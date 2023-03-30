@@ -1,108 +1,95 @@
-@extends('layouts.master')  
+@extends('layouts.master')
 @section('css')
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/kpi.css') }}"> 
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/kpi.css') }}">
 @endsection
 @section('page')
 <meta name="csrf-token" content="{{ csrf_token() }}">
     <section>
-        <div class="row">
-            <div class="col-12">
+        <div class="row mt-4">
+            <div class="col-12 mx-2">
                 <div class="">
                     <div class="ml-3">
                         <dl>
-                            <dt class="h3 font-weight-bold dt">Welcome back, {{ Auth::user()->full_name }} 👋</dt>
-                            <dd class="display-5 font-weight-light dd">Your current kpi report is here</dd>
+                            <dt class=" font-weight-bold dt">Welcome back, {{ Auth::user()->full_name }} 👋</dt>
+                            <dd class="display-5 my-3 font-weight-light pb-2 mb-5">Your current kpi report is here</dd>
                         </dl>
                     </div>
                     <div class="container-fluid">
-                        <div class="row mt-3">
-                            <div class="col-lg-8 col-md-12  d-flex  flex-column  justify-content-between ">
+                        <div class="row">
+                            <div  class="col-lg-8 col-sm-12 d-flex flex-column justify-content-between" >
                                 {{-- contanct us banner --}}
                                 {{-- <div class="">
 
                                 </div> --}}
                                 <div class="">
                                     <div class="row mt-0">
-                                        <div class="col-12 pb-xl-3 pb-2 h-50"><a href="#">
+                                        <div class="col-12 pb-xl-3 pb-2 h-25"><a href="#">
                                                 <img class="banner" src="{{ asset('images/kpi-banner.png') }}"
-                                                    width="100%" height="10%" alt="contact us"> </a>
+                                                    width="100%" height="8%" alt="contact us"> </a>
                                         </div>
                                     </div>
                                 </div>
                                 {{-- contanct us banner end --}}
                                 {{-- orders details cards --}}
-                                <div class="row ">
-                                    <div class="col-md-3 col-sm-4">
-                                        <div class="imagecard imagecard-topimage">
-                                            <a href="#">
-                                                <div class="imagecard-topimage_header">
-                                                    <div class="icon-background" style="background-color: #EEFAFA">
-                                                        <center> <img src="{{ asset('app-assets/images/icons/chart.svg') }}"
-                                                                class="icon" width="40" height="40" /> </center>
-                                                    </div>
-                                                </div>
+                                <div class="row d-flex justify-content-between">
+                                    <div class="col-md-3 col-sm-6  ">
+                                        <div class="card imagecard imagecard-topimage pr-lg-2 mr-lg-2">
+                                            <div class="icon-background m-4 p-5" style="background-color: #EEFAFA">
+                                                <center> <img src="{{ asset('app-assets/images/icons/chart.svg') }}"
+                                                        class="icon" width="60" height="60" /> </center>
+                                            </div>
+                                            <div class="card-body">
                                                 <div>
-                                                    <p class="text-center font-weight-bold h3"  id="total">0</p>
-                                                    <p class="text-center mt-0 pt-0">Total orders</p>
+                                                    <h3 class="text-center font-weight-bold my-3 " id="chart">0 </h3>
+                                                    <p class="text-center display-5">Chart</p>
                                                 </div>
-                                            </a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-sm-4">
-                                        <div class="imagecard imagecard-topimage">
-                                            <a href="#">
-                                                <div class="imagecard-topimage_header">
-                                                    <div class="icon-background" style="background-color: #fff9eb">
-                                                        <center> <img src="{{ asset('app-assets/images/icons/tax.svg') }}" class="icon" width="40" height="40" /> </center>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="card imagecard imagecard-topimage">
 
-                                                    </div>
-                                                </div>
+                                            <div class="icon-background m-4 p-5" style="background-color: #fff9eb">
+                                                <center> <img src="{{ asset('app-assets/images/icons/tax.svg') }}"
+                                                        class="icon" width="60" height="60" /> </center>
+
+                                            </div>
+                                            <div class="card-body">
                                                 <div>
-                                                    <p class="text-center font-weight-bold h3"  id="taxed">0 </p>
-                                                    <p class="text-center mt-0 pt-0">Taxed</p>
+                                                    <h3 class="text-center font-weight-bold my-3 " id="taxed">0 </h3>
+                                                    <p class="text-center display-5">Taxed</p>
                                                 </div>
-                                            </a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-sm-4">
-                                        <div class="imagecard imagecard-topimage">
-                                            <a href="#">
-                                                <div class="imagecard-topimage_header">
-                                                    <div class="icon-background" style="background-color: #eefafa">
-                                                        <center> <img
-                                                                src="{{ asset('app-assets/images/icons/delivered.svg') }}"
-                                                                class="icon" width="40" height="40" /> </center>
+                                    <div class="col-md-3 col-sm-6">
 
-                                                    </div>
+                                        <div class="card imagecard imagecard-topimage">
+
+                                            <div class="icon-background m-4 p-5" style="background-color: #eefafa">
+                                                <center> <img src="{{ asset('app-assets/images/icons/delivered.svg') }}"
+                                                        class="icon" width="60" height="60" /> </center>
+                                            </div>
+                                            <div class="card-body">
+                                                <div>                                                    
+                                                    <h3 class="text-center font-weight-bold my-3 " id="delivered">0 </h3>
+                                                    <p class="text-center display-5">Delivered</p>
                                                 </div>
-                                                <div> 
-
-
-                                                    <p class="text-center font-weight-bold h3 "  id="delivered"> 0
-                                                    </p>
-
-                                                    <p class="text-center mt-0 pt-0">Delivered</p>
-                                                </div>
-                                            </a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-sm-4">
-                                        <div class="imagecard imagecard-topimage">
-                                            <a href="#">
-                                                <div class="imagecard-topimage_header">
-                                                    <div class="icon-background" style="background-color: #fbeffb">
-                                                        <center> <img
-                                                                src="{{ asset('app-assets/images/icons/retured.svg') }}"
-                                                                class="icon" width="40" height="40" /> </center>
-
-                                                    </div>
-                                                </div>
+                                    <div class="col-md-3 col-sm-6  ">
+                                        <div class="card imagecard imagecard-topimage ml-xl-2 pl-xl-2">
+                                            <div class="icon-background m-4 p-5" style="background-color: #fbeffb">
+                                                <center> <img src="{{ asset('app-assets/images/icons/retured.svg') }}"
+                                                        class="icon" width="60" height="60" /> </center>
+                                            </div>
+                                            <div class="card-body">
                                                 <div>
-                                                    <p class="text-center font-weight-bold h3"  id="returned"> 0
-                                                    </p>
-                                                    <p class="text-center mt-0 pt-0">Retured</p>
+                                                    <h3 class="text-center font-weight-bold my-3 " id="retured">0 </h3>
+                                                    <p class="text-center display-5">Retured</p>
                                                 </div>
-                                            </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -111,26 +98,26 @@
 
                             </div>
                             {{-- Report Report  --}}
-                            <div class="col-lg-4 col-md-12  d-flex  flex-column   justify-content-center">
-                                <div class="filter-card" id="filter-card">
-                                    <h4 class="text-center mt-0 pt-0  h5 font-weight-bold">
+                            <div class=" col-lg-4 col-sm-12 d-flex flex-column justify-content-center " >
+                                <div class="filter-card " id="filter-card">
+                                    <h3 class="text-center m-4 font-weight-bold">
                                         Report Generator
-                                    </h4>
+                                    </h3>
                                     <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
-                                        <label for="startDate " class="mt-xl-3 mt-lg-1 mb-0 ">Start Date</label><br>
+                                        <label for="startDate " class="mt-3 mb-2 ">Start Date</label><br>
                                         <div class="input-group">
-                                            <input class="form-control py-2 rounded-3 mr-1 " type="date"
-                                                name="start_date" id="startDate" {{-- value="{{ \Carbon\Carbon::parse(request('start_date'))->format('Y-m-d')  }}" placeholder="yyyy/dd/mm" --}}>
+                                            <input class="form-control py-2 mr-1 p-3" type="date" name="start_date"
+                                                id="startDate">
                                         </div>
-                                        <label for="end-date" class="mt-xl-3 mt-lg-1 mb-0 ""> End Date</label><br>
+                                        <label for="end-date" class="mt-4 mb-2"> End Date</label><br>
                                         <div class="input-group">
-                                            <input name="end_date" id="endDate" class="form-control rounded-5"
+                                            <input name="end_date" id="endDate" class="form-control py-2 mr-1 p-3"
                                                 type="date">
                                         </div>
-                                        <label for="start-date" class="mt-xl-3 mt-lg-1 mb-0 ">Tracking Code</label><br>
+                                        <label for="tracking_code" class="mt-4 mb-2">Tracking Code</label><br>
                                         <div class="input-group">
-                                            <textarea id="start-date" value="tracking code" type="text" placeholder="Please Enter Tracking Codes" rows="1"
-                                                class="form-control rounded-3" name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
+                                            <textarea id="tracking_code" value="tracking code" type="text" placeholder="Please Enter Tracking Codes"
+                                                rows="4" class="form-control py-2 mr-1" name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
                                             @error('trackingNumbers')
                                                 <div class="help-block text-danger">
                                                     {{ $message }}
@@ -142,23 +129,26 @@
                                                 </button>
                                             </span>
                                         </div>
-                                        <div class="d-flex justify-content-between mt-3">
+                                        <div class="d-flex justify-content-between mt-4 mb-3">
                                             <div>
-                                                <button type="submit" class="btn btn-outline-success px-3 py-1">Check
+                                                <button type="submit"
+                                                    class="btn btn-outline-success btn-lg px-3 py-1">Check
                                                     Details</button>
                                             </div>
                                             <div>
                                     </form>
-                                    <form class="row col-12 p-0 m-0" action="{{ route('admin.reports.kpi-report.store') }}"
-                                        method="POST">
+                                    <form class="row col-12 p-0 m-0"
+                                        action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
                                         @csrf
                                         @if ($trackings)
                                             <input type="hidden" name="order"
                                                 value="{{ collect($trackings['return']['objeto']) }}">
                                             <input type="hidden" name="trackingCodeUser"
                                                 value="{{ collect($trackingCodeUser) }}">
-                                        @endif 
-                                    <button type="submit" class="btn btn-success px-3 py-1 px-3 py-1" {{ !empty($trackings) ? '' : 'disabled' }}> <i class="fa fa-download"></i> Download </button> 
+                                        @endif
+                                        <button type="submit" class="btn btn-success btn-lg px-3 py-1 px-3 py-1"
+                                            {{ !empty($trackings) ? '' : 'disabled' }}> <i class="fa fa-download"></i>
+                                            Download </button>
                                     </form>
 
                                 </div>
@@ -208,24 +198,24 @@
                                                 <td>{{ sortTrackingEvents($data, null)['delivered'] }}</td>
                                                 <td>{{ sortTrackingEvents($data, null)['returned'] }}</td>
                                             @else
-                                                <td colspan='9'>No Trackings Found</td>
+                                                <td colspan="11">No Trackings Found</td>
                                             @endif
                                         </tr>
                                     @endif
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="10" class="text-center">No Trackings Found</td>
+                                    <td colspan="11" class="text-center">No Trackings Found</td>
 
                                 </tr>
                             @endif
                         </tbody>
                     </table>
-                    @include('layouts.livewire.loading') 
+                    @include('layouts.livewire.loading')
                 </div>
 
             </div>
-        </div> 
+        </div>
         </div>
         </div>
     </section>
@@ -264,10 +254,10 @@
             var returnOrder = (returned / totalRecords * 100).toFixed(2);
             var inTransit = (inProcess / totalRecords * 100).toFixed(2);
             $('#total').html(totalRecords);
-            $('#delivered').html(deliveredOrder );
+            $('#delivered').html(deliveredOrder);
             $('#taxed').html(taxOrder + ' %');
             $('#returned').html(returnOrder + ' %');
             $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
         }
-      </script>
+    </script>
 @endsection
