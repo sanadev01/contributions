@@ -175,68 +175,6 @@
                 <div class="row">
                     <table class="table  table-borderless p-0 table-responsive-md table-striped  " id="kpiReportTable">
                         <thead style="backgroud-color:#000" class="">
-                            <tr class="">
-                                <th>User</th>
-                                <th>@lang('orders.Tracking')</th>
-                                <th>@lang('orders.Type Package')</th>
-                                <th>@lang('orders.First Event')</th>
-                                <th>@lang('orders.Last Event')</th>
-                                <th>@lang('orders.Days Between')</th>
-                                <th>@lang('orders.Last Event')</th>
-                                <th>@lang('orders.Taxed')</th>
-                                <th>@lang('orders.Delivered')</th>
-                                <th>@lang('orders.Returned')</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="">
-                                <td>User</td>
-                                <td>@lang('orders.Tracking')</td>
-                                <td>@lang('orders.Type Package')</td>
-                                <td>@lang('orders.First Event')</td>
-                                <td>@lang('orders.Last Event')</td>
-                                <td>@lang('orders.Days Between')</td>
-                                <td>@lang('orders.Last Event')</td>
-                                <td>@lang('orders.Taxed')</td>
-                                <td>@lang('orders.Delivered')</td>
-                                <td>@lang('orders.Returned')</td>
-                            </tr>
-                            <tr class="">
-                                <td>User</td>
-                                <td>@lang('orders.Tracking')</td>
-                                <td>@lang('orders.Type Package')</td>
-                                <td>@lang('orders.First Event')</td>
-                                <td>@lang('orders.Last Event')</td>
-                                <td>@lang('orders.Days Between')</td>
-                                <td>@lang('orders.Last Event')</td>
-                                <td>@lang('orders.Taxed')</td>
-                                <td>@lang('orders.Delivered')</td>
-                                <td>@lang('orders.Returned')</td>
-                            </tr>
-                            <tr class="">
-                                <td>User</td>
-                                <td>@lang('orders.Tracking')</td>
-                                <td>@lang('orders.Type Package')</td>
-                                <td>@lang('orders.First Event')</td>
-                                <td>@lang('orders.Last Event')</td>
-                                <td>@lang('orders.Days Between')</td>
-                                <td>@lang('orders.Last Event')</td>
-                                <td>@lang('orders.Taxed')</td>
-                                <td>@lang('orders.Delivered')</td>
-                                <td>@lang('orders.Returned')</td>
-                            </tr>
-                            <tr class="">
-                                <td>User</td>
-                                <td>@lang('orders.Tracking')</td>
-                                <td>@lang('orders.Type Package')</td>
-                                <td>@lang('orders.First Event')</td>
-                                <td>@lang('orders.Last Event')</td>
-                                <td>@lang('orders.Days Between')</td>
-                                <td>@lang('orders.Last Event')</td>
-                                <td>@lang('orders.Taxed')</td>
-                                <td>@lang('orders.Delivered')</td>
-                                <td>@lang('orders.Returned')</td>
-                            </tr>
                             @if ($trackings)
                                 @foreach ($trackings['return']['objeto'] as $data)
                                     @if (isset($data['evento']))
