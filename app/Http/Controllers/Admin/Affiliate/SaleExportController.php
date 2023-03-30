@@ -12,12 +12,10 @@ class SaleExportController extends Controller
 {
     public function __invoke(Request $request, AffiliateSaleRepository $affiliateSaleRepository)
     {
+        // $sales = $affiliateSaleRepository->getSalesForExport($request);
         $sales = $affiliateSaleRepository->get($request, false);
-        if(Auth::user()->isAdmin() && $request->status == 'toPay'){
-            session()->flash('alert-success','Commission has been paid');
-            return redirect()->back();
-        }
-        $exportService = new SaleExport($sales);
+        
+        $exportService = new SaleExport($sales->sortByDesc('order.user_id'));
         return $exportService->handle();
     }
 }

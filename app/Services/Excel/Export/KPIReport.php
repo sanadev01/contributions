@@ -79,6 +79,7 @@ class KPIReport extends AbstractExportService
             }
 
 
+
         $this->currentRow = $row;
         $this->setBackgroundColor("A{$row}:K{$row}", 'adfb84');
     }
