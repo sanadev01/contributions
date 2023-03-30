@@ -35,8 +35,7 @@
                                     <div class="col-md-3 col-sm-6  ">
                                         <div class="card imagecard imagecard-topimage pr-lg-2 mr-lg-2">
                                             <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #EEFAFA">
-                                                <center> <img src="{{ asset('app-assets/images/icons/chart.svg') }}"
-                                                        class="icon" width="60" height="60" /> </center>
+                                                  <img src="{{ asset('app-assets/images/icons/chart.svg') }}" class="icon" width="60" height="60" />
                                             </div>
                                             <div class="card-body">
                                                 <div>
@@ -50,8 +49,7 @@
                                         <div class="card imagecard imagecard-topimage">
 
                                             <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #fff9eb">
-                                                <center> <img src="{{ asset('app-assets/images/icons/tax.svg') }}"
-                                                        class="icon" width="60" height="60" /> </center>
+                                                   <img src="{{ asset('app-assets/images/icons/tax.svg') }}" class="icon" width="60" height="60" />  
 
                                             </div>
                                             <div class="card-body">
@@ -62,13 +60,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-sm-6">
-
-                                        <div class="card imagecard imagecard-topimage">
-
+                                    <div class="col-md-3 col-sm-6"> 
+                                        <div class="card imagecard imagecard-topimage"> 
                                             <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #eefafa">
-                                                <center> <img src="{{ asset('app-assets/images/icons/delivered.svg') }}"
-                                                        class="icon" width="60" height="60" /> </center>
+                                                 <img src="{{ asset('app-assets/images/icons/delivered.svg') }}"  class="icon" width="60" height="60" />
                                             </div>
                                             <div class="card-body">
                                                 <div>                                                    
@@ -81,8 +76,7 @@
                                     <div class="col-md-3 col-sm-6  ">
                                         <div class="card imagecard imagecard-topimage ml-xl-2 pl-xl-2">
                                             <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #fbeffb">
-                                                <center> <img src="{{ asset('app-assets/images/icons/retured.svg') }}"
-                                                        class="icon" width="60" height="60" /> </center>
+                                               <img src="{{ asset('app-assets/images/icons/retured.svg') }}"  class="icon" width="60" height="60" />  
                                             </div>
                                             <div class="card-body">
                                                 <div>
