@@ -41,10 +41,10 @@ class KPIReport extends AbstractExportService
                     
 
                     if(optional($data) && isset(optional($data)['numero'])) {
-                        $user = $this->trackingCodeUser[optional($data)['numero']];
+                        $poboxName = $this->trackingCodeUser[optional($data)['numero']];
                         $date = $this->orderDates[optional($data)['numero']];
-                        if($user)
-                        $this->setCellValue('A'.$row, $user['name'] .''. $user['last_name'] .' '. $user['pobox_number'] );
+                        if($poboxName)
+                        $this->setCellValue('A'.$row, $poboxName);
                         
                         $this->setCellValue('B'.$row, optional($data)['numero']);
                         $this->setCellValue('C'.$row, optional($data)['categoria']);
@@ -55,7 +55,7 @@ class KPIReport extends AbstractExportService
                         $this->setCellValue('H'.$row, sortTrackingEvents($data, null)['taxed']);
                         $this->setCellValue('I'.$row, sortTrackingEvents($data, null)['delivered']);
                         $this->setCellValue('J'.$row, sortTrackingEvents($data, null)['returned']);
-                        $this->setCellValue('K'.$row, optional($date)['order_date']);
+                        $this->setCellValue('K'.$row, $date);
                         $row++;
                         if(sortTrackingEvents($data, null)['taxed']=='Yes'){
                             $taxed++;

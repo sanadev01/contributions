@@ -190,8 +190,8 @@
                                     @if (isset($data['evento']))
                                         <tr class="count">
                                             @if (optional($data) && isset(optional($data)['numero']))
-                                                <td  class="py-4"><p>{{ optional($orderDates[optional($data)['numero']])->order_date->format('m/d/Y') }} </p></td>
-                                                <td  class="py-4"><p>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}  </p></td>
+                                                <td  class="py-4"><p>{{ $orderDates[optional($data)['numero']] }} </p></td>
+                                                <td  class="py-4"><p>{{ $trackingCodeUser[optional($data)['numero']] }}  </p></td>
                                                 <td  class="py-4"><p>{{ optional($data)['numero'] }}</p></td>
                                                 <td  class="py-4"><p><span>{{ optional($data)['categoria'] }}</span></p></td>
                                                 <td  class="py-4"><p>{{ optional(optional(optional($data)['evento'])[count($data['evento']) - 1])['data'] }}  </p></td>
