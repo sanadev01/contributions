@@ -138,8 +138,10 @@
                                         @if ($trackings)
                                             <input type="hidden" name="order"
                                                 value="{{ collect($trackings['return']['objeto']) }}">
-                                            <input type="hidden" name="trackingCodeUser"
+                                                <input type="hidden" name="trackingCodeUser"
                                                 value="{{ collect($trackingCodeUser) }}">
+                                                <input type="hidden" name="orderDates"
+                                                value="{{ collect($orderDates) }}">
                                         @endif
                                         <button type="submit" class="btn btn-success  px-3 py-1 px-3 py-1"
                                             {{ !empty($trackings) ? '' : 'disabled' }}> <i class="fa fa-download"></i>
