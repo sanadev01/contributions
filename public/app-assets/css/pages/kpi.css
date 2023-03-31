@@ -15,13 +15,13 @@
 }
 .center-text {
     
-  display: inline-block;
+  /* display: inline-block;
   vertical-align: middle;
   line-height: normal;
 
   height: 10px;
   line-height: 20px;
-  text-align: center;
+  */ text-align: center;
   }
 .imagecard .fa {
     position: relative;
