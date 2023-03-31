@@ -10,7 +10,7 @@
                 <div>
                     <div class="ml-3">
                         <dl>
-                            <dt class="font-weight-bold dt">Welcome back, {{ Auth::user()->full_name }} 👋</dt>
+                            <dt class="font-weight-bold dt">Welcome back, {{ Auth::user()->name }} 👋</dt>
                             <dd class="display-5 my-3 font-weight-light pb-2 mb-5">Your current kpi report is here</dd>
                         </dl>
                     </div>
@@ -21,7 +21,7 @@
                                 <div>
                                     <div class="row mt-0">
                                         <div class="col-12 pb-xl-2 pb-1 h-25">
-                                            <a href="{{ url('tickets') }}"> <img class="banner"
+                                            <a href="{{ url('tickets') }}" target="_blank"> <img class="banner"
                                                     src="{{ asset('images/kpi-banner.png') }}" width="100%" height="auto"
                                                     alt="contact us"> </a>
                                         </div>
@@ -84,7 +84,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-1 " id="retured">0 </h3>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="returned">0 </h3>
                                                     <p class="text-center display-5">Retured</p>
                                                 </div>
                                             </div>
@@ -127,8 +127,10 @@
                                         </div>
                                         <div class="d-flex justify-content-between mt-4 mb-3">
                                             <div>
-                                                <button type="submit" class="btn btn-outline-success   px-3 py-1">Check
-                                                    Details</button>
+                                        <button type="submit" class="btn btn-outline-success glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
+                                            Check Details
+                                        </button>
+                                                {{-- <button type="submit" class="btn btn-outline-success responsive-content "></button> --}}
                                             </div>
                                             <div>
                                     </form>
@@ -143,7 +145,8 @@
                                                 <input type="hidden" name="orderDates"
                                                 value="{{ collect($orderDates) }}">
                                         @endif
-                                        <button type="submit" class="btn btn-success  px-3 py-1 px-3 py-1"
+ 
+                                        <button type="submit" class="btn btn-success waves-effect waves-light p-3"
                                             {{ !empty($trackings) ? '' : 'disabled' }}> <i class="fa fa-download"></i>
                                             Download </button>
                                     </form>
@@ -188,47 +191,39 @@
                             <tbody>
                                 @if ($trackings)
                                     @foreach ($trackings['return']['objeto'] as $data)
-                                        @if (isset($data['evento']))
+                                        @if (isset($data['evento'])) 
                                             <tr class="count">
                                                 @if (optional($data) && isset(optional($data)['numero']))
-                                                    <td class="py-3">
-                                                        <p>{{ $orderDates[optional($data)['numero']] }}
+                                                    <td>
+                                                        <p class="center-text">{{ $orderDates[optional($data)['numero']] }} </p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="center-text">{{ $trackingCodeUser[optional($data)['numero']] }} </p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="center-text">{{ optional($data)['numero'] }}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="center-text"><span>{{ optional($data)['categoria'] }}</span></p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="center-text">{{ optional(optional(optional($data)['evento'])[count($data['evento']) - 1])['data'] }}
                                                         </p>
                                                     </td>
-                                                    <td class="py-3">
-                                                        <p>{{ $trackingCodeUser[optional($data)['numero']] }}
+                                                    <td>
+                                                        <p class="center-text">{{ optional(optional(optional($data)['evento'])[0])['data'] }}
                                                         </p>
                                                     </td>
-                                                    <td class="py-3">
-                                                        <p>{{ optional($data)['numero'] }}</p>
+                                                    <td>
+                                                        <p class="center-text">{{ sortTrackingEvents($data, null)['diffDates'] }} </p>
                                                     </td>
-                                                    <td class="py-3">
-                                                        <p><span>{{ optional($data)['categoria'] }}</span></p>
-                                                    </td>
-                                                    <td class="py-3">
-                                                        <p>{{ optional(optional(optional($data)['evento'])[count($data['evento']) - 1])['data'] }}
+                                                    <td>
+                                                        <p class="center-text">{{ optional(optional(optional($data)['evento'])[0])['descricao'] }}
                                                         </p>
                                                     </td>
-                                                    <td class="py-3">
-                                                        <p>{{ optional(optional(optional($data)['evento'])[0])['data'] }}
-                                                        </p>
-                                                    </td>
-                                                    <td class="py-3">
-                                                        <p>{{ sortTrackingEvents($data, null)['diffDates'] }} </p>
-                                                    </td>
-                                                    <td class="py-3">
-                                                        <p>{{ optional(optional(optional($data)['evento'])[0])['descricao'] }}
-                                                        </p>
-                                                    </td>
-                                                    <td class="py-3">
-                                                        <p>{{ sortTrackingEvents($data, null)['taxed'] }}</p>
-                                                    </td>
-                                                    <td class="py-3">
-                                                        <p>{{ sortTrackingEvents($data, null)['delivered'] }}</p>
-                                                    </td>
-                                                    <td class="py-3">
-                                                        <p>{{ sortTrackingEvents($data, null)['returned'] }}</p>
-                                                    </td>
+                                                    <td>  {{ sortTrackingEvents($data, null)['taxed'] }}  </td>
+                                                    <td> {{ sortTrackingEvents($data, null)['delivered'] }} </td>
+                                                    <td> {{ sortTrackingEvents($data, null)['returned'] }} </td>
                                                 @else
                                                     <td colspan="11">No Trackings Found</td>
                                                 @endif
@@ -293,16 +288,22 @@
             var delivered = 0;
             var inProcess = 0;
             $(".count").each(function() {
-                if ($(this).find('td').eq(8).text() == 'Yes') {
+                console.log('8','h'+$(this).find('td').eq(8).text().trim()+"h");
+                console.log('9','h'+$(this).find('td').eq(9).text().trim()+"h");
+                console.log('10','h'+$(this).find('td').eq(10).text().trim()+"h");
+                
+
+                if ($(this).find('td').eq(8).text().trim() == 'Yes') {
                     taxed++;
                 }
-                if ($(this).find('td').eq(9).text() == 'Yes') {
+                if ($(this).find('td').eq(9).text().trim() == 'Yes') {
                     delivered++;
                 }
-                if ($(this).find('td').eq(10).text() == 'Yes') {
+                if ($(this).find('td').eq(10).text().trim() == 'Yes') {
+                    
                     returned++;
                 }
-                if ($(this).find('td').eq(9).text() == 'No') {
+                if ($(this).find('td').eq(9).text().trim() == 'No') {
                     inProcess++;
                 }
             });
