@@ -33,12 +33,12 @@
                                 <div class="row d-flex justify-content-between">
                                     <div class="col-md-3 col-sm-6  ">
                                         <div class="card imagecard imagecard-topimage pr-lg-2 mr-lg-2">
-                                            <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #EEFAFA">
+                                            <div class="icon-background mx-4 px-5 my-3 py-4 d-flex justify-content-center"  style="background-color: #EEFAFA">
                                                   <img src="{{ asset('app-assets/images/icons/chart.svg') }}" class="icon" width="60" height="60" />
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-2 " id="total">0 </h3>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="total">0 </h3>
                                                     <p class="text-center card-body-description">Total Orders</p>
                                                 </div>
                                             </div>
@@ -47,13 +47,13 @@
                                     <div class="col-md-3 col-sm-6">
                                         <div class="card imagecard imagecard-topimage">
 
-                                            <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #fff9eb">
+                                            <div class="icon-background mx-4 px-5 my-3 py-4 d-flex justify-content-center"  style="background-color: #fff9eb">
                                                    <img src="{{ asset('app-assets/images/icons/tax.svg') }}" class="icon" width="60" height="60" />  
 
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-2 " id="taxed">0 </h3>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="taxed">0 </h3>
                                                     <p class="text-center card-body-description">Taxed</p>
                                                 </div>
                                             </div>
@@ -61,12 +61,12 @@
                                     </div>
                                     <div class="col-md-3 col-sm-6"> 
                                         <div class="card imagecard imagecard-topimage"> 
-                                            <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #eefafa">
+                                            <div class="icon-background mx-4 px-5 my-3 py-4 d-flex justify-content-center"  style="background-color: #eefafa">
                                                  <img src="{{ asset('app-assets/images/icons/delivered.svg') }}"  class="icon" width="60" height="60" />
                                             </div>
                                             <div class="card-body">
                                                 <div>                                                    
-                                                    <h3 class="text-center font-weight-bold my-2 " id="delivered">0 </h3>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="delivered">0 </h3>
                                                     <p class="text-center card-body-description">Delivered</p>
                                                 </div>
                                             </div>
@@ -74,12 +74,12 @@
                                     </div>
                                     <div class="col-md-3 col-sm-6  ">
                                         <div class="card imagecard imagecard-topimage ml-xl-2 pl-xl-2">
-                                            <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #fbeffb">
+                                            <div class="icon-background mx-4 px-5 my-3 py-4 d-flex justify-content-center"  style="background-color: #fbeffb">
                                                <img src="{{ asset('app-assets/images/icons/retured.svg') }}"  class="icon" width="60" height="60" />  
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-2 " id="retured">0 </h3>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="retured">0 </h3>
                                                     <p class="text-center card-body-description">Retured</p>
                                                 </div>
                                             </div>
