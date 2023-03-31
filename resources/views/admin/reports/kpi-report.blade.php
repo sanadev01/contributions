@@ -152,21 +152,21 @@
                     {{-- Report Generato end --}}
                 </div>
                 {{-- table of kpi --}}
-                <div class="row  mx-sm-0 mx-lg-1">
+                <div class="row  mx-1">
                     <table class=" table  table-borderless p-0 table-responsive-md table-striped  " id="kpi-report">
                         <thead  >
                             <tr class="" id="kpiHead">
-                                <th class="py-4" >Order Date</th>
-                                <th class="py-4"  >User</th>
-                                <th class="py-4">@lang('orders.Tracking')</th>
-                                <th class="py-4">@lang('orders.Type Package')</th>
-                                <th class="py-4">@lang('orders.First Event')</th>
-                                <th class="py-4">@lang('orders.Last Event')</th>
-                                <th class="py-4">@lang('orders.Days Between')</th>
-                                <th class="py-4">@lang('orders.Last Event')</th>
-                                <th class="py-4">@lang('orders.Taxed')</th>
-                                <th class="py-4">@lang('orders.Delivered')</th>
-                                <th class="py-4">@lang('orders.Returned')</th>
+                                <th class="py-3" >Order Date</th>
+                                <th class="py-3"  >User</th>
+                                <th class="py-3">@lang('orders.Tracking')</th>
+                                <th class="py-3">@lang('orders.Type Package')</th>
+                                <th class="py-3">@lang('orders.First Event')</th>
+                                <th class="py-3">@lang('orders.Last Event')</th>
+                                <th class="py-3">@lang('orders.Days Between')</th>
+                                <th class="py-3">@lang('orders.Last Event')</th>
+                                <th class="py-3">@lang('orders.Taxed')</th>
+                                <th class="py-3">@lang('orders.Delivered')</th>
+                                <th class="py-3">@lang('orders.Returned')</th>
                             </tr>
                         </thead>                        
                         <tfoot class="search-header">
@@ -190,17 +190,17 @@
                                     @if (isset($data['evento']))
                                         <tr class="count">
                                             @if (optional($data) && isset(optional($data)['numero']))
-                                                <td  class="py-4"><p>{{ optional($orderDates[optional($data)['numero']])->order_date->format('m/d/Y') }} </p></td>
-                                                <td  class="py-4"><p>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}  </p></td>
-                                                <td  class="py-4"><p>{{ optional($data)['numero'] }}</p></td>
-                                                <td  class="py-4"><p><span>{{ optional($data)['categoria'] }}</span></p></td>
-                                                <td  class="py-4"><p>{{ optional(optional(optional($data)['evento'])[count($data['evento']) - 1])['data'] }}  </p></td>
-                                                <td  class="py-4"><p>{{ optional(optional(optional($data)['evento'])[0])['data'] }}  </p></td>
-                                                <td  class="py-4"><p>{{ sortTrackingEvents($data, null)['diffDates'] }} </p></td>
-                                                <td  class="py-4"><p>{{ optional(optional(optional($data)['evento'])[0])['descricao'] }} </p></td>
-                                                <td  class="py-4"><p>{{ sortTrackingEvents($data, null)['taxed'] }}</p></td>
-                                                <td  class="py-4"><p>{{ sortTrackingEvents($data, null)['delivered'] }}</p></td>
-                                                <td  class="py-4"><p>{{ sortTrackingEvents($data, null)['returned'] }}</p></td>
+                                                <td  class="py-3"><p>{{ optional($orderDates[optional($data)['numero']])->order_date->format('m/d/Y') }} </p></td>
+                                                <td  class="py-3"><p>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}  </p></td>
+                                                <td  class="py-3"><p>{{ optional($data)['numero'] }}</p></td>
+                                                <td  class="py-3"><p><span>{{ optional($data)['categoria'] }}</span></p></td>
+                                                <td  class="py-3"><p>{{ optional(optional(optional($data)['evento'])[count($data['evento']) - 1])['data'] }}  </p></td>
+                                                <td  class="py-3"><p>{{ optional(optional(optional($data)['evento'])[0])['data'] }}  </p></td>
+                                                <td  class="py-3"><p>{{ sortTrackingEvents($data, null)['diffDates'] }} </p></td>
+                                                <td  class="py-3"><p>{{ optional(optional(optional($data)['evento'])[0])['descricao'] }} </p></td>
+                                                <td  class="py-3"><p>{{ sortTrackingEvents($data, null)['taxed'] }}</p></td>
+                                                <td  class="py-3"><p>{{ sortTrackingEvents($data, null)['delivered'] }}</p></td>
+                                                <td  class="py-3"><p>{{ sortTrackingEvents($data, null)['returned'] }}</p></td>
                                             @else
                                                 <td colspan="11">No Trackings Found</td>
                                             @endif
@@ -233,8 +233,7 @@
     $(document).ready(function() {
         $('#kpi-report tfoot th').each(function() {
             var title = $(this).text();
-            $(this).html('<input type="text" class="form-control py-4" placeholder="Search ' + title +
-                '" />');
+            $(this).html('<input type="text" class="form-control py-4" placeholder="Search ' + title + '" />');
         });
         var table = $('#kpi-report').DataTable({
             "paging": false,
@@ -243,12 +242,10 @@
                     .columns()
                     .every(function() {
                         var that = this;
-
                         $('input', this.footer()).on('keyup change clear', function() {
                             if (that.search() !== this.value) {
                                 that.search(this.value).draw();
                                 calculation();
-                         document.getElementById("kpiHead").style.backgroundColor = "#eefafa";
 
                             }
                         });
@@ -257,7 +254,6 @@
             "info": false
         });
         calculation();
-        document.getElementById("kpiHead").style.backgroundColor = "#eefafa";
     });
 
     function calculation() {
