@@ -23,8 +23,8 @@
                                 </div> --}}
                                 <div class="">
                                     <div class="row mt-0">
-                                        <div class="col-12 pb-xl-3 pb-2 h-25">
-                                            <a href="{{ url('tickets') }}"> <img class="banner" src="{{ asset('images/kpi-banner.png') }}" width="100%" height="8%" alt="contact us"> </a>
+                                        <div class="col-12 pb-xl-2 pb-1 h-25">
+                                            <a href="{{ url('tickets') }}"> <img class="banner" src="{{ asset('images/kpi-banner.png') }}" width="100%" height="auto" alt="contact us"> </a>
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +38,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h4 class="text-center my-1 " id="total">0 </h4>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="total">0 </h3>
                                                     <p class="text-center display-5">Total Orders</p>
                                                 </div>
                                             </div>
@@ -53,7 +53,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h4 class="text-center my-1 " id="taxed">0 </h4>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="taxed">0 </h3>
                                                     <p class="text-center display-5">Taxed</p>
                                                 </div>
                                             </div>
@@ -66,7 +66,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>                                                    
-                                                    <h4 class="text-center my-1 " id="delivered">0 </h4>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="delivered">0 </h3>
                                                     <p class="text-center display-5">Delivered</p>
                                                 </div>
                                             </div>
@@ -79,7 +79,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h4 class="text-center my-1 " id="retured">0 </h4>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="retured">0 </h3>
                                                     <p class="text-center display-5">Retured</p>
                                                 </div>
                                             </div>
@@ -152,23 +152,23 @@
                     {{-- Report Generato end --}}
                 </div>
                 {{-- table of kpi --}}
-                <div class="row  mx-1">
-                    <table class=" table  table-borderless p-0 table-responsive-md table-striped  " id="kpi-report">
-                        <thead  >
+                <div class="">
+                    <table class="table  table-borderless p-0 table-responsive-md table-striped  " id="kpi-report">
+                        <thead style="backgroud-color:#000" class="">
                             <tr class="" id="kpiHead">
-                                <th class="py-3" >Order Date</th>
-                                <th class="py-3"  >User</th>
-                                <th class="py-3">@lang('orders.Tracking')</th>
-                                <th class="py-3">@lang('orders.Type Package')</th>
-                                <th class="py-3">@lang('orders.First Event')</th>
-                                <th class="py-3">@lang('orders.Last Event')</th>
-                                <th class="py-3">@lang('orders.Days Between')</th>
-                                <th class="py-3">@lang('orders.Last Event')</th>
-                                <th class="py-3">@lang('orders.Taxed')</th>
-                                <th class="py-3">@lang('orders.Delivered')</th>
-                                <th class="py-3">@lang('orders.Returned')</th>
+                                <th class="py-4">Order Date</th>
+                                <th class="py-4">User</th>
+                                <th class="py-4">@lang('orders.Tracking')</th>
+                                <th class="py-4">@lang('orders.Type Package')</th>
+                                <th class="py-4">@lang('orders.First Event')</th>
+                                <th class="py-4">@lang('orders.Last Event')</th>
+                                <th class="py-4">@lang('orders.Days Between')</th>
+                                <th class="py-4">@lang('orders.Last Event')</th>
+                                <th class="py-4">@lang('orders.Taxed')</th>
+                                <th class="py-4">@lang('orders.Delivered')</th>
+                                <th class="py-4">@lang('orders.Returned')</th>
                             </tr>
-                        </thead>                        
+                        </thead>
                         <tfoot class="search-header">
                             <tr>
                                 <th>Order Date</th>
@@ -183,15 +183,14 @@
                                 <th>Delivered</th>
                                 <th>Returned</th>
                             </tr>
-                        </tfoot>
-                        <tbody>
+                        <tbody>  
                             @if ($trackings)
                                 @foreach ($trackings['return']['objeto'] as $data)
                                     @if (isset($data['evento']))
                                         <tr class="count">
                                             @if (optional($data) && isset(optional($data)['numero']))
-                                                <td  class="py-4"><p>{{ $orderDates[optional($data)['numero']] }} </p></td>
-                                                <td  class="py-4"><p>{{ $trackingCodeUser[optional($data)['numero']] }}  </p></td>
+                                                <td  class="py-4"><p>{{ optional($orderDates[optional($data)['numero']])->order_date }} </p></td>
+                                                <td  class="py-4"><p>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}  </p></td>
                                                 <td  class="py-4"><p>{{ optional($data)['numero'] }}</p></td>
                                                 <td  class="py-4"><p><span>{{ optional($data)['categoria'] }}</span></p></td>
                                                 <td  class="py-4"><p>{{ optional(optional(optional($data)['evento'])[count($data['evento']) - 1])['data'] }}  </p></td>
@@ -253,6 +252,8 @@
             },
             "info": false
         });
+        document.getElementById("kpiHead").style.backgroundColor = "#eefafa";
+
         calculation();
     });
 
@@ -281,8 +282,8 @@
         var returnOrder = (returned / totalRecords * 100).toFixed(2);
         var inTransit = (inProcess / totalRecords * 100).toFixed(2);
         $('#total').html(totalRecords);
-        $('#delivered').html(deliveredOrder + ' %');
-        $('#taxed').html(taxOrder + ' %');
+        $('#delivered').html(parseInt(deliveredOrder) + ' %');
+        $('#taxed').html(parseInt(taxOrder) + ' %');
         $('#returned').html(returnOrder + ' %');
         $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
         document.getElementById("kpiHead").style.backgroundColor = "#eefafa";
