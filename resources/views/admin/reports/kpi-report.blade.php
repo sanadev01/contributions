@@ -153,9 +153,9 @@
                 </div>
                 {{-- table of kpi --}}
                 <div class="row">
-                    <table class="table  table-borderless p-0 table-responsive-md table-striped  " id="kpiReportTable">
+                    <table class="table  table-borderless p-0 table-responsive-md table-striped  " id="kpi-report">
                         <thead style="backgroud-color:#000" class="">
-                            <tr class="">
+                            <tr class="" id="kpiHead">
                                 <th class="py-4">Order Date</th>
                                 <th class="py-4">User</th>
                                 <th class="py-4">@lang('orders.Tracking')</th>
@@ -169,59 +169,21 @@
                                 <th class="py-4">@lang('orders.Returned')</th>
                             </tr>
                         </thead>
-                        <tbody> 
-                            <tr >
-                                <td class="py-4"><p>Order Date</p></td>
-                                <td  class="py-4"><p>User</p></td>
-                                <td  class="py-4"><p>@lang('orders.Tracking')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Type Package')</p></td>
-                                <td  class="py-4"><p>@lang('orders.First Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Days Between')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Taxed')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Delivered')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Returned')</p></td>
+                        <tfoot class="search-header">
+                            <tr>
+                                <th>Order Date</th>
+                                <th>User</th>
+                                <th>Tracking</th>
+                                <th>Type Package</th>
+                                <th>First Event</th>
+                                <th>Last Event</th>
+                                <th>Days Between</th>
+                                <th>Last Event</th>
+                                <th>Taxed</th>
+                                <th>Delivered</th>
+                                <th>Returned</th>
                             </tr>
-                            <tr >
-                                <td class="py-4"><p>Order Date</p></td>
-                                <td  class="py-4"><p>User</p></td>
-                                <td  class="py-4"><p>@lang('orders.Tracking')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Type Package')</p></td>
-                                <td  class="py-4"><p>@lang('orders.First Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Days Between')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Taxed')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Delivered')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Returned')</p></td>
-                            </tr>
-                            <tr >
-                                <td class="py-4"><p>Order Date</p></td>
-                                <td  class="py-4"><p>User</p></td>
-                                <td  class="py-4"><p>@lang('orders.Tracking')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Type Package')</p></td>
-                                <td  class="py-4"><p>@lang('orders.First Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Days Between')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Taxed')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Delivered')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Returned')</p></td>
-                            </tr>
-                            <tr >
-                                <td class="py-4"><p>Order Date</p></td>
-                                <td  class="py-4"><p>User</p></td>
-                                <td  class="py-4"><p>@lang('orders.Tracking')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Type Package')</p></td>
-                                <td  class="py-4"><p>@lang('orders.First Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Days Between')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Taxed')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Delivered')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Returned')</p></td>
-                            </tr> 
+                        <tbody>  
                             @if ($trackings)
                                 @foreach ($trackings['return']['objeto'] as $data)
                                     @if (isset($data['evento']))
@@ -265,40 +227,67 @@
     <x-modal />
 @endsection
 @section('js')
-    <script>
-        $(document).ready(function() {
-            calculation();
-        });
 
-        function calculation() {
-            var totalRecords = $('#kpiReportTable tbody').find('tr.count').length;
-            var taxed = 0;
-            var returned = 0;
-            var delivered = 0;
-            var inProcess = 0;
-            $("table > tbody > tr").each(function() {
-                if ($(this).find('td').eq(8).text() == 'Yes') {
-                    taxed++;
-                }
-                if ($(this).find('td').eq(9).text() == 'Yes') {
-                    delivered++;
-                }
-                if ($(this).find('td').eq(10).text() == 'Yes') {
-                    returned++;
-                }
-                if ($(this).find('td').eq(9).text() == 'No') {
-                    inProcess++;
-                }
-            });
-            var taxOrder = (taxed / totalRecords * 100).toFixed(2);
-            var deliveredOrder = (delivered / totalRecords * 100).toFixed(2);
-            var returnOrder = (returned / totalRecords * 100).toFixed(2);
-            var inTransit = (inProcess / totalRecords * 100).toFixed(2);
-            $('#total').html(totalRecords);
-            $('#delivered').html(deliveredOrder);
-            $('#taxed').html(taxOrder + ' %');
-            $('#returned').html(returnOrder + ' %');
-            $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
-        }
-    </script>
+<script>
+    $(document).ready(function() {
+        $('#kpi-report tfoot th').each(function() {
+            var title = $(this).text();
+            $(this).html('<input type="text" class="form-control py-4" placeholder="Search ' + title + '" />');
+        });
+        var table = $('#kpi-report').DataTable({
+            "paging": false,
+            initComplete: function() {
+                this.api()
+                    .columns()
+                    .every(function() {
+                        var that = this;
+                        $('input', this.footer()).on('keyup change clear', function() {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                                // calculation();
+
+                            }
+                        });
+                    });
+            },
+            "info": false
+        });
+        document.getElementById("kpiHead").style.backgroundColor = "#eefafa";
+
+        // calculation();
+    });
+
+    function calculation() {
+        var totalRecords = $('#kpi-report tbody').find('tr.count').length;
+        var taxed = 0;
+        var returned = 0;
+        var delivered = 0;
+        var inProcess = 0;
+        $("table > tbody > tr").each(function() {
+            if ($(this).find('td').eq(8).text() == 'Yes') {
+                taxed++;
+            }
+            if ($(this).find('td').eq(9).text() == 'Yes') {
+                delivered++;
+            }
+            if ($(this).find('td').eq(10).text() == 'Yes') {
+                returned++;
+            }
+            if ($(this).find('td').eq(9).text() == 'No') {
+                inProcess++;
+            }
+        });
+        var taxOrder = (taxed / totalRecords * 100).toFixed(2);
+        var deliveredOrder = (delivered / totalRecords * 100).toFixed(2);
+        var returnOrder = (returned / totalRecords * 100).toFixed(2);
+        var inTransit = (inProcess / totalRecords * 100).toFixed(2);
+        $('#total').html(totalRecords);
+        $('#delivered').html(parseInt(deliveredOrder) + ' %');
+        $('#taxed').html(parseInt(taxOrder) + ' %');
+        $('#returned').html(returnOrder + ' %');
+        $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
+        document.getElementById("kpiHead").style.backgroundColor = "#eefafa";
+
+    }
+</script>
 @endsection
