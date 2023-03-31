@@ -147,14 +147,15 @@
                                         <th>Returned</th>
                                     </tr>
                                 </tfoot>
+ 
                                 <tbody>
                                     @if($trackings)
                                         @foreach($trackings['return']['objeto'] as $data)
                                             @if(isset($data['evento']))
                                             <tr class="count">
                                                 @if(optional($data) && isset(optional($data)['numero']))
-                                                    <td>{{ optional($orderDates[optional($data)['numero']])->order_date }}</td>
-                                                    <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}</td>
+                                                    <td>{{ $orderDates[optional($data)['numero']] }}</td>
+                                                    <td>{{ $trackingCodeUser[optional($data)['numero']] }}</td> 
                                                     <td>{{ optional($data)['numero'] }}</td>
                                                     <td><span>{{ optional($data)['categoria'] }}</span></td>
                                                     <td>{{ optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data'] }}</td>
