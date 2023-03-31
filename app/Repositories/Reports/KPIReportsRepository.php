@@ -61,8 +61,8 @@ class KPIReportsRepository
         $codesUsers =  [];
         $orderDate =  [];
         foreach($orders as $order) {
-            $codesUsers[$order->corrios_tracking_code] = $order->user;
-            $orderDate[$order->corrios_tracking_code] = $order;
+            $codesUsers[$order->corrios_tracking_code] = $order->user->pobox_name;
+            $orderDate[$order->corrios_tracking_code] = $order->order_date->format('m/d/Y');
         }
         $codes = $orders->pluck('corrios_tracking_code')->toArray();
         if(empty($codes)) {

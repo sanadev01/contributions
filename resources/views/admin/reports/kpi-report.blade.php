@@ -190,11 +190,11 @@
                                             <tr class="count">
                                                 @if (optional($data) && isset(optional($data)['numero']))
                                                     <td class="py-3">
-                                                        <p>{{ optional($orderDates[optional($data)['numero']])->order_date }}
+                                                        <p>{{ $orderDates[optional($data)['numero']] }}
                                                         </p>
                                                     </td>
                                                     <td class="py-3">
-                                                        <p>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}
+                                                        <p>{{ $trackingCodeUser[optional($data)['numero']] }}
                                                         </p>
                                                     </td>
                                                     <td class="py-3">
