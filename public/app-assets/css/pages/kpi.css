@@ -71,7 +71,7 @@ a.imagecard:hover,
 }
 
 .icon-background {
-    padding: 15px 10px;
+    padding: 15px 10px !important;
     border-radius: 11px;
 }
 #filter-card:hover {
@@ -125,3 +125,56 @@ th > span{
 #kpiReportTable tr:last-child td:last-child { border-bottom-right-radius: 10px; }
 #kpiReportTable tr:first-child th:first-child { border-top-left-radius: 10px; }
 #kpiReportTable tr:first-child th:last-child { border-top-right-radius: 10px;}
+
+@media screen and (min-width: 1000px) and (max-width: 1540px) {
+
+    .imagecard:first-child {
+        padding: 0px !important;
+        margin: 0px !important;
+      }
+      .custom-cards{
+        /* padding: 5px 10px !important;  */
+        margin-bottom: 15px !important;
+      }
+      .card-body {
+        padding: 0px !important;
+      }
+      input{        
+      height:40px !important;
+      padding: 0px !important;
+      }
+      textarea{         
+      height:40px !important;;
+      }
+      label{
+        margin-top: 10px !important; 
+      }
+      .filter-card h4{
+        margin: 0px !important;
+      }
+
+}
+
+
+@media screen and (min-width: 0px) and (max-width: 1000px) {
+
+    .imagecard {
+        padding: 0px !important;
+        margin: 0px !important;
+      }
+      .custom-cards{
+        /* padding: 5px 10px !important;  */
+        margin-bottom: 15px !important;
+      }
+      .card-body {
+        padding: 0px !important;
+      } 
+      label{
+        margin-top: 2px 0px !important; 
+         
+      }
+      .filter-card h4{
+        margin: 0px !important;
+      }
+
+}

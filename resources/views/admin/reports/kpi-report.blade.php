@@ -31,7 +31,7 @@
                                 {{-- contanct us banner end --}}
                                 {{-- orders details cards --}}
                                 <div class="row d-flex justify-content-between">
-                                    <div class="col-md-3 col-sm-6  ">
+                                    <div class="col-md-3 col-sm-6 custom-cards ">
                                         <div class="card imagecard imagecard-topimage pr-lg-2 mr-lg-2">
                                             <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #EEFAFA">
                                                   <img src="{{ asset('app-assets/images/icons/chart.svg') }}" class="icon" width="60" height="60" />
@@ -44,7 +44,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-sm-6">
+                                    <div class="col-md-3 col-sm-6  custom-cards">
                                         <div class="card imagecard imagecard-topimage">
 
                                             <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #fff9eb">
@@ -59,7 +59,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-sm-6"> 
+                                    <div class="col-md-3 col-sm-6  custom-cards"> 
                                         <div class="card imagecard imagecard-topimage"> 
                                             <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #eefafa">
                                                  <img src="{{ asset('app-assets/images/icons/delivered.svg') }}"  class="icon" width="60" height="60" />
@@ -72,7 +72,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-sm-6  ">
+                                    <div class="col-md-3 col-sm-6  custom-cards ">
                                         <div class="card imagecard imagecard-topimage ml-xl-2 pl-xl-2">
                                             <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #fbeffb">
                                                <img src="{{ asset('app-assets/images/icons/retured.svg') }}"  class="icon" width="60" height="60" />  
@@ -125,7 +125,7 @@
                                         <div class="d-flex justify-content-between mt-4 mb-3">
                                             <div>
                                                 <button type="submit"
-                                                    class="btn btn-outline-success btn-lg px-3 py-1">Check
+                                                    class="btn btn-outline-success   px-3 py-1">Check
                                                     Details</button>
                                             </div>
                                             <div>
@@ -139,7 +139,7 @@
                                             <input type="hidden" name="trackingCodeUser"
                                                 value="{{ collect($trackingCodeUser) }}">
                                         @endif
-                                        <button type="submit" class="btn btn-success btn-lg px-3 py-1 px-3 py-1"
+                                        <button type="submit" class="btn btn-success  px-3 py-1 px-3 py-1"
                                             {{ !empty($trackings) ? '' : 'disabled' }}> <i class="fa fa-download"></i>
                                             Download </button>
                                     </form>
