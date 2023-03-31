@@ -172,7 +172,7 @@
                             </tr>
                         </thead>
                         <tfoot class="search-header">
-                            <tr>
+                            <tr id="kpiHeadSearch">
                                 <th>Order Date</th>
                                 <th>User</th>
                                 <th>Tracking</th>
@@ -281,6 +281,7 @@
                 "info": false
             });
             document.getElementById("kpiHead").style.backgroundColor = "#eefafa";
+            document.getElementById("kpiHeadSearch").style.backgroundColor = "#eefafa";
 
             calculation();
         });
@@ -314,7 +315,8 @@
             $('#taxed').html(parseInt(taxOrder) + ' %');
             $('#returned').html(returnOrder + ' %');
             $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
-            document.getElementById("kpiHead").style.backgroundColor = "#eefafa";
+            document.getElementById("kpiHead").style.backgroundColor = "#eefafa"
+            document.getElementById("kpiHeadSearch").style.backgroundColor = "#eefafa";
 
         }
     </script>
