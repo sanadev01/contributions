@@ -109,7 +109,7 @@
                                 </div>
                             </div>
                             <table class="table mb-0 table-responsive-md" id="kpi-report">
-                                <thead>
+                                <thead >
                                     <tr>
                                         <th>Order Date</th>
                                         <th>User</th>
@@ -145,7 +145,7 @@
                                             @if(isset($data['evento']) && optional(optional(optional($data)['evento'])[0])['descricao']=='Aguardando pagamento')
                                             <tr class="count">
                                                 @if(optional($data) && isset(optional($data)['numero']))
-                                                    <td>{{ optional($orderDates[optional($data)['numero']])->order_date }}</td>
+                                                    <td>{{ optional($orderDates[optional($data)['numero']])->order_date->format('m/d/Y') }}</td>
                                                     <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}</td>
                                                     <td>{{ optional($data)['numero'] }}</td>
                                                     <td><span>{{ optional($data)['categoria'] }}</span></td>

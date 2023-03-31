@@ -33,13 +33,13 @@
                                 <div class="row d-flex justify-content-between">
                                     <div class="col-md-3 col-sm-6  ">
                                         <div class="card imagecard imagecard-topimage pr-lg-2 mr-lg-2">
-                                            <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #EEFAFA">
+                                            <div class="icon-background mx-4 px-5 my-3 py-4 d-flex justify-content-center"  style="background-color: #EEFAFA">
                                                   <img src="{{ asset('app-assets/images/icons/chart.svg') }}" class="icon" width="60" height="60" />
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-2 " id="total">0 </h3>
-                                                    <p class="text-center display-5">Total Orders</p>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="total">0 </h3>
+                                                    <p class="text-center card-body-description">Total Orders</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -47,40 +47,40 @@
                                     <div class="col-md-3 col-sm-6">
                                         <div class="card imagecard imagecard-topimage">
 
-                                            <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #fff9eb">
+                                            <div class="icon-background mx-4 px-5 my-3 py-4 d-flex justify-content-center"  style="background-color: #fff9eb">
                                                    <img src="{{ asset('app-assets/images/icons/tax.svg') }}" class="icon" width="60" height="60" />  
 
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-2 " id="taxed">0 </h3>
-                                                    <p class="text-center display-5">Taxed</p>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="taxed">0 </h3>
+                                                    <p class="text-center card-body-description">Taxed</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-6"> 
                                         <div class="card imagecard imagecard-topimage"> 
-                                            <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #eefafa">
+                                            <div class="icon-background mx-4 px-5 my-3 py-4 d-flex justify-content-center"  style="background-color: #eefafa">
                                                  <img src="{{ asset('app-assets/images/icons/delivered.svg') }}"  class="icon" width="60" height="60" />
                                             </div>
                                             <div class="card-body">
                                                 <div>                                                    
-                                                    <h3 class="text-center font-weight-bold my-2 " id="delivered">0 </h3>
-                                                    <p class="text-center display-5">Delivered</p>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="delivered">0 </h3>
+                                                    <p class="text-center card-body-description">Delivered</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-6  ">
                                         <div class="card imagecard imagecard-topimage ml-xl-2 pl-xl-2">
-                                            <div class="icon-background m-4 p-5 d-flex justify-content-center"  style="background-color: #fbeffb">
+                                            <div class="icon-background mx-4 px-5 my-3 py-4 d-flex justify-content-center"  style="background-color: #fbeffb">
                                                <img src="{{ asset('app-assets/images/icons/retured.svg') }}"  class="icon" width="60" height="60" />  
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-2 " id="retured">0 </h3>
-                                                    <p class="text-center display-5">Retured</p>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="retured">0 </h3>
+                                                    <p class="text-center card-body-description">Retured</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -152,12 +152,12 @@
                     {{-- Report Generato end --}}
                 </div>
                 {{-- table of kpi --}}
-                <div class="row">
-                    <table class="table  table-borderless p-0 table-responsive-md table-striped  " id="kpiReportTable">
-                        <thead style="backgroud-color:#000" class="">
-                            <tr class="">
-                                <th class="py-4">Order Date</th>
-                                <th class="py-4">User</th>
+                <div class="row  mx-sm-0 mx-lg-1">
+                    <table class=" table  table-borderless p-0 table-responsive-md table-striped  " id="kpi-report">
+                        <thead  >
+                            <tr class="" id="kpiHead">
+                                <th class="py-4" >Order Date</th>
+                                <th class="py-4"  >User</th>
                                 <th class="py-4">@lang('orders.Tracking')</th>
                                 <th class="py-4">@lang('orders.Type Package')</th>
                                 <th class="py-4">@lang('orders.First Event')</th>
@@ -168,67 +168,30 @@
                                 <th class="py-4">@lang('orders.Delivered')</th>
                                 <th class="py-4">@lang('orders.Returned')</th>
                             </tr>
-                        </thead>
-                        <tbody> 
-                            <tr >
-                                <td class="py-4"><p>Order Date</p></td>
-                                <td  class="py-4"><p>User</p></td>
-                                <td  class="py-4"><p>@lang('orders.Tracking')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Type Package')</p></td>
-                                <td  class="py-4"><p>@lang('orders.First Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Days Between')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Taxed')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Delivered')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Returned')</p></td>
+                        </thead>                        
+                        <tfoot class="search-header">
+                            <tr>
+                                <th>Order Date</th>
+                                <th>User</th>
+                                <th>Tracking</th>
+                                <th>Type Package</th>
+                                <th>First Event</th>
+                                <th>Last Event</th>
+                                <th>Days Between</th>
+                                <th>Last Event</th>
+                                <th>Taxed</th>
+                                <th>Delivered</th>
+                                <th>Returned</th>
                             </tr>
-                            <tr >
-                                <td class="py-4"><p>Order Date</p></td>
-                                <td  class="py-4"><p>User</p></td>
-                                <td  class="py-4"><p>@lang('orders.Tracking')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Type Package')</p></td>
-                                <td  class="py-4"><p>@lang('orders.First Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Days Between')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Taxed')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Delivered')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Returned')</p></td>
-                            </tr>
-                            <tr >
-                                <td class="py-4"><p>Order Date</p></td>
-                                <td  class="py-4"><p>User</p></td>
-                                <td  class="py-4"><p>@lang('orders.Tracking')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Type Package')</p></td>
-                                <td  class="py-4"><p>@lang('orders.First Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Days Between')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Taxed')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Delivered')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Returned')</p></td>
-                            </tr>
-                            <tr >
-                                <td class="py-4"><p>Order Date</p></td>
-                                <td  class="py-4"><p>User</p></td>
-                                <td  class="py-4"><p>@lang('orders.Tracking')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Type Package')</p></td>
-                                <td  class="py-4"><p>@lang('orders.First Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Days Between')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Last Event')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Taxed')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Delivered')</p></td>
-                                <td  class="py-4"><p>@lang('orders.Returned')</p></td>
-                            </tr> 
+                        </tfoot>
+                        <tbody>
                             @if ($trackings)
                                 @foreach ($trackings['return']['objeto'] as $data)
                                     @if (isset($data['evento']))
                                         <tr class="count">
                                             @if (optional($data) && isset(optional($data)['numero']))
-                                                <td  class="py-4"><p>{{ optional($orderDates[optional($data)['numero']])->order_date }} </p></td>
-                                                <td  class="py-4"><p>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}  </p></td>
+                                                <td  class="py-4"><p>{{ $orderDates[optional($data)['numero']] }} </p></td>
+                                                <td  class="py-4"><p>{{ $trackingCodeUser[optional($data)['numero']] }}  </p></td>
                                                 <td  class="py-4"><p>{{ optional($data)['numero'] }}</p></td>
                                                 <td  class="py-4"><p><span>{{ optional($data)['categoria'] }}</span></p></td>
                                                 <td  class="py-4"><p>{{ optional(optional(optional($data)['evento'])[count($data['evento']) - 1])['data'] }}  </p></td>
@@ -265,40 +228,69 @@
     <x-modal />
 @endsection
 @section('js')
-    <script>
-        $(document).ready(function() {
-            calculation();
-        });
 
-        function calculation() {
-            var totalRecords = $('#kpiReportTable tbody').find('tr.count').length;
-            var taxed = 0;
-            var returned = 0;
-            var delivered = 0;
-            var inProcess = 0;
-            $("table > tbody > tr").each(function() {
-                if ($(this).find('td').eq(8).text() == 'Yes') {
-                    taxed++;
-                }
-                if ($(this).find('td').eq(9).text() == 'Yes') {
-                    delivered++;
-                }
-                if ($(this).find('td').eq(10).text() == 'Yes') {
-                    returned++;
-                }
-                if ($(this).find('td').eq(9).text() == 'No') {
-                    inProcess++;
-                }
-            });
-            var taxOrder = (taxed / totalRecords * 100).toFixed(2);
-            var deliveredOrder = (delivered / totalRecords * 100).toFixed(2);
-            var returnOrder = (returned / totalRecords * 100).toFixed(2);
-            var inTransit = (inProcess / totalRecords * 100).toFixed(2);
-            $('#total').html(totalRecords);
-            $('#delivered').html(deliveredOrder);
-            $('#taxed').html(taxOrder + ' %');
-            $('#returned').html(returnOrder + ' %');
-            $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
-        }
-    </script>
+<script>
+    $(document).ready(function() {
+        $('#kpi-report tfoot th').each(function() {
+            var title = $(this).text();
+            $(this).html('<input type="text" class="form-control py-4" placeholder="Search ' + title +
+                '" />');
+        });
+        var table = $('#kpi-report').DataTable({
+            "paging": false,
+            initComplete: function() {
+                this.api()
+                    .columns()
+                    .every(function() {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change clear', function() {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                                calculation();
+                         document.getElementById("kpiHead").style.backgroundColor = "#eefafa";
+
+                            }
+                        });
+                    });
+            },
+            "info": false
+        });
+        calculation();
+        document.getElementById("kpiHead").style.backgroundColor = "#eefafa";
+    });
+
+    function calculation() {
+        var totalRecords = $('#kpi-report tbody').find('tr.count').length;
+        var taxed = 0;
+        var returned = 0;
+        var delivered = 0;
+        var inProcess = 0;
+        $("table > tbody > tr").each(function() {
+            if ($(this).find('td').eq(8).text() == 'Yes') {
+                taxed++;
+            }
+            if ($(this).find('td').eq(9).text() == 'Yes') {
+                delivered++;
+            }
+            if ($(this).find('td').eq(10).text() == 'Yes') {
+                returned++;
+            }
+            if ($(this).find('td').eq(9).text() == 'No') {
+                inProcess++;
+            }
+        });
+        var taxOrder = (taxed / totalRecords * 100).toFixed(2);
+        var deliveredOrder = (delivered / totalRecords * 100).toFixed(2);
+        var returnOrder = (returned / totalRecords * 100).toFixed(2);
+        var inTransit = (inProcess / totalRecords * 100).toFixed(2);
+        $('#total').html(totalRecords);
+        $('#delivered').html(deliveredOrder + ' %');
+        $('#taxed').html(taxOrder + ' %');
+        $('#returned').html(returnOrder + ' %');
+        $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
+        document.getElementById("kpiHead").style.backgroundColor = "#eefafa";
+
+    }
+</script>
 @endsection
