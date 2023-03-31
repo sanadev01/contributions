@@ -23,8 +23,8 @@
                                 </div> --}}
                                 <div class="">
                                     <div class="row mt-0">
-                                        <div class="col-12 pb-xl-3 pb-2 h-25">
-                                            <a href="{{ url('tickets') }}"> <img class="banner" src="{{ asset('images/kpi-banner.png') }}" width="100%" height="8%" alt="contact us"> </a>
+                                        <div class="col-12 pb-xl-2 pb-1 h-25">
+                                            <a href="{{ url('tickets') }}"> <img class="banner" src="{{ asset('images/kpi-banner.png') }}" width="100%" height="auto" alt="contact us"> </a>
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +38,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-2 " id="total">0 </h3>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="total">0 </h3>
                                                     <p class="text-center display-5">Total Orders</p>
                                                 </div>
                                             </div>
@@ -53,7 +53,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-2 " id="taxed">0 </h3>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="taxed">0 </h3>
                                                     <p class="text-center display-5">Taxed</p>
                                                 </div>
                                             </div>
@@ -66,7 +66,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>                                                    
-                                                    <h3 class="text-center font-weight-bold my-2 " id="delivered">0 </h3>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="delivered">0 </h3>
                                                     <p class="text-center display-5">Delivered</p>
                                                 </div>
                                             </div>
@@ -79,7 +79,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-2 " id="retured">0 </h3>
+                                                    <h3 class="text-center font-weight-bold my-1 " id="retured">0 </h3>
                                                     <p class="text-center display-5">Retured</p>
                                                 </div>
                                             </div>
@@ -93,9 +93,9 @@
                             {{-- Report Report  --}}
                             <div class=" col-lg-4 col-sm-12 d-flex flex-column justify-content-center " >
                                 <div class="filter-card " id="filter-card">
-                                    <h3 class="text-center m-4 font-weight-bold">
+                                    <h4 class="text-center m-4 font-weight-bold">
                                         Report Generator
-                                    </h3>
+                                    </h4>
                                     <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
                                         <label for="startDate " class="mt-3 mb-2 ">Start Date</label><br>
                                         <div class="input-group">
@@ -152,7 +152,7 @@
                     {{-- Report Generato end --}}
                 </div>
                 {{-- table of kpi --}}
-                <div class="row">
+                <div class="">
                     <table class="table  table-borderless p-0 table-responsive-md table-striped  " id="kpi-report">
                         <thead style="backgroud-color:#000" class="">
                             <tr class="" id="kpiHead">
@@ -244,7 +244,7 @@
                         $('input', this.footer()).on('keyup change clear', function() {
                             if (that.search() !== this.value) {
                                 that.search(this.value).draw();
-                                // calculation();
+                                calculation();
 
                             }
                         });
@@ -254,7 +254,7 @@
         });
         document.getElementById("kpiHead").style.backgroundColor = "#eefafa";
 
-        // calculation();
+        calculation();
     });
 
     function calculation() {
