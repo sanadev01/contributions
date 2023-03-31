@@ -295,7 +295,7 @@ class User extends Authenticatable
 
     public function getPoboxNameAttribute()
     {
-        return  $this->full_name.''.$this->pobox_number;
+        return  $this->name.' '.$this->pobox_number;
     }
     
     public function isActive(){
