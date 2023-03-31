@@ -260,7 +260,7 @@
         $(document).ready(function() {
             $('#kpi-report tfoot th').each(function() {
                 var title = $(this).text();
-                $(this).html('<input type="text" class="form-control py-4" placeholder="Search ' + title +
+                $(this).html('<input id="tableInput" type="text" class="form-control py-4" placeholder="Search ' + title +
                     '" />');
             });
             var table = $('#kpi-report').DataTable({
@@ -292,7 +292,7 @@
             var returned = 0;
             var delivered = 0;
             var inProcess = 0;
-            $("table > tbody > tr").each(function() {
+            $(".count").each(function() {
                 if ($(this).find('td').eq(8).text() == 'Yes') {
                     taxed++;
                 }
@@ -311,8 +311,8 @@
             var returnOrder = (returned / totalRecords * 100).toFixed(2);
             var inTransit = (inProcess / totalRecords * 100).toFixed(2);
             $('#total').html(totalRecords);
-            $('#delivered').html(parseInt(deliveredOrder) + ' %');
-            $('#taxed').html(parseInt(taxOrder) + ' %');
+            $('#delivered').html(deliveredOrder + ' %');
+            $('#taxed').html(taxOrder + ' %');
             $('#returned').html(returnOrder + ' %');
             $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
             document.getElementById("kpiHead").style.backgroundColor = "#eefafa"
