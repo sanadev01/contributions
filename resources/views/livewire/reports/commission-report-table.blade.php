@@ -190,10 +190,10 @@
                 @endif
                 <tr>
                     <td colspan="3"></td>
-                    <td class="h3">Total</td>
+                    <td><h3>Total<h3></td>
                     <td class="h4">{{ number_format($users->sum('sale_count'),2) }} </td>
                     <td colspan="2" class="h4">{{ number_format($users->sum('commission'),2) }} </td>
-                 </tr>
+                </tr>
             </tbody>
         </table>
         <div class="d-flex justify-content-end px-3">
