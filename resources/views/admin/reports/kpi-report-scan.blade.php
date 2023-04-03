@@ -145,8 +145,8 @@
                                             @if(isset($data['evento']) && optional(optional(optional($data)['evento'])[0])['descricao']=='Aguardando pagamento')
                                             <tr class="count">
                                                 @if(optional($data) && isset(optional($data)['numero']))
-                                                    <td>{{ optional($orderDates[optional($data)['numero']])->order_date->format('m/d/Y') }}</td>
-                                                    <td>{{ optional($trackingCodeUser[optional($data)['numero']])->pobox_name }}</td>
+                                                    <td>{{ optional($orderDates[optional($data)['numero']]) }}</td>
+                                                    <td>{{ optional($trackingCodeUser[optional($data)['numero']]) }}</td>
                                                     <td>{{ optional($data)['numero'] }}</td>
                                                     <td><span>{{ optional($data)['categoria'] }}</span></td>
                                                     <td>{{ optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data'] }}</td>
