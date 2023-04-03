@@ -188,6 +188,12 @@
                         </tr>
                     @endforeach
                 @endif
+                <tr>
+                    <td colspan="3"></td>
+                    <td><strong>Total<strong></td>
+                    <td class="h4">{{ number_format($users->sum('sale_count'),2) }} </td>
+                    <td colspan="2" class="h4">{{ number_format($users->sum('commission'),2) }} </td>
+                </tr>
             </tbody>
         </table>
         <div class="d-flex justify-content-end px-3">
