@@ -19,6 +19,7 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Models\AffiliateSale;
 
 /*
 |--------------------------------------------------------------------------
@@ -296,4 +297,11 @@ Route::get('permission',function($id = null){
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
 
+Route::get('commission-report', function(){
+  
+    AffiliateSale::where('is_paid',1)->update([
+     'is_paid' => 0, 
+ ]); 
+ return 'all commissions status changed.';
+});   
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
