@@ -79,13 +79,13 @@
                                         <div class="card imagecard imagecard-topimage ml-xl-2 pl-xl-2">
                                             <div class="icon-background m-4 p-5 d-flex justify-content-center"
                                                 style="background-color: #fbeffb">
-                                                <img src="{{ asset('app-assets/images/icons/retured.svg') }}" class="icon"
+                                                <img src="{{ asset('app-assets/images/icons/returned.svg') }}" class="icon"
                                                     width="60" height="60" />
                                             </div>
                                             <div class="card-body">
                                                 <div>
                                                     <h3 class="text-center font-weight-bold my-1 " id="returned">0 </h3>
-                                                    <p class="text-center display-5">Retured</p>
+                                                    <p class="text-center display-5">Returned</p>
                                                 </div>
                                             </div>
                                         </div>
