@@ -40,7 +40,7 @@
                                             <div class="card-body">
                                                 <div>
                                                     <h3 class="text-center font-weight-bold my-1 " id="total">0 </h3>
-                                                    <p class="text-center display-5">Total Orders</p>
+                                                    <p class="text-center display-5"><strong>Total Orders</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -55,7 +55,7 @@
                                             <div class="card-body">
                                                 <div>
                                                     <h3 class="text-center font-weight-bold my-1 " id="taxed">0 </h3>
-                                                    <p class="text-center display-5">Taxed</p>
+                                                    <p class="text-center display-5"><strong>Taxed</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -70,7 +70,7 @@
                                             <div class="card-body">
                                                 <div>
                                                     <h3 class="text-center font-weight-bold my-1 " id="delivered">0 </h3>
-                                                    <p class="text-center display-5">Delivered</p>
+                                                    <p class="text-center display-5"><strong>Delivered</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -85,7 +85,7 @@
                                             <div class="card-body">
                                                 <div>
                                                     <h3 class="text-center font-weight-bold my-1 " id="returned">0 </h3>
-                                                    <p class="text-center display-5">Returned</p>
+                                                    <p class="text-center display-5"><strong>Returned</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -100,17 +100,17 @@
                                         Report Generator
                                     </h4>
                                     <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
-                                        <label for="startDate " class="mt-3 mb-2 ">Start Date</label><br>
+                                        <label for="startDate " class="mt-3 mb-2 "><strong>Start Date</strong></label><br>
                                         <div class="input-group">
                                             <input class="form-control py-2 mr-1 p-3" type="date" name="start_date"
                                                 id="startDate">
                                         </div>
-                                        <label for="end-date" class="mt-4 mb-2"> End Date</label><br>
+                                        <label for="end-date" class="mt-4 mb-2"><strong>End Date</strong></label><br>
                                         <div class="input-group">
                                             <input name="end_date" id="endDate" class="form-control py-2 mr-1 p-3"
                                                 type="date">
                                         </div>
-                                        <label for="tracking_code" class="mt-4 mb-2">Tracking Code</label><br>
+                                        <label for="tracking_code" class="mt-4 mb-2"><strong>Tracking Code</strong></label><br>
                                         <div class="input-group">
                                             <textarea id="tracking_code" value="tracking code" type="text" placeholder="Please Enter Tracking Codes"
                                                 rows="4" class="form-control py-2 mr-1" name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
