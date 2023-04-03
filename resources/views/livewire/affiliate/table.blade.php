@@ -2,8 +2,10 @@
     @admin
         <div class="row">
             <div class="col-12 text-right mb-3">
-                <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $ {{ number_format($balance->where('is_paid', true)->sum('value'), 2) }}</span></p>
-                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $ {{ number_format($balance->where('is_paid', false)->sum('value'), 2) }}</span></p>
+                <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $
+                        {{ number_format($balance->where('is_paid', true)->sum('value'), 2) }}</span></p>
+                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $
+                        {{ number_format($balance->where('is_paid', false)->sum('value'), 2) }}</span></p>
             </div>
         </div>
     @endadmin
@@ -20,7 +22,8 @@
             </select>
         </div>
         <div class="col-11 text-right">
-            <form action="{{ route('admin.affiliate.sale.exports') }}" method="GET" target="_blank" class="row col-12">
+            <form action="{{ route('admin.affiliate.sale.exports') }}" id="affiliateSale" method="GET"
+                class="row col-12">
                 @csrf
                 <div class="col-2">
                     <label class="pull-left">@lang('sales-commission.start date')</label>
@@ -36,13 +39,14 @@
                     <label class="pull-left">@lang('parcel.User POBOX Number')</label>
                     <livewire:components.search-user />
                 </div>
+                <input name="status" type="hidden">
                 <div class="col-2">
                     <label class="pull-left">@lang('Type')</label>
-                    <select type="text" name="status" class="form-control">
+                    <select type="text" id="choose_status" name="choose_status" class="form-control" required>
                         <option value="">Select option</option>
                         <option value="downlaod">Download Report</option>
-                        @if(Auth::user()->isAdmin())
-                            <option value="toPay">Pay Commissions</option>
+                        @if (Auth::user()->isAdmin())
+                            <option value="confirmToPay">Pay Commissions</option>
                         @endif
                     </select>
                 </div>
@@ -96,12 +100,12 @@
                             <input type="date" class="form-control col-md-6" wire:model.debounce.1000ms="start">
                             <input type="date" class="form-control col-md-6" wire:model.debounce.1000ms="end">
                         </div>
-                        
+
                     </th>
                     @admin
-                    <th>
-                        <input type="search" class="form-control" wire:model.debounce.1000ms="name">
-                    </th>
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="name">
+                        </th>
                     @endadmin
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="user">
@@ -125,11 +129,11 @@
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="weight">
                     </th>
-                    
+
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="value">
                     </th>
-                    <th >
+                    <th>
                         <select class="form-control" wire:model="saleType">
                             <option value="">All</option>
                             <option value="flat">Flat</option>
@@ -148,7 +152,7 @@
             </thead>
             <tbody>
                 @forelse ($sales as $sale)
-                    @include('admin.affiliate.components.sale-row',['sale'=>$sale])    
+                    @include('admin.affiliate.components.sale-row', ['sale' => $sale])
                 @empty
                     <x-tables.no-record colspan="15"></x-tables.no-record>
                 @endforelse
@@ -160,3 +164,56 @@
     </div>
     @include('layouts.livewire.loading')
 </div>
+
+<div class="modal fade" id="toPay" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="col-8">
+                    <h4>
+                        Confirm to Pay Commission
+                    </h4>
+                </div>
+            </div>
+            <div class="modal-body" style="font-size: 15px;">
+                <p>
+                    Are you Sure want to Pay
+                </p>
+                <input type="hidden" name="command" id="command" value="">
+                <input type="hidden" name="data" id="data" value="">
+            </div>
+            <div class="modal-footer"> 
+
+                <button type="submit" class="btn btn-primary" id="payConfirmed"> Yes Pay</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('consolidation.Cancel')</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section('js')
+
+    <script>
+        $(document).on("submit", "#affiliateSale", function(e) {
+            if ($("select[name=choose_status]").val() == "confirmToPay") {
+                e.preventDefault();
+
+
+                $('#toPay').modal('show');
+            }
+        });
+
+        $('#payConfirmed').click(function() {
+            $("input[name=status]").val('toPay').change();
+            $("select[name=choose_status]").val('toPay').change();
+            $("#affiliateSale").submit();
+        });
+
+        $("#choose_status").on('change', function() {
+            selected = $("select[name=choose_status]").val()
+            if (selected) { 
+                let value = selected == "confirmToPay" || selected == "toPay" ? "toPay" : "download"
+                $("input[name=status]").val(value).change();
+            }
+        });
+    </script>
