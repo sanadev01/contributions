@@ -71,8 +71,8 @@
                                                     @if ($trackings)
                                                         <input type="hidden" name="order"
                                                             value="{{ collect($trackings['return']['objeto']) }}">
-                                                        <input type="hidden" name="trackingCodeUser"
-                                                            value="{{ collect($trackingCodeUser) }}">
+                                                        <input type="hidden" name="trackingCodeUsersName"
+                                                            value="{{ collect($trackingCodeUsersName) }}">
                                                         <input type="hidden" name="orderDates"
                                                             value="{{ collect($orderDates) }}">
                                                     @endif
@@ -145,8 +145,8 @@
                                             @if(isset($data['evento']) && optional(optional(optional($data)['evento'])[0])['descricao']=='Aguardando pagamento')
                                             <tr class="count">
                                                 @if(optional($data) && isset(optional($data)['numero']))
-                                                    <td>{{ optional($orderDates[optional($data)['numero']]) }}</td>
-                                                    <td>{{ optional($trackingCodeUser[optional($data)['numero']]) }}</td>
+                                                    <td>{{ $orderDates[optional($data)['numero']] }}</td>
+                                                    <td>{{ $trackingCodeUsersName[optional($data)['numero']] }}</td>
                                                     <td>{{ optional($data)['numero'] }}</td>
                                                     <td><span>{{ optional($data)['categoria'] }}</span></td>
                                                     <td>{{ optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data'] }}</td>

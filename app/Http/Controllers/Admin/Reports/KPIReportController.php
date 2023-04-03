@@ -21,7 +21,7 @@ class KPIReportController extends Controller
     {
         $this->authorize('viewKPIReport',Reports::class);
         $trackings = [];
-        $trackingCodeUser = [];
+        $trackingCodeUsersName = [];
         $orderDates = [];
         if($request->start_date && $request->end_date || $request->trackingNumbers) {
             try{ 
@@ -32,19 +32,19 @@ class KPIReportController extends Controller
                 return back(); 
             }
             $trackings = $response['trackings'];
-            $trackingCodeUser = $response['trackingCodeUser'];
+            $trackingCodeUsersName = $response['trackingCodeUsersName'];
             $orderDates = $response['orderDates'];
         }
-        return view('admin.reports.kpi-report', compact('trackings','trackingCodeUser', 'orderDates'));
+        return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates'));
     }
     public function store(Request $request)
     {
         if($request->order){
             $trackings = json_decode($request->order, true);
-            $trackingCodeUser =json_decode($request->trackingCodeUser, true);
+            $trackingCodeUsersName =json_decode($request->trackingCodeUsersName, true);
             $orderDates =json_decode($request->orderDates, true);
             
-            $exportService = new KPIReport($trackings,$trackingCodeUser, $orderDates, null);
+            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, null);
             return $exportService->handle();
         }
     } 
