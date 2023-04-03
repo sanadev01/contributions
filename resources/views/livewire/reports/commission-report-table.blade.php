@@ -129,7 +129,7 @@
             </thead>
             <tbody>
                 @if(\Auth::user()->isAdmin())
-               
+                
                     @foreach($users as $user)
                         <tr>
                             <td class="details-control">
