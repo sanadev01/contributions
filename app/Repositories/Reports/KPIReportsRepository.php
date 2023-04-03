@@ -58,15 +58,19 @@ class KPIReportsRepository
         }
 
         $orders = ($orders->get());  
-        $codesUsers =  [];
+        $codesUsersName =  [];
         $orderDate =  [];
         foreach($orders as $order) {
-            $codesUsers[$order->corrios_tracking_code] = $order->user->pobox_name;
+            $codesUsersName[$order->corrios_tracking_code] = $order->user->name;
             $orderDate[$order->corrios_tracking_code] = $order->order_date->format('m/d/Y');
         }
         $codes = $orders->pluck('corrios_tracking_code')->toArray();
         if(empty($codes)) {
-         return ['trackings'=>[],'trackingCodeUser'=>[], 'orderDates' => []];
+         return [
+            'trackings'=>[],
+            'trackingCodeUsersName'=>[],
+             'orderDates' => []
+         ];
         }
         $client = new SoapClient($this->wsdlUrl, array('trace'=>1));
         $request_param = array(
@@ -85,7 +89,11 @@ class KPIReportsRepository
         if($trackings['return']['qtd'] == "1") {
             $trackings['return']['objeto'] = array($trackings['return']['objeto']); ## if you send only one tracking you need to add an array before the content to follow the pattern
         } 
-        return ['trackings'=>$trackings,'trackingCodeUser'=>$codesUsers, 'orderDates'=>$orderDate];
+        return [
+            'trackings'=>$trackings,
+            'trackingCodeUsersName'=> $codesUsersName,
+             'orderDates'=>$orderDate
+        ];
     }
 
 }
