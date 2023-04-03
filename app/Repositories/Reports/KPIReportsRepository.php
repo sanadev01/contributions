@@ -66,7 +66,7 @@ class KPIReportsRepository
         }
         $codes = $orders->pluck('corrios_tracking_code')->toArray();
         if(empty($codes)) {
-         return ['trackings'=>[],'trackingCodeUser'=>[], 'orderDates' => []];
+         return ['trackings'=>[],'trackingCodeUsersName'=>[], 'orderDates' => []];
         }
         $client = new SoapClient($this->wsdlUrl, array('trace'=>1));
         $request_param = array(
