@@ -157,14 +157,6 @@
                                 </a>
                             </td>
                         </tr>
-                        @if($loop->last)
-                         <tr>
-                            <td colspan="3"></td>
-                            <td class="h3">Total</td>
-                            <td class="h4">{{ number_format($users->sum('sale_count'),2) }} </td>
-                            <td colspan="2" class="h4">{{ number_format($users->sum('commission'),2) }} </td>
-                         </tr>
-                         @endif
                     @endforeach
                 @else
                     @foreach($users as $commission)
@@ -194,16 +186,14 @@
                                 </a>
                             </td>
                         </tr>
-                        @if($loop->last)
-                            <tr>
-                                <td colspan="3"></td>
-                                <td ><h3>Total</h3></td>
-                                <td class="h4">{{ number_format($users->sum('sale_count'),2) }} </td>
-                                <td colspan="2" class="h4">{{ number_format($users->sum('commission'),2) }} </td>
-                            </tr>
-                        @endif
                     @endforeach
                 @endif
+                <tr>
+                    <td colspan="3"></td>
+                    <td class="h3">Total</td>
+                    <td class="h4">{{ number_format($users->sum('sale_count'),2) }} </td>
+                    <td colspan="2" class="h4">{{ number_format($users->sum('commission'),2) }} </td>
+                 </tr>
             </tbody>
         </table>
         <div class="d-flex justify-content-end px-3">
