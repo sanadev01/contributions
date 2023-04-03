@@ -7,14 +7,14 @@ class KPIReport extends AbstractExportService
 
     private $currentRow = 1;
     private $isAwaiting = null;
-    private $trackingCodeUser;
+    private $trackingCodeUsersName;
     private $orderDates;
 
-    public function __construct($trackings,$trackingCodeUser, $orderDates, $isAwaiting)
+    public function __construct($trackings,$trackingCodeUsersName, $orderDates, $isAwaiting)
     {
         $this->isAwaiting = $isAwaiting;
         $this->trackings = $trackings;
-        $this->trackingCodeUser = $trackingCodeUser;
+        $this->trackingCodeUsersName = $trackingCodeUsersName;
         $this->orderDates = $orderDates;
         parent::__construct();
     }
@@ -37,15 +37,11 @@ class KPIReport extends AbstractExportService
         foreach ($this->trackings as $data) {
             
             if(isset($data['evento'])) {
-                if( $this->isAwaiting && optional(optional(optional($data)['evento'])[0])['descricao'] == $this->isAwaiting || !$this->isAwaiting){
+                // if( $this->isAwaiting && optional(optional(optional($data)['evento'])[0])['descricao'] == $this->isAwaiting || !$this->isAwaiting){
                     
 
-                    if(optional($data) && isset(optional($data)['numero'])) {
-                        $poboxName = $this->trackingCodeUser[optional($data)['numero']];
-                        $date = $this->orderDates[optional($data)['numero']];
-                        if($poboxName)
-                        $this->setCellValue('A'.$row, $poboxName);
-                        
+                    if(optional($data) && isset(optional($data)['numero'])) { 
+                        $this->setCellValue('A'.$row, $this->trackingCodeUsersName[optional($data)['numero']]);
                         $this->setCellValue('B'.$row, optional($data)['numero']);
                         $this->setCellValue('C'.$row, optional($data)['categoria']);
                         $this->setCellValue('D'.$row, optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data']);
@@ -55,7 +51,7 @@ class KPIReport extends AbstractExportService
                         $this->setCellValue('H'.$row, sortTrackingEvents($data, null)['taxed']);
                         $this->setCellValue('I'.$row, sortTrackingEvents($data, null)['delivered']);
                         $this->setCellValue('J'.$row, sortTrackingEvents($data, null)['returned']);
-                        $this->setCellValue('K'.$row, $date);
+                        $this->setCellValue('K'.$row, $this->orderDates[optional($data)['numero']]);
                         $row++;
                         if(sortTrackingEvents($data, null)['taxed']=='Yes'){
                             $taxed++;
@@ -67,7 +63,7 @@ class KPIReport extends AbstractExportService
                             $returned++;
                         } 
                     }
-                }
+                // }
             }
         }
             if($row>2){
