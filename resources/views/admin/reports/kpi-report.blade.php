@@ -140,8 +140,8 @@
                                         @if ($trackings)
                                             <input type="hidden" name="order"
                                                 value="{{ collect($trackings['return']['objeto']) }}">
-                                                <input type="hidden" name="trackingCodeUser"
-                                                value="{{ collect($trackingCodeUser) }}">
+                                                <input type="hidden" name="trackingCodeUsersName"
+                                                value="{{ collect($trackingCodeUsersName) }}">
                                                 <input type="hidden" name="orderDates"
                                                 value="{{ collect($orderDates) }}">
                                         @endif
@@ -198,7 +198,7 @@
                                                         <p class="center-text">{{ $orderDates[optional($data)['numero']] }} </p>
                                                     </td>
                                                     <td>
-                                                        <p class="center-text">{{ $trackingCodeUser[optional($data)['numero']] }} </p>
+                                                        <p class="center-text">{{ $trackingCodeUsersName[optional($data)['numero']] }} </p>
                                                     </td>
                                                     <td>
                                                         <p class="center-text">{{ optional($data)['numero'] }}</p>

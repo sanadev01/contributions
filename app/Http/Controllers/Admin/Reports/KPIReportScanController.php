@@ -20,32 +20,34 @@ class KPIReportScanController extends Controller
     public function index(Request $request, KPIReportsRepository $kpiReportsRepository)
     {
         $this->authorize('viewKPIReport',Reports::class);
+
         $trackings = [];
-        $trackingCodeUser = [];
+        $trackingCodeUsersName = [];
         $orderDates = [];
+
         if($request->start_date && $request->end_date || $request->user_id) {
             try{ 
-            $response = $kpiReportsRepository->get($request);
-            }
-            catch(Exception $e){
+                $response = $kpiReportsRepository->get($request);
+            }catch(Exception $e){
                 session()->flash('alert-danger', 'Error' . $e->getMessage());
                 return back(); 
             }
             $trackings = $response['trackings'];
-            $trackingCodeUser = $response['trackingCodeUser'];
+            $trackingCodeUsersName = $response['trackingCodeUsersName'];
             $orderDates = $response['orderDates'];
-        } 
-        return view('admin.reports.kpi-report-scan', compact('trackings','trackingCodeUser', 'orderDates'));
+        }
+
+        return view('admin.reports.kpi-report-scan', compact('trackings','trackingCodeUsersName', 'orderDates'));
     }
 
     public function store(Request $request)
     {
         if($request->order){
             $trackings = json_decode($request->order, true);
-            $trackingCodeUser =json_decode($request->trackingCodeUser, true);
+            $trackingCodeUsersName =json_decode($request->trackingCodeUsersName, true);
             $orderDates =json_decode($request->orderDates, true);
            
-            $exportService = new KPIReport($trackings,$trackingCodeUser, $orderDates, 'Aguardando pagamento');
+            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, 'Aguardando pagamento');
             return $exportService->handle();
         }
     }
