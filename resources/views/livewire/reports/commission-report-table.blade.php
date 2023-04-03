@@ -187,8 +187,10 @@
                                 </a>
                             </td>
                             @else
-                                {{$commission}}
-                            @endif
+                                {{ \Log::info('commision',[$commission]) }}
+                                {{ \Log::info('user',[Auth::user()]) }}
+                            @endif 
+
                         </tr>
                     @endforeach
                 @endif
