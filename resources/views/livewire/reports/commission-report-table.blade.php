@@ -193,7 +193,7 @@
                                         <i class="fa fa-eye text-success"></i>
                                     </a>
                                 </td>
-                            </tr> 
+                            </tr>
                             @if($loop->last)
                                 <tr>
                                     <td colspan="3"></td>
