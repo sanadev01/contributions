@@ -1,6 +1,9 @@
 <?php
 
 return [ 
+    
+    "Pay" => "Pagar" ,
+    "Download" => "Descargar" ,
     "Total Commission" => "Comisión total" ,
     "Total Order" => "Pedidos totales" ,
     "Users" => "Usuarias" , 
