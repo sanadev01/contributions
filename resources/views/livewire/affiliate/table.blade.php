@@ -20,8 +20,7 @@
             </select>
         </div>
         <div class="col-11 text-right">
-            <form action="{{ route('admin.affiliate.sale.exports') }}" id="affiliateSale" method="GET"
-                class="row col-12">
+            <form action="{{ route('admin.affiliate.sale.exports') }}" id="affiliateSale" method="GET" class="row col-12">
                 @csrf
                 <div class="col-2">
                     <label class="pull-left">@lang('sales-commission.start date')</label>
@@ -44,9 +43,8 @@
                         @lang('commission.Download') <i class="fa fa-arrow-down"></i>
                     </button>
 
-                    <button class="btn btn-info mt-1 ml-2 pull-left d-none" title="@lang('commission.Pay')"
-                        id="toPayCommission">
-                        @lang('commission.Pay') <i class="fa fa-arrow-down"></i>
+                    <button class="btn btn-info mt-1 ml-2 pull-left d-none" title="@lang('commission.Pay')" id="toPayCommission">
+                        @lang('commission.Pay')  
                     </button>
                 </div>
             </form>
