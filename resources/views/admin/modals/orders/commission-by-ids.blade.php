@@ -36,7 +36,7 @@
             </section>
         </div>
         <input type="hidden" name="command" id="command" value="">
-        <input name="data" id="data" value="{{request('orderIds')}}">
+        <input type="hidden" name="data" id="data" value="{{request('orderIds')}}">
     </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-primary" id="save"> @lang('commission.Proceed') </button>
