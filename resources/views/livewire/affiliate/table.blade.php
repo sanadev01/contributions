@@ -143,7 +143,13 @@
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="commission">
                     </th>
-                    <th></th>
+                    <th>
+                        <select class="form-control" wire:model="status">
+                            <option value="">All</option>
+                            <option value="unpaid">Unpaid</option>
+                            <option value="paid">Paid</option>
+                        </select>
+                    </th>
                     <th></th>
                     @admin
                         <th></th>
@@ -165,42 +171,92 @@
     @include('layouts.livewire.loading')
 </div>
 
-<div class="modal fade" id="toPay" role="dialog">
+
+<div  id="toPay"class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
+       <div class="modal-content">
+          <div class="modal-header"> 
                 <div class="col-8">
                     <h4>
-                        Confirm to Pay Commission
+                       Confirm to Pay Commission
                     </h4>
-                </div>
+                </div> 
+             
+          </div>
+          <div class="modal-body" style="font-size: 15px;">
+            <div class="modal-body">
+
             </div>
+
+        </div>
+ 
+          <div class="modal-footer"> 
+
+            <button type="submit" class="btn btn-primary" id="payConfirmed"> Proceed</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">  Decline </button>
+        </div>
+       </div>
+    </div>
+ </div>
+
+
+ <div class="modal fade" id="confirm" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+            <div class="col-8">
+                <h4>
+                   Confirm to Pay Commission
+                </h4>
+            </div>
+        </div>
+        <form action="{{ route('admin.affiliate.sales-commission.create') }}" method="GET" id="bulk_sale_form">
             <div class="modal-body" style="font-size: 15px;">
-                <p>
-                    Are you Sure want to Pay
-                </p>
+                <div class="modal-body-confirm">
+ 
+                </div>  
                 <input type="hidden" name="command" id="command" value="">
                 <input type="hidden" name="data" id="data" value="">
             </div>
-            <div class="modal-footer"> 
-
-                <button type="submit" class="btn btn-primary" id="payConfirmed"> Yes Pay</button>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="save"> Yes Pay</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('consolidation.Cancel')</button>
             </div>
-        </div>
+        </form>
+      </div>
     </div>
 </div>
+
+{{-- @include('comission-models') --}}
 
 @section('js')
 
     <script>
         $(document).on("submit", "#affiliateSale", function(e) {
-            if ($("select[name=choose_status]").val() == "confirmToPay") {
-                e.preventDefault();
+            
+                if ($("select[name=choose_status]").val() == "confirmToPay") {
+                    e.preventDefault();
+                    start = $("input[name=start]").val()
+                    end = $("input[name=end]").val()
+                    user_id = $("input[name=user_id]").val() 
 
 
-                $('#toPay').modal('show');
-            }
+                    $.ajax({
+                    url :"{{ route('admin.modals.order.commissions') }}",
+                    type: 'GET',
+                    data:{start:start,end:end,user_id:user_id},
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success:function(data){
+                        $('.modal-body').html(data)
+                        $('#toPay').modal('show'); 
+                    },
+
+                });
+
+
+                }
         });
 
         $('#payConfirmed').click(function() {
@@ -211,9 +267,43 @@
 
         $("#choose_status").on('change', function() {
             selected = $("select[name=choose_status]").val()
-            if (selected) { 
+            if (selected) {
                 let value = selected == "confirmToPay" || selected == "toPay" ? "toPay" : "download"
                 $("input[name=status]").val(value).change();
             }
         });
+
+ 
+        $('body').on('change','#bulk-actions',function(){
+
+            if ( $(this).val() == 'clear' ){
+                $('.bulk-sales').prop('checked',false)
+            }else if ( $(this).val() == 'checkAll' ){
+                $('.bulk-sales').prop('checked',true)
+            }else if ( $(this).val() == 'pay-commission' ){
+                var orderIds = [];
+                $.each($(".bulk-sales:checked"), function(){
+                    orderIds.push($(this).val());
+                    
+                    // $(".result").append('HD-' + this.value + ',');
+                });
+                
+                $('#bulk_sale_form #command').val('pay-commission');
+                $('#bulk_sale_form #data').val(JSON.stringify(orderIds));  
+                    $.ajax({
+                        url :"{{ route('admin.modals.order.commissions') }}",
+                        type: 'GET',
+                        data:{orderIds:JSON.stringify(orderIds)},
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        success:function(data){
+                            $('#confirm').modal('show');  
+                            $('.modal-body-confirm').html(data)
+
+                        }, 
+                   }); 
+                } 
+            });
     </script>
+@endsection

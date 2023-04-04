@@ -10,7 +10,7 @@ class AffiliateSaleRepository
 {
     public function get(Request $request,$paginate = true,$pageSize=50){
         
-        $query = AffiliateSale::has('user')->with('order')->has('order');
+        $query = AffiliateSale::has('user')->with(['order','user'])->has('order');
 
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id());
