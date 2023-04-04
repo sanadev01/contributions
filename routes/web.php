@@ -273,12 +273,8 @@ Route::get('test-label/{id}',function($id){
     // $labelPrinter = new CN23LabelMaker();
     
     $order = Order::find($id);
-    if($order) {
-        $response = json_decode($order->api_response);
-        dd($response->shipmentresponse->label);
-    }
-    // $order->status = 70;
-    // $order->save();
+    $order->status = 70;
+    $order->save();
     // dd($order);
     // $labelPrinter->setOrder($order);
     // $labelPrinter->setService(2);
@@ -298,12 +294,5 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     }
     session()->forget('anjun_token');
     return 'Anjun Token refresh';
-});  
-Route::get('commission-report', function(){
-  
-       AffiliateSale::where('is_paid',1)->update([
-        'is_paid' => 0, 
-    ]); 
-    return 'all commissions status changed.';
-});  
+}); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
