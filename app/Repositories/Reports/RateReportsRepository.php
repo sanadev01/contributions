@@ -2,98 +2,106 @@
 
 namespace App\Repositories\Reports;
 
-use SoapClient;
+use App\Models\User;
+use App\Models\Recipient;
 use App\Models\Order;
-use Illuminate\Http\Request;
+use App\Models\ProfitPackage;
 use App\Models\ShippingService;
+use App\Services\Calculators\RatesCalculator;
+use App\Services\Converters\UnitsConverter;
+use App\Services\Calculators\WeightCalculator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Resources\CollectsResources;
 
-class KPIReportsRepository
+class RateReportsRepository
 {
     protected $error;
-    protected $wsdlUrl;
-    protected $user;
-    protected $password;
 
-    public function __construct()
+    public function getRateReport($packageId, $serviceId = null)
     {
-        $this->wsdlUrl = 'http://webservice.correios.com.br/service/rastro/Rastro.wsdl';
-        $this->user = '9912501576';
-        $this->password = 'N>WTBF@3GP';
+        $package = ProfitPackage::find($packageId);
+        $recipient = new Recipient();
+        $recipient->state_id = 508;//$request->state_id;
+        $recipient->country_id = 30;//$request->country_id;
+        if(optional(optional($package->shippingService)->rates)[0]){
+            $recipient->country_id = optional(optional(optional($package->shippingService)->rates)[0])->country_id;//$request->country_id;
+        }
+        $newUser = Auth::user();
+        $newUser->profitPackage = $package;
+        $profitPackageSlabRates = collect();
+
+        foreach($package->data as $profitPackageSlab){
+            $order = new Order();
+            $order->user = $newUser;
+            $order->width =  0;
+            $order->height = 0;
+            $order->length = 0;
+            $order->measurement_unit = 'kg/cm';
+            $order->recipient = $recipient;
+            $originalWeightMax =  $profitPackageSlab['max_weight'];
+            $originalWeight =  $profitPackageSlab['min_weight'];
+            $profitValue =  $profitPackageSlab['value'];
+            if($originalWeight < 100 ){
+                $originalWeight = 100;
+            }
+            $order->weight = UnitsConverter::gramsToKg($originalWeight);
+            $shippingRates = collect();
+            $shippingValue = collect();
+            if($package->shippingService){
+                $shippingService = $package->shippingService;
+                $shippingService->cacheCalculator = false;
+                if ( $shippingService->isAvailableFor($order) ){
+                    $rate = $shippingService->getRateFor($order,true,false);
+                    $value = $shippingService->getRateFor($order,false,false);
+                    $shippingRates->push($rate);
+                    $shippingValue->push($value);
+                }
+            }else{
+
+                if($serviceId)
+                {
+                    $service = ShippingService::find($serviceId);
+                    if($service){
+
+                        $service->cacheCalculator = false;
+                        if ( $service->isAvailableFor($order) ){
+                            $rate = $service->getRateFor($order,true,false);
+                            $value = $service->getRateFor($order,false,false);
+                            $shippingRates->push($rate);
+                            $shippingValue->push($value);
+                        }
+                    }
+                    
+                }else{
+                    foreach (ShippingService::query()->active()->get() as $shippingService) {
+                        $shippingService->cacheCalculator = false;
+                        if ( $shippingService->isAvailableFor($order) ){
+                            $rate = $shippingService->getRateFor($order,true,false);
+                            $value = $shippingService->getRateFor($order,false,false);
+                            $shippingRates->push($rate);
+                            $shippingValue->push($value);
+                        }
+                    }
+                }
+            }
+
+            $profitPackageSlabRates->push([
+                'weight' => $originalWeightMax,
+                'profit'  => $profitValue,
+                'shipping'  => $shippingValue,
+                'rates'  => $shippingRates,
+            ]);
+        }
+
+        return $profitPackageSlabRates;
     }
 
-    public function get(Request $request)
+    public function getRateSample($serviceId)
     {
-        $orders = Order::with('user')
-        ->where('corrios_tracking_code','!=',null)->where('status', '>=', Order::STATUS_SHIPPED)
-        ->whereHas('shippingService',function($orders) {
-                return $orders->whereIn('service_sub_class', [
-                    ShippingService::Packet_Standard, 
-                    ShippingService::Packet_Express, 
-                    ShippingService::AJ_Packet_Standard, 
-                    ShippingService::AJ_Packet_Express, 
-                    ShippingService::Prime5, 
-                    ShippingService::GePS]);
-            });
-
-        if ($request->user_id) {
-            $orders->where('user_id', $request->user_id);
+        $shippingService = ShippingService::find($serviceId);
+        if(optional(optional($shippingService->rates)[0])->data){
+            return $shippingService->rates[0]->data;
         }
-        if (Auth::user()->isUser()) {
-            $orders->where('user_id', Auth::id());
-        }
-        if ( $request->start_date ){
-            $startDate  = $request->start_date.' 00:00:00';
-            $orders->where('order_date','>=',$startDate);
-        }
-        if ( $request->end_date ){
-            $endDate    = $request->end_date.' 23:59:59';
-            $orders->where('order_date','<=',$endDate);
-        }
-        if ( $request->trackingNumbers ){
-            $trackNos = preg_replace('/\s+/', '', $request->trackingNumbers);
-            $trackNos =str_replace(',', '', $trackNos);
-            $splitNos = (str_split($trackNos,13));
-            $orders->whereIn('corrios_tracking_code',$splitNos);
-        }
-
-        $orders = ($orders->get());  
-        $codesUsersName =  [];
-        $orderDate =  [];
-        foreach($orders as $order) {
-            $codesUsersName[$order->corrios_tracking_code] = $order->user->name;
-            $orderDate[$order->corrios_tracking_code] = $order->order_date->format('m/d/Y');
-        }
-        $codes = $orders->pluck('corrios_tracking_code')->toArray();
-        if(empty($codes)) {
-         return [
-            'trackings'             => [],
-            'trackingCodeUsersName' => [],
-            'orderDates'            => []
-         ];
-        }
-        $client = new SoapClient($this->wsdlUrl, array('trace'=>1));
-        $request_param = array(
-            'usuario' => $this->user,
-            'senha' => $this->password,
-            'tipo' => 'L',
-            'resultado' => 'T',
-            'lingua' => 101,
-            'objetos' => $codes
-        );
-        $result = $client->buscaEventosLista($request_param);
-        if(!$result->return->objeto) {
-            return false;
-        }
-        $trackings = json_decode(json_encode($result), true); ## convert the object to array (you have to)
-        if($trackings['return']['qtd'] == "1") {
-            $trackings['return']['objeto'] = array($trackings['return']['objeto']); ## if you send only one tracking you need to add an array before the content to follow the pattern
-        } 
-        return [
-            'trackings'             => $trackings,
-            'trackingCodeUsersName' => $codesUsersName,
-            'orderDates'            => $orderDate
-        ];
+        return false;
     }
-
 }
