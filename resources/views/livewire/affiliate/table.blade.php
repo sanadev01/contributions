@@ -177,8 +177,8 @@
        <div class="modal-content">
           <div class="modal-header"> 
                 <div class="col-8">
-                    <h4>
-                       Confirm to Pay Commission
+                    <h4> 
+                   @lang('commission.Confirm Pay') 
                     </h4>
                 </div> 
              
@@ -192,8 +192,8 @@
  
           <div class="modal-footer"> 
 
-            <button type="submit" class="btn btn-primary" id="payConfirmed"> Proceed</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">  Decline </button>
+            <button type="submit" class="btn btn-primary" id="payConfirmed">  @lang('commission.Proceed')</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">   @lang('commission.Decline') </button>
         </div>
        </div>
     </div>
@@ -205,8 +205,8 @@
       <div class="modal-content">
         <div class="modal-header">
             <div class="col-8">
-                <h4>
-                   Confirm to Pay Commission
+                <h4> 
+                   @lang('commission.Confirm Pay') 
                 </h4>
             </div>
         </div>
@@ -219,15 +219,14 @@
                 <input type="hidden" name="data" id="data" value="">
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="save"> Yes Pay</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('consolidation.Cancel')</button>
+                <button type="submit" class="btn btn-primary" id="save"> @lang('commission.Proceed') </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('commission.Decline') </button>
             </div>
         </form>
       </div>
     </div>
 </div>
-
-{{-- @include('comission-models') --}}
+ 
 
 @section('js')
 

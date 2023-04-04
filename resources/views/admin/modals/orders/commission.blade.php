@@ -3,14 +3,14 @@
     @if ($totalOrder)
 
         @if ($start)
-            <h4> <strong> Start date :</strong> {{ $start }}</h1>
+            <h4> <strong> @lang('commission.End Date') :</strong> {{ $start }}</h1>
         @endif
         @if ($end)
-            <h4> <strong> End date :</strong> {{ $end }}</h1>
+            <h4> <strong>@lang('commission.Start Date') :</strong> {{ $end }}</h1>
         @endif
-        <h4> <strong> Total Order : </strong> {{ $totalOrder }}</h4>
-        <h4> <strong> Total Commission : </strong>{{ $totalCommission }}</h4>
-        <h4> <strong> Users </strong></h4>
+        <h4> <strong> @lang('commission.Total Order') : </strong> {{ $totalOrder }}</h4>
+        <h4> <strong>   @lang('commission.Total Commission') : </strong>{{ $totalCommission }}</h4>
+        <h4> <strong>   @lang('commission.Users') :  </strong></h4>
         <ul>
             @foreach ($groupByUser as $userSales)
                 <li>
@@ -20,7 +20,8 @@
         </ul>
         
         <p>
-            Are you Sure want to Pay the Commissions against these orders ?
+            
+            @lang('commission.Confirmation Message')  
         </p> 
     @else
         <x-tables.no-record colspan="15"></x-tables.no-record>
