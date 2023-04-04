@@ -185,7 +185,7 @@
         $('#toPayCommission').click(function(e) {
             e.preventDefault(); 
             start = $("input[name=start]").val()
-            end = $("input[name=end]").val()
+            end = $("input[name=end]").val() 
             user_id = $("input[name=user_id]").val()
             $.ajax({
                 url: "{{ route('admin.modals.order.commissions-by-users') }}",

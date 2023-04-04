@@ -9,13 +9,9 @@
 <div class="modal-body" style="font-size: 15px;">
     <div class="modal-body"> 
         <section class="card invoice-page"> 
-            @if ($totalOrder) 
-                @if ($start)
-                    <h4> <strong> @lang('commission.End Date') :</strong> {{ $start }}</h1>
-                @endif
-                @if ($end)
-                    <h4> <strong>@lang('commission.Start Date') :</strong> {{ $end }}</h1>
-                @endif
+            @if ($totalOrder)
+                <h4> <strong> @lang('commission.Start Date') :</strong> {{ request('start') }}</h1> 
+                <h4> <strong>@lang('commission.End Date') :</strong> {{ request('end') }}</h1>
                 <h4> <strong> @lang('commission.Total Order') : </strong> {{ $totalOrder }}</h4>
                 <h4> <strong> @lang('commission.Total Commission') : </strong>{{ $totalCommission }}</h4>
                 <h4> <strong> @lang('commission.Users') : </strong></h4>

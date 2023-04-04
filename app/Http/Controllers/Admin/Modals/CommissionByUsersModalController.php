@@ -13,18 +13,14 @@ class CommissionByUsersModalController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $end = $request->start;
-        $start = $request->end;
- 
-            $sales =  (new AffiliateSaleRepository)->get(request()->merge([
-                'status' => 'unpaid',
-            ]), false); 
-        
-        
+        $sales =  (new AffiliateSaleRepository)->get(request()->merge([
+            'status' => 'unpaid',
+        ]), false); 
+         
         $totalOrder = $sales->count();
         $totalCommission = $sales->sum('value');
         $groupByUser = $sales->groupBy('user_id');
 
-        return view('admin.modals.orders.commission-by-users', compact('start', 'end', 'groupByUser', 'totalCommission', 'totalOrder'));
+        return view('admin.modals.orders.commission-by-users', compact('groupByUser', 'totalCommission', 'totalOrder'));
     }
 }
