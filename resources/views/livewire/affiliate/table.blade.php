@@ -2,10 +2,8 @@
     @admin
         <div class="row">
             <div class="col-12 text-right mb-3">
-                <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $
-                        {{ number_format($balance->where('is_paid', true)->sum('value'), 2) }}</span></p>
-                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $
-                        {{ number_format($balance->where('is_paid', false)->sum('value'), 2) }}</span></p>
+                <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> ${{ number_format($balance->where('is_paid', true)->sum('value'), 2) }}</span></p>
+                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> ${{ number_format($balance->where('is_paid', false)->sum('value'), 2) }}</span></p>
             </div>
         </div>
     @endadmin
@@ -39,20 +37,16 @@
                     <label class="pull-left">@lang('parcel.User POBOX Number')</label>
                     <livewire:components.search-user />
                 </div>
-                <input name="status" type="hidden">
-                <div class="col-2">
-                    <label class="pull-left">@lang('Type')</label>
-                    <select type="text" id="choose_status" name="choose_status" class="form-control" required>
-                        <option value="">Select option</option>
-                        <option value="downlaod">Download Report</option>
-                        @if (Auth::user()->isAdmin())
-                            <option value="confirmToPay">Pay Commissions</option>
-                        @endif
-                    </select>
-                </div>
+                <input name="status" type="hidden" value="download">
+
                 <div class="col-2 mt-4">
-                    <button class="btn btn-success mt-1 pull-left" title="@lang('sales-commission.Download Pay')">
-                        @lang('sales-commission.Download Pay') <i class="fa fa-arrow-down"></i>
+                    <button class="btn btn-success mt-1 pull-left" title="@lang('commission.Download')">
+                        @lang('commission.Download') <i class="fa fa-arrow-down"></i>
+                    </button>
+
+                    <button class="btn btn-info mt-1 ml-2 pull-left d-none" title="@lang('commission.Pay')"
+                        id="toPayCommission">
+                        @lang('commission.Pay') <i class="fa fa-arrow-down"></i>
                     </button>
                 </div>
             </form>
@@ -172,137 +166,91 @@
 </div>
 
 
-<div  id="toPay"class="modal fade" role="dialog">
+<div id="toPay" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
-       <div class="modal-content">
-          <div class="modal-header"> 
-                <div class="col-8">
-                    <h4> 
-                   @lang('commission.Confirm Pay') 
-                    </h4>
-                </div> 
-             
-          </div>
-          <div class="modal-body" style="font-size: 15px;">
-            <div class="modal-body">
-
-            </div>
-
+        <div class="modal-content">
         </div>
- 
-          <div class="modal-footer"> 
-
-            <button type="submit" class="btn btn-primary" id="payConfirmed">  @lang('commission.Proceed')</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">   @lang('commission.Decline') </button>
-        </div>
-       </div>
-    </div>
- </div>
-
-
- <div class="modal fade" id="confirm" role="dialog">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-            <div class="col-8">
-                <h4> 
-                   @lang('commission.Confirm Pay') 
-                </h4>
-            </div>
-        </div>
-        <form action="{{ route('admin.affiliate.sales-commission.create') }}" method="GET" id="bulk_sale_form">
-            <div class="modal-body" style="font-size: 15px;">
-                <div class="modal-body-confirm">
- 
-                </div>  
-                <input type="hidden" name="command" id="command" value="">
-                <input type="hidden" name="data" id="data" value="">
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="save"> @lang('commission.Proceed') </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('commission.Decline') </button>
-            </div>
-        </form>
-      </div>
     </div>
 </div>
  
 
+
 @section('js')
-
     <script>
-        $(document).on("submit", "#affiliateSale", function(e) {
-            
-                if ($("select[name=choose_status]").val() == "confirmToPay") {
-                    e.preventDefault();
-                    start = $("input[name=start]").val()
-                    end = $("input[name=end]").val()
-                    user_id = $("input[name=user_id]").val() 
+        function payCommission() { 
+            $("input[name=status]").val('toPay').change();
+            $("#affiliateSale").submit();
+        }
 
+        $('#toPayCommission').click(function(e) {
+            e.preventDefault(); 
+            start = $("input[name=start]").val()
+            end = $("input[name=end]").val()
+            user_id = $("input[name=user_id]").val()
+            $.ajax({
+                url: "{{ route('admin.modals.order.commissions-by-users') }}",
+                type: 'GET',
+                data: {
+                    start: start,
+                    end: end,
+                    user_id: user_id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    $('.modal-content').html(data);
+                    $('#toPay').modal('show');
+                },
 
-                    $.ajax({
-                    url :"{{ route('admin.modals.order.commissions') }}",
+            });
+        });
+
+        $("input").change(function() {
+            togglePay()
+        
+        });
+
+        function togglePay() { 
+            // alert($("input[name=user_id]").val())
+            // if ($("input[name=start]").val() || $("input[name=user_id]").val()) {
+                $("#toPayCommission").removeClass("d-none");
+            // }else{
+            //     $("#toPayCommission").addClass("d-none");
+            // }
+        } 
+
+        $('body').on('change', '#bulk-actions', function() {
+
+            if ($(this).val() == 'clear') {
+                $('.bulk-sales').prop('checked', false)
+            } else if ($(this).val() == 'checkAll') {
+                $('.bulk-sales').prop('checked', true)
+            } else if ($(this).val() == 'pay-commission') {
+                var orderIds = [];
+                $.each($(".bulk-sales:checked"), function() {
+                    orderIds.push($(this).val());
+
+                    // $(".result").append('HD-' + this.value + ',');
+                }); 
+                $('#bulk_sale_form #command').val('pay-commission');
+                $('#bulk_sale_form #data').val(JSON.stringify(orderIds));
+                $.ajax({
+                    url: "{{ route('admin.modals.order.commissions-by-ids') }}",
                     type: 'GET',
-                    data:{start:start,end:end,user_id:user_id},
+                    data: {
+                        orderIds: JSON.stringify(orderIds)
+                    },
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    success:function(data){
-                        $('.modal-body').html(data)
-                        $('#toPay').modal('show'); 
+                    success: function(data) { 
+                            $('.modal-content').html(data);
+                            $('#toPay').modal('show');
+
                     },
-
                 });
-
-
-                }
-        });
-
-        $('#payConfirmed').click(function() {
-            $("input[name=status]").val('toPay').change();
-            $("select[name=choose_status]").val('toPay').change();
-            $("#affiliateSale").submit();
-        });
-
-        $("#choose_status").on('change', function() {
-            selected = $("select[name=choose_status]").val()
-            if (selected) {
-                let value = selected == "confirmToPay" || selected == "toPay" ? "toPay" : "download"
-                $("input[name=status]").val(value).change();
             }
         });
-
- 
-        $('body').on('change','#bulk-actions',function(){
-
-            if ( $(this).val() == 'clear' ){
-                $('.bulk-sales').prop('checked',false)
-            }else if ( $(this).val() == 'checkAll' ){
-                $('.bulk-sales').prop('checked',true)
-            }else if ( $(this).val() == 'pay-commission' ){
-                var orderIds = [];
-                $.each($(".bulk-sales:checked"), function(){
-                    orderIds.push($(this).val());
-                    
-                    // $(".result").append('HD-' + this.value + ',');
-                });
-                
-                $('#bulk_sale_form #command').val('pay-commission');
-                $('#bulk_sale_form #data').val(JSON.stringify(orderIds));  
-                    $.ajax({
-                        url :"{{ route('admin.modals.order.commissions') }}",
-                        type: 'GET',
-                        data:{orderIds:JSON.stringify(orderIds)},
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        success:function(data){
-                            $('#confirm').modal('show');  
-                            $('.modal-body-confirm').html(data)
-
-                        }, 
-                   }); 
-                } 
-            });
     </script>
 @endsection

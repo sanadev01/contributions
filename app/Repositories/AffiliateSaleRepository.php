@@ -18,6 +18,11 @@ class AffiliateSaleRepository
                 $query->where('referrer_id', $request->user_id);
             }
         }
+
+        
+        if ($request->orderIds) {
+              $query->whereIn('id', json_decode($request->orderIds));
+        }
         if(Auth::user()->isAdmin() && $request->user_id){
             $query->where('user_id', $request->user_id);
         }
