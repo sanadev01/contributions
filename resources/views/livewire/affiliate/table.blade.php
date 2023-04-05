@@ -20,10 +20,8 @@
         @admin
             <div class="row">
                 <div class="col-12 text-right">
-                    <p class="mr-0 h5">Paid Commission:<span class="text-success h4"> $
-                            {{ number_format($balance->where('is_paid', true)->sum('value'), 2) }}</span></p>
-                    <p class="mr-0 h5">UnPaid Commission:<span class="text-danger h4"> $
-                            {{ number_format($balance->where('is_paid', false)->sum('value'), 2) }}</span></p>
+                    <p class="mr-0 h5">Paid Commission:<span class="text-success h4"> ${{ number_format($balance->where('is_paid', true)->sum('commission'), 2) }}</span></p>
+                    <p class="mr-0 h5">UnPaid Commission:<span class="text-danger h4"> ${{ number_format($balance->where('is_paid', false)->sum('commission'), 2) }}</span></p>
                 </div>
             </div>
         @endadmin
