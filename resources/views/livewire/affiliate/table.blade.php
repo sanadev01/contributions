@@ -20,7 +20,7 @@
             </select>
         </div>
         <div class="col-11 text-right">
-            <form action="{{ route('admin.affiliate.sale.exports') }}" id="affiliateSale" method="GET" class="row col-12">
+            <form action="{{ route('admin.affiliate.sale.exports') }}" method="GET" class="row col-12">
                 @csrf
                 <div class="col-2">
                     <label class="pull-left">@lang('sales-commission.start date')</label>
