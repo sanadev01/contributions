@@ -20,35 +20,74 @@
         @admin
             <div class="row">
                 <div class="col-12 text-right">
-                    <p class="mr-0 h5">Paid Commission:<span class="text-success h4"> $
-                            {{ number_format($balance->where('is_paid', true)->sum('value'), 2) }}</span></p>
-                    <p class="mr-0 h5">UnPaid Commission:<span class="text-danger h4"> $
-                            {{ number_format($balance->where('is_paid', false)->sum('value'), 2) }}</span></p>
+                    <p class="mr-0 h5">Paid Commission:<span class="text-success h4"> ${{ number_format($balance->where('is_paid', true)->sum('commission'), 2) }}</span></p>
+                    <p class="mr-0 h5">UnPaid Commission:<span class="text-danger h4"> ${{ number_format($balance->where('is_paid', false)->sum('commission'), 2) }}</span></p>
                 </div>
             </div>
         @endadmin
-        <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
-            <div class=" col-6 text-left mb-2 pl-0">
-                <div class="row" id="dateSearch" style="display: none;">
-                    <form class="col-12 pl-0" action="{{ route('admin.affiliate.sale.exports') }}" method="GET"
-                        target="_blank">
+
+        <div class="mb-2 row col-md-12 " id="datefilters">
+            <form action="{{ route('admin.affiliate.sale.exports') }}" method="GET" class="row col-12" id="dateSearch" style="display: none;">
+                @csrf
+                <div class="col-2 ml-0 pl-0">
+                    <label class="pull-left">@lang('sales-commission.start date')</label>
+                    <input type="date" name="start" class="form-control">
+                </div>
+                <div class="col-2">
+                    <label class="pull-left">@lang('sales-commission.end date')</label>
+                    <input type="date" name="end" class="form-control">
+                </div>
+                <div class="col-2">
+                    <label class="pull-left">@lang('parcel.User POBOX Number')</label>
+                    <livewire:components.search-user />
+                </div>
+                <input name="status" type="hidden" value="download">
+
+                <div class="col-2 mt-4">
+                    <button class="btn btn-success mt-1 pull-left" title="@lang('sales-commission.Download')">
+                        @lang('sales-commission.Download') <i class="fa fa-arrow-down"></i>
+                    </button>
+                    <button class="btn btn-info mt-1 ml-2 pull-left d-none" title="@lang('sales-commission.Pay Commission')"
+                        id="toPayCommission">
+                        @lang('sales-commission.Pay Commission')
+                    </button>
+                </div>
+            </form>
+        </div>
+
+
+        {{-- <div class="" >
+            <div class=" col-12 text-left mb-2 pl-0">
+                <div class="row" >
+                    <form class="row" action="{{ route('admin.affiliate.sale.exports') }}" method="GET"  >
                         @csrf
-                        <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">
+                        <div class="col-lg-3"  >
                             <label>Start Date</label>
                             <input type="date" name="start" class="form-control">
                         </div>
-                        <div class="form-group mx-sm-3 mb-2 col-4" style="float:left;margin-right:20px;">
+                        <div class="col-lg-3"  ">
                             <label>End Date</label>
                             <input type="date" name="end" class="form-control">
                         </div>
-                        <button class="btn btn-success searchDateBtn waves-effect waves-light"
-                            title="@lang('sales-commission.Download Sales')">
-                            <i class="fa fa-arrow-down" aria-hidden="true"></i>
-                        </button>
+                        <div class="col-lg-3"  >
+                            <label  >@lang('parcel.User POBOX Number')</label>
+                            <livewire:components.search-user />
+                        </div>
+                        <div class="col-lg-2">
+                            <input name="status" type="hidden" value="download">                  
+                            <button class="btn btn-success   waves-effect waves-light pull-left" title="@lang('sales-commission.Download')">
+                                @lang('sales-commission.Download') <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                            </button> 
+                        </div>
+                        <div class="col-lg-2">  
+                            <button class="btn btn-info   waves-effect waves-light d-none"  title="@lang('sales-commission.Pay Commission')" id="toPayCommission">   
+                                @lang('sales-commission.Pay Commission')
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="mb-2 row col-md-12 hide "
             @if ($this->search) style="display: block !important;" @endif id="logSearch">
             <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
@@ -71,36 +110,26 @@
         <div class="table-wrapper position-relative">
             <table class="table mb-0 table-bordered table-responsive-md" id="">
                 <thead>
-                    <tr>
+                    <tr >
                         @admin
-                            <th id="optionChkbx">
-                                <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">
-                                    <input type="checkbox" id="checkAll" name="bulk-sales[]" class="check-all"
-                                        value="">
-                                    <span class="vs-checkbox vs-checkbox-sm">
-                                        <span class="vs-checkbox--check">
-                                            <i class="vs-icon feather icon-check"></i>
-                                        </span>
-                                    </span>
-                                </div>
-                            </th>
+                        <th style="max-width: 30px;"   >
+                            <select name="" id="bulk-actions" class="form-control">
+                                <option value="clear">Clear All</option>
+                                <option value="checkAll">Select All</option>
+                                <option value="pay-commission"> @lang('sales-commission.Pay Commission')</option>
+                            </select>
+                        </th>
                         @endadmin
                         <th>@lang('sales-commission.Date')</th>
                         @admin
                             <th>@lang('sales-commission.User')</th>
                         @endadmin
                         <th>Commission From</th>
-                        {{-- <th>@lang('sales-commission.Order ID')</th> --}}
                         <th>WHR#</th>
-                        {{-- <th>Tracking Code</th> --}}
-                        {{-- <th>Customer Reference</th>
-                        <th>Carrier Tracking#</th>
-                        <th>Weight</th> --}}
                         <th>@lang('sales-commission.Value')</th>
                         <th>@lang('sales-commission.Type')</th>
                         <th>@lang('sales-commission.Commission')</th>
                         <th>@lang('Is Paid')</th>
-                        {{-- <th>@lang('status')</th> --}}
                         @admin
                             <th>@lang('Action')</th>
                         @endadmin
@@ -135,3 +164,69 @@
         @include('layouts.livewire.loading')
     </div>
 </div>
+<div id="toPay" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+@section('js')
+    <script> 
+        $('#toPayCommission').click(function(e) {
+            e.preventDefault();
+            start = $("input[name=start]").val()
+            end = $("input[name=end]").val()
+            user_id = $("input[name=user_id]").val()
+            loadModal(null,start,end,user_id)
+        }); 
+
+        $('body').on('change', '#bulk-actions', function() {
+
+            if ($(this).val() == 'clear') {
+                $('.bulk-sales').prop('checked', false)
+            } else if ($(this).val() == 'checkAll') {
+                $('.bulk-sales').prop('checked', true)
+            } else if ($(this).val() == 'pay-commission') {
+                var orderIds = [];
+                $.each($(".bulk-sales:checked"), function() {
+                    orderIds.push($(this).val()); 
+                });
+                loadModal(JSON.stringify(orderIds)); 
+            }
+        });
+
+        function loadModal(ids,start=null,end=null,user_id=null) {
+            $.ajax({
+                url: "{{ route('admin.modals.order.commissions') }}",
+                type: 'GET',
+                data: {
+                    orderIds:ids,
+                    start: start,
+                    end: end,
+                    user_id: user_id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    $('.modal-content').html(data);
+                    $('#toPay').modal('show');
+
+                },
+            });
+        }
+
+        $("input").change(function() {
+            togglePay()
+            setTimeout(togglePay, 1000);
+        }); 
+        function togglePay() {
+            if ($("input[name=start]").val() || $("input[name=end]").val() || $("input[name=user_id]").val()) {
+                $("#toPayCommission").removeClass("d-none");
+            } else {
+                $("#toPayCommission").addClass("d-none");
+            }
+        }
+        togglePay()
+    </script>
+@endsection
