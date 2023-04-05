@@ -212,11 +212,12 @@
         function togglePay() {
             // alert($("input[name=user_id]").val())
             // if ($("input[name=start]").val() || $("input[name=user_id]").val()) {
-                $("#toPayCommission").removeClass("d-none");
+            //     $("#toPayCommission").removeClass("d-none");
             // }else{
-            //     $("#toPayCommission").addClass("d-none");
+                $("#toPayCommission").addClass("d-none");
             // }
         } 
+        togglePay()
 
         $('body').on('change', '#bulk-actions', function() {
 
