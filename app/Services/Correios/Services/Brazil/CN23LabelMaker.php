@@ -25,6 +25,7 @@ class CN23LabelMaker implements HasLableExport
     private $items;
     private $sumplementryItems;
     private $hasSuplimentary;
+    private $hasDescpCount;
 
     public function __construct()
     {
@@ -39,6 +40,7 @@ class CN23LabelMaker implements HasLableExport
         Rua Barao Do Triunfo, 520 - CJ 152 - Brooklin Paulista
         CEP 04602-001 - São Paulo - SP- Brasil';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
+        $this->hasDescpCount = '';
     }
 
     public function setOrder(Order $order)
@@ -108,15 +110,30 @@ class CN23LabelMaker implements HasLableExport
 
     private function setItems()
     {
-        $this->items = $this->order->items->take(4);
+        $this->getItemsDescpCount($this->order);
+        
+        if($this->hasDescpCount[0]['count'] > 190) {
+            $this->items = $this->order->items->take(1);
+        }elseif($this->hasDescpCount[1]['count'] > 100){
+            $this->items = $this->order->items->take(2);
+        }elseif($this->hasDescpCount[2]['count'] > 190){
+            $this->items = $this->order->items->take(3);
+        }else {
+            $this->items = $this->order->items->take(4);
+        }
         return $this;
     }
 
     private function setSuplimentryItems()
     {
-        if ( $this->order->items->count() > 4 ){
+        if ( $this->order->items->count() > 1 ){
             $this->hasSuplimentary = true;
-            $this->sumplementryItems = $this->order->items->skip(4)->chunk(30);
+            $this->getItemsDescpCount($this->order);
+            if($this->hasDescpCount > 190) {
+                $this->sumplementryItems = $this->order->items->skip(1)->chunk(30);
+            }else {
+                $this->sumplementryItems = $this->order->items->skip(4)->chunk(30);
+            }
         }
 
         return $this;
@@ -163,5 +180,18 @@ class CN23LabelMaker implements HasLableExport
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
         ];
+    }
+
+    private function getItemsDescpCount (Order $order) {
+        $countDescp = [];
+        foreach ($order->items as $key => $item) {
+            $count= strlen($item->description);
+            $countToPush = ['count' => $count];
+           array_push($countDescp, $countToPush);
+        }
+        // dd($countDescp);
+        // $descp = array_column($countDescp, 'count');
+        // $this->hasDescpCount = array_sum($descp);
+        return $this->hasDescpCount = $countDescp;
     }
 }
