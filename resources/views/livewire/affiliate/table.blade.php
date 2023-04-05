@@ -186,7 +186,7 @@
             end = $("input[name=end]").val() 
             user_id = $("input[name=user_id]").val()
             $.ajax({
-                url: "{{ route('admin.modals.order.commissions-by-users') }}",
+                url: "{{ route('admin.modals.order.commissions') }}",
                 type: 'GET',
                 data: {
                     start: start,
@@ -209,7 +209,7 @@
         
         });
 
-        function togglePay() { 
+        function togglePay() {
             // alert($("input[name=user_id]").val())
             // if ($("input[name=start]").val() || $("input[name=user_id]").val()) {
                 $("#toPayCommission").removeClass("d-none");
@@ -234,7 +234,7 @@
                 $('#bulk_sale_form #command').val('pay-commission');
                 $('#bulk_sale_form #data').val(JSON.stringify(orderIds));
                 $.ajax({
-                    url: "{{ route('admin.modals.order.commissions-by-ids') }}",
+                    url: "{{ route('admin.modals.order.commissions') }}",
                     type: 'GET',
                     data: {
                         orderIds: JSON.stringify(orderIds)
