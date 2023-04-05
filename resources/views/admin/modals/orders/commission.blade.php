@@ -6,18 +6,18 @@
 <div class="modal-body" style="font-size: 15px;">
     @if ($totalOrder)
         <section class="card invoice-page">
-        @if(request('start') || request('end'))
-            <h4> <strong> @lang('sales-commission.start date') :</strong> {{ request('start') }}</h1>
-            <h4> <strong>@lang('sales-commission.end date') :</strong> {{ request('end') }}</h1>
-        @endif
-        <h4> <strong> @lang('sales-commission.Total Order') : </strong> {{ $totalOrder }}</h4>
-        <h4> <strong> @lang('sales-commission.Total Commission') : </strong>{{ $totalCommission }}</h4>
-        <h4> <strong> @lang('sales-commission.Users') : </strong></h4>
-        <ul>
-            @foreach ($userNames as $name)
-                <li> {{ $name }} </li>
-            @endforeach
-        </ul>
+            @if(request('start') || request('end'))
+                <h4> <strong> @lang('sales-commission.start date') :</strong> {{ request('start') }}</h1>
+                <h4> <strong>@lang('sales-commission.end date') :</strong> {{ request('end') }}</h1>
+            @endif
+            <h4> <strong> @lang('sales-commission.Total Order') : </strong> {{ $totalOrder }}</h4>
+            <h4> <strong> @lang('sales-commission.Total Commission') : </strong>{{ $totalCommission }}</h4>
+            <h4> <strong> @lang('sales-commission.Users') : </strong></h4>
+            <ul>
+                @foreach ($userNames as $name)
+                    <li> {{ $name }} </li>
+                @endforeach
+            </ul>
         </section>
         @lang('sales-commission.Confirmation Message')
         <div class="modal-footer">
