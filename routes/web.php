@@ -295,5 +295,5 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     }
     session()->forget('anjun_token');
     return 'Anjun Token refresh';
-});
+}); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
