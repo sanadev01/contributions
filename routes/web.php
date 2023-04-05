@@ -296,13 +296,5 @@ Route::get('permission',function($id = null){
 });
 
 
-Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
-
-Route::get('commission-report', function(){
-  
-    AffiliateSale::where('is_paid',1)->update([
-     'is_paid' => 0, 
- ]); 
- return 'all commissions status changed.';
-});   
+Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container'); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');

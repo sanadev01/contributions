@@ -27,28 +27,69 @@
                 </div>
             </div>
         @endadmin
-        <div class="row col-12 pr-0 m-0 pl-0" id="datefilters">
-            <div class=" col-6 text-left mb-2 pl-0">
-                <div class="row" id="dateSearch" style="display: none;">
-                    <form class="col-12 pl-0" action="{{ route('admin.affiliate.sale.exports') }}" method="GET"
-                        target="_blank">
+
+        <div class="mb-2 row col-md-12 " id="datefilters">
+            <form action="{{ route('admin.affiliate.sale.exports') }}" method="GET" class="row col-12" id="dateSearch" style="display: none;">
+                @csrf
+                <div class="col-2 ml-0 pl-0">
+                    <label class="pull-left">@lang('sales-commission.start date')</label>
+                    <input type="date" name="start" class="form-control">
+                </div>
+                <div class="col-2">
+                    <label class="pull-left">@lang('sales-commission.end date')</label>
+                    <input type="date" name="end" class="form-control">
+                </div>
+                <div class="col-2">
+                    <label class="pull-left">@lang('parcel.User POBOX Number')</label>
+                    <livewire:components.search-user />
+                </div>
+                <input name="status" type="hidden" value="download">
+
+                <div class="col-2 mt-4">
+                    <button class="btn btn-success mt-1 pull-left" title="@lang('sales-commission.Download')">
+                        @lang('sales-commission.Download') <i class="fa fa-arrow-down"></i>
+                    </button>
+                    <button class="btn btn-info mt-1 ml-2 pull-left d-none" title="@lang('sales-commission.Pay Commission')"
+                        id="toPayCommission">
+                        @lang('sales-commission.Pay Commission')
+                    </button>
+                </div>
+            </form>
+        </div>
+
+
+        {{-- <div class="" >
+            <div class=" col-12 text-left mb-2 pl-0">
+                <div class="row" >
+                    <form class="row" action="{{ route('admin.affiliate.sale.exports') }}" method="GET"  >
                         @csrf
-                        <div class="form-group mb-2 col-4" style="float:left;margin-right:20px;">
+                        <div class="col-lg-3"  >
                             <label>Start Date</label>
                             <input type="date" name="start" class="form-control">
                         </div>
-                        <div class="form-group mx-sm-3 mb-2 col-4" style="float:left;margin-right:20px;">
+                        <div class="col-lg-3"  ">
                             <label>End Date</label>
                             <input type="date" name="end" class="form-control">
                         </div>
-                        <button class="btn btn-success searchDateBtn waves-effect waves-light"
-                            title="@lang('sales-commission.Download Sales')">
-                            <i class="fa fa-arrow-down" aria-hidden="true"></i>
-                        </button>
+                        <div class="col-lg-3"  >
+                            <label  >@lang('parcel.User POBOX Number')</label>
+                            <livewire:components.search-user />
+                        </div>
+                        <div class="col-lg-2">
+                            <input name="status" type="hidden" value="download">                  
+                            <button class="btn btn-success   waves-effect waves-light pull-left" title="@lang('sales-commission.Download')">
+                                @lang('sales-commission.Download') <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                            </button> 
+                        </div>
+                        <div class="col-lg-2">  
+                            <button class="btn btn-info   waves-effect waves-light d-none"  title="@lang('sales-commission.Pay Commission')" id="toPayCommission">   
+                                @lang('sales-commission.Pay Commission')
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="mb-2 row col-md-12 hide "
             @if ($this->search) style="display: block !important;" @endif id="logSearch">
             <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
@@ -71,36 +112,26 @@
         <div class="table-wrapper position-relative">
             <table class="table mb-0 table-bordered table-responsive-md" id="">
                 <thead>
-                    <tr>
+                    <tr >
                         @admin
-                            <th id="optionChkbx">
-                                <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">
-                                    <input type="checkbox" id="checkAll" name="bulk-sales[]" class="check-all"
-                                        value="">
-                                    <span class="vs-checkbox vs-checkbox-sm">
-                                        <span class="vs-checkbox--check">
-                                            <i class="vs-icon feather icon-check"></i>
-                                        </span>
-                                    </span>
-                                </div>
-                            </th>
+                        <th style="max-width: 30px;"   >
+                            <select name="" id="bulk-actions" class="form-control">
+                                <option value="clear">Clear All</option>
+                                <option value="checkAll">Select All</option>
+                                <option value="pay-commission"> @lang('sales-commission.Pay Commission')</option>
+                            </select>
+                        </th>
                         @endadmin
                         <th>@lang('sales-commission.Date')</th>
                         @admin
                             <th>@lang('sales-commission.User')</th>
                         @endadmin
                         <th>Commission From</th>
-                        {{-- <th>@lang('sales-commission.Order ID')</th> --}}
                         <th>WHR#</th>
-                        {{-- <th>Tracking Code</th> --}}
-                        {{-- <th>Customer Reference</th>
-                        <th>Carrier Tracking#</th>
-                        <th>Weight</th> --}}
                         <th>@lang('sales-commission.Value')</th>
                         <th>@lang('sales-commission.Type')</th>
                         <th>@lang('sales-commission.Commission')</th>
                         <th>@lang('Is Paid')</th>
-                        {{-- <th>@lang('status')</th> --}}
                         @admin
                             <th>@lang('Action')</th>
                         @endadmin
