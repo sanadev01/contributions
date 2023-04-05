@@ -15,11 +15,10 @@ class CommissionModalController extends Controller
             'status' => 'unpaid',
         ]), false); 
         $totalOrder = $sales->count();
-        $totalCommission = $sales->sum('commission');
-        
+        $totalCommission = number_format($sales->sum('commission'),2);      
         $userIds = $sales->pluck('user_id')->unique()->toArray();
         $userNames = User::whereIn('id',$userIds)->pluck('name'); 
-         
+                 
         return view('admin.modals.orders.commission', compact('userNames', 'totalCommission', 'totalOrder','sales'));
     }
 }
