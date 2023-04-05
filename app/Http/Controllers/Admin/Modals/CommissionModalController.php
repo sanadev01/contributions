@@ -12,7 +12,7 @@ class CommissionModalController extends Controller
 {
     public function __invoke(Request $request)
     {
-        if(Auth::user()->isUser()){ 
+        if(!Auth::user()->isAdmin()){ 
             abort(401);
         }
         $sales =  (new AffiliateSaleRepository)->get(request()->merge([
