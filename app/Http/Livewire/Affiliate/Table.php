@@ -26,6 +26,7 @@ class Table extends Component
     public $order;
     public $user;
     public $whr;
+    public $status;
     public $corrios_tracking;
     public $reference;
     public $tracking;
@@ -53,6 +54,7 @@ class Table extends Component
             'value' => $this->value,
             'user' => $this->user,
             'whr' => $this->whr,
+            'status' => $this->status,
             'corrios_tracking' => $this->corrios_tracking,
             'reference' => $this->reference,
             'tracking' => $this->tracking,

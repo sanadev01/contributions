@@ -135,3 +135,69 @@
         @include('layouts.livewire.loading')
     </div>
 </div>
+<div id="toPay" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+@section('js')
+    <script> 
+        $('#toPayCommission').click(function(e) {
+            e.preventDefault();
+            start = $("input[name=start]").val()
+            end = $("input[name=end]").val()
+            user_id = $("input[name=user_id]").val()
+            loadModal(null,start,end,user_id)
+        }); 
+
+        $('body').on('change', '#bulk-actions', function() {
+
+            if ($(this).val() == 'clear') {
+                $('.bulk-sales').prop('checked', false)
+            } else if ($(this).val() == 'checkAll') {
+                $('.bulk-sales').prop('checked', true)
+            } else if ($(this).val() == 'pay-commission') {
+                var orderIds = [];
+                $.each($(".bulk-sales:checked"), function() {
+                    orderIds.push($(this).val()); 
+                });
+                loadModal(JSON.stringify(orderIds)); 
+            }
+        });
+
+        function loadModal(ids,start=null,end=null,user_id=null) {
+            $.ajax({
+                url: "{{ route('admin.modals.order.commissions') }}",
+                type: 'GET',
+                data: {
+                    orderIds:ids,
+                    start: start,
+                    end: end,
+                    user_id: user_id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    $('.modal-content').html(data);
+                    $('#toPay').modal('show');
+
+                },
+            });
+        }
+
+        $("input").change(function() {
+            togglePay()
+            setTimeout(togglePay, 1000);
+        }); 
+        function togglePay() {
+            if ($("input[name=start]").val() || $("input[name=end]").val() || $("input[name=user_id]").val()) {
+                $("#toPayCommission").removeClass("d-none");
+            } else {
+                $("#toPayCommission").addClass("d-none");
+            }
+        }
+        togglePay()
+    </script>
+@endsection

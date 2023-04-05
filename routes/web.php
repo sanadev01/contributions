@@ -241,6 +241,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('report/{user}/shipment-user', \ShipmentByServiceController::class)->name('report.shipment-user');
             Route::get('parcel/{parcel}/consolidation-print', \ConsolidationPrintController::class)->name('parcel.consolidation-print');
             Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
+            Route::get('commissions', \CommissionModalController::class)->name('order.commissions');
             Route::get('order/{error}/edit/{edit?}', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'edit'])->name('order.error.edit');
             Route::get('order/{error}/show', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'show'])->name('order.error.show');
             Route::get('package/{package}/users', [\App\Http\Controllers\Admin\Rates\ProfitPackageController::class,'packageUsers'])->name('package.users');

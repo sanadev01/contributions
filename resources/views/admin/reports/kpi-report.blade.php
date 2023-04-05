@@ -39,8 +39,8 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-1 " id="total">0 </h3>
-                                                    <p class="text-center display-5"><strong>Total Orders</strong></p>
+                                                    <h3 class="text-center font-weight-bold my-1 font-black" id="total">0 </h3>
+                                                    <p class="text-center display-5 font-black"><strong>Total Orders</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -54,8 +54,8 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-1 " id="taxed">0 </h3>
-                                                    <p class="text-center display-5"><strong>Taxed</strong></p>
+                                                    <h3 class="text-center font-weight-bold my-1 font-black" id="taxed">0 </h3>
+                                                    <p class="text-center display-5 font-black"><strong>Taxed</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -69,8 +69,8 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-1 " id="delivered">0 </h3>
-                                                    <p class="text-center display-5"><strong>Delivered</strong></p>
+                                                    <h3 class="text-center font-weight-bold my-1 font-black" id="delivered">0 </h3>
+                                                    <p class="text-center display-5 font-black"><strong>Delivered</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -84,8 +84,8 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-1 " id="returned">0 </h3>
-                                                    <p class="text-center display-5"><strong>Returned</strong></p>
+                                                    <h3 class="text-center font-weight-bold my-1 font-black" id="returned">0 </h3>
+                                                    <p class="text-center display-5 font-black"><strong>Returned</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -96,21 +96,21 @@
                             {{-- Report Report  --}}
                             <div class=" col-lg-4 col-sm-12 d-flex flex-column justify-content-center ">
                                 <div class="filter-card " id="filter-card">
-                                    <h4 class="text-center m-4 font-weight-bold">
+                                    <h4 class="text-center m-4 font-weight-bold font-black">
                                         Report Generator
                                     </h4>
                                     <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
-                                        <label for="startDate " class="mt-3 mb-2 "><strong>Start Date</strong></label><br>
+                                        <label for="startDate " class="mt-3 mb-2 font-black"><strong>Start Date</strong></label><br>
                                         <div class="input-group">
                                             <input class="form-control py-2 mr-1 p-3" type="date" name="start_date"
                                                 id="startDate">
                                         </div>
-                                        <label for="end-date" class="mt-4 mb-2"><strong>End Date</strong></label><br>
+                                        <label for="end-date" class="mt-4 mb-2 font-black"><strong>End Date</strong></label><br>
                                         <div class="input-group">
                                             <input name="end_date" id="endDate" class="form-control py-2 mr-1 p-3"
                                                 type="date">
                                         </div>
-                                        <label for="tracking_code" class="mt-4 mb-2"><strong>Tracking Code</strong></label><br>
+                                        <label for="tracking_code" class="mt-4 mb-2 font-black"><strong>Tracking Code</strong></label><br>
                                         <div class="input-group">
                                             <textarea id="tracking_code" value="tracking code" type="text" placeholder="Please Enter Tracking Codes"
                                                 rows="4" class="form-control py-2 mr-1" name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
@@ -161,17 +161,17 @@
                     <table class="table  table-borderless p-0 table-responsive-md table-striped  " id="kpi-report">
                         <thead>
                             <tr id="kpiHead">
-                                <th class="py-3">Order Date</th>
-                                <th class="py-3">User</th>
-                                <th class="py-3">@lang('orders.Tracking')</th>
-                                <th class="py-3">@lang('orders.Type Package')</th>
-                                <th class="py-3">@lang('orders.First Event')</th>
-                                <th class="py-3">@lang('orders.Last Event')</th>
-                                <th class="py-3">@lang('orders.Days Between')</th>
-                                <th class="py-3">@lang('orders.Last Event')</th>
-                                <th class="py-3">@lang('orders.Taxed')</th>
-                                <th class="py-3">@lang('orders.Delivered')</th>
-                                <th class="py-3">@lang('orders.Returned')</th>
+                                <th class="py-3 font-black">Order Date</th>
+                                <th class="py-3 font-black">User</th>
+                                <th class="py-3 font-black">@lang('orders.Tracking')</th>
+                                <th class="py-3 font-black">@lang('orders.Type Package')</th>
+                                <th class="py-3 font-black">@lang('orders.First Event')</th>
+                                <th class="py-3 font-black">@lang('orders.Last Event')</th>
+                                <th class="py-3 font-black">@lang('orders.Days Between')</th>
+                                <th class="py-3 font-black">@lang('orders.Last Event')</th>
+                                <th class="py-3 font-black">@lang('orders.Taxed')</th>
+                                <th class="py-3 font-black">@lang('orders.Delivered')</th>
+                                <th class="py-3 font-black">@lang('orders.Returned')</th>
                             </tr>
                         </thead>
                         <tfoot class="search-header">
@@ -221,18 +221,18 @@
                                                         <p class="center-text">{{ optional(optional(optional($data)['evento'])[0])['descricao'] }}
                                                         </p>
                                                     </td>
-                                                    <td>  {{ sortTrackingEvents($data, null)['taxed'] }}  </td>
-                                                    <td> {{ sortTrackingEvents($data, null)['delivered'] }} </td>
-                                                    <td> {{ sortTrackingEvents($data, null)['returned'] }} </td>
+                                                    <td><p class="center-text">{{ sortTrackingEvents($data, null)['taxed'] }}</p></td>
+                                                    <td><p class="center-text">{{ sortTrackingEvents($data, null)['delivered'] }}</p></td>
+                                                    <td><p class="center-text">{{ sortTrackingEvents($data, null)['returned'] }}</p></td>
                                                 @else
-                                                    <td colspan="11">No Trackings Found</td>
+                                                    <td colspan="11"><p class="center-text">No Trackings Found</p></td>
                                                 @endif
                                             </tr>
                                         @endif
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="11" class="text-center ">No Trackings Found</td>
+                                        <td colspan="11" class="text-center">No Trackings Found</td>
 
                                     </tr>
                                 @endif
