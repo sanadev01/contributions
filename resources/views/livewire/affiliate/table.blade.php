@@ -2,8 +2,8 @@
     @admin
         <div class="row">
             <div class="col-12 text-right mb-3">
-                <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $ {{ number_format($balance->where('is_paid', true)->sum('value'), 2) }}</span></p>
-                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $ {{ number_format($balance->where('is_paid', false)->sum('value'), 2) }}</span></p>
+                <p class="mr-2 h5">Paid Commission:<span class="text-success h4">${{ number_format($balance->where('is_paid', true)->sum('commission'), 2) }}</span></p>
+                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4">${{ number_format($balance->where('is_paid', false)->sum('commission'), 2) }}</span></p>
             </div>
         </div>
     @endadmin
@@ -20,14 +20,12 @@
             </select>
         </div>
         <div class="col-11 text-right">
-            <form action="{{ route('admin.affiliate.sale.exports') }}" method="GET" target="_blank" class="row col-12">
+            <form action="{{ route('admin.affiliate.sale.exports') }}" method="GET" class="row col-12">
                 @csrf
                 <div class="col-2">
                     <label class="pull-left">@lang('sales-commission.start date')</label>
                     <input type="date" name="start" class="form-control">
                 </div>
-
-
                 <div class="col-2">
                     <label class="pull-left">@lang('sales-commission.end date')</label>
                     <input type="date" name="end" class="form-control">
@@ -36,19 +34,15 @@
                     <label class="pull-left">@lang('parcel.User POBOX Number')</label>
                     <livewire:components.search-user />
                 </div>
-                <div class="col-2">
-                    <label class="pull-left">@lang('Type')</label>
-                    <select type="text" name="status" class="form-control">
-                        <option value="">Select option</option>
-                        <option value="downlaod">Download Report</option>
-                        @if(Auth::user()->isAdmin())
-                            <option value="toPay">Pay Commissions</option>
-                        @endif
-                    </select>
-                </div>
+                <input name="status" type="hidden" value="download">
+
                 <div class="col-2 mt-4">
-                    <button class="btn btn-success mt-1 pull-left" title="@lang('sales-commission.Download Pay')">
-                        @lang('sales-commission.Download Pay') <i class="fa fa-arrow-down"></i>
+                    <button class="btn btn-success mt-1 pull-left" title="@lang('sales-commission.Download')">
+                        @lang('sales-commission.Download') <i class="fa fa-arrow-down"></i>
+                    </button>
+                    <button class="btn btn-info mt-1 ml-2 pull-left d-none" title="@lang('sales-commission.Pay Commission')"
+                        id="toPayCommission">
+                        @lang('sales-commission.Pay Commission')
                     </button>
                 </div>
             </form>
@@ -58,15 +52,9 @@
         <table class="table mb-0 table-responsive-md" id="">
             <thead>
                 <tr>
-                    @admin
-                        <th style="min-width: 100px;">
-                            <select name="" id="bulk-actions" class="form-control">
-                                <option value="clear">Clear All</option>
-                                <option value="checkAll">Select All</option>
-                                <option value="pay-commission">Pay Commission</option>
-                            </select>
-                        </th>
-                    @endadmin
+                    <th style="min-width: 100px;">
+                        Pay Option
+                    </th>
                     <th>@lang('sales-commission.Date')</th>
                     @admin
                         <th>@lang('sales-commission.User')</th>
@@ -82,26 +70,31 @@
                     <th>@lang('sales-commission.Type')</th>
                     <th>@lang('sales-commission.Commission')</th>
                     <th>@lang('Is Paid')</th>
-                    {{-- <th>@lang('status')</th> --}}
                     @admin
                         <th>@lang('Action')</th>
                     @endadmin
                 </tr>
                 <tr class="no-print">
                     @admin
-                        <th></th>
+                        <th style="min-width: 100px;">
+                            <select name="" id="bulk-actions" class="form-control">
+                                <option value="clear">Clear All</option>
+                                <option value="checkAll">Select All</option>
+                                <option value="pay-commission">@lang('sales-commission.Pay Commission')</option>
+                            </select>
+                        </th>
                     @endadmin
                     <th>
                         <div class="row">
                             <input type="date" class="form-control col-md-6" wire:model.debounce.1000ms="start">
                             <input type="date" class="form-control col-md-6" wire:model.debounce.1000ms="end">
                         </div>
-                        
+
                     </th>
                     @admin
-                    <th>
-                        <input type="search" class="form-control" wire:model.debounce.1000ms="name">
-                    </th>
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="name">
+                        </th>
                     @endadmin
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="user">
@@ -125,11 +118,10 @@
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="weight">
                     </th>
-                    
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="value">
                     </th>
-                    <th >
+                    <th>
                         <select class="form-control" wire:model="saleType">
                             <option value="">All</option>
                             <option value="flat">Flat</option>
@@ -139,7 +131,13 @@
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="commission">
                     </th>
-                    <th></th>
+                    <th>
+                        <select class="form-control" wire:model="status">
+                            <option value="">All</option>
+                            <option value="unpaid">Unpaid</option>
+                            <option value="paid">Paid</option>
+                        </select>
+                    </th>
                     <th></th>
                     @admin
                         <th></th>
@@ -148,7 +146,7 @@
             </thead>
             <tbody>
                 @forelse ($sales as $sale)
-                    @include('admin.affiliate.components.sale-row',['sale'=>$sale])    
+                    @include('admin.affiliate.components.sale-row', ['sale' => $sale])
                 @empty
                     <x-tables.no-record colspan="15"></x-tables.no-record>
                 @endforelse
@@ -160,3 +158,69 @@
     </div>
     @include('layouts.livewire.loading')
 </div>
+<div id="toPay" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+@section('js')
+    <script> 
+        $('#toPayCommission').click(function(e) {
+            e.preventDefault();
+            start = $("input[name=start]").val()
+            end = $("input[name=end]").val()
+            user_id = $("input[name=user_id]").val()
+            loadModal(null,start,end,user_id)
+        }); 
+
+        $('body').on('change', '#bulk-actions', function() {
+
+            if ($(this).val() == 'clear') {
+                $('.bulk-sales').prop('checked', false)
+            } else if ($(this).val() == 'checkAll') {
+                $('.bulk-sales').prop('checked', true)
+            } else if ($(this).val() == 'pay-commission') {
+                var orderIds = [];
+                $.each($(".bulk-sales:checked"), function() {
+                    orderIds.push($(this).val()); 
+                });
+                loadModal(JSON.stringify(orderIds)); 
+            }
+        });
+
+        function loadModal(ids,start=null,end=null,user_id=null) {
+            $.ajax({
+                url: "{{ route('admin.modals.order.commissions') }}",
+                type: 'GET',
+                data: {
+                    orderIds:ids,
+                    start: start,
+                    end: end,
+                    user_id: user_id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    $('.modal-content').html(data);
+                    $('#toPay').modal('show');
+
+                },
+            });
+        }
+
+        $("input").change(function() {
+            togglePay()
+            setTimeout(togglePay, 1000);
+        }); 
+        function togglePay() {
+            if ($("input[name=start]").val() || $("input[name=end]").val() || $("input[name=user_id]").val()) {
+                $("#toPayCommission").removeClass("d-none");
+            } else {
+                $("#toPayCommission").addClass("d-none");
+            }
+        }
+        togglePay()
+    </script>
+@endsection
