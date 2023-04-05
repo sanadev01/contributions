@@ -57,9 +57,9 @@
         <table class="table mb-0 table-responsive-md" id="">
             <thead>
                 <tr>
-                    <th style="min-width: 100px;">
-                        Pay Option
-                    </th>
+                    @admin
+                        <th style="min-width: 100px;"> Pay Option  </th>
+                    @endadmin
                     <th>@lang('sales-commission.Date')</th>
                     @admin
                         <th>@lang('sales-commission.User')</th>
