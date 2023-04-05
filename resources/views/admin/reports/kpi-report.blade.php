@@ -39,8 +39,8 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-1 text-dark" id="total">0 </h3>
-                                                    <p class="text-center display-5 text-dark"><strong>Total Orders</strong></p>
+                                                    <h3 class="text-center font-weight-bold my-1 font-black" id="total">0 </h3>
+                                                    <p class="text-center display-5 font-black"><strong>Total Orders</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -54,8 +54,8 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-1 text-dark" id="taxed">0 </h3>
-                                                    <p class="text-center display-5 text-dark"><strong>Taxed</strong></p>
+                                                    <h3 class="text-center font-weight-bold my-1 font-black" id="taxed">0 </h3>
+                                                    <p class="text-center display-5 font-black"><strong>Taxed</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -69,8 +69,8 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-1 text-dark" id="delivered">0 </h3>
-                                                    <p class="text-center display-5 text-dark"><strong>Delivered</strong></p>
+                                                    <h3 class="text-center font-weight-bold my-1 font-black" id="delivered">0 </h3>
+                                                    <p class="text-center display-5 font-black"><strong>Delivered</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -84,8 +84,8 @@
                                             </div>
                                             <div class="card-body">
                                                 <div>
-                                                    <h3 class="text-center font-weight-bold my-1 text-dark" id="returned">0 </h3>
-                                                    <p class="text-center display-5 text-dark"><strong>Returned</strong></p>
+                                                    <h3 class="text-center font-weight-bold my-1 font-black" id="returned">0 </h3>
+                                                    <p class="text-center display-5 font-black"><strong>Returned</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -96,21 +96,21 @@
                             {{-- Report Report  --}}
                             <div class=" col-lg-4 col-sm-12 d-flex flex-column justify-content-center ">
                                 <div class="filter-card " id="filter-card">
-                                    <h4 class="text-center m-4 font-weight-bold text-dark">
+                                    <h4 class="text-center m-4 font-weight-bold font-black">
                                         Report Generator
                                     </h4>
                                     <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
-                                        <label for="startDate " class="mt-3 mb-2 text-dark"><strong>Start Date</strong></label><br>
+                                        <label for="startDate " class="mt-3 mb-2 font-black"><strong>Start Date</strong></label><br>
                                         <div class="input-group">
                                             <input class="form-control py-2 mr-1 p-3" type="date" name="start_date"
                                                 id="startDate">
                                         </div>
-                                        <label for="end-date" class="mt-4 mb-2 text-dark"><strong>End Date</strong></label><br>
+                                        <label for="end-date" class="mt-4 mb-2 font-black"><strong>End Date</strong></label><br>
                                         <div class="input-group">
                                             <input name="end_date" id="endDate" class="form-control py-2 mr-1 p-3"
                                                 type="date">
                                         </div>
-                                        <label for="tracking_code" class="mt-4 mb-2 text-dark"><strong>Tracking Code</strong></label><br>
+                                        <label for="tracking_code" class="mt-4 mb-2 font-black"><strong>Tracking Code</strong></label><br>
                                         <div class="input-group">
                                             <textarea id="tracking_code" value="tracking code" type="text" placeholder="Please Enter Tracking Codes"
                                                 rows="4" class="form-control py-2 mr-1" name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
@@ -161,17 +161,17 @@
                     <table class="table  table-borderless p-0 table-responsive-md table-striped  " id="kpi-report">
                         <thead>
                             <tr id="kpiHead">
-                                <th class="py-3 text-dark">Order Date</th>
-                                <th class="py-3 text-dark">User</th>
-                                <th class="py-3 text-dark">@lang('orders.Tracking')</th>
-                                <th class="py-3 text-dark">@lang('orders.Type Package')</th>
-                                <th class="py-3 text-dark">@lang('orders.First Event')</th>
-                                <th class="py-3 text-dark">@lang('orders.Last Event')</th>
-                                <th class="py-3 text-dark">@lang('orders.Days Between')</th>
-                                <th class="py-3 text-dark">@lang('orders.Last Event')</th>
-                                <th class="py-3 text-dark">@lang('orders.Taxed')</th>
-                                <th class="py-3 text-dark">@lang('orders.Delivered')</th>
-                                <th class="py-3 text-dark">@lang('orders.Returned')</th>
+                                <th class="py-3 font-black">Order Date</th>
+                                <th class="py-3 font-black">User</th>
+                                <th class="py-3 font-black">@lang('orders.Tracking')</th>
+                                <th class="py-3 font-black">@lang('orders.Type Package')</th>
+                                <th class="py-3 font-black">@lang('orders.First Event')</th>
+                                <th class="py-3 font-black">@lang('orders.Last Event')</th>
+                                <th class="py-3 font-black">@lang('orders.Days Between')</th>
+                                <th class="py-3 font-black">@lang('orders.Last Event')</th>
+                                <th class="py-3 font-black">@lang('orders.Taxed')</th>
+                                <th class="py-3 font-black">@lang('orders.Delivered')</th>
+                                <th class="py-3 font-black">@lang('orders.Returned')</th>
                             </tr>
                         </thead>
                         <tfoot class="search-header">
