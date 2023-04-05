@@ -16,7 +16,7 @@ class CommissionModalController extends Controller
         $totalOrder = $sales->count();
         $totalCommission = $sales->sum('value');
         $groupByUser = $sales->groupBy('user_id');
-
+        
         return view('admin.modals.orders.commission', compact('groupByUser', 'totalCommission', 'totalOrder'));
     }
 }
