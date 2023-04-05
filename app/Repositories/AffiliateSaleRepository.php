@@ -18,8 +18,6 @@ class AffiliateSaleRepository
                 $query->where('referrer_id', $request->user_id);
             }
         }
-
-        
         if ($request->orderIds) {
               $query->whereIn('id', json_decode($request->orderIds));
         }

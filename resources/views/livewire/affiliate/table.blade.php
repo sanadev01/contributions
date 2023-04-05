@@ -121,7 +121,6 @@
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="weight">
                     </th>
-
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="value">
                     </th>

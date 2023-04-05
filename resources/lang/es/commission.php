@@ -1,7 +1,5 @@
 <?php
-
-return [ 
-    
+return [
     "Pay" => "Pagar" ,
     "Download" => "Descargar" ,
     "Total Commission" => "Comisión total" ,

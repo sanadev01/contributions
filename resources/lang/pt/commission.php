@@ -1,5 +1,4 @@
 <?php
-
 return [ 
     "Pay" => "Pagar" ,
     "Download" => "Download" ,
