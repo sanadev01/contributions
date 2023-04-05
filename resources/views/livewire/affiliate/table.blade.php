@@ -2,8 +2,8 @@
     @admin
         <div class="row">
             <div class="col-12 text-right mb-3">
-                <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> ${{ number_format($balance->where('is_paid', true)->sum('value'), 2) }}</span></p>
-                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> ${{ number_format($balance->where('is_paid', false)->sum('value'), 2) }}</span></p>
+                <p class="mr-2 h5">Paid Commission:<span class="text-success h4">${{ number_format($balance->where('is_paid', true)->sum('commission'), 2) }}</span></p>
+                <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4">${{ number_format($balance->where('is_paid', false)->sum('commission'), 2) }}</span></p>
             </div>
         </div>
     @endadmin
@@ -26,8 +26,6 @@
                     <label class="pull-left">@lang('sales-commission.start date')</label>
                     <input type="date" name="start" class="form-control">
                 </div>
-
-
                 <div class="col-2">
                     <label class="pull-left">@lang('sales-commission.end date')</label>
                     <input type="date" name="end" class="form-control">
@@ -42,9 +40,9 @@
                     <button class="btn btn-success mt-1 pull-left" title="@lang('sales-commission.Download')">
                         @lang('sales-commission.Download') <i class="fa fa-arrow-down"></i>
                     </button>
-
-                    <button class="btn btn-info mt-1 ml-2 pull-left d-none" title="@lang('sales-commission.Pay Commission')" id="toPayCommission">
-                        @lang('sales-commission.Pay Commission')  
+                    <button class="btn btn-info mt-1 ml-2 pull-left d-none" title="@lang('sales-commission.Pay Commission')"
+                        id="toPayCommission">
+                        @lang('sales-commission.Pay Commission')
                     </button>
                 </div>
             </form>
@@ -54,9 +52,8 @@
         <table class="table mb-0 table-responsive-md" id="">
             <thead>
                 <tr>
-                    
                     <th style="min-width: 100px;">
-                          Pay Option
+                        Pay Option
                     </th>
                     <th>@lang('sales-commission.Date')</th>
                     @admin
@@ -73,7 +70,6 @@
                     <th>@lang('sales-commission.Type')</th>
                     <th>@lang('sales-commission.Commission')</th>
                     <th>@lang('Is Paid')</th>
-                    {{-- <th>@lang('status')</th> --}}
                     @admin
                         <th>@lang('Action')</th>
                     @endadmin
@@ -162,60 +158,21 @@
     </div>
     @include('layouts.livewire.loading')
 </div>
-
-
 <div id="toPay" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
         </div>
     </div>
 </div>
- 
-
-
 @section('js')
-    <script>
-        function payCommission() { 
-            $("input[name=status]").val('toPay').change();
-            $("#affiliateSale").submit();
-        }
-
+    <script> 
         $('#toPayCommission').click(function(e) {
-            e.preventDefault(); 
+            e.preventDefault();
             start = $("input[name=start]").val()
-            end = $("input[name=end]").val() 
+            end = $("input[name=end]").val()
             user_id = $("input[name=user_id]").val()
-            $.ajax({
-                url: "{{ route('admin.modals.order.commissions') }}",
-                type: 'GET',
-                data: {
-                    start: start,
-                    end: end,
-                    user_id: user_id
-                },
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                success: function(data) {
-                    $('.modal-content').html(data);
-                    $('#toPay').modal('show');
-                },
-
-            });
-        });
-
-        $("input").change(function() { 
-              setTimeout(togglePay, 1000); 
-        });
-
-        function togglePay() { 
-            if ($("input[name=start]").val() || $("input[name=end]").val() || $("input[name=user_id]").val()) {
-                $("#toPayCommission").removeClass("d-none");
-            }else{
-                $("#toPayCommission").addClass("d-none");
-            }
-        }
-        togglePay()
+            loadModal(null,start,end,user_id)
+        }); 
 
         $('body').on('change', '#bulk-actions', function() {
 
@@ -226,28 +183,44 @@
             } else if ($(this).val() == 'pay-commission') {
                 var orderIds = [];
                 $.each($(".bulk-sales:checked"), function() {
-                    orderIds.push($(this).val());
-
-                    // $(".result").append('HD-' + this.value + ',');
-                }); 
-                $('#bulk_sale_form #command').val('pay-commission');
-                $('#bulk_sale_form #data').val(JSON.stringify(orderIds));
-                $.ajax({
-                    url: "{{ route('admin.modals.order.commissions') }}",
-                    type: 'GET',
-                    data: {
-                        orderIds: JSON.stringify(orderIds)
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    success: function(data) { 
-                            $('.modal-content').html(data);
-                            $('#toPay').modal('show');
-
-                    },
+                    orderIds.push($(this).val()); 
                 });
+                loadModal(JSON.stringify(orderIds)); 
             }
         });
+
+        function loadModal(ids,start=null,end=null,user_id=null) {
+            $.ajax({
+                url: "{{ route('admin.modals.order.commissions') }}",
+                type: 'GET',
+                data: {
+                    orderIds:ids,
+                    start: start,
+                    end: end,
+                    user_id: user_id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    $('.modal-content').html(data);
+                    $('#toPay').modal('show');
+
+                },
+            });
+        }
+
+        $("input").change(function() {
+            togglePay()
+            setTimeout(togglePay, 1000);
+        }); 
+        function togglePay() {
+            if ($("input[name=start]").val() || $("input[name=end]").val() || $("input[name=user_id]").val()) {
+                $("#toPayCommission").removeClass("d-none");
+            } else {
+                $("#toPayCommission").addClass("d-none");
+            }
+        }
+        togglePay()
     </script>
 @endsection

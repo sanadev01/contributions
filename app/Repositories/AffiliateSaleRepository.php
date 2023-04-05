@@ -46,11 +46,6 @@ class AffiliateSaleRepository
             });
         }
         
-        if(Auth::user()->isAdmin() && $request->status == 'toPay'){
-            return $query->where('is_paid',false)->update([
-                'is_paid' => true
-            ]);
-        }
         if($request->status == 'downlaod'){
             return $query->get()->sortByDesc('order.user_id');
         }
