@@ -39,12 +39,12 @@
                 <input name="status" type="hidden" value="download">
 
                 <div class="col-2 mt-4">
-                    <button class="btn btn-success mt-1 pull-left" title="@lang('commission.Download')">
-                        @lang('commission.Download') <i class="fa fa-arrow-down"></i>
+                    <button class="btn btn-success mt-1 pull-left" title="@lang('sales-commission.Download')">
+                        @lang('sales-commission.Download') <i class="fa fa-arrow-down"></i>
                     </button>
 
-                    <button class="btn btn-info mt-1 ml-2 pull-left d-none" title="@lang('commission.Pay')" id="toPayCommission">
-                        @lang('commission.Pay')  
+                    <button class="btn btn-info mt-1 ml-2 pull-left d-none" title="@lang('sales-commission.Pay Commission')" id="toPayCommission">
+                        @lang('sales-commission.Pay Commission')  
                     </button>
                 </div>
             </form>
@@ -84,7 +84,7 @@
                             <select name="" id="bulk-actions" class="form-control">
                                 <option value="clear">Clear All</option>
                                 <option value="checkAll">Select All</option>
-                                <option value="pay-commission">Pay Commission</option>
+                                <option value="pay-commission">@lang('sales-commission.Pay Commission')</option>
                             </select>
                         </th>
                     @endadmin

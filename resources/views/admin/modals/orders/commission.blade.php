@@ -1,7 +1,7 @@
 <div class="modal-header">
     <div class="col-8">
         <h4>
-            @lang('commission.Confirm Pay')
+            @lang('sales-commission.Confirm Pay')
         </h4>
     </div>
 </div>
@@ -11,9 +11,9 @@
             <div class="modal-body">
                 <section class="card invoice-page">
                     @if ($totalOrder)
-                        <h4> <strong> @lang('commission.Total Order') : </strong> {{ $totalOrder }}</h4>
-                        <h4> <strong> @lang('commission.Total Commission') : </strong>{{ $totalCommission }}</h4>
-                        <h4> <strong> @lang('commission.Users') : </strong></h4>
+                        <h4> <strong> @lang('sales-commission.Total Order') : </strong> {{ $totalOrder }}</h4>
+                        <h4> <strong> @lang('sales-commission.Total Commission') : </strong>{{ $totalCommission }}</h4>
+                        <h4> <strong> @lang('sales-commission.Users') : </strong></h4>
                         <ul>
                             @foreach ($groupByUser as $userSales)
                                 <li>
@@ -22,7 +22,7 @@
                             @endforeach
                         </ul>
                         <p>
-                            @lang('commission.Confirmation Message')
+                            @lang('sales-commission.Confirmation Message')
                         </p>
                     @else
                         <x-tables.no-record colspan="15"></x-tables.no-record>
@@ -33,8 +33,8 @@
             <input type="hidden" name="data" id="data" value="{{ request('orderIds') }}">
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id="save"> @lang('commission.Proceed') </button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('commission.Decline')
+            <button type="submit" class="btn btn-primary" id="save"> @lang('sales-commission.Proceed') </button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('sales-commission.Decline')
             </button>
         </div>
     </form>
@@ -43,11 +43,11 @@
         <div class="modal-body">
             <section class="card invoice-page">
                 @if ($totalOrder)
-                    <h4> <strong> @lang('commission.Start Date') :</strong> {{ request('start') }}</h1>
-                        <h4> <strong>@lang('commission.End Date') :</strong> {{ request('end') }}</h1>
-                            <h4> <strong> @lang('commission.Total Order') : </strong> {{ $totalOrder }}</h4>
-                            <h4> <strong> @lang('commission.Total Commission') : </strong>{{ $totalCommission }}</h4>
-                            <h4> <strong> @lang('commission.Users') : </strong></h4>
+                    <h4> <strong> @lang('sales-commission.start date') :</strong> {{ request('start') }}</h1>
+                        <h4> <strong>@lang('sales-commission.end date') :</strong> {{ request('end') }}</h1>
+                            <h4> <strong> @lang('sales-commission.Total Order') : </strong> {{ $totalOrder }}</h4>
+                            <h4> <strong> @lang('sales-commission.Total Commission') : </strong>{{ $totalCommission }}</h4>
+                            <h4> <strong> @lang('sales-commission.Users') : </strong></h4>
                             <ul>
                                 @foreach ($groupByUser as $userSales)
                                     <li>
@@ -56,7 +56,7 @@
                                 @endforeach
                             </ul>
                             <p>
-                                @lang('commission.Confirmation Message')
+                                @lang('sales-commission.Confirmation Message')
                             </p>
                         @else
                             <x-tables.no-record colspan="15"></x-tables.no-record>
@@ -65,7 +65,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" onclick="payCommission()"> @lang('commission.Proceed') </button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('commission.Decline') </button>
+        <button type="submit" class="btn btn-primary" onclick="payCommission()"> @lang('sales-commission.Proceed') </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('sales-commission.Decline') </button>
     </div>
 @endif
