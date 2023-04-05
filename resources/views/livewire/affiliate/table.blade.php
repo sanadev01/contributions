@@ -54,15 +54,10 @@
         <table class="table mb-0 table-responsive-md" id="">
             <thead>
                 <tr>
-                    @admin
-                        <th style="min-width: 100px;">
-                            <select name="" id="bulk-actions" class="form-control">
-                                <option value="clear">Clear All</option>
-                                <option value="checkAll">Select All</option>
-                                <option value="pay-commission">Pay Commission</option>
-                            </select>
-                        </th>
-                    @endadmin
+                    
+                    <th style="min-width: 100px;">
+                          Pay Option
+                    </th>
                     <th>@lang('sales-commission.Date')</th>
                     @admin
                         <th>@lang('sales-commission.User')</th>
@@ -85,7 +80,13 @@
                 </tr>
                 <tr class="no-print">
                     @admin
-                        <th></th>
+                        <th style="min-width: 100px;">
+                            <select name="" id="bulk-actions" class="form-control">
+                                <option value="clear">Clear All</option>
+                                <option value="checkAll">Select All</option>
+                                <option value="pay-commission">Pay Commission</option>
+                            </select>
+                        </th>
                     @endadmin
                     <th>
                         <div class="row">
@@ -203,19 +204,17 @@
             });
         });
 
-        $("input").change(function() {
-            togglePay()
-        
+        $("input").change(function() { 
+              setTimeout(togglePay, 1000); 
         });
 
-        function togglePay() {
-            // alert($("input[name=user_id]").val())
-            // if ($("input[name=start]").val() || $("input[name=user_id]").val()) {
+        function togglePay() { 
+            if ($("input[name=start]").val() || $("input[name=end]").val() || $("input[name=user_id]").val()) {
                 $("#toPayCommission").removeClass("d-none");
-            // }else{
-                // $("#toPayCommission").addClass("d-none");
-            // }
-        } 
+            }else{
+                $("#toPayCommission").addClass("d-none");
+            }
+        }
         togglePay()
 
         $('body').on('change', '#bulk-actions', function() {
