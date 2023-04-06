@@ -108,7 +108,7 @@
                                         <input name="end_date" id="endDate" class="form-control py-2 mr-1 p-3" type="date">
                                     </div>
                                     @if ($isScanKpi)
-                                    <input name="isScanKpi"  type="hidden" value="true">
+                                    <input name="kpiType"  type="hidden" value="scan">
 
                                         <label for="tracking_code" class="mt-4 mb-2 font-black"><strong>@lang('parcel.User POBOX Number')</strong></label><br>
                                         <div class="input-group w-100">
@@ -120,7 +120,7 @@
                                     @else
                                     <label for="tracking_code" class="mt-4 mb-2 font-black"><strong>Tracking  Code</strong></label><br>
                                     <div class="input-group">
-                                        <input name="isScanKpi"  type="hidden" value="false">
+                                        <input name="kpiType"  type="hidden" value="report">
                                         <textarea id="tracking_code" value="tracking code" type="text" placeholder="Please Enter Tracking Codes" 
                                                   rows="4" class="form-control py-2 mr-1"
                                                   name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
