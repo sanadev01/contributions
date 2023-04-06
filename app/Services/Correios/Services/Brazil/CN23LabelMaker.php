@@ -26,6 +26,7 @@ class CN23LabelMaker implements HasLableExport
     private $items;
     private $sumplementryItems;
     private $hasSuplimentary;
+    private $hasDescpCount;
 
     public function __construct()
     {
@@ -40,6 +41,7 @@ class CN23LabelMaker implements HasLableExport
         Rua Barao Do Triunfo, 520 - CJ 152 - Brooklin Paulista
         CEP 04602-001 - São Paulo - SP- Brasil';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
+        $this->hasDescpCount = '';
     }
 
     public function setOrder(Order $order)
@@ -109,15 +111,15 @@ class CN23LabelMaker implements HasLableExport
 
     private function setItems()
     {
-        $this->items = $this->order->items->take(4);
+        $this->getItemsDescpCount();
         return $this;
     }
 
     private function setSuplimentryItems()
     {
-        if ( $this->order->items->count() > 4 ){
+        if ( $this->order->items->count() > 2 ){
             $this->hasSuplimentary = true;
-            $this->sumplementryItems = $this->order->items->skip(4)->chunk(30);
+            $this->getItemsDescpCount();
         }
 
         return $this;
@@ -164,5 +166,22 @@ class CN23LabelMaker implements HasLableExport
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
         ];
+    }
+
+    private function getItemsDescpCount ()
+    {
+        $orderItem = $this->order->items()->take(4)->selectRaw(\DB::raw('LENGTH(description)'))->get()->toArray();
+        $descpItems = array_flatten($orderItem);
+        $itemCount = count($descpItems);
+        
+        if($itemCount > 1 && array_sum(array_slice($descpItems, 0, 2)) > 245) {
+            $itemSelect = 2;
+        }elseif( ($itemCount > 2 && array_sum(array_slice($descpItems, 0, 3)) > 200) || ($itemCount > 3 && array_sum(array_slice($descpItems, 0, 4)) > 257) ) {
+            $itemSelect = 3;
+        }else {
+            $itemSelect = 4;
+        }
+        $this->items = $this->order->items->take($itemSelect);
+        $this->sumplementryItems = $this->order->items->skip($itemSelect)->chunk(30);
     }
 }
