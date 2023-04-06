@@ -57,7 +57,7 @@ class Parcel {
                   'zipCode' => ($order->sender_zipcode) ? $order->sender_zipcode: '33182',
                   'city' => ($order->sender_city) ? $order->sender_city: 'Miami',
                   'state' => ($order->sender_state_id) ? $order->senderState->code: 'FL',
-                  'countryCode' => ($order->sender_country_id) ? $order->senderCountry->code: 'US',
+                  'countryCode' => 'US',
                ],
             ];
       return $packet;
