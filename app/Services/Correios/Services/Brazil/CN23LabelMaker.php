@@ -173,7 +173,7 @@ class CN23LabelMaker implements HasLableExport
         $descpItems = array_flatten($orderItem);
         $itemCount = count($descpItems);
         
-        if($itemCount > 1 && array_sum(array_slice($descpItems, 0, 2)) > 280) {
+        if($itemCount > 1 && array_sum(array_slice($descpItems, 0, 2)) > 245) {
             $itemSelect = 2;
         }elseif( ($itemCount > 2 && array_sum(array_slice($descpItems, 0, 3)) > 200) || ($itemCount > 3 && array_sum(array_slice($descpItems, 0, 4)) > 257) ) {
             $itemSelect = 3;
