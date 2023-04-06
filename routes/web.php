@@ -271,16 +271,16 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id}',function($id){
     
-    // $labelPrinter = new CN23LabelMaker();
+    $labelPrinter = new CN23LabelMaker();
     
     $order = Order::find($id);
-    $order->status = 70;
-    $order->save();
+    // $order->status = 70;
+    // $order->save();
     // dd($order);
-    // $labelPrinter->setOrder($order);
-    // $labelPrinter->setService(2);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
     
-    // return $labelPrinter->download();
+    return $labelPrinter->download();
 });
 
 Route::get('permission',function($id = null){

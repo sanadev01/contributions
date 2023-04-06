@@ -110,36 +110,15 @@ class CN23LabelMaker implements HasLableExport
 
     private function setItems()
     {
-        $this->getItemsDescpCount($this->order);
-        $itemCount = count($this->hasDescpCount);
-        if($itemCount > 1 && array_sum(array_slice($this->hasDescpCount, 1, 2)) > 280){
-            $this->items = $this->order->items->take(2);
-        }elseif($itemCount > 2 && array_sum(array_slice($this->hasDescpCount, 1, 3)) > 200){
-            $this->items = $this->order->items->take(3);
-        }elseif($itemCount > 3 && array_sum(array_slice($this->hasDescpCount, 1, 4)) < 150){
-            $this->items = $this->order->items->take(4);
-        }else {
-            $this->items = $this->order->items->take(4);
-        }
-
+        $this->getItemsDescpCount();
         return $this;
     }
 
     private function setSuplimentryItems()
     {
-        if ( $this->order->items->count() > 1 ){
+        if ( $this->order->items->count() > 2 ){
             $this->hasSuplimentary = true;
-            $this->getItemsDescpCount($this->order);
-            $itemCount = count($this->hasDescpCount);
-            if($itemCount > 1 && array_sum(array_slice($this->hasDescpCount, 1, 2)) > 280){
-                $this->sumplementryItems = $this->order->items->skip(2)->chunk(30);
-            }elseif($itemCount > 2 && array_sum(array_slice($this->hasDescpCount, 1, 3)) > 200){
-                $this->sumplementryItems = $this->order->items->skip(3)->chunk(30);
-            }elseif($itemCount > 3 && array_sum(array_slice($this->hasDescpCount, 1, 4)) < 150){
-                $this->sumplementryItems = $this->order->items->skip(4)->chunk(30);
-            }else {
-                $this->sumplementryItems = $this->order->items->skip(4)->chunk(30);
-            }
+            $this->getItemsDescpCount();
         }
 
         return $this;
@@ -188,13 +167,20 @@ class CN23LabelMaker implements HasLableExport
         ];
     }
 
-    private function getItemsDescpCount (Order $order) {
-        $descpCount = [];
-        foreach ($order->items as $key => $item) {
-            $count= strlen($item->description);
-            array_push($descpCount, $count);
-           if ($key++ > 4) break;
+    private function getItemsDescpCount ()
+    {
+        $orderItem = $this->order->items()->take(4)->selectRaw(\DB::raw('LENGTH(description)'))->get()->toArray();
+        $descpItems = array_flatten($orderItem);
+        $itemCount = count($descpItems);
+        
+        if($itemCount > 1 && array_sum(array_slice($descpItems, 0, 2)) > 280) {
+            $itemSelect = 2;
+        }elseif( ($itemCount > 2 && array_sum(array_slice($descpItems, 0, 3)) > 200) || ($itemCount > 3 && array_sum(array_slice($descpItems, 0, 4)) > 257) ) {
+            $itemSelect = 3;
+        }else {
+            $itemSelect = 4;
         }
-        return $this->hasDescpCount = $descpCount;
+        $this->items = $this->order->items->take($itemSelect);
+        $this->sumplementryItems = $this->order->items->skip($itemSelect)->chunk(30);
     }
 }
