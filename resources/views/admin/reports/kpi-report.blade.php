@@ -120,7 +120,7 @@
                                             Date</strong></label><br>
                                     <div class="input-group">
                                         <input name="end_date" id="endDate" class="form-control py-2 mr-1 p-3"
-                                            type="date">
+                         f                   type="date">
                                     </div>
 
                                     @if ($isScanKpi)
@@ -220,8 +220,7 @@
                             @if ($trackings)
                             @foreach ($trackings['return']['objeto'] as $data)
                             @if (isset($data['evento']))
-                            @if ($isScanKpi && optional(optional(optional($data)['evento'])[0])['descricao'] != 'Objeto
-                            entregue ao destinatário')
+                            @if ($isScanKpi && optional(optional(optional($data)['evento'])[0])['descricao'] != 'Objeto entregue ao destinatário')
                             @continue
                             @endif
 

@@ -1,7 +1,13 @@
 .dataTables_filter {
     display: none;
 }
-
+.position-relative{
+    width: 100%;
+}
+.position-relative > input {
+    width: 100%;
+    padding:10px;
+}
 .imagecard {
     border: 1px solid rgba(46, 61, 73, 0.15);
     margin-top: 0;
