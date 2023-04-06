@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Session;
 use App\Services\Excel\Export\KPIReport;
 use App\Repositories\Reports\KPIReportsRepository;
 use Exception;
-use Illuminate\Support\Facades\Route;
 
 class KPIReportController extends Controller
 {
