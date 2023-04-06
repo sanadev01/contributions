@@ -86,6 +86,17 @@ class UpdateCN23Label
             //FOR CPF
             $this->pdfi->SetFont("Arial", "B", 7);
             $this->pdfi->RotatedText(186, 29.2, 'CPF:', 0);
+            //FOR items
+            foreach($this->order->items  as $key=>$item){
+                if($key>5){
+                    break;
+                }
+                $this->pdfi->SetFont("Arial", "B", 7);
+                $this->pdfi->RotatedText(142, 74+($key*4), $item->sh_code, 0);
+                //FOR items
+                $this->pdfi->SetFont("Arial", "B", 7);
+                $this->pdfi->RotatedText(175.5, 74+($key*4), 'USA', 0);
+            }
             // FOR RETURN ADDRESS
             $this->pdfi->SetFillColor(255, 255, 255);
             $this->pdfi->Rect(60, 22, 40, 12, "F");
