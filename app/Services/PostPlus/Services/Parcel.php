@@ -52,10 +52,10 @@ class Parcel {
                   'name' => $order->getSenderFullName(),
                   'phone' => ($order->sender_phone) ? $order->sender_phone: '',
                   'email' => ($order->sender_email) ? $order->sender_email: '',
-                  'address' => "2200 NW 129TH AVE",
-                  'zipCode' => "33182",
-                  'city' => "FL",
-                  'countryCode' => "US",
+                  'address' => ($order->sender_address) ? $order->sender_address: '2200 NW 129TH AVE',
+                  'zipCode' => ($order->sender_zipcode) ? $order->sender_zipcode: '33182',
+                  'city' => ($order->sender_city) ? $order->sender_city: 'FL',
+                  'countryCode' => ($order->sender_country_id) ? $order->senderCountry->code: 'US',
                ],
             ];
       return $packet;
