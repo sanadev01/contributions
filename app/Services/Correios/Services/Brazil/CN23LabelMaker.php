@@ -112,11 +112,11 @@ class CN23LabelMaker implements HasLableExport
     {
         $this->getItemsDescpCount($this->order);
         $itemCount = count($this->hasDescpCount);
-        if($itemCount > 1 && ($this->hasDescpCount[0]['count']+$this->hasDescpCount[1]['count']) > 280){
+        if($itemCount > 1 && array_sum(array_slice($this->hasDescpCount, 1, 2)) > 280){
             $this->items = $this->order->items->take(2);
-        }elseif($itemCount > 2 && ($this->hasDescpCount[0]['count']+$this->hasDescpCount[1]['count']+$this->hasDescpCount[2]['count']) > 200){
+        }elseif($itemCount > 2 && array_sum(array_slice($this->hasDescpCount, 1, 3)) > 200){
             $this->items = $this->order->items->take(3);
-        }elseif($itemCount > 3 && ($this->hasDescpCount[0]['count']+$this->hasDescpCount[1]['count']+$this->hasDescpCount[2]['count']+$this->hasDescpCount[3]['count']) < 150){
+        }elseif($itemCount > 3 && array_sum(array_slice($this->hasDescpCount, 1, 4)) < 150){
             $this->items = $this->order->items->take(4);
         }else {
             $this->items = $this->order->items->take(4);
@@ -131,11 +131,11 @@ class CN23LabelMaker implements HasLableExport
             $this->hasSuplimentary = true;
             $this->getItemsDescpCount($this->order);
             $itemCount = count($this->hasDescpCount);
-            if($itemCount > 1 && ($this->hasDescpCount[0]['count']+$this->hasDescpCount[1]['count']) > 280){
+            if($itemCount > 1 && array_sum(array_slice($this->hasDescpCount, 1, 2)) > 280){
                 $this->sumplementryItems = $this->order->items->skip(2)->chunk(30);
-            }elseif($itemCount > 2 && ($this->hasDescpCount[0]['count']+$this->hasDescpCount[1]['count']+$this->hasDescpCount[2]['count']) > 200){
+            }elseif($itemCount > 2 && array_sum(array_slice($this->hasDescpCount, 1, 3)) > 200){
                 $this->sumplementryItems = $this->order->items->skip(3)->chunk(30);
-            }elseif($itemCount > 3 && ($this->hasDescpCount[0]['count']+$this->hasDescpCount[1]['count']+$this->hasDescpCount[2]['count']+$this->hasDescpCount[3]['count']) < 150){
+            }elseif($itemCount > 3 && array_sum(array_slice($this->hasDescpCount, 1, 4)) < 150){
                 $this->sumplementryItems = $this->order->items->skip(4)->chunk(30);
             }else {
                 $this->sumplementryItems = $this->order->items->skip(4)->chunk(30);
@@ -189,13 +189,12 @@ class CN23LabelMaker implements HasLableExport
     }
 
     private function getItemsDescpCount (Order $order) {
-        $countDescp = [];
+        $descpCount = [];
         foreach ($order->items as $key => $item) {
             $count= strlen($item->description);
-            $countToPush = ['count' => $count];
-           array_push($countDescp, $countToPush);
+            array_push($descpCount, $count);
            if ($key++ > 4) break;
         }
-        return $this->hasDescpCount = $countDescp;
+        return $this->hasDescpCount = $descpCount;
     }
 }
