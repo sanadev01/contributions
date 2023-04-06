@@ -341,14 +341,14 @@
                     </li>
                     @endcan
                     @can('viewKPIReport', App\Models\Reports::class)
-                    <li class="{{ $isActive(['admin.reports.kpi-report.index']) }}">
-                        <a href="{{ route('admin.reports.kpi-report.index') }}">
+                    <li class="@if(!request('isScanKpi')) active @endif">
+                        <a href="{{ route('admin.reports.kpi-report.index',['isScanKpi' =>false]) }}">
                             <i class="icon_adjst feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.KPI Report')</span>
                         </a>
                     </li> 
-                    <li class="{{ $isActive(['admin.reports.kpi-report-scan.index']) }}">
-                        <a href="{{ route('admin.reports.kpi-report-scan.index') }}">
+                    <li class="@if(request('isScanKpi')) active @endif">
+                        <a href="{{ route('admin.reports.kpi-report.index',['isScanKpi' => true]) }}">
                             <i class="icon_adjst feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.Tax Report Scan')</span>
                         </a>

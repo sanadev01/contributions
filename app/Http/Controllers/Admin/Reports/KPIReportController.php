@@ -20,7 +20,7 @@ class KPIReportController extends Controller
     */
     public function index(Request $request, KPIReportsRepository $kpiReportsRepository)
     {
-        $isScanKpi = Route::getCurrentRoute()->uri == "reports/kpi-report-scan";
+        $isScanKpi =$request->isScanKpi;
  
         $this->authorize('viewKPIReport',Reports::class);
         $trackings = [];
