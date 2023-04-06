@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Session;
 use App\Services\Excel\Export\KPIReport;
 use App\Repositories\Reports\KPIReportsRepository;
 use Exception;
+use Illuminate\Support\Facades\Route;
 
 class KPIReportController extends Controller
 {
@@ -19,6 +20,8 @@ class KPIReportController extends Controller
     */
     public function index(Request $request, KPIReportsRepository $kpiReportsRepository)
     {
+        $isScanKpi = Route::getCurrentRoute()->uri == "reports/kpi-report-scan";
+ 
         $this->authorize('viewKPIReport',Reports::class);
         $trackings = [];
         $trackingCodeUsersName = [];
@@ -35,16 +38,17 @@ class KPIReportController extends Controller
             $trackingCodeUsersName = $response['trackingCodeUsersName'];
             $orderDates = $response['orderDates'];
         }
-        return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates'));
+        return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates','isScanKpi'));
     }
     public function store(Request $request)
     {
         if($request->order){
+            
             $trackings = json_decode($request->order, true);
             $trackingCodeUsersName =json_decode($request->trackingCodeUsersName, true);
             $orderDates =json_decode($request->orderDates, true);
             
-            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, null);
+            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, $request->isScanKpi?'Objeto entregue ao destinatário':null);
             return $exportService->handle();
         }
     } 

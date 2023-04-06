@@ -99,7 +99,7 @@
                                     <h4 class="text-center m-4 font-weight-bold font-black">
                                         Report Generator
                                     </h4>
-                                    <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
+                                    <form action="{{ $isScanKpi?route('admin.reports.kpi-report-scan.index'):route('admin.reports.kpi-report.index') }}" method="GET">
                                         <label for="startDate " class="mt-3 mb-2 font-black"><strong>Start Date</strong></label><br>
                                         <div class="input-group">
                                             <input class="form-control py-2 mr-1 p-3" type="date" name="start_date"
@@ -140,10 +140,9 @@
                                         @if ($trackings)
                                             <input type="hidden" name="order"
                                                 value="{{ collect($trackings['return']['objeto']) }}">
-                                                <input type="hidden" name="trackingCodeUsersName"
-                                                value="{{ collect($trackingCodeUsersName) }}">
-                                                <input type="hidden" name="orderDates"
-                                                value="{{ collect($orderDates) }}">
+                                                <input type="hidden" name="isScanKpi" value="{{ $isScanKpi}}">
+                                                <input type="hidden" name="trackingCodeUsersName" value="{{ collect($trackingCodeUsersName) }}">
+                                                <input type="hidden" name="orderDates" value="{{ collect($orderDates) }}">
                                         @endif
  
                                         <button type="submit" class="btn btn-success waves-effect waves-light p-3"
@@ -191,7 +190,12 @@
                             <tbody>
                                 @if ($trackings)
                                     @foreach ($trackings['return']['objeto'] as $data)
-                                        @if (isset($data['evento'])) 
+                                        @if(isset($data['evento']))
+                                        @if($isScanKpi && optional(optional(optional($data)['evento'])[0])['descricao']!='Objeto entregue ao destinatário')
+                                             @continue
+                                        @endif
+                                        
+                                            
                                             <tr class="count">
                                                 @if (optional($data) && isset(optional($data)['numero']))
                                                     <td>

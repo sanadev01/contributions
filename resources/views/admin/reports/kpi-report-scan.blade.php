@@ -142,7 +142,8 @@
                                 <tbody>
                                     @if($trackings)
                                         @foreach($trackings['return']['objeto'] as $data)
-                                            @if(isset($data['evento']) && optional(optional(optional($data)['evento'])[0])['descricao']=='Aguardando pagamento')
+                                            @if(isset($data['evento']))
+                                              {{-- && (!$isScanKpi || optional(optional(optional($data)['evento'])[0])['descricao']=='Aguardando pagamento')) --}}
                                             <tr class="count">
                                                 @if(optional($data) && isset(optional($data)['numero']))
                                                     <td>{{ $orderDates[optional($data)['numero']] }}</td>
