@@ -98,7 +98,7 @@
                         <div class=" col-lg-4 col-sm-12 d-flex flex-column justify-content-center ">
                             <div class="filter-card " id="filter-card">
                                 <h4 class="text-center m-4 font-weight-bold font-black">  Report Generator </h4>
-                                <form action="{{ $isScanKpi ? route('admin.reports.kpi-report-scan.index') : route('admin.reports.kpi-report.index') }}" method="GET">
+                                <form action="{{ route('admin.reports.kpi-report.index') }}" method="GET">
                                     <label for="startDate " class="mt-3 mb-2 font-black"><strong>Start Date</strong></label><br>
                                     <div class="input-group">
                                         <input class="form-control py-2 mr-1 p-3" type="date" name="start_date" id="startDate">
@@ -108,6 +108,8 @@
                                         <input name="end_date" id="endDate" class="form-control py-2 mr-1 p-3" type="date">
                                     </div>
                                     @if ($isScanKpi)
+                                    <input name="isScanKpi"  type="hidden" value="true">
+
                                         <label for="tracking_code" class="mt-4 mb-2 font-black"><strong>@lang('parcel.User POBOX Number')</strong></label><br>
                                         <div class="input-group w-100">
                                             <livewire:components.search-user selectedId="{{ request('user_id') }}"/>
@@ -118,10 +120,10 @@
                                     @else
                                     <label for="tracking_code" class="mt-4 mb-2 font-black"><strong>Tracking  Code</strong></label><br>
                                     <div class="input-group">
+                                        <input name="isScanKpi"  type="hidden" value="false">
                                         <textarea id="tracking_code" value="tracking code" type="text" placeholder="Please Enter Tracking Codes" 
                                                   rows="4" class="form-control py-2 mr-1"
-                                                  name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}
-                                        </textarea>
+                                                  name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
                                         @error('trackingNumbers')
                                         <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
