@@ -179,7 +179,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('audit-report', AuditReportController::class)->only(['index','create']);
             Route::resource('anjun', AnjunReportController::class)->only(['index','create']);
             Route::resource('kpi-report', KPIReportController::class)->only(['index','store']);
-            Route::resource('kpi-report-scan', KPIReportController::class)->only(['index']);
             Route::get('tax-report', TaxReportController::class)->name('tax-report');
             
         });
