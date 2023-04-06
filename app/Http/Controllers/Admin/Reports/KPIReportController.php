@@ -19,7 +19,7 @@ class KPIReportController extends Controller
     */
     public function index(Request $request, KPIReportsRepository $kpiReportsRepository)
     {
-        $isScanKpi =$request->isScanKpi=='true';
+        $isScanKpi =$request->kpiType == 'scan';
  
         $this->authorize('viewKPIReport',Reports::class);
         $trackings = [];
@@ -47,7 +47,7 @@ class KPIReportController extends Controller
             $trackingCodeUsersName =json_decode($request->trackingCodeUsersName, true);
             $orderDates =json_decode($request->orderDates, true);
             
-            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, $request->isScanKpi?'Aguardando pagamento':null);
+            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, $request->isScanKpi ?'Aguardando pagamento':null);
             return $exportService->handle();
         }
     } 
