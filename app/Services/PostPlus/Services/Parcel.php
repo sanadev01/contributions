@@ -17,7 +17,7 @@ class Parcel {
       } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime) {
          $type = 'Prime';
       } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
-         $type = 'Premium';
+         $type = 'ParcelUPU';
       }
       $refNo = $order->customer_reference;
       $packet = [
@@ -67,6 +67,7 @@ class Parcel {
       
         if (count($order->items) >= 1) {
          $totalQuantity = $order->items->sum('quantity');
+         $totalQuantity = $order->items->sum('quantity');
             foreach ($order->items as $key => $item) {
                 $itemToPush = [];
                 $originCountryCode = optional($order->senderCountry)->code;
@@ -82,6 +83,5 @@ class Parcel {
         }
         return $items;
    }
-
 
 }

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Services\GePS\Client;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
+use App\Repositories\AnjunLabelRepository;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
@@ -22,11 +23,14 @@ use App\Repositories\PostPlusLabelRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Repositories\ColombiaLabelRepository;
+use App\Repositories\POSTNLLabelRepository;
 
 class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order)
     {
+
         if(Auth::id() != $order->user_id){
             return apiResponse(false,'Order not found');
         }
@@ -52,6 +56,7 @@ class OrderLabelController extends Controller
             if ($order->shippingService->is_usps_priority_international || $order->shippingService->is_usps_firstclass_international) {
                 $uspsLabelRepository = new USPSLabelRepository();
                 $uspsLabelRepository->handle($order);
+
                 $error = $uspsLabelRepository->getUSPSErrors();
                 if (!$error) {
                     return $this->commit($order);
@@ -134,6 +139,19 @@ class OrderLabelController extends Controller
                     }
                     if ($corrieosBrazilLabelRepository->getError()) {
                         return $this->rollback($corrieosBrazilLabelRepository->getError());
+                    }
+                }
+                
+                if ($order->shippingService->is_anjun_china){
+                    $anjunLabelRepository = new AnjunLabelRepository();
+                    $anjunLabelRepository->run($order, $request->update_label === 'true' ? true : false); 
+
+                    $order->refresh();
+                    if ($labelData) {
+                        Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                    }
+                    if ($anjunLabelRepository->getError()) {
+                        return $this->rollback($anjunLabelRepository->getError());
                     }
                 }
             }
