@@ -220,7 +220,7 @@
                             @if ($trackings)
                             @foreach ($trackings['return']['objeto'] as $data)
                             @if (isset($data['evento']))
-                            @if ($isScanKpi && optional(optional(optional($data)['evento'])[0])['descricao'] != 'Objeto entregue ao destinatário')
+                            @if ($isScanKpi && optional(optional(optional($data)['evento'])[0])['descricao'] != 'Aguardando pagamento')
                             @continue
                             @endif
 

@@ -48,7 +48,7 @@ class KPIReportController extends Controller
             $trackingCodeUsersName =json_decode($request->trackingCodeUsersName, true);
             $orderDates =json_decode($request->orderDates, true);
             
-            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, $request->isScanKpi?'Objeto entregue ao destinatário':null);
+            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, $request->isScanKpi?'Aguardando pagamento':null);
             return $exportService->handle();
         }
     } 
