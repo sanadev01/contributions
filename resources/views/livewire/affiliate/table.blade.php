@@ -37,21 +37,26 @@
                     <label class="pull-left">@lang('sales-commission.end date')</label>
                     <input type="date" name="end" class="form-control">
                 </div>
-                <div class="col-2">
-                    <label class="pull-left">@lang('parcel.User POBOX Number')</label>
-                    <livewire:components.search-user />
-                </div>
+                    @admin
+                        <div class="col-2">
+                            <label class="pull-left">@lang('parcel.User POBOX Number')</label>
+                            <livewire:components.search-user />
+                        </div>
+                    @endadmin
                 <input name="status" type="hidden" value="download">
 
                 <div class="col-2 mt-4">
                     <button class="btn btn-success mt-1 pull-left" title="@lang('sales-commission.Download')">
                         @lang('sales-commission.Download') <i class="fa fa-arrow-down"></i>
                     </button>
-                    <button class="btn btn-info mt-1 ml-2 pull-left d-none" title="@lang('sales-commission.Pay Commission')"
-                        id="toPayCommission">
-                        @lang('sales-commission.Pay Commission')
-                    </button>
+                        @admin
+                            <button class="btn btn-info mt-1 ml-2 pull-left d-none" title="@lang('sales-commission.Pay Commission')"
+                                id="toPayCommission">
+                                @lang('sales-commission.Pay Commission')
+                            </button>
+                        @endadmin
                 </div>
+                
             </form>
         </div>
 

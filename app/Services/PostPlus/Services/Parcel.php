@@ -17,7 +17,7 @@ class Parcel {
       } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime) {
          $type = 'Prime';
       } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
-         $type = 'Premium';
+         $type = 'ParcelUPU';
       }
       $refNo = $order->customer_reference;
       $packet = [
