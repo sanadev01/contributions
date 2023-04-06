@@ -18,7 +18,7 @@ class KPIReportController extends Controller
      * @return \Illuminate\Http\Response
     */
     public function index(Request $request, KPIReportsRepository $kpiReportsRepository)
-    {
+    { 
         $this->authorize('viewKPIReport',Reports::class);
         $trackings = [];
         $trackingCodeUsersName = [];
@@ -40,11 +40,12 @@ class KPIReportController extends Controller
     public function store(Request $request)
     {
         if($request->order){
+            
             $trackings = json_decode($request->order, true);
             $trackingCodeUsersName =json_decode($request->trackingCodeUsersName, true);
             $orderDates =json_decode($request->orderDates, true);
             
-            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, null);
+            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, $request->type == 'scan' ?'Aguardando pagamento':null);
             return $exportService->handle();
         }
     } 
