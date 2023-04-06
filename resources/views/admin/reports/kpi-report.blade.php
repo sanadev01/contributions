@@ -107,8 +107,8 @@
                                     <div class="input-group">
                                         <input name="end_date" id="endDate" class="form-control py-2 mr-1 p-3" type="date">
                                     </div>
-                                    @if ($isScanKpi)
-                                    <input name="kpiType"  type="hidden" value="scan">
+                                    @if (request('type')=='scan')
+                                    <input name="type"  type="hidden" value="scan">
 
                                         <label for="tracking_code" class="mt-4 mb-2 font-black"><strong>@lang('parcel.User POBOX Number')</strong></label><br>
                                         <div class="input-group w-100">
@@ -120,9 +120,9 @@
                                     @else
                                     <label for="tracking_code" class="mt-4 mb-2 font-black"><strong>Tracking  Code</strong></label><br>
                                     <div class="input-group">
-                                        <input name="kpiType"  type="hidden" value="report">
+                                        <input name="type"  type="hidden" value="report">
                                         <textarea id="tracking_code" value="tracking code" type="text" placeholder="Please Enter Tracking Codes" 
-                                                  rows="4" class="form-control py-2 mr-1"
+                                                  rows="2" class="form-control py-2 mr-1 rounded-lg"
                                                   name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
                                         @error('trackingNumbers')
                                         <div class="help-block text-danger"> {{ $message }} </div>
@@ -145,7 +145,7 @@
                                     @csrf
                                     @if ($trackings)
                                         <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
-                                        <input type="hidden" name="isScanKpi" value="{{ $isScanKpi }}">
+                                        <input type="hidden" name="type" value="{{ request('type') }}">
                                         <input type="hidden" name="trackingCodeUsersName" value="{{ collect($trackingCodeUsersName) }}">
                                         <input type="hidden" name="orderDates" value="{{ collect($orderDates) }}">
                                     @endif
@@ -195,7 +195,7 @@
                             @if ($trackings)
                             @foreach ($trackings['return']['objeto'] as $data)
                                 @if (isset($data['evento']))
-                                        @if ($isScanKpi && optional(optional(optional($data)['evento'])[0])['descricao'] != 'Aguardando pagamento')
+                                        @if (request('type')=='scan' && optional(optional(optional($data)['evento'])[0])['descricao'] != 'Aguardando pagamento')
                                             @continue
                                         @endif
                                         <tr class="count">
@@ -300,10 +300,6 @@
             var delivered = 0;
             var inProcess = 0;
             $(".count").each(function() {
-                console.log('8', 'h' + $(this).find('td').eq(8).text().trim() + "h");
-                console.log('9', 'h' + $(this).find('td').eq(9).text().trim() + "h");
-                console.log('10', 'h' + $(this).find('td').eq(10).text().trim() + "h");
-
 
                 if ($(this).find('td').eq(8).text().trim() == 'Yes') {
                     taxed++;
@@ -324,9 +320,15 @@
             var returnOrder = (returned / totalRecords * 100).toFixed(2);
             var inTransit = (inProcess / totalRecords * 100).toFixed(2);
             $('#total').html(totalRecords);
-            $('#delivered').html(deliveredOrder + ' %');
+            if(!isNaN(deliveredOrder)){ 
+             $('#delivered').html(deliveredOrder + ' %');
+            }
+            if(!isNaN(taxOrder)){ 
             $('#taxed').html(taxOrder + ' %');
+            }
+            if(!isNaN(returnOrder)){  
             $('#returned').html(returnOrder + ' %');
+            }
             $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
             document.getElementById("kpiHead").style.backgroundColor = "#eefafa"
             document.getElementById("kpiHeadSearch").style.backgroundColor = "#eefafa";

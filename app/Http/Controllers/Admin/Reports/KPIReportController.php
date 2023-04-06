@@ -18,9 +18,7 @@ class KPIReportController extends Controller
      * @return \Illuminate\Http\Response
     */
     public function index(Request $request, KPIReportsRepository $kpiReportsRepository)
-    {
-        $isScanKpi =$request->kpiType == 'scan';
- 
+    { 
         $this->authorize('viewKPIReport',Reports::class);
         $trackings = [];
         $trackingCodeUsersName = [];
@@ -37,7 +35,7 @@ class KPIReportController extends Controller
             $trackingCodeUsersName = $response['trackingCodeUsersName'];
             $orderDates = $response['orderDates'];
         }
-        return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates','isScanKpi'));
+        return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates'));
     }
     public function store(Request $request)
     {
@@ -47,7 +45,7 @@ class KPIReportController extends Controller
             $trackingCodeUsersName =json_decode($request->trackingCodeUsersName, true);
             $orderDates =json_decode($request->orderDates, true);
             
-            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, $request->isScanKpi ?'Aguardando pagamento':null);
+            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, $request->type == 'scan' ?'Aguardando pagamento':null);
             return $exportService->handle();
         }
     } 
