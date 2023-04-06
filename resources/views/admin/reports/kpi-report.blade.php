@@ -107,8 +107,8 @@
                                     <div class="input-group">
                                         <input name="end_date" id="endDate" class="form-control py-2 mr-1 p-3" type="date">
                                     </div>
-                                    @if ($isScanKpi)
-                                    <input name="kpiType"  type="hidden" value="scan">
+                                    @if (request('type')=='scan')
+                                    <input name="type"  type="hidden" value="scan">
 
                                         <label for="tracking_code" class="mt-4 mb-2 font-black"><strong>@lang('parcel.User POBOX Number')</strong></label><br>
                                         <div class="input-group w-100">
@@ -120,7 +120,7 @@
                                     @else
                                     <label for="tracking_code" class="mt-4 mb-2 font-black"><strong>Tracking  Code</strong></label><br>
                                     <div class="input-group">
-                                        <input name="kpiType"  type="hidden" value="report">
+                                        <input name="type"  type="hidden" value="report">
                                         <textarea id="tracking_code" value="tracking code" type="text" placeholder="Please Enter Tracking Codes" 
                                                   rows="4" class="form-control py-2 mr-1"
                                                   name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
@@ -145,7 +145,7 @@
                                     @csrf
                                     @if ($trackings)
                                         <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
-                                        <input type="hidden" name="isScanKpi" value="{{ $isScanKpi }}">
+                                        <input type="hidden" name="type" value="{{ request('type') }}">
                                         <input type="hidden" name="trackingCodeUsersName" value="{{ collect($trackingCodeUsersName) }}">
                                         <input type="hidden" name="orderDates" value="{{ collect($orderDates) }}">
                                     @endif
@@ -195,7 +195,7 @@
                             @if ($trackings)
                             @foreach ($trackings['return']['objeto'] as $data)
                                 @if (isset($data['evento']))
-                                        @if ($isScanKpi && optional(optional(optional($data)['evento'])[0])['descricao'] != 'Aguardando pagamento')
+                                        @if (request('type')=='scan' && optional(optional(optional($data)['evento'])[0])['descricao'] != 'Aguardando pagamento')
                                             @continue
                                         @endif
                                         <tr class="count">
