@@ -122,7 +122,7 @@
                                     <div class="input-group">
                                         <input name="type"  type="hidden" value="report">
                                         <textarea id="tracking_code" value="tracking code" type="text" placeholder="Please Enter Tracking Codes" 
-                                                  rows="4" class="form-control py-2 mr-1"
+                                                  rows="2" class="form-control py-2 mr-1 rounded-lg"
                                                   name="trackingNumbers">{{ old('trackingNumbers', request('trackingNumbers')) }}</textarea>
                                         @error('trackingNumbers')
                                         <div class="help-block text-danger"> {{ $message }} </div>
@@ -300,10 +300,6 @@
             var delivered = 0;
             var inProcess = 0;
             $(".count").each(function() {
-                console.log('8', 'h' + $(this).find('td').eq(8).text().trim() + "h");
-                console.log('9', 'h' + $(this).find('td').eq(9).text().trim() + "h");
-                console.log('10', 'h' + $(this).find('td').eq(10).text().trim() + "h");
-
 
                 if ($(this).find('td').eq(8).text().trim() == 'Yes') {
                     taxed++;
@@ -324,9 +320,15 @@
             var returnOrder = (returned / totalRecords * 100).toFixed(2);
             var inTransit = (inProcess / totalRecords * 100).toFixed(2);
             $('#total').html(totalRecords);
-            $('#delivered').html(deliveredOrder + ' %');
+            if(!isNaN(deliveredOrder)){ 
+             $('#delivered').html(deliveredOrder + ' %');
+            }
+            if(!isNaN(taxOrder)){ 
             $('#taxed').html(taxOrder + ' %');
+            }
+            if(!isNaN(returnOrder)){  
             $('#returned').html(returnOrder + ' %');
+            }
             $('#inProcess').html('Processing or In Transit: ' + inTransit + ' %');
             document.getElementById("kpiHead").style.backgroundColor = "#eefafa"
             document.getElementById("kpiHeadSearch").style.backgroundColor = "#eefafa";
