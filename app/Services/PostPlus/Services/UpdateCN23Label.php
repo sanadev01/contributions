@@ -88,7 +88,7 @@ class UpdateCN23Label
             $this->pdfi->RotatedText(186, 29.2, 'CPF:', 0);
             //FOR items
             foreach($this->order->items  as $key=>$item){
-                if($key>5){
+                if($key>4){
                     break;
                 }
                 $this->pdfi->SetFont("Arial", "B", 7);
