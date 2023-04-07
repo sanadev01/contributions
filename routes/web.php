@@ -13,6 +13,8 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Models\AffiliateSale;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -177,7 +179,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('audit-report', AuditReportController::class)->only(['index','create']);
             Route::resource('anjun', AnjunReportController::class)->only(['index','create']);
             Route::resource('kpi-report', KPIReportController::class)->only(['index','store']);
-            Route::resource('kpi-report-scan', KPIReportScanController::class)->only(['index','store']);
             Route::get('tax-report', TaxReportController::class)->name('tax-report');
             
         });
@@ -232,6 +233,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('report/{user}/shipment-user', \ShipmentByServiceController::class)->name('report.shipment-user');
             Route::get('parcel/{parcel}/consolidation-print', \ConsolidationPrintController::class)->name('parcel.consolidation-print');
             Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
+            Route::get('commissions', \CommissionModalController::class)->name('order.commissions');
             Route::get('order/{error}/edit/{edit?}', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'edit'])->name('order.error.edit');
             Route::get('order/{error}/show', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'show'])->name('order.error.show');
             Route::get('package/{package}/users', [\App\Http\Controllers\Admin\Rates\ProfitPackageController::class,'packageUsers'])->name('package.users');
@@ -268,16 +270,16 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id}',function($id){
     
-    // $labelPrinter = new CN23LabelMaker();
+    $labelPrinter = new CN23LabelMaker();
     
     $order = Order::find($id);
-    $order->status = 70;
-    $order->save();
+    // $order->status = 70;
+    // $order->save();
     // dd($order);
-    // $labelPrinter->setOrder($order);
-    // $labelPrinter->setService(2);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
     
-    // return $labelPrinter->download();
+    return $labelPrinter->download();
 });
 
 Route::get('permission',function($id = null){
@@ -292,6 +294,5 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     }
     session()->forget('anjun_token');
     return 'Anjun Token refresh';
-});
-
+}); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');

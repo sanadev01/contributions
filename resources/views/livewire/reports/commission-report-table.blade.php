@@ -180,14 +180,26 @@
                             <td class="h4">
                                 {{ number_format($commission->commission,2) }} USD
                             </td>
+                            @if($commission->referrer)
                             <td class="h4">
                                 <a href="{{ route('admin.reports.commission.show',$commission->referrer) }}">
                                     <i class="fa fa-eye text-success"></i>
                                 </a>
                             </td>
+                            @else
+                                {{ \Log::info('commision',[$commission]) }}
+                                {{ \Log::info('user',[Auth::user()]) }}
+                            @endif 
+
                         </tr>
                     @endforeach
                 @endif
+                <tr>
+                    <td colspan="3"></td>
+                    <td><strong>Total<strong></td>
+                    <td class="h4">{{ number_format($users->sum('sale_count'),2) }} </td>
+                    <td colspan="2" class="h4">{{ number_format($users->sum('commission'),2) }} </td>
+                </tr>
             </tbody>
         </table>
         <div class="d-flex justify-content-end px-3">
