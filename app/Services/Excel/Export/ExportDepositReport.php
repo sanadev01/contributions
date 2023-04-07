@@ -156,7 +156,7 @@ class ExportDepositReport extends AbstractExportService
                     if ($order->shippingService->sub_class_code == ShippingService::GePS || $order->shippingService->sub_class_code == ShippingService::GePS_EFormat || $order->shippingService->sub_class_code == ShippingService::Parcel_Post) {
                         return 'Global eParcel';
                     }
-                    if ($order->shippingService->sub_class_code == ShippingService::Prime5) {
+                    if ($order->shippingService->sub_class_code == ShippingService::Prime5 || $order->shippingService->sub_class_code == ShippingService::Prime5RIO) {
                         return 'Prime5';
                     }
                     if (in_array($order->shippingService->sub_class_code, 
