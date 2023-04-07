@@ -30,6 +30,7 @@ return [
             541 => 'Parcel Post',
             777 => 'Post Plus Prime',
             778 => 'PrimeRIO',
+            357 => 'Prime5RIO',
         ]
     ]
 ];

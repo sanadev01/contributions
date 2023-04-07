@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\SwedenPost\Services;
 
+use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
  
 class ShippingOrder { 
@@ -16,6 +17,11 @@ class ShippingOrder {
       if($order->hasBattery()) {
          $batteryType = "Lithium Ion Polymer"; $batteryPacking = "Inside Equipment";
       }
+      if($order->shippingService->service_sub_class == ShippingService::Prime5) {
+         $serviceCode = 'DIRECT.LINK.US.L3';
+      } elseif($order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
+         $serviceCode = 'DIRECT.LINK.US.L3P';
+      }
      
      $packet = 
          [ 
@@ -26,7 +32,7 @@ class ShippingOrder {
                   //Parcel Information
                   'referenceNo' => ($refNo ? $refNo : $order->tracking_id).' HD-'.$order->id,
                   'trackingNo' => "",
-                  'serviceCode' =>"DIRECT.LINK.US.L3",
+                  'serviceCode' => $serviceCode,
                   'incoterm' => "DDU",
                   'weight'=> $order->weight,
                   'weightUnit' => $uom,
