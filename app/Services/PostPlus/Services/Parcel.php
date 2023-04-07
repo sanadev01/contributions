@@ -45,6 +45,7 @@ class Parcel {
                   'address' => $order->recipient->address.' '.optional($order->recipient)->address2.' '.$order->recipient->street_no,
                   'zipCode' => cleanString($order->recipient->zipcode),
                   'city' => $order->recipient->city,
+                  'state' => $order->recipient->State->code,
                   'countryCode' => $order->recipient->country->code,
                ],
                //Sender Information
@@ -52,10 +53,11 @@ class Parcel {
                   'name' => $order->getSenderFullName(),
                   'phone' => ($order->sender_phone) ? $order->sender_phone: '',
                   'email' => ($order->sender_email) ? $order->sender_email: '',
-                  'address' => "2200 NW 129TH AVE",
-                  'zipCode' => "33182",
-                  'city' => "FL",
-                  'countryCode' => "US",
+                  'address' => ($order->sender_address) ? $order->sender_address: '2200 NW 129TH AVE',
+                  'zipCode' => ($order->sender_zipcode) ? $order->sender_zipcode: '33182',
+                  'city' => ($order->sender_city) ? $order->sender_city: 'Miami',
+                  'state' => ($order->sender_state_id) ? $order->senderState->code: 'FL',
+                  'countryCode' => 'US',
                ],
             ];
       return $packet;

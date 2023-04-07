@@ -111,7 +111,7 @@
                                     <input name="type"  type="hidden" value="scan">
 
                                         <label for="tracking_code" class="mt-4 mb-2 font-black"><strong>@lang('parcel.User POBOX Number')</strong></label><br>
-                                        <div class="input-group w-100">
+                                        <div class="col-sm-12 p-0">
                                             <livewire:components.search-user selectedId="{{ request('user_id') }}"/>
                                             @error('pobox_number')
                                                 <div class="help-block text-danger"> {{ $message }} </div>
