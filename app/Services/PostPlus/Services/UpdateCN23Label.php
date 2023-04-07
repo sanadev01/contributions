@@ -34,7 +34,14 @@ class UpdateCN23Label
             $this->pdfi->SetFillColor(255, 255, 255);
             $this->pdfi->SetFont("Arial", "", 7);
             // FOR RETURN ADDRESS
-            $this->printReturnAddress(60.7, 3.7, 40, 10.4, 5.5, 8, 10.5, 13, 5, 'B');
+            if($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime) {
+                $paddingLeft = 57.8;
+                $font = 4.5;
+            }else {
+                $paddingLeft = 60.6;
+                $font = 5;
+            }
+            $this->printReturnAddress($paddingLeft, 3.7, 39, 10.4, 5.5, 8, 10.5, 13, $font, 'B');
             //FOR SHIPPING
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(4, 47.5, 'Shipping:', 00);
