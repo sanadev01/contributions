@@ -18,7 +18,7 @@ class Rate extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'data' => 'Array',
+        'data' => 'array',
     ];
 
 

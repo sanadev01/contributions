@@ -11,7 +11,7 @@ class PoBox extends Model
     use JsonColumn;
 
     protected $casts = [
-        'extra_data' => 'Array'
+        'extra_data' => 'array'
     ];
 
     use LogsActivity;

@@ -15,7 +15,7 @@ class ApiLog extends Model
     protected static $submitEmptyLogs = false;
     
     protected $casts = [
-        'data' => 'Array'
+        'data' => 'array'
     ];
     
     const TYPE_CONFIRMATION = 'confirmation';

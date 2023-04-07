@@ -16,7 +16,7 @@ class Connect extends Model
     protected static $submitEmptyLogs = false;
     
     protected $casts = [
-        'extra_data' => 'Array'
+        'extra_data' => 'array'
     ];
 
     const TYPE_SHOPIFY = 'shopify';

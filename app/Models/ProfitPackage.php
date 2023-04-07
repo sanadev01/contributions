@@ -18,7 +18,7 @@ class ProfitPackage extends Model
     protected static $submitEmptyLogs = false;
     
     protected $casts = [
-        'data' => 'Array'
+        'data' => 'array'
     ];
 
     const SERVICE_BPS = 'bps';

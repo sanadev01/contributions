@@ -28,7 +28,7 @@ class Order extends Model implements Package
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
     protected $casts = [
-       'cn23' => 'Array',
+       'cn23' => 'array',
        'order_date' => 'datetime',
        'us_secondary_label_cost' => 'array',
     ];
