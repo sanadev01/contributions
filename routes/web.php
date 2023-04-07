@@ -273,16 +273,13 @@ Route::get('test-label/{id}',function($id){
     $labelPrinter = new CN23LabelMaker();
     
     $order = Order::find($id);
-    if($order) {
-        dd($order->api_response);
-    }
     // $order->status = 70;
     // $order->save();
     // dd($order);
-    // $labelPrinter->setOrder($order);
-    // $labelPrinter->setService(2);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
     
-    // return $labelPrinter->download();
+    return $labelPrinter->download();
 });
 
 Route::get('permission',function($id = null){

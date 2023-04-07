@@ -81,16 +81,19 @@ class UpdateCN23Label
             return true;
 
         } elseif($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
-            $this->pdfi = new PDFRotate('L', 'mm', array(147, 212.9));
-            $this->textEMSLabel(116.7, 92.5, 135.8, 92.5, 135, 95.2, 12.5, 114.7, 131.8, 92.9, 116.8, 91.2, 116.7, 95.2);
+            if(count($this->order->items) > 5) {
+                $this->pdfi = new PDFRotate('P', 'mm', array(212.9, 275));
+                $this->textEMSLabel(116.7, 212.5, 135.8, 212.5, 135, 215, 12.5, 234.3, 131.8, 213, 116.6, 211.1, 116.7, 215);
+                
+            }else{
+                $this->pdfi = new PDFRotate('L', 'mm', array(147, 212.9));
+                $this->textEMSLabel(116.7, 92.5, 135.8, 92.5, 135, 95.2, 12.5, 114.7, 131.8, 92.9, 116.8, 91.2, 116.7, 95.2);
+            }
             //FOR CPF
             $this->pdfi->SetFont("Arial", "B", 7);
             $this->pdfi->RotatedText(186, 29.2, 'CPF:', 0);
-            //FOR items sh code
+            //FOR ITEMS SH CODE
             foreach($this->order->items  as $key=>$item){
-                if($key>4){
-                    break;
-                }
                 $this->pdfi->SetFont("Arial", "B", 7);
                 $this->pdfi->RotatedText(142, 74+($key*4), $item->sh_code, 0);
                 //USA
@@ -110,7 +113,11 @@ class UpdateCN23Label
             $this->pdfi->RotatedText(60.7, 35, "Paulista CEP 04602-001 - Sao Paulo - SP- Brasil", 0);
             //FOR BOX CHECK
             $this->pdfi->SetFont("Arial", "B", 7);
-            $this->pdfi->RotatedText(11.7, 102.7, 'X', 0);
+            if(count($this->order->items) > 5) {
+                $this->pdfi->RotatedText(11.7, 222.7, 'X', 0);
+            } else {
+                $this->pdfi->RotatedText(11.7, 102.7, 'X', 0);
+            }
             $this->pdfi->Output($this->pdf_file, 'F');
             
             return true;
