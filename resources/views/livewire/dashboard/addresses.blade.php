@@ -2,7 +2,7 @@
         <div class="row col-12">
             <div class="col-md-6">
                 <div class="card-wrapper h-auto my-2 w-auto">
-                    <input class="c-card" type="checkbox" wire:click="setDefaultAddress('{{ $user->id }}')" name="defaultAddress" id="defaultAddress"  @if(setting('default_address', null, $user->id)) checked @endif>
+                    <input class="c-card" type="checkbox" wire:click="setAddress('{{ $user->id }}', 'default')" name="defaultAddress" id="defaultAddress"  @if(setting('default_address', null, $user->id)) checked @endif>
                     <strong><label>Default Address</label></strong>
                     <div class="card-content">
                         <div class="card-state-icon"></div>
@@ -15,7 +15,7 @@
             </div>
             <div class="col-md-6">
                 <div class="card-wrapper h-auto my-2 w-auto">
-                    <input class="c-card" type="checkbox" wire:click="setUserAddress('{{ $user->id }}')" name="userAddress" id="userAddress"  @if(setting('user_address', null, $user->id)) checked @endif>
+                    <input class="c-card" type="checkbox" wire:click="setAddress('{{ $user->id }}', null)" name="userAddress" id="userAddress"  @if(setting('user_address', null, $user->id)) checked @endif>
                     <strong><label>User Address</label></strong>
                     <div class="card-content">
                         <div class="card-state-icon"></div>

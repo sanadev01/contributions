@@ -28,21 +28,16 @@ class Addresses extends Component
         return view('livewire.dashboard.addresses',['user' => $user]);
     }
 
-    public function setDefaultAddress($id)
+    public function setAddress($id, $type)
     {
         $user = User::find($id);
-        if($user) {
+        if($user && $type === "default") {
             saveSetting('default_address', true, $user->id);
             saveSetting('user_address', false, $user->id);
-        }
-    }
-
-    public function setUserAddress($id)
-    {
-        $user = User::find($id);
-        if($user) {
+        } else {
             saveSetting('user_address', true, $user->id);
             saveSetting('default_address', false, $user->id);
         }
+
     }
 }
