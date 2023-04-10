@@ -14,23 +14,9 @@
 @if (!$buttonsOnly)
     <div class="label mt-2">
         @if (!$error)
-            <!--
-                Sinerlog modification
-                Shows the sinerlog label
-             -->
-             @if ($order->sinerlog_tran_id != '')
-            <iframe src="{{$renderLabel}}" style="width:100%; height:700px;" frameborder="0">
-                
-            </iframe>
-            @elseif($order->shippingService->isColombiaService() && $order->api_response)
-                <iframe src="{{$order->colombiaLabelUrl()}}" style="width:100%; height:700px;" frameborder="0">
-
-                </iframe>
-            @else
             <iframe src="https://docs.google.com/gview?url={{ route('order.label.download', encrypt($order->id)) }}&embedded=true&time{{md5(microtime())}}" style="width:100%; height:700px;" frameborder="0">
                 <iframe src="{{ route('order.label.download', encrypt($order->id)) }}" style="width:100%; height:700px;" frameborder="0"></iframe>
             </iframe>
-            @endif
         @else
             <div class="alert alert-danger">
                 {{ $error }}

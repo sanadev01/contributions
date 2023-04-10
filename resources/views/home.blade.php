@@ -51,7 +51,6 @@
 
     </style>
 @endsection
-
 @section('page')
     <!-- Dashboard Analytics Start -->
     <section id="dashboard-analytics">
@@ -72,20 +71,17 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                        <th  class="pl-0 pr-3">LTL Truck to</th>
-                                        <th>Parcels via UPS | FedEx | USPS sent to</th>
+                                            <th  class="pl-0 pr-3">LTL Truck to</th>
+                                            <th class="pl-3 pr-0">Parcels via UPS | FedEx | USPS sent to</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td class="pl-0 pr-3">{!! auth()->user()->getPoboxAddress() ?? '' !!}</td>
-                                            <td>8305 NW 116<sup>th</sup> Avenue<br>
-                                                Doral , FL 33178<br>
-                                                United States <br>
-                                                <span>Ph#: +13058885191</span>
+                                            <td class="pl-0 pr-3">
+                                                <livewire:dashboard.addresses :user-id="old('user_id')" />
                                             </td>
                                         </tr>
-
                                     </tbody>
                                 </table>
                             </p>
