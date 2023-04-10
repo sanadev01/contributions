@@ -11,17 +11,21 @@ use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Resources\Warehouse\Container\PackageResource;
-
+use Spatie\Activitylog\LogOptions;
 class Container extends Model implements \App\Services\Correios\Contracts\Container
 {
     use SoftDeletes;
 
     protected $guarded = [];
     
-    use LogsActivity;
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
+    use LogsActivity;    
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logAll()
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
+    }
 
     const CONTAINER_ANJUN_NX = 'AJ-NX';
     const CONTAINER_ANJUN_IX = 'AJ-IX';

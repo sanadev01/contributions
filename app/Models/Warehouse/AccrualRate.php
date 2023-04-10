@@ -7,13 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use App\Services\Correios\Models\Package;
 use App\Services\Converters\UnitsConverter;
 use Spatie\Activitylog\Traits\LogsActivity;
-
+use Spatie\Activitylog\LogOptions;
 class AccrualRate extends Model
 {
     use LogsActivity;
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
+    
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logAll()
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
+    }
     
     public function getServiceName()
     {

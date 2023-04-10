@@ -6,19 +6,29 @@ use App\Models\Order;
 use Illuminate\Support\Str;
 use App\Models\AffiliateSale;
 use App\Models\CommissionSetting;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Traits\CausesActivity;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Milon\Barcode\DNS2D;
-
+use Spatie\Activitylog\LogOptions;
 
 class User extends Authenticatable
 {
-    use Notifiable,LogsActivity,CausesActivity;
+    use Notifiable, LogsActivity ,CausesActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logOnly([
+                                'pobox_number', 'package_id', 'state_id', 'country_id', 'role_id','name', 'email', 'last_name', 
+                                'phone', 'city', 'street_no', 'address', 'address2', 'account_type', 'tax_id', 'zipcode', 
+                                'locale','market_place_name','image_id','reffered_by', 'reffer_code', 'battery', 'perfume',
+                                'status', 'insurance', 'stripe', 'usps', 'ups', 'api_profit','amazon_api_enabled','amazon_api_key'
+                            ])
+                            ->logOnlyDirty()->dontSubmitEmptyLogs();
+    }
+    protected static $ignoreChangedAttributes = ['password','api_token','api_enabled'];
     
     const ROLE_ADMIN = 1;
     const ROLE_USER = 2;
@@ -30,16 +40,6 @@ class User extends Authenticatable
 
     const GILBERTO_ACCOUNT_ID = 13;
     
-    protected static $ignoreChangedAttributes = ['password','api_token','api_enabled'];
-    protected static $logAttributes = [
-        'pobox_number', 'package_id', 'state_id', 'country_id', 'role_id','name', 'email', 'last_name', 
-        'phone', 'city', 'street_no', 'address', 'address2', 'account_type', 'tax_id', 'zipcode', 
-        'locale','market_place_name','image_id','reffered_by', 'reffer_code', 'battery', 'perfume',
-        'status', 'insurance', 'stripe', 'usps', 'ups', 'api_profit','amazon_api_enabled','amazon_api_key'
-    ];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
-
 
     /**
      * The attributes that are mass assignable.

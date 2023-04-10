@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
-
+use Spatie\Activitylog\LogOptions;
 class ImportedOrder extends Model
 {
     protected $fillable = [
@@ -18,9 +18,12 @@ class ImportedOrder extends Model
     protected $casts = ['items' => 'array','recipient' => 'array','error' => 'array'];
 
     use LogsActivity;
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logAll()
+                            ->logOnlyDirty()->dontSubmitEmptyLogs();
+    }
 
     public function user()
     {

@@ -8,7 +8,7 @@ use LaravelJsonColumn\Traits\JsonColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Services\Calculators\RatesCalculator;
-
+use Spatie\Activitylog\LogOptions;
 class ShippingService extends Model
 {
     use JsonColumn;
@@ -44,11 +44,14 @@ class ShippingService extends Model
 
 
     protected $guarded = [];
-
-    protected static $logAttributes = ['*'];
-
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
+    
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logAll()
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
+    }
 
     public $cacheCalculator = false; 
 

@@ -16,14 +16,22 @@ use App\Services\Correios\Contracts\Package;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\Package as ModelsPackage;
-
+use Spatie\Activitylog\LogOptions;
 class Order extends Model implements Package
 {
 
     use SoftDeletes;
     protected $guarded = [];
-
+    
     use LogsActivity;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logAll()
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
+    }
+
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;

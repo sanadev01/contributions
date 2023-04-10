@@ -7,13 +7,17 @@ use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
-
+use Spatie\Activitylog\LogOptions;
 class DeliveryBill extends Model
 {
-    use LogsActivity;
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
+    use LogsActivity;    
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logAll()
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
+    }
     
     protected $guarded = [];
 
