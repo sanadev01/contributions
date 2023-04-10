@@ -157,7 +157,7 @@ class UpdateCN23Label
         $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
         $this->pdfi->RotatedText($rectLM, $textLine1H, "(em caso de nao entrega encaminhar para)", 0);
         $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
-        $this->pdfi->RotatedText($rectLM, $textLine2H, "Blue Line Ag. De Cargas Ltda.", 0);
+        $this->pdfi->RotatedText($rectLM, $textLine2H, "Blue Line c/o Homedeliverybr", 0);
         $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
         $this->pdfi->RotatedText($rectLM, $textLine3H, "Rua Barao Do Triunfo, 520-CJ 152- Brooklin", 0);
         $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
