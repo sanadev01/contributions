@@ -31,10 +31,6 @@ class Order extends Model implements Package
                             ->logOnlyDirty()
                             ->dontSubmitEmptyLogs();
     }
-
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
     protected $casts = [
        'cn23' => 'array',
        'order_date' => 'datetime',

@@ -26,10 +26,11 @@ class User extends Authenticatable
                                 'locale','market_place_name','image_id','reffered_by', 'reffer_code', 'battery', 'perfume',
                                 'status', 'insurance', 'stripe', 'usps', 'ups', 'api_profit','amazon_api_enabled','amazon_api_key'
                             ])
-                            ->logOnlyDirty()->dontSubmitEmptyLogs();
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
     }
     protected static $ignoreChangedAttributes = ['password','api_token','api_enabled'];
-    
+
     const ROLE_ADMIN = 1;
     const ROLE_USER = 2;
     const ROLE_DRIVER = 'driver';

@@ -22,7 +22,8 @@ class ImportedOrder extends Model
     {
         return LogOptions::defaults()
                             ->logAll()
-                            ->logOnlyDirty()->dontSubmitEmptyLogs();
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
     }
 
     public function user()

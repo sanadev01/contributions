@@ -14,7 +14,8 @@ class Deposit extends Model
     {
         return LogOptions::defaults()
                             ->logAll()
-                            ->logOnlyDirty()->dontSubmitEmptyLogs();
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
     }
     
     protected $guarded = [];
