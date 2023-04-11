@@ -237,7 +237,7 @@
         <div class="actions clearfix">
             <ul role="menu" aria-label="Pagination">
                 <li class="disabled" aria-disabled="true">
-                    <a href="{{ route('admin.orders.sender.index',$order) }}" role="menuitem">@lang('orders.recipient.Previous')</a>
+                    <a href="{{ route('admin.orders.sender.index',$order->encrypted_id) }}" role="menuitem">@lang('orders.recipient.Previous')</a>
                 </li>
                 <li aria-hidden="false" aria-disabled="false">
                     <button class="btn btn-primary">@lang('orders.recipient.Next')</button>

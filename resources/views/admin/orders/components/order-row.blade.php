@@ -80,7 +80,7 @@
         ${{ number_format($order->gross_total,2) }}
     </td>
     <td>
-        <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->encrypted_id}},$event.target.value)" @else disabled="disabled"  @endif>
+        <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>
             <option class="bg-info" value="{{ App\Models\Order::STATUS_ORDER }}" {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected': '' }}>ORDER</option>
             {{-- <option class="bg-warning" value="{{ App\Models\Order::STATUS_NEEDS_PROCESSING }}" {{ $order->status == App\Models\Order::STATUS_NEEDS_PROCESSING ? 'selected': '' }}>NEEDS PROCESSING</option> --}}
             <option class="btn-cancelled" value="{{ App\Models\Order::STATUS_CANCEL }}" {{ $order->status == App\Models\Order::STATUS_CANCEL ? 'selected': '' }}>CANCELLED</option>
@@ -182,7 +182,7 @@
                         </a>
                    @endcan
                    @can('copyOrder', $order)
-                        <a @if(Auth::user()->isActive())  @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}"  @endif href="{{ route('admin.orders.duplicate',$order) }}" class="dropdown-item" title="@lang('orders.actions.duplicate-order')">
+                        <a @if(Auth::user()->isActive())  @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}"  @endif href="{{ route('admin.orders.duplicate',$order->encrypted_id) }}" class="dropdown-item" title="@lang('orders.actions.duplicate-order')">
                             <i class="feather icon-copy"></i>@lang('orders.actions.duplicate-order')
                         </a>
                    @endcan

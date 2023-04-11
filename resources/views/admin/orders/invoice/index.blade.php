@@ -19,9 +19,9 @@
             <ul role="menu" aria-label="Pagination">
                 <li class="disabled" aria-disabled="true">
                     @if (($order->user->hasRole('wholesale') && $order->user->insurance == false) || ($order->user->hasRole('retailer')))
-                        <a href="{{ route('admin.orders.services.index',$order) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
+                        <a href="{{ route('admin.orders.services.index',$order->encrypted_id) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
                     @else
-                        <a href="{{ route('admin.orders.order-details.index',$order) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
+                        <a href="{{ route('admin.orders.order-details.index',$order->encrypted_id) }}" role="menuitem">@lang('orders.invoice.Previous')</a>
                     @endif
                 </li>
                 @if ( !$order->isPaid() )
