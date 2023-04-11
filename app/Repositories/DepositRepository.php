@@ -418,7 +418,7 @@ class DepositRepository
                 return $query->whereHas('deposits',function($query) use($dateFrom){
                     return $query->where('created_at','>=',$dateFrom. ' 00:00:00');
                  });
-             })->when($request->filled('dateTo'), function($query) use($request){
+             })->when($request->filled('dateTo'), function($query,$dateTo){
                 return $query->whereHas('deposits',function($query,$dateTo){ 
                     $query->where('created_at','<=',$dateTo. ' 23:59:59');
                  });
