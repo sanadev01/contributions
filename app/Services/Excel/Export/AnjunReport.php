@@ -40,6 +40,7 @@ class AnjunReport extends AbstractExportService
             $this->setCellValue('E'.$row, round($order->gross_total,2));
             $this->setCellValue('F'.$row, $this->getValuePaidToCorrieos($order)['airport']);
             $this->setCellValue('G'.$row, $this->getValuePaidToCorrieos($order)['commission']);
+            $this->setCellValue('H'.$row, $order->status_name);
             $row++;
         }
 
@@ -73,8 +74,11 @@ class AnjunReport extends AbstractExportService
 
         $this->setColumnWidth('G', 20);
         $this->setCellValue('G1', 'Anjun Commission');
+        
+        $this->setColumnWidth('H', 20);
+        $this->setCellValue('H1', 'Status');
 
-        $this->setBackgroundColor('A1:G1', '2b5cab');
+        $this->setBackgroundColor('A1:H1', '2b5cab');
         $this->setColor('A1:H1', 'FFFFFF');
 
         $this->currentRow++;
