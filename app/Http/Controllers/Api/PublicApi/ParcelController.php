@@ -18,8 +18,6 @@ use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Requests\Api\Parcel\UpdateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
 use App\Repositories\ApiShippingServiceRepository;
-use Illuminate\Support\Facades\Validator;
-use FlyingLuscas\Correios\Client;
 use Illuminate\Support\Facades\Log;
 
 class ParcelController extends Controller
