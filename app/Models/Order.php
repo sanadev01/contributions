@@ -16,7 +16,8 @@ use App\Services\Correios\Contracts\Package;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\Package as ModelsPackage;
-
+use Exception;
+use Illuminate\Support\Facades\Crypt;
 class Order extends Model implements Package
 {
 
@@ -67,6 +68,31 @@ class Order extends Model implements Package
 
     public $user_profit = 0;
 
+    public function getWarehouseNumberAttribute()
+    {
+        $warehouseNumer =  '';
+        $idArray = array_map('intval', str_split($this->id));
+        $time =  array_map('intval', str_split($this->created_at->timestamp)); 
+        foreach($idArray as $key => $idChar){
+             $warehouseNumer .= $time[$key] . $idChar;
+        }
+        return $warehouseNumer.end($time);
+    }
+    public function resolveRouteBinding($encryptedId, $field = null)
+    {
+        try{
+            return $this->where('id',decrypt($encryptedId))->orwhere('id',$encryptedId)->firstOrFail();
+        }
+        catch(Exception $e){
+            return $this->where('id',$encryptedId)->firstOrFail();
+            
+        }
+        
+    }
+    public function getEncryptedIdAttribute()
+    {
+        return encrypt($this->id);
+    }
     public function scopeParcelReady(Builder $query)
     {
         return $query->where(function($query){

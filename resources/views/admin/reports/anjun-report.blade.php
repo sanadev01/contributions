@@ -88,7 +88,7 @@
                                             <td>
                                                 <span>
                                                     <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$order->id) }}">
-                                                        WRH#: {{ $order->warehouse_number }}
+                                                          {{ $order->warehouse_number }}
                                                     </a>
                                                 </span>
                                             </td>
