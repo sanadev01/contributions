@@ -6,7 +6,7 @@
         <td>
             <div class="vs-checkbox-con vs-checkbox-primary" title="Select">
                 <input type="checkbox" onchange='handleChange(this);' name="orders[]" class="bulk-orders"
-                    value="{{ $order->id }}">
+                    value="{{ $order->encrypted_id }}">
                 <span class="vs-checkbox vs-checkbox-sm">
                     <span class="vs-checkbox--check">
                         <i class="vs-icon feather icon-check"></i>
@@ -59,7 +59,7 @@
         @endif
         <span>
             <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal"
-                data-url="{{ route('admin.modals.parcel.shipment-info', $order) }}">
+                data-url="{{ route('admin.modals.parcel.shipment-info', $order->encrypted_id) }}">
                 {{ $order->warehouse_number }}
             </a>
         </span>
@@ -75,7 +75,7 @@
         <span title="Consolidation Requested For Following Shipments">
             @foreach ($order->subOrders as $subOrder)
                 <a href="#" class="mb-1 d-block" data-toggle="modal" data-target="#hd-modal"
-                    data-url="{{ route('admin.modals.parcel.shipment-info', $subOrder) }}">
+                    data-url="{{ route('admin.modals.parcel.shipment-info', $subOrder->encrypted_id) }}">
                     {{ $subOrder->warehouse_number }}
                 </a>
             @endforeach

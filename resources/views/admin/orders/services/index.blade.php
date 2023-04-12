@@ -81,7 +81,7 @@
     <div class="actions clearfix">
         <ul role="menu" aria-label="Pagination">
             <li class="disabled mt-2" aria-disabled="true">
-                <a href="{{ route('admin.orders.order-details.index',$order) }}" role="menuitem">@lang('orders.services.Previous')</a>
+                <a href="{{ route('admin.orders.order-details.index',$order->encrypted_id) }}" role="menuitem">@lang('orders.services.Previous')</a>
             </li>
             <li aria-hidden="false" aria-disabled="false">
                 <button class="btn btn-primary mt-2">@lang('orders.services.Next')</button>

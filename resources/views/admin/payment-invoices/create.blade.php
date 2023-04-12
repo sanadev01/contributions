@@ -51,11 +51,11 @@
                                         <tbody>
                                             @foreach ($orders as $order)
                                                 <tr
-                                                    class="selectable cursor-pointer {{ request('order') == $order->id ? 'bg-info' : '' }}">
+                                                    class="selectable cursor-pointer {{ decrypt(request('order')) == $order->id ? 'bg-info' : '' }}">
                                                     <td>
                                                         <input class="form-control order-select" type="checkbox"
                                                             name="orders[]" id="{{ $order->id }}"
-                                                            {{ request('order') == $order->id ? 'checked' : '' }}
+                                                            {{ decrypt(request('order')) == $order->id ? 'checked' : '' }}
                                                             value="{{ $order->id }}">
                                                     </td>
                                                     <td>
