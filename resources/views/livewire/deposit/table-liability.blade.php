@@ -67,11 +67,11 @@
         </tr>
         </thead>
         <tbody>
-            @foreach($users as $user)
+            @foreach($users as $deposit)
             <tr>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->pobox_number }}</td>
-                <td>{{ getBalance($user) }}</td>
+                <td>{{ $deposit->user->name }}</td>
+                <td>{{ $deposit->user->pobox_number }}</td>
+                <td>{{ $deposit->balance }}</td>
             </tr>
             @endforeach
         </tbody>
