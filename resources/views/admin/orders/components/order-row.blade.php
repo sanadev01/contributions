@@ -3,7 +3,7 @@
         <td>
             
             <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-                <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$order->id}}">
+                <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$order->encrypted_id}}">
                 <span class="vs-checkbox vs-checkbox-lg">
                     <span class="vs-checkbox--check">
                         <i class="vs-icon feather icon-check"></i>
@@ -15,7 +15,7 @@
     @endif
     <td class="d-flex justify-content-between align-items-center">
         @if(\Request::route()->getName() != 'admin.reports.order.index'  && !$order->isTrashed())
-            <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})" title="@lang('Edit Order')">
+            <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->encrypted_id}})" title="@lang('Edit Order')">
                 <input type="radio" name="edit_order" class="edit-order" value="false">
                 <span class="vs-radio vs-radio-lg">
                     <span class="vs-radio--border"></span>
