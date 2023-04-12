@@ -5,14 +5,12 @@ namespace App\Http\Controllers\Admin\Order;
 use Exception;
 use App\Models\Order;
 use App\Models\Deposit;
-use App\Events\OrderPaid;
 use Illuminate\Http\Request;
 use App\Models\PaymentInvoice;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Mail\Admin\NotifyTransaction;
 use App\Mail\Admin\OrderNotification;
-use Illuminate\Database\Eloquent\Collection;
 
 class OrderStatusController extends Controller
 {
@@ -24,17 +22,12 @@ class OrderStatusController extends Controller
         $order = Order::find($request->order_id);
         $user = $request->user;
         $preStatus = $order->status_name;
-        $orders = new Collection;
 
         if ($order->status == Order::STATUS_REFUND) {
             return apiResponse(false, "You can't change status anymore");
         } 
         if ( $order->status == Order::STATUS_SHIPPED) {
             return apiResponse(false, "Order is already shipped");
-        } 
-        
-        if ( !$order->isPaid() && $request->status == Order::STATUS_SHIPPED) {
-            return apiResponse(false, "You can't change order status unless to pay");
         } 
         DB::beginTransaction();
         try {
@@ -54,14 +47,14 @@ class OrderStatusController extends Controller
                     if ($order) {
                         $order->deposits()->sync($deposit->id);
                     }
+
                     $order->update([
                         'status'  => $request->status,
                         'is_paid' => false
                     ]);
-                    optional($order->affiliateSale)->delete();
                     DB::commit();
                     $this->sendTransactionMail($deposit, $preStatus, $user);
-                    return apiResponse(true, "Order has been Refunded");
+                    return apiResponse(true, "Updated");
                 }
 
                 if ($request->status == Order::STATUS_PAYMENT_DONE && !$order->is_paid) {
@@ -76,45 +69,50 @@ class OrderStatusController extends Controller
                             'is_credit' => false,
                         ]);
 
-                        $order->deposits()->sync($deposit->id);
-
+                        if ($order) {
+                            $order->deposits()->sync($deposit->id);
+                        }
                         $order->update([
                             'status'  => $request->status,
                             'is_paid' => true
                         ]);
-
-                        $orders->push($order);
-                        event(new OrderPaid($orders, true));
                         $this->sendTransactionMail($deposit, $preStatus, $user);
-
-                        return $this->commit();
-
+                        
                     } else {
                         return $this->rollback("Not Enough Balance. Please Add Balance to " . $order->user->name . ' ' . $order->user->pobox_number . " account.");
                     }
 
                 }
-                if ($order->isPaid() && $request->status == Order::STATUS_SHIPPED){
+                if ($order->isPaid()){
                     $order->update([
                         'status' => $request->status,
                     ]);
                     return $this->commit();
                 }
-                // optional($order->affiliateSale)->delete();
+
                 if(in_array($request->status, [
                     Order::STATUS_CANCEL, 
                     Order::STATUS_REJECTED, 
                     Order::STATUS_RELEASE, 
-                    Order::STATUS_PAYMENT_PENDING,
-                ])){
+                    Order::STATUS_PAYMENT_PENDING, 
+                    Order::STATUS_SHIPPED, 
+                    ]))
+                {
                     $order->update([
                         'status' => $request->status,
-                        'is_paid' => false
+                        'is_paid' => $request->status >= Order::STATUS_PAYMENT_DONE ? true : false
                     ]);
                     //SendOrderMailNotification 
-                    $this->sendTransactionMail($order, $preStatus, $user);
+                    try {
+                        \Mail::send(new OrderNotification($order, $preStatus, $user));
+                    } catch (\Exception $ex) {
+                        \Log::info('Notify Transaction email send error: ' . $ex->getMessage());
+                    }
                 }
-                return $this->commit();
+
+                DB::commit();
+                
+                return apiResponse(true, "Updated");
 
             }
             return $this->rollback("Unhandle status selected");
@@ -127,7 +125,7 @@ class OrderStatusController extends Controller
     public function commit()
     {
         DB::commit();
-        return apiResponse(true, "Order Status has been changed");
+        return apiResponse(true, "Updated");
     }
 
     public function rollback($message="Error while update")
