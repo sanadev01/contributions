@@ -26,7 +26,7 @@
                 </li>
                 @if ( !$order->isPaid() )
                 <li aria-hidden="false" aria-disabled="false">
-                    <a href="{{ route('admin.payment-invoices.orders.index',['order'=>$order]) }}" class="btn btn-primary">Pay Order Now</a>
+                    <a href="{{ route('admin.payment-invoices.orders.index',['order'=>$order->encrypted_id]) }}" class="btn btn-primary">Pay Order Now</a>
                 </li>
                 @else
                 <li aria-hidden="false" aria-disabled="false">

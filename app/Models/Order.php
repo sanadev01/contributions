@@ -72,7 +72,7 @@ class Order extends Model implements Package
     {
         $warehouseNumer =  '';
         $idArray = array_map('intval', str_split($this->id));
-        $time =  array_map('intval', str_split($this->created_at->timestamp)); 
+        $time =  array_map('intval', str_split(strtotime($this->created_at))); 
         foreach($idArray as $key => $idChar){
              $warehouseNumer .= $time[$key] . $idChar;
         }
