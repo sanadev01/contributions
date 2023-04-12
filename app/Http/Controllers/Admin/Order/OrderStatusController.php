@@ -113,11 +113,6 @@ class OrderStatusController extends Controller
                     ]);
                     //SendOrderMailNotification 
                     $this->sendTransactionMail($order, $preStatus, $user);
-                    // try {
-                    //     \Mail::send(new OrderNotification($order, $preStatus, $user));
-                    // } catch (\Exception $ex) {
-                    //     \Log::info('Notify Transaction email send error: ' . $ex->getMessage());
-                    // }
                 }
                 return $this->commit();
 
