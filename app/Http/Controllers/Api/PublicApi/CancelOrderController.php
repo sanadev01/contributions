@@ -51,21 +51,21 @@ class CancelOrderController extends Controller
                     if($order){
                         $order->deposits()->sync($deposit->id);
                         $order->update([
-                            'status' => Order::STATUS_REFUND,
-                            'is_paid' =>  false
-                        ]);
-                        optional($order->affiliateSale)->delete();
+                                'status' => Order::STATUS_REFUND,
+                                'is_paid' =>  false
+                            ]);
                     }
-                    try {          
-                        //SendMailNotification
-                        Mail::send(new NotifyTransaction($deposit, $preStatus, Auth::user()->name));
-                    } catch (Exception $ex) { 
-                        Log::info('Notify Transaction email send error: '.$ex->getMessage());
-                    }
-                    DB::commit();
+                            try {          
+                                //SendMailNotification
+                                Mail::send(new NotifyTransaction($deposit, $preStatus, Auth::user()->name));
+                            } catch (Exception $ex) { 
+                                Log::info('Notify Transaction email send error: '.$ex->getMessage());
+                            }
+                DB::commit();
                 }catch(Exception $e){
                     DB::rollBack(); 
                     return response()->json(['message'=>$ex->getMessage(),'line'=>$ex->getLine()],422); 
+ 
                 }
                 $message = "Order Refund & Cancelled";
             }else{
