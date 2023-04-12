@@ -232,4 +232,18 @@ class DomesticLabelRepository
 
         return $errors;
     }
+
+    public function getGDEDomesticRates($uspsShippingServices)
+    {
+        $uspsShippingServices->each(function ($shippingService, $key){
+
+            if ($shippingService['service_sub_class'] == ShippingService::USPS_PRIORITY
+                || $shippingService['service_sub_class'] == ShippingService::USPS_FIRSTCLASS)
+            {
+                $this->getUSPSRates( $shippingService['service_sub_class']);
+            }
+        });
+
+        return $this->domesticRates;
+    }
 }

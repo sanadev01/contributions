@@ -6,37 +6,49 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1">
-{{--    <meta name="description" content="Vuexy admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">--}}
-{{--    <meta name="keywords" content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">--}}
-{{--    <meta name="author" content="PIXINVENT">--}}
+    {{-- <meta name="description" content="Vuexy admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities."> --}}
+    {{-- <meta name="keywords" content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app"> --}}
+    {{-- <meta name="author" content="PIXINVENT"> --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet">
+    {{-- <link rel="preconnect" href="https://fonts.googleapis.com"> --}}
+    {{-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> --}}
+    {{-- <link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet"> --}}
+
     {{-- <link href='https://fonts.googleapis.com/css?family=Karla' rel='stylesheet'> --}}
     @include('layouts.css')
     @yield('css')
+    {{-- <link rel="preconnect" href="https://fonts.googleapis.com"> --}}
+    {{-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
-        window.locale= "{{ app()->getLocale() }}";
+        window.locale = "{{ app()->getLocale() }}";
     </script>
     <livewire:styles>
-    <script src="https://kit.fontawesome.com/8ea855d2d1.js" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/8ea855d2d1.js" crossorigin="anonymous"></script>
 </head>
 <!-- END: Head-->
 
 <!-- BEGIN: Body-->
 
 <x-master-layout>
-    <div class="viewport">
-        <div class="position-fixed w-100 h-100 justify-content-center align-items-center" id="loading" style="z-index: 100000;top:0;right0; background-color:#ffffff75;display:flex;">
-            <img src="{{ asset('images/loading.gif') }}" class="h-25" alt="">
+    <div class="viewport {{ explode('/', request()->path())[0] }}">
+        <div class="position-fixed w-100 h-100  loader-center" id="loading"
+            style="z-index: 100000;top:0;right0; background-color:#ffffff75;display:flex;">
+            <img src="{{ asset('images/loader/order.gif') }}" class="loader1" alt="">
+            <img src="{{ asset('images/loader/deliveryBill.gif') }}" class="loader2" alt="">
+            <img src="{{ asset('images/loader/container.gif') }}" class="loader3" alt="">
+            <img src="{{ asset('images/loader/search.gif') }}" class="loader4" alt="">
+            <img src="{{ asset('images/loader/payment.gif') }}" class="loader5" alt="">
+            <img src="{{ asset('images/loader/tracking.gif') }}" class="loader6" alt="">
+            <img src="{{ asset('images/loader/Loader.svg') }}" class="loader7" alt="">
         </div>
-    
+
         <!-- BEGIN: Header-->
         <x-nav-bar></x-nav-bar>
-    
+
         <x-user-menu></x-user-menu>
-    
+
         <!-- BEGIN: Content-->
         <div class="app-content content">
             <div class="content-overlay"></div>
@@ -55,36 +67,36 @@
         <!-- END: Content-->
         <div class="sidenav-overlay"></div>
         <div class="drag-target"></div>
-        
+
         @include('layouts.footer')
     </div>
     @include('layouts.js')
     @yield('js')
     <script>
-        function confirmDelete(msg){
+        function confirmDelete(msg) {
             return confirm(msg ?? 'Are you Sure to Delete');
         }
 
-        $('document').ready(function(){
-            setTimeout(function(){
+        $('document').ready(function() {
+            setTimeout(function() {
                 $('#loading').fadeOut();
-            },1000)
+            }, 1000)
         })
 
-        $('body').on('submit','form',function(){
+        $('body').on('submit', 'form', function() {
             $('#loading').fadeIn();
-            setTimeout(function(){
+            setTimeout(function() {
                 $('#loading').fadeOut();
-            },5000)
+            }, 5000)
         })
     </script>
 
     {{-- Livewire Js Section start here --}}
     <livewire:scripts>
 
-    @stack('js')
-    @yield('lvjs')
-    @stack('lvjs-stack')
+        @stack('js')
+        @yield('lvjs')
+        @stack('lvjs-stack')
 
 </x-master-layout>
 @yield('modal')

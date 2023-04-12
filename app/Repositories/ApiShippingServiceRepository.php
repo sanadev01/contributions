@@ -10,6 +10,7 @@ use App\Models\ShippingService;
 class ApiShippingServiceRepository
 {
     public $error;
+    protected $currentUSDollar = 0.000266616;
 
     public function isAvalaible($shippingService, $volumeWeight)
     {
@@ -93,9 +94,9 @@ class ApiShippingServiceRepository
 
             if($response->success == true)
             {
-                $order->update([
-                    'user_declared_freight' => $response->data['total_amount'],
-                ]);
+                // $order->update([
+                //     'user_declared_freight' => $response->data['total_amount'],
+                // ]);
 
                 return true;
             }
