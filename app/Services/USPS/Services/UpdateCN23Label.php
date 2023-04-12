@@ -38,14 +38,18 @@ class UpdateCN23Label
         }
 
         $this->pdfi->SetFillColor(255, 255, 255);
+        $this->pdfi->Rect(143, 22, 7, 2, "F");
+        // $this->pdfi->RotatedText(143, 24, ' ', 0);
+        
+        $this->pdfi->SetFillColor(255, 255, 255);
         $this->pdfi->Rect(143, 27.5, 7, 4, "F");
-        $userDeclaredFreight = $this->order->user_declared_freight <= 0.01 ? 0 : $this->order->user_declared_freight;
-        $this->pdfi->RotatedText(143, 29.7, number_format($userDeclaredFreight, 2, '.', ','), 0);
+        // $userDeclaredFreight = $this->order->user_declared_freight <= 0.01 ? 0 : $this->order->user_declared_freight;
+        // $this->pdfi->RotatedText(143, 29.7, ' ', 0);
 
         $this->pdfi->SetFillColor(255, 255, 255);
         $this->pdfi->Rect(143, 38.5, 7, 3, "F");
-        $userDeclaredFreight = $this->order->user_declared_freight <= 0.01 ? 0 : $this->order->user_declared_freight;
-        $this->pdfi->RotatedText(143, 41.1, number_format($this->order->order_value+$userDeclaredFreight, 2, '.', ','), 0);
+        // $userDeclaredFreight = $this->order->user_declared_freight <= 0.01 ? 0 : $this->order->user_declared_freight;
+        // $this->pdfi->RotatedText(143, 41.1, ' ', 0);
        
 
         $this->pdfi->Output($this->pdf_file, 'F');
