@@ -405,42 +405,38 @@ class DepositRepository
     
     public function getUserLiability(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
     {
-       return User::with(['deposits' => function ($q) use ($orderType){ 
-        $q->orderBy('balance',$orderType); 
-    }])->whereHas('deposits')->when(!Auth::user()->isAdmin(),function($query) {
+       return User::with(['deposits' => function ($q) use ($orderType){
+            $q->orderBy('balance',$orderType);
+         }])->whereHas('deposits')
+       ->when(!Auth::user()->isAdmin(),function($query) {
             $query->where('id',Auth::id());
+        })->whereHas('deposits',function($query) use($request){
+            $query->when($request->balance, function($query,$balance){
+                        $query->where('balance','LIKE',"%{$balance}%");
+            })->when($request->dateTo, function($query,$dateTo){
+                $query->where('created_at','<=',$dateTo. ' 23:59:59');
+            })->when($request->dateFrom, function($query,$dateFrom){
+                return $query->where('created_at','>=',$dateFrom. ' 00:00:00');
+            });
         })->when($request->user,function($query ,$user){
-                return $query->where('pobox_number',"%{$user}%")
-                            ->orWhere('name','LIKE',"%{$user}%")
-                            ->orWhere('last_name','LIKE',"%{$user}%")
-                            ->orWhere('email','LIKE',"%{$user}%")
-                            ->orWhere('id', $user);
+        return $query->where('pobox_number',"%{$user}%")
+            ->orWhere('name','LIKE',"%{$user}%")
+            ->orWhere('last_name','LIKE',"%{$user}%")
+            ->orWhere('email','LIKE',"%{$user}%")
+            ->orWhere('id', $user);
         })->when($request->poboxNumber,function($query ,$poboxNumber){
-                return $query->where('pobox_number',"%{$poboxNumber}%")
-                            ->orWhere('name','LIKE',"%{$poboxNumber}%")
-                            ->orWhere('last_name','LIKE',"%{$poboxNumber}%")
-                            ->orWhere('email','LIKE',"%{$poboxNumber}%")
-                            ->orWhere('id', $poboxNumber);
-            })->when($request->filled('dateFrom'), function($query,$dateFrom){
-                return $query->whereHas('deposits',function($query) use($dateFrom){
-                    return $query->where('created_at','>=',$dateFrom. ' 00:00:00');
-                 });
-             })->when($request->filled('dateTo'), function($query) use($request){
-                return $query->whereHas('deposits',function($query,$dateTo){ 
-                    $query->where('created_at','<=',$dateTo. ' 23:59:59');
-                 });
-             })->when($request->filled('balance'), function($query,$balance){
-                return $query->whereHas('deposits',function($query) use($balance){ 
-                    $query->where('balance','LIKE',"%{$balance}%");
-                 });
-             })->when($orderBy !='balance', function($query) use($orderBy,$orderType){
-                return $query->orderBy($orderBy,$orderType);
-              })->latest()
-             ->when($paginate,function($query) use($pageSize) {
-                return $query->paginate($pageSize);
-             })->when(!$paginate,function($query) use($pageSize) {
-                return $query->get();
-             });
+            return $query->where('pobox_number',"%{$poboxNumber}%")
+                ->orWhere('name','LIKE',"%{$poboxNumber}%")
+                ->orWhere('last_name','LIKE',"%{$poboxNumber}%")
+                ->orWhere('email','LIKE',"%{$poboxNumber}%")
+                ->orWhere('id', $poboxNumber);
+        })->when($orderBy !='balance', function($query) use($orderBy,$orderType){
+            return $query->orderBy($orderBy,$orderType);
+        })->latest()->when($paginate,function($query) use($pageSize) {
+            return $query->paginate($pageSize);
+        })->when(!$paginate,function($query) use($pageSize) {
+            return $query->get();
+        });
     }
     
 }
