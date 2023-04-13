@@ -60,7 +60,7 @@
         <span>
             <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal"
                 data-url="{{ route('admin.modals.parcel.shipment-info', $order->encrypted_id) }}">
-                {{ $order->warehouse_number }}
+                {{ $order->encrypted_warehouse_number }}
             </a>
         </span>
         <td>
@@ -76,7 +76,7 @@
             @foreach ($order->subOrders as $subOrder)
                 <a href="#" class="mb-1 d-block" data-toggle="modal" data-target="#hd-modal"
                     data-url="{{ route('admin.modals.parcel.shipment-info', $subOrder->encrypted_id) }}">
-                    {{ $subOrder->warehouse_number }}
+                    {{ $subOrder->encrypted_warehouse_number }}
                 </a>
             @endforeach
         </span>

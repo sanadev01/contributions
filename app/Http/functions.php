@@ -219,3 +219,13 @@ function orderProductsValue($products)
            return  $count + ($product['value'])*($product['quantity']);
     });
 }
+function orignalWarehouseNumber($warehouseNumer)
+{
+    $orginalWarehouseNumer =  '';
+    $idArray = array_map('intval', str_split($warehouseNumer)); 
+    foreach($idArray as $key => $idChar){
+        if($key%2 != 0)
+            $orginalWarehouseNumer .= $idChar;
+    }
+    return $orginalWarehouseNumer;
+}
