@@ -398,7 +398,7 @@ class DepositRepository
     
     public function getUserLiability(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
     {
-       return (Deposit::when($request->balance, function($query,$balance){
+       return Deposit::when($request->balance, function($query,$balance){
                            $query->where('balance','LIKE',"%{$balance}%");
                         })->when($request->dateTo, function($query,$dateTo){
                             $query->where('created_at','<=',$dateTo. ' 23:59:59');
@@ -413,7 +413,7 @@ class DepositRepository
                                     ->orWhere('id', $poboxNumber);
                                 });
                         })->latest()
-                        ->get())
+                        ->get()
                         ->unique('user_id'); 
     }
     

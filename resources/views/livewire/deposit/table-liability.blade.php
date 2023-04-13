@@ -67,7 +67,7 @@
         </tr>
         </thead>
         <tbody>
-            @foreach($users as $deposit)
+            @foreach($deposits as $deposit)
             <tr>
                 <td>{{ $deposit->user->name }}</td>
                 <td>{{ $deposit->user->pobox_number }}</td>
