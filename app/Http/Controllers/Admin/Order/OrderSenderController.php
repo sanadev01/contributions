@@ -43,7 +43,7 @@ class OrderSenderController extends Controller
         
         if ( $orderRepository->updateSenderAddress($request,$order) ){
             session()->flash('alert-success','orders.Sender Updated');
-            return redirect()->route('admin.orders.recipient.index',$order);
+            return redirect()->route('admin.orders.recipient.index',$order->encrypted_id);
         }
 
         session()->flash('alert-success','orders.Sender Update Error');
