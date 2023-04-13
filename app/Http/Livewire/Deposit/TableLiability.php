@@ -83,9 +83,5 @@ class TableLiability extends Component
     public function updating()
     {
         $this->resetPage();
-    } 
-    
-    public function searchByBalance($query)
-    {
     }
 }
