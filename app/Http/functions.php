@@ -174,11 +174,14 @@ function getAutoChargeData(User $user)
 }
 function orignalWarehouseNumber($warehouseNumer)
 {
-    $orginalWarehouseNumer =  '';
-    $idArray = array_map('intval', str_split($warehouseNumer)); 
-    foreach($idArray as $key => $idChar){
-        if($key%2 != 0)
-            $orginalWarehouseNumer .= $idChar;
+    $id = str_split($warehouseNumer);
+    $whrNo = optional($id)[0].optional($id)[1].optional($id)[2].optional($id)[5].optional($id)[6];
+    if( strlen($warehouseNumer) > 9){
+        $whrNo = $whrNo.optional($id)[7];
+        if(strlen($warehouseNumer) > 10){
+            return $whrNo.optional($id)[10];
+        }
+        return $whrNo;
     }
-    return $orginalWarehouseNumer;
+    return $whrNo;
 }

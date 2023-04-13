@@ -32,7 +32,7 @@
         @if( $order->warehouse_number)
             <span>
                 <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$order->encrypted_id) }}">
-                     {{ $order->encrypted_warehouse_number }}
+                     {{ $order->change_id }}
                 </a>
             </span>
         @endif
@@ -42,7 +42,7 @@
         <span title="Consolidation Requested For Following Shipments">
             @foreach( $order->subOrders as $subOrder)
                 <a href="#" class="mb-1 d-block" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$subOrder->encrypted_id) }}">
-                    WHR#: {{ $subOrder->encrypted_warehouse_number }}
+                    WHR#: {{ $subOrder->change_id }}
                 </a>
             @endforeach
         </span>

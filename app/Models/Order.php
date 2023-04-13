@@ -68,15 +68,11 @@ class Order extends Model implements Package
 
     public $user_profit = 0;
 
-    public function getEncryptedWarehouseNumberAttribute()
+    public function getChangeIdAttribute()
     {
-        $warehouseNumer =  '';
-        $idArray = array_map('intval', str_split($this->id));
-        $time =  array_map('intval', str_split(strtotime($this->created_at))); 
-        foreach($idArray as $key => $idChar){
-             $warehouseNumer .= $time[$key] . $idChar;
-        }
-        return $warehouseNumer.end($time);
+        $idArray = str_split($this->id,3);
+        $date = explode(":",$this->created_at);
+        return $idArray[0].$date[1].$idArray[1].$date[2].optional($idArray)[2];
     }
     public function resolveRouteBinding($encryptedId, $field = null)
     {
