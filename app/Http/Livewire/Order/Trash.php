@@ -73,4 +73,13 @@ class Trash extends Component
             'userType' => $this->userType,
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc', true);
     }
+
+    public function sortBy($name)
+    {
+        if ($name == $this->sortBy) {
+            $this->sortAsc = ! $this->sortAsc;
+        } else {
+            $this->sortBy = $name;
+        }
+    }
 }

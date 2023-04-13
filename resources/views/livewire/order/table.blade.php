@@ -101,7 +101,9 @@
                         <th class="no-print">@lang('orders.actions.actions')</th>
                     </tr>
                     <tr>
-                        <th></th>
+                        @if (\Request::route()->getName() != 'admin.trash-orders.index')
+                            <th></th>
+                        @endif
                         @admin
                             <th>
                                 <input type="search" class="form-control" wire:model.debounce.1000ms="name">
