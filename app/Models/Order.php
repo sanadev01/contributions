@@ -68,7 +68,7 @@ class Order extends Model implements Package
 
     public $user_profit = 0;
 
-    public function getWarehouseNumberAttribute()
+    public function getEncryptedWarehouseNumberAttribute()
     {
         $warehouseNumer =  '';
         $idArray = array_map('intval', str_split($this->id));
