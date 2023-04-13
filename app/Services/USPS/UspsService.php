@@ -134,7 +134,7 @@ class UspsService
             {
                 return (Object)[
                     'success' => false,
-                    'message' => ($url == $this->getPriceUrl) ? $response->json()['message']  : $response->json()['error'],
+                    'message' => ($url == $this->getPriceUrl) ? $response->json()['message']  : $response->json()['message'],
                 ];    
             }elseif ($response->status() !== 200) 
             {
