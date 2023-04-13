@@ -350,67 +350,24 @@ class DepositRepository
             \Log::info('Notify Transaction email send error: '.$ex->getMessage());
         }
     }
-
-    public function getLiability(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
-    {
-        $query = Deposit::query();
-
-        if ( !Auth::user()->isAdmin() ){
-            $query->where('user_id',Auth::id());
-        }
-
-        if ( $request->user ){
-            $query->whereHas('user',function($query) use($request) {
-                return $query->where('pobox_number',"%{$request->user}%")
-                            ->orWhere('name','LIKE',"%{$request->user}%")
-                            ->orWhere('last_name','LIKE',"%{$request->user}%")
-                            ->orWhere('email','LIKE',"%{$request->user}%")
-                            ->orWhere('id', $request->user);
-            });
-        }
-        if ( $request->poboxNumber ){
-            $query->whereHas('user',function($query) use($request) {
-                return $query->where('pobox_number',"%{$request->poboxNumber}%")
-                            ->orWhere('name','LIKE',"%{$request->poboxNumber}%")
-                            ->orWhere('last_name','LIKE',"%{$request->poboxNumber}%")
-                            ->orWhere('email','LIKE',"%{$request->poboxNumber}%")
-                            ->orWhere('id', $request->poboxNumber);
-            });
-        }
-
-        if ( $request->filled('dateFrom') ){
-            $query->where('created_at','>=',$request->dateFrom. ' 00:00:00');
-        }
-
-        if ( $request->filled('dateTo') ){
-            $query->where('created_at','<=',$request->dateTo. ' 23:59:59');
-        }
-
-        if ( $request->filled('balance') ){
-            $query->where('balance','LIKE',"%{$request->balance}%");
-        }
-        $query->groupBy('user_id');
-        $query->orderBy($orderBy,'DESC');
-        $query->latest();
-
-        return $paginate ? $query->paginate($pageSize) : $query->get(); 
-    }
     
     public function getUserLiability(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
     {
        return Deposit::when($request->balance, function($query,$balance){
                            $query->where('balance','LIKE',"%{$balance}%");
-                        })->when($request->dateTo, function($query,$dateTo){
+                        })
+                        ->when($request->dateTo, function($query,$dateTo){
                             $query->where('created_at','<=',$dateTo. ' 23:59:59');
                         })->when($request->dateFrom, function($query,$dateFrom){
                             return $query->where('created_at','>=',$dateFrom. ' 00:00:00');
                         })->whereHas('user',function($query) use($request){
-                            $query->when($request->poboxNumber,function($query ,$poboxNumber){
-                                return $query->where('pobox_number',"%{$poboxNumber}%")
-                                    ->orWhere('name','LIKE',"%{$poboxNumber}%")
-                                    ->orWhere('last_name','LIKE',"%{$poboxNumber}%")
-                                    ->orWhere('email','LIKE',"%{$poboxNumber}%")
-                                    ->orWhere('id', $poboxNumber);
+                            $search = $request->poboxNumber? $request->poboxNumber: $request->user;
+                            $query->when($search,function($query ,$search){
+                                return $query->where('pobox_number',"%{$search}%")
+                                    ->orWhere('name','LIKE',"%{$search}%")
+                                    ->orWhere('last_name','LIKE',"%{$search}%")
+                                    ->orWhere('email','LIKE',"%{$search}%")
+                                    ->orWhere('id', $search);
                                 });
                         })->latest()
                         ->get()

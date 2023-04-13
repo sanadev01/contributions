@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\Deposit;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Repositories\DepositRepository;
-use App\Services\Excel\Export\ExportLiabilityReport;
 
 class LiabilityController extends Controller
 {
@@ -14,13 +13,8 @@ class LiabilityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, DepositRepository $depositRepository)
+    public function index()
     {
-        if ( $request->dl ==1 ){
-            $liability = $depositRepository->getLiability($request,false,0,$request->sortBy,$request->sortOrder);
-            $liabilityReport = new ExportLiabilityReport($liability);
-            return $liabilityReport->handle();
-        }
         return view('admin.Liability.index');
     }
 

@@ -7,7 +7,7 @@ use App\Models\Deposit;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Repositories\DepositRepository;
-
+use App\Services\Excel\Export\ExportLiabilityReport;
 class TableLiability extends Component
 {
     use WithPagination;
@@ -23,6 +23,7 @@ class TableLiability extends Component
     public $sortAsc = false;
     public $balance;
     public $userId; 
+    public $deposits; 
     
     protected $listeners = [
         'user:updated' => 'updateUser',
@@ -37,16 +38,17 @@ class TableLiability extends Component
 
     public function render()
     {                     
-        $deposits = $this->getUserLiability();
+        $this->deposits = $this->getUserLiability();
         return view('livewire.deposit.table-liability',[
-            'deposits' => $deposits,
-            'totalBalance' => $this->getUserLiabilityBalance($deposits),
-            'downloadLink' => route('admin.liability.index',http_build_query(
-                $this->getRequestData()->all()
-            )).'&dl=1'
+            'deposits' => $this->deposits,
+            'totalBalance' => $this->getUserLiabilityBalance($this->deposits)
         ]);
     }
-
+    public function download()
+    {
+            $liabilityReport = new ExportLiabilityReport($this->deposits);
+            return $liabilityReport->handle();        
+    }
     public function sortBy($name)
     {
         if ($name == $this->sortBy) {

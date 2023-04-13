@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="col-md-1 text-right mt-4">
-            <a href="{{$downloadLink}}" class="btn btn-primary">Download</a>
+            <button wire:click="download" class="btn btn-primary">Download</button>  
         </div>
     </div>
     
