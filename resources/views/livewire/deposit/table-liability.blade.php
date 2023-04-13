@@ -50,7 +50,7 @@
         <tr>
             <th><a href="#" wire:click.prevent="sortBy('name')">User</a></th>
             <th><a href="#" wire:click.prevent="sortBy('pobox_number')">WHR#</a> </th>
-            <th><a href="#" wire:click.prevent="sortBy('balance')">Balance</a></th>
+            <th><a href="#" >Balance</a></th>
         </tr>
         <tr>
             <th>
@@ -62,7 +62,7 @@
             </th>
            
             <th>
-                <input type="search" wire:model.debounce.500ms="balance" class="form-control">
+                {{-- <input type="search" wire:model.debounce.500ms="balance" class="form-control"> --}}
             </th>
         </tr>
         </thead>
