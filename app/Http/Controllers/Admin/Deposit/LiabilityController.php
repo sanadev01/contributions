@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin\Deposit;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Repositories\DepositRepository;
-
 class LiabilityController extends Controller
 {
     /**

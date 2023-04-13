@@ -1,9 +1,6 @@
 <?php
 
 namespace App\Http\Livewire\Deposit;
-
-use Carbon\Carbon;
-use App\Models\Deposit;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Repositories\DepositRepository;
@@ -12,9 +9,7 @@ class TableLiability extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-
-    public $pageSize = 50;
-    
+    public $pageSize = 50;    
     public $user;
     public $poboxNumber;
     public $dateFrom;
@@ -60,7 +55,6 @@ class TableLiability extends Component
 
     public function getUserLiability()
     {
-
         return (new DepositRepository)->getUserLiability($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 
@@ -103,6 +97,6 @@ class TableLiability extends Component
     }
     
     public function searchByBalance($query)
-    { 
+    {dd(3);
     }
 }
