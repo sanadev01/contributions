@@ -485,6 +485,10 @@ class OrderRepository
             })->orWhereNotNull('us_api_tracking_code');
         }
 
+        if ($request->is_trashed) {
+            $orders->onlyTrashed();
+        }
+
         $startDate  = $request->start_date.' 00:00:00';
         $endDate    = $request->end_date.' 23:59:59';
         if ( $request->start_date ){

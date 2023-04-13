@@ -94,9 +94,9 @@ class ApiShippingServiceRepository
 
             if($response->success == true)
             {
-                // $order->update([
-                //     'user_declared_freight' => $response->data['total_amount'],
-                // ]);
+                $order->update([
+                    'user_declared_freight' => $response->data['total_amount'],
+                ]);
 
                 return true;
             }

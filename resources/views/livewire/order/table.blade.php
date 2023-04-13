@@ -30,6 +30,7 @@
                     <div class="row" id="dateSearch">
                         <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank" class="row col-12">
                             @csrf
+                            <input type="hidden" name="is_trashed" value = true>
                             <div class="col-4">
                                 <label>Start Date</label>
                                 <input type="date" name="start_date" class="form-control">

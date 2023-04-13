@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Order;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Reports;
 use App\Jobs\ExportOrder;
@@ -15,10 +16,11 @@ class OrderExportController extends Controller
 {
     public function __invoke(Request $request)
     {
+        $todayDate = Carbon::now()->format('Y-m-d');
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-        $startDate = $startDate ? $startDate : \Carbon::now()->format('Y-m-d');
-        $endDate = $endDate ? $endDate : \Carbon::now()->format('Y-m-d');
+        $startDate = $startDate ? $startDate : $todayDate;
+        $endDate = $endDate ? $endDate : $todayDate;
 
         $report = Reports::create([
             'user_id' => Auth::id(),
@@ -28,7 +30,6 @@ class OrderExportController extends Controller
         ]);
         
         $request->merge(['report' => $report->id]);
-
         ExportOrder::dispatch($request->all(), Auth::user());
         return redirect()->route('admin.reports.export-orders');
     }
