@@ -69,32 +69,6 @@ class Order extends Model implements Package
     const COLOMBIA = 50;
 
     public $user_profit = 0;
-
-    public function getEncryptedWarehouseNumberAttribute()
-    {
-        $warehouseNumer =  '';
-        $idArray = array_map('intval', str_split($this->id));
-        $time =  array_map('intval', str_split(strtotime($this->created_at))); 
-        foreach($idArray as $key => $idChar){
-             $warehouseNumer .= $time[$key] . $idChar;
-        }
-        return $warehouseNumer.end($time);
-    }
-    public function resolveRouteBinding($encryptedId, $field = null)
-    {
-        try{
-            return $this->where('id',decrypt($encryptedId))->orwhere('id',$encryptedId)->firstOrFail();
-        }
-        catch(Exception $e){
-            return $this->where('id',$encryptedId)->firstOrFail();
-            
-        }
-        
-    }
-    public function getEncryptedIdAttribute()
-    {
-        return encrypt($this->id);
-    }
     public function scopeParcelReady(Builder $query)
     {
         return $query->where(function($query){
@@ -926,6 +900,31 @@ class Order extends Model implements Package
         elseif($this->status == Order::STATUS_SHIPPED) {
             return "SHIPPED";
         }
+    }
+
+    public function getChangeIdAttribute()
+    {
+        $idArray = str_split($this->id,3);
+        $date = explode(":",$this->created_at);
+        $wrhCode = (explode("-", $this->warehouse_number)[0]=='TEMPWHR'?"TEMP-":"HD-");
+        return $wrhCode.$idArray[0].$date[1].optional($idArray)[1].$date[2].optional($idArray)[2];
+    }
+
+    public function resolveRouteBinding($encryptedId, $field = null)
+    {
+        try{
+            return $this->where('id',decrypt($encryptedId))->orwhere('id',$encryptedId)->firstOrFail();
+        }
+        catch(Exception $e){
+            return $this->where('id',$encryptedId)->firstOrFail();
+            
+        }
+        
+    }
+
+    public function getEncryptedIdAttribute()
+    {
+        return encrypt($this->id);
     }
 
 }
