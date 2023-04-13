@@ -51,6 +51,7 @@ class Trash extends Component
     {
         return view('livewire.order.table', [
             'orders' => $this->getTrashedOrders(),
+            'isTrashed' => false
         ]);
     }
 
