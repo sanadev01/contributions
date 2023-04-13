@@ -172,3 +172,13 @@ function getAutoChargeData(User $user)
         'limit' => setting('charge_limit', null, $user->id),
     ];
 }
+function orginalWarehouseNumber($warehouseNumer)
+{
+    $orginalWarehouseNumer =  '';
+    $idArray = array_map('intval', str_split($warehouseNumer)); 
+    foreach($idArray as $key => $idChar){
+        if($key%2 != 0)
+            $orginalWarehouseNumer .= $idChar;
+    }
+    return $orginalWarehouseNumer;
+}
