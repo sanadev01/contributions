@@ -35,7 +35,7 @@ class ExportLiabilityReport extends AbstractExportService
         foreach ($this->liabilities as $liability) {
             $this->setCellValue('A'.$row, optional($liability->user)->name);
             $this->setCellValue('B'.$row, optional($liability->user)->pobox_number);
-            $this->setCellValue('C'.$row, getBalance($liability->user) );
+            $this->setCellValue('C'.$row, $liability->balance );
             $row++;
         }
 

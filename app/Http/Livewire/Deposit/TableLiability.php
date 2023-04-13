@@ -1,20 +1,15 @@
 <?php
 
 namespace App\Http\Livewire\Deposit;
-
-use Carbon\Carbon;
-use App\Models\Deposit;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Repositories\DepositRepository;
-
+use App\Services\Excel\Export\ExportLiabilityReport;
 class TableLiability extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-
-    public $pageSize = 50;
-    
+    public $pageSize = 50;    
     public $user;
     public $poboxNumber;
     public $dateFrom;
@@ -23,6 +18,7 @@ class TableLiability extends Component
     public $sortAsc = false;
     public $balance;
     public $userId; 
+    public $deposits; 
     
     protected $listeners = [
         'user:updated' => 'updateUser',
@@ -37,16 +33,17 @@ class TableLiability extends Component
 
     public function render()
     {                     
-        $users = $this->getUserLiability();
+        $this->deposits = $this->getUserLiability();
         return view('livewire.deposit.table-liability',[
-            'users' => $users,
-            'totalBalance' => $this->getUserLiabilityBalance($users),
-            'downloadLink' => route('admin.liability.index',http_build_query(
-                $this->getRequestData()->all()
-            )).'&dl=1'
+            'deposits' => $this->deposits,
+            'totalBalance' => $this->getUserLiabilityBalance($this->deposits)
         ]);
     }
-
+    public function download()
+    {
+            $liabilityReport = new ExportLiabilityReport($this->deposits);
+            return $liabilityReport->handle();        
+    }
     public function sortBy($name)
     {
         if ($name == $this->sortBy) {
@@ -58,7 +55,6 @@ class TableLiability extends Component
 
     public function getUserLiability()
     {
-
         return (new DepositRepository)->getUserLiability($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 
@@ -90,17 +86,17 @@ class TableLiability extends Component
         $this->resetPage();
     }
 
-    public function getUserLiabilityBalance($users)
+    public function getUserLiabilityBalance($deposits)
     {
          $sum = 0;
-         foreach($users as $user){
-            $sum += getBalance($user);
+         foreach($deposits as $deposit){
+            $sum +=  $deposit->balance;
          }
          return $sum;
          
     }
     
     public function searchByBalance($query)
-    { 
+    {dd(3);
     }
 }

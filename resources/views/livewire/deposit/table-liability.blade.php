@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="col-md-1 text-right mt-4">
-            <a href="{{$downloadLink}}" class="btn btn-primary">Download</a>
+            <button wire:click="download" class="btn btn-primary">Download</button>  
         </div>
     </div>
     
@@ -67,11 +67,11 @@
         </tr>
         </thead>
         <tbody>
-            @foreach($users as $user)
+            @foreach($deposits as $deposit)
             <tr>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->pobox_number }}</td>
-                <td>{{ getBalance($user) }}</td>
+                <td>{{ $deposit->user->name }}</td>
+                <td>{{ $deposit->user->pobox_number }}</td>
+                <td>{{ $deposit->balance }}</td>
             </tr>
             @endforeach
         </tbody>
