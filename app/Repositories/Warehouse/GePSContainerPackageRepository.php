@@ -23,8 +23,7 @@ class GePSContainerPackageRepository {
         if ($order->status != Order::STATUS_PAYMENT_DONE) {
             $error = 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid';
         }
-        if ( (!$container->hasGePSService() && $order->shippingService->isGePSService()) 
-            || ($container->hasGePSService() && !$order->shippingService->isGePSService())){
+        if ( (!$container->hasGePSService() ||  !$order->shippingService->isGePSService())){
 
             $error = 'Order does not belong to this container. Please Check Packet Service';
         }

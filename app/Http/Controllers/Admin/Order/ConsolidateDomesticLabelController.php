@@ -22,7 +22,8 @@ class ConsolidateDomesticLabelController extends Controller
             'data' => 'required',
         ]);
 
-        $orderIds = json_decode($validated['data'], true);
+        $orderIds = array_map( function($id) { return decrypt($id);
+        }, json_decode($validated['data'],true));
         
         if (!$orderIds) {
             session()->flash('alert-danger', 'orders must be selected');
