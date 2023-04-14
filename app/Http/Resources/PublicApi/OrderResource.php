@@ -35,7 +35,7 @@ class OrderResource extends JsonResource
                 "sender_taxId" => $this->sender_taxId,
             ],
             "created_at" => $this->created_at,
-            "warehouse_number" => $this->warehouse_number,
+            "warehouse_number" => $this->change_id,
             "order_value" => $this->order_value,
             "shipping_service_name" => $this->shipping_service_name,
             "shipping_value" => $this->shipping_value,
