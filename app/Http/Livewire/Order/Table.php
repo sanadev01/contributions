@@ -54,7 +54,8 @@ class Table extends Component
         }
 
         return view('livewire.order.table', [
-            'orders' => $this->getOrders()
+            'orders' => $this->getOrders(),
+            'isTrashed' => true
         ]);
     }
 
