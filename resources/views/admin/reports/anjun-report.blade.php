@@ -79,6 +79,7 @@
                                         <th>@lang('orders.Amount Customers Paid')</th>
                                         <th>@lang('orders.Correios Anjun')</th>
                                         <th>@lang('Anjun Commission')</th>
+                                        <th>@lang('orders.status')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -97,6 +98,7 @@
                                             <td>{{ $order->gross_total }}</td>
                                             <td><livewire:reports.anjun-report :order="$order" :isCommission="false"/></td>
                                             <td><livewire:reports.anjun-report :order="$order" :isCommission="true"/></td>
+                                            <td>{{ $order->status_name }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
