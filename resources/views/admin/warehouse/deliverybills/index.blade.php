@@ -9,54 +9,71 @@
                         <h4 class="mb-0">
                             @lang('warehouse.deliveryBill.Delivery Bills')
                         </h4>
-                        <a href="{{ route('warehouse.delivery_bill.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.deliveryBill.Create Delivery Bill') </a>
+                        <div>
+                            <a href="{{ route('warehouse.delivery_bill.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.deliveryBill.Create Delivery Bill') </a>
+                            <a class="mr-2 btn btn-success waves-effect waves-light" href="{{ route('warehouse.delivery_bill.index') }}"> Back to lists </a>
+                        </div>
+
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
                         <div class="mt-1">
-                            <div class="col-12 text-right">
-
-                                <div class="row justify-content-start">
-                                    <div class="col-md-1">
-                                        <div class="row justify-content-start ml-3">
-                                            <form action="{{ route('warehouse.combine_delivery_bill.manifest.download') }}" method="post">
-                                                @csrf
-                                                <input type="hidden" name="dbills[]" id="dbills">
-                                                <button type="submit" id="btn_combine" class="btn btn-sm btn-success d-none">
-                                                    <i class="fa fa-download" aria-hidden="true"></i>
-                                                </button>
+                            <div class="row">
+                                <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="col-md-1">
+                                            <div class="row justify-content-start ml-3">
+                                                <form action="{{ route('warehouse.combine_delivery_bill.manifest.download') }}" method="post">
+                                                    @csrf
+                                                    <input type="hidden" name="dbills[]" id="dbills">
+                                                    <button type="submit" id="btn_combine" class="btn btn-sm btn-success d-none">
+                                                        <i class="fa fa-download" aria-hidden="true"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="row">
+                                            <form action="" class="col-md-11">
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <div class="row justify-content-start">
+                                                            <div class="col-md-3">
+                                                                <label>Start Date</label>
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                <input type="date" class="form-control mb-2 mr-sm-2" value="{{ Request('startDate') }}" name="startDate">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="row justify-content-start">
+                                                            <div class="col-md-3">
+                                                                <label>End Date</label>
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                <input type="date" class="form-control" value="{{ Request('endDate') }}"  name="endDate">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button class="btn btn-success waves-effect waves-light" type="submit" title="Search">
+                                                            Search <i class="fa fa-search" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </form>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="row justify-content-start">
-                                            <div class="col-md-3">
-                                                <label>Start Date</label>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <input type="date" class="form-control mb-2 mr-sm-2" value="{{ Request('startDate') }}" name="startDate">
+                                            <div class="col-md-1">
+                                                <form action="{{ route('warehouse.download.create') }}">
+                                                    <input type="hidden" value="{{ Request('startDate') }}" name="startDate">
+                                                    <input type="hidden" value="{{ Request('endDate') }}"  name="endDate">
+                                                    <button class="btn btn-success waves-effect waves-light" type="submit">Download</button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="row justify-content-start">
-                                            <div class="col-md-3">
-                                                <label>End Date</label>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <input type="date" class="form-control" value="{{ Request('endDate') }}"  name="endDate">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button class="btn btn-success waves-effect waves-light" title="Search">
-                                            Search <i class="fa fa-search" aria-hidden="true"></i>
-                                        </button>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <a class="btn btn-success waves-effect waves-light" href="{{url('delivery_bill')}}">
-                                            back to lists
-                                        </a>
-                                    </div>
+                                </div>
                                 </div>
                             </div>
                             <table class="table mb-0">
@@ -98,9 +115,6 @@
                                             {{ $deliveryBill->request_id }}
                                         </td>
                                         <td>{{ $deliveryBill->cnd38_code }}</td>
-                                        <td>
-                                            {{ $deliveryBill->origin_country }}
-                                        </td>
                                         <td class="d-flex">
                                             <div class="btn-group">
                                                 <div class="dropdown">
@@ -112,7 +126,7 @@
                                                             <i class="fa fa-list"></i> Show Containers
                                                         </a>
                                                         @if( $deliveryBill->isRegistered() && $deliveryBill->isReady())
-                                                            <a href="{{ route('warehouse.delivery_bill.download',$deliveryBill) }}" class="dropdown-item w-100">
+                                                            <a href="{{ route('warehouse.download.show',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> GET CN38
                                                             </a>
                                                             @if($deliveryBill->isRegistered() && $deliveryBill->isPostPlus())
