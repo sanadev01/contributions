@@ -59,7 +59,7 @@
             <table class="table mb-0  table-bordered" id="tblOrders">
                 <thead>
                     <tr>
-                        @if (\Request::route()->getName() != 'admin.trash-orders.index')
+                        @if (\Request::route()->getName() != 'admin.trash-orders.index' && $isTrashed)
                             <th id="optionChkbx">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="Select All">
                                     <input type="checkbox" id="checkAll" name="orders[]" class="check-all"
@@ -101,7 +101,9 @@
                         <th class="no-print">@lang('orders.actions.actions')</th>
                     </tr>
                     <tr>
-                        <th></th>
+                        @if (\Request::route()->getName() != 'admin.trash-orders.index' && $isTrashed)
+                            <th></th>
+                        @endif
                         @admin
                             <th>
                                 <input type="search" class="form-control" wire:model.debounce.1000ms="name">
