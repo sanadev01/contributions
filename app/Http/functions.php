@@ -178,14 +178,55 @@ function orignalWarehouseNumber($warehouseNumer)
     if(count($arr)>1){
         $warehouseNumer = $arr[1];
     } 
-    $id = str_split(trim($warehouseNumer));
-    $whrNo = optional($id)[0].optional($id)[1].optional($id)[2].optional($id)[5].optional($id)[6];
-    if( strlen($warehouseNumer) > 9){
-        $whrNo = $whrNo.optional($id)[7];
-        if(strlen($warehouseNumer) > 10){
-            return $whrNo.optional($id)[10];
+    $id = str_split(trim($warehouseNumer));  
+    switch(strlen($warehouseNumer)-4){
+        case (1):{ 
+            $whrNo = $id[0];
+            break;
+        }case (2):{ 
+            $whrNo = $id[0].$id[1];
+            break;
+        }case (3):{ 
+            $whrNo = $id[0].$id[1].$id[2];
+            break;
         }
-        return $whrNo;
-    }
-    return $whrNo;
+        case (4):{  
+            $whrNo = $id[0].$id[1].$id[2].$id[5];
+            break;
+        }case (5):{
+            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6];
+            break;
+        }case (6):{ 
+            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7];
+            break;
+        }
+        case (7):{  
+            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[10];
+            
+            break;
+        }case (8):{
+            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[10].$id[11];
+            
+            break;
+        }case (9):{ 
+            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[10].$id[12].$id[12];
+            break;
+        }
+
+        case (10):{
+            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[8].$id[9].$id[10].$id[13];
+            
+            break;
+        }case (11):{
+            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[8].$id[9].$id[10].$id[13].$id[14];       
+            
+            break;
+        }case (12):{ 
+            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[8].$id[9].$id[10].$id[13].$id[14].$id[15];
+            break;
+        } 
+        break;
+         
+    } 
+    return (int) $whrNo;
 }

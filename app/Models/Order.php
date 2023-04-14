@@ -805,10 +805,63 @@ class Order extends Model implements Package
 
     public function getChangeIdAttribute()
     {
+// return $this->id;
         $idArray = str_split($this->id,3);
         $date = explode(":",$this->created_at);
-        $wrhCode = (explode("-", $this->warehouse_number)[0]=='TEMPWHR'?"TEMP-":"HD-");
-        return $wrhCode.$idArray[0].$date[1].optional($idArray)[1].$date[2].optional($idArray)[2];
+        $wrhCode = (explode("-", $this->warehouse_number)[0]=='TEMPWHR'?"TEMP-":"HD-"); 
+        $changed=''; 
+        $len = strlen($this->id);
+        switch($len){
+             
+            case (1):
+                $changed = $idArray[0] . $date[1]. $date[2];
+                break;
+            case (2):
+                    $changed = $idArray[0] . $date[1]. $date[2];
+                    break;
+            case (3):
+                   $changed = $idArray[0] . $date[1]. $date[2];
+                        break;
+             case (4):{ 
+                $changed = $idArray[0] . $date[1].$idArray[1]. $date[2];    
+                break; 
+             }
+             case (5):{ 
+                $changed = $idArray[0] . $date[1].$idArray[1]. $date[2]; 
+                break; 
+             }
+             case (6):{ 
+                $changed = $idArray[0] . $date[1].$idArray[1]. $date[2];    
+                break; 
+             }
+             case 7:{
+                $changed = $idArray[0] . $date[1].$idArray[1]. $date[2].$idArray[2];
+                break; 
+             } 
+             case 8:{
+                $changed = $idArray[0] . $date[1].$idArray[1]. $date[2].$idArray[2];
+                break; 
+             } 
+             case 9:{
+                
+                $changed = $idArray[0] . $date[1].$idArray[1]. $date[2].$idArray[2];
+                break; 
+             } 
+             case 10:{                
+                 $changed = $idArray[0] . $date[1].$idArray[1].$idArray[2]. $date[2].$idArray[3];
+                 break;
+             }
+            case 11:{                
+                $changed = $idArray[0] . $date[1].$idArray[1].$idArray[2]. $date[2].$idArray[3];
+                break;
+            }
+            case 12:{                
+                $changed = $idArray[0] . $date[1].$idArray[1].$idArray[2]. $date[2].$idArray[3];
+                break;
+            }
+            
+        } 
+        return $wrhCode.$changed;
     }
 
     public function resolveRouteBinding($encryptedId, $field = null)
@@ -817,7 +870,7 @@ class Order extends Model implements Package
             return $this->where('id',decrypt($encryptedId))->orwhere('id',$encryptedId)->firstOrFail();
         }
         catch(Exception $e){
-            return $this->where('id',$encryptedId)->firstOrFail();
+            return $this->whereIn('id',[$encryptedId ,orignalWarehouseNumber($encryptedId)])->firstOrFail();
             
         }
         
