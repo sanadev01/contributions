@@ -218,14 +218,14 @@ function orignalWarehouseNumber($warehouseNumer)
             
             break;
         }case (11):{
-            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[8].$id[9].$id[10].$id[13].$id[14];       
-            
+            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[8].$id[9].$id[10].$id[13].$id[14];
             break;
         }case (12):{ 
             $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[8].$id[9].$id[10].$id[13].$id[14].$id[15];
             break;
-        } 
-        break;
+        }
+        default:
+         abort(404);
          
     } 
     return (int) $whrNo;
