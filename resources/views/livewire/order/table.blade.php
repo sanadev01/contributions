@@ -60,13 +60,13 @@
         <table class="table mb-0 table-responsive-md" id="order-table">
             <thead>
                 <tr>
-                    @if (\Request::route()->getName() != 'admin.trash-orders.index')
+                    @if (\Request::route()->getName() != 'admin.trash-orders.index' && $isTrashed)
                         <th>
                             @lang('orders.Bulk Print')
                         </th>
                     @endif
                     <th>
-                        @if (\Request::route()->getName() != 'admin.trash-orders.index')
+                        @if (\Request::route()->getName() != 'admin.trash-orders.index'  && $isTrashed)
                             <span class="mr-4"> @lang('Edit Order')</span>
                         @endif
                         <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
@@ -92,7 +92,7 @@
                     <th class="no-print">@lang('orders.actions.actions')</th>
                 </tr>
                 <tr class="no-print">
-                    @if (\Request::route()->getName() != 'admin.trash-orders.index')
+                    @if (\Request::route()->getName() != 'admin.trash-orders.index' && $isTrashed)
                         <th style="min-width: 100px;">
                             <select name="" id="bulk-actions" class="form-control">
                                 <option value="clear">Clear All</option>
