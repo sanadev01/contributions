@@ -21,13 +21,15 @@ class ExportLiabilityReport extends AbstractExportService
     private function prepareExcelSheet()
     {
         $this->setExcelHeaderRow(); 
+        $row =  $this->currentRow;
         foreach ($this->deposits as $deposit) {
-            $this->setCellValue('A'.$this->currentRow, optional($deposit->user)->name);
-            $this->setCellValue('B'.$this->currentRow, optional($deposit->user)->pobox_number);
-            $this->setCellValue('C'.$this->currentRow, number_format($deposit->balance,2).' ');
-            $this->setCellValue('D'.$this->currentRow, $deposit->created_at->format('m/d/Y'));  
-            $this->currentRow++;
+            $this->setCellValue('A'.$row, optional($deposit->user)->name);
+            $this->setCellValue('B'.$row, optional($deposit->user)->pobox_number);
+            $this->setCellValue('C'.$row, number_format($deposit->balance,2).' ');
+            $this->setCellValue('D'.$row, $deposit->created_at->format('m/d/Y'));  
+           $row++;
         }
+         $this->currentRow = $row;
     }
 
     private function setExcelHeaderRow()
