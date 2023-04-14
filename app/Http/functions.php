@@ -212,7 +212,6 @@ function orignalWarehouseNumber($warehouseNumer)
             $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[10].$id[12].$id[12];
             break;
         }
-
         case (10):{
             $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[8].$id[9].$id[10].$id[13];
             
