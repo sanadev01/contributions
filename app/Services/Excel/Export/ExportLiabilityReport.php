@@ -35,7 +35,8 @@ class ExportLiabilityReport extends AbstractExportService
         foreach ($this->liabilities as $liability) {
             $this->setCellValue('A'.$row, optional($liability->user)->name);
             $this->setCellValue('B'.$row, optional($liability->user)->pobox_number);
-            $this->setCellValue('C'.$row, $liability->balance );
+            $this->setCellValue('C'.$row, number_format($liability->balance,2).' ');
+            $this->setCellValue('D'.$row,  $liability->created_at->format('m/d/Y'));
             $row++;
         }
 
@@ -53,8 +54,11 @@ class ExportLiabilityReport extends AbstractExportService
         $this->setColumnWidth('C', 20);
         $this->setCellValue('C1', 'Balance');
 
-        $this->setBackgroundColor('A1:C1', '2b5cab');
-        $this->setColor('A1:C1', 'FFFFFF');
+        $this->setColumnWidth('D', 20);
+        $this->setCellValue('D1', 'Date');
+
+        $this->setBackgroundColor('A1:D1', '2b5cab');
+        $this->setColor('A1:D1', 'FFFFFF');
 
         $this->currentRow++;
     }
