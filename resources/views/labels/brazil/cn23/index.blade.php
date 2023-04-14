@@ -172,7 +172,7 @@
             width: 3cm;
             position: relative;
             text-align: left;
-            margin-top: -2.8px;
+            margin-top: -2.8px !important;
         }
         .barcode_zipcode{
             position: absolute;
@@ -196,7 +196,7 @@
         }
         .complain_address{
             position: absolute;
-            top: 89mm;
+            top: 89mm !important;
             text-align: center;
             font-size: 7px;
             width: 9cm;
@@ -302,8 +302,8 @@
         }
         .bottom-block{
             position: absolute;
-            top: 9mm;
-            left: 52mm;
+            top: 9mm !important;
+            left: 52mm !important;
             font-size: 8pt !important;
         }
         .box-g{
