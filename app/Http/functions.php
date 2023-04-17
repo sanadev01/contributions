@@ -219,20 +219,36 @@ function orderProductsValue($products)
            return  $count + ($product['value'])*($product['quantity']);
     });
 }
-function orignalWarehouseNumber($warehouseNumer)
-{
-    $arr = explode("-", $warehouseNumer);
-    if(count($arr)>1){
-        $warehouseNumer = $arr[1];
-    } 
-    $id = str_split(trim($warehouseNumer));
-    $whrNo = optional($id)[0].optional($id)[1].optional($id)[2].optional($id)[5].optional($id)[6];
-    if( strlen($warehouseNumer) > 9){
-        $whrNo = $whrNo.optional($id)[7];
-        if(strlen($warehouseNumer) > 10){
-            return $whrNo.optional($id)[10];
-        }
-        return $whrNo;
+function orignalWarehouseNumber($whrNo)
+{  
+    if(count(explode("-", $whrNo))>1){
+        $whrNo = explode("-", $whrNo)[1];
     }
-    return $whrNo;
+    $whrNo = trim($whrNo);
+    $whrLen = strlen($whrNo)-4; 
+
+    switch(true){
+        case($whrLen < 1):
+        {
+            $orignalWhrNo = -1;
+            break; 
+        }
+        case ($whrLen <= 3):{
+            $orignalWhrNo = substr($whrNo,0,$whrLen);
+            break;
+        } 
+        case ($whrLen <= 6):{
+             $orignalWhrNo = substr($whrNo,0,3).substr($whrNo,5,$whrLen-3);
+            break;
+        }
+        case ($whrLen <= 9 ):{
+            $orignalWhrNo = substr($whrNo,0,3).substr($whrNo,5,3).substr($whrNo,10,3);;
+            break;
+        }
+        case ($whrLen >=10 ):{
+            $orignalWhrNo = substr($whrNo,0,3).substr($whrNo,5,3). substr($whrNo,8,3) .substr($whrNo,13);
+            break;
+        }
+    }
+    return (int) $orignalWhrNo;
 }

@@ -903,20 +903,40 @@ class Order extends Model implements Package
     }
 
     public function getChangeIdAttribute()
-    {
-        $idArray = str_split($this->id,3);
+    { 
+        $id = $this->id;
         $date = explode(":",$this->created_at);
-        $wrhCode = (explode("-", $this->warehouse_number)[0]=='TEMPWHR'?"TEMP-":"HD-");
-        return $wrhCode.$idArray[0].$date[1].optional($idArray)[1].$date[2].optional($idArray)[2];
+        $minute = $date[1];
+        $sec = $date[2]; 
+        $wrhCode = (explode("-", $this->warehouse_number)[0]=='TEMPWHR'?"TEMP-":"HD-"); 
+        $changed='';
+        switch(true){
+            case (strlen($id)<=3):{
+                $changed = substr($id,0,3). $minute. $sec;
+                break;
+            }
+            case (strlen($id)<=6):{
+                $changed = substr($id,0,3) . $minute. substr($id,3,3). $sec;
+                break;
+             }
+             case (strlen($id)<=9):{
+                $changed = substr($id,0,3) . $minute .substr($id,3,3). $sec .substr($id,6,3);
+                break;
+             }
+             case(strlen($id)>=10):{
+                $changed = substr($id,0,3) . $minute .substr($id,3,6). $sec .substr($id,9);
+                break;
+            }
+        }
+        return $wrhCode.$changed;
     }
-
     public function resolveRouteBinding($encryptedId, $field = null)
     {
         try{
             return $this->where('id',decrypt($encryptedId))->orwhere('id',$encryptedId)->firstOrFail();
         }
         catch(Exception $e){
-            return $this->where('id',$encryptedId)->firstOrFail();
+            return $this->whereIn('id',[$encryptedId ,orignalWarehouseNumber($encryptedId)])->firstOrFail();
             
         }
         
