@@ -22,7 +22,7 @@
                                 </div>
                             </div>    
                         </div>
-                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Return Parcel to Origin</b></h5></label>
+                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Return All Parcels on My Account Cost</b></h5></label>
                         <div class="col-md-1 pr-0">
                             <div class="input-group">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="Authorized to Dispose Parcel">
@@ -35,7 +35,7 @@
                                 </div>
                             </div>    
                         </div>
-                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Authorized to Dispose Parcel</b></h5></label>
+                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Disposal All Authorized</b></h5></label>
                         <div class="col-md-1 pr-0">
                             <div class="input-group">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="Return Parcel to Individual">
@@ -48,7 +48,7 @@
                                 </div>
                             </div>    
                         </div>
-                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Return Parcel to Individual</b></h5></label>
+                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Choose Return by Individual Parcel</b></h5></label>
                     </div>
                 </div>
             </div><br>
