@@ -909,8 +909,7 @@ class Order extends Model implements Package
         $minute = $date[1];
         $sec = $date[2]; 
         $wrhCode = (explode("-", $this->warehouse_number)[0]=='TEMPWHR'?"TEMP-":"HD-"); 
-        $changed=''; 
-        // dd( substr($id,0,3) . $minute .substr($id,3,3). $sec .substr($id,6,3));
+        $changed='';
         switch(true){
             case (strlen($id)<=3):{
                 $changed = substr($id,0,3). $minute. $sec;
