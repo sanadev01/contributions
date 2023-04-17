@@ -35,7 +35,7 @@
                                 </div>
                             </div>    
                         </div>
-                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Dispose All Authorized</b></h5></label>
+                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Disposal All Authorized</b></h5></label>
                         <div class="col-md-1 pr-0">
                             <div class="input-group">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="Return Parcel to Individual">
