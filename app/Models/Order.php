@@ -805,57 +805,24 @@ class Order extends Model implements Package
 
     public function getChangeIdAttribute()
     {
-// return $this->id;
         $idArray = str_split($this->id,3);
         $date = explode(":",$this->created_at);
         $wrhCode = (explode("-", $this->warehouse_number)[0]=='TEMPWHR'?"TEMP-":"HD-"); 
         $changed=''; 
         $len = strlen($this->id);
-        switch($len){
-             
-            case (1):
-                $changed = $idArray[0] . $date[1]. $date[2];
-                break;
-            case (2):
+        switch(true){
+            case ($len==1 || $len== 2 || $len== 3):
                     $changed = $idArray[0] . $date[1]. $date[2];
                     break;
-            case (3):
-                   $changed = $idArray[0] . $date[1]. $date[2];
-                        break;
-             case (4):{ 
+            case ($len==4 || $len==5 || $len==6):{
                 $changed = $idArray[0] . $date[1].$idArray[1]. $date[2];    
                 break; 
              }
-             case (5):{ 
-                $changed = $idArray[0] . $date[1].$idArray[1]. $date[2]; 
-                break; 
-             }
-             case (6):{ 
-                $changed = $idArray[0] . $date[1].$idArray[1]. $date[2];    
-                break; 
-             }
-             case 7:{
+             case ($len==7 || $len==8 || $len==9):{                
                 $changed = $idArray[0] . $date[1].$idArray[1]. $date[2].$idArray[2];
                 break; 
              } 
-             case 8:{
-                $changed = $idArray[0] . $date[1].$idArray[1]. $date[2].$idArray[2];
-                break; 
-             } 
-             case 9:{
-                
-                $changed = $idArray[0] . $date[1].$idArray[1]. $date[2].$idArray[2];
-                break; 
-             } 
-             case 10:{                
-                 $changed = $idArray[0] . $date[1].$idArray[1].$idArray[2]. $date[2].$idArray[3];
-                 break;
-             }
-            case 11:{                
-                $changed = $idArray[0] . $date[1].$idArray[1].$idArray[2]. $date[2].$idArray[3];
-                break;
-            }
-            case 12:{                
+             case($len==10 || $len==11 || $len==12):{                
                 $changed = $idArray[0] . $date[1].$idArray[1].$idArray[2]. $date[2].$idArray[3];
                 break;
             }

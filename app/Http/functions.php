@@ -173,59 +173,46 @@ function getAutoChargeData(User $user)
     ];
 }
 function orignalWarehouseNumber($warehouseNumer)
-{
+{ 
     $arr = explode("-", $warehouseNumer);
     if(count($arr)>1){
         $warehouseNumer = $arr[1];
-    } 
-    $id = str_split(trim($warehouseNumer));  
-    switch(strlen($warehouseNumer)-4){
-        case (1):{ 
-            $whrNo = $id[0];
-            break;
-        }case (2):{ 
-            $whrNo = $id[0].$id[1];
-            break;
-        }case (3):{ 
-            $whrNo = $id[0].$id[1].$id[2];
-            break;
-        }
-        case (4):{  
-            $whrNo = $id[0].$id[1].$id[2].$id[5];
-            break;
-        }case (5):{
-            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6];
-            break;
-        }case (6):{ 
-            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7];
+    }
+    $warehouseNumer = trim($warehouseNumer);
+    $whrSplit = str_split($warehouseNumer);
+    $whrLen = strlen($warehouseNumer)-4;
+    $_1To3 = substr($warehouseNumer,0,3);
+    $_5To7 = substr($warehouseNumer,5,8);
+    $_5To7 = substr($warehouseNumer,5,8);
+    $_8To10 = substr($warehouseNumer,8,11);
+    $_10To12 = substr($warehouseNumer,10,13);
+    $_13to15 = substr($warehouseNumer,13,16);
+    switch(true){
+        case ($whrLen == 1 ||$whrLen == 2 ||$whrLen == 3 ):{
+            $whrNo = $_1To3;
             break;
         }
-        case (7):{  
-            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[10];
-            
+        case ($whrLen == 4):{ 
+            $whrNo = $_1To3.$whrSplit[5];
             break;
-        }case (8):{
-            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[10].$id[11];
-            
+        }case ($whrLen == 5):{
+            $whrNo = $_1To3.$whrSplit[5].$whrSplit[6];
             break;
-        }case (9):{ 
-            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[10].$id[12].$id[12];
+        }case ($whrLen == 6):{
+            $whrNo = $_1To3.$_5To7;
             break;
         }
-        case (10):{
-            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[8].$id[9].$id[10].$id[13];
-            
+        case ($whrLen == 7 ||$whrLen == 8 ||$whrLen == 9 ):{
+            $whrNo = $_1To3.$_5To7.$_10To12;
             break;
-        }case (11):{
-            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[8].$id[9].$id[10].$id[13].$id[14];
-            break;
-        }case (12):{ 
-            $whrNo = $id[0].$id[1].$id[2].$id[5].$id[6].$id[7].$id[8].$id[9].$id[10].$id[13].$id[14].$id[15];
+        }
+        case ($whrLen == 10 ||$whrLen == 11 ||$whrLen == 12 ):{
+            $whrNo = $_1To3.$_5To7.$_8To10.$_13to15;
             break;
         }
         default:
-         abort(404);
-         
-    } 
+        $whrNo = -1;
+        
+    }  
     return (int) $whrNo;
 }
