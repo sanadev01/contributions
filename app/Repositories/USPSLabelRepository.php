@@ -10,6 +10,7 @@ use App\Models\OrderTracking;
 use App\Models\ShippingService;
 use Illuminate\Pipeline\Pipeline;
 use App\Errors\SecondaryLabelError;
+use App\Services\USPS\Services\UpdateCN23Label;
 use App\Services\USPS\USPSLabelMaker;
 use App\Services\USPS\USPSShippingService;
 
@@ -140,7 +141,7 @@ class USPSLabelRepository
 
         $labelPrinter = new USPSLabelMaker();
         $labelPrinter->saveLabel($base64_pdf, $fileName);
-
+        return (new UpdateCN23Label($order))->run(); 
         return true;
     }
 

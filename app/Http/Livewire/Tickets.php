@@ -5,12 +5,13 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Repositories\TicketRepository;
+use GuzzleHttp\Psr7\Request;
 
 class Tickets extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-
+    public $searchTerm;
     public $date;
     public $user;
     public $status;
@@ -24,6 +25,8 @@ class Tickets extends Component
 
     public function render()
     {
+
+        $this->searchTerm = request('searchTerm');
         return view('livewire.tickets', [
             'tickets' => $this->getTickets(),
         ]);
@@ -43,10 +46,7 @@ class Tickets extends Component
     private function getTickets()
     {
         return (new TicketRepository)->get(request()->merge([
-            'date' => $this->date ? $this->date : null,
-            'pobox' => $this->pobox,
-            'user' => $this->user,
-            'status' => ($this->status != 'all') ? $this->open : null,
+            'searchTerm' => $this->searchTerm ? $this->searchTerm : null,
         ]));
     }
 }

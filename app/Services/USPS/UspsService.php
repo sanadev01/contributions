@@ -134,7 +134,7 @@ class UspsService
             {
                 return (Object)[
                     'success' => false,
-                    'message' => ($url == $this->getPriceUrl) ? $response->json()['message']  : $response->json()['error'],
+                    'message' => ($url == $this->getPriceUrl) ? $response->json()['message']  : $response->json()['message'],
                 ];    
             }elseif ($response->status() !== 200) 
             {
@@ -348,14 +348,14 @@ class UspsService
     private function getSenderAddress($order)
     {
         return [
-            'company_name' => 'HERCO SUITE#100 -'.$order->warehouse_number,
+            'company_name' => $order->getSenderFullName().'-'.$order->warehouse_number, //sender name
             'line1' => $order->sender_address,
             'city' => $order->sender_city,
             'state_province' => ($order->sender_state) ? $order->sender_state : State::where('id', $order->sender_state_id)->value('code'),
             'postal_code' => $order->sender_zipcode,
-            'phone_number' => '+13058885191',
-            'sms' => '+17867024093',
-            'email' => 'homedelivery@homedeliverybr.com',
+            'phone_number' => $order->sender_phone??($order->user->phone??'+13058885191'),//sender phone
+            'sms' => '+13058885191',
+            'email' => $order->sender_email??($order->user->email??'homedelivery@homedeliverybr.com'),
             'country_code' => 'US',
         ];
     }

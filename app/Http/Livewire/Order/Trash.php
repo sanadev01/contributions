@@ -51,6 +51,7 @@ class Trash extends Component
     {
         return view('livewire.order.table', [
             'orders' => $this->getTrashedOrders(),
+            'isTrashed' => false
         ]);
     }
 
@@ -72,5 +73,14 @@ class Trash extends Component
             'paymentStatus' => $this->paymentStatus,
             'userType' => $this->userType,
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc', true);
+    }
+
+    public function sortBy($name)
+    {
+        if ($name == $this->sortBy) {
+            $this->sortAsc = ! $this->sortAsc;
+        } else {
+            $this->sortBy = $name;
+        }
     }
 }

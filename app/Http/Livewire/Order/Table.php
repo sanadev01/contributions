@@ -54,7 +54,8 @@ class Table extends Component
         }
 
         return view('livewire.order.table', [
-            'orders' => $this->getOrders()
+            'orders' => $this->getOrders(),
+            'isTrashed' => true
         ]);
     }
 
@@ -84,6 +85,7 @@ class Table extends Component
             'orderType' => $this->orderType,
             'paymentStatus' => $this->paymentStatus,
             'userType' => $this->userType,
+            'search' => $this->search,
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 

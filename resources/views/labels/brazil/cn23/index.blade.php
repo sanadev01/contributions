@@ -172,6 +172,7 @@
             width: 3cm;
             position: relative;
             text-align: left;
+            margin-top: -2.8px !important;
         }
         .barcode_zipcode{
             position: absolute;
@@ -195,7 +196,7 @@
         }
         .complain_address{
             position: absolute;
-            top: 90mm;
+            top: 89mm !important;
             text-align: center;
             font-size: 7px;
             width: 9cm;
@@ -301,8 +302,8 @@
         }
         .bottom-block{
             position: absolute;
-            top: 11mm;
-            left: 48mm;
+            top: 9mm !important;
+            left: 52mm !important;
             font-size: 8pt !important;
         }
         .box-g{
@@ -417,7 +418,7 @@
     <div class="serivce-zipcode">
         <div class="left-block">
             <div class="return-address">
-                <span class="return-box"> <i class="return-box-text">X</i> </span> &nbsp; Retorno a origem  <span class="return-box">   </span> Tratar como abandono<br>
+                <span class="return-box"> @if($hasReturn)<i class="return-box-text">X</i>@endif </span> &nbsp; Retorno a origem  <span class="return-box"> @if(!$hasReturn)<i class="return-box-text">X</i>@endif </span> Tratar como abandono<br>
                 <span class="site-text">Dúvidas e reclamações: homedeliverybr.com</span><br><br>
                 <strong>DEVOLUCÃO:</strong> <br>
                 {!! $returnAddress !!}
@@ -438,9 +439,10 @@
             <br>
         </div>
         <div class="right-block">
-            <h2>Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2>
-            {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
-            {{ $order->sender_email }} <br>
+        <p class="mb-0"><h2>Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2></p>
+            <!-- {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br> -->
+            {!! $activeAddress !!}
+            <!-- {{ $order->sender_email }} <br> -->
             <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
             <strong>CR#:</strong>{{ $order->customer_reference }} <br>
             <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>

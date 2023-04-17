@@ -4,7 +4,7 @@
             <strong>Statement From: </strong> {{ $dateFrom }} - {{ $dateTo }} <br>
             {{-- <strong>Total Deposit:</strong> {{ 0 }} <br>
             <strong>Total Debit: </strong>  {{ 0 }} <br> --}}
-            <strong>Balance: <span style="font-size: 16px;">{{  number_format($totalBalance, 2) }} USD </span></strong>
+            <strong>Balance: <span style="font-size: 16px;">{{  number_format($deposits->sum('balance'), 2) }} USD </span></strong>
         </div>
     </div>
     <div class="row justify-content-end mb-4">
@@ -41,16 +41,17 @@
             </div>
         </div>
         <div class="col-md-1 text-right mt-4">
-            <a href="{{$downloadLink}}" class="btn btn-primary">Download</a>
+            <button wire:click="download" class="btn btn-primary">Download</button>  
         </div>
     </div>
     
     <table class="table table-hover-animation mb-0">
         <thead>
         <tr>
-            <th><a href="#" wire:click.prevent="sortBy('name')">User</a></th>
-            <th><a href="#" wire:click.prevent="sortBy('pobox_number')">WHR#</a> </th>
-            <th><a href="#" wire:click.prevent="sortBy('balance')">Balance</a></th>
+            <th><a href="#" wire:click.prevent="sortBy('name')"> User </a></th>
+            <th><a href="#" wire:click.prevent="sortBy('pobox_number')"> WHR# </a> </th>
+            <th> Balance </th>
+            <th> Date    </th>
         </tr>
         <tr>
             <th>
@@ -61,17 +62,17 @@
                 <input type="search" wire:model.debounce.500ms="poboxNumber" class="form-control">
             </th>
            
-            <th>
-                <input type="search" wire:model.debounce.500ms="balance" class="form-control">
-            </th>
+            <th>  </th>
+            <th>  </th>
         </tr>
         </thead>
         <tbody>
-            @foreach($users as $user)
+            @foreach($deposits as $deposit)
             <tr>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->pobox_number }}</td>
-                <td>{{ getBalance($user) }}</td>
+                <td>{{ $deposit->user->name }}</td>
+                <td>{{ $deposit->user->pobox_number }}</td>
+                <td>{{ number_format($deposit->balance,2) }}</td>
+                <td>{{ $deposit->created_at->format('m/d/Y') }}</td>
             </tr>
             @endforeach
         </tbody>
