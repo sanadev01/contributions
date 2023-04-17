@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\PublicApi;
 
+use App\Events\AutoChargeAmountEvent;
 use App\Models\Order;
 use App\Events\OrderPaid;
 use Illuminate\Http\Request;
@@ -48,6 +49,7 @@ class OrderLabelController extends Controller
                         'status' => Order::STATUS_PAYMENT_DONE
                     ]);
                     chargeAmount($order->gross_total, $order);
+                    AutoChargeAmountEvent::dispatch($order->user);
                     $isPayingFlag = true;
                 }
             }
