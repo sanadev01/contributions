@@ -78,9 +78,9 @@ class UpdateCN23Label
             $this->printReturnAddress(60.7, 22, 40, 12, 26, 29, 32, 35, 6, '');
             $this->pdfi->SetFont("Arial", "B", 7);
             if(count($this->order->items) > 5) {
-                $this->pdfi->RotatedText(13, 222.7, 'X', 0);
+                $this->pdfi->RotatedText(100.2, 218.7, 'X', 0);
             } else {
-                $this->pdfi->RotatedText(13, 102.7, 'X', 0);
+                $this->pdfi->RotatedText(100.2, 98.7, 'X', 0);
             }
             $this->pdfi->Output($this->pdf_file, 'F');
             return true;
@@ -110,9 +110,9 @@ class UpdateCN23Label
             //FOR BOX CHECK
             $this->pdfi->SetFont("Arial", "B", 7);
             if(count($this->order->items) > 5) {
-                $this->pdfi->RotatedText(11.7, 222.7, 'X', 0);
+                $this->pdfi->RotatedText(98.7, 218.7, 'X', 0);
             } else {
-                $this->pdfi->RotatedText(11.7, 102.7, 'X', 0);
+                $this->pdfi->RotatedText(98.7, 98.7, 'X', 0);
             }
             $this->pdfi->Output($this->pdf_file, 'F');
             
