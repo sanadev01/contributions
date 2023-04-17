@@ -418,7 +418,7 @@
     <div class="serivce-zipcode">
         <div class="left-block">
             <div class="return-address">
-                <span class="return-box"> @if($hasReturn)<i class="return-box-text">X</i>@endif </span> &nbsp; Retorno a origem  <span class="return-box"> @if(!$hasReturn)<i class="return-box-text">X</i>@endif </span> Tratar como abandono<br>
+                <span class="return-box"> @if($hasReturn === "Origin")<i class="return-box-text">X</i>@endif </span> &nbsp; Retorno a origem  <span class="return-box"> @if($hasReturn === "Dispose")<i class="return-box-text">X</i>@endif </span> Tratar como abandono<br>
                 <span class="site-text">Dúvidas e reclamações: homedeliverybr.com</span><br><br>
                 <strong>DEVOLUCÃO:</strong> <br>
                 {!! $returnAddress !!}

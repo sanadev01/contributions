@@ -196,8 +196,12 @@ class CN23LabelMaker implements HasLableExport
     {
         $this->order = $order;
         $value = $this->order->getOrderValue();
-        if($this->order->sinerlog_tran_id === "origin" || ($this->order->sinerlog_tran_id === "individual" && $value > 100)) {
-            $this->hasReturn = true;
+        if(setting('return_origin', null, auth()->user()->id) || ($this->order->sinerlog_tran_id === "individual" && $value > 100)) {
+            $this->hasReturn = "Origin";
+        }elseif(setting('dispose_all', null, auth()->user()->id)) {
+            $this->hasReturn = "Dispose";
+        }else {
+            $this->hasReturn = "Origin";
         }
         return $this;
     }

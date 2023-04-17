@@ -287,14 +287,11 @@ class OrderRepository
     {
         $order->syncServices($request->get('services',[]));
 
-        if($request->return_origin) {
-            $order->update([ 'sinerlog_tran_id' => "origin" ]);
-        }
-        if($request->dispose_parcel) {
-            $order->update([ 'sinerlog_tran_id' => "dispose" ]);
-        }
         if($request->return_individual) {
             $order->update([ 'sinerlog_tran_id' => "individual" ]);
+        }
+        if(!$request->return_individual) {
+            $order->update([ 'sinerlog_tran_id' => null ]);
         }
 
         $order->doCalculations();

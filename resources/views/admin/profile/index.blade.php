@@ -198,6 +198,30 @@
                                         </div>
                                         <label class="col-md-6 font-medium-1 font-weight-bold" for="auto_charge">@lang('profile.payment permission')<span class="text-danger"></span></label>
                                     </div>
+                                    <div class="controls row mb-1 align-items-center">
+                                        <div class="offset-3 form-check form-check-inline">
+                                            <div class="vs-checkbox-con vs-checkbox-primary ml-3" title="Parcel Return to Origin">
+                                                <input type="checkbox" name="return_origin" id="returnParcel" @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <label class="form-check-label font-medium-1 font-weight-bold mt-2" for="dispose_all">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <div class="vs-checkbox-con vs-checkbox-primary ml-3" title="Parcel Return to Origin">
+                                                <input type="checkbox" name="dispose_all" id="disposeAll" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <label class="form-check-label font-medium-1 font-weight-bold mt-2" for="dispose_all">Dispose All Authorized<span class="text-danger"></span></label>
+                                        </div>
+                                    </div>
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
@@ -216,5 +240,17 @@
 @endsection
 @section('js')
     <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
+    <script>
+        $('#returnParcel').change(function() {
+            if($(this).is(":checked")){
+            $('#disposeAll').prop('checked', false);
+            }    
+        });
+        $('#disposeAll').change(function() {
+            if($(this).is(":checked")){
+            $('#returnParcel').prop('checked', false);
+            }    
+        });
+    </script>
     @include('layouts.states-ajax')
 @endsection

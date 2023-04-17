@@ -13,7 +13,7 @@
                         <div class="col-md-1 pr-0">
                             <div class="input-group">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="Return Parcel to Origin">
-                                    <input type="checkbox" name="return_origin" id="returnParcel" @if($order->sinerlog_tran_id === "origin") checked @endif>
+                                    <input type="checkbox" name="return_origin" id="returnParcel" disabled @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
                                     <span class="vs-checkbox vs-checkbox-lg">
                                         <span class="vs-checkbox--check">
                                             <i class="vs-icon feather icon-check"></i>
@@ -22,11 +22,11 @@
                                 </div>
                             </div>    
                         </div>
-                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Return Parcel to Origin</b></h5></label>
+                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Return All Parcels on My Account Cost</b></h5></label>
                         <div class="col-md-1 pr-0">
                             <div class="input-group">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="Authorized to Dispose Parcel">
-                                    <input type="checkbox" name="dispose_parcel" id="disposeParcel" @if($order->sinerlog_tran_id === "dispose") checked @endif>
+                                    <input type="checkbox" name="dispose_parcel" id="disposeParcel" disabled @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
                                     <span class="vs-checkbox vs-checkbox-lg">
                                         <span class="vs-checkbox--check">
                                             <i class="vs-icon feather icon-check"></i>
@@ -35,7 +35,7 @@
                                 </div>
                             </div>    
                         </div>
-                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Authorized to Dispose Parcel</b></h5></label>
+                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Disposal All Authorized</b></h5></label>
                         <div class="col-md-1 pr-0">
                             <div class="input-group">
                                 <div class="vs-checkbox-con vs-checkbox-primary" title="Return Parcel to Individual">
@@ -48,7 +48,7 @@
                                 </div>
                             </div>    
                         </div>
-                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Return Parcel to Individual</b></h5></label>
+                        <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Choose Return by Individual Parcel</b></h5></label>
                     </div>
                 </div>
             </div><br>
