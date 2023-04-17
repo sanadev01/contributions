@@ -179,12 +179,7 @@ function orignalWarehouseNumber($warehouseNumer)
         $warehouseNumer = $arr[1];
     }
     $warehouseNumer = trim($warehouseNumer);
-    $whrLen = strlen($warehouseNumer)-4;
-
-    $_1To3 = substr($warehouseNumer,0,3); 
-    $_5To7 = substr($warehouseNumer,5,3); 
-    $_8To10 = substr($warehouseNumer,8,3);
- 
+    $whrLen = strlen($warehouseNumer)-4; 
 
     switch(true){
         case($whrLen < 1):
@@ -197,15 +192,15 @@ function orignalWarehouseNumber($warehouseNumer)
             break;
         } 
         case ($whrLen <= 6):{
-             $whrNo = $_1To3.substr($warehouseNumer,5,$whrLen-3);
+             $whrNo = substr($warehouseNumer,0,3).substr($warehouseNumer,5,$whrLen-3);
             break;
         }
         case ($whrLen <= 9 ):{
-            $whrNo = $_1To3.$_5To7.substr($warehouseNumer,10,3);;
+            $whrNo = substr($warehouseNumer,0,3).substr($warehouseNumer,5,3).substr($warehouseNumer,10,3);;
             break;
         }
         case ($whrLen >=10 ):{
-            $whrNo = $_1To3.$_5To7.$_8To10.substr($warehouseNumer,13);
+            $whrNo = substr($warehouseNumer,0,3).substr($warehouseNumer,5,3). substr($warehouseNumer,8,3) .substr($warehouseNumer,13);
             break;
         }
     }
