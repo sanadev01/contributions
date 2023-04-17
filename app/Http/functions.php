@@ -179,40 +179,35 @@ function orignalWarehouseNumber($warehouseNumer)
         $warehouseNumer = $arr[1];
     }
     $warehouseNumer = trim($warehouseNumer);
-    $whrSplit = str_split($warehouseNumer);
     $whrLen = strlen($warehouseNumer)-4;
-    $_1To3 = substr($warehouseNumer,0,3);
-    $_5To7 = substr($warehouseNumer,5,8);
-    $_5To7 = substr($warehouseNumer,5,8);
-    $_8To10 = substr($warehouseNumer,8,11);
-    $_10To12 = substr($warehouseNumer,10,13);
-    $_13to15 = substr($warehouseNumer,13,16);
+
+    $_1To3 = substr($warehouseNumer,0,3); 
+    $_5To7 = substr($warehouseNumer,5,3); 
+    $_8To10 = substr($warehouseNumer,8,3);
+ 
+
     switch(true){
-        case ($whrLen == 1 ||$whrLen == 2 ||$whrLen == 3 ):{
-            $whrNo = $_1To3;
+        case ($whrLen == 1 || $whrLen == 2 ||$whrLen == 3):{
+            $whrNo = substr($warehouseNumer,0,$whrLen);
             break;
-        }
-        case ($whrLen == 4):{ 
-            $whrNo = $_1To3.$whrSplit[5];
-            break;
-        }case ($whrLen == 5):{
-            $whrNo = $_1To3.$whrSplit[5].$whrSplit[6];
-            break;
-        }case ($whrLen == 6):{
-            $whrNo = $_1To3.$_5To7;
+        } 
+        case ($whrLen == 4 || $whrLen == 5 ||$whrLen == 6):{
+             $whrNo = $_1To3.substr($warehouseNumer,5,$whrLen-3);
             break;
         }
         case ($whrLen == 7 ||$whrLen == 8 ||$whrLen == 9 ):{
-            $whrNo = $_1To3.$_5To7.$_10To12;
+            $whrNo = $_1To3.$_5To7.substr($warehouseNumer,10,3);;
             break;
         }
         case ($whrLen == 10 ||$whrLen == 11 ||$whrLen == 12 ):{
-            $whrNo = $_1To3.$_5To7.$_8To10.$_13to15;
+            $whrNo = $_1To3.$_5To7.$_8To10.substr($warehouseNumer,13,3);
             break;
         }
         default:
         $whrNo = -1;
         
     }  
+
+    dd($whrNo);
     return (int) $whrNo;
 }
