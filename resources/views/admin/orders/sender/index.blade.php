@@ -24,21 +24,7 @@
                         </div>
                     @enderror
                 </div>
-                <div class="col-6 my-3 p-4">
-                    <div class="row justify-content-end">
-                        <fieldset class="col-md-6 text-right">
-                            <div class="vs-checkbox-con vs-checkbox-primary">
-                                <input type="checkbox" name="save_address">
-                                <span class="vs-checkbox vs-checkbox-lg">
-                                    <span class="vs-checkbox--check">
-                                        <i class="vs-icon feather icon-check"></i>
-                                    </span>
-                                </span>
-                                <span class="h3 mx-2 text-primary my-0 py-0">@lang('address.save Address')</span>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
+                
             </div>
             <div class="row">
                 <div class="col-sm-6">
@@ -68,7 +54,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Email')</label>
-                        <input type="email" class="form-control" name="email" value="{{ old('email',__default($order->user->email,null)) }}">
+                        <input type="email" class="form-control" name="email" value="{{ old('email',__default($order->sender_email,null)) }}">
                         @error('email')
                             <div class="text-danger">
                                 {{ $message }}
@@ -79,7 +65,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Phone')<span class="text-danger" id="phone" style="display: none;">*</span></label>
-                        <input type="text" class="form-control" name="phone" value="{{ old('phone',__default($order->user->phone,null)) }}">
+                        <input type="text" class="form-control" name="phone" value="{{ old('phone',__default($order->sender_phone,null)) }}">
                         @error('phone')
                             <div class="text-danger">
                                 {{ $message }}
