@@ -804,33 +804,34 @@ class Order extends Model implements Package
     }
 
     public function getChangeIdAttribute()
-    {
-        $idArray = str_split($this->id,3);
+    { 
+        $id = $this->id;
         $date = explode(":",$this->created_at);
+        $minute = $date[1];
+        $sec = $date[2]; 
         $wrhCode = (explode("-", $this->warehouse_number)[0]=='TEMPWHR'?"TEMP-":"HD-"); 
         $changed=''; 
-        $len = strlen($this->id);
+        // dd( substr($id,0,3) . $minute .substr($id,3,3). $sec .substr($id,6,3));
         switch(true){
-            case ($len==1 || $len== 2 || $len== 3):
-                    $changed = $idArray[0] . $date[1]. $date[2];
-                    break;
-            case ($len==4 || $len==5 || $len==6):{
-                $changed = $idArray[0] . $date[1].$idArray[1]. $date[2];    
-                break; 
-             }
-             case ($len==7 || $len==8 || $len==9):{                
-                $changed = $idArray[0] . $date[1].$idArray[1]. $date[2].$idArray[2];
-                break; 
-             } 
-             case($len==10 || $len==11 || $len==12):{                
-                $changed = $idArray[0] . $date[1].$idArray[1].$idArray[2]. $date[2].$idArray[3];
+            case (strlen($id)<=3):{
+                $changed = substr($id,0,3). $minute. $sec;
                 break;
             }
-            
-        } 
+            case (strlen($id)<=6):{
+                $changed = substr($id,0,3) . $minute. substr($id,3,3). $sec;
+                break;
+             }
+             case (strlen($id)<=9):{
+                $changed = substr($id,0,3) . $minute .substr($id,3,3). $sec .substr($id,6,3);
+                break;
+             }
+             case(strlen($id)>=10):{
+                $changed = substr($id,0,3) . $minute .substr($id,3,6). $sec .substr($id,9);
+                break;
+            }
+        }
         return $wrhCode.$changed;
     }
-
     public function resolveRouteBinding($encryptedId, $field = null)
     {
         try{

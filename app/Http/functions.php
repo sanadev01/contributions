@@ -187,27 +187,27 @@ function orignalWarehouseNumber($warehouseNumer)
  
 
     switch(true){
-        case ($whrLen == 1 || $whrLen == 2 ||$whrLen == 3):{
+        case($whrLen < 1):
+        {
+            $whrNo = -1;
+            break; 
+        }
+        case ($whrLen <= 3):{
             $whrNo = substr($warehouseNumer,0,$whrLen);
             break;
         } 
-        case ($whrLen == 4 || $whrLen == 5 ||$whrLen == 6):{
+        case ($whrLen <= 6):{
              $whrNo = $_1To3.substr($warehouseNumer,5,$whrLen-3);
             break;
         }
-        case ($whrLen == 7 ||$whrLen == 8 ||$whrLen == 9 ):{
+        case ($whrLen <= 9 ):{
             $whrNo = $_1To3.$_5To7.substr($warehouseNumer,10,3);;
             break;
         }
-        case ($whrLen == 10 ||$whrLen == 11 ||$whrLen == 12 ):{
-            $whrNo = $_1To3.$_5To7.$_8To10.substr($warehouseNumer,13,3);
+        case ($whrLen >=10 ):{
+            $whrNo = $_1To3.$_5To7.$_8To10.substr($warehouseNumer,13);
             break;
         }
-        default:
-        $whrNo = -1;
-        
-    }  
-
-    dd($whrNo);
+    }
     return (int) $whrNo;
 }
