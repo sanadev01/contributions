@@ -200,6 +200,21 @@ class OrderRepository
             'sender_zipcode' => $request->sender_zipcode,
         ]);
 
+        if($request->save_address) {
+            $order->user->update([
+                'name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'tax_id' => $request->taxt_id,
+                'address' => $request->sender_address,
+                'city' => $request->sender_city,
+                'country_id' => $request->sender_country_id,
+                'state_id' => $request->sender_state_id,
+                'zipcode' => $request->sender_zipcode,
+            ]);
+        }
+
         return $order;
     }
 

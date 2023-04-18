@@ -174,5 +174,24 @@
             }
         }
     });
+
+    $('#returnParcel').change(function() {
+        if($(this).is(":checked")){
+        $('#disposeParcel').prop('checked', false);
+        $('#returnIndividual').prop('checked', false);
+        }    
+    });
+    $('#disposeParcel').change(function() {
+        if($(this).is(":checked")){
+        $('#returnParcel').prop('checked', false);
+        $('#returnIndividual').prop('checked', false);
+        }    
+    });
+    $('#returnIndividual').change(function() {
+        if($(this).is(":checked")){
+        $('#returnParcel').prop('checked', false);
+        $('#disposeParcel').prop('checked', false);
+        }    
+    });
 </script>
 @endsection
