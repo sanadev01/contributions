@@ -932,10 +932,10 @@ class Order extends Model implements Package
     public function resolveRouteBinding($encryptedId, $field = null)
     {
         try{
-            return $this->findOrFail(decrypt($encryptedId));
+            return $this->withTrashed()->findOrFail(decrypt($encryptedId));
         }
         catch(Exception $e){
-            return $this->findOrFail($encryptedId);
+            return $this->withTrashed()->findOrFail($encryptedId);
             
         }
         
