@@ -172,6 +172,7 @@ class CN23LabelMaker implements HasLableExport
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
             'hasReturn' => $this->hasReturn,
+            'activeAddress' => $this->activeAddress,
         ];
     }
 
