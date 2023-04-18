@@ -29,7 +29,7 @@
                     @foreach ($orders as $order)
                     <tr>
                         <th scope="row">{{ $loop->iteration }}</th>
-                        <td>{{ $order->id }}</td>
+                        <td>{{ $order->warehouse_number }}</td>
                         <td>{{ ucfirst($order->merchant) }}</td>
                         <td>{{ $order->getWeight('kg') }} Kg</td>
                         <td>{{ $order->corrios_tracking_code }}</td>

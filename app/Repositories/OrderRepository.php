@@ -72,8 +72,8 @@ class OrderRepository
             });
         }
         if($request->warehouse_number){
-            $warehouseNumer = orignalWarehouseNumber($request->warehouse_number);
-            $query->where('warehouse_number', 'LIKE', "%{$warehouseNumer}%");
+            // $warehouseNumer = orignalWarehouseNumber($request->warehouse_numbe r);
+            $query->where('warehouse_number', 'LIKE', "%{$request->warehouse_number}%");
         }
         if($request->merchant){
             $query->where('merchant', 'LIKE', "%{$request->merchant}%");
