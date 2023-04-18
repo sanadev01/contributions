@@ -205,7 +205,7 @@ class CN23LabelMaker implements HasLableExport
             }
         }
         else {
-            if(setting('return_origin', null, auth()->user()->id)) {
+            if(setting('return_origin', null, auth()->user()->id) || setting('individual_parcel', null, auth()->user()->id)) {
                 $this->hasReturn = "Origin";
             }
             if(setting('dispose_all', null, auth()->user()->id)) {
