@@ -28,7 +28,8 @@ class OrderCreatedController extends Controller
             if ( !$shippingService ){
                 $shippingService = ShippingService::query()->active()->first();
             }
-            if(User::find(base64_decode($request->callbackUser))){
+            
+            if(!User::find(base64_decode($request->callbackUser))->isActive()){
                 return null;
             }
             $order = Order::create([
