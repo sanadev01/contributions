@@ -219,7 +219,7 @@
                                                     </span>
                                                 </span>
                                             </div>
-                                            <label class="form-check-label font-medium-1 font-weight-bold mt-2" for="dispose_all">Dispose All Authorized<span class="text-danger"></span></label>
+                                            <label class="form-check-label font-medium-1 font-weight-bold mt-2" for="dispose_all">Disposal All Authorized<span class="text-danger"></span></label>
                                         </div>
                                     </div>
                                 <div class="row mt-1">

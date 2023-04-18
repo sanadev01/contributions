@@ -43,7 +43,7 @@ class CN23LabelMaker implements HasLableExport
         CEP 04602-001 - São Paulo - SP- Brasil';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
         $this->hasDescpCount = '';
-        $this->hasReturn = false;
+        $this->hasReturn = '';
         $this->activeAddress = '';
     }
 
@@ -196,12 +196,21 @@ class CN23LabelMaker implements HasLableExport
     {
         $this->order = $order;
         $value = $this->order->getOrderValue();
-        if(setting('return_origin', null, auth()->user()->id) || ($this->order->sinerlog_tran_id === "individual" && $value > 100)) {
-            $this->hasReturn = "Origin";
-        }elseif(setting('dispose_all', null, auth()->user()->id)) {
-            $this->hasReturn = "Dispose";
-        }else {
-            $this->hasReturn = "Origin";
+        if($this->order->sinerlog_tran_id) {
+            if($this->order->sinerlog_tran_id === "origin"  || $this->order->sinerlog_tran_id === "individual") {
+                $this->hasReturn = "Origin";
+            }
+            if($this->order->sinerlog_tran_id === "dispose") {
+                $this->hasReturn = "Dispose";
+            }
+        }
+        else {
+            if(setting('return_origin', null, auth()->user()->id)) {
+                $this->hasReturn = "Origin";
+            }
+            if(setting('dispose_all', null, auth()->user()->id)) {
+                $this->hasReturn = "Dispose";
+            }
         }
         return $this;
     }
