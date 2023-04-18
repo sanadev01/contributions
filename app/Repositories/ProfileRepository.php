@@ -16,9 +16,9 @@ class ProfileRepository
     public function store(Request $request)
     {   
         try{
-
-            $user = User::find(Auth::id());
-
+            $user = User::find(Auth::id()); 
+                ($request->order_webhook_url != null ) ? saveSetting('order_webhook_url', $request->order_webhook_url, $user->id) : saveSetting('order_webhook_url', 0, $user->id);
+                ($request->order_webhook_url_method != null ) ? saveSetting('order_webhook_url_method', $request->order_webhook_url_method, $user->id) : saveSetting('order_webhook_url_method', "POST", $user->id);
             $user->update([
                 'name' => $request->name,
                 'last_name' => $request->last_name,
@@ -55,6 +55,8 @@ class ProfileRepository
                 // dd($image);
             }
             $request->has('auto_charge') ? saveSetting('auto_charge', true, $user->id) : saveSetting('auto_charge', false, $user->id);
+            $request->has('return_origin') ? saveSetting('return_origin', true, $user->id) : saveSetting('return_origin', false, $user->id);
+            $request->has('dispose_all') ? saveSetting('dispose_all', true, $user->id) : saveSetting('dispose_all', false, $user->id);
             return true;
 
         }catch(Exception $exception){

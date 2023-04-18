@@ -7,6 +7,7 @@ use App\Http\Requests\Orders\Recipient\CreateRequest;
 use App\Models\Order;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
+use App\Models\Country;
 
 class OrderRecipientController extends Controller
 {
@@ -18,7 +19,16 @@ class OrderRecipientController extends Controller
     public function index(Order $order)
     {
         $this->authorize('editReceipient',$order);
-        return view('admin.orders.recipient.index',compact('order'));
+
+        $countryConstants = [
+            'Brazil' => Country::Brazil,
+            'Chile' => Country::Chile,
+            'Colombia' => Country::COLOMBIA,
+            'US' => Country::US,
+            'Netherlands' => Country::NETHERLANDS
+        ];
+
+        return view('admin.orders.recipient.index',compact('order', 'countryConstants'));
     }
 
     /**
