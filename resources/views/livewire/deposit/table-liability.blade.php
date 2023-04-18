@@ -48,9 +48,10 @@
     <table class="table table-hover-animation mb-0">
         <thead>
         <tr>
-            <th><a href="#" wire:click.prevent="sortBy('name')">User</a></th>
-            <th><a href="#" wire:click.prevent="sortBy('pobox_number')">WHR#</a> </th>
-            <th><a href="#" >Balance</a></th>
+            <th><a href="#" wire:click.prevent="sortBy('name')"> User </a></th>
+            <th><a href="#" wire:click.prevent="sortBy('pobox_number')"> WHR# </a> </th>
+            <th> Balance </th>
+            <th> Date    </th>
         </tr>
         <tr>
             <th>
@@ -61,9 +62,8 @@
                 <input type="search" wire:model.debounce.500ms="poboxNumber" class="form-control">
             </th>
            
-            <th>
-                {{-- <input type="search" wire:model.debounce.500ms="balance" class="form-control"> --}}
-            </th>
+            <th>  </th>
+            <th>  </th>
         </tr>
         </thead>
         <tbody>
@@ -71,7 +71,8 @@
             <tr>
                 <td>{{ $deposit->user->name }}</td>
                 <td>{{ $deposit->user->pobox_number }}</td>
-                <td>{{ $deposit->balance }}</td>
+                <td>{{ number_format($deposit->balance,2) }}</td>
+                <td>{{ $deposit->created_at->format('m/d/Y') }}</td>
             </tr>
             @endforeach
         </tbody>
