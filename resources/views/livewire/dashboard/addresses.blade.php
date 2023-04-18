@@ -23,8 +23,7 @@
                             {{$user->address}}<sup>th</sup> {{$user->address2}}
                             {{$user->street_no}}, {{$user->state->code}} {{$user->zipcode}}<br>
                             {{$user->country->name}} <br>
-                            <span>Ph#: {{$user->phone}}</span><br>
-                            <span>{{$user->email}}</span>
+                            <span>Ph#: {{$user->phone}}</span>
                         @else
                             <span>Address Not Found!!</span>
                         @endif

@@ -80,7 +80,7 @@
                                         <tr>
                                             <td class="pl-0 pr-3">{!! auth()->user()->getPoboxAddress() ?? '' !!}</td>
                                             <td class="pl-0 pr-3">
-                                              <livewire:dashboard.addresses :user-id="old('user_id')" />
+                                                <livewire:dashboard.addresses :user-id="old('user_id')" />
                                             </td>
                                         </tr>
 
