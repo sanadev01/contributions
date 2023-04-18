@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class DeliveryBillRepository extends AbstractRepository
 {
-    public function get(Request $request)
+    public function get(Request $request ,$isPaginate)
     {
         $query = DeliveryBill::query();
         if($request->startDate){
@@ -27,7 +27,8 @@ class DeliveryBillRepository extends AbstractRepository
             $endDate = $request->endDate. ' 23:59:59';
             $query->where('created_at','<=', $endDate);
         }
-        return $query->latest()->paginate(50);
+        $deliveryBill = $query->latest();
+        return $isPaginate ? $deliveryBill->paginate(50) : $deliveryBill->get();
     }
 
     public function getContainers()

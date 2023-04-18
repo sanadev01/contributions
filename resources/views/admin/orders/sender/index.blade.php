@@ -29,21 +29,20 @@
                         @enderror
                     </div>
                     <div class="col-6 my-3 p-4">
-                    <div class="row justify-content-end">
-                        <fieldset class="col-md-6 text-right">
-                            <div class="vs-checkbox-con vs-checkbox-primary">
-                                <input type="checkbox" name="save_address">
-                                <span class="vs-checkbox vs-checkbox-lg">
-                                    <span class="vs-checkbox--check">
-                                        <i class="vs-icon feather icon-check"></i>
+                        <div class="row justify-content-end">
+                            <fieldset class="col-md-6 text-right">
+                                <div class="vs-checkbox-con vs-checkbox-primary">
+                                    <input type="checkbox" name="save_address">
+                                    <span class="vs-checkbox vs-checkbox-lg">
+                                        <span class="vs-checkbox--check">
+                                            <i class="vs-icon feather icon-check"></i>
+                                        </span>
                                     </span>
-                                </span>
-                                <span class="h3 mx-2 text-black my-0 py-0">@lang('address.save Address')</span>
-                            </div>
-                        </fieldset>
+                                    <span class="h4 mx-2 text-black my-0 py-0">@lang('address.save Address')</span>
+                                </div>
+                            </fieldset>
+                        </div>
                     </div>
-                </div>
-
                 </div>
                 <div class="row">
                     <div class="col-sm-6">

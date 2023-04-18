@@ -338,6 +338,9 @@ class OrderRepository
         if($request->return_individual) {
             $order->update([ 'sinerlog_tran_id' => "individual" ]);
         }
+        if(!$request->return_origin && !$request->dispose_parcel && !$request->return_individual) {
+            $order->update([ 'sinerlog_tran_id' => null ]);
+        }
 
         $order->doCalculations();
         return true;
