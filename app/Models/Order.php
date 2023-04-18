@@ -16,7 +16,8 @@ use App\Services\Correios\Contracts\Package;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\Package as ModelsPackage;
-
+use Exception;
+use Illuminate\Support\Facades\Crypt;
 class Order extends Model implements Package
 {
 
@@ -66,7 +67,6 @@ class Order extends Model implements Package
     const US = 250;
 
     public $user_profit = 0;
-
     public function scopeParcelReady(Builder $query)
     {
         return $query->where(function($query){
@@ -464,7 +464,7 @@ class Order extends Model implements Package
 
     public function getTempWhrNumber()
     {
-        return "HD-{$this->id}";
+        return "HD-{$this->change_id}";
     }
 
     public function doCalculations($onVolumetricWeight=true)
@@ -801,6 +801,50 @@ class Order extends Model implements Package
         elseif($this->status == Order::STATUS_SHIPPED) {
             return "SHIPPED";
         }
+    }
+
+    public function getChangeIdAttribute()
+    { 
+        $id = $this->id;
+        $date = explode(":",$this->created_at);
+        $minute = $date[1];
+        $sec = $date[2];
+        $changed='';
+        switch(true){
+            case (strlen($id)<=3):{
+                $changed = substr($id,0,3). $minute. $sec;
+                break;
+            }
+            case (strlen($id)<=6):{
+                $changed = substr($id,0,3) . $minute. substr($id,3,3). $sec;
+                break;
+             }
+             case (strlen($id)<=9):{
+                $changed = substr($id,0,3) . $minute .substr($id,3,3). $sec .substr($id,6,3);
+                break;
+             }
+             case(strlen($id)>=10):{
+                $changed = substr($id,0,3) . $minute .substr($id,3,6). $sec .substr($id,9);
+                break;
+            }
+        }
+        return $changed;
+    }
+    public function resolveRouteBinding($encryptedId, $field = null)
+    {
+        try{
+            return $this->findOrFail(decrypt($encryptedId));
+        }
+        catch(Exception $e){
+            return $this->findOrFail($encryptedId);
+            
+        }
+        
+    }
+
+    public function getEncryptedIdAttribute()
+    {
+        return encrypt($this->id);
     }
 
 }

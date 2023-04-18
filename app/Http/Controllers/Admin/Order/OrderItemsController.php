@@ -128,9 +128,9 @@ class OrderItemsController extends Controller
             session()->flash('alert-success','orders.Order Placed');
             if ($order->user->hasRole('wholesale') && $order->user->insurance == true) 
             {
-                return redirect()->route('admin.orders.order-invoice.index',$order);# code...
+                return redirect()->route('admin.orders.order-invoice.index',$order->encrypted_id);# code...
             }
-            return \redirect()->route('admin.orders.services.index',$order);
+            return \redirect()->route('admin.orders.services.index',$order->encrypted_id);
         }
         return \back()->withInput();
     }

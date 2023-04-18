@@ -16,6 +16,6 @@ class DuplicateOrderController extends Controller
         $copy = $duplicateOrderRepository->makeDuplicate($order);
 
         session()->flash('alert-success','Order Copied');
-        return redirect()->route('admin.orders.sender.index',$copy);
+        return redirect()->route('admin.orders.sender.index',$copy->encrypted_id);
     }
 }
