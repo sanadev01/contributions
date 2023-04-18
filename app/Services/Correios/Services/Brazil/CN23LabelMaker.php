@@ -44,7 +44,7 @@ class CN23LabelMaker implements HasLableExport
         CEP 04602-001 - São Paulo - SP- Brasil';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
         $this->hasDescpCount = '';
-        $this->hasReturn = '';
+        $this->hasReturn = 'Origin';
         $this->activeAddress = '';
     }
 
