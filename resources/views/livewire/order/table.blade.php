@@ -36,7 +36,11 @@
         <div class="row col-11  d-flex justify-content-end pr-0">
             <form class="row col-8  d-flex justify-content-end " action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                 @csrf
-                <input type="hidden" name="is_trashed" value = true>
+                @if (request()->route()->getName() != 'admin.trash-orders.index')
+                    <input type="hidden" name="is_trashed" value="0">
+                @else
+                    <input type="hidden" name="is_trashed" value="1">
+                @endif
 
                 <label>Start Date</label>
                 <input type="date" name="start_date" class="form-control col-2">
