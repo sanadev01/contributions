@@ -114,6 +114,9 @@
                                             @endif
                                         </td>
                                         <td>{{ $deliveryBill->cnd38_code }}</td>
+                                        <td>
+                                            {{ $deliveryBill->origin_country }}
+                                        </td>
                                         <td class="d-flex">
                                             <div class="btn-group">
                                                 <div class="dropdown">
