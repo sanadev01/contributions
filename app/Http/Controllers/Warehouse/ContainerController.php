@@ -18,10 +18,9 @@ class ContainerController extends Controller
     }
 
     public function create()
-    {
-        $anjunService = (setting('anjun_api', null, User::ROLE_ADMIN));
+    { 
 
-        return view('admin.warehouse.containers.create', compact('anjunService'));
+        return view('admin.warehouse.containers.create');
     }
 
     public function store(CreateContainerRequest  $createContainerRequest, ContainerRepository $containerRepository)

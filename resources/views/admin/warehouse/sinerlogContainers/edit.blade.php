@@ -5,7 +5,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">@lang('warehouse.containers.Edit Container')</h4>
+                        @section('title',__('warehouse.containers.Edit Container'))
                         <a href="{{ route('warehouse.sinerlog_containers.index', $sinerlog_container) }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
                     </div>
                     <hr>

@@ -2,6 +2,7 @@
 
 namespace App\Services\Excel\Export;
 use App\Models\Order;
+use App\Models\ShippingService;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -208,7 +209,10 @@ class OrderExport extends AbstractExportService
     private function getcarrier($order)
     {
         $service = $order->carrierService();
-        if(in_array($service, ['USPS','UPS','FEDEX']) ){
+        if( in_array($service, ['USPS','UPS','FEDEX'])
+            && !in_array( optional($order->shippingService)->service_sub_class,
+            [ ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, ShippingService::USPS_PRIORITY_INTERNATIONAL ]) )
+        {
             return [
                 'intl' => null,
                 'domestic' => $service

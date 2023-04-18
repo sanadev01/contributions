@@ -4,6 +4,7 @@ namespace App\Services\Correios\Services\Brazil;
 
 use Exception;
 use App\Models\Order;
+use App\Models\User;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use App\Services\Correios\Contracts\HasLableExport;
 use App\Services\Correios\Models\Package;
@@ -56,7 +57,7 @@ class CN23LabelMaker implements HasLableExport
         $this->checkReturn($this->order);
         $this->getActiveAddress($this->order);
 
-        if ($this->order->shippingService->isAnjunService()) {
+        if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->is_anjun_china) {
             $this->contractNumber = 'Contrato:  9912501700';
             $this->hasAnjunLabel = true;
         }
