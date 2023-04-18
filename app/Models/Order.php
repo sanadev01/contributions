@@ -494,7 +494,7 @@ class Order extends Model implements Package
 
     public function getTempWhrNumber()
     {
-        return "HD-{$this->id}";
+        return "HD-{$this->change_id}";
     }
 
     public function doCalculations($onVolumetricWeight=true)
@@ -907,8 +907,7 @@ class Order extends Model implements Package
         $id = $this->id;
         $date = explode(":",$this->created_at);
         $minute = $date[1];
-        $sec = $date[2]; 
-        $wrhCode = (explode("-", $this->warehouse_number)[0]=='TEMPWHR'?"TEMP-":"HD-"); 
+        $sec = $date[2];
         $changed='';
         switch(true){
             case (strlen($id)<=3):{
@@ -928,15 +927,15 @@ class Order extends Model implements Package
                 break;
             }
         }
-        return $wrhCode.$changed;
+        return $changed;
     }
     public function resolveRouteBinding($encryptedId, $field = null)
     {
         try{
-            return $this->where('id',decrypt($encryptedId))->orwhere('id',$encryptedId)->firstOrFail();
+            return $this->findOrFail(decrypt($encryptedId));
         }
         catch(Exception $e){
-            return $this->whereIn('id',[$encryptedId ,orignalWarehouseNumber($encryptedId)])->firstOrFail();
+            return $this->findOrFail($encryptedId);
             
         }
         
