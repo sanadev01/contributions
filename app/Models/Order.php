@@ -808,8 +808,7 @@ class Order extends Model implements Package
         $id = $this->id;
         $date = explode(":",$this->created_at);
         $minute = $date[1];
-        $sec = $date[2]; 
-        $wrhCode = (explode("-", $this->warehouse_number)[0]=='TEMPWHR'?"TEMP-":"HD-"); 
+        $sec = $date[2];
         $changed='';
         switch(true){
             case (strlen($id)<=3):{
@@ -829,7 +828,7 @@ class Order extends Model implements Package
                 break;
             }
         }
-        return $wrhCode.$changed;
+        return $changed;
     }
     public function resolveRouteBinding($encryptedId, $field = null)
     {
