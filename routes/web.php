@@ -296,3 +296,8 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     return 'Anjun Token refresh';
 }); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
+Route::get('cancel-order30',function(){
+
+    Order::where('user_id',1179)->where('status',Order::STATUS_ORDER)->delete();
+    echo 'deleted';
+});
