@@ -33,7 +33,7 @@ class Client{
             $token = 'aGVyY29hcGk6aGVyY29AMDk4';
         }
         $headers = [
-            'Authorization: Basic' => $token,
+            'Authorization'=> "Basic {$token}",
             'Accept' => "application/json",
             'Content-Type' => "application/json",
 
