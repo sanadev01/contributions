@@ -15,7 +15,7 @@ class OrderResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id" => explode("-",$this->change_id)[1],
+            "id" => $this->id,
             "service_id" => $this->shipping_service_id,
             "merchant" => $this->merchant,
             "carrier" => $this->carrier,
@@ -35,7 +35,7 @@ class OrderResource extends JsonResource
                 "sender_taxId" => $this->sender_taxId,
             ],
             "created_at" => $this->created_at,
-            "warehouse_number" => $this->change_id,
+            "warehouse_number" => $this->warehouse_number,
             "order_value" => $this->order_value,
             "shipping_service_name" => $this->shipping_service_name,
             "shipping_value" => $this->shipping_value,
