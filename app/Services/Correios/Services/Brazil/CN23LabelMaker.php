@@ -4,6 +4,7 @@ namespace App\Services\Correios\Services\Brazil;
 
 use Exception;
 use App\Models\Order;
+use App\Models\User;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use App\Services\Correios\Contracts\HasLableExport;
 use App\Services\Correios\Models\Package;
@@ -26,6 +27,8 @@ class CN23LabelMaker implements HasLableExport
     private $sumplementryItems;
     private $hasSuplimentary;
     private $hasDescpCount;
+    private $hasReturn;
+    private $activeAddress;
 
     public function __construct()
     {
@@ -51,8 +54,10 @@ class CN23LabelMaker implements HasLableExport
         $this->recipient = $order->recipient;
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
+        $this->checkReturn($this->order);
+        $this->getActiveAddress($this->order);
 
-        if ($this->order->shippingService->isAnjunService()) {
+        if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->is_anjun_china) {
             $this->contractNumber = 'Contrato:  9912501700';
             $this->hasAnjunLabel = true;
         }
@@ -166,6 +171,7 @@ class CN23LabelMaker implements HasLableExport
             'suplimentaryItems' => $this->sumplementryItems,
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
+            'hasReturn' => $this->hasReturn,
         ];
     }
 

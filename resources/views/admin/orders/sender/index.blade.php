@@ -3,35 +3,26 @@
     <link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
 @endsection
 @section('wizard-form')
-<form action="{{ route('admin.orders.sender.store',$order) }}" method="POST" class="wizard">
-    @csrf
-    <div class="content clearfix"> 
-        <!-- Step 1 -->
-        <h6 id="steps-uid-0-h-0" tabindex="-1" class="title current">@lang('orders.sender.Step 1')</h6>
-        <fieldset id="steps-uid-0-p-0" role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current" aria-hidden="false">
-            <div class="row mb-1">
-                <div class="col-md-3 form-group">
-                    <label for="country">@lang('orders.sender.Select Country')</label>
-                    <select id="country"  name="sender_country_id" class="form-control countrySelect selectpicker show-tick" data-live-search="true">
-                        <option value="">Select @lang('address.Country')</option>
-                        @foreach (countries() as $country)
-                            <option {{ old('sender_country_id', __default($order->sender_country_id,optional($order->user)->country_id)?__default($order->sender_country_id,optional($order->user)->country_id):30) == $country->id ? 'selected' : '' }} value="{{ $country->id }}">{{ $country->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('sender_country_id')
-                        <div class="text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                    <label for="firstName1">@lang('orders.sender.First Name') <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="first_name" required value="{{ old('first_name',__default($order->sender_first_name,optional($order->user)->name)) }}" id="firstName1">
-                        @error('first_name')
+    <form action="{{ route('admin.orders.sender.store', $order) }}" method="POST" class="wizard">
+        @csrf
+        <div class="content clearfix">
+            <!-- Step 1 -->
+            <h6 id="steps-uid-0-h-0" tabindex="-1" class="title current">@lang('orders.sender.Step 1')</h6>
+            <fieldset id="steps-uid-0-p-0" role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current bg-white"
+                aria-hidden="false">
+                <div class="row mb-1">
+                    <div class="col-md-3 form-group">
+                        <label for="country">@lang('orders.sender.Select Country')</label>
+                        <select id="country" name="sender_country_id"
+                            class="form-control countrySelect selectpicker show-tick" data-live-search="true">
+                            <option value="">Select @lang('address.Country')</option>
+                            @foreach (countries() as $country)
+                                <option
+                                    {{ old('sender_country_id', __default($order->sender_country_id, optional($order->user)->country_id) ? __default($order->sender_country_id, optional($order->user)->country_id) : 30) == $country->id ? 'selected' : '' }}
+                                    value="{{ $country->id }}">{{ $country->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('sender_country_id')
                             <div class="text-danger">
                                 {{ $message }}
                             </div>
@@ -170,7 +161,7 @@
         if(selected == countryChile || selected == countryUS) {
                 $('#address').css('display', 'block');
                 $('#city').css('display', 'block');
-                $('#tax_id').css('display', 'none'); 
+                $('#tax_id').css('display', 'none');
                 $('#phone').css('display', 'inline-block');
                 $('#sender_state').prop('disabled', true);
 
@@ -193,7 +184,7 @@
                     $('#state').addClass('d-block');
                     $('#zip_code').addClass('d-block');
 
-                    $('#sender_state').prop('required',true);
+                    $('#sender_state').prop('required', true);
                     $("[name='sender_zipcode']").prop('required', true);
 
                     $('#sender_state').prop('disabled', false);
@@ -211,16 +202,8 @@
 
                 $('#state').removeClass('d-block');
                 $('#zip_code').removeClass('d-block');
-
-                $("[name='sender_address']").prop( 'disabled', true );
-                $("[name='sender_city']").prop('disabled', true);
+            
                 $("[name='taxt_id']").prop('disabled', false);
-
-                $("[name='sender_address']").prop('required',false);
-                $("[name='sender_city']").prop('required', false);
-                $('#sender_state').prop('required',false);
-                $("[name='phone']").prop('required',false);
-
                 $('#sender_state').prop('disabled', true);
         }
 
@@ -281,73 +264,134 @@
                 
             } else {
                 $('#address').css('display', 'none');
-                $('#city').css('display', 'none'); 
+                $('#city').css('display', 'none');
                 $('#tax_id').css('display', 'block');
                 $('#phone').css('display', 'none');
                 $('#state').addClass('d-none');
-                $('#zip_code').addClass('d-none');
+                $('#zip_code').addClass('d-block');
 
-                $('#state').removeClass('d-block');
-                $('#zip_code').removeClass('d-block');
+                //$('#state').removeClass('d-block');
+                //$('#zip_code').removeClass('d-block');
 
-                $("[name='sender_address']").prop( 'disabled', true );
+                $("[name='sender_address']").prop('disabled', true);
                 $("[name='sender_city']").prop('disabled', true);
                 $("[name='taxt_id']").prop('disabled', false);
 
-                $("[name='sender_address']").prop('required',false);
+                $("[name='sender_address']").prop('required', false);
                 $("[name='sender_city']").prop('required', false);
-                $('#sender_state').prop('required',false);
-                $("[name='phone']").prop('required',false);
-                $("[name='sender_zipcode']").prop('required', false);
+                $('#sender_state').prop('required', false);
+                $("[name='phone']").prop('required', false);
 
                 $('#sender_state').prop('disabled', true);
             }
-        });
 
-        $('#sender_state').on('change', function() {
-            window.validate_us_address();
-        });
+            $('#sender_address').on('change', function() {
+                window.validate_us_address();
+            });
 
-        $('#sender_city').on('change', function() {
-            console.log('city changed');
-            window.validate_us_address();
-        });
+            $('#country').change(function() {
+                let selected = $('#country').val();
 
-    })
+                if (selected == '46' || selected == '250') {
+                    $('#address').css('display', 'block');
+                    $('#city').css('display', 'block');
+                    $('#tax_id').css('display', 'none');
+                    $('#phone').css('display', 'inline-block');
+                    $('#sender_state').prop('disabled', true);
 
-    validate_us_address = function()
-    {
-        let country = $('#country').val();
-        let address = $('#sender_address').val();
-        let state = $('#sender_state option:selected').text();
-        let city = $('#sender_city').val();
+                    if (selected == '250') {
+                        $('#state').removeClass('d-none');
+                        $('#zip_code').removeClass('d-none');
 
-        if(country == '250' && state != undefined && address.length > 4 && city.length >= 4)
-        {
-            $('#loading').fadeIn();
-            $.get('{{ route("api.orders.recipient.us_address") }}',{
-                address: address,
-                state: state,
-                city: city,
-            }).then(function(response){
-                
-                if ( response.success == true && response.zipcode != 0){
-                    $('#loading').fadeOut();
-                    $('#sender_zipcode').val(response.zipcode);
-                    $('#zipcode_response').empty().append("<p><b>According to your given Address, your zip code should be this</b></p><p><span style='color: red;'>Zipcode: </span><span>"+response.zipcode+"</span></p>");
-                }else {
-                    $('#loading').fadeOut();
-                    $('#zipcode_response').empty().append("<p style='color: red;'><b>According to USPS,</b></p><p><span style='color: red;'></span><span>"+response.message+"</span></p>");
+                        $('#state').addClass('d-block');
+                        $('#zip_code').addClass('d-block');
+
+                        $('#sender_state').prop('required', true);
+                        $("[name='sender_zipcode']").prop('required', true);
+
+                        $('#sender_state').prop('disabled', false);
+
+                        window.validate_us_address();
+                    }
+
+                    $("[name='sender_address']").prop("disabled", false);
+                    $("[name='sender_city']").prop('disabled', false);
+                    $("[name='taxt_id']").prop('disabled', true);
+
+                    $("[name='sender_address']").prop('required', true);
+                    $("[name='sender_city']").prop('required', true);
+                    $("[name='phone']").prop('required', true);
+                } else {
+                    $('#address').css('display', 'none');
+                    $('#city').css('display', 'none');
+                    $('#tax_id').css('display', 'block');
+                    $('#phone').css('display', 'none');
+                    $('#state').addClass('d-none');
+                    $('#zip_code').addClass('d-none');
+
+                    $('#state').removeClass('d-block');
+                    $('#zip_code').removeClass('d-block');
+
+                    $("[name='sender_address']").prop('disabled', true);
+                    $("[name='sender_city']").prop('disabled', true);
+                    $("[name='taxt_id']").prop('disabled', false);
+
+                    $("[name='sender_address']").prop('required', false);
+                    $("[name='sender_city']").prop('required', false);
+                    $('#sender_state').prop('required', false);
+                    $("[name='phone']").prop('required', false);
+                    $("[name='sender_zipcode']").prop('required', false);
+
+                    $('#sender_state').prop('disabled', true);
                 }
+            });
 
-            }).catch(function(error){
-                console.log(error);
-                $('#loading').fadeOut();
-                $('#zipcode_response').empty().append("<p style='color: red;'><b>According to USPS, your address is Invalid</b></p>");
-            })
+            $('#sender_state').on('change', function() {
+                window.validate_us_address();
+            });
+
+            $('#sender_city').on('change', function() {
+                console.log('city changed');
+                window.validate_us_address();
+            });
+
+        })
+
+        validate_us_address = function() {
+            let country = $('#country').val();
+            let address = $('#sender_address').val();
+            let state = $('#sender_state option:selected').text();
+            let city = $('#sender_city').val();
+
+            if (country == '250' && state != undefined && address.length > 4 && city.length >= 4) {
+                $('#loading').fadeIn();
+                $.get('{{ route('api.orders.recipient.us_address') }}', {
+                    address: address,
+                    state: state,
+                    city: city,
+                }).then(function(response) {
+
+                    if (response.success == true && response.zipcode != 0) {
+                        $('#loading').fadeOut();
+                        $('#sender_zipcode').val(response.zipcode);
+                        $('#zipcode_response').empty().append(
+                            "<p><b>According to your given Address, your zip code should be this</b></p><p><span style='color: red;'>Zipcode: </span><span>" +
+                            response.zipcode + "</span></p>");
+                    } else {
+                        $('#loading').fadeOut();
+                        $('#zipcode_response').empty().append(
+                            "<p style='color: red;'><b>According to USPS,</b></p><p><span style='color: red;'></span><span>" +
+                            response.message + "</span></p>");
+                    }
+
+                }).catch(function(error) {
+                    console.log(error);
+                    $('#loading').fadeOut();
+                    $('#zipcode_response').empty().append(
+                        "<p style='color: red;'><b>According to USPS, your address is Invalid</b></p>");
+                })
+            }
         }
-    }
-
- 
-</script>
+    })
+    </script>
 @endsection

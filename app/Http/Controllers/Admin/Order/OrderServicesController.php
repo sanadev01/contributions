@@ -39,7 +39,7 @@ class OrderServicesController extends Controller
         
         if ( $orderRepository->updateHandelingServices($request,$order) ){
             session()->flash('alert-success','orders.Services Updated');
-            return redirect()->route('admin.orders.order-invoice.index',$order);
+            return redirect()->route('admin.orders.order-invoice.index',$order->encrypted_id);
         }
 
         session()->flash('alert-success','orders.Error Updateding Services');
