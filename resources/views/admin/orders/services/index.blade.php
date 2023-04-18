@@ -105,17 +105,15 @@
             <div class="row py-5 justify-content-center">
                 <div class="col-md-8 col-12">
                     @foreach ($services as $service)
-                        <div class="row">
-                            <div class="vs-checkbox-con vs-checkbox-primary my-3">
-                                <input type="checkbox" id="additional_service" name="services[]" {{ in_array($service->id,$order->services->pluck('service_id')->toArray()) ? 'checked':'' }} value="{{$service->id}}" data-service="{{ $service->name}}"> 
-                                <span class="vs-checkbox">
-                                    <span class="vs-checkbox--check">
-                                        <i class="vs-icon feather icon-check"></i>
-                                    </span>
-                                </span> 
-                                <span> {{ $service->name }} <strong>  ( Custo  extra @if($service->name == 'Insurance' || $service->name == 'Seguro') maximum 3% of total declared value of order items and minimum @endif{{ $service->price }})</strong>  USD por envio
+                        <div class="vs-checkbox-con vs-checkbox-primary my-3">
+                            <input type="checkbox" id="additional_service" name="services[]" {{ in_array($service->id,$order->services->pluck('service_id')->toArray()) ? 'checked':'' }} value="{{$service->id}}" data-service="{{ $service->name}}"> 
+                            <span class="vs-checkbox">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
                                 </span>
-                            </div>
+                            </span> 
+                            <span> {{ $service->name }} <strong>  ( Custo  extra @if($service->name == 'Insurance' || $service->name == 'Seguro') maximum 3% of total declared value of order items and minimum @endif{{ $service->price }})</strong>  USD por envio
+                            </span>
                         </div>
                     @endforeach
                 </div>
@@ -175,25 +173,6 @@
                 });
             }
         }
-    });
-
-    $('#returnParcel').change(function() {
-        if($(this).is(":checked")){
-        $('#disposeParcel').prop('checked', false);
-        $('#returnIndividual').prop('checked', false);
-        }    
-    });
-    $('#disposeParcel').change(function() {
-        if($(this).is(":checked")){
-        $('#returnParcel').prop('checked', false);
-        $('#returnIndividual').prop('checked', false);
-        }    
-    });
-    $('#returnIndividual').change(function() {
-        if($(this).is(":checked")){
-        $('#returnParcel').prop('checked', false);
-        $('#disposeParcel').prop('checked', false);
-        }    
     });
 </script>
 @endsection

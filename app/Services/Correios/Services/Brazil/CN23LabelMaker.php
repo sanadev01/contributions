@@ -26,8 +26,6 @@ class CN23LabelMaker implements HasLableExport
     private $sumplementryItems;
     private $hasSuplimentary;
     private $hasDescpCount;
-    private $hasReturn;
-    private $activeAddress;
 
     public function __construct()
     {
@@ -38,7 +36,7 @@ class CN23LabelMaker implements HasLableExport
         $this->packetType = 'Packet Standard';
         $this->contractNumber = 'Contrato:  9912501576';
         $this->service = 2;
-        $this->returnAddress = 'Blue Line Ag. De Cargas C/o Homedeliverybr<br>
+        $this->returnAddress = 'Blue Line Ag. De Cargas Ltda. <br>
         Rua Barao Do Triunfo, 520 - CJ 152 - Brooklin Paulista
         CEP 04602-001 - São Paulo - SP- Brasil';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
@@ -53,8 +51,6 @@ class CN23LabelMaker implements HasLableExport
         $this->recipient = $order->recipient;
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
-        $this->checkReturn($this->order);
-        $this->getActiveAddress($this->order);
 
         if ($this->order->shippingService->isAnjunService()) {
             $this->contractNumber = 'Contrato:  9912501700';
@@ -170,8 +166,6 @@ class CN23LabelMaker implements HasLableExport
             'suplimentaryItems' => $this->sumplementryItems,
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
-            'hasReturn' => $this->hasReturn,
-            'activeAddress' => $this->activeAddress,
         ];
     }
 

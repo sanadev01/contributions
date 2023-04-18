@@ -18,7 +18,7 @@ class DeliveryBillController extends Controller
      */
     public function index(DeliveryBillRepository $deliveryBillRepository,Request $request)
     {
-        $deliveryBills = $deliveryBillRepository->get($request);
+        $deliveryBills = $deliveryBillRepository->get($request,true);
         return view('admin.warehouse.deliverybills.index',compact('deliveryBills'));
     }
 

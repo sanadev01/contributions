@@ -22,7 +22,7 @@ use App\Repositories\PostPlusLabelRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use App\Events\AutoChargeAmountEvent;
 class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order)
@@ -44,6 +44,7 @@ class OrderLabelController extends Controller
                         'status' => Order::STATUS_PAYMENT_DONE
                     ]);
                     chargeAmount($order->gross_total, $order);
+                    AutoChargeAmountEvent::dispatch($order->user);
                     $isPayingFlag = true;
                 }
             }

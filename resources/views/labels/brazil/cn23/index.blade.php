@@ -172,7 +172,6 @@
             width: 3cm;
             position: relative;
             text-align: left;
-            margin-top: -2.8px;
         }
         .barcode_zipcode{
             position: absolute;
@@ -196,7 +195,7 @@
         }
         .complain_address{
             position: absolute;
-            top: 89mm;
+            top: 90mm;
             text-align: center;
             font-size: 7px;
             width: 9cm;
@@ -302,8 +301,8 @@
         }
         .bottom-block{
             position: absolute;
-            top: 9mm;
-            left: 52mm;
+            top: 11mm;
+            left: 48mm;
             font-size: 8pt !important;
         }
         .box-g{
@@ -439,10 +438,9 @@
             <br>
         </div>
         <div class="right-block">
-        <p class="mb-0"><h2>Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2></p>
-            <!-- {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br> -->
-            {!! $activeAddress !!}
-            <!-- {{ $order->sender_email }} <br> -->
+            <h2>Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2>
+            {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
+            {{ $order->sender_email }} <br>
             <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
             <strong>CR#:</strong>{{ $order->customer_reference }} <br>
             <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>
