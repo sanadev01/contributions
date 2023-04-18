@@ -464,7 +464,7 @@ class Order extends Model implements Package
 
     public function getTempWhrNumber()
     {
-        return "HD-{$this->id}";
+        return "HD-{$this->change_id}";
     }
 
     public function doCalculations($onVolumetricWeight=true)
@@ -837,7 +837,7 @@ class Order extends Model implements Package
             return $this->where('id',decrypt($encryptedId))->orwhere('id',$encryptedId)->firstOrFail();
         }
         catch(Exception $e){
-            return $this->whereIn('id',[$encryptedId ,orignalWarehouseNumber($encryptedId)])->firstOrFail();
+            return $this->where('id',$encryptedId)->firstOrFail();
             
         }
         
