@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Services\Excel\Export;
-use App\Models\Order;
 use App\Models\User;
+use App\Models\Order;
+use App\Models\ShippingService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
