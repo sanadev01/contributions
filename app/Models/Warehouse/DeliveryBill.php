@@ -71,6 +71,20 @@ class DeliveryBill extends Model
             return true;
         }
     }
+    
+    public function isAnjunChinaStandard()
+    {
+        if($this->containers->first()->services_subclass_code == Container::CONTAINER_ANJUNC_NX){
+            return true;
+        }
+    }
+    
+    public function isAnjunChinaExpress()
+    {
+        if($this->containers->first()->services_subclass_code == Container::CONTAINER_ANJUNC_IX){
+            return true;
+        }
+    }
 
     public function isSwedenPost()
     {
