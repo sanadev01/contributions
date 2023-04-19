@@ -321,25 +321,5 @@
 @endsection
 @section('js')
     <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
-    <script>
-        $('#returnParcel').change(function() {
-        if($(this).is(":checked")){
-        $('#disposeAll').prop('checked', false);
-        $('#returnIndividual').prop('checked', false);
-        }    
-        });
-        $('#disposeAll').change(function() {
-            if($(this).is(":checked")){
-            $('#returnParcel').prop('checked', false);
-            $('#returnIndividual').prop('checked', false);
-            }    
-        });
-        $('#returnIndividual').change(function() {
-            if($(this).is(":checked")){
-            $('#returnParcel').prop('checked', false);
-            $('#disposeAll').prop('checked', false);
-            }    
-        });
-    </script>
     @include('layouts.states-ajax')
 @endsection

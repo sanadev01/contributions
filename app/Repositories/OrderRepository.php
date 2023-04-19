@@ -239,21 +239,6 @@ class OrderRepository
             'sender_zipcode' => $request->sender_zipcode,
         ]);
 
-        if($request->save_address) {
-            $order->user->update([
-                'name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'tax_id' => $request->taxt_id,
-                'address' => $request->sender_address,
-                'city' => $request->sender_city,
-                'country_id' => $request->sender_country_id,
-                'state_id' => $request->sender_state_id,
-                'zipcode' => $request->sender_zipcode,
-            ]);
-        }
-
         return $order;
     }
 
@@ -413,19 +398,6 @@ class OrderRepository
                 'insurance_value' => 0,
                 'status' => $order->status < Order::STATUS_ORDER ?  Order::STATUS_ORDER : $order->status
             ]);
-
-            if($request->return_origin) {
-                $order->update([ 'sinerlog_tran_id' => "origin" ]);
-            }
-            if($request->dispose_parcel) {
-                $order->update([ 'sinerlog_tran_id' => "dispose" ]);
-            }
-            if($request->return_individual) {
-                $order->update([ 'sinerlog_tran_id' => "individual" ]);
-            }
-            if(!$request->return_origin && !$request->dispose_parcel && !$request->return_individual) {
-                $order->update([ 'sinerlog_tran_id' => null ]);
-            }
             
             $order->doCalculations();
 
@@ -486,6 +458,34 @@ class OrderRepository
             $orders->whereHas('shippingService', function($query) {
                 return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND, ShippingService::USPS_GROUND]);
             })->orWhereNotNull('us_api_tracking_code');
+        }
+
+        if ($request->type == 'order') {
+            $orders->where('status','=',Order::STATUS_ORDER);
+        }
+
+        if ($request->type == 'cancelled') {
+            $orders->where('status','=',Order::STATUS_CANCEL);
+        }
+
+        if ($request->type == 'rejected') {
+            $orders->where('status','=',Order::STATUS_REJECTED);
+        }
+
+        if ($request->type == 'released') {
+            $orders->where('status','=',Order::STATUS_RELEASE);
+        }
+
+        if ($request->type == 'payment_pending') {
+            $orders->where('status','=',Order::STATUS_PAYMENT_PENDING);
+        }
+
+        if ($request->type == 'payment_done') {
+            $orders->where('status','=',Order::STATUS_PAYMENT_DONE);
+        }
+
+        if ($request->type == 'shipped') {
+            $orders->where('status','=',Order::STATUS_SHIPPED);
         }
 
         if ($request->is_trashed) {
