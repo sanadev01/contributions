@@ -183,7 +183,7 @@
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
-                                    <!-- <div class="controls row mb-1 align-items-center">
+                                    <div class="controls row mb-1 align-items-center">
                                         <div class="offset-3">
                                             <div class="input-group ml-3">
                                                 <div class="vs-checkbox-con vs-checkbox-primary" title="Auto charge">
@@ -197,41 +197,6 @@
                                             </div>
                                         </div>
                                         <label class="col-md-6 font-medium-1 font-weight-bold" for="auto_charge">@lang('profile.payment permission')<span class="text-danger"></span></label>
-                                    </div> -->
-                                    <div class="controls row mb-1 align-items-center">
-                                        <div class="offset-3 form-check form-check-inline">
-                                            <div class="vs-checkbox-con vs-checkbox-primary ml-3" title="Parcel Return to Origin">
-                                                <input type="checkbox" name="return_origin" id="returnParcel" @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
-                                                <span class="vs-checkbox vs-checkbox-lg">
-                                                    <span class="vs-checkbox--check">
-                                                        <i class="vs-icon feather icon-check"></i>
-                                                    </span>
-                                                </span>
-                                            </div>
-                                            <label class="form-check-label font-medium-1 font-weight-bold mt-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <div class="vs-checkbox-con vs-checkbox-primary ml-3" title="Disposal All Authorized">
-                                                <input type="checkbox" name="dispose_all" id="disposeAll" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
-                                                <span class="vs-checkbox vs-checkbox-lg">
-                                                    <span class="vs-checkbox--check">
-                                                        <i class="vs-icon feather icon-check"></i>
-                                                    </span>
-                                                </span>
-                                            </div>
-                                            <label class="form-check-label font-medium-1 font-weight-bold mt-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <div class="vs-checkbox-con vs-checkbox-primary ml-3" title="Choose Return by Individual Parcel">
-                                                <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
-                                                <span class="vs-checkbox vs-checkbox-lg">
-                                                    <span class="vs-checkbox--check">
-                                                        <i class="vs-icon feather icon-check"></i>
-                                                    </span>
-                                                </span>
-                                            </div>
-                                            <label class="form-check-label font-medium-1 font-weight-bold mt-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                                        </div>
                                     </div>
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
@@ -251,25 +216,5 @@
 @endsection
 @section('js')
     <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
-    <script>
-        $('#returnParcel').change(function() {
-        if($(this).is(":checked")){
-        $('#disposeAll').prop('checked', false);
-        $('#returnIndividual').prop('checked', false);
-        }    
-        });
-        $('#disposeAll').change(function() {
-            if($(this).is(":checked")){
-            $('#returnParcel').prop('checked', false);
-            $('#returnIndividual').prop('checked', false);
-            }    
-        });
-        $('#returnIndividual').change(function() {
-            if($(this).is(":checked")){
-            $('#returnParcel').prop('checked', false);
-            $('#disposeAll').prop('checked', false);
-            }    
-        });
-    </script>
     @include('layouts.states-ajax')
 @endsection

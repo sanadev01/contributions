@@ -55,9 +55,6 @@ class ProfileRepository
                 // dd($image);
             }
             $request->has('auto_charge') ? saveSetting('auto_charge', true, $user->id) : saveSetting('auto_charge', false, $user->id);
-            $request->has('return_origin') ? saveSetting('return_origin', true, $user->id) : saveSetting('return_origin', false, $user->id);
-            $request->has('dispose_all') ? saveSetting('dispose_all', true, $user->id) : saveSetting('dispose_all', false, $user->id);
-            $request->has('individual_parcel') ? saveSetting('individual_parcel', true, $user->id) : saveSetting('individual_parcel', false, $user->id);
             return true;
 
         }catch(Exception $exception){
