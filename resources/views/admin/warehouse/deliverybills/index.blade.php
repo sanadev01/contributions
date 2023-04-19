@@ -25,13 +25,13 @@
                         </a>
                     </div>
                 </div>
-                <div class="card-content card-body" style="min-height: 100vh;">
+                <div class="card-content card-body" style="min-height: 100vh;" >
                     <div class="mt-1">
-                        <div class="col-12 text-right">
-                            <form action="">
-                                <div class="row justify-content-start hide"
-                                    @if (Request('startDate') || Request('endDate')) style="display:flex !important" @endif
-                                    id="logSearch">
+                        <div class="row text-right d-flex justify-content-center hide" id="logSearch">
+                            <div class="col-10  pl-5  " >
+                                
+                            <form action="" >
+                                <div class="row justify-content-start"   @if (Request('startDate') || Request('endDate')) style="display:flex !important" @endif >
                                     <div class="col-md-3">
                                         <div class="row justify-content-start">
                                             <div class="col-md-3 pl-0 text-left">
@@ -86,7 +86,16 @@
                                     </div>
                                     </div>
                                 </div>
-                            </form>
+                            </form> 
+                            </div>
+                            <div class="col-2 d-flex justify-content-start">
+                                <form action="{{ route('warehouse.download.create') }}"  >
+                                    <input type="hidden" value="{{ Request('startDate') }}" name="startDate">
+                                    <input type="hidden" value="{{ Request('endDate') }}"  name="endDate">
+                                    <input type="hidden" value="{{ Request('type') }}"  name="type">
+                                    <button class="btn btn-success waves-effect waves-light" type="submit">Download</button>
+                                </form> 
+                            </div>
                         </div>
                         <table class="table mb-0 table-bordered">
                             <thead>
