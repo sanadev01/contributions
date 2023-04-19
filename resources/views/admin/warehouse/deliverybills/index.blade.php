@@ -54,6 +54,25 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-2">
+                                        <div class="row justify-content-start">
+                                            <div class="col-md-3">
+                                                <label>Service</label>
+                                            </div> 
+                                            <div class="col-md-9">
+                                                <select class="form-control mb-2 mr-sm-2" name="type">
+                                                    <option value="">All</option>
+                                                    <option value="{{json_encode(['NX','IX'])}}">Correios Brazil</option>
+                                                    <option value="{{json_encode(['537'])}}">Global eParcel</option>
+                                                    <option value="{{json_encode(['773'])}}  ">Prime5</option>
+                                                    <option value="{{json_encode(['734'])}}">Post Plus</option>                                                           
+                                                    <option value="{{json_encode(['PostNL'])}}">Post NL</option>                                                           
+                                                    <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                                    
+                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                                    
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="pl-0">
                                     <div class="col-md-12">
                                         <button class="btn btn-success waves-effect waves-light" title="Search">
@@ -132,7 +151,7 @@
                                                             <i class="fa fa-list"></i> Show Containers
                                                         </a>
                                                         @if ($deliveryBill->isRegistered() && $deliveryBill->isReady())
-                                                            <a href="{{ route('warehouse.delivery_bill.download', $deliveryBill) }}"
+                                                            <a href="{{'/delivery_bill/download/'.$deliveryBill->id}}"
                                                                 class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> GET CN38
                                                             </a>
