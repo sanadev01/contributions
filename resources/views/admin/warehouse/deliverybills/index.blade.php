@@ -67,9 +67,9 @@
                                                                 <select class="form-control mb-2 mr-sm-2" name="type">
                                                                     <option value="">All</option>
                                                                     <option value="{{json_encode(['NX','IX'])}}">Correios Brazil</option>
-                                                                    <option value="{{json_encode(['537'])}}">Global eParcel</option>
-                                                                    <option value="{{json_encode(['773'])}}  ">Prime5</option>
-                                                                    <option value="{{json_encode(['734'])}}">Post Plus</option>                                                           
+                                                                    <option value="{{json_encode(['537','540'])}}">Global eParcel</option>
+                                                                    <option value="{{json_encode(['773','357'])}}">Prime5</option>
+                                                                    <option value="{{json_encode(['734','367','778','777'])}}">Post Plus</option>                                                           
                                                                     <option value="{{json_encode(['PostNL'])}}">Post NL</option>                                                           
                                                                     <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                                    
                                                                     <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                                    

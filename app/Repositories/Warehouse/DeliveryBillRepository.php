@@ -15,21 +15,21 @@ use App\Repositories\AbstractRepository;
 
 class DeliveryBillRepository extends AbstractRepository
 {
-    public function get(Request $request ,$isPaginate)
+    public function get(Request $request, $isPaginate)
     {
-        $query = DeliveryBill::query()->whereHas('containers',function($query) use ($request){ 
-              return $query->when($request->type,function($query,$type){  
-                return $query->where('services_subclass_code',json_decode($type));
-              });
-        });
-        
-        if($request->startDate){
-            $startDate = $request->startDate. ' 00:00:00';
-            $query->where('created_at','>=', $startDate);
+        $query = DeliveryBill::query();
+        if ($request->type){
+            $query->whereHas('containers', function ($query) use ($request) {
+                return $query->whereIn('services_subclass_code', json_decode($request->type));
+            });
         }
-        if($request->endDate){
-            $endDate = $request->endDate. ' 23:59:59';
-            $query->where('created_at','<=', $endDate);
+        if ($request->startDate) {
+            $startDate = $request->startDate . ' 00:00:00';
+            $query->where('created_at', '>=', $startDate);
+        }
+        if ($request->endDate) {
+            $endDate = $request->endDate . ' 23:59:59';
+            $query->where('created_at', '<=', $endDate);
         }
         $deliveryBill = $query->latest();
         return $isPaginate ? $deliveryBill->paginate(50) : $deliveryBill->get();
