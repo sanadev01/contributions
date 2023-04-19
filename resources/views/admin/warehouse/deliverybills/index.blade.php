@@ -88,6 +88,7 @@
                                                 <form action="{{ route('warehouse.download.create') }}">
                                                     <input type="hidden" value="{{ Request('startDate') }}" name="startDate">
                                                     <input type="hidden" value="{{ Request('endDate') }}"  name="endDate">
+                                                    <input type="hidden" value="{{ Request('type') }}"  name="type">
                                                     <button class="btn btn-success waves-effect waves-light" type="submit">Download</button>
                                                 </form>
                                             </div>

@@ -17,11 +17,8 @@ class DeliveryBillRepository extends AbstractRepository
 {
     public function get(Request $request ,$isPaginate)
     {
-        $query = DeliveryBill::query()->whereHas('containers',function($query) use ($request){
-           
-              return $query->when($request->type,function($query,$type){ 
-                
-                // dd(json_decode($type));
+        $query = DeliveryBill::query()->whereHas('containers',function($query) use ($request){ 
+              return $query->when($request->type,function($query,$type){  
                 return $query->where('services_subclass_code',json_decode($type));
               });
         });
