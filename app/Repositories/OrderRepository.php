@@ -200,6 +200,21 @@ class OrderRepository
             'sender_zipcode' => $request->sender_zipcode,
         ]);
 
+        if($request->save_address) {
+            $order->user->update([
+                'name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'tax_id' => $request->taxt_id,
+                'address' => $request->sender_address,
+                'city' => $request->sender_city,
+                'country_id' => $request->sender_country_id,
+                'state_id' => $request->sender_state_id,
+                'zipcode' => $request->sender_zipcode,
+            ]);
+        }
+
         return $order;
     }
 
@@ -355,6 +370,19 @@ class OrderRepository
                 'insurance_value' => 0,
                 'status' => $order->isPaid() ? ($order->status < Order::STATUS_ORDER ? Order::STATUS_ORDER : $order->status) : Order::STATUS_ORDER
             ]);
+
+            if($request->return_origin) {
+                $order->update([ 'sinerlog_tran_id' => "origin" ]);
+            }
+            if($request->dispose_parcel) {
+                $order->update([ 'sinerlog_tran_id' => "dispose" ]);
+            }
+            if($request->return_individual) {
+                $order->update([ 'sinerlog_tran_id' => "individual" ]);
+            }
+            if(!$request->return_origin && !$request->dispose_parcel && !$request->return_individual) {
+                $order->update([ 'sinerlog_tran_id' => null ]);
+            }
             
             $order->doCalculations();
 
