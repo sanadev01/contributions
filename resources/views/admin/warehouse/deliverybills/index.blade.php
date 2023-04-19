@@ -63,12 +63,12 @@
                                                 <select class="form-control mb-2 mr-sm-2" name="type">
                                                     <option value="">All</option>
                                                     <option value="{{json_encode(['NX','IX'])}}">Correios Brazil</option>
-                                                    <option value="{{json_encode(['537'])}}">Global eParcel</option>
-                                                    <option value="{{json_encode(['773'])}}  ">Prime5</option>
-                                                    <option value="{{json_encode(['734'])}}">Post Plus</option>                                                           
+                                                    <option value="{{json_encode(['537','540'])}}">Global eParcel</option>
+                                                    <option value="{{json_encode(['773','357'])}}">Prime5</option>
+                                                    <option value="{{json_encode(['734','367','778','777'])}}">Post Plus</option>                                                           
                                                     <option value="{{json_encode(['PostNL'])}}">Post NL</option>                                                           
                                                     <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                                    
-                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                                    
+                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                                     
                                                 </select>
                                             </div>
                                         </div>
@@ -160,7 +160,7 @@
                                                             <i class="fa fa-list"></i> Show Containers
                                                         </a>
                                                         @if ($deliveryBill->isRegistered() && $deliveryBill->isReady())
-                                                            <a href="{{'/delivery_bill/download/'.$deliveryBill->id}}"
+                                                            <a href=" {{ route('warehouse.download.show',$deliveryBill->id) }} "
                                                                 class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> GET CN38
                                                             </a>
