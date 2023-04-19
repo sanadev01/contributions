@@ -45,7 +45,7 @@
                 @endforeach
             </div>
         @endif
-        @if(count($usServicesErrors) < 2)
+        @if(count($usServicesErrors) < 2 && !$order->shippingService->isGDEService())
             <form wire:submit.prevent="getRates">
                 <div class="ml-3 mt-3">
                     <div class="row ml-3">
@@ -167,6 +167,58 @@
                     </div>    
                 </div>
             </form>
+        @else
+        <br>
+            @if($usGDERates)
+                <div class="container">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" style="width: 6%;">#</th>
+                            <th scope="col-3">Service</th>
+                            <th scope="col-3">Cost</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($usGDERates as $rate)
+                                <tr>
+                                    <th scope="row">{{ $loop->iteration }}</th>
+                                    <td>{{ $rate['service'] }}</td>
+                                    <td>{{ $rate['cost'] }} USD</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="ml-3 mt-3">
+                    <div class="row ml-3">
+                        <h2 class="mb-2">
+                            Service
+                        </h2>
+                    </div>
+                    <div class="container pb-5">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="service">Choose Service <span class="text-danger">*</span></label>
+                                <select name="service" wire:model.debounce.500ms="selectedService" id="ups_shipping_service" class="form-control" required style="height: 80%;">
+                                    <option value="">@lang('orders.order-details.Select Shipping Service')</option>
+                                    @foreach ($usGDERates as $gdeShippingService)
+                                        <option style="font-size: 15px;" value="{{ $gdeShippingService['service_code'] }}">{{ $gdeShippingService['service'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @error('selectedService') <span class="error text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="container pb-3">
+                    <div class="row mr-3">
+                        <div class="ml-auto">
+                            <button type="button" wire:click="getGDELabel()" class="btn btn-primary">Buy Label</button>
+                        </div>
+                    </div>    
+                </div>
+            @endif
         @endif    
         @if ($upsError || $uspsError || $fedexError)
             <div class="container">
