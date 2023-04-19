@@ -25,13 +25,13 @@
                         </a>
                     </div>
                 </div>
-                <div class="card-content card-body" style="min-height: 100vh;">
+                <div class="card-content card-body" style="min-height: 100vh;" >
                     <div class="mt-1">
-                        <div class="col-12 text-right">
-                            <form action="">
-                                <div class="row justify-content-start hide"
-                                    @if (Request('startDate') || Request('endDate')) style="display:flex !important" @endif
-                                    id="logSearch">
+                        <div class="row text-right d-flex justify-content-center hide" id="logSearch">
+                            <div class="col-10  pl-5  " >
+                                
+                            <form action="" >
+                                <div class="row justify-content-start"   @if (Request('startDate') || Request('endDate')) style="display:flex !important" @endif >
                                     <div class="col-md-3">
                                         <div class="row justify-content-start">
                                             <div class="col-md-3 pl-0 text-left">
@@ -54,6 +54,25 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-2">
+                                        <div class="row justify-content-start">
+                                            <div class="col-md-3">
+                                                <label>Service</label>
+                                            </div> 
+                                            <div class="col-md-9">
+                                                <select class="form-control mb-2 mr-sm-2" name="type">
+                                                    <option value="">All</option>
+                                                    <option value="{{json_encode(['NX','IX'])}}">Correios Brazil</option>
+                                                    <option value="{{json_encode(['537','540'])}}">Global eParcel</option>
+                                                    <option value="{{json_encode(['773','357'])}}">Prime5</option>
+                                                    <option value="{{json_encode(['734','367','778','777'])}}">Post Plus</option>                                                           
+                                                    <option value="{{json_encode(['PostNL'])}}">Post NL</option>                                                           
+                                                    <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                                    
+                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                                     
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="pl-0">
                                     <div class="col-md-12">
                                         <button class="btn btn-success waves-effect waves-light" title="Search">
@@ -67,7 +86,16 @@
                                     </div>
                                     </div>
                                 </div>
-                            </form>
+                            </form> 
+                            </div>
+                            <div class="col-2 d-flex justify-content-start">
+                                <form action="{{ route('warehouse.download.create') }}"  >
+                                    <input type="hidden" value="{{ Request('startDate') }}" name="startDate">
+                                    <input type="hidden" value="{{ Request('endDate') }}"  name="endDate">
+                                    <input type="hidden" value="{{ Request('type') }}"  name="type">
+                                    <button class="btn btn-success waves-effect waves-light" type="submit">Download</button>
+                                </form> 
+                            </div>
                         </div>
                         <table class="table mb-0 table-bordered">
                             <thead>
@@ -132,7 +160,7 @@
                                                             <i class="fa fa-list"></i> Show Containers
                                                         </a>
                                                         @if ($deliveryBill->isRegistered() && $deliveryBill->isReady())
-                                                            <a href="{{ route('warehouse.delivery_bill.download', $deliveryBill) }}"
+                                                            <a href=" {{ route('warehouse.download.show',$deliveryBill->id) }} "
                                                                 class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> GET CN38
                                                             </a>
