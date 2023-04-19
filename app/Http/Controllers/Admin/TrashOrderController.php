@@ -24,15 +24,13 @@ class TrashOrderController extends Controller
     {
         try{
 
-            $orderIds = array_map(function($id){
-              return decrypt($id);  
-            },json_decode($request->get('data'),true));
+            $orderIds = json_decode($request->get('data'),true);
+            $orders = Order::find($orderIds)->each->delete();
             
-            Order::find($orderIds)->each->delete();
-
-            session()->flash('alert-success','Parcel Deleted');
-            return back();
-             
+            // if ( $preAlertRepository->delete($request->data) ){
+                session()->flash('alert-success','Parcel Deleted');
+                return back();
+            // }
         }catch(\Exception $e){
             session()->flash('alert-danger','Error While Deleting Parcel');
             return back();
