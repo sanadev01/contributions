@@ -296,3 +296,26 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     return 'Anjun Token refresh';
 }); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
+
+Route::get('/clear-cache/{id}', function($id) {
+    if($id === "1") {
+        $artisanCmd = Artisan::call('cache:clear');
+        return "Application Cache Cleared";
+    }
+    if($id === "2") {
+        $artisanCmd = Artisan::call('config:cache');
+        return "Application Configuration Cache Cleared";
+    }
+    if($id === "3") {
+        $artisanCmd = Artisan::call('route:cache');
+        return "Application Route Cache Cleared";
+    }
+    if($id === "4") {
+        $artisanCmd = Artisan::call('view:clear');
+        return "Application View Cache Cleared";
+    }
+    if($id === "5") {
+        $artisanCmd = Artisan::call('optimze:clear');
+        return "Application Optimize Cleared";
+    }
+});
