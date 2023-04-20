@@ -22,7 +22,7 @@
                                 <div class="row">
                                     <div class="col-md-1">
                                         <div class="col-md-1">
-                                            <div class="row justify-content-start ml-3">
+                                            <div class="ml-3">
                                                 <form action="{{ route('warehouse.combine_delivery_bill.manifest.download') }}" method="post">
                                                     @csrf
                                                     <input type="hidden" name="dbills[]" id="dbills">
@@ -40,25 +40,15 @@
                                                     <div class="col-md-1">
                                                     </div>
                                                         <div class="col-md-3">
-                                                        <div class="row justify-content-start"> 
-                                                            <div class="">
                                                                 <label>Start Date</label>
                                                                 <input type="date" class="form-control mb-2 mr-sm-2" value="{{ Request('startDate') }}" name="startDate">
-                                                            </div>
-                                                        </div>
                                                     </div>
-                                                    <div class="col-md-3">
-                                                        <div class="row justify-content-start"> 
-                                                            <div class="">
+                                                    <div class="col-md-3"> 
                                                                 <label>End Date</label>
                                                                 <input type="date" class="form-control" value="{{ Request('endDate') }}"  name="endDate">
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                     
                                                     <div class="col-md-3">
-                                                        <div class="row justify-content-start">
-                                                            <div class="">
                                                                 <label>Service</label>
                                                                 <select class="form-control mb-2 mr-sm-2" name="type">
                                                                     <option value="">All</option>
@@ -70,8 +60,6 @@
                                                                     <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                                    
                                                                     <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                                    
                                                                 </select>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                     <div class="col-md-2 mt-2">
                                                         <button class="btn btn-success waves-effect waves-light mt-4" type="submit" title="Search">
