@@ -37,7 +37,7 @@
                                         <div class="row">
                                             <form action="" class="col-md-11">
                                                 <div class="row">
-                                                    <div class="col-md-5">
+                                                    <div class="col-md-4">
                                                         <div class="row justify-content-start">
                                                             <div class="col-md-3">
                                                                 <label>Start Date</label>
@@ -47,13 +47,33 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-5">
+                                                    <div class="col-md-4">
                                                         <div class="row justify-content-start">
                                                             <div class="col-md-3">
                                                                 <label>End Date</label>
                                                             </div>
                                                             <div class="col-md-9">
                                                                 <input type="date" class="form-control" value="{{ Request('endDate') }}"  name="endDate">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-2">
+                                                        <div class="row justify-content-start">
+                                                            <div class="col-md-3">
+                                                                <label>Service</label>
+                                                            </div> 
+                                                            <div class="col-md-9">
+                                                                <select class="form-control mb-2 mr-sm-2" name="type">
+                                                                    <option value="">All</option>
+                                                                    <option value="{{json_encode(['NX','IX'])}}">Correios Brazil</option>
+                                                                    <option value="{{json_encode(['537','540'])}}">Global eParcel</option>
+                                                                    <option value="{{json_encode(['773','357'])}}">Prime5</option>
+                                                                    <option value="{{json_encode(['734','367','778','777'])}}">Post Plus</option>                                                           
+                                                                    <option value="{{json_encode(['PostNL'])}}">Post NL</option>                                                           
+                                                                    <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                                    
+                                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                                    
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -68,6 +88,7 @@
                                                 <form action="{{ route('warehouse.download.create') }}">
                                                     <input type="hidden" value="{{ Request('startDate') }}" name="startDate">
                                                     <input type="hidden" value="{{ Request('endDate') }}"  name="endDate">
+                                                    <input type="hidden" value="{{ Request('type') }}"  name="type">
                                                     <button class="btn btn-success waves-effect waves-light" type="submit">Download</button>
                                                 </form>
                                             </div>
@@ -96,7 +117,7 @@
                                             <input type="checkbox" name="deliveryBills[]" class="form-control container" value="{{$deliveryBill->id}}">
                                         </td>
                                         <td>
-                                            {{ $deliveryBill->name }}
+                                            {{ $deliveryBill->name   }}
                                             @if ($deliveryBill->Containers->count() > 0)
                                                 @if(optional($deliveryBill->Containers->first()->orders->first())->shippingService && $deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
                                                     <span class="badge badge-success">A</span>
