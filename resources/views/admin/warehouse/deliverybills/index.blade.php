@@ -20,7 +20,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-1">
                                         <div class="col-md-1">
                                             <div class="row justify-content-start ml-3">
                                                 <form action="{{ route('warehouse.combine_delivery_bill.manifest.download') }}" method="post">
@@ -33,37 +33,33 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-11">
                                         <div class="row">
-                                            <form action="" class="col-md-11">
+                                            <form action="" class="col-md-10">
                                                 <div class="row">
-                                                    <div class="col-md-4">
-                                                        <div class="row justify-content-start">
-                                                            <div class="col-md-3">
+                                                    <div class="col-md-1">
+                                                    </div>
+                                                        <div class="col-md-3">
+                                                        <div class="row justify-content-start"> 
+                                                            <div class="">
                                                                 <label>Start Date</label>
-                                                            </div>
-                                                            <div class="col-md-9">
                                                                 <input type="date" class="form-control mb-2 mr-sm-2" value="{{ Request('startDate') }}" name="startDate">
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <div class="row justify-content-start">
-                                                            <div class="col-md-3">
+                                                    <div class="col-md-3">
+                                                        <div class="row justify-content-start"> 
+                                                            <div class="">
                                                                 <label>End Date</label>
-                                                            </div>
-                                                            <div class="col-md-9">
                                                                 <input type="date" class="form-control" value="{{ Request('endDate') }}"  name="endDate">
                                                             </div>
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-3">
                                                         <div class="row justify-content-start">
-                                                            <div class="col-md-3">
+                                                            <div class="">
                                                                 <label>Service</label>
-                                                            </div> 
-                                                            <div class="col-md-9">
                                                                 <select class="form-control mb-2 mr-sm-2" name="type">
                                                                     <option value="">All</option>
                                                                     <option value="{{json_encode(['NX','IX'])}}">Correios Brazil</option>
@@ -77,15 +73,15 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-2">
-                                                        <button class="btn btn-success waves-effect waves-light" type="submit" title="Search">
+                                                    <div class="col-md-2 mt-2">
+                                                        <button class="btn btn-success waves-effect waves-light mt-4" type="submit" title="Search">
                                                             Search <i class="fa fa-search" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
                                                 </div>
                                             </form>
-                                            <div class="col-md-1">
-                                                <form action="{{ route('warehouse.download.create') }}">
+                                            <div class="col-md-1 d-flex mt-2">
+                                                <form action="{{ route('warehouse.download.create') }}" class="mt-4">
                                                     <input type="hidden" value="{{ Request('startDate') }}" name="startDate">
                                                     <input type="hidden" value="{{ Request('endDate') }}"  name="endDate">
                                                     <input type="hidden" value="{{ Request('type') }}"  name="type">
