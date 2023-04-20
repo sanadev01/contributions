@@ -60,7 +60,7 @@
                                                                     <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                                  
                                                                 </select>
                                                     </div>
-                                                    <div class="col-md-2 mt-2">
+                                                    <div class="col-md-2 mt-1">
                                                         <button class="btn btn-success waves-effect waves-light mt-4" type="submit" title="Search">
                                                             Search <i class="fa fa-search" aria-hidden="true"></i>
                                                         </button>
