@@ -307,7 +307,7 @@ Route::get('/clear-cache/{id}', function($id) {
         return "Application Configuration Cache Cleared";
     }
     if($id === "3") {
-        $artisanCmd = Artisan::call('route:cache');
+        $artisanCmd = Artisan::call('route:clear');
         return "Application Route Cache Cleared";
     }
     if($id === "4") {
@@ -315,7 +315,11 @@ Route::get('/clear-cache/{id}', function($id) {
         return "Application View Cache Cleared";
     }
     if($id === "5") {
-        $artisanCmd = Artisan::call('optimze:clear');
+        $artisanCmd = Artisan::call('optimize');
+        return "Application Optimized";
+    }
+    if($id === "6") {
+        $artisanCmd = Artisan::call('optimize:clear');
         return "Application Optimize Cleared";
     }
 });
