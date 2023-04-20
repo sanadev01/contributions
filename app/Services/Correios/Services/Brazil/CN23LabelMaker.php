@@ -116,7 +116,7 @@ class CN23LabelMaker implements HasLableExport
     {
         if ( $this->order->items->count() > 4 ){
             $this->hasSuplimentary = true;
-            $this->getItemsDescpCount();
+            $this->sumplementryItems = $this->order->items->skip(4)->chunk(30);
         }
 
         return $this;
@@ -164,21 +164,4 @@ class CN23LabelMaker implements HasLableExport
             'barcodeNew' => new BarcodeGeneratorPNG(),
         ];
     }
-
-    private function getItemsDescpCount ()
-     {
-         $orderItem = $this->order->items()->take(4)->selectRaw(\DB::raw('LENGTH(description)'))->get()->toArray();
-         $descpItems = array_flatten($orderItem);
-         $itemCount = count($descpItems);
-         
-         if($itemCount > 1 && array_sum(array_slice($descpItems, 0, 2)) > 245) {
-             $itemSelect = 2;
-         }elseif( ($itemCount > 2 && array_sum(array_slice($descpItems, 0, 3)) > 200) || ($itemCount > 3 && array_sum(array_slice($descpItems, 0, 4)) > 257) ) {
-             $itemSelect = 3;
-         }else {
-             $itemSelect = 4;
-         }
-         $this->items = $this->order->items->take($itemSelect);
-         $this->sumplementryItems = $this->order->items->skip($itemSelect)->chunk(30);
-     }
 }
