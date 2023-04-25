@@ -108,18 +108,27 @@ class CN23LabelMaker implements HasLableExport
 
     private function setItems()
     {
-        $this->items = $this->order->items->take(4);
+        $this->items = $this->order->items->take($this->suplimentryAt());
         return $this;
     }
 
     private function setSuplimentryItems()
     {
-        if ( $this->order->items->count() > 4 ){
+        $suplimentryAt = $this->suplimentryAt();
+        if ( $this->order->items->count() > $suplimentryAt){
             $this->hasSuplimentary = true;
-            $this->sumplementryItems = $this->order->items->skip(4)->chunk(30);
+            $this->sumplementryItems = $this->order->items->skip($suplimentryAt)->chunk(30);
         }
-
         return $this;
+    }
+    private function suplimentryAt(){
+        
+        foreach ( $this->order->items as  $key=>$item){
+            if(strlen($item->description) >70  ){
+                return $key==0?1:$key;
+            }
+        }
+        return 4;
     }
 
     public function render()

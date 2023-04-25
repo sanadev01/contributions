@@ -5,7 +5,7 @@
     <td style="width: 15px;">
         QTDE
     </td>
-    <td style="width: 150px;">
+    <td colspan="2"  >
         DESCRIÇÃO DO CON TEÚDO 
     </td>
     <td>
