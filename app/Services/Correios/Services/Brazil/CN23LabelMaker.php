@@ -26,7 +26,6 @@ class CN23LabelMaker implements HasLableExport
     private $items;
     private $sumplementryItems;
     private $hasSuplimentary;
-    private $hasDescpCount;
 
     public function __construct()
     {
@@ -41,7 +40,6 @@ class CN23LabelMaker implements HasLableExport
         Rua Barao Do Triunfo, 520 - CJ 152 - Brooklin Paulista
         CEP 04602-001 - São Paulo - SP- Brasil';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
-        $this->hasDescpCount = '';
     }
 
     public function setOrder(Order $order)
@@ -111,18 +109,27 @@ class CN23LabelMaker implements HasLableExport
 
     private function setItems()
     {
-        $this->getItemsDescpCount();
+        $this->items = $this->order->items->take($this->suplimentryAt());
         return $this;
     }
 
     private function setSuplimentryItems()
     {
-        if ( $this->order->items->count() > 2 ){
+        $suplimentryAt = $this->suplimentryAt();
+        if ( $this->order->items->count() > $suplimentryAt){
             $this->hasSuplimentary = true;
-            $this->getItemsDescpCount();
+            $this->sumplementryItems = $this->order->items->skip($suplimentryAt)->chunk(30);
         }
-
         return $this;
+    }
+    private function suplimentryAt(){
+        
+        foreach ( $this->order->items as  $key=>$item){
+            if(strlen($item->description) >70  ){
+                return $key==0?1:$key;
+            }
+        }
+        return 4;
     }
 
     public function render()
@@ -166,22 +173,5 @@ class CN23LabelMaker implements HasLableExport
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
         ];
-    }
-
-    private function getItemsDescpCount ()
-    {
-        $orderItem = $this->order->items()->take(4)->selectRaw(\DB::raw('LENGTH(description)'))->get()->toArray();
-        $descpItems = array_flatten($orderItem);
-        $itemCount = count($descpItems);
-        
-        if($itemCount > 1 && array_sum(array_slice($descpItems, 0, 2)) > 245) {
-            $itemSelect = 2;
-        }elseif( ($itemCount > 2 && array_sum(array_slice($descpItems, 0, 3)) > 200) || ($itemCount > 3 && array_sum(array_slice($descpItems, 0, 4)) > 257) ) {
-            $itemSelect = 3;
-        }else {
-            $itemSelect = 4;
-        }
-        $this->items = $this->order->items->take($itemSelect);
-        $this->sumplementryItems = $this->order->items->skip($itemSelect)->chunk(30);
     }
 }
