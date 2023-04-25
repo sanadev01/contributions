@@ -204,7 +204,7 @@
         
         .items-table{
             position: absolute;
-            top: 11.96cm;
+            top: 11.76cm;
             font-size: 7px;
             font-weight: bold;
             width: auto;
@@ -212,7 +212,7 @@
         .items-table table{
             margin: 0.1cm;
             border-collapse: collapse;
-            width: 100%;
+            width: 98%;
             /* page-break-inside: auto; */
             margin-bottom: 0.2cm;
         }

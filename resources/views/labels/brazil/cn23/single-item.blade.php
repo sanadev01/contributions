@@ -9,6 +9,6 @@
         @endif
     </td>
     <td>{{ $item->weight }}</td>
-    <td>USD {{ number_format($item->value,2) }}</td>
-    <td>USD {{ number_format($item->value*$item->quantity,2) }}</td>
+    <td>{{ number_format($item->value,2) }}</td>
+    <td>{{ number_format($item->value*$item->quantity,2) }}</td>
 </tr>
