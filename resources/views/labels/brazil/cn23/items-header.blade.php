@@ -12,9 +12,9 @@
         PESO (KG)
     </td>
     <td style="25px;">
-        UNIT US
+        UNIT(USD)
     </td>
-    <td style="25px;">
-        VALOR US
+    <td style="25px">
+        VALOR(USD)
     </td>
 </tr>

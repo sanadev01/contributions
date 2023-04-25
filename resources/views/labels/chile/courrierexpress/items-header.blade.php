@@ -5,16 +5,16 @@
     <td style="width: 15px;">
         QTDE
     </td>
-    <td colspan="2"  >
+    <td colspan="2">
         DESCRIÇÃO DO CON TEÚDO 
     </td>
     <td>
         PESO (KG)
     </td>
     <td style="25px;">
-        UNIT US
+        UNIT USD
     </td>
     <td style="25px;">
-        VALOR US
+        VALOR USD
     </td>
 </tr>

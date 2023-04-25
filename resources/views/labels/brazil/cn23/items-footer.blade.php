@@ -1,7 +1,7 @@
 @if (!$isSumplimentary)
     <tr>
         <td>
-            FRETE (US)
+            FRETE
         </td>
         <td></td>
         <td colspan="2"></td>
@@ -17,7 +17,7 @@
     </tr>
     <tr>
         <td>
-            SEGURO (US)
+            SEGURO
         </td>
         <td></td>
         <td colspan="2"></td>

@@ -16,7 +16,7 @@
 </tr>
 <tr>
     <td>
-        SEGURO (US)
+        SEGURO 
     </td>
     <td></td>
     <td colspan="2"></td>
