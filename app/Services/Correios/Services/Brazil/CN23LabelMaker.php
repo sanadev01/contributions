@@ -124,11 +124,16 @@ class CN23LabelMaker implements HasLableExport
     }
     private function suplimentryAt(){ 
         foreach ( $this->order->items as  $key=>$item){
-            if(strlen($item->description) >70  ){ 
+            if(strlen($item->description) >70  ){
+                try{
+                    
                 if(strlen($this->order->items[$key+1]->description) <=70  && $key<2)
                     return $key==0?2:$key+1;
-                    else
+                }catch(Exception $e){
                     return $key==0?1:$key;
+
+                } 
+                 return $key==0?1:$key;
             }
         }
         return 4;
