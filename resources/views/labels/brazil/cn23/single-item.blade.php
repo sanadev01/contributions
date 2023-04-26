@@ -9,7 +9,7 @@
         @endif
         {{-- extra space --}}
         @if ($loop->first)
-            @for($i=strlen($item->description);$i<66;$i=$i+3) 
+            @for($i=strlen($item->description);$i<52;$i=$i+3) 
                 &nbsp; &nbsp; &nbsp;
             @endfor
         @endif 
