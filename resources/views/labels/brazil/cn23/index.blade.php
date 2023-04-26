@@ -204,7 +204,7 @@
         
         .items-table{
             position: absolute;
-            top: 11.76cm;
+            top: 11.86cm;
             font-size: 7px;
             font-weight: bold;
             width: auto;
