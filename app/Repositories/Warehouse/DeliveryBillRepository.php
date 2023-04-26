@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class DeliveryBillRepository extends AbstractRepository
 {
-    public function get(Request $request ,$isPaginate)
+    public function get(Request $request, $isPaginate)
     {
         $query = DeliveryBill::query();
         if ($request->type){
@@ -28,9 +28,13 @@ class DeliveryBillRepository extends AbstractRepository
             $startDate = $request->startDate. ' 00:00:00';
             $query->where('created_at','>=', $startDate);
         }
-        if($request->endDate){
-            $endDate = $request->endDate. ' 23:59:59';
-            $query->where('created_at','<=', $endDate);
+        if ($request->startDate) {
+            $startDate = $request->startDate . ' 00:00:00';
+            $query->where('created_at', '>=', $startDate);
+        }
+        if ($request->endDate) {
+            $endDate = $request->endDate . ' 23:59:59';
+            $query->where('created_at', '<=', $endDate);
         }
         $deliveryBill = $query->latest();
         return $isPaginate ? $deliveryBill->paginate(50) : $deliveryBill->get();

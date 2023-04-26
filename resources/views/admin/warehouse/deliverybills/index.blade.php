@@ -104,9 +104,9 @@
                                     <th>@lang('warehouse.deliveryBill.Name')</th>
                                     <th>Request ID</th>
                                     <th>@lang('warehouse.deliveryBill.CN38 Code')</th>
-                                    <th>
+                                    {{-- <th>
                                         @lang('warehouse.deliveryBill.Dispatch Numbers')
-                                    </th>
+                                    </th> --}}
                                     <th>@lang('warehouse.actions.Action')</th>
                                 </tr>
                             </thead>

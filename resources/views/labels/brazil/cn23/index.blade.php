@@ -204,7 +204,7 @@
         
         .items-table{
             position: absolute;
-            top: 11.96cm;
+            top: 11.76cm;
             font-size: 7px;
             font-weight: bold;
             width: auto;
@@ -212,7 +212,7 @@
         .items-table table{
             margin: 0.1cm;
             border-collapse: collapse;
-            width: 100%;
+            width: 98%;
             /* page-break-inside: auto; */
             margin-bottom: 0.2cm;
         }
@@ -356,13 +356,15 @@
         .site-text{
             position: absolute;
             top: 15px !important;
+            margin-top:5px;
         }
         .return-box-text{
             position: absolute;
             top: 0.6mm;
             /* left: 0.1mm; */
             /* font-size: 16px !important; */
-            margin-left: -2.3px !important;
+            margin-left: -3px !important;
+            margin-top: 4px !important;
         }
     </style>
 </head>
@@ -418,7 +420,7 @@
         <div class="left-block">
             <div class="return-address">
                 <span class="return-box"> <i class="return-box-text">X</i> </span> &nbsp; Retorno a origem  <span class="return-box">   </span> Tratar como abandono<br>
-                <span class="site-text">Dúvidas e reclamações: homedeliverybr.com</span><br><br>
+                <span class="site-text" >Dúvidas e reclamações: homedeliverybr.com</span><br><br>
                 <strong>DEVOLUCÃO:</strong> <br>
                 {!! $returnAddress !!}
             </div>
