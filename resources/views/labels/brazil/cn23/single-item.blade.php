@@ -5,7 +5,13 @@
         @if( strlen($item->description) > 34)  
             <span style="font-size: 4.8px"> {{ $item->description }} </span> 
         @else 
-            {{ $item->description }} 
+            {{ $item->description }}
+        @endif
+        {{-- extra space --}}
+        @if ($loop->first)
+            @for($i=strlen($item->description);$i<39;$i=$i+3) 
+                &nbsp; &nbsp; &nbsp;
+            @endfor
         @endif
     </td>
     <td>{{ $item->weight }}</td>
