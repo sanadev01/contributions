@@ -2,7 +2,7 @@
     <table border="1">
         <tbody>
             <tr>
-                <td colspan="3">
+                <td colspan="4">
                     DECLARACÃO PARA ALFÃNDEGA
                 </td>
                 <td colspan="3">

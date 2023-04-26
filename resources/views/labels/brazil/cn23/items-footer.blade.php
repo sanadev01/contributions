@@ -1,10 +1,10 @@
 @if (!$isSumplimentary)
     <tr>
         <td>
-            FRETE (US)
+            FRETE
         </td>
         <td></td>
-        <td></td>
+        <td colspan="2"></td>
         <td></td>
         <td></td>
         <td>
@@ -17,10 +17,10 @@
     </tr>
     <tr>
         <td>
-            SEGURO (US)
+            SEGURO
         </td>
         <td></td>
-        <td></td>
+        <td colspan="2"></td>
         <td></td>
         <td></td>
         <td>0.00</td>
@@ -31,7 +31,7 @@
         TOTAL:
     </td>
     <td>{{ number_format($totalQuantity,2) }}</td>
-    <td></td>
+    <td colspan="2"></td> 
     <td>{{ round($totalWeight,2) }}Kg</td>
     <td></td>
     <td>
