@@ -12,7 +12,7 @@
             @for($i=strlen($item->description);$i<65;$i=$i+5) 
                 &nbsp;&nbsp;&nbsp;&nbsp;
             @endfor
-        @endif 
+        @endif
     </td>
     <td>{{ $item->weight }}</td>
     <td>{{ number_format($item->value,2) }}</td>
