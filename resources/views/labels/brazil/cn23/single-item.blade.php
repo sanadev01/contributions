@@ -10,7 +10,7 @@
         {{-- extra space --}}
         @if ($loop->first)
             @for($i=strlen($item->description);$i<65;$i=$i+5) 
-                &nbsp; &nbsp; &nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;
             @endfor
         @endif 
     </td>
