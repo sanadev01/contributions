@@ -409,32 +409,8 @@ class OrderRepository
             })->orWhereNotNull('us_api_tracking_code');
         }
 
-        if ($request->type == 'order') {
-            $orders->where('status','=',Order::STATUS_ORDER);
-        }
-
-        if ($request->type == 'cancelled') {
-            $orders->where('status','=',Order::STATUS_CANCEL);
-        }
-
-        if ($request->type == 'rejected') {
-            $orders->where('status','=',Order::STATUS_REJECTED);
-        }
-
-        if ($request->type == 'released') {
-            $orders->where('status','=',Order::STATUS_RELEASE);
-        }
-
-        if ($request->type == 'payment_pending') {
-            $orders->where('status','=',Order::STATUS_PAYMENT_PENDING);
-        }
-
-        if ($request->type == 'payment_done') {
-            $orders->where('status','=',Order::STATUS_PAYMENT_DONE);
-        }
-
-        if ($request->type == 'shipped') {
-            $orders->where('status','=',Order::STATUS_SHIPPED);
+        if ($request->type && $request->type != 'domestic') {
+            $orders->where('status','=',$request->type);
         }
 
         if ($request->is_trashed) {
