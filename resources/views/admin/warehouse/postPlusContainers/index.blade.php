@@ -123,6 +123,9 @@
                                                                 </button>
                                                             </form>
                                                         @endif
+                                                        <a href="{{ route('temp_manifest.download',[$container]) }}" class="dropdown-item w-100">
+                                                            <i class="feather icon-box"></i> Temp Manifest
+                                                        </a>
                                                         @if( $container->isRegistered() )
                                                             <a href="{{ route('warehouse.postplus_container.download',[$container, '3']) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Get CN31

@@ -50,7 +50,9 @@ use App\Http\Controllers\Warehouse\PostPlusUnitRegisterController;
 use App\Http\Controllers\Warehouse\PostPlusCN35DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusCN38DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusManifestDownloadController;
-
+use App\Models\Warehouse\Container;
+use App\Services\Excel\Export\OrderExportTemp;
+use Illuminate\Support\Facades\Auth;
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
 
@@ -131,6 +133,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
 });
 
 
+Route::get('temp_manifest/{container}/download', function(Container $container){
+    $orders = $container->orders;        
+    $exportService = new OrderExportTemp($orders,Auth::id());
+    $exportService->handle(); 
+    return $exportService->download(); 
+})->name('temp_manifest.download');
 Route::get('test', function () {
 
     // $labelPrinter = new CN35LabelMaker;
