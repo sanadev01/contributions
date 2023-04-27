@@ -52,13 +52,14 @@
                 <select class="form-control col-2 mr-2" name="type">
                     <option value="">All</option>
                     <option value="domestic">Domestic</option>
-                    <option value="order">Order</option>
-                    <option value="cancelled">Cancelled</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="released">Released</option>
-                    <option value="payment_pending">Payment Pending</option>
-                    <option value="payment_done">Payment Done</option>
-                    <option value="shipped">Shipped</option>
+                    <option value="{{ App\Models\Order::STATUS_ORDER }}">ORDER</option>
+                    <option value="{{ App\Models\Order::STATUS_CANCEL }}">CANCELLED</option>
+                    <option value="{{ App\Models\Order::STATUS_REJECTED }}">REJECTED</option>
+                    <option value="{{ App\Models\Order::STATUS_RELEASE }}">RELEASED</option>
+                    <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}">PAYMENT_PENDING</option>
+                    <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}">PAYMENT_DONE</option>
+                    <option value="{{ App\Models\Order::STATUS_SHIPPED }}">SHIPPED</option>
+                    <option value="{{ App\Models\Order::STATUS_REFUND }}">REFUND / CANCELLED</option>
                 </select>
 
                 <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
@@ -166,6 +167,7 @@
                             <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}">PAYMENT_PENDING</option>
                             <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}">PAYMENT_DONE</option>
                             <option value="{{ App\Models\Order::STATUS_SHIPPED }}">SHIPPED</option>
+                            <option value="{{ App\Models\Order::STATUS_REFUND }}">REFUND / CANCELLED</option>
                         </select>
                     </th>
                     <th >
