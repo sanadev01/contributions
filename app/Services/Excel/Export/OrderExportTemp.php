@@ -79,9 +79,9 @@ class OrderExportTemp extends AbstractExportService
             $this->setCellValue('Z'.$row, '');   
             $this->setCellValue('AA'.$row,'');
             $this->setCellValue('AB'.$row,'B2C');
-            $this->setCellValue('AC'.$row,'UZPO');
+            $this->setCellValue('AC'.$row, $type);
             $this->setCellValue('AD'.$row, $order->carrierService());
-            $this->setCellValue('AE'.$row,'UZPO-UPU');
+            $this->setCellValue('AE'.$row, $type);
             $this->setCellValue('AF'.$row,'');
             $this->setCellValue('AG'.$row,'');
             $this->setCellValue('AH'.$row,'');
