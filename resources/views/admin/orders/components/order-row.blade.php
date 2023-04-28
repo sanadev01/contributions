@@ -214,7 +214,9 @@
                             @endif
                             @if ($order->corrios_tracking_code &&
                                  $order->recipient &&
-                                 ($order->recipient->country_id != \App\Models\Order::US || $order->shippingService->isGDEService()) && 
+                                 ($order->recipient->country_id != \App\Models\Order::US 
+                                //  || $order->shippingService->isGDEService()
+                                 ) && 
                                 !$order->hasSecondLabel() && !$order->isRefund())
                                 <a href="{{ route('admin.order.us-label.index', $order->encrypted_id) }}" class="dropdown-item"
                                     title="@lang('orders.actions.label')">

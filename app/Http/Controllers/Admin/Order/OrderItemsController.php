@@ -54,6 +54,7 @@ class OrderItemsController extends Controller
 
         $shippingServiceCodes = [
             'USPS_PRIORITY' => ShippingService::USPS_PRIORITY,
+            'GDE_SERVICE' => ShippingService::GDE_Service,
             'USPS_FIRSTCLASS' => ShippingService::USPS_FIRSTCLASS,
             'USPS_PRIORITY_INTERNATIONAL' => ShippingService::USPS_PRIORITY_INTERNATIONAL,
             'USPS_FIRSTCLASS_INTERNATIONAL' => ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
