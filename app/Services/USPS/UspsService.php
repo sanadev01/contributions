@@ -433,7 +433,7 @@ class UspsService
                 return 'Priority';
                 break;
             case ShippingService::GDE_Service:
-                return 'Priority';
+                return 'PriorityInternational';
                 break;
             case 'Priority':
                 return 'Priority';
