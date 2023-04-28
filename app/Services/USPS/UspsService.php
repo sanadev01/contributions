@@ -105,7 +105,7 @@ class UspsService
             ],
         ];
 
-        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||$order->shippingService->service_sub_class == ShippingService::GDE_Service || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
             $request_body = array_add($request_body, 'customs_form', $this->setCustomsForm($order));
             array_forget($request_body, 'usps.image_size');
         }
@@ -252,7 +252,7 @@ class UspsService
             ],
         ];
 
-        if ($service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+        if ($service == ShippingService::USPS_PRIORITY_INTERNATIONAL ||$service == ShippingService::GDE_Service || $service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
             
             $request_body = array_add($request_body, 'value', $this->calculateItemsValue($order->items));
 
@@ -322,7 +322,7 @@ class UspsService
             ],
         ];
 
-        if ($request->service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $request->service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+        if ($request->service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $request->service == ShippingService::GDE_Service || $request->service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
             $request_body = array_add($request_body, 'customs_form', $this->setCustomsForm($order));
             array_forget($request_body, 'usps.image_size');
         }
