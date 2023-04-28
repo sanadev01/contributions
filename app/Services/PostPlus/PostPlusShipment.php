@@ -46,8 +46,7 @@ class PostPlusShipment
                 $weight+= $package->getWeight();
             }
             $body = [
-                "type" => "AWB",
-                "terminalCode" => "PDL",
+                "type" => "VirtualDespatch",
                 "shipmentNr" => $this->containers[0]->awb,
                 'arrivalInfo' => [
                     'transportNr' => $this->containers[0]->dispatch_number,
