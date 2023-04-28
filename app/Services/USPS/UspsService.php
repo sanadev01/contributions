@@ -432,6 +432,9 @@ class UspsService
             case ShippingService::USPS_PRIORITY:
                 return 'Priority';
                 break;
+            case ShippingService::GDE_Service:
+                return 'Priority';
+                break;
             case 'Priority':
                 return 'Priority';
                 break;     

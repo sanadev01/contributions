@@ -81,7 +81,8 @@ class HandleCorreiosLabelsRepository
             }
             
             if ($this->order->shippingService->isGDEService()) {
-                return $this->GDELabel();
+                // return $this->GDELabel();
+                return $this->uspsLabel();
             }
         }
 
