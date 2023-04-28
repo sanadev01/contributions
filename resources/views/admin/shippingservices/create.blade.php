@@ -48,7 +48,7 @@
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">@lang('shippingservice.Max width allowed')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="number" required class="form-control" name="max_width_allowed" placeholder="@lang('shippingservice.ax width allowed')" value="{{ old('max_width_allowed') }}">
+                                        <input type="number" required class="form-control" name="max_width_allowed" placeholder="@lang('shippingservice.Max width allowed')" value="{{ old('max_width_allowed') }}">
                                         @error('max_width_allowed')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
@@ -86,9 +86,9 @@
                                 </div>
 
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">@lang('shippingservice.max_weight')<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('shippingservice.Max weight')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="number" step=".1" required class="form-control" name="max_weight_allowed" placeholder="@lang('shippingservice.max_weight')" value="{{ old('max_weight_allowed') }}">
+                                        <input type="number" step=".1" required class="form-control" name="max_weight_allowed" placeholder="@lang('shippingservice.Max weight')" value="{{ old('max_weight_allowed') }}">
                                         @error('max_weight_allowed')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
