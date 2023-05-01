@@ -46,15 +46,14 @@ class PostPlusShipment
                 $weight+= $package->getWeight();
             }
             $body = [
-                "type" => "AWB",
-                "terminalCode" => "PDL",
+                "type" => "VirtualDespatch",
                 "shipmentNr" => $this->containers[0]->awb,
                 'arrivalInfo' => [
                     'transportNr' => $this->containers[0]->dispatch_number,
                     'originCountryCode' => "US",
                     'totalWeight' => $weight,
                     'totalBags' => count($this->containers),
-                    'arrivalOn' => Carbon::now()->addDay(),
+                    'arrivalOn' => Carbon::today()->toDateString(),
                     'notes' => ''
                  ],
             ];
@@ -114,7 +113,7 @@ class PostPlusShipment
             return $this->submitShipment($data->shipmentSubmitToken, $id);
         } else {
             $this->deleteShipment($id);
-            return $this->responseUnprocessable($data->status->warningDetails[1]);
+            return $this->responseUnprocessable(optional(optional(optional($data)->status)->warningDetails)[0]);
         }
     }
 

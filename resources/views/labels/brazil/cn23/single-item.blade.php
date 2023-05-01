@@ -9,8 +9,8 @@
         @endif
         {{-- extra space --}}
         @if ($loop->first)
-            @for($i=strlen($item->description);$i<39;$i=$i+3) 
-                &nbsp; &nbsp; &nbsp;
+            @for($i=strlen($item->description);$i<65;$i=$i+5) 
+                &nbsp;&nbsp;&nbsp;&nbsp;
             @endfor
         @endif
     </td>

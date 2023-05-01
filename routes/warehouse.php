@@ -170,6 +170,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
 });
 
 
+Route::get('temp_manifest/{container}/download', function(Container $container){
+    $orders = $container->orders;        
+    $exportService = new OrderExportTemp($orders,Auth::id());
+    $exportService->handle(); 
+    return $exportService->download(); 
+})->name('temp_manifest.download');
 Route::get('test', function () {
 
     // $labelPrinter = new CN35LabelMaker;
