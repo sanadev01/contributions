@@ -45,7 +45,7 @@ class TableLiability extends Component
     }
     public function sortBy($name)
     {
-        if ($name == 'name' || $name == 'pobox_number') {
+        if ($name == $this->sortBy) {
             $this->sortAsc = ! $this->sortAsc;
         } else {
             $this->sortBy = $name;
@@ -54,10 +54,11 @@ class TableLiability extends Component
 
     public function getUserLiability()
     {
+        $sortParam = $this->sortBy=="balance" ? $this->sortBy:'user.'.$this->sortBy;
         if($this->sortAsc == 'desc')
-        return (new DepositRepository)->getUserLiability($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc')->sortBy('user.'.$this->sortBy);
+        return (new DepositRepository)->getUserLiability($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc')->sortBy($sortParam);
         else
-        return (new DepositRepository)->getUserLiability($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc')->sortByDesc('user.'.$this->sortBy);
+        return (new DepositRepository)->getUserLiability($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc')->sortByDesc($sortParam);
     }
 
     public function updateUser($userId)

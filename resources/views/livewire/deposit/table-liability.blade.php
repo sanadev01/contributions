@@ -50,7 +50,7 @@
         <tr>
             <th><a href="#" wire:click.prevent="sortBy('name')"> User </a></th>
             <th><a href="#" wire:click.prevent="sortBy('pobox_number')"> WHR# </a></th>
-            <th>Balance</th>
+            <th><a href="#" wire:click.prevent="sortBy('balance')">Balance </a></th>
             <th> Date </th>
         </tr>
         <tr>
