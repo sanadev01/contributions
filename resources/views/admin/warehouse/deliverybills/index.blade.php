@@ -164,11 +164,11 @@
                                                                 class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> GET CN38
                                                             </a>
-                                                            @if($deliveryBill->isRegistered() && $deliveryBill->isPostPlus())
+                                                            <!-- @if($deliveryBill->isRegistered() && $deliveryBill->isPostPlus())
                                                                 <a href="{{ route('warehouse.postplus.cn38.download',$deliveryBill) }}" class="dropdown-item w-100">
                                                                     <i class="fa fa-cloud-download"></i> GET Post Plus CN38
                                                                 </a>
-                                                            @endif
+                                                            @endif -->
                                                         @endif
                                                         @if($deliveryBill->isPostNL())
                                                             <a href="{{ $deliveryBill->request_id }}" target="_blank" class="dropdown-item w-100">
@@ -181,11 +181,11 @@
                                                         <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                             <i class="fa fa-cloud-download"></i> Download Manifest By Service
                                                         </a>
-                                                        @if($deliveryBill->isRegistered() && $deliveryBill->isPostPlus())
+                                                        <!-- @if($deliveryBill->isRegistered() && $deliveryBill->isPostPlus())
                                                             <a href="{{ route('warehouse.postplus.manifest.download',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> Download PostPlus Manifest
                                                             </a>
-                                                        @endif
+                                                        @endif -->
 
                                                         <a href="{{ route('warehouse.audit-report.show', $deliveryBill) }}"
                                                             class="dropdown-item w-100">
