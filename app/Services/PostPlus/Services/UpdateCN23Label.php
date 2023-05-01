@@ -154,13 +154,13 @@ class UpdateCN23Label
     public function printReturnAddress($rectLM, $rectLT, $rectH, $rectW, $textLine1H, $textLine2H, $textLine3H, $textLine4H, $fontSize, $fontWeight) {
         $this->pdfi->SetFillColor(255, 255, 255);
         $this->pdfi->Rect($rectLM, $rectLT, $rectH, $rectW, "F");
+        $this->pdfi->SetFont("Arial", 'B', $fontSize);
+        $this->pdfi->RotatedText($rectLM, $textLine1H, "DEVOLUCAO", 0);
         $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
-        $this->pdfi->RotatedText($rectLM, $textLine1H, "(em caso de nao entrega encaminhar para)", 0);
+        $this->pdfi->RotatedText($rectLM, $textLine2H, "Homedeliverybr", 0);
         $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
-        $this->pdfi->RotatedText($rectLM, $textLine2H, "Blue Line c/o Homedeliverybr", 0);
+        $this->pdfi->RotatedText($rectLM, $textLine3H, "Rua Acaca 47- Ipiranga", 0);
         $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
-        $this->pdfi->RotatedText($rectLM, $textLine3H, "Rua Barao Do Triunfo, 520-CJ 152- Brooklin", 0);
-        $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
-        $this->pdfi->RotatedText($rectLM, $textLine4H, "Paulista CEP 04602-001 - Sao Paulo - SP- Brasil", 0);
+        $this->pdfi->RotatedText($rectLM, $textLine4H, "Sao Paulo CEP 04201-020", 0);
     }
 }
