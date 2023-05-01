@@ -353,7 +353,6 @@ class DepositRepository
     
     public function getUserLiability(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
     {
-        //  dd($request->sortBy);
        return Deposit::when($request->balance, function($query,$balance){
                            $query->where('balance','LIKE',"%{$balance}%");
                         })
