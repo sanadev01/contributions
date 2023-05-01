@@ -113,7 +113,7 @@ class PostPlusShipment
             return $this->submitShipment($data->shipmentSubmitToken, $id);
         } else {
             $this->deleteShipment($id);
-            return $this->responseUnprocessable($data->status->warningDetails[1]);
+            return $this->responseUnprocessable(optional(optional(optional($data)->status)->warningDetails)[0]);
         }
     }
 
