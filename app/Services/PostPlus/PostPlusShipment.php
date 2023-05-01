@@ -53,7 +53,7 @@ class PostPlusShipment
                     'originCountryCode' => "US",
                     'totalWeight' => $weight,
                     'totalBags' => count($this->containers),
-                    'arrivalOn' => Carbon::now()->addDay(),
+                    'arrivalOn' => Carbon::today()->toDateString(),
                     'notes' => ''
                  ],
             ];
