@@ -327,3 +327,9 @@ Route::get('/clear-cache/{id}', function($id) {
         return "Application Optimize Cleared";
     }
 });
+
+
+Route::get('affiliate-sale-deleted', function(){
+   $deleted =  AffiliateSale::whereDate('created_at','<=','2023-04-30 23:59:59')->delete();
+   echo $deleted. ' Affiliate Sale deleted.'; 
+}); 
