@@ -56,11 +56,9 @@ class AffiliateSaleRepository
             });
         }
         if ( $request->user ){
-            $query->whereHas('order',function($query) use($request) {
-                return $query->whereHas('user',function($query) use($request) {
+             $query->whereHas('user',function($query) use($request) {
                    return $query->where('name', 'LIKE', "%{$request->user}%");
                });
-           });
         }
 
         if ( $request->order ){
