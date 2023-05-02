@@ -20,10 +20,10 @@ class AffiliateSaleRepository
         }
         if ($request->orderIds) {
               $query->whereIn('id', json_decode($request->orderIds));
-        } 
+        }
         if(Auth::user()->isAdmin() && $request->user_id){
             $query->where('user_id', $request->user_id);
-        } 
+        }
         if ( $request->status == 'paid' ){
             $query->where('is_paid', true);
         }
@@ -55,11 +55,12 @@ class AffiliateSaleRepository
                 return $query->where('name', 'LIKE', "%{$request->name}%");
             });
         }
-        if ( $request->user ){ 
-                $query->whereHas('user',function($query) use($request) {
+        if ( $request->user ){
+             $query->whereHas('user',function($query) use($request) {
                    return $query->where('name', 'LIKE', "%{$request->user}%");
-               }); 
+               });
         }
+
         if ( $request->order ){
             $query->where(function($query) use($request){
                 return $query->where('order_id', 'LIKE', "%{$request->order}%");
