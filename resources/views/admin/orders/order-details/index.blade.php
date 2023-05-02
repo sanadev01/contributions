@@ -140,7 +140,7 @@
         $('#user_declared_freight').val(
             parseFloat($('option:selected', this).attr("data-cost"))
         );
-        if(service == shippingServiceCodes.USPS_PRIORITY_INTERNATIONAL || service == shippingServiceCodes.USPS_FIRSTCLASS_INTERNATIONAL) {
+        if(service == shippingServiceCodes.USPS_PRIORITY_INTERNATIONAL || service == shippingServiceCodes.GDE_SERVICE || service == shippingServiceCodes.USPS_FIRSTCLASS_INTERNATIONAL) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
         }else if(service == 537 || service == 540 || service == 773) {
@@ -155,7 +155,7 @@
     //USPS PRIORITY INTERNATIONAL SERVICE FOR RATES CALL 
     function checkService(){
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        if(service == shippingServiceCodes.USPS_PRIORITY_INTERNATIONAL) {
+        if(service == shippingServiceCodes.USPS_PRIORITY_INTERNATIONAL || service == shippingServiceCodes.GDE_SERVICE) {
             return  getUspsPriorityIntlRates();
         }
     }
@@ -212,7 +212,7 @@
 
     $('#us_shipping_service').ready(function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
-        if(service == shippingServiceCodes.USPS_PRIORITY || service == shippingServiceCodes.GDE_SERVICE || service == shippingServiceCodes.USPS_FIRSTCLASS) {
+        if(service == shippingServiceCodes.USPS_PRIORITY || service == shippingServiceCodes.USPS_FIRSTCLASS) {
 
         //   return  getUspsRates();
 
@@ -234,7 +234,7 @@
     $('#us_shipping_service').on('change',function(){
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         
-        if(service == shippingServiceCodes.USPS_PRIORITY || service == shippingServiceCodes.GDE_SERVICE || service == shippingServiceCodes.USPS_FIRSTCLASS || service == shippingServiceCodes.USPS_GROUND) {
+        if(service == shippingServiceCodes.USPS_PRIORITY  || service == shippingServiceCodes.USPS_FIRSTCLASS || service == shippingServiceCodes.USPS_GROUND) {
 
            return getUspsRates();
 

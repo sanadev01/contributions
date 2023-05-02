@@ -32,6 +32,7 @@ class HandleCorreiosLabelsRepository
     }
     public function handle()
     {
+         
         if ($this->order->recipient->country_id == Order::BRAZIL) {
 
             if ($this->order->shippingService->isGePSService()) {
@@ -80,16 +81,14 @@ class HandleCorreiosLabelsRepository
                 return $this->upsLabel();
             }
             
-            if ($this->order->shippingService->isGDEService()) {
-                // return $this->GDELabel();
-                return $this->uspsLabel();
-            }
+           
         }
 
         if ($this->order->recipient->country_id != Order::US) {
-            if ($this->order->shippingService->is_usps_priority_international || $this->order->shippingService->is_usps_firstclass_international) {
+            if ($this->order->shippingService->is_usps_priority_international || $this->order->shippingService->is_usps_firstclass_international || $this->order->shippingService->isGDEService()) {
                 return $this->uspsLabel();
             }
+            
         }
 
         if($this->order->shippingService->isPostNLService()){
