@@ -1,5 +1,5 @@
 <div class="items-table">
-    <table border="1">
+    <table border="1" style="width: 370px !important">
         <tbody>
             <tr>
                 <td colspan="4">
