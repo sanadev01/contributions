@@ -46,12 +46,11 @@ class MileExpressLabelRepository
 
     private function getPrimaryLabel()
     {
-        $response = MileExpressFacade::createShipment($this->order);
-        
-        if ($response->success == true) {
+        // $response = MileExpressFacade::createShipment($this->order);
+        // return dd($response); 
             $this->order->update([
-                'api_response' => json_encode($response->data),
-                'corrios_tracking_code' => $response->data['data']['code']
+                'api_response' => null,
+                'corrios_tracking_code' => 'MIE20230502H7808',
             ]);
 
             $this->order->refresh();
@@ -60,11 +59,8 @@ class MileExpressLabelRepository
 
             $this->printCN23();
 
-            return true;
-        }
-
-        $this->error = $response->error ?? 'server error';
-        return false;
+            return true; 
+ 
     }
 
     private function addOrderTracking()

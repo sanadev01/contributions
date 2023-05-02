@@ -401,6 +401,14 @@ class Order extends Model implements Package
 
                 return 'Colombia Service';
             }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_NACIONAL || optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_TRAYETOS || optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_URBANO){
+
+                return 'Colombia Service';
+            }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Mile_Express){
+
+                return 'Homedeliverbr Express';
+            }
 
             return 'Correios Brazil';
         }

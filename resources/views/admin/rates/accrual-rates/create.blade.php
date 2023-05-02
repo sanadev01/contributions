@@ -61,7 +61,7 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GePS}}">Global eParcel Prime</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GePS_EFormat}}">Global eParcel Untracked Packet</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Prime5}}">Prime5</option>
-                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_MILE_EXPRESS}}">Mile Express</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_MILE_EXPRESS}}">Homedelivebr Express</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_PostNL}}">PostNL</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_COLOMBIA_URBANO}}">Colombia URBANO</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_COLOMBIA_NACIONAL}}">Colombia NACIONAL</option>

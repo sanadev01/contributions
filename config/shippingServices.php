@@ -23,7 +23,7 @@ return [
             34166 => "AJ China Standard",
             33174 => "AJ China Express",
             33172 => 'AJ Packet Express',
-            33173 => 'Mile Express',
+            33173 => 'Homedelivebr Express',
             44162 => 'Colombia Urbano',
             44163 => 'Colombia Nacional',
             44164 => 'Colombia Trayetos',

@@ -56,7 +56,7 @@
                                 <div class="col-md-6">
                                     <select class="form-control" name="services_subclass_code" required>
                                         <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                        <option value="ML-EX" {{ old('services_subclass_code', $container->services_subclass_code) == 'ML-EX' ? 'selected': '' }}>Mile Express</option>
+                                        <option value="ML-EX" {{ old('services_subclass_code', $container->services_subclass_code) == 'ML-EX' ? 'selected': '' }}>Homedelivebr Express</option>
                                     </select>
                                     @error('services_subclass_code')
                                         <div class="help-block text-danger"> {{ $message }} </div>

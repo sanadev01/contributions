@@ -73,7 +73,7 @@ class CN35LabelMaker implements HasLableExport
         }
 
         if ( $this->service == 15 ){
-            $this->packetType = 'Mile Express';
+            $this->packetType = 'Homedelivebr Express';
             $this->companyName = 'Express Courier';
         }
 
@@ -137,8 +137,8 @@ class CN35LabelMaker implements HasLableExport
                 return $this;
             }
         }
-        if($this->packetType == 'Mile Express'){
-            $this->officeAddress = 'Mile Express <br/>
+        if($this->packetType == 'Homedelivebr Express'){
+            $this->officeAddress = 'Homedelivebr Express <br/>
                                     Rua Lagoa Dourada 371 <br/>
                                     Cocaia I Guarulhos-SP <br/>
                                     &nbsp;<br/>
