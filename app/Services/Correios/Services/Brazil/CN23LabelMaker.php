@@ -35,9 +35,9 @@ class CN23LabelMaker implements HasLableExport
         $this->packetType = 'Packet Standard';
         $this->contractNumber = 'Contrato:  9912501576';
         $this->service = 2;
-        $this->returnAddress = 'Blue Line Ag. De Cargas Ltda. <br>
-        Rua Barao Do Triunfo, 520 - CJ 152 - Brooklin Paulista
-        CEP 04602-001 - São Paulo - SP- Brasil';
+        $this->returnAddress = 'Homedeliverybr <br>
+        Rua Acaçá 47- Ipiranga <br>
+        Sao Paulo CEP 04201-020';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
     }
 
