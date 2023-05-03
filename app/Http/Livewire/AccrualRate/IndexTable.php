@@ -71,7 +71,7 @@ class IndexTable extends Component
             'value' => Package::SERVICE_CLASS_COLOMBIA_TRAYETOS,
         ];
         $this->services[13] = [
-            'name' => 'Mile Express',
+            'name' => 'Homedelivebr Express',
             'value' => Package::SERVICE_CLASS_MILE_EXPRESS,
         ];
         $this->services[14] = [

@@ -125,7 +125,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('sinerlog_container/{container}/download', SinerlogCN35DownloadController::class)->name('sinerlog_container.download');
     Route::get('sinerlog_container/{container}/manifest', SinerlogManifestDownloadController::class)->name('sinerlog_container.manifest');
 
-    // Routes for mile express container
+    // Routes for Homedelivebr Express container
     Route::resource('mile-express-containers', MileExpressContainerController::class);
     Route::get('mile-express-container/{container}/packages', MileExpressContainerPackageController::class)->name('mile-express-container.packages');
     Route::get('mile-express-container/{container}/register', MileExpressUnitRegisterController::class)->name('mile-express-container.register');

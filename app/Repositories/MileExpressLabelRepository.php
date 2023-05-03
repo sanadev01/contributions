@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Models\OrderTracking;
 use App\Facades\MileExpressFacade;
+use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use Illuminate\Support\Facades\Storage;
 
 class MileExpressLabelRepository
@@ -14,17 +15,17 @@ class MileExpressLabelRepository
 
     public function run(Order $order,$update)
     {
+      $this->order = $order;
         if($update){
-            return $this->updateLabel($order);
+            return $this->updateLabel();
         }
         else {
-            return $this->handle($order);
+            return $this->handle();
         }
     }
 
-    public function handle($order)
+    public function handle()
     {
-        $this->order = $order;
 
         if ($this->order->api_response == null) {
             return $this->getPrimaryLabel();
@@ -36,7 +37,12 @@ class MileExpressLabelRepository
 
     public function updateLabel()
     {
-        $this->error = 'Sorry!, Colombia Label can not be updated';
+        $this->order->update([
+            'api_response' => null,
+            'corrios_tracking_code' => 'HD'.date('d').date('m').$this->order->id.'BR',
+        ]); 
+        $this->printCN23();        
+        return true; 
     }
 
     public function getError()
@@ -46,25 +52,15 @@ class MileExpressLabelRepository
 
     private function getPrimaryLabel()
     {
-        $response = MileExpressFacade::createShipment($this->order);
-        
-        if ($response->success == true) {
-            $this->order->update([
-                'api_response' => json_encode($response->data),
-                'corrios_tracking_code' => $response->data['data']['code']
-            ]);
-
-            $this->order->refresh();
-
+            if(!$this->order->corrios_tracking_code){
+                $this->order->update([
+                    'api_response' => null,
+                    'corrios_tracking_code' => 'HD'.date('d').date('m').$this->order->id.'BR',
+                ]);
+            }
             $this->addOrderTracking();
-
             $this->printCN23();
-
-            return true;
-        }
-
-        $this->error = $response->error ?? 'server error';
-        return false;
+            return true; 
     }
 
     private function addOrderTracking()
@@ -85,20 +81,10 @@ class MileExpressLabelRepository
 
     private function printCN23()
     {
-        
-        if (Storage::disk('local')->exists('labels/'.$this->order->corrios_tracking_code.'.pdf')) {
-            return true;
-        }
-        
-        $mileExpressShipmentId = json_decode($this->order->api_response)->data->id;
-        
-        $labelResponse = MileExpressFacade::getLabel($mileExpressShipmentId);
-
-        if ($labelResponse->success == true) {
-            Storage::disk('local')->put("labels/{$this->order->corrios_tracking_code}.pdf", $labelResponse->data);
-            return true;
-        }
-
-        return $this->error = $labelResponse->error;
+        $labelPrinter = new CN23LabelMaker();
+        $labelPrinter->setOrder($this->order);
+        $labelPrinter->setService($this->order->getService());
+        $labelPrinter->setPacketType($this->order->getDistributionModality());
+        $labelPrinter->saveAs(storage_path("app/labels/{$this->order->corrios_tracking_code}.pdf"));
     }
 }
