@@ -48,10 +48,36 @@
     <table class="table table-hover-animation mb-0">
         <thead>
         <tr>
-            <th><a href="#" wire:click.prevent="sortBy('name')"> User </a></th>
-            <th><a href="#" wire:click.prevent="sortBy('pobox_number')"> WHR# </a></th>
-            <th><a href="#" wire:click.prevent="sortBy('balance')">Balance </a></th>
-            <th> Date </th>
+            <th><a href="#" wire:click.prevent="sortBy('name')"> User 
+            @if ( $sortBy == 'name' && $sortAsc )
+                <i class="fa fa-arrow-down ml-2"></i>
+            @elseif( $sortBy =='name' && !$sortAsc )
+                <i class="fa fa-arrow-up ml-2"></i>
+            @endif
+            </a></th>
+            <th><a href="#" wire:click.prevent="sortBy('pobox_number')"> WHR# 
+                @if ( $sortBy == 'pobox_number' && $sortAsc )
+                <i class="fa fa-arrow-down ml-2"></i>
+                @elseif( $sortBy =='pobox_number' && !$sortAsc )
+                    <i class="fa fa-arrow-up ml-2"></i>
+                @endif
+            </a></th>
+            <th><a href="#" wire:click.prevent="sortBy('balance')">Balance
+                @if ( $sortBy == 'balance' && $sortAsc )
+                <i class="fa fa-arrow-down ml-2"></i>
+                @elseif( $sortBy =='balance' && !$sortAsc )
+                    <i class="fa fa-arrow-up ml-2"></i>
+                @endif    
+            </a></th>
+            <th> 
+                <a href="#" wire:click.prevent="sortBy('created_at')">Date
+                    @if ( $sortBy == 'created_at' && $sortAsc )
+                    <i class="fa fa-arrow-down ml-2"></i>
+                    @elseif( $sortBy =='created_at' && !$sortAsc )
+                        <i class="fa fa-arrow-up ml-2"></i>
+                    @endif    
+                </a> 
+            </th>
         </tr>
         <tr>
             <th>
@@ -62,8 +88,8 @@
                 <input type="search" wire:model.debounce.500ms="poboxNumber" class="form-control">
             </th>
            
-            <th>  </th>
-            <th>  </th>
+            <th>   <input type="search" wire:model.debounce.500ms="balance" class="form-control"></th>
+            <th>   </th>
         </tr>
         </thead>
         <tbody>
