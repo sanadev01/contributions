@@ -50,26 +50,66 @@ class AffiliateSaleRepository
             return $query->get()->sortByDesc('order.user_id');
         }
 
-        if ( $request->search ){
-            $query->where('type',"$request->search")
-                ->orWhere('value',"{$request->search}")
-                ->orWhere('order_id', 'LIKE', "%{$request->search}%")
-                ->orWhere('commission', 'LIKE', "%{$request->search}%");
-           
-            $query->orWhereHas('order',function($query) use($request){
-                $query->where('weight', 'LIKE', "%{$request->search}%")
-                ->orWhere('customer_reference', 'LIKE', "%{$request->search}%")
-                ->orWhere('corrios_tracking_code', 'LIKE', "%{$request->search}%")
-                ->orWhere('warehouse_number', 'LIKE', "%{$request->search}%")
-                ->orWhere('tracking_id', 'LIKE', "%{$request->search}%");
-                return $query->whereHas('user',function($query) use($request) {
-                   return $query->where('name', 'LIKE', "%{$request->search}%");
+        if ( $request->name ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('name', 'LIKE', "%{$request->name}%");
+            });
+        }
+        if ( $request->user ){
+             $query->whereHas('user',function($query) use($request) {
+                   return $query->where('name', 'LIKE', "%{$request->user}%");
                });
-            })
-           ->orWhereHas('user',function($query) use($request) {
-            return $query->where('name', 'LIKE', "%{$request->search}%");
-        });
+        }
 
+        if ( $request->order ){
+            $query->where(function($query) use($request){
+                return $query->where('order_id', 'LIKE', "%{$request->order}%");
+            });
+        }
+       
+        if ( $request->whr ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('warehouse_number', 'LIKE', "%{$request->whr}%");
+            });
+        }
+        if ( $request->corrios_tracking ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('corrios_tracking_code', 'LIKE', "%{$request->corrios_tracking}%");
+            });
+        }
+        if ( $request->reference ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('customer_reference', 'LIKE', "%{$request->reference}%");
+            });
+        }
+
+        if ( $request->tracking ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('tracking_id', 'LIKE', "%{$request->tracking}%");
+            });
+        }
+        if ( $request->weight ){
+            $query->whereHas('order',function($query) use($request){
+                return $query->where('weight', 'LIKE', "%{$request->weight}%");
+            });
+        }
+
+        if ( $request->value ){
+            $query->where(function($query) use($request){
+                return $query->where('value',"{$request->value}");
+            });
+        }
+
+        if ( $request->saleType ){
+            $query->where(function($query) use($request){
+                return $query->where('type',"$request->saleType");
+            });
+        }
+
+        if ( $request->commission ){
+            $query->where(function($query) use($request){
+                return $query->where('commission', 'LIKE', "%{$request->commission}%");
+            });
         }
 
         $sales = $query->orderBy('id','desc');

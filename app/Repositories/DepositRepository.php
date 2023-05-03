@@ -367,6 +367,9 @@ class DepositRepository
         if($request->dateTo){
             $query->where('created_at','<=',$request->dateTo. ' 23:59:59');
         }
+        if($request->balance){
+            $query->where('balance',$request->balance);
+        }
         $query->whereHas('user',function($query) use($request){
             $search = $request->poboxNumber? $request->poboxNumber: $request->user;
             if($search){
