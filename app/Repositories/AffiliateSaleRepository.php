@@ -148,7 +148,7 @@ class AffiliateSaleRepository
             $query->where('is_paid',false);
         }
         
-        return $query->get()->sortByDesc('referrer_id');
+        return $query->get()->sortByDesc('order.user_id');
     }
 
 
