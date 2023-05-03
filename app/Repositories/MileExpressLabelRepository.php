@@ -52,8 +52,6 @@ class MileExpressLabelRepository
 
     private function getPrimaryLabel()
     {
-        // $response = MileExpressFacade::createShipment($this->order);
-        // return dd($response);  
             if(!$this->order->corrios_tracking_code){
                 $this->order->update([
                     'api_response' => null,
