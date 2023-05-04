@@ -55,10 +55,10 @@
                 <i class="fa fa-arrow-up ml-2"></i>
             @endif
             </a></th>
-            <th><a href="#" wire:click.prevent="sortBy('pobox_number')"> WHR# 
-                @if ( $sortBy == 'pobox_number' && $sortAsc )
+            <th><a href="#" wire:click.prevent="sortBy('user_id')"> POBox No# 
+                @if ( $sortBy == 'user_id' && $sortAsc )
                 <i class="fa fa-arrow-down ml-2"></i>
-                @elseif( $sortBy =='pobox_number' && !$sortAsc )
+                @elseif( $sortBy =='user_id' && !$sortAsc )
                     <i class="fa fa-arrow-up ml-2"></i>
                 @endif
             </a></th>
@@ -81,7 +81,7 @@
         </tr>
         <tr>
             <th>
-                <input type="search" wire:model.debounce.500ms="user" class="form-control">
+                <input type="search" wire:model.debounce.500ms="userName" class="form-control">
             </th>
            
             <th>
@@ -98,7 +98,7 @@
                 <td>{{ $deposit->user->name }}</td>
                 <td>{{ $deposit->user->pobox_number }}</td>
                 <td>{{ number_format($deposit->balance,2) }}</td>
-                <td>{{ $deposit->created_at->format('m/d/Y') }}</td>
+                <td>{{ optional($deposit->created_at)->format('m/d/Y') }}</td>
             </tr>
             @endforeach
         </tbody>
