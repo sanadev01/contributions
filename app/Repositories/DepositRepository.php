@@ -363,14 +363,16 @@ class DepositRepository
                 })->when($request->dateTo,function($query,$to){
                     $query->where('created_at','<=',$to. ' 23:59:59');
                 })->whereHas('user',function($query) use($request){
-                    $search = $request->poboxNumber? $request->poboxNumber: $request->user;
-                    if($search)
+                    if($request->poboxNumber)
                     {
-                        return $query->where('pobox_number',"%{$search}%")
-                        ->orWhere('name','LIKE',"%{$search}%")
-                        ->orWhere('last_name','LIKE',"%{$search}%")
-                        ->orWhere('email','LIKE',"%{$search}%")
-                        ->orWhere('id', $search);
+                        return $query->where('pobox_number',"%{$request->poboxNumber}%")
+                        ->orWhere('id', $request->poboxNumber);
+                    }
+                    if($request->user)
+                    {
+                        return $query->where('name','LIKE',"%{$request->user}%")
+                        ->orWhere('last_name','LIKE',"%{$request->user}%")
+                        ->orWhere('email','LIKE',"%{$request->user}%");
                     }
                 })
                 ->get();
