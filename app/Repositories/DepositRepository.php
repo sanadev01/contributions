@@ -374,11 +374,8 @@ class DepositRepository
                     }
                 })
                 ->get();
-
-          $query =  Deposit::whereIn('id',$lastDeposits->pluck('id'));
-  
-        $lability = $paginate ? $query->paginate($pageSize) : $query->get();
-        $hdlability = $lability; 
+        $query =  Deposit::whereIn('id',$lastDeposits->pluck('id'));
+        $hdlability = $paginate ? $query->paginate($pageSize) : $query->get(); 
         $sortParam = $orderBy=="balance" ? $orderBy:'user.'.$orderBy;
         if($orderType == 'asc'){
             return $hdlability->sortBy($sortParam);
