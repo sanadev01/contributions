@@ -33,7 +33,13 @@ class KPIReportsRepository
                     ShippingService::AJ_Packet_Standard, 
                     ShippingService::AJ_Packet_Express, 
                     ShippingService::Prime5, 
-                    ShippingService::GePS]);
+                    ShippingService::GePS,
+                    ShippingService::Post_Plus_Registered,
+                    ShippingService::Post_Plus_EMS,
+                    ShippingService::Post_Plus_Prime,
+                    ShippingService::Post_Plus_Premium,
+                    ShippingService::Prime5RIO,
+                ]);
             });
 
         if ($request->user_id) {

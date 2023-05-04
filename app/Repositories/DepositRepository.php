@@ -359,8 +359,9 @@ class DepositRepository
     }
     
     public function getUserLiability(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
-    { 
-        $query =  Deposit::with('user')->select('user_id','balance',DB::raw('MAX(created_at) as created_at'))
+    {
+
+        $lastDeposits =  Deposit::select(DB::raw('MAX(id) as id'))
                 ->groupBy('user_id')->when($request->dateFrom,function($query,$from){
                     $query->where('created_at','>=',$from. ' 00:00:00');
                 }) 
@@ -369,16 +370,20 @@ class DepositRepository
                 })->when($request->dateTo,function($query,$to){
                     $query->where('created_at','<=',$to. ' 23:59:59');
                 })->whereHas('user',function($query) use($request){
-                    if($request->poboxNumber){
+                    if($request->poboxNumber)
+                    {
                         return $query->where('pobox_number',"%{$request->poboxNumber}%")
                         ->orWhere('id', $request->poboxNumber);
                     }
-                    if($request->user){
+                    if($request->user)
+                    {
                         return $query->where('name','LIKE',"%{$request->user}%")
                         ->orWhere('last_name','LIKE',"%{$request->user}%")
                         ->orWhere('email','LIKE',"%{$request->user}%");
                     }
-                });
+                })
+                ->get();
+        $query =  Deposit::whereIn('id',$lastDeposits->pluck('id'));
         $hdlability = $paginate ? $query->paginate($pageSize) : $query->get(); 
         $sortParam = $orderBy=="name" ? 'user.'.$orderBy : $orderBy;
         if($orderType == 'asc'){
