@@ -97,7 +97,7 @@ class PostPlusShipment
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
         $data= json_decode($response);
         if ($response->successful() && !is_null($data->parcels)) {
-            return $this->prepareShipment($id);
+            return $this->responseSuccessful($id, 'Container preparation is successfull. Now you can register the unit.');
         } else {
             return $this->responseUnprocessable($data->detail);
         }

@@ -14,7 +14,6 @@
         </thead>
         <tbody>
             @foreach ($orders as $key => $order)
-            
             <tr id="{{ $key }}">
                 <td>
                     {{ $order->corrios_tracking_code }}
@@ -40,7 +39,7 @@
                     {{ $order->customer_reference }}
                 </td>
                 <td>
-                    @if ($editMode == true)
+                    @if ($editMode == true && $order->containers[0]->sequence == 1)
                         <button wire:click="removeOrder({{ $order->id }})" class="btn btn-danger">
                             Remove
                         </button>
