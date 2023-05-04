@@ -94,12 +94,14 @@
         </thead>
         <tbody>
             @foreach($deposits as $deposit)
+            @if($deposit->user)
             <tr>
                 <td>{{ $deposit->user->name }}</td>
                 <td>{{ $deposit->user->pobox_number }}</td>
                 <td>{{ number_format($deposit->balance,2) }}</td>
                 <td>{{ $deposit->created_at->format('m/d/Y') }}</td>
             </tr>
+            @endif
             @endforeach
         </tbody>
     </table>

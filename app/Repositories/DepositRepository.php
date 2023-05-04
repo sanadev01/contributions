@@ -353,29 +353,32 @@ class DepositRepository
     
     public function getUserLiability(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
     {
-        $query = Deposit::query();
-        if($request->dateFrom){
-            $query->where('created_at','>=',$request->dateFrom. ' 00:00:00');
-        }
-        if($request->dateTo){
-            $query->where('created_at','<=',$request->dateTo. ' 23:59:59');
-        }
-        if($request->balance){
-            $query->where('balance',$request->balance);
-        }
-        $query->whereHas('user',function($query) use($request){
-            $search = $request->poboxNumber? $request->poboxNumber: $request->user;
-            if($search){
-                return $query->where('pobox_number',"%{$search}%")
-                ->orWhere('name','LIKE',"%{$search}%")
-                ->orWhere('last_name','LIKE',"%{$search}%")
-                ->orWhere('email','LIKE',"%{$search}%")
-                ->orWhere('id', $search);
-            }
-        });
-        $query->latest();
+
+        $lastDeposits =  Deposit::select(DB::raw('MAX(id) as id'))
+                ->groupBy('user_id')->when($request->dateFrom,function($query,$from){
+                    $query->where('created_at','>=',$from. ' 00:00:00');
+                }) 
+                ->when($request->balance,function($query,$balance){
+                    $query->where('balance',$balance); 
+                })->when($request->dateTo,function($query,$to){
+                    $query->where('created_at','<=',$to. ' 23:59:59');
+                })->whereHas('user',function($query) use($request){
+                    $search = $request->poboxNumber? $request->poboxNumber: $request->user;
+                    if($search)
+                    {
+                        return $query->where('pobox_number',"%{$search}%")
+                        ->orWhere('name','LIKE',"%{$search}%")
+                        ->orWhere('last_name','LIKE',"%{$search}%")
+                        ->orWhere('email','LIKE',"%{$search}%")
+                        ->orWhere('id', $search);
+                    }
+                })
+                ->get();
+
+          $query =  Deposit::whereIn('id',$lastDeposits->pluck('id'));
+  
         $lability = $paginate ? $query->paginate($pageSize) : $query->get();
-        $hdlability = $lability->unique('user_id');
+        $hdlability = $lability; 
         $sortParam = $orderBy=="balance" ? $orderBy:'user.'.$orderBy;
         if($orderType == 'asc'){
             return $hdlability->sortBy($sortParam);
