@@ -10,7 +10,7 @@ class TableLiability extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $pageSize = 50;    
-    public $user;
+    public $userName;
     public $poboxNumber;
     public $dateFrom;
     public $dateTo;
@@ -58,18 +58,18 @@ class TableLiability extends Component
 
     public function updateUser($userId)
     {
-        $this->user = $userId;
+       $this->poboxNumber = $userId;
     }
 
     public function clearSearch()
     {
-        $this->user = null;
+       $this->poboxNumber = null;
     }
 
     public function getRequestData()
     {
         return request()->merge([
-            'user' => $this->user,            
+            'user' => $this->userName,            
             'poboxNumber' => $this->poboxNumber,            
             'dateFrom' => $this->dateFrom,
             'dateTo' => $this->dateTo,
