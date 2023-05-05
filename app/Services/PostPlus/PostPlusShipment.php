@@ -97,7 +97,7 @@ class PostPlusShipment
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
         $data= json_decode($response);
         if ($response->successful() && !is_null($data->parcels)) {
-            return $this->prepareShipment($id);
+            return $this->responseSuccessful($id, 'Container preparation is successfull. Now you can register the unit.');
         } else {
             return $this->responseUnprocessable($data->detail);
         }
@@ -108,6 +108,8 @@ class PostPlusShipment
         $url = $this->baseUri . "/shipments/$id/prepare";
         $body = [ "" => '', ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+        \Log::info('prepareShipment');
+        \Log::info($response);
         $data= json_decode($response);
         if ($response->successful() && optional($data)->shipmentSubmitToken) {
             return $this->submitShipment($data->shipmentSubmitToken, $id);
@@ -124,6 +126,8 @@ class PostPlusShipment
             "shipmentSubmitToken" =>  $token,
         ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+        \Log::info('submitShipment');
+        \Log::info($response);
         $data= json_decode($response);
         if ($response->successful()) {
             return $this->getShipmentDetails($id);
