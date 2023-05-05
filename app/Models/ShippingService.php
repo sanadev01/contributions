@@ -42,6 +42,7 @@ class ShippingService extends Model
     const Post_Plus_Prime = 777;
     const Post_Plus_Premium = 778;
     const Prime5RIO = 357;
+    const GSS_USPS = 477;
 
 
     protected $guarded = [];
