@@ -13,8 +13,8 @@ class SaleExport extends AbstractExportService
     private $currentRow = 1;
 
     public function __construct(Collection $sales)
-    {
-        $this->sales = $sales;
+    { 
+        $this->sales = $sales->sortByDesc('referrer_id');
 
         parent::__construct();
     }
