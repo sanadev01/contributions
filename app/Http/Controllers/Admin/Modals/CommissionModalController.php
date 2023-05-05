@@ -21,11 +21,8 @@ class CommissionModalController extends Controller
         $totalOrder = $sales->count();
         $totalCommission = number_format($sales->sum('commission'),2);      
         $userIds = $sales->pluck('user_id')->unique()->toArray();
-        $userNames = User::whereIn('id', $userIds )->pluck('name'); 
-        
+        $userNames = User::whereIn('id', $userIds )->pluck('name');
         $userSales = $sales->groupBy('user_id');
-        $from  = $sales[0]->created_at->format('Y-m-d');
-        $to  = $sales[$sales->count()-1]->created_at->format('Y-m-d');
-        return view('admin.modals.orders.commission', compact('userNames','from','to', 'totalCommission', 'totalOrder','sales','userSales'));
+        return view('admin.modals.orders.commission', compact('userNames', 'totalCommission', 'totalOrder','sales','userSales'));
     }
 }

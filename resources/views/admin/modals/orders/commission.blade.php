@@ -41,7 +41,7 @@
             <ul> 
                 
                      
-                    <li>  {{$from }} - {{$to  }}     </li>
+                    <li>  {{ $sales[0]->created_at->format('Y-m-d') }} - {{ $sales[$sales->count()-1]->created_at->format('Y-m-d')  }}     </li>
          
                     
             </ul>
