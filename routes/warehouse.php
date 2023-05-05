@@ -51,6 +51,7 @@ use App\Http\Controllers\Warehouse\SwedenPostCN35DownloadController;
 use App\Http\Controllers\Warehouse\SwedenPostManifestDownloadController;
 use App\Http\Controllers\Warehouse\PostPlusContainerController;
 use App\Http\Controllers\Warehouse\PostPlusContainerPackageController;
+use App\Http\Controllers\Warehouse\PostPlusUnitPrepareController;
 use App\Http\Controllers\Warehouse\PostPlusUnitRegisterController;
 use App\Http\Controllers\Warehouse\PostPlusCN35DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusCN38DownloadController;
@@ -157,8 +158,9 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     // Routes for Post Plus Container
     Route::resource('postplus_containers', PostPlusContainerController::class);
     Route::resource('postplus_container.packages', PostPlusContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('postplus_container/{container}/prepare', PostPlusUnitPrepareController::class)->name('postplus_container.prepare');
     Route::get('postplus_container/{container}/register', PostPlusUnitRegisterController::class)->name('postplus_container.register');
-    Route::get('postplus_container/{container}/download/', PostPlusCN35DownloadController::class)->name('postplus_container.download');
+    Route::get('postplus_container/{container}/download/{id}', PostPlusCN35DownloadController::class)->name('postplus_container.download');
     Route::get('postplus/{delivery_bill}/cn38', PostPlusCN38DownloadController::class)->name('postplus.cn38.download');
     Route::get('postplus/{delivery_bill}/manifest', PostPlusManifestDownloadController::class)->name('postplus.manifest.download');
     // Routes for Colombia Container

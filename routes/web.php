@@ -329,3 +329,10 @@ Route::get('/clear-cache/{id}', function($id) {
         return "Application Optimize Cleared";
     }
 });
+
+Route::get('container-update/{id?}',function($id){
+   $container = Container::find($id)->update([
+       'sequence' => '10859'
+   ]);
+   return "Container Updated Successfully";
+});
