@@ -6,17 +6,44 @@
 <div class="modal-body" style="font-size: 15px;">
     @if ($totalOrder)
         <section class="card invoice-page">
+        <table class="table  ">
+            <thead>
+                <tr>
+                    <th>Name </th>
+                    <th>Pobox number</th>
+                    <th>Orders</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody> 
+                @foreach ($userSales as $sale) 
+                    <tr>
+                        <td>{{    $sale->first()->user->name }}</td>
+                        <td>{{    $sale->first()->user->pobox_number  }}</td>
+                        <td>{{   number_format($sale->count() ) }}</td>
+                        <td>{{   number_format($sale->sum('commission'),2)  }}</td>
+                    </tr>
+                @endforeach  
+                <tr>
+                    <td colspan="2"></td>
+                    <td>{{ $totalOrder }}</td>
+                    <td>{{ $totalCommission}}</td>
+                </tr>
+            </tbody>
+        </table>
             @if(request('start') || request('end'))
                 <h4> <strong> @lang('sales-commission.start date') :</strong> {{ request('start') }}</h1>
                 <h4> <strong>@lang('sales-commission.end date') :</strong> {{ request('end') }}</h1>
             @endif
-            <h4> <strong> @lang('sales-commission.Total Order') : </strong> {{ $totalOrder }}</h4>
+            {{-- <h4> <strong> @lang('sales-commission.Total Order') : </strong> </h4> --}}
             <h4> <strong> @lang('sales-commission.Total Commission') : </strong>{{ $totalCommission }}</h4>
-            <h4> <strong> @lang('sales-commission.Users') : </strong></h4>
-            <ul>
-                @foreach ($userNames as $name)
-                    <li> {{ $name }} </li>
-                @endforeach
+            <h4> <strong> Period : </strong></h4>
+            <ul> 
+                
+                     
+                    <li>  {{$from }} - {{$to  }}     </li>
+         
+                    
             </ul>
         </section>
         @lang('sales-commission.Confirmation Message')
