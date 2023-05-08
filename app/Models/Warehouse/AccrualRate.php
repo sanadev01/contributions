@@ -80,6 +80,9 @@ class AccrualRate extends Model
         if ( $this->service == Package::SERVICE_CLASS_Prime5RIO ){
             return "Prime5RIO";
         }
+        if ( $this->service == Package::SERVICE_CLASS_GDE ){
+            return "GDE";
+        }
         return '';
     }
 
