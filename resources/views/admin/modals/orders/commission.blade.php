@@ -9,13 +9,11 @@
         <table class="   ">
             <thead>
                 <tr>
-                    <th>Name </th>
+                    <th>Name</th>
                     <th>Pobox number</th>
                     <th>Refferers</th>
-                    <th> Orders</th>
-                    <th>  Balnace</th>
-                    {{-- <th>Orders</th>
-                    <th>Balance</th> --}}
+                    <th>Orders</th>
+                    <th>Balnace</th>
                 </tr>
             </thead>
             <tbody> 
@@ -41,7 +39,7 @@
                     <tr>
                         <td colspan="2"></td>
                         <td colspan="3">
-                            <hr>  
+                            <hr class="m-1">  
                         </td>   
                     </tr>
                     <tr>
@@ -54,20 +52,20 @@
                 </tr>
                 <tr>
                     <td colspan="5">
-                        <hr>  
+                        <hr class="m-1">  
                     </td>  
                 </tr>
                 @endforeach
                 <tr>
                     <td colspan="2"></td>
-                    <td><strong>Overall Total</strong></td>
+                    <td><strong>Grand Total</strong></td>
                     <td><strong>{{ $totalOrder }} </strong></td>
                     <td> <strong>{{ $totalCommission}} USD </strong></td>
                 </tr>
             </tbody>
         </table>
             @if(request('start') || request('end'))
-                Period : <h4> {{ request('start') ? request('start').' to':'before'  }}   {{ request('end')??date('Y-m-d') }}</h4>
+                <h4 class="mt-2">Period :  <b>{{ request('start') ? request('start').' to':'before'  }}   {{ request('end')??date('Y-m-d') }}</b></h4>
             @endif 
         </section>
         @lang('sales-commission.Confirmation Message')
