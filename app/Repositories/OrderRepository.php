@@ -520,7 +520,6 @@ class OrderRepository
             $uspsShippingService = new USPSShippingService($order);
             $upsShippingService = new UPSShippingService($order);
             $fedExShippingService = new FedExShippingService($order);
-            $gdeShippingService = new GDEShippingService($order);
             
             foreach (ShippingService::query()->active()->get() as $shippingService) 
             {
@@ -533,10 +532,6 @@ class OrderRepository
                 }
 
                 if ($fedExShippingService->isAvailableFor($shippingService)) {
-                    $shippingServices->push($shippingService);
-                }
-
-                if ($gdeShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
                 }
             }
@@ -603,6 +598,8 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::GePS_EFormat)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_GROUND)
             || $shippingServices->contains('service_sub_class', ShippingService::Parcel_Post)
+            || $shippingServices->contains('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)
+            || $shippingServices->contains('service_sub_class', ShippingService::GDE_FIRST_CLASS)
             || $shippingServices->contains('service_sub_class', ShippingService::PostNL))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
@@ -613,7 +610,9 @@ class OrderRepository
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS
                         && $shippingService->service_sub_class != ShippingService::USPS_PRIORITY_INTERNATIONAL
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL
-                        && $shippingService->service_sub_class != ShippingService::USPS_GROUND;
+                        && $shippingService->service_sub_class != ShippingService::USPS_GROUND
+                        && $shippingService->service_sub_class != ShippingService::GDE_PRIORITY_MAIL
+                        && $shippingService->service_sub_class != ShippingService::GDE_FIRST_CLASS;
                 });
             }
             if(!setting('ups', null, User::ROLE_ADMIN))

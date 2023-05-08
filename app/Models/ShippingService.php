@@ -49,7 +49,8 @@ class ShippingService extends Model
     const Post_Plus_Prime = 777;
     const Post_Plus_Premium = 778;
     const Prime5RIO = 357;
-    const GDE_Service = 4387;
+    const GDE_PRIORITY_MAIL = 4387;
+    const GDE_FIRST_CLASS = 4388;
 
     
 
@@ -226,7 +227,15 @@ class ShippingService extends Model
 
     public function isGDEService()
     {
-        if($this->service_sub_class == self::GDE_Service){
+        if($this->service_sub_class == self::GDE_PRIORITY_MAIL || self::GDE_FIRST_CLASS){
+            return true;
+        }
+        return false;
+    }
+
+    public function isInboundDomesticService()
+    {
+        if (collect($this->inboundDomesticShippingServices())->contains($this->service_sub_class)) {
             return true;
         }
         return false;
@@ -270,7 +279,6 @@ class ShippingService extends Model
             self::UPS_GROUND, 
             self::FEDEX_GROUND,
             self::USPS_GROUND,
-            self::GDE_Service,
         ];
     }
 
@@ -325,7 +333,15 @@ class ShippingService extends Model
             self::Parcel_Post,
         ];
     }
-    
+
+    private function inboundDomesticShippingServices()
+    {
+        return [
+            self::GDE_PRIORITY_MAIL,
+            self::GDE_FIRST_CLASS,
+        ];
+    }
+
     public function getIsMilliExpressAttribute()
     { 
         return $this->service_sub_class == ShippingService::Mile_Express;
@@ -373,6 +389,14 @@ class ShippingService extends Model
     public function getIsUspsGroundAttribute()
     { 
         return $this->service_sub_class == ShippingService::USPS_GROUND;
+    }
+    public function getIsGdePriorityAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::GDE_PRIORITY_MAIL;
+    }
+    public function getIsGdeFirstClassAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::GDE_FIRST_CLASS;
     }
 
     public function getIsAnjunChinaAttribute()

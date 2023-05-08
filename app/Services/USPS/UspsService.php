@@ -105,12 +105,12 @@ class UspsService
             ],
         ];
 
-        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||$order->shippingService->service_sub_class == ShippingService::GDE_Service || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+        if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
             $request_body = array_add($request_body, 'customs_form', $this->setCustomsForm($order));
             array_forget($request_body, 'usps.image_size');
         }
 
-        if ($order->sender_country_id != Country::US && ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS)) {
+        if ($order->sender_country_id != Country::US && ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $order->shippingService->service_sub_class == ShippingService::GDE_PRIORITY_MAIL || $order->shippingService->service_sub_class == ShippingService::GDE_FIRST_CLASS)) {
             $request_body['usps']['gde_origin_country_code'] = Country::find($order->sender_country_id)->code;
         }
         
@@ -428,12 +428,10 @@ class UspsService
 
     private function setServiceClass($service)
     {
+        // dd($service);
         switch ($service) {
             case ShippingService::USPS_PRIORITY:
                 return 'Priority';
-                break;
-            case ShippingService::GDE_Service:
-                return 'PriorityInternational';
                 break;
             case 'Priority':
                 return 'Priority';
@@ -458,7 +456,13 @@ class UspsService
                 break;     
             case ShippingService::USPS_FIRSTCLASS_INTERNATIONAL:
                 return 'FirstClassInternational';
-                break;               
+                break;
+            case ShippingService::GDE_FIRST_CLASS:
+                return 'FirstClass';
+                break;
+            case ShippingService::GDE_PRIORITY_MAIL:
+                return 'Priority';
+                break;                     
             default:
                 return 'FirstClassInternational';
                 break;

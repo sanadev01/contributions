@@ -345,7 +345,9 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND) {
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GDE_PRIORITY_MAIL ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GDE_FIRST_CLASS) {
 
                 return 'usps';
 
@@ -385,11 +387,6 @@ class Order extends Model implements Package
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium){
 
                 return 'PostPlus';
-
-            }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::GDE_Service){
-
-                return 'GDE';
 
             }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::AJ_Standard_CN || (optional($this->shippingService)->service_sub_class == ShippingService::AJ_Express_CN)){
@@ -788,9 +785,6 @@ class Order extends Model implements Package
 
     public function isInternational()
     {
-        if($this->shippingService->isGDEService()) {
-            return true;
-        }
         return $this->recipient->country->id != Country::US;
     }
 
