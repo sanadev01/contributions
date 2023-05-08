@@ -252,7 +252,7 @@ class UspsService
             ],
         ];
 
-        if ($service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+        if ($service == ShippingService::USPS_PRIORITY_INTERNATIONAL ||$service == ShippingService::GDE_Service || $service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
             
             $request_body = array_add($request_body, 'value', $this->calculateItemsValue($order->items));
 
@@ -322,7 +322,7 @@ class UspsService
             ],
         ];
 
-        if ($request->service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $request->service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
+        if ($request->service == ShippingService::USPS_PRIORITY_INTERNATIONAL || $request->service == ShippingService::GDE_Service || $request->service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
             $request_body = array_add($request_body, 'customs_form', $this->setCustomsForm($order));
             array_forget($request_body, 'usps.image_size');
         }
@@ -428,14 +428,15 @@ class UspsService
 
     private function setServiceClass($service)
     {
+        // dd($service);
         switch ($service) {
-            case ShippingService::USPS_PRIORITY || ShippingService::GDE_PRIORITY_MAIL:
+            case ShippingService::USPS_PRIORITY:
                 return 'Priority';
                 break;
             case 'Priority':
                 return 'Priority';
                 break;     
-            case ShippingService::USPS_FIRSTCLASS || ShippingService::GDE_FIRST_CLASS:
+            case ShippingService::USPS_FIRSTCLASS:
                 return 'FirstClass';
                 break;
             case 'FirstClass':
@@ -455,7 +456,13 @@ class UspsService
                 break;     
             case ShippingService::USPS_FIRSTCLASS_INTERNATIONAL:
                 return 'FirstClassInternational';
-                break;               
+                break;
+            case ShippingService::GDE_FIRST_CLASS:
+                return 'FirstClass';
+                break;
+            case ShippingService::GDE_PRIORITY_MAIL:
+                return 'Priority';
+                break;                     
             default:
                 return 'FirstClassInternational';
                 break;

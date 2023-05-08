@@ -5,10 +5,10 @@ return [
     'order-history-month' => 'Orders History (Month :month)',
     'order-history-year' => 'Orders History (Year :year)',
     'Today Orders' =>'Today Orders',
-    'Total Month Order'=>'Total :month Order',
+    'Month Orders'=>':month Orders',
     'Completed Orders'=>'Completed Orders',
-    'Current Year' =>'Current Year Total Orders',
-    'Total Orders'=>'Total Order Since: 2020',
+    'Current Year' =>':year Orders',
+    'Total Orders'=>'Orders',
     'Start Date'=>'Start Date',
     'End Date'=>'End Date'
     

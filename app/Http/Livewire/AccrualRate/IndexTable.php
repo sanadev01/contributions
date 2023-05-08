@@ -59,28 +59,48 @@ class IndexTable extends Component
             'value' => Package::SERVICE_CLASS_Prime5,
         ];
         $this->services[10] = [
+            'name' => 'Colombia Urbano',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_URBANO,
+        ];
+        $this->services[11] = [
+            'name' => 'Colombia Nacional',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_NACIONAL,
+        ];
+        $this->services[12] = [
+            'name' => 'Colombia Trayetos',
+            'value' => Package::SERVICE_CLASS_COLOMBIA_TRAYETOS,
+        ];
+        $this->services[13] = [
+            'name' => 'Homedelivebr Express',
+            'value' => Package::SERVICE_CLASS_MILE_EXPRESS,
+        ];
+        $this->services[14] = [
             'name' => 'Post Plus Registered',
             'value' => Package::SERVICE_CLASS_Post_Plus_Registered,
         ];
-        $this->services[11] = [
+        $this->services[15] = [
             'name' => 'Post Plus EMS',
             'value' => Package::SERVICE_CLASS_Post_Plus_EMS,
         ];
-        $this->services[12] = [
+        $this->services[16] = [
             'name' => 'Parcel Post',
             'value' => Package::SERVICE_CLASS_Parcel_Post,
         ];
-        $this->services[13] = [
+        $this->services[17] = [
             'name' => 'Post Plus Prime',
             'value' => Package::SERVICE_CLASS_Post_Plus_Prime,
         ];
-        $this->services[14] = [
+        $this->services[18] = [
             'name' => 'PrimeRIO',
             'value' => Package::SERVICE_CLASS_Post_Plus_Premium,
         ];
-        $this->services[15] = [
+        $this->services[19] = [
             'name' => 'Prime5RIO',
             'value' => Package::SERVICE_CLASS_Prime5RIO,
+        ];
+        $this->services[20] = [
+            'name' => 'GDE',
+            'value' => Package::SERVICE_CLASS_GDE,
         ];
         return $this->services;
     }
