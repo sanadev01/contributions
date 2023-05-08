@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Modals;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\AffiliateSale;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\AffiliateSaleRepository;
