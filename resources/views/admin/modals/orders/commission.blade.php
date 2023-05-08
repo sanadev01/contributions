@@ -20,7 +20,7 @@
             </thead>
             <tbody> 
                 @foreach ($userSales as $sale) 
-                <tr class="border: 1px solid #000;"> 
+                <tr> 
                     <td>{{  $sale['name'] }}</td>
                     <td>{{  $sale['pobox_number']  }}</td>
                     <td>
@@ -52,14 +52,12 @@
                     </tr>
                 
                 </tr>
-                <tr style="border-top: none;">
+                <tr>
                     <td colspan="5">
                         <hr>  
                     </td>  
                 </tr>
-                
-                @endforeach  
-   
+                @endforeach
                 <tr>
                     <td colspan="2"></td>
                     <td><strong>Overall Total</strong></td>
