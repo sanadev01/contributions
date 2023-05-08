@@ -11,21 +11,42 @@
                 <tr>
                     <th>Name </th>
                     <th>Pobox number</th>
-                    <th>Orders</th>
-                    <th>Balance</th>
+                    <th>Refferers</th>
+                    <th> Orders</th>
+                    <th>  Balnace</th>
+                    {{-- <th>Orders</th>
+                    <th>Balance</th> --}}
                 </tr>
             </thead>
             <tbody> 
                 @foreach ($userSales as $sale) 
-                    <tr>
-                        <td>{{  $sale->first()->user->name }}</td>
-                        <td>{{  $sale->first()->user->pobox_number  }}</td>
-                        <td>{{  number_format($sale->count() ) }}</td>
-                        <td>{{  number_format($sale->sum('commission'),2)  }} USD</td>
-                    </tr>
+                <tr> 
+                    <td>{{  $sale['name'] }}</td>
+                    <td>{{  $sale['pobox_number']  }}</td>
+                    <td>
+                        @foreach ($sale['referrer'] as $referrer)
+                            {{ $referrer->first()->referrer->name }} <br>
+                        @endforeach
+                        Total
+                    </td>
+                    <td>
+                        @foreach ($sale['referrer'] as $referrer)
+                            {{ $referrer->count() }} <br>
+                        @endforeach 
+                         {{ $sale['orders'] }}
+                    </td>
+                    <td>
+                        @foreach ($sale['referrer'] as $referrer)
+                            {{ number_format($referrer->sum('commission'), 2) }}  USD <br>
+                        @endforeach
+                       {{   $sale['commission']  }} USD 
+                    </td>
+                
+                </tr>
                 @endforeach  
                 <tr>
                     <td colspan="2"></td>
+                    <td>Total</td>
                     <td>{{ $totalOrder }}</td>
                     <td>{{ $totalCommission}} USD</td>
                 </tr>

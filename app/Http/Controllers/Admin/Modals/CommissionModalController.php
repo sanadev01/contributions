@@ -21,8 +21,17 @@ class CommissionModalController extends Controller
         $totalOrder = $sales->count();
         $totalCommission = number_format($sales->sum('commission'),2);      
         $userIds = $sales->pluck('user_id')->unique()->toArray();
-        $userNames = User::whereIn('id', $userIds )->pluck('name');
-        $userSales = $sales->groupBy('user_id');
+        $userNames = User::whereIn('id', $userIds )->pluck('name'); 
+        
+        $userSales = $sales->groupBy('user_id')->transform(function($item, $k) {
+            return [
+                'name' => $item->first()->user->name,
+                'pobox_number' => $item->first()->user->pobox_number,
+                'commission' =>  number_format($item->sum('commission'), 2),
+                'orders' => $item->count(),
+                'referrer' => $item->groupBy('referrer_id'),
+            ];
+        }); 
         return view('admin.modals.orders.commission', compact('userNames', 'totalCommission', 'totalOrder','sales','userSales'));
     }
 }
