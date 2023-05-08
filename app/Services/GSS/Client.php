@@ -5,9 +5,9 @@ namespace App\Services\GSS;
 use App\Models\Order;
 use App\Models\OrderTracking;
 use Illuminate\Support\Facades\Http;
+use App\Services\GSS\Services\Parcel; 
 use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
-use App\Services\PostPlus\Services\Parcel; 
 use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Contracts\Container;
 use App\Services\Correios\Models\PackageError;
@@ -47,25 +47,27 @@ class Client{
             'locationId' => $this->locationId,
             'workStationId' => $this->workStationId,
         ];
-        // $response = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/Authentication/login", $authParams);
+        // $response = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Authentication/login", $authParams);
         $response = $this->client->post("$this->baseUrl/Authentication/login",['json' => $authParams ]);
-        $data = json_decode($response);
-        dd($data);
-        if($response->successful() && $data->accessToken) {
+        $data = json_decode($response->getBody()->getContents());
+        if($data->accessToken) {
             return [ 
                 'Authorization' => "Bearer {$data->accessToken}",
-                'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
             ];
         }
     }
     public function createPackage(Package $order)
-    {  
-        dd($this->getHeaders());
-        
+    {
+        // dd("$this->baseUrl/Package/LabelAndProcessPackage");
         $shippingRequest = (new Parcel())->getRequestBody($order);
-        try {
-            $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);
+        // try {
+            $response = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
+            // $response = $this->client->post("$this->baseUrl/Package/LabelAndProcessPackage",[
+            //     'headers' => $this->getHeaders(),
+            //     'json' => $shippingRequest 
+            // ]);
+            dd($response);
             $data = json_decode($response);
             if(optional(optional($data)->references)->printId) {
                 $trackingNumber = $data->identifiers->parcelNr;
@@ -98,9 +100,9 @@ class Client{
                 return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->errorDetails[0])->detail);
             }
             return null;
-        }catch (\Exception $exception){
-            return new PackageError($exception->getMessage());
-        }
+        // }catch (\Exception $exception){
+        //     return new PackageError($exception->getMessage());
+        // }
     }
 
     public function createContainer(Container $container)

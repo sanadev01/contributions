@@ -547,7 +547,8 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::GePS)
             || $shippingServices->contains('service_sub_class', ShippingService::GePS_EFormat)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_GROUND)
-            || $shippingServices->contains('service_sub_class', ShippingService::Parcel_Post))
+            || $shippingServices->contains('service_sub_class', ShippingService::Parcel_Post)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_USPS))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {

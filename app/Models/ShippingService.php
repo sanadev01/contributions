@@ -177,6 +177,14 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isGSSService()
+    {
+        if($this->service_sub_class == self::GSS_USPS){
+            return true;
+        }
+        return false;
+    }
+
     private function anjunShippingServices()
     {
         return [

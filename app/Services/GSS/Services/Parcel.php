@@ -59,7 +59,7 @@ class Parcel {
                //Package Information
                'package' => [
                   'mailingAgentID' => 'HERCOFRGTUSM',
-                  'packageID' => ($refNo ? $refNo : $order->tracking_id).' HD-'.$order->id,
+                  'packageID' => '99756621246HD',
                   'serviceType' => 'LBL',
                   'rateType' => $type,
                   'packagePhysicalCount' => 1,
