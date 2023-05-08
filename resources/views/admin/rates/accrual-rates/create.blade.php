@@ -36,7 +36,6 @@
                                             <option value="30">Brazil</option>
                                             <option value="46">Chile</option>
                                             <option value="50">Colombia</option>
-                                            <option value="250">United States</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
