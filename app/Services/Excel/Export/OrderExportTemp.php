@@ -49,7 +49,7 @@ class OrderExportTemp extends AbstractExportService
             $type = 'Prime';
          } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
             $type = 'ParcelUPU';
-         }
+         } 
             $user = $order->user; 
             $this->setCellValue('A'.$row, $order->containers->first()->awb);
             $this->setCellValue('B'.$row, $order->containers->first()->seal_no );
@@ -60,8 +60,8 @@ class OrderExportTemp extends AbstractExportService
             $this->setCellValue('G'.$row, $order->recipient->state->name);
             $this->setCellValue('H'.$row, $order->recipient->city);
             $this->setCellValue('I'.$row, $order->recipient->address.' '.$order->recipient->street_no);
-            $this->setCellValue('J'.$row, $order->recipient->phone);
-            $this->setCellValue('K'.$row, $order->recipient->phone);
+            $this->setCellValue('J'.$row, $order->recipient->phone.' ');
+            $this->setCellValue('K'.$row, $order->recipient->phone.' ');
             $this->setCellValue('L'.$row, $order->recipient->email);
             $this->setCellValue('M'.$row, $order->recipient->country->code);
             $this->setCellValue('N'.$row, '');
