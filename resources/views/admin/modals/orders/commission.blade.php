@@ -13,7 +13,7 @@
                     <th>Pobox number</th>
                     <th>Referrals</th>
                     <th>Orders</th>
-                    <th>Balnace</th>
+                    <th>Balance</th>
                 </tr>
             </thead>
             <tbody> 
