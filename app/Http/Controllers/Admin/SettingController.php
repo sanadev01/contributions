@@ -71,6 +71,7 @@ class SettingController extends Controller
         $request->has('geps_service') ? saveSetting('geps_service', true, $this->adminId) : saveSetting('geps_service', false, $this->adminId);
         $request->has('sweden_post') ? saveSetting('sweden_post', true, $this->adminId) : saveSetting('sweden_post', false, $this->adminId);
         $request->has('post_plus') ? saveSetting('post_plus', true, $this->adminId) : saveSetting('post_plus', false, $this->adminId);
+        $request->has('gss_usps') ? saveSetting('gss_usps', true, $this->adminId) : saveSetting('gss_usps', false, $this->adminId);
 
         ($request->usps_profit != null ) ? saveSetting('usps_profit', $request->usps_profit, $this->adminId) : saveSetting('usps_profit', 0, $this->adminId);
         ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $this->adminId) : saveSetting('ups_profit', 0, $this->adminId);

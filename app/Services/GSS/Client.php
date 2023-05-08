@@ -14,21 +14,26 @@ use App\Services\Correios\Models\PackageError;
 
 class Client{
 
-    protected $host;
+    protected $userId;
+    protected $password;
+    protected $locationId;
+    protected $workStationId;
     protected $baseUrl;
-    protected $client;
-
-    protected $apiKey;
 
     public function __construct()
     {   
         if(app()->isProduction()){
-            $this->apiKey = config('gss.production.x-api-key');
-            $this->baseUri = config('gss.production.base_uri');
-
+            $this->userId = config('gss.production.userId');
+            $this->password = config('gss.production.password');
+            $this->locationId = config('gss.production.locationId');
+            $this->workStationId = config('gss.production.workStationId');
+            $this->baseUrl = config('gss.production.baseUrl');
         }else{ 
-            $this->apiKey = config('gss.test.x-api-key');
-            $this->baseUri = config('gss.test.base_uri');
+            $this->userId = config('gss.test.userId');
+            $this->password = config('gss.test.password');
+            $this->locationId = config('gss.test.locationId');
+            $this->workStationId = config('gss.test.workStationId');
+            $this->baseUrl = config('gss.test.baseUrl');
         }
 
         $this->client = new GuzzleClient();
@@ -36,13 +41,28 @@ class Client{
 
     private function getHeaders()
     {
-        return [ 
-            'x-api-key' => $this->apiKey,
-            'Content-Type' => 'application/json'
+        $authParams = [
+            'userId' => $this->userId,
+            'password' => $this->password,
+            'locationId' => $this->locationId,
+            'workStationId' => $this->workStationId,
         ];
+        // $response = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/Authentication/login", $authParams);
+        $response = $this->client->post("$this->baseUrl/Authentication/login",['json' => $authParams ]);
+        $data = json_decode($response);
+        dd($data);
+        if($response->successful() && $data->accessToken) {
+            return [ 
+                'Authorization' => "Bearer {$data->accessToken}",
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ];
+        }
     }
     public function createPackage(Package $order)
     {  
+        dd($this->getHeaders());
+        
         $shippingRequest = (new Parcel())->getRequestBody($order);
         try {
             $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);

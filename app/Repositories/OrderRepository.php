@@ -91,7 +91,8 @@ class OrderRepository
                     ShippingService::USPS_FIRSTCLASS,
                     ShippingService::USPS_PRIORITY_INTERNATIONAL,
                     ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
-                    ShippingService::USPS_GROUND
+                    ShippingService::USPS_GROUND,
+                    ShippingService::GSS_USPS
                 ];
             }
             if($request->carrier == 'UPS'){
@@ -578,6 +579,13 @@ class OrderRepository
                 $this->shippingServiceError = 'GePS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::GePS;
+                });
+            }
+
+            if (!setting('gss_usps', null, User::ROLE_ADMIN) && !setting('gss_usps', null, auth()->user()->id)) {
+                $this->shippingServiceError = 'GSS is not enabled for this user';
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::GSS_USPS;
                 });
             }
             

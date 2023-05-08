@@ -320,6 +320,23 @@
                                     </div>
                                 </div>
                                 @endif
+                                @if(setting('gss_usps', null, \App\Models\User::ROLE_ADMIN))
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">GSS<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="GSS USPS">
+                                                <input type="checkbox" name="gss_usps" id="gss_usps" @if(setting('gss_usps', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
                                 {{-- <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Stripe<span class="text-danger"></span></label>
                                     <div class="col-md-6">
