@@ -11,7 +11,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Pobox number</th>
-                    <th>Refferers</th>
+                    <th>Referrals</th>
                     <th>Orders</th>
                     <th>Balnace</th>
                 </tr>
@@ -23,18 +23,20 @@
                     <td>{{  $sale['pobox_number']  }}</td>
                     <td>
                         @foreach ($sale['referrer'] as $referrer)
-                            {{ $referrer->first()->referrer->name }} <br>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    {{ $referrer->first()->referrer->name }} 
+                                </td>
+                                <td>
+                                    {{  $referrer->count() }} 
+                                </td>
+                                <td>
+                                    {{ number_format($referrer->sum('commission'), 2) }} <br>
+                                </td>
+                            </tr>
                         @endforeach
-                    </td>
-                    <td>
-                        @foreach ($sale['referrer'] as $referrer)
-                            {{ $referrer->count() }} <br>
-                        @endforeach
-                    </td>
-                    <td>
-                        @foreach ($sale['referrer'] as $referrer)
-                            {{ number_format($referrer->sum('commission'), 2) }}  USD <br>
-                        @endforeach 
                     </td>
                     <tr>
                         <td colspan="2"></td>
