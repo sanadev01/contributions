@@ -19,9 +19,7 @@ class CommissionModalController extends Controller
         $sales =  (new AffiliateSaleRepository)->get(request()->merge([
             'status' => 'unpaid',
         ]), false);
-        // $query = AffiliateSale::has('user')->with('order')->has('order');
-        // $query->where('is_paid',false);
-        // $sales = $query->groupBy('user_id')->get();
+        
         $totalOrder = $sales->count();
         $totalCommission = number_format($sales->sum('commission'),2);
         
