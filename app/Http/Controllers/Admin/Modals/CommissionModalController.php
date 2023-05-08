@@ -17,12 +17,12 @@ class CommissionModalController extends Controller
         }
         $sales =  (new AffiliateSaleRepository)->get(request()->merge([
             'status' => 'unpaid',
-        ]), false); 
+        ]), false);
         $totalOrder = $sales->count();
         $totalCommission = number_format($sales->sum('commission'),2);      
         $userIds = $sales->pluck('user_id')->unique()->toArray();
-        $userNames = User::whereIn('id',$userIds)->pluck('name'); 
-                 
-        return view('admin.modals.orders.commission', compact('userNames', 'totalCommission', 'totalOrder','sales'));
+        $userNames = User::whereIn('id', $userIds )->pluck('name');
+        $userSales = $sales->groupBy('user_id');
+        return view('admin.modals.orders.commission', compact('userNames', 'totalCommission', 'totalOrder','sales','userSales'));
     }
 }
