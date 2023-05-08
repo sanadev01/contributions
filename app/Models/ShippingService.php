@@ -42,6 +42,8 @@ class ShippingService extends Model
     const Post_Plus_Prime = 777;
     const Post_Plus_Premium = 778;
     const Prime5RIO = 357;
+    const GDE_PRIORITY_MAIL = 4387;
+    const GDE_FIRST_CLASS = 4388;
 
 
     protected $guarded = [];
@@ -176,6 +178,14 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isInboundDomesticService()
+    {
+        if (collect($this->inboundDomesticShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+        return false;
+    }
+
     private function anjunShippingServices()
     {
         return [
@@ -233,6 +243,15 @@ class ShippingService extends Model
             self::Parcel_Post,
         ];
     }
+
+    private function inboundDomesticShippingServices()
+    {
+        return [
+            self::GDE_PRIORITY_MAIL,
+            self::GDE_FIRST_CLASS,
+        ];
+    }
+
     public function getIsMilliExpressAttribute()
     { 
         return $this->service_sub_class == ShippingService::Mile_Express;
@@ -280,6 +299,14 @@ class ShippingService extends Model
     public function getIsUspsGroundAttribute()
     { 
         return $this->service_sub_class == ShippingService::USPS_GROUND;
+    }
+    public function getIsGdePriorityAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::GDE_PRIORITY_MAIL;
+    }
+    public function getIsGdeFirstClassAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::GDE_FIRST_CLASS;
     }
     
 }
