@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Modals;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Repositories\AffiliateSaleRepository;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\AffiliateSaleRepository;
 
 class CommissionModalController extends Controller
 {
@@ -18,11 +17,19 @@ class CommissionModalController extends Controller
         $sales =  (new AffiliateSaleRepository)->get(request()->merge([
             'status' => 'unpaid',
         ]), false);
+        
         $totalOrder = $sales->count();
-        $totalCommission = number_format($sales->sum('commission'),2);      
-        $userIds = $sales->pluck('user_id')->unique()->toArray();
-        $userNames = User::whereIn('id', $userIds )->pluck('name');
-        $userSales = $sales->groupBy('user_id');
-        return view('admin.modals.orders.commission', compact('userNames', 'totalCommission', 'totalOrder','sales','userSales'));
+        $totalCommission = number_format($sales->sum('commission'),2);
+        
+        $userSales = $sales->groupBy('user_id')->transform(function($item, $k) {
+            return [
+                'name' => $item->first()->user->name,
+                'pobox_number' => $item->first()->user->pobox_number,
+                'commission' =>  number_format($item->sum('commission'), 2),
+                'orders' => $item->count(),
+                'referrer' => $item->groupBy('referrer_id'),
+            ];
+        }); 
+        return view('admin.modals.orders.commission', compact('totalCommission', 'totalOrder','sales','userSales'));
     }
 }
