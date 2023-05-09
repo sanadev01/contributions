@@ -12,7 +12,12 @@
         <div class="form-group col-12 col-sm-6 col-md-6">
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Description') <span class="text-danger"></span></label>
-                <input type="text" class="form-control descp" required name="items[{{$keyId}}][description]" value="{{ optional($item)['description'] }}">
+                <input type="text" id="description{{$keyId}}" class="form-control descp" required name="items[{{$keyId}}][description]" onkeyup="descriptionChange({{$keyId}},this)" value="{{ optional($item)['description'] }}">
+                <small id="characterCount{{$keyId}}" class="form-text text-muted"></small>
+                <div id="feedback{{$keyId}}">
+                </div>
+
+
                 @error("items.{$keyId}.description")
                     <div class="help-block text-danger">{{ $message }}</div>
                 @enderror
@@ -68,3 +73,24 @@
         </div>
     </div>
 </div>
+<script>
+    function descriptionChange(id,event){
+            descriptionLength = event.value.length;
+            $('#description'+id).removeClass('is-invalid is-valid');
+            $('#feedback'+id).removeClass('invalid-feedback valid-feedback');
+            $('#characterCount'+id).text(descriptionLength+'/200');
+                if(descriptionLength<=50)
+                    updateFeedback('Weak Description!',false,id)            
+                else if(descriptionLength<=150)
+                    updateFeedback('Good Description!',true,id)
+                else if(descriptionLength<=200)
+                    updateFeedback('Very Good Description!',true,id)        
+                else
+                    updateFeedback('Limit Exceeded!',false,id)
+        }
+        function updateFeedback(message,isValidFeedback,id) {
+            $('#description'+id).addClass(isValidFeedback?'is-valid':'is-invalid');
+            $('#feedback'+id).addClass(isValidFeedback?'valid-feedback':'invalid-feedback');
+            $('#feedback'+id).text(message);
+        }  
+</script>
