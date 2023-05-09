@@ -76,17 +76,27 @@
     function descriptionChange(id,event){
             descriptionLength = event.value.length; 
             $('#feedback'+id).removeClass('text-success  text-danger');
-            $('#characterCount'+id).text(descriptionLength+'/200');
-                if(descriptionLength<=50)
-                    updateFeedback('Weak Description!',false,id)            
-                else if(descriptionLength<=150)
-                    updateFeedback('Good Description!',true,id)
-                else if(descriptionLength<=200)
+            serviceCode = $('#shipping_service_id option:selected').attr('data-service-code');
+             
+           if(serviceCode == 7777){
+            limit = 50;
+           }else{
+            limit = 200;
+           } 
+            $('#characterCount'+id).text(' '+descriptionLength+'/'+limit);
+                if(descriptionLength<=50 && descriptionLength<limit)
+                    if(limit<=50&&descriptionLength>20)
+                        updateFeedback('Good Description!',true,id) 
+                    else           
+                        updateFeedback('Weak Description!',false,id)            
+                else if(descriptionLength<=150 && descriptionLength<limit)
+                    updateFeedback('Good Description!',true,id && descriptionLength<limit)
+                else if(descriptionLength<=200 && descriptionLength<limit )
                     updateFeedback('Very Good Description!',true,id)        
                 else
                     updateFeedback('Limit Exceeded!',false,id)
         }
-        function updateFeedback(message,isValidFeedback,id) { 
+        function updateFeedback(message,isValidFeedback,id) {
             $('#feedback'+id).addClass(isValidFeedback?'text-success':'text-danger');
             $('#feedback'+id).text(message);
         }  
