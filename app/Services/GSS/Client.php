@@ -59,50 +59,30 @@ class Client{
     }
     public function createPackage(Package $order)
     {
-        // dd("$this->baseUrl/Package/LabelAndProcessPackage");
         $shippingRequest = (new Parcel())->getRequestBody($order);
-        // try {
-            $response = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
-            // $response = $this->client->post("$this->baseUrl/Package/LabelAndProcessPackage",[
-            //     'headers' => $this->getHeaders(),
-            //     'json' => $shippingRequest 
-            // ]);
-            dd($response);
-            $data = json_decode($response);
-            if(optional(optional($data)->references)->printId) {
-                $trackingNumber = $data->identifiers->parcelNr;
-                $printId = $data->prints[0]->id;
-                if($trackingNumber && $printId) {
-                    $getLabel = Http::withHeaders($this->getHeaders())->get("$this->baseUri/parcels/parcel-prints/get-many?ids=$printId&IncludeContents=true");
-                    $getLabelResponse = json_decode($getLabel);
-                    if(!$getLabelResponse->prints[0]->hasErrors) {
-                        $order->update([
-                            'corrios_tracking_code' => $trackingNumber,
-                            'api_response' => json_encode($getLabelResponse),
-                            'cn23' => [
-                                "tracking_code" => $trackingNumber,
-                                "stamp_url" => route('warehouse.cn23.download',$order->id),
-                                'leve' => false
-                            ],
-                        ]);
-                        // store order status in order tracking
-                        return $this->addOrderTracking($order);
-                    }
-                    if($getLabelResponse->prints[0]->hasErrors) {
-                        return new PackageError("Error while print label. Code: ".optional(optional($getLabelResponse)->prints)->errorDetails[0]);
-                    }
-                }
-            }
-            else if (isset($data->status->hasErrors)){
-                return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->status)->errorDetails[0]);
+        try {
+            $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
+            $response = json_decode($request);
+            if($response->success) {
+                $order->update([
+                    'corrios_tracking_code' => $response->trackingNumber,
+                    'api_response' => json_encode($response),
+                    'cn23' => [
+                        "tracking_code" => $response->trackingNumber,
+                        "stamp_url" => route('warehouse.cn23.download',$order->id),
+                        'leve' => false
+                    ],
+                ]);
+                // store order status in order tracking
+                return $this->addOrderTracking($order);
             }
             else {
-                return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->errorDetails[0])->detail);
+                return new PackageError("Error while creating parcel. Code".$response->statusCode.". Description: ".$response->message);
             }
             return null;
-        // }catch (\Exception $exception){
-        //     return new PackageError($exception->getMessage());
-        // }
+        }catch (\Exception $exception){
+            return new PackageError($exception->getMessage());
+        }
     }
 
     public function createContainer(Container $container)
