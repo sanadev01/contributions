@@ -75,16 +75,18 @@
             descriptionLength = event.value.length; 
             $('#feedback'+id).removeClass('text-success  text-danger');
             serviceCode = $('#shipping_service_id option:selected').attr('data-service-code');
-             
-           if(serviceCode == 7777){
+              
+            if(serviceCode == 357 || serviceCode == 773 ){
+            limit = 60;
+           }else if(serviceCode == 540 || serviceCode == 537  || serviceCode ==  541 ){
             limit = 50;
            }else{
             limit = 200;
            }   
             if(descriptionLength>limit)
             {
-                
-                $('#description'+id).val( $('#description'+id).val().substr(0,limit));
+                $('#description'+id).val($('#description'+id).val().substr(0,limit-1));
+                descriptionLength = limit;
             }
 
             $('#characterCount'+id).text(' '+descriptionLength+'/'+limit);
