@@ -12,10 +12,8 @@
         <div class="form-group col-12 col-sm-6 col-md-6">
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Description') <span   id="feedback{{$keyId}}"></span></label>
-                <input type="text" class="form-control descp" required name="items[{{$keyId}}][description]" onkeyup="descriptionChange({{$keyId}},this)" value="{{ optional($item)['description'] }}">
+                <input type="text" id="description{{$keyId}}" class="form-control descp" required name="items[{{$keyId}}][description]" max="200" min="0" onkeyup="descriptionChange({{$keyId}},this)" value="{{ optional($item)['description'] }}">
                 <small id="characterCount{{$keyId}}" class="form-text text-muted"></small>
-                 
-
 
                 @error("items.{$keyId}.description")
                     <div class="help-block text-danger">{{ $message }}</div>
@@ -76,17 +74,35 @@
     function descriptionChange(id,event){
             descriptionLength = event.value.length; 
             $('#feedback'+id).removeClass('text-success  text-danger');
-            $('#characterCount'+id).text(descriptionLength+'/200');
-                if(descriptionLength<=50)
-                    updateFeedback('Weak Description!',false,id)            
-                else if(descriptionLength<=150)
-                    updateFeedback('Good Description!',true,id)
-                else if(descriptionLength<=200)
+            serviceCode = $('#shipping_service_id option:selected').attr('data-service-code');
+              
+            if(serviceCode == 357 || serviceCode == 773 ){
+                limit = 60;
+            }else if(serviceCode == 540 || serviceCode == 537  || serviceCode ==  541 ){
+                limit = 50;
+            }else{
+                limit = 200;
+            }   
+            if(descriptionLength>limit)
+            {
+                $('#description'+id).val($('#description'+id).val().substr(0,limit-1));
+                descriptionLength = limit;
+            }
+
+            $('#characterCount'+id).text(' '+descriptionLength+'/'+limit);
+                if(descriptionLength<=50 && descriptionLength<limit)
+                    if(limit<=50&&descriptionLength>20)
+                        updateFeedback('Good Description!',true,id) 
+                    else           
+                        updateFeedback('Weak Description!',false,id)            
+                else if(descriptionLength<=150 && descriptionLength<limit)
+                    updateFeedback('Good Description!',true,id && descriptionLength<limit)
+                else if(descriptionLength<=200 && descriptionLength<limit )
                     updateFeedback('Very Good Description!',true,id)        
                 else
                     updateFeedback('Limit Exceeded!',false,id)
         }
-        function updateFeedback(message,isValidFeedback,id) { 
+        function updateFeedback(message,isValidFeedback,id) {
             $('#feedback'+id).addClass(isValidFeedback?'text-success':'text-danger');
             $('#feedback'+id).text(message);
         }  
