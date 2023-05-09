@@ -36,7 +36,7 @@ class USPSShippingService
 
     public function isAvailableForInternational($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||$shippingService->service_sub_class == ShippingService::GDE_Service || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }
