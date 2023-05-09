@@ -11,8 +11,12 @@
         </div>
         <div class="form-group col-12 col-sm-6 col-md-6">
             <div class="controls">
-                <label>@lang('orders.order-details.order-item.Description') <span class="text-danger"></span></label>
-                <input type="text" class="form-control descp" required name="items[{{$keyId}}][description]" value="{{ optional($item)['description'] }}">
+                <label>@lang('orders.order-details.order-item.Description') <span   id="feedback{{$keyId}}"></span></label>
+                <input type="text" class="form-control descp" required name="items[{{$keyId}}][description]" onkeyup="descriptionChange({{$keyId}},this)" value="{{ optional($item)['description'] }}">
+                <small id="characterCount{{$keyId}}" class="form-text text-muted"></small>
+                 
+
+
                 @error("items.{$keyId}.description")
                     <div class="help-block text-danger">{{ $message }}</div>
                 @enderror
@@ -68,3 +72,22 @@
         </div>
     </div>
 </div>
+<script>
+    function descriptionChange(id,event){
+            descriptionLength = event.value.length; 
+            $('#feedback'+id).removeClass('text-success  text-danger');
+            $('#characterCount'+id).text(descriptionLength+'/200');
+                if(descriptionLength<=50)
+                    updateFeedback('Weak Description!',false,id)            
+                else if(descriptionLength<=150)
+                    updateFeedback('Good Description!',true,id)
+                else if(descriptionLength<=200)
+                    updateFeedback('Very Good Description!',true,id)        
+                else
+                    updateFeedback('Limit Exceeded!',false,id)
+        }
+        function updateFeedback(message,isValidFeedback,id) { 
+            $('#feedback'+id).addClass(isValidFeedback?'text-success':'text-danger');
+            $('#feedback'+id).text(message);
+        }  
+</script>
