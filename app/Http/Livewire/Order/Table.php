@@ -85,6 +85,7 @@ class Table extends Component
             'orderType' => $this->orderType,
             'paymentStatus' => $this->paymentStatus,
             'userType' => $this->userType,
+            'search' => $this->search,
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 

@@ -117,39 +117,4 @@ class AffiliateSaleRepository
         return $paginate ? $sales->paginate($pageSize) : $sales->get();
     }
 
-    public function getSalesForExport($request)
-    {   
-        $query = AffiliateSale::has('user')->with('order')->has('order');
-        
-        if (Auth::user()->isUser()) {
-            $query->where('user_id', Auth::id());
-        }
-        
-        // if ($request->user_id) {
-        //     $query->where('user_id', $request->user_id);
-        // }
-
-        $startDate = $request->start_date . ' 00:00:00';
-        $endDate = $request->end_date.' 23:59:59';
-        
-        if ( $request->start_date ){
-            $query->where('created_at','>', $startDate);
-        }
-        
-        if ( $request->end_date ){
-            $query->where('created_at','<=',$endDate);
-        }
-        
-        if ( $request->status == 'paid' ){
-            $query->where('is_paid', true);
-        }
-        
-        if ( $request->status == 'unpaid' ){
-            $query->where('is_paid',false);
-        }
-        
-        return $query->get()->sortByDesc('order.user_id');
-    }
-
-
 }

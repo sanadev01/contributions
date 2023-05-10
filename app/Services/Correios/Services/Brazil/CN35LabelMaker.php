@@ -2,6 +2,7 @@
 
 namespace App\Services\Correios\Services\Brazil;
 
+use App\Models\Warehouse\Container;
 use App\Services\Correios\Contracts\HasLableExport;
 
 class CN35LabelMaker implements HasLableExport
@@ -21,8 +22,9 @@ class CN35LabelMaker implements HasLableExport
     private $service;
     private $unitCode;
     private $OrderWeight;
+    private $colombiaContainer = false;
 
-    public function __construct()
+    public function __construct(Container $container)
     {
         $this->companyName = '<img src="'.public_path('images/hd-1cm.png').'" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
         $this->packetType = 'PACKET STANDARD';
@@ -30,6 +32,19 @@ class CN35LabelMaker implements HasLableExport
         $this->serialNumber = 1;
         $this->flightNumber = '';
         $this->dispatchDate = '';
+        $order = $container->orders->first();
+        
+        if($order){ 
+              $this->setType($order->getOriginalWeight('kg')); 
+        }
+        
+        $this->weight =  $container->getWeight();
+        $this->dispatchNumber = $container->dispatch_number;
+        $this->originAirpot = 'MIA';
+        $this->setService($container->getServiceCode());
+        $this->destinationAirport = $container->getDestinationAriport();        
+        $this->itemsCount = $container->getPiecesCount();
+        $this->unitCode = $container->getUnitCode();
     }
 
     public function setCompanyName($companyName)
@@ -50,6 +65,16 @@ class CN35LabelMaker implements HasLableExport
         }
         if ( $this->service == 3 ){
             $this->packetType = 'PACKET MINI';
+        }
+
+        if ( $this->service == 10 ){
+            $this->packetType = 'COLOMBIA SERVICE';
+            $this->colombiaContainer = true;
+        }
+
+        if ( $this->service == 15 ){
+            $this->packetType = 'Homedelivebr Express';
+            $this->companyName = 'Express Courier';
         }
 
         return $this;
@@ -111,6 +136,14 @@ class CN35LabelMaker implements HasLableExport
                                         CNPJ: 34.028.316/7189-93';
                 return $this;
             }
+        }
+        if($this->packetType == 'Homedelivebr Express'){
+            $this->officeAddress = 'Homedelivebr Express <br/>
+                                    Rua Lagoa Dourada 371 <br/>
+                                    Cocaia I Guarulhos-SP <br/>
+                                    &nbsp;<br/>
+                                    &nbsp;<br/>';
+            return $this;
         }
         $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/>
                                 Centro Internacional de Curitiba –SE/PR <br/>
@@ -176,6 +209,7 @@ class CN35LabelMaker implements HasLableExport
             'service' => $this->service,
             'unitCode' => $this->unitCode,
             'OrderWeight' => $this->OrderWeight,
+            'colombiaContainer' => $this->colombiaContainer,
         ];
     }
 
