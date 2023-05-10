@@ -112,7 +112,7 @@
                                 <label class="col-md-3 text-md-right">@lang('shippingservice.max_weight')<span
                                         class="text-danger">*</span></label>
                                 <div class="col-md-6">
-                                    <input type="number" step=".1" required class="form-control"
+                                    <input type="number" step=".001" required class="form-control"
                                         name="max_weight_allowed" placeholder="@lang('shippingservice.max_weight')"
                                         value="{{ old('max_weight_allowed', $shippingService->max_weight_allowed) }}">
                                     @error('max_weight_allowed')
