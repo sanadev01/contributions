@@ -25,10 +25,10 @@
         {{ optional($sale->order->user)->name }}
     </td>
     <td>
-        <a href="#" data-toggle="modal" data-target="#hd-modal"
-        data-url="{{ route('admin.modals.order.invoice', $sale->order) }}" title="@lang('sales-commission.Show Order Details')">
-        {{ $sale->order->warehouse_number }}
-    </a>
+        <a href="#" @admin data-toggle="modal" data-target="#hd-modal"
+        data-url="{{ route('admin.modals.order.invoice', $sale->order) }}" title="@lang('sales-commission.Show Order Details')" @endadmin>
+            {{ $sale->order->warehouse_number }}
+        </a>
     </td>
 
     <td>
