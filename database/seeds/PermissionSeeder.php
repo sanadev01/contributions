@@ -487,17 +487,7 @@ class PermissionSeeder extends Seeder
                 'slug' => 'update_adjustment',
                 'group' => 'Tax',
                 'description' => 'User can update adjustment'
-            ],
-
-
-
-
-
-
-
-
-
- 
+            ], 
             [
                 'slug' => 'consolidate_parcel',
                 'group' => 'Order',

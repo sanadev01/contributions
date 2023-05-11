@@ -17,7 +17,6 @@ class ServicesController extends Controller
     public function index(Order $parcel)
     {
         $this->authorize('updateConsolidation',$parcel);
-
         $parcel->load('services');
         $services = HandlingService::query()->active()->get();
         return view('admin.consolidation.services',compact('services','parcel'));
@@ -31,8 +30,7 @@ class ServicesController extends Controller
      */
     public function store(Request $request, Order $parcel)
     {
-        $this->authorize('updateConsolidation',$parcel);
-             
+        $this->authorize('updateConsolidation',$parcel);             
         $parcel->syncServices($request->get('services',[]));
         session()->flash('alert-success', __('consolidation.service_updated_success'));
         return \redirect()->route('admin.parcels.index');
