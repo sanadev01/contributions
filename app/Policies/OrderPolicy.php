@@ -70,7 +70,7 @@ class OrderPolicy
         return $user->hasPermission('delete_parcel') && $user->id == $order->user_id;
     }
 
-    public function consolidate_parcel(User $user)
+    public function consolidateParcel(User $user)
     {
         return $user->hasPermission('consolidate_parcel');
     }
