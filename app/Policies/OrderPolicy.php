@@ -205,9 +205,16 @@ class OrderPolicy
         return $user->hasPermission('print_label');
 
     }
+
     public function printBulkLabel(User $user)
     {
         return $user->hasPermission('print_bulk_label');
+
+    }
+
+    public function viewTrashedOrder(User $user)
+    {
+        return $user->hasPermission('view_trashed_order');
 
     }
 
