@@ -90,7 +90,7 @@
                                                 </div>
                                             @endif
 
-                                            @if($container->isRegistered() && $container->isShipped())
+                                            @if($container->isShipped())
                                                 <div class="btn btn-success">
                                                     Shipped
                                                 </div>
@@ -110,11 +110,7 @@
                                                             <a href="{{ route('warehouse.postplus_containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
-                                                            @if($container->sequence == 1)
-                                                                <a href="{{ route('warehouse.postplus_container.prepare',$container) }}" class="dropdown-item w-100">
-                                                                    <i class="feather icon-box"></i> Prepare Unit
-                                                                </a>
-                                                            @elseif(!$container->isRegistered() && $container->hasOrders())
+                                                            @if( !$container->isRegistered() && $container->hasOrders())
                                                                 <a href="{{ route('warehouse.postplus_container.register',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Register Unit
                                                                 </a>
@@ -131,13 +127,16 @@
                                                             <i class="feather icon-box"></i> Temp Manifest
                                                         </a>
                                                         @if( $container->isRegistered() )
-                                                            <a href="{{ route('warehouse.postplus_container.download',[$container, '3']) }}" class="dropdown-item w-100">
+                                                            <!-- <a href="{{ route('warehouse.postplus_container.download',[$container, '3']) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Get CN31
                                                             </a>
                                                             <a href="{{ route('warehouse.postplus_container.download',[$container, '2'] ) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Get CN33
                                                             </a>
                                                             <a href="{{ route('warehouse.postplus_container.download',[$container, '1']) }}" class="dropdown-item w-100">
+                                                                <i class="feather icon-box"></i> Get CN35
+                                                            </a> -->
+                                                            <a href="{{ route('warehouse.postplus_container.download',$container) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Get CN35
                                                             </a>
                                                         @endif
