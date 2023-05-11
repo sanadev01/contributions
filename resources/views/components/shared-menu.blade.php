@@ -1,7 +1,8 @@
 @user
-<li class="sub-category"> <span>Apps</span> </li>
-
     @php $user = Auth()->user(); @endphp
+@if($user->amazon_api_enabled && $user->api_enabled && $user->api_token || !auth()->user()->hideBoxControl() && $user->can('view_box_control') || $user->can('view_label_post'))
+    <li class="sub-category"> <span>Apps</span> </li>
+@endif
     @if($user->amazon_api_enabled && $user->api_enabled && $user->api_token)
         <li class="nav-item" style="background: #f79400;color: #fff;font-weight: 700;font-size: 16px;">
             <a class="nav-link" target="__blank"
@@ -26,7 +27,7 @@
 </li>
 @endcan
 @endif
-@can('view_label_post',)
+@can('view_label_post')
 <li class="nav-item">
     <a class="nav-link" target="__blank" href="https://labelposteasy.com/entre.php?tk={{ hash_hmac("sha256",Auth()->user()->email.Auth()->user()->pobox_number.date("YmdH" ,strtotime("now + 60 minutes")),'6a3db6e59e693493f3518d1b39e39dbb26730d2ce0ee1185a2e90ef025d1a5c7') }}&id={{ Auth()->user()->pobox_number }}">
         <svg viewBox="0 0 24 24" height="15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">

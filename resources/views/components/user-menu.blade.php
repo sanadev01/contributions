@@ -301,7 +301,7 @@
                         <span class="menu-title" data-i18n="Dashboard">@lang('menu.Accounting')</span>
                     </a>
                     <ul class="menu-content">
-                        @can('viewAny', App\Models\PaymentInvoice::class)
+                        @can('view_payment_invoice', App\Models\PaymentInvoice::class)
                             <li class="nav-item {{ $isActive(['admin.payment-invoices.index', 'admin.payment-invoices.edit']) }}">
                                 <a href="{{ route('admin.payment-invoices.index') }}">
                                     <i class=" feather icon-circle"></i>
@@ -371,7 +371,7 @@
                         </ul>
                     </li>
                 @endif
-                @can('labelPrint', App\Models\Order::class)
+                @can('printBulkLabel', App\Models\Order::class)
                     <li class="{{ $isActive(['admin.label.scan.create']) }}">
                         <a href="{{ route('admin.label.scan.create') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
@@ -457,34 +457,36 @@
                     @endadmin
                     </ul>
                 </li>
-                <li class="nav-item has-sub sidebar-group">
-                    <a href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-divide-square">
-                            <rect x="3" y="3" width="18" height="18" rx="2"
-                                ry="2"></rect>
-                            <line x1="8" y1="12" x2="16" y2="12"></line>
-                            <line x1="12" y1="16" x2="12" y2="16"></line>
-                            <line x1="12" y1="8" x2="12" y2="8"></line>
-                        </svg>
-                        <span class="menu-title" data-i18n="Dashboard">Calculators</span>
-                    </a>
-                    <ul class="menu-content">
-                        <li class="nav-item {{ $isActive(['calculator.index']) }} ">
-                            <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title" data-i18n="Apps">@lang('menu.calculator')</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {{ $isActive(['us-calculator.index']) }} ">
-                            <a class="nav-link" href="{{ route('us-calculator.index') }}" target="_blank">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title" data-i18n="Apps">@lang('menu.uscalculator')</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                @can('view_calculator')
+                    <li class="nav-item has-sub sidebar-group">
+                        <a href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-divide-square">
+                                <rect x="3" y="3" width="18" height="18" rx="2"
+                                    ry="2"></rect>
+                                <line x1="8" y1="12" x2="16" y2="12"></line>
+                                <line x1="12" y1="16" x2="12" y2="16"></line>
+                                <line x1="12" y1="8" x2="12" y2="8"></line>
+                            </svg>
+                            <span class="menu-title" data-i18n="Dashboard">Calculators</span>
+                        </a>
+                        <ul class="menu-content">
+                            <li class="nav-item {{ $isActive(['calculator.index']) }} ">
+                                <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
+                                    <i class="feather icon-circle"></i>
+                                    <span class="menu-title" data-i18n="Apps">@lang('menu.calculator')</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ $isActive(['us-calculator.index']) }} ">
+                                <a class="nav-link" href="{{ route('us-calculator.index') }}" target="_blank">
+                                    <i class="feather icon-circle"></i>
+                                    <span class="menu-title" data-i18n="Apps">@lang('menu.uscalculator')</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcan
                 @can('view',App\Models\OrderTracking::class)
                     <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
                         <a href="{{ route('admin.tracking.index') }}" target="_blank">
@@ -622,14 +624,12 @@
                         <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                             class="feather feather-user">
-                            @can('view_menu', App\Models\Ticket::class)
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                        <span data-i18n="Apps"> @lang('menu.profile') </span>
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="12" cy="7" r="4"></circle>
+                                        </svg>
+                          <span data-i18n="Apps"> @lang('menu.profile') </span>
                     </a>
                 </li>
-            @endcan
 
                 @can('viewAny', Spatie\Activitylog\Models\Activity::class)
                     <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
@@ -661,8 +661,8 @@
                     @endcan
                 @endadmin
                 <x-shared-menu></x-shared-menu>
-                <li class="sub-category"> <span class="text-white">HELP</span> </li>
                 @can('view_api_docs')
+                <li class="sub-category"> <span class="text-white">HELP</span> </li>
                     <li class="nav-item">
                         <a class="nav-link" target="__blank"
                             href="https://documenter.getpostman.com/view/16057364/TzeXmSxT">
@@ -677,9 +677,8 @@
                         </a>
                     </li>
                 @endcan
-                @endcan
             @endif            
-            @can('view_menu', App\Models\Ticket::class)
+            @can('view_tickets', App\Models\Ticket::class)
                 <li class="nav-item {{ $isActive(['admin.tickets.index', 'admin.tickets.show']) }}">
                     <a class="nav-link" href="{{ route('admin.tickets.index') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
