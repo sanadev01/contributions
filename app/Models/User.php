@@ -6,7 +6,6 @@ use App\Models\Order;
 use Illuminate\Support\Str;
 use App\Models\AffiliateSale;
 use App\Models\CommissionSetting;
-use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
@@ -250,11 +249,7 @@ class User extends Authenticatable
 
     public function getPoboxAddress()
     {
-        try{
         return optional(PoBox::first())->getCompleteAddress();
-        }catch(Exception $e){ 
-            return  '';
-        }
     }
 
     public function hasRole($slug)
