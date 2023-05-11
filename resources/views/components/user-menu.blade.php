@@ -123,7 +123,7 @@
                                             class="feather icon-circle"></i><span class="menu-title">Pickups</span></a>
                                 </li>
                             @endadmin
-                            @can('view_trashed_order',App\Models\Order::class)
+                            @can('viewTrashedOrder',App\Models\Order::class)
                                 <li class="nav-item {{ $isActive(['admin.trash-orders.index']) }}">
                                     <a href="{{ route('admin.trash-orders.index') }}">
                                         <i class="feather icon-circle"></i>
