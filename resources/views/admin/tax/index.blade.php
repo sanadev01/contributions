@@ -9,7 +9,7 @@
                             @lang('tax.Manage Tax Services')
                         </h4> 
                         <div>
-                        @can('create_adjustment',App\Models\Tax::class)
+                        @can('createAdjustment',App\Models\Tax::class)
                             <a href="{{ route('admin.adjustment.create') }}" class="btn btn-success">
                                 @lang('tax.Adjustment')
                             </a>

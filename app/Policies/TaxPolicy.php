@@ -26,15 +26,15 @@ class TaxPolicy
     }
 
        
-    public function view_adjustment(User $user)
+    public function viewAdjustment(User $user)
     {   
         return $user->hasPermission('view_adjustment');
     }
-    public function update_adjustment(User $user,Tax $tax)
+    public function updateAdjustment(User $user,Tax $tax)
     {   
         return $user->hasPermission('update_adjustment') && $tax->user_id == $user->id;
     }
-    public function create_adjustment(User $user)
+    public function createAdjustment(User $user)
     {   
         return $user->hasPermission('create_adjustment');
     }
