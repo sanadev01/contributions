@@ -18,7 +18,7 @@ class SelectPackagesController extends Controller
      */
     public function index(PreAlertRepository $preAlertRepository)
     {
-        $this->authorize('consolidate_parcel',Order::class);
+        $this->authorize('consolidateParcel',Order::class);
         return view('admin.consolidation.index');
     }
 
@@ -30,7 +30,7 @@ class SelectPackagesController extends Controller
      */
     public function store(CreateRequest $request,PreAlertRepository $preAlertRepository)
     {
-        $this->authorize('consolidate_parcel',Order::class);
+        $this->authorize('consolidateParcel',Order::class);
         $consolidatedOrder = $preAlertRepository->createConsolidationRequest($request);
         if ( $consolidatedOrder ){
             session()->flash('alert-success',__('consolidation.success_message_created'));
