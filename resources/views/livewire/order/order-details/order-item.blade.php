@@ -85,18 +85,20 @@
             }   
             if(descriptionLength>limit)
             {
-                $('#description'+id).val($('#description'+id).val().substr(0,limit-1));
+                $('#description'+id).val($('#description'+id).val().substr(0,limit));
                 descriptionLength = limit;
             }
 
             $('#characterCount'+id).text(' '+descriptionLength+'/'+limit);
-                if(descriptionLength<=50 && descriptionLength<limit)
-                    if(limit<=50&&descriptionLength>20)
+                if(descriptionLength<=50 && descriptionLength<limit){
+                    
+                    if(limit<=60&&descriptionLength>(limit/2))
                         updateFeedback('Good Description!',true,id) 
-                    else           
-                        updateFeedback('Weak Description!',false,id)            
+                    else 
+                        updateFeedback('Weak Description!',false,id)  
+                }
                 else if(descriptionLength<=150 && descriptionLength<limit)
-                    updateFeedback('Good Description!',true,id && descriptionLength<limit)
+                    updateFeedback('Good Description!',true,id)
                 else if(descriptionLength<=200 && descriptionLength<limit )
                     updateFeedback('Very Good Description!',true,id)        
                 else
