@@ -301,7 +301,7 @@
                         <span class="menu-title" data-i18n="Dashboard">@lang('menu.Accounting')</span>
                     </a>
                     <ul class="menu-content">
-                        @can('view_payment_invoice', App\Models\PaymentInvoice::class)
+                        @can('viewPaymentInvoice', App\Models\PaymentInvoice::class)
                             <li class="nav-item {{ $isActive(['admin.payment-invoices.index', 'admin.payment-invoices.edit']) }}">
                                 <a href="{{ route('admin.payment-invoices.index') }}">
                                     <i class=" feather icon-circle"></i>

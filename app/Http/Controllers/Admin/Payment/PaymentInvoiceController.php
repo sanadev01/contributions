@@ -19,7 +19,7 @@ class PaymentInvoiceController extends Controller
      */
     public function index()
     {
-        $this->authorize('view_payment_invoice',PaymentInvoice::class);
+        $this->authorize('viewPaymentInvoice',PaymentInvoice::class);
         return view('admin.payment-invoices.index');
     }
 
