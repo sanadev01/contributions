@@ -11,7 +11,7 @@
                         <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
                             class="btn btn-primary mr-1 waves-effect waves-light"><i
                                 class="feather icon-filter"></i></button>
-                        @can('create_adjustment',App\Models\Tax::class)
+                        @can('createAdjustment',App\Models\Tax::class)
                             <a href="{{ route('admin.adjustment.create') }}" class="btn btn-success">
                                 @lang('tax.Adjustment')
                             </a>
