@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Repositories\Warehouse\GSSContainerRepository;
-use App\Http\Requests\Warehouse\GSS\CreateContainerRequest;
-use App\Http\Requests\Warehouse\GSS\UpdateContainerRequest;
+use App\Http\Requests\Warehouse\GSSContainer\CreateContainerRequest;
+use App\Http\Requests\Warehouse\GSSContainer\UpdateContainerRequest;
 
 class GSSContainerController extends Controller
 {

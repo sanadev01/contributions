@@ -6,11 +6,11 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('warehouse.containers.Create Container')</h4>
-                        <a href="{{ route('warehouse.postplus_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
+                        <a href="{{ route('warehouse.gss_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('warehouse.postplus_containers.store') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('warehouse.gss_containers.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="controls row mb-1 align-items-center my-2">
