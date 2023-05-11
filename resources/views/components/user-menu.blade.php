@@ -42,12 +42,12 @@
                     </li>
                 @endif
                 @can('view',App\Models\OrderTracking::class)
-                <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
-                    <a href="{{ route('admin.tracking.index') }}" target="_blank">
-                        <i class=" feather icon-map-pin"></i>
-                        <span class="menu-title">@lang('menu.trackings')</span>
-                    </a>
-                </li>
+                    <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
+                        <a href="{{ route('admin.tracking.index') }}" target="_blank">
+                            <i class=" feather icon-map-pin"></i>
+                            <span class="menu-title">@lang('menu.trackings')</span>
+                        </a>
+                    </li>
                 @endcan
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.profile.index') }}">
