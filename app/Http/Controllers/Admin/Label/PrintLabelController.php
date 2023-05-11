@@ -32,7 +32,7 @@ class PrintLabelController extends Controller
      */
     public function create(Order $order)
     {
-        $this->authorize('labelPrint',$order);
+        $this->authorize('printBulkLabel',$order);
         return view('admin.print-label.create');
     }
 

@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin\Payment;
 use App\Http\Controllers\Controller;
 use App\Models\PaymentInvoice;
 use App\Repositories\PaymentInvoiceRepository;
-use Illuminate\Http\Request;
-
 class PaymentInvoiceController extends Controller
 {
     public function __construct()
@@ -21,6 +19,7 @@ class PaymentInvoiceController extends Controller
      */
     public function index()
     {
+        $this->authorize('view_payment_invoice',PaymentInvoice::class);
         return view('admin.payment-invoices.index');
     }
 

@@ -7,17 +7,19 @@
                     <div class="card-header">
                         <h4 class="mb-0">
                             @lang('tax.Manage Tax Services')
-                        </h4>
-                        @can('create', App\Models\HandlingService::class)
+                        </h4> 
                         <div>
-                        <a href="{{ route('admin.adjustment.create') }}" class="btn btn-success">
-                            @lang('tax.Adjustment')
-                        </a>
-                        <a href="{{ route('admin.tax.create') }}" class="btn btn-primary">
-                            @lang('tax.Pay Tax')
-                        </a>
-                        </div>
+                        @can('create_adjustment',App\Models\Tax::class)
+                            <a href="{{ route('admin.adjustment.create') }}" class="btn btn-success">
+                                @lang('tax.Adjustment')
+                            </a>
                         @endcan
+                        @can('create',App\Models\Tax::class)
+                            <a href="{{ route('admin.tax.create') }}" class="btn btn-primary">
+                                @lang('tax.Pay Tax')
+                            </a>
+                        @endcan
+                        </div> 
                     </div></br>
                     <div class="table-responsive-md mt-1 mr-4 ml-4">
                         <div class="filters p-2">

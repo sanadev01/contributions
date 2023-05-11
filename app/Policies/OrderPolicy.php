@@ -70,6 +70,11 @@ class OrderPolicy
         return $user->hasPermission('delete_parcel') && $user->id == $order->user_id;
     }
 
+    public function consolidate_parcel(User $user)
+    {
+        return $user->hasPermission('consolidate_parcel');
+    }
+
     /**
      * Determine whether the user can restore the model.
      *
@@ -198,6 +203,11 @@ class OrderPolicy
     public function labelPrint(User $user)
     {
         return $user->hasPermission('print_label');
+
+    }
+    public function printBulkLabel(User $user)
+    {
+        return $user->hasPermission('print_bulk_label');
 
     }
 

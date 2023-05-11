@@ -15,6 +15,9 @@ class TrackingController extends Controller
      */
     public function index()
     {
+        $this->authorize('view',App\Models\OrderTracking::class);
+
+        
         return view('ordertracking.index');
     }
 

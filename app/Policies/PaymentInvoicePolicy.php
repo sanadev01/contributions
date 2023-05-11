@@ -35,6 +35,11 @@ class PaymentInvoicePolicy
         return $user->id == $paymentInvoice->paid_by;
     }
 
+    public function view_payment_invoice(User $user)
+    {
+        return $user->hasPermission('view_payment_invoice');
+    }
+
     /**
      * Determine whether the user can create models.
      *
