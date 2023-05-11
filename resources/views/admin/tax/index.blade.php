@@ -11,14 +11,19 @@
                         <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
                             class="btn btn-primary mr-1 waves-effect waves-light"><i
                                 class="feather icon-filter"></i></button>
-                        <a href="{{ route('admin.adjustment.create') }}" class="btn btn-success">
-                            @lang('tax.Adjustment')
-                        </a>
+                        @can('create_adjustment',App\Models\Tax::class)
+                            <a href="{{ route('admin.adjustment.create') }}" class="btn btn-success">
+                                @lang('tax.Adjustment')
+                            </a>
+                        @endcan
+                        @can('create',App\Models\Tax::class)
                         <a href="{{ route('admin.tax.create') }}" class="btn btn-primary">
                             @lang('tax.Pay Tax')
                         </a>
+                        @endcan
                         </div>
                         @endcan
+                        </div> 
                     </div></br>
                     <div class="table-responsive-md mt-1 mr-4 ml-4 mb-5">
                         <div class="filters p-2" id="dateSearch"

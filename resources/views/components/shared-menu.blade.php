@@ -13,6 +13,7 @@
     @endif
 @enduser
 @if(!auth()->user()->hideBoxControl())
+@can('view_box_control')
 <li class="nav-item">
     <a class="nav-link" target="__blank" href="https://app.ideainfo.com.br/index.php?app=boxcontrol">
         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em"
@@ -23,7 +24,9 @@
         <span class="menu-title"> Box Control </span>
     </a>
 </li>
+@endcan
 @endif
+@can('view_label_post',)
 <li class="nav-item">
     <a class="nav-link" target="__blank" href="https://labelposteasy.com/entre.php?tk={{ hash_hmac("sha256",Auth()->user()->email.Auth()->user()->pobox_number.date("YmdH" ,strtotime("now + 60 minutes")),'6a3db6e59e693493f3518d1b39e39dbb26730d2ce0ee1185a2e90ef025d1a5c7') }}&id={{ Auth()->user()->pobox_number }}">
         <svg viewBox="0 0 24 24" height="15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
@@ -35,9 +38,14 @@
         </svg>        <span data-i18n="Apps">Label Post</span>
     </a>
 </li>
-{{-- <li class="nav-item">
+@endcan
+
+{{-- 
+@can('view_api_docs')
+    <li class="nav-item">
     <a class="nav-link" target="__blank" href="https://documenter.getpostman.com/view/16057364/TzeXmSxT">
         <i class="fa fa-list-alt" style="color: #28c76f;"></i>
         <span data-i18n="Apps"> @lang('menu.API Documents') </span>
     </a>
-</li> --}}
+</li> 
+@endcan--}}
