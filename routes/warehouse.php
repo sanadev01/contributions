@@ -130,6 +130,14 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('postplus_container/{container}/download/', PostPlusCN35DownloadController::class)->name('postplus_container.download');
     Route::get('postplus/{delivery_bill}/cn38', PostPlusCN38DownloadController::class)->name('postplus.cn38.download');
     Route::get('postplus/{delivery_bill}/manifest', PostPlusManifestDownloadController::class)->name('postplus.manifest.download');
+
+    // Routes for GSS Container
+    Route::resource('gss_containers', GSSContainerController::class);
+    Route::resource('gss_container.packages', GSSContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('gss_container/{container}/register', GSSUnitRegisterController::class)->name('gss.register');
+    Route::get('gss_container/{container}/download/', GSSCN35DownloadController::class)->name('gss.download');
+    Route::get('gss/{delivery_bill}/cn38', GSSCN38DownloadController::class)->name('gss.cn38.download');
+    Route::get('gss/{delivery_bill}/manifest', GSSManifestDownloadController::class)->name('gss.manifest.download');
 });
 
 

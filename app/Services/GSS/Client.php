@@ -47,7 +47,6 @@ class Client{
             'locationId' => $this->locationId,
             'workStationId' => $this->workStationId,
         ];
-        // $response = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Authentication/login", $authParams);
         $response = $this->client->post("$this->baseUrl/Authentication/login",['json' => $authParams ]);
         $data = json_decode($response->getBody()->getContents());
         if($data->accessToken) {
@@ -85,19 +84,6 @@ class Client{
         }
     }
 
-    public function createContainer(Container $container)
-    {
- 
-    }
-
-    public function registerDeliveryBill(DeliveryBill $deliveryBill)
-    { 
-    }
-
-    public function getDeliveryBillStatus(DeliveryBill $deliveryBill)
-    { 
-    }
-
     public function addOrderTracking($order)
     {
         if($order->trackings->isEmpty())
@@ -114,10 +100,5 @@ class Client{
 
         return true;
     }
-
-    public function destroy($container)
-    { 
-    }
-     
-
+    
 }
