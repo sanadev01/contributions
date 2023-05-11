@@ -35,7 +35,7 @@ class TicketPolicy
         return $user->hasPermission('show_ticket') && $ticket->user_id == $user->id || $user->hasPermission('reply_ticket');
     }
 
-    public function view_menu(User $user)
+    public function show_ticket(User $user)
     {
         return $user->hasPermission('show_ticket');
     }

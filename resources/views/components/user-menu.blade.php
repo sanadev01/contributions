@@ -678,7 +678,7 @@
                     </li>
                 @endcan
             @endif            
-            @can('view_tickets', App\Models\Ticket::class)
+            @can('show_ticket', App\Models\Ticket::class)
                 <li class="nav-item {{ $isActive(['admin.tickets.index', 'admin.tickets.show']) }}">
                     <a class="nav-link" href="{{ route('admin.tickets.index') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
