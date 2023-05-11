@@ -39,7 +39,7 @@
                     {{ $order->customer_reference }}
                 </td>
                 <td>
-                    @if ($editMode == true && $order->containers[0]->sequence == 1)
+                    @if ($editMode == true)
                         <button wire:click="removeOrder({{ $order->id }})" class="btn btn-danger">
                             Remove
                         </button>
