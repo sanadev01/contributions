@@ -462,7 +462,7 @@
             </li>
             @endadmin
 
-            @can('view_menu', App\Models\Ticket::class)
+            @can('show_ticket', App\Models\Ticket::class)
             <li class="nav-item {{ $isActive(['admin.tickets.index','admin.tickets.show']) }}">
                 <a class="nav-link" href="{{ route('admin.tickets.index') }}">
                     <i class="icon_adjst feather icon-message-circle" style="color: #3db64c;"></i>
