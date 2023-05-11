@@ -35,7 +35,7 @@ class PaymentInvoicePolicy
         return $user->id == $paymentInvoice->paid_by;
     }
 
-    public function view_payment_invoice(User $user)
+    public function viewPaymentInvoice(User $user)
     {
         return $user->hasPermission('view_payment_invoice');
     }
