@@ -131,6 +131,8 @@
                                                 <span class="badge badge-warning text-black">P</span>
                                                 @elseif($deliveryBill->hasColombiaService())
                                                     <span class="badge badge-success">C</span>
+                                                @elseif($deliveryBill->isGDE())
+                                                    <span class="badge badge-secondary">GDE</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif

@@ -65,6 +65,11 @@ use App\Http\Controllers\Warehouse\POSTNLContainerController;
 use App\Http\Controllers\Warehouse\POSTNLContainerPackageController;
 use App\Http\Controllers\Warehouse\POSTNLUnitRegisterController;
 use App\Http\Controllers\Warehouse\POSTNLCN35DownloadController;
+use App\Http\Controllers\Warehouse\GDEContainerController;
+use App\Http\Controllers\Warehouse\GDEContainerPackageController;
+use App\Http\Controllers\Warehouse\GDEUnitRegisterController;
+use App\Http\Controllers\Warehouse\GDECN35DownloadController;
+use App\Http\Controllers\Warehouse\GDEManifestDownloadController;
 
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
@@ -169,6 +174,13 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
      Route::get('colombia-containers/{container}/register', ColombiaUnitRegisterController::class)->name('colombia-containers.register');
      Route::get('colombia-containers/{container}/download', ColombiaCN35DownloadController::class)->name('colombia-containers.download');
      Route::get('colombia-containers/{container}/manifest', ColombiaContainerManifestController::class)->name('colombia-containers.manifest');
+
+     // Routes for GDE Container
+    Route::resource('gde_containers', GDEContainerController::class);
+    Route::resource('gde_container.packages', GDEContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('gde_container/{container}/register', GDEUnitRegisterController::class)->name('gde_container.register');
+    Route::get('gde_container/{container}/download', GDECN35DownloadController::class)->name('gde_container.download');
+    Route::get('gde/{delivery_bill}/manifest', GDEManifestDownloadController::class)->name('gde.manifest.download');
 });
 
 

@@ -138,4 +138,11 @@ class DeliveryBill extends Model
 
         return false;
     }
+
+    public function isGDE()
+    {
+        if($this->containers->first()->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL || ShippingService::GDE_FIRST_CLASS){
+            return true;
+        }
+    }
 }

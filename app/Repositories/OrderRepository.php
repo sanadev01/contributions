@@ -14,7 +14,6 @@ use App\Services\UPS\UPSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
 use App\Services\GePS\GePSShippingService;
-use App\Services\GDE\GDEShippingService;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Colombia\ColombiaPostalCodes;
 use App\Services\Order\UpdateOrderInvoice;
