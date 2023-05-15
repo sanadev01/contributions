@@ -102,7 +102,7 @@ class Client{
         return true;
     }
 
-    public function createReceptacle()
+    public function createReceptacle($container)
     {
         $url = "$this->baseUrl/Receptacle/CreateReceptacleForRateTypeToDestination";
         $weight = 0;
@@ -111,16 +111,14 @@ class Client{
                 $weight+= $package->getWeight();
             }
             $body = [
-                "rateType" => "VirtualDespatch",
-                "shipmentNr" => $this->containers[0]->awb,
-                'arrivalInfo' => [
-                    'transportNr' => $this->containers[0]->dispatch_number,
-                    'originCountryCode' => "US",
-                    'totalWeight' => $weight,
-                    'totalBags' => count($this->containers),
-                    'arrivalOn' => Carbon::today()->toDateString(),
-                    'notes' => ''
-                 ],
+                "type" => "IPA",
+                "dutiable" => true,
+                "receptacleType" => "E",
+                "foreignOECode" => "CWB",
+                "countryCode" => "BR",
+                "dateOfMailing" => Carbon::now(),
+                "pieceCount" => '',
+                "weightInLbs" => '',
             ];
             $response = Http::withHeaders($this->getHeaders())->post($url, $body);
             $data= json_decode($response);

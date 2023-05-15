@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Warehouse;
 use Carbon\Carbon;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Services\GSS\Client;
 use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\DeliveryBill;
-use App\Services\GSS\GSSShipment;
 
 class GSSUnitRegisterController extends Controller
 {
@@ -21,11 +21,14 @@ class GSSUnitRegisterController extends Controller
             return back();
         }
 
-        $response =  (new GSSShipment($container))->create();
+        $client = new Client();
+
+        $response =  $client->createReceptacle($container);
+        dd($response);
         $data = $response->getData();
         if ($data->isSuccess){
 
-            $updateShipment = (new GSSShipment($container))->getShipmentDetails($data->output->id);
+            $updateShipment = (new Client($container))->getShipmentDetails($data->output->id);
             $shipmentDetails = $updateShipment->getData();
             foreach($containers as $package) {
                 $package->update([
