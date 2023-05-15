@@ -36,7 +36,7 @@ class ExportWhiteLabelManifest extends AbstractCsvExportService
     protected function prepareHeaders() : array
     {
         return [
-            'HAWB',
+            'HAWB Asim',
             'Date',
             'Shipper Name',
             'ConsigneeName/CPF',
