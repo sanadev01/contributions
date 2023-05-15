@@ -11,8 +11,8 @@ class CN35LabelHandler
 
     public static function handle(Container $container, $requestId)
     {
-        if (!$container->hasPostPlusService()) {
-            return response()->json([ 'isSuccess' => false,  'message'  => "Only post plus container allowed!" ], 422);
+        if (!$container->hasGSSService()) {
+            return response()->json([ 'isSuccess' => false,  'message'  => "Only GSS container allowed!" ], 422);
         }
 
         $shipment = json_decode($container->unit_response_list)->cn35;
@@ -52,7 +52,7 @@ class CN35LabelHandler
         }
         
         else {
-            session()->flash('alert-danger','Unable to retrieve documents from Post Plus');
+            session()->flash('alert-danger','Unable to retrieve documents from GSS');
             return back();
         }
     }

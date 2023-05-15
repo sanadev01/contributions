@@ -56,6 +56,7 @@ class Client{
             ];
         }
     }
+
     public function createPackage(Package $order)
     {
         $shippingRequest = (new Parcel())->getRequestBody($order);
@@ -99,6 +100,44 @@ class Client{
         }    
 
         return true;
+    }
+
+    public function createReceptacle()
+    {
+        $url = "$this->baseUrl/Receptacle/CreateReceptacleForRateTypeToDestination";
+        $weight = 0;
+        if($this->containers[0]->awb) {
+            foreach($this->containers as $package) {
+                $weight+= $package->getWeight();
+            }
+            $body = [
+                "rateType" => "VirtualDespatch",
+                "shipmentNr" => $this->containers[0]->awb,
+                'arrivalInfo' => [
+                    'transportNr' => $this->containers[0]->dispatch_number,
+                    'originCountryCode' => "US",
+                    'totalWeight' => $weight,
+                    'totalBags' => count($this->containers),
+                    'arrivalOn' => Carbon::today()->toDateString(),
+                    'notes' => ''
+                 ],
+            ];
+            $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+            $data= json_decode($response);
+    
+            if ($response->successful()) { 
+                if ($data->id) {
+                    return $this->addParcels($data->id);
+                } else {
+                    return $this->responseUnprocessable($data->detail);
+                }
+            } else {
+                return $this->responseUnprocessable($data->detail);
+            }
+        }
+        else {
+            return $this->responseUnprocessable("Airway Bill Number is Required for Processing.");
+        }
     }
     
 }

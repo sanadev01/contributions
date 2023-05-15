@@ -9,20 +9,30 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class GSSShipment
 {
-    protected $baseUri;
+    protected $userId;
+    protected $password;
+    protected $locationId;
+    protected $workStationId;
+    protected $baseUrl;
     protected $container;
     protected $containers;
-    protected $apiKey;
 
     public function __construct(Container $container)
     {
-        if (app()->isProduction()) {
-            $this->apiKey = config('postplus.production.x-api-key');
-            $this->baseUri = config('postplus.production.base_uri');
-        } else {
-            $this->apiKey = config('postplus.test.x-api-key');
-            $this->baseUri = config('postplus.test.base_uri');
+        if(app()->isProduction()){
+            $this->userId = config('gss.production.userId');
+            $this->password = config('gss.production.password');
+            $this->locationId = config('gss.production.locationId');
+            $this->workStationId = config('gss.production.workStationId');
+            $this->baseUrl = config('gss.production.baseUrl');
+        }else{ 
+            $this->userId = config('gss.test.userId');
+            $this->password = config('gss.test.password');
+            $this->locationId = config('gss.test.locationId');
+            $this->workStationId = config('gss.test.workStationId');
+            $this->baseUrl = config('gss.test.baseUrl');
         }
+
         $this->container = $container;
         $this->containers = Container::where('awb', $this->container->awb)->get();
         $this->client = new GuzzleClient(['verify' => false]);
@@ -31,10 +41,20 @@ class GSSShipment
 
     private function getHeaders()
     {
-        return [ 
-            'x-api-key' => $this->apiKey,
-            'Content-Type' => 'application/json'
+        $authParams = [
+            'userId' => $this->userId,
+            'password' => $this->password,
+            'locationId' => $this->locationId,
+            'workStationId' => $this->workStationId,
         ];
+        $response = $this->client->post("$this->baseUrl/Authentication/login",['json' => $authParams ]);
+        $data = json_decode($response->getBody()->getContents());
+        if($data->accessToken) {
+            return [ 
+                'Authorization' => "Bearer {$data->accessToken}",
+                'Accept' => 'application/json'
+            ];
+        }
     }
 
     public function create()
@@ -46,16 +66,14 @@ class GSSShipment
                 $weight+= $package->getWeight();
             }
             $body = [
-                "type" => "VirtualDespatch",
-                "shipmentNr" => $this->containers[0]->awb,
-                'arrivalInfo' => [
-                    'transportNr' => $this->containers[0]->dispatch_number,
-                    'originCountryCode' => "US",
-                    'totalWeight' => $weight,
-                    'totalBags' => count($this->containers),
-                    'arrivalOn' => Carbon::today()->toDateString(),
-                    'notes' => ''
-                 ],
+                "type" => "IPA",
+                "dutiable" => true,
+                "receptacleType" => "E",
+                "foreignOECode" => "CWB",
+                "countryCode" => "BR",
+                "dateOfMailing" => Carbon::now(),
+                "pieceCount" => '',
+                "weightInLbs" => '',
             ];
             $response = Http::withHeaders($this->getHeaders())->post($url, $body);
             $data= json_decode($response);
