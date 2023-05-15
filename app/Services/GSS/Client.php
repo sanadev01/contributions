@@ -104,6 +104,7 @@ class Client{
 
     public function createReceptacle($container)
     {
+        dd($container->getWeight());
         $url = "$this->baseUrl/Receptacle/CreateReceptacleForRateTypeToDestination";
         $weight = 0;
         if($this->containers[0]->awb) {
