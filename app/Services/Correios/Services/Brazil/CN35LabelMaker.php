@@ -71,12 +71,6 @@ class CN35LabelMaker implements HasLableExport
             $this->packetType = 'COLOMBIA SERVICE';
             $this->colombiaContainer = true;
         }
-
-        if ( $this->service == 15 ){
-            $this->packetType = 'Homedelivebr Express';
-            $this->companyName = 'HD Express';
-        }
-
         return $this;
     }
 
@@ -136,14 +130,6 @@ class CN35LabelMaker implements HasLableExport
                                         CNPJ: 34.028.316/7189-93';
                 return $this;
             }
-        }
-        if($this->packetType == 'Homedelivebr Express'){
-            $this->officeAddress = 'Homedelivebr Express <br/>
-                                    Rua Lagoa Dourada 371 <br/>
-                                    Cocaia I Guarulhos-SP <br/>
-                                    &nbsp;<br/>
-                                    &nbsp;<br/>';
-            return $this;
         }
         $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/>
                                 Centro Internacional de Curitiba –SE/PR <br/>

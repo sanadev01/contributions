@@ -102,35 +102,8 @@ class CN35LabelMaker implements HasLableExport
 
     public function setType(string $weight)
     {
-        $this->OrderWeight = $weight;
-        if($weight > 3){
-            if($this->packetType == 'PACKET EXPRESS'){
-                $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/>
-                                        Centro Internacional de São Paulo – SE/SPM <br/>
-                                        Rua Mergenthaler, 592 – Bloco III, 5 Mezanino <br/>
-                                        05311-900  Vila Leopoldina - São Paulo/SP <br/>
-                                        CNPJ 34.028.316/7105-85';
-                return $this;
-            }
-            if($this->packetType == 'PACKET STANDARD'){
-                $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/> 
-                                        Centro Internacional do Rio de Janeiro –SE/RJ <br/>
-                                        Ponta do Galeão, s/n 2 andar TECA Correios Galeão, <br/>
-                                        21941-9740 Ilha do Governador, Rio de Janeiro/RJ <br/>
-                                        CNPJ: 34.028.316/7189-93';
-                return $this;
-            }
-        }
-        if($this->packetType == 'Homedelivebr Express'){
-            $this->officeAddress = 'Homedelivebr Express <br/>
-                                    Rua Lagoa Dourada 371 <br/>
-                                    Cocaia I Guarulhos-SP <br/>
-                                    &nbsp;<br/>
-                                    &nbsp;<br/>';
-            return $this;
-        }
-        $this->officeAddress = 'Express courier';
-
+        $this->OrderWeight = $weight; 
+        $this->officeAddress = 'Express courier'; 
         return $this;
     }
     public function setDestinationAirport(string $airport)
