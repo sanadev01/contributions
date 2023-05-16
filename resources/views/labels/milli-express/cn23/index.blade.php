@@ -369,9 +369,6 @@
     </style>
 </head>
 <body>
-    <div class="cn23-text">
-        CN23
-    </div>
     <img class="partner-logo" src="{{ $partnerLogo }}"> 
     {{-- <img src="{{ $serviceLogo }}" class="service-type"/> --}}
     <div class="service-info-wrapper">

@@ -49,7 +49,6 @@ class MileExpressContainerController extends Controller
         if (!auth()->user()->isAdmin()) {
             abort(403);
         }
-
         if ($containerRepository->store($request) ){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.mile-express-containers.index');
