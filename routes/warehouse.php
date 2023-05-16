@@ -61,6 +61,7 @@ use App\Http\Controllers\Warehouse\ColombiaCN35DownloadController;
 use App\Http\Controllers\Warehouse\ColombiaUnitRegisterController;
 use App\Http\Controllers\Warehouse\ColombiaContainerPackageController;
 use App\Http\Controllers\Warehouse\ColombiaContainerManifestController;
+use App\Http\Controllers\Warehouse\MilliExpressContainerController;
 use App\Http\Controllers\Warehouse\POSTNLContainerController;
 use App\Http\Controllers\Warehouse\POSTNLContainerPackageController;
 use App\Http\Controllers\Warehouse\POSTNLUnitRegisterController;
@@ -88,6 +89,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('container/{container}/register', UnitRegisterController::class)->name('container.register');
     Route::get('container/{container}/cancel', UnitCancelContoller::class)->name('container.cancel');
     Route::get('container/{container}/download', CN35DownloadController::class)->name('container.download');
+    Route::get('container/milli-express/{container}/download', MilliExpressContainerController::class)->name('milli-express.container.download');
     
     Route::resource('delivery_bill', DeliveryBillController::class);
     Route::get('delivery_bill/{delivery_bill}/register', DeliveryBillRegisterController::class)->name('delivery_bill.register');

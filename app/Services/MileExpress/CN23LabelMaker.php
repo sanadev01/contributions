@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Correios\Services\Brazil;
+namespace App\Services\MileExpress;
 
 use Exception;
 use App\Models\Order;
@@ -48,11 +48,6 @@ class CN23LabelMaker implements HasLableExport
         $this->recipient = $order->recipient;
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
-
-        if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->is_anjun_china) {
-            $this->contractNumber = 'Contrato:  9912501700';
-            $this->hasAnjunLabel = true;
-        }
         return $this;
     }
 
@@ -64,22 +59,16 @@ class CN23LabelMaker implements HasLableExport
 
     public function setPacketType(int $packetType)
     { 
-        switch($packetType):
-            case Package::SERVICE_CLASS_EXPRESS:
-                $this->packetType = 'Packet Express';
-                $this->serviceLogo = public_path('images/express-package.png');
-            break;
-            case Package::SERVICE_CLASS_MINI:
-                $this->packetType = 'Packet Mini';
-                $this->serviceLogo = public_path('images/mini-package.png');
-            break;
-            case Package::SERVICE_CLASS_STANDARD:
-            default:
-                $this->packetType = 'Packet Standard';
+        switch($packetType): 
+            case Package::SERVICE_CLASS_MILE_EXPRESS:
+                $this->packetType = 'HD Express';
                 $this->serviceLogo = public_path('images/standard-package.png');
+            break; 
+            default: 
+            $this->packetType = 'HD Express';
+            $this->serviceLogo = public_path('images/standard-package.png');
             break;
-        endswitch;
-
+        endswitch; 
         return $this;
     }
 
@@ -141,7 +130,7 @@ class CN23LabelMaker implements HasLableExport
 
     public function render()
     {
-        return view('labels.brazil.cn23.index',$this->getViewData());
+        return view('labels.milli-express.cn23.index',$this->getViewData());
     }
 
     public function download()
@@ -150,7 +139,7 @@ class CN23LabelMaker implements HasLableExport
             throw new Exception("Order not Set");
         }
 
-        return \PDF::loadView('labels.brazil.cn23.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.milli-express.cn23.index',$this->getViewData())->stream();
     }
 
     public function saveAs($path)
@@ -158,7 +147,7 @@ class CN23LabelMaker implements HasLableExport
         if ( !file_exists(dirname($path)) ){
             mkdir(dirname($path),0775,true);
         }
-        return \PDF::loadView('labels.brazil.cn23.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.milli-express.cn23.index',$this->getViewData())->save($path);
     }
 
     private function getViewData()
