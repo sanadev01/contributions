@@ -113,6 +113,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'FirstClass International';
         }elseif($this->services_subclass_code == 'FirstClass International'){
             return 'USPS Ground';
+        }elseif($this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL){
+            return 'GDE Priority Mail';
+        }
+        elseif($this->services_subclass_code == ShippingService::GDE_FIRST_CLASS){
+            return 'GDE First Class';
         }else {
             return 'FirstClass';
         }
@@ -165,7 +170,13 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif( $this->services_subclass_code == 'AJC-IX') {
             return 14;
-        } 
+        }
+        elseif( $this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL) {
+            return 16;
+        }
+        elseif( $this->services_subclass_code == ShippingService::GDE_FIRST_CLASS) {
+            return 17;
+        }  
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
 
@@ -265,7 +276,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasGDEService()
     {
-        return $this->services_subclass_code == ShippingService::GDE_Service;
+        return $this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL || ShippingService::GDE_FIRST_CLASS;
     }
     
     public function hasColombiaService()

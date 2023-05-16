@@ -428,8 +428,7 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Prime5RIO ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GDE_Service) {
+                optional($this->shippingService)->service_sub_class == ShippingService::Prime5RIO) {
 
                 return $this->user_declared_freight;
             }

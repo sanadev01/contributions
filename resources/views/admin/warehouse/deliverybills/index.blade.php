@@ -131,6 +131,8 @@
                                                 <span class="badge badge-warning text-black">P</span>
                                                 @elseif($deliveryBill->hasColombiaService())
                                                     <span class="badge badge-success">C</span>
+                                                @elseif($deliveryBill->isGDE())
+                                                    <span class="badge badge-secondary">GDE</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif
@@ -181,6 +183,11 @@
                                                         <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                             <i class="fa fa-cloud-download"></i> Download Manifest By Service
                                                         </a>
+                                                        @if ($deliveryBill->isRegistered() && $deliveryBill->isGDE())
+                                                            <a href="{{ route('warehouse.gde.manifest.download',$deliveryBill) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i> Download White Label Manifest
+                                                            </a>
+                                                        @endif
                                                         <!-- @if($deliveryBill->isRegistered() && $deliveryBill->isPostPlus())
                                                             <a href="{{ route('warehouse.postplus.manifest.download',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> Download PostPlus Manifest

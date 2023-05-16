@@ -28,10 +28,17 @@ class USPSShippingService
 
     public function isAvailableFor($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $shippingService->service_sub_class == ShippingService::USPS_GROUND || $shippingService->service_sub_class == ShippingService::GDE_PRIORITY_MAIL || $shippingService->service_sub_class == ShippingService::GDE_FIRST_CLASS) && $this->weight <= $shippingService->max_weight_allowed)
-        {
+        if($shippingService->service_sub_class == ShippingService::GDE_PRIORITY_MAIL && $this->weight >= 0.454) {
             return true;
         }
+
+        elseif($shippingService->service_sub_class == ShippingService::GDE_FIRST_CLASS && $this->weight <= 0.453) {
+            return true;
+        }
+        elseif($shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $shippingService->service_sub_class == ShippingService::USPS_GROUND && $this->weight <= $shippingService->max_weight_allowed) {
+            return true;
+        }
+        
     }
 
     public function isAvailableForInternational($shippingService)
