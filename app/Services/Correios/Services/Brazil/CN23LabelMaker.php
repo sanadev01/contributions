@@ -63,7 +63,7 @@ class CN23LabelMaker implements HasLableExport
     }
 
     public function setPacketType(int $packetType)
-    {
+    { 
         switch($packetType):
             case Package::SERVICE_CLASS_EXPRESS:
                 $this->packetType = 'Packet Express';
@@ -72,6 +72,10 @@ class CN23LabelMaker implements HasLableExport
             case Package::SERVICE_CLASS_MINI:
                 $this->packetType = 'Packet Mini';
                 $this->serviceLogo = public_path('images/mini-package.png');
+            break;
+            case Package::SERVICE_CLASS_MILE_EXPRESS:
+                $this->packetType = 'HD Express';
+                $this->serviceLogo = public_path('images/standard-package.png');
             break;
             case Package::SERVICE_CLASS_STANDARD:
             default:
