@@ -4,6 +4,7 @@ namespace App\Repositories\Warehouse;
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Session;
 
@@ -15,6 +16,9 @@ class GDEContainerPackageRepository {
     {
         $error = null;
 
+        if($container->services_subclass_code != $order->shippingService->service_sub_class){
+            $error = 'container service does not match';
+        }
         if(!$order->containers->isEmpty()) {
             $error = "Order is already present in Container";
         }
