@@ -373,8 +373,10 @@
         CN23
     </div>
     <img class="partner-logo" src="{{ $partnerLogo }}">
+    @if(!$order->shippingService->isMileExpressService())
     <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
     <p class="screening-code">CJA01</p>
+    @endif
     <img src="{{ $serviceLogo }}" class="service-type"/>
     <div class="service-info-wrapper">
         <div class="order-infoline"></div>

@@ -74,7 +74,7 @@ class CN35LabelMaker implements HasLableExport
 
         if ( $this->service == 15 ){
             $this->packetType = 'Homedelivebr Express';
-            $this->companyName = 'Express Courier';
+            $this->companyName = 'HD Express';
         }
 
         return $this;
