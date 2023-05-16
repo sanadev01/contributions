@@ -38,16 +38,15 @@ class DeliveryBillRegisterController extends Controller
         }
         elseif ($deliveryBill->hasMileExpressService()) {
             
-            $deliveryBillRepository->processMileExpressBill($deliveryBill, $deliveryBill->container());
-            $error = $deliveryBillRepository->getError();
+            // $deliveryBillRepository->processMileExpressBill($deliveryBill, $deliveryBill->container());
+            // $error = $deliveryBillRepository->getError();
 
-            if ($error) {
-                session()->flash('alert-danger',$error);
-                return back();
-            }
-
+            // if ($error) {
+            //     session()->flash('alert-danger',$error);
+            //     return back();
+            // } 
             $deliveryBill->update([
-                'cnd38_code' => $deliveryBill->setRandomCN38Code(),
+                'cnd38_code' => $deliveryBill->setCN38Code(),
                 'request_id' => $deliveryBill->setRandomRequestId()
             ]);
 

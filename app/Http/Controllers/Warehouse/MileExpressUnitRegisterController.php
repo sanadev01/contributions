@@ -19,24 +19,30 @@ class MileExpressUnitRegisterController extends Controller
     {
         if (count($container->orders) > 0){
 
-            $airWayBillIds = $containerRepository->getAirWayBillIdsForMileExpress($container->orders);
+            // $airWayBillIds = $containerRepository->getAirWayBillIdsForMileExpress($container->orders);
             
-            $containerConsolidatorData = json_decode($container->unit_response_list);
+            // $containerConsolidatorData = json_decode($container->unit_response_list);
             
-            $response = MileExpressFacade::registerContainer($containerConsolidatorData->id, $airWayBillIds);
+            // $response = MileExpressFacade::registerContainer($containerConsolidatorData->id, $airWayBillIds);
             
-            if ($response->success == false) {
-                session()->flash('alert-danger', $response->message ?? 'error occured while registering container');
-                return back();
-            }
+            // if ($response->success == false) {
+            //     session()->flash('alert-danger', $response->message ?? 'error occured while registering container');
+            //     return back();
+            // }
 
-            if ($response->success == true) {
+            
+            if ($container->unit_code == null) {
                 $container->update([
-                    'unit_code' => $containerConsolidatorData->code,
+                    'unit_code' => 'HDC'.date('d').date('m').sprintf("%07d", $container->id).'BR',
                     'response' => true,
                 ]);
                 
                 session()->flash('alert-success','Package Registration success. You can print Label now');
+                return back();
+            }
+            else{
+                
+                session()->flash('alert-danger','Package Already Registered.');
                 return back();
             }
         }
