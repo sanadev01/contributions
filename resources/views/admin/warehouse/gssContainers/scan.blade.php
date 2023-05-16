@@ -25,4 +25,13 @@
     </section>
 @endsection
 @section('js')
+<script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
+<script>
+     $(document).ready(function(){
+        $("#scan").focus();
+    });
+    window.addEventListener('scan-focus', event => {
+        $("#scan").focus();
+    });
+</script>
 @endsection

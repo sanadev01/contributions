@@ -27,7 +27,7 @@ class GSSShippingService
 
     public function isAvailableFor($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::GSS_USPS) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::GSS_IPA) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }
@@ -35,7 +35,7 @@ class GSSShippingService
 
     public function isAvailableForInternational($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::GSS_USPS) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::GSS_IPA) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }

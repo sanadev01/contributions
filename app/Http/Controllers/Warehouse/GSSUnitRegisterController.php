@@ -22,49 +22,9 @@ class GSSUnitRegisterController extends Controller
         }
 
         $client = new Client();
-
         $response =  $client->createReceptacle($container);
-        dd($response);
         $data = $response->getData();
         if ($data->isSuccess){
-
-            $updateShipment = (new Client($container))->getShipmentDetails($data->output->id);
-            $shipmentDetails = $updateShipment->getData();
-            foreach($containers as $package) {
-                $package->update([
-                    'unit_response_list' => json_encode(['cn35'=>$shipmentDetails->output]),
-                    'unit_code' => $shipmentDetails->output->bags[0]->outboundBagNrs,
-                    'response' => '1',
-                ]); 
-            }
-
-            //Create Delivery Bill
-            $containerIds = [];
-            foreach ($containers as $key => $container) {
-                $idsToPush = [$container->id,];
-                array_push($containerIds, $idsToPush);
-            }
-            $idsArray = array_merge(...$containerIds);
-
-            $deliveryBill = DeliveryBill::create([
-                'name' => 'Delivery Bill: '.Carbon::now()->format('m-d-Y'),
-                'request_id' => $shipmentDetails->output->id,
-                'cnd38_code' => $container->awb,
-            ]);
-
-            $deliveryBill->containers()->sync($idsArray);
-
-            foreach($deliveryBill->containers()->get() as $bills){
-                $bills->orders()->update([
-                    'status' =>  Order::STATUS_SHIPPED,
-                    'api_tracking_status' => 'HD-Shipped',
-                ]);
-
-                foreach($bills->orders as $order)
-                { 
-                    $this->addOrderTracking($order->id);
-                }
-            }
             session()->flash('alert-success', $data->message);
             return back();
               
@@ -72,19 +32,5 @@ class GSSUnitRegisterController extends Controller
             session()->flash('alert-danger',$data->message);
             return back();
         } 
-    }
-
-    public function addOrderTracking($order_id)
-    {
-        OrderTracking::create([
-            'order_id' => $order_id,
-            'status_code' => Order::STATUS_SHIPPED,
-            'type' => 'HD',
-            'description' => 'Parcel transfered to airline',
-            'country' => 'US',
-            'city' => 'Miami'
-        ]);
-
-        return true;
     }
 }

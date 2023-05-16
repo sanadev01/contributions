@@ -344,7 +344,7 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_USPS) {
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_IPA) {
 
                 return 'USPS';
 

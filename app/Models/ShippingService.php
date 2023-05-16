@@ -42,7 +42,7 @@ class ShippingService extends Model
     const Post_Plus_Prime = 777;
     const Post_Plus_Premium = 778;
     const Prime5RIO = 357;
-    const GSS_USPS = 477;
+    const GSS_IPA = 477;
 
 
     protected $guarded = [];
@@ -179,7 +179,7 @@ class ShippingService extends Model
 
     public function isGSSService()
     {
-        if($this->service_sub_class == self::GSS_USPS){
+        if($this->service_sub_class == self::GSS_IPA){
             return true;
         }
         return false;

@@ -11,7 +11,7 @@ class Parcel {
 
    public function getRequestBody($order) {
 
-      if($order->shippingService->service_sub_class == ShippingService::GSS_USPS) {
+      if($order->shippingService->service_sub_class == ShippingService::GSS_IPA) {
          $type = 'IPA';
       } 
 

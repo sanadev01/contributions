@@ -31,7 +31,7 @@ return [
             777 => 'Post Plus Prime',
             778 => 'PrimeRIO',
             357 => 'Prime5RIO',
-            477 => 'GSS USPS',
+            477 => 'GSS IPA',
         ]
     ]
 ];

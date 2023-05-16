@@ -90,8 +90,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Post Plus';
         }elseif($this->services_subclass_code == '357'){
             return 'Prime5RIO';
-        }elseif($this->services_subclass_code == ShippingService::GSS_USPS){
-            return 'GSS USPS';
+        }elseif($this->services_subclass_code == ShippingService::GSS_IPA){
+            return 'GSS IPA';
         }else {
             return 'FirstClass';
         }
@@ -213,6 +213,6 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasGSSService()
     {
-        return $this->services_subclass_code == ShippingService::GSS_USPS;
+        return $this->services_subclass_code == ShippingService::GSS_IPA;
     }
 }

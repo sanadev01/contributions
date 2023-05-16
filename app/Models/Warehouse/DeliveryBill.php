@@ -86,4 +86,11 @@ class DeliveryBill extends Model
         }
     }
 
+    public function isGSS()
+    {
+        if($this->containers->first()->services_subclass_code == ShippingService::GSS_IPA){
+            return true;
+        }
+    }
+
 }

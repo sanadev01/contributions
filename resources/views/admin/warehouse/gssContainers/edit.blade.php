@@ -56,7 +56,7 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code" disabled>
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            <option value="{{App\Models\ShippingService::GSS_USPS}}" {{ old('services_subclass_code',$container->services_subclass_code) == "{{App\Models\ShippingService::GSS_USPS}}" ? 'selected': '' }}>IPA</option>
+                                            <option value="{{App\Models\ShippingService::GSS_IPA}}" {{ old('services_subclass_code',$container->services_subclass_code) == "{{App\Models\ShippingService::GSS_IPA}}" ? 'selected': '' }}>IPA</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>

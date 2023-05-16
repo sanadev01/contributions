@@ -2,14 +2,17 @@
 
 namespace App\Services\GSS;
 
+use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Models\ShippingService;
+use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Http;
-use App\Services\GSS\Services\Parcel; 
 use App\Models\Warehouse\DeliveryBill;
+use App\Services\GSS\Services\Parcel; 
 use GuzzleHttp\Client as GuzzleClient;
+use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Contracts\Package;
-use App\Services\Correios\Contracts\Container;
 use App\Services\Correios\Models\PackageError;
 
 class Client{
@@ -19,6 +22,7 @@ class Client{
     protected $locationId;
     protected $workStationId;
     protected $baseUrl;
+    protected $token;
 
     public function __construct()
     {   
@@ -37,10 +41,6 @@ class Client{
         }
 
         $this->client = new GuzzleClient();
-    } 
-
-    private function getHeaders()
-    {
         $authParams = [
             'userId' => $this->userId,
             'password' => $this->password,
@@ -50,11 +50,17 @@ class Client{
         $response = $this->client->post("$this->baseUrl/Authentication/login",['json' => $authParams ]);
         $data = json_decode($response->getBody()->getContents());
         if($data->accessToken) {
-            return [ 
-                'Authorization' => "Bearer {$data->accessToken}",
-                'Accept' => 'application/json'
-            ];
+            $this->token = $data->accessToken;
         }
+
+    } 
+
+    private function getHeaders()
+    {
+        return [ 
+            'Authorization' => "Bearer {$this->token}",
+            'Accept' => 'application/json'
+        ];
     }
 
     public function createPackage(Package $order)
@@ -104,39 +110,154 @@ class Client{
 
     public function createReceptacle($container)
     {
-        dd($container->getWeight());
+        $containers = Container::where('awb', $container->awb)->get();
         $url = "$this->baseUrl/Receptacle/CreateReceptacleForRateTypeToDestination";
         $weight = 0;
-        if($this->containers[0]->awb) {
-            foreach($this->containers as $package) {
-                $weight+= $package->getWeight();
+        $piecesCount = 0;
+        if($container->services_subclass_code == ShippingService::GSS_IPA) {
+            $rateType = "IPA";
+        }
+        if($containers[0]->awb) {
+            foreach($containers as $package) {
+                $weight+= UnitsConverter::kgToPound($package->getWeight());
+                $piecesCount = $package->getPiecesCount();
             }
             $body = [
-                "type" => "IPA",
+                "rateType" => $rateType,
                 "dutiable" => true,
                 "receptacleType" => "E",
                 "foreignOECode" => "CWB",
                 "countryCode" => "BR",
                 "dateOfMailing" => Carbon::now(),
-                "pieceCount" => '',
-                "weightInLbs" => '',
+                "pieceCount" => $piecesCount,
+                "weightInLbs" => $weight,
             ];
             $response = Http::withHeaders($this->getHeaders())->post($url, $body);
             $data= json_decode($response);
     
-            if ($response->successful()) { 
-                if ($data->id) {
-                    return $this->addParcels($data->id);
-                } else {
-                    return $this->responseUnprocessable($data->detail);
-                }
+            if ($response->successful() && $data->success == true) { 
+                
+                return $this->addPackagesToReceptacle($data->receptacleID, $containers);
+
             } else {
-                return $this->responseUnprocessable($data->detail);
+                return $this->responseUnprocessable($data->message);
             }
         }
         else {
             return $this->responseUnprocessable("Airway Bill Number is Required for Processing.");
         }
+    }
+
+    public function addPackagesToReceptacle($id, $containers)
+    {
+        $codes = [];
+        foreach ($containers as $key => $container) {
+            foreach ($container->orders as $key => $item) {
+                $codesToPush = [
+                    $item->corrios_tracking_code,
+                ];
+                array_push($codes, $codesToPush);
+            }
+        }
+        $parcels = implode(",", array_merge(...$codes));
+        $url = $this->baseUrl . '/Package/AddPackagesToReceptacle';
+        $body = [
+            "uspsPackageID" =>  $parcels,
+            "receptacleID" => $id,
+        ];
+        $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+        $data= json_decode($response);
+        if ($response->successful() && $data->success == true) {
+            return $this->moveReceptacleToOpenDispatch($id, $containers);
+        } else {
+            return $this->responseUnprocessable($data->message);
+        }
+    }
+
+    public function moveReceptacleToOpenDispatch($id, $containers)
+    {
+        $url = $this->baseUrl . "/Receptacle/MoveReceptacleToOpenDispatch/$id";
+        $response = Http::withHeaders($this->getHeaders())->get($url);
+        $data = json_decode($response);
+        if ($response->successful() && $data->success == true) {
+            return $this->closeDispatch($id, $containers);
+        } else {
+            return $this->responseUnprocessable($data->message);
+        }
+    }
+
+    public function closeDispatch($id, $containers)
+    {
+        $url = $this->baseUrl . '/Dispatch/CloseDispatch';
+        $body = [
+            "departureDateTime" => Carbon::now(),
+            "arrivalDateTime" => Carbon::now()->addDays(1),
+        ];
+        $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+        $data= json_decode($response);
+        if ($response->successful() && $data->success == true) {
+            return $this->getReceptacleLabel($id, $containers, $data->dispatchID);
+        } else {
+            return $this->responseUnprocessable($data->message);
+        }
+    }
+
+    public function getReceptacleLabel($id, $containers, $dispatchID) {
+
+        $url = $this->baseUrl . '/Receptacle/GetReceptacleLabel';
+        $body = [
+            "receptacleID" =>  $id,
+            "labelFormat" => "PDF",
+        ];
+        $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+        $data= json_decode($response);
+        $reportsUrl = $this->baseUrl . "/Dispatch/GetRequiredReportsForDispatch/$dispatchID";
+        $reportsResponse = Http::withHeaders($this->getHeaders())->get($reportsUrl);
+        $reportData = json_decode($reportsResponse);
+        if ($response->successful() && $data->success == true) {
+            foreach($containers as $package) {
+                $package->update([
+                    'unit_response_list' => json_encode(['cn35'=>$data, 'manifest' => $reportData, 'dispatchID' => $dispatchID]),
+                    'unit_code' => $id,
+                ]); 
+            }
+            return $this->responseSuccessful($data, 'Container registration is successfull. You can download CN35 label');
+        } else {
+            return $this->responseUnprocessable($data->message);
+        }
+    }
+
+    public function generateDispatchReport($report, $dispatchID) {
+
+        $url = $this->baseUrl . '/Dispatch/GenerateDispatchReport';
+        $body = [
+            "dispatchID" => $dispatchID,
+            "reportID" => $report,
+            "permitNumber" => '',
+        ];
+        $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+        $data= json_decode($response);
+        if ($response->successful() && $data->success == true) {
+            return $this->responseSuccessful($data, 'File Exists');
+        } else {
+            return $this->responseUnprocessable($data->message);
+        }
+    }
+
+    public static function responseUnprocessable($message)
+    {
+        return response()->json([
+            'isSuccess' => false,
+            'message' => $message,
+        ], 422);
+    }
+    public static function responseSuccessful($output, $message)
+    {
+        return response()->json([
+            'isSuccess' => true,
+            'output' => $output,
+            'message' =>  $message,
+        ]);
     }
     
 }

@@ -56,6 +56,7 @@ use App\Http\Controllers\Warehouse\GSSUnitRegisterController;
 use App\Http\Controllers\Warehouse\GSSCN35DownloadController;
 use App\Http\Controllers\Warehouse\GSSCN38DownloadController;
 use App\Http\Controllers\Warehouse\GSSManifestDownloadController;
+use App\Http\Controllers\Warehouse\GSSReportsDownloadController;
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Export\OrderExportTemp;
 use Illuminate\Support\Facades\Auth;
@@ -144,6 +145,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('gss_container/{container}/download/', GSSCN35DownloadController::class)->name('gss_container.download');
     Route::get('gss/{delivery_bill}/cn38', GSSCN38DownloadController::class)->name('gss_container.cn38.download');
     Route::get('gss/{delivery_bill}/manifest', GSSManifestDownloadController::class)->name('gss_container.manifest.download');
+    Route::get('gss/{reports}/manifest/{dispatch}', GSSReportsDownloadController::class)->name('gss_container.reports.download');
 });
 
 

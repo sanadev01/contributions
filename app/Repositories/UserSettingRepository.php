@@ -62,7 +62,7 @@ class UserSettingRepository {
         $request->has('geps_service') ? saveSetting('geps_service', true, $user->id) : saveSetting('geps_service', false, $user->id);
         $request->has('sweden_post') ? saveSetting('sweden_post', true, $user->id) : saveSetting('sweden_post', false, $user->id);
         $request->has('post_plus') ? saveSetting('post_plus', true, $user->id) : saveSetting('post_plus', false, $user->id);
-        $request->has('gss_usps') ? saveSetting('gss_usps', true, $user->id) : saveSetting('gss_usps', false, $user->id);
+        $request->has('GSS_IPA') ? saveSetting('GSS_IPA', true, $user->id) : saveSetting('GSS_IPA', false, $user->id);
         $request->has('tax') ? saveSetting('tax', true, $user->id) : saveSetting('tax', false, $user->id);
         $request->has('volumetric_discount') ? saveSetting('volumetric_discount', true,$user->id) : saveSetting('volumetric_discount', false, $user->id);
         $request->has('marketplace_checked') ? saveSetting('marketplace_checked', true,$user->id) : saveSetting('marketplace_checked', false, $user->id);
