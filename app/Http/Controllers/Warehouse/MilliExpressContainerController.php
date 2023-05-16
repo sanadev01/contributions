@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Warehouse\Container;
 use App\Services\MileExpress\CN35LabelMaker;
 
-class MilliExpressCN35DownloadController extends Controller
+class MilliExpressContainerController extends Controller
 {
     public function __invoke(Container $container)
     { 
