@@ -1,13 +1,8 @@
 <?php
-
 namespace App\Repositories;
-
 use App\Models\Order;
 use App\Models\OrderTracking;
-use App\Facades\MileExpressFacade;
-use App\Services\Correios\Services\Brazil\CN23LabelMaker;
-use Illuminate\Support\Facades\Storage;
-
+use App\Services\MileExpress\CN23LabelMaker;
 class MileExpressLabelRepository
 {
     private $order;
@@ -26,11 +21,9 @@ class MileExpressLabelRepository
 
     public function handle()
     {
-
         if ($this->order->api_response == null) {
             return $this->getPrimaryLabel();
         }
-
         $this->printCN23();
         return true;
     }

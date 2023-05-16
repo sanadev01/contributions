@@ -45,15 +45,15 @@
             font-size: 15pt;
             object-fit: contain;
         }
-        
+/*         
         .service-type{
             position: absolute;
             top: 2.5mm;
-            right: 2.5mm;
+            right: 6mm;
             width: 20mm;
             height: 20mm;
             display: block;
-        }
+        } */
         .cn23-text{
             right: 0.1cm;
             top: 0.1cm;
@@ -69,7 +69,7 @@
         }
         .service-info{
             position: absolute;
-            left: 65mm;
+            left: 69mm;
             top:23mm;
         }
         .service-name{
@@ -77,10 +77,10 @@
             font-weight: bold;
             font-size: 10pt;
         }
-        .contract-code{
+        /* .contract-code{
             font-size: 8pt;
             text-align: center;
-        }
+        } */
 
         .tracking_code{
             position: absolute;
@@ -372,21 +372,19 @@
     <div class="cn23-text">
         CN23
     </div>
-    <img class="partner-logo" src="{{ $partnerLogo }}">
-    <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
-    <p class="screening-code">CJA01</p>
-    <img src="{{ $serviceLogo }}" class="service-type"/>
+    <img class="partner-logo" src="{{ $partnerLogo }}"> 
+    {{-- <img src="{{ $serviceLogo }}" class="service-type"/> --}}
     <div class="service-info-wrapper">
         <div class="order-infoline"></div>
         <strong>Service: </strong> {{ $service }} <br>
     </div>
-    <div class="service-info">
+    <div class="service-info ">
         <div class="service-name">
             {!! $packetType !!}
         </div>
-        <div class="contract-code">
+        {{-- <div class="contract-code">
             {!! $contractNumber !!}
-        </div>
+        </div> --}}
     </div>
     <div class="tracking_code">
         <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
