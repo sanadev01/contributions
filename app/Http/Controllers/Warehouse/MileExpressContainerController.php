@@ -90,8 +90,7 @@ class MileExpressContainerController extends Controller
     {
         if ($mile_express_container->isRegistered()) {
             return back();
-        }
-
+        } 
         if ( $containerRepository->update($mile_express_container, $request) ){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.mile-express-containers.index');
