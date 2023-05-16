@@ -41,12 +41,14 @@
                         </a>
                     </li>
                 @endif
-                <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
-                    <a href="{{ route('admin.tracking.index') }}" target="_blank">
-                        <i class=" feather icon-map-pin"></i>
-                        <span class="menu-title">@lang('menu.trackings')</span>
-                    </a>
-                </li>
+                @can('view',App\Models\OrderTracking::class)
+                    <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
+                        <a href="{{ route('admin.tracking.index') }}" target="_blank">
+                            <i class=" feather icon-map-pin"></i>
+                            <span class="menu-title">@lang('menu.trackings')</span>
+                        </a>
+                    </li>
+                @endcan
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.profile.index') }}">
                         <i class=" feather icon-user-check"></i>
@@ -121,12 +123,14 @@
                                             class="feather icon-circle"></i><span class="menu-title">Pickups</span></a>
                                 </li>
                             @endadmin
-                            <li class="nav-item {{ $isActive(['admin.trash-orders.index']) }}">
-                                <a href="{{ route('admin.trash-orders.index') }}">
-                                    <i class="feather icon-circle"></i>
-                                    <span class="menu-title">@lang('menu.Trashed Orders')</span>
-                                </a>
-                            </li>
+                            @can('viewTrashedOrder',App\Models\Order::class)
+                                <li class="nav-item {{ $isActive(['admin.trash-orders.index']) }}">
+                                    <a href="{{ route('admin.trash-orders.index') }}">
+                                        <i class="feather icon-circle"></i>
+                                        <span class="menu-title">@lang('menu.Trashed Orders')</span>
+                                    </a>
+                                </li>
+                            @endcan
                         </ul>
                     </li>
                 @endcan
@@ -297,7 +301,7 @@
                         <span class="menu-title" data-i18n="Dashboard">@lang('menu.Accounting')</span>
                     </a>
                     <ul class="menu-content">
-                        @can('viewAny', App\Models\PaymentInvoice::class)
+                        @can('viewPaymentInvoice', App\Models\PaymentInvoice::class)
                             <li class="nav-item {{ $isActive(['admin.payment-invoices.index', 'admin.payment-invoices.edit']) }}">
                                 <a href="{{ route('admin.payment-invoices.index') }}">
                                     <i class=" feather icon-circle"></i>
@@ -367,7 +371,7 @@
                         </ul>
                     </li>
                 @endif
-                @can('labelPrint', App\Models\Order::class)
+                @can('printBulkLabel', App\Models\Order::class)
                     <li class="{{ $isActive(['admin.label.scan.create']) }}">
                         <a href="{{ route('admin.label.scan.create') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
@@ -453,35 +457,37 @@
                     @endadmin
                     </ul>
                 </li>
-                <li class="nav-item has-sub sidebar-group">
-                    <a href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-divide-square">
-                            <rect x="3" y="3" width="18" height="18" rx="2"
-                                ry="2"></rect>
-                            <line x1="8" y1="12" x2="16" y2="12"></line>
-                            <line x1="12" y1="16" x2="12" y2="16"></line>
-                            <line x1="12" y1="8" x2="12" y2="8"></line>
-                        </svg>
-                        <span class="menu-title" data-i18n="Dashboard">Calculators</span>
-                    </a>
-                    <ul class="menu-content">
-                        <li class="nav-item {{ $isActive(['calculator.index']) }} ">
-                            <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title" data-i18n="Apps">@lang('menu.calculator')</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {{ $isActive(['us-calculator.index']) }} ">
-                            <a class="nav-link" href="{{ route('us-calculator.index') }}" target="_blank">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title" data-i18n="Apps">@lang('menu.uscalculator')</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                @can('viewAny', App\Models\Order::class)
+                @can('view_calculator')
+                    <li class="nav-item has-sub sidebar-group">
+                        <a href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-divide-square">
+                                <rect x="3" y="3" width="18" height="18" rx="2"
+                                    ry="2"></rect>
+                                <line x1="8" y1="12" x2="16" y2="12"></line>
+                                <line x1="12" y1="16" x2="12" y2="16"></line>
+                                <line x1="12" y1="8" x2="12" y2="8"></line>
+                            </svg>
+                            <span class="menu-title" data-i18n="Dashboard">Calculators</span>
+                        </a>
+                        <ul class="menu-content">
+                            <li class="nav-item {{ $isActive(['calculator.index']) }} ">
+                                <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
+                                    <i class="feather icon-circle"></i>
+                                    <span class="menu-title" data-i18n="Apps">@lang('menu.calculator')</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ $isActive(['us-calculator.index']) }} ">
+                                <a class="nav-link" href="{{ route('us-calculator.index') }}" target="_blank">
+                                    <i class="feather icon-circle"></i>
+                                    <span class="menu-title" data-i18n="Apps">@lang('menu.uscalculator')</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcan
+                @can('view',App\Models\OrderTracking::class)
                     <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
                         <a href="{{ route('admin.tracking.index') }}" target="_blank">
                             <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
@@ -619,9 +625,9 @@
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                             class="feather feather-user">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                        <span data-i18n="Apps"> @lang('menu.profile') </span>
+                                            <circle cx="12" cy="7" r="4"></circle>
+                                        </svg>
+                          <span data-i18n="Apps"> @lang('menu.profile') </span>
                     </a>
                 </li>
 
@@ -655,34 +661,38 @@
                     @endcan
                 @endadmin
                 <x-shared-menu></x-shared-menu>
+                @can('view_api_docs')
                 <li class="sub-category"> <span class="text-white">HELP</span> </li>
-                <li class="nav-item">
-                    <a class="nav-link" target="__blank"
-                        href="https://documenter.getpostman.com/view/16057364/TzeXmSxT">
-                        <svg viewBox="0 0 24 24" height="15" stroke="currentColor" stroke-width="2"
-                            fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                            <polyline points="10 9 9 9 8 9"></polyline>
-                        </svg> <span data-i18n="Apps"> @lang('menu.API Documents') </span>
+                    <li class="nav-item">
+                        <a class="nav-link" target="__blank"
+                            href="https://documenter.getpostman.com/view/16057364/TzeXmSxT">
+                            <svg viewBox="0 0 24 24" height="15" stroke="currentColor" stroke-width="2"
+                                fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg> <span data-i18n="Apps"> @lang('menu.API Documents') </span>
+                        </a>
+                    </li>
+                @endcan
+            @endif            
+            @can('show_ticket', App\Models\Ticket::class)
+                <li class="nav-item {{ $isActive(['admin.tickets.index', 'admin.tickets.show']) }}">
+                    <a class="nav-link" href="{{ route('admin.tickets.index') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-message-circle">
+                            <path
+                                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                            </path>
+                        </svg>
+                        <span data-i18n="Apps">@lang('menu.support tickets')</span>
+                        <livewire:components.support-ticket />
                     </a>
                 </li>
-            @endif
-            <li class="nav-item {{ $isActive(['admin.tickets.index', 'admin.tickets.show']) }}">
-                <a class="nav-link" href="{{ route('admin.tickets.index') }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="feather feather-message-circle">
-                        <path
-                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
-                        </path>
-                    </svg>
-                    <span data-i18n="Apps">@lang('menu.support tickets')</span>
-                    <livewire:components.support-ticket />
-                </a>
-            </li>
+            @endcan
         </ul>
     </div>
 </div>

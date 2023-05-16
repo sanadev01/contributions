@@ -16,8 +16,10 @@
                         <button type="btn" onclick="toggleOrderPageSearch()" id="orderSearch"
                             class="btn btn-primary mb-1 waves-effect waves-light mr-1"><i
                                 class="feather icon-search"></i></button>
-                        <a @if (Auth::user()->isActive()) href="{{ route('admin.consolidation.parcels.index') }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif
-                            class="btn btn-primary mb-1 waves-effect waves-light mr-1"> @lang('consolidation.Create Consolidation') </a>
+                        @can('consolidateParcel',App\Models\Order::class)
+                            <a @if (Auth::user()->isActive()) href="{{ route('admin.consolidation.parcels.index') }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif
+                                class="btn btn-primary mb-1 waves-effect waves-light mr-1"> @lang('consolidation.Create Consolidation') </a>
+                        @endcan
                         <a @if (Auth::user()->isActive()) href="{{ route('admin.parcels.create') }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif
                             class="btn btn-primary mb-1 waves-effect waves-light"> @lang('parcel.Create Parcel') </a>
                     </div>

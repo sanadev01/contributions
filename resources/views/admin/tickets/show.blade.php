@@ -90,7 +90,7 @@
                                         <div class="col-3">
                                             <button type="submit"
                                                 class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
-                                                @lang('tickets.Reply')
+                                                @lang('tickets.Reply') 
                                             </button>
                                         </div>
                                     </div>

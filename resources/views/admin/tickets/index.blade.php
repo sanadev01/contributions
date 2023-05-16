@@ -1,10 +1,12 @@
 @extends('layouts.master')
 
 @section('page')
-    @if (auth()->user()->isAdmin())
+    @can('reply',App\Models\Ticket::class)
         @section('title', __('tickets.Support Tickets'))
-    @else
-    @section('title', __('tickets.My Tickets'))
+    @endcan
+    @cannot('reply',App\Models\Ticket::class)
+        @section('title', __('tickets.My Tickets'))
+    @endcan
 @endif
 
 <div class="card min-vh-100">

@@ -77,13 +77,15 @@
                                 title="@lang('tickets.Detail')">
                                 <i class="feather icon-eye"></i>
                             </a>
-                            @if (auth()->user()->isAdmin() && $ticket->isOpen())
-                                <form action="{{ route('admin.ticket.mark-closed', $ticket) }}" method="post">
-                                    @csrf
-                                    <button class="btn btn-danger" title="@lang('tickets.Close Ticket')">
-                                        <i class="feather icon-check"></i>
-                                    </button>
-                                </form>
+                            @if ($ticket->isOpen())
+                                @can('close',App\Models\Ticket::class)
+                                    <form action="{{ route('admin.ticket.mark-closed', $ticket) }}" method="post">
+                                        @csrf
+                                        <button class="btn btn-danger" title="@lang('tickets.Close Ticket')">
+                                            <i class="feather icon-check"></i>
+                                        </button>
+                                    </form>
+                                @endcan
                             @endif
                         </td>
                     </tr>

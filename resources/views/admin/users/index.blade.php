@@ -127,13 +127,15 @@
                                                             title="Check User Activity" class="dropdown-item w-100">
                                                             <i class="feather icon-activity"></i> Activity Logs
                                                         </a>
-                                                        <form action="{{ route('admin.users.login', $user) }}"
-                                                            class="d-flex" method="post">
-                                                            @csrf
-                                                            <button class="dropdown-item w-100">
-                                                                <i class="feather icon-lock"></i> @lang('user.Login')
-                                                            </button>
-                                                        </form>
+                                                        @can('impersonate',App\Models\User::class)
+                                                            <form action="{{ route('admin.users.login', $user) }}"
+                                                                class="d-flex" method="post">
+                                                                @csrf
+                                                                <button class="dropdown-item w-100">
+                                                                    <i class="feather icon-lock"></i> @lang('user.Login')
+                                                                </button>
+                                                            </form>
+                                                        @endcan
                                                         @can('delete', $user)
                                                             <form action="{{ route('admin.users.destroy', $user) }}"
                                                                 class="d-flex" method="post"
