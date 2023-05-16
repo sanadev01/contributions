@@ -126,7 +126,7 @@ class ContainerRepository extends AbstractRepository{
     }
 
     public function update(Container $container, Request $request)
-    { 
+    {
         try {
             return  $container->update([
                 'destination_operator_name' => $request->destination_operator_name,
