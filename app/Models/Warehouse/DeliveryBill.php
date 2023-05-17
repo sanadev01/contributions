@@ -14,12 +14,39 @@ class DeliveryBill extends Model
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
-    
+
     protected $guarded = [];
 
     public function containers()
     {
         return $this->belongsToMany(Container::class);
+    }
+
+    /**
+     * @return Container
+     */
+    public function container()
+    {
+        return $this->containers->first();
+    }
+
+    public function isPostNL()
+    {
+        if($this->containers->first()->services_subclass_code == 'PostNL'){
+            return true;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMileExpressService()
+    {
+        if ($this->container()->services_subclass_code == Container::CONTAINER_MILE_EXPRESS) {
+            return true;
+        }
+
+        return false;
     }
 
     public function isRegistered()
@@ -71,6 +98,20 @@ class DeliveryBill extends Model
             return true;
         }
     }
+    
+    public function isAnjunChinaStandard()
+    {
+        if($this->containers->first()->services_subclass_code == Container::CONTAINER_ANJUNC_NX){
+            return true;
+        }
+    }
+    
+    public function isAnjunChinaExpress()
+    {
+        if($this->containers->first()->services_subclass_code == Container::CONTAINER_ANJUNC_IX){
+            return true;
+        }
+    }
 
     public function isSwedenPost()
     {
@@ -93,4 +134,22 @@ class DeliveryBill extends Model
         }
     }
 
+    /**
+     * @return bool
+     */
+    public function hasColombiaService()
+    {
+        if ($this->containers->first()->services_subclass_code == 'CO-NX') {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isGDE()
+    {
+        if($this->containers->first()->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL || ShippingService::GDE_FIRST_CLASS){
+            return true;
+        }
+    }
 }

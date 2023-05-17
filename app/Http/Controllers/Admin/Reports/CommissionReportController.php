@@ -20,10 +20,12 @@ class CommissionReportController extends Controller
     public function index(Request $request, CommissionReportsRepository $commissionReportsRepository) 
     {
         
-        // $this->authorize('viewComissionReport',Reports::class);
-
         if ( $request->dl ==1 ){
-            $users = $commissionReportsRepository->getCommissionReportOfUsers($request,false,0,$request->sort_by,$request->sort_order);
+            if(Auth::user()->isAdmin()){
+                $users = $commissionReportsRepository->getCommissionReportOfUsers($request,false,0,$request->sort_by,$request->sort_order);
+            }else{
+                $users = $commissionReportsRepository->getCommissionReportOfLoggedInUser($request,false,0,$request->sort_by,$request->sort_order);
+            }
             $shipmentReport = new CommissionReport($users,$request);
             return $shipmentReport->handle();
         }
