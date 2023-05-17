@@ -66,7 +66,7 @@
                     <li class="{{ $isActive(['warehouse.mile-express-containers.index','warehouse.mile-express-containers.create','warehouse.mile-express-containers.edit']) }}">
                         <a href="{{ route('warehouse.mile-express-containers.index') }}">
                             <i class="feather icon-circle"></i>
-                            <span class="menu-title">@lang('menu.Warehouse.MileExpress')</span>
+                            <span class="menu-title">@lang('menu.Warehouse.HD Express Courier')</span>
                         </a>
                     <li class="{{ $isActive(['warehouse.postnl_containers.index','warehouse.postnl_containers.create','warehouse.postnl_containers.edit','warehouse.postnl_container.packages.index']) }}">
                         <a href="{{ route('warehouse.postnl_containers.index') }}">
