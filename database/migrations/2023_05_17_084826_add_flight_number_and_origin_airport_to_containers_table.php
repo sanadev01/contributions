@@ -15,7 +15,7 @@ class AddFlightNumberAndOriginAirportToContainersTable extends Migration
     {
         Schema::table('containers', function (Blueprint $table) {
             $table->string('origin_airport',100)->nullable()->after('origin_country');
-            $table->string('flight_number',100)->nullable()->after('origin_country');
+            $table->string('flight_number',20)->nullable()->after('origin_country');
         });
     }
 
