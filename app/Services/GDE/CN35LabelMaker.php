@@ -28,7 +28,7 @@ class CN35LabelMaker implements HasLableExport
     {
  
 
-        $this->companyName = '<img src="'.public_path('images/hd-1cm.png').'" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
+        $this->companyName = 'HomeDelivery Express Services';
         $this->packetType = 'PACKET STANDARD';
         $this->officeAddress = '';
         $this->serialNumber = 1;
@@ -43,7 +43,7 @@ class CN35LabelMaker implements HasLableExport
         
         $this->weight =  $container->getWeight();
         $this->dispatchNumber = $container->dispatch_number;
-        $this->originAirpot = 'MIA';
+        $this->originAirpot = 'GRU';
         $this->setService($container->getServiceCode());
         $this->destinationAirport = $container->getDestinationAriport();        
         $this->itemsCount = $container->getPiecesCount();
@@ -112,29 +112,7 @@ class CN35LabelMaker implements HasLableExport
     public function setType(string $weight)
     {
         $this->OrderWeight = $weight;
-        if($weight > 3){
-            if($this->packetType == 'PACKET EXPRESS'){
-                $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/>
-                                        Centro Internacional de São Paulo – SE/SPM <br/>
-                                        Rua Mergenthaler, 592 – Bloco III, 5 Mezanino <br/>
-                                        05311-900  Vila Leopoldina - São Paulo/SP <br/>
-                                        CNPJ 34.028.316/7105-85';
-                return $this;
-            }
-            if($this->packetType == 'PACKET STANDARD'){
-                $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/> 
-                                        Centro Internacional do Rio de Janeiro –SE/RJ <br/>
-                                        Ponta do Galeão, s/n 2 andar TECA Correios Galeão, <br/>
-                                        21941-9740 Ilha do Governador, Rio de Janeiro/RJ <br/>
-                                        CNPJ: 34.028.316/7189-93';
-                return $this;
-            }
-        }
-        $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/>
-                                Centro Internacional de Curitiba –SE/PR <br/>
-                                Rua Salgado Filho, 476 Jardim Amélia <br/>
-                                83.330-972  Pinhais/PR <br/>
-                                CNPJ 34.028.316/0031-29';
+        $this->officeAddress = "Herco Freight Forwarders Inc <br> 2200 NW 190<sup>th</sup> Avenue Suite#100  <br> Miami , FL 33182 Phone (305) 888-5191";
 
         return $this;
     }
