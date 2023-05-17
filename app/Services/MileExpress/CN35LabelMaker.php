@@ -4,6 +4,7 @@ namespace App\Services\MileExpress;
 
 use App\Models\Warehouse\Container;
 use App\Services\Correios\Contracts\HasLableExport;
+use Carbon\Carbon;
 
 class CN35LabelMaker implements HasLableExport
 {
@@ -31,7 +32,7 @@ class CN35LabelMaker implements HasLableExport
         $this->officeAddress = '';
         $this->serialNumber = 1;
         $this->flightNumber = $container->flight_number;
-        $this->dispatchDate = '';
+        $this->dispatchDate = Carbon::now()->format('Y-m-d');
         $order = $container->orders->first();        
         if($order){ 
               $this->setType($order->getOriginalWeight('kg')); 
