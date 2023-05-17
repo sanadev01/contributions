@@ -57,7 +57,8 @@ class GDEContainerRepository {
         try {
             return  $container->update([
                 'seal_no' => $request->seal_no,
-                'unit_type' => $request->unit_type
+                'unit_type' => $request->unit_type,
+                'destination_operator_name' => $request->destination_operator_name
             ]);
 
         } catch (\Exception $ex) {

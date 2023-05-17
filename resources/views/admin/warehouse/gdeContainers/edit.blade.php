@@ -41,11 +41,7 @@
                                 <div class="controls row mb-1 align-items-center my-2">
                                     <label class="col-md-3 text-md-right">@lang('warehouse.containers.Sorting')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="destination_operator_name">
-                                            <option value="">@lang('warehouse.containers.Sorting')</option>
-                                            <option value="SAOD" {{ old('destination_operator_name', $container->destination_operator_name) == 'SAOD' ? 'selected' : '' }}>GRU</option>
-                                            <option value="CRBA" {{ old('destination_operator_name', $container->destination_operator_name) == 'CRBA' ? 'selected' : '' }}>CWB</option>
-                                        </select>
+                                        <input class="form-control" name="destination_operator_name" value="{{ old('destination_operator_name', $container->destination_operator_name) }}">
                                         @error('destination_operator_name')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
