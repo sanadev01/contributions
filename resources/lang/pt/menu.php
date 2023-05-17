@@ -54,7 +54,7 @@ return [
         'Chile' => 'Chile',
         'USPS' => 'USPS',
         // 'Sinerlog' => 'Sinerlog',
-        'MileExpress' => 'MileExpress',
+        'HD Express' => 'HD Express',
         'PostNL' => 'PostNL',
         'Colombia' => 'Colombia',
         'GePS' => 'GePS',
