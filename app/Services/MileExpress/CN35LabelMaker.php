@@ -30,7 +30,7 @@ class CN35LabelMaker implements HasLableExport
         $this->packetType = 'PACKET STANDARD';
         $this->officeAddress = '';
         $this->serialNumber = 1;
-        $this->flightNumber = '';
+        $this->flightNumber = $container->flight_number;
         $this->dispatchDate = '';
         $order = $container->orders->first();        
         if($order){ 
@@ -39,7 +39,7 @@ class CN35LabelMaker implements HasLableExport
         
         $this->weight =  $container->getWeight();
         $this->dispatchNumber = $container->dispatch_number;
-        $this->originAirpot = 'MIA';
+        $this->originAirpot = $container->origin_airport;
         $this->setService($container->getServiceCode());
         $this->destinationAirport = $container->destination_operator_name;        
         $this->itemsCount = $container->getPiecesCount();
