@@ -43,7 +43,7 @@ class CN35LabelMaker implements HasLableExport
         
         $this->weight =  $container->getWeight();
         $this->dispatchNumber = $container->dispatch_number;
-        $this->originAirpot = 'MIA';
+        $this->originAirpot = 'GRU';
         $this->setService($container->getServiceCode());
         $this->destinationAirport = $container->getDestinationAriport();        
         $this->itemsCount = $container->getPiecesCount();
