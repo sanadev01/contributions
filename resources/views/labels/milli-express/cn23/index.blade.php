@@ -70,12 +70,12 @@
         .service-info{
             position: absolute;
             left: 69mm;
-            top:23mm;
+            top:13mm;
         }
         .service-name{
             text-align: center;
             font-weight: bold;
-            font-size: 10pt;
+            font-size: 15pt;
         }
         /* .contract-code{
             font-size: 8pt;
