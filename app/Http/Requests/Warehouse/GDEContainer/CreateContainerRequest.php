@@ -26,6 +26,8 @@ class CreateContainerRequest extends FormRequest
         return [
             'unit_type' => 'required|integer|in:1,2',
             'services_subclass_code' => 'required',
+            'origin_airport' => 'required',
+            'flight_number' => 'required',
             'destination_operator_name' => 'required',
             'seal_no' => 'required|unique:containers,seal_no',
         ];
