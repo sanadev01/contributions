@@ -26,6 +26,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\ColombiaLabelRepository;
 use App\Repositories\POSTNLLabelRepository;
+use App\Repositories\GDELabelRepository;
+use App\Repositories\GSSLabelRepository;
+
 
 class OrderLabelController extends Controller
 {
@@ -79,7 +82,7 @@ class OrderLabelController extends Controller
 
             if ($order->recipient->country_id == Order::US) {
                 // For USPS
-                if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $order->shippingService->service_sub_class == ShippingService::USPS_GROUND) {
+                if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $order->shippingService->service_sub_class == ShippingService::USPS_GROUND || $order->shippingService->service_sub_class == ShippingService::GSS_PRIORITY_MAIL ||$order->shippingService->service_sub_class == ShippingService::GSS_FIRST_CLASS) {
                     $uspsLabelRepository = new USPSLabelRepository();
                     $uspsLabelRepository->handle($order);
 
@@ -128,6 +131,22 @@ class OrderLabelController extends Controller
                     $postPlusLabelRepository = new PostPlusLabelRepository();
                     $postPlusLabelRepository->get($order);
                     $error = $postPlusLabelRepository->getError();
+                    if ($error){
+                        return $this->rollback($error);
+                    }
+                }
+                if ($order->shippingService->isGDEService()) {
+                    $gdeLabelRepository = new GDELabelRepository();
+                    $gdeLabelRepository->get($order);
+                    $error = $gdeLabelRepository->getError();
+                    if ($error){
+                        return $this->rollback($error);
+                    }
+                }
+                if ($order->shippingService->isGSSService()) {
+                    $gssLabelRepository = new GSSLabelRepository();
+                    $gssLabelRepository->get($order);
+                    $error = $gssLabelRepository->getError();
                     if ($error){
                         return $this->rollback($error);
                     }
