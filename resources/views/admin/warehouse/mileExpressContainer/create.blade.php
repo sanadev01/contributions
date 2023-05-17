@@ -45,6 +45,25 @@
                                 </div>
                             </div>
                             <div class="controls row mb-1 align-items-center my-2">
+                                <label class="col-md-3 text-md-right">Flight Number<span class="text-danger">*</span></label>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="flight_number" value= "{{old('flight_number')}}" required>  
+                                    @error('flight_number')
+                                        <div class="help-block text-danger"> {{ $message }} </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            
+                            <div class="controls row mb-1 align-items-center my-2">
+                                <label class="col-md-3 text-md-right">Origin Airport<span class="text-danger">*</span></label>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="origin_airport" value= "{{old('origin_airport')}}" required>  
+                                    @error('origin_airport')
+                                        <div class="help-block text-danger"> {{ $message }} </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="controls row mb-1 align-items-center my-2">
                                 <label class="col-md-3 text-md-right">@lang('warehouse.containers.Distribution Service Class')<span class="text-danger">*</span></label>
                                 <div class="col-md-6">
                                     <select class="form-control" name="services_subclass_code" required>

@@ -109,6 +109,8 @@ class ContainerRepository extends AbstractRepository{
                 'origin_operator_name' => 'HERC',
                 'postal_category_code' => 'A',
                 'destination_operator_name' => $request->destination_operator_name,
+                'origin_airport' => $request->origin_airport,
+                'flight_number' => $request->flight_number,
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code,
                 'unit_response_list' => ($request->services_subclass_code == Container::CONTAINER_MILE_EXPRESS) ? json_encode($mileExpressContinerData) : null,
@@ -131,7 +133,9 @@ class ContainerRepository extends AbstractRepository{
             return  $container->update([
                 'destination_operator_name' => $request->destination_operator_name,
                 'seal_no' => $request->seal_no,
-                'unit_type' => $request->unit_type
+                'unit_type' => $request->unit_type,
+                'origin_airport' => $request->origin_airport,
+                'flight_number' => $request->flight_number,
             ]);
 
         } catch (\Exception $ex) {
