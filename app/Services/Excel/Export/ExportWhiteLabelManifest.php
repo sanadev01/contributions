@@ -32,7 +32,7 @@ class ExportWhiteLabelManifest extends AbstractExportService
     }
     public function superHeadingRow()
     {
-        $this->mergeCells('A1:V5');
+    $this->mergeCells('A1:Q5');
         $this->sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
         $this->sheet->getStyle('A1')->getAlignment()->setVertical('center');
         $this->setCellValue('A1' ,'MANIFESTO DE EXPORTAÇÃO REMESSA EXPRESSA');
@@ -74,12 +74,7 @@ class ExportWhiteLabelManifest extends AbstractExportService
                 $this->setCellValue('O'.$row,$this->getValuePaidToCorrieos($container,$package)['airport']);
                 $this->setCellValue('P'.$row, $this->getValuePaidToCorrieos($container,$package)['commission']); 
                 $this->setCellValue('Q'.$row,  optional($package->affiliateSale)->commission);
-                $this->setCellValue('R'.$row,  optional(optional($package->affiliateSale)->user)->pobox_number.' '.optional(optional($package->affiliateSale)->user)->name);
-                $this->setCellValue('S'.$row,  $container->dispatch_number);
-                $this->setCellValue('T'.$row, optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName());
-                $this->setCellValue('U'.$row,  $package->tracking_id);
-                $this->setCellValue('V'.$row,  setting('marketplace_checked', null, $package->user->id)?  setting('marketplace', null, $package->user->id):'');
-                foreach ($package->items as $item) {
+             foreach ($package->items as $item) {
                     $this->setCellValue('I'.$row, $item->description);
                     $this->setCellValue('J'.$row, $item->sh_code);
                     $this->row++;
@@ -101,18 +96,18 @@ class ExportWhiteLabelManifest extends AbstractExportService
         $this->setCellValue('O'.$row, $this->totalPaidToCorreios);
         $this->setCellValue('P'.$row, $this->totalAnjunCommission);
         $this->setCellValue('Q'.$row, $this->totalCommission);
-        $this->currentRow = $row; 
+        $this->currentRow = $row;
     }
     private function setExcelHeaderRow()
     {
 
-        foreach (range('A', 'V') as $char) {
+        foreach (range('A', 'Q') as $char) {
             $this->mergeCells($char.$this->currentRow.':'.$char.($this->currentRow+2)); 
         }
 
-        $this->sheet->getStyle('A'.$this->currentRow.':V'.$this->currentRow)->getAlignment()->setHorizontal('center');
-        $this->sheet->getStyle('A'.$this->currentRow.':V'.$this->currentRow)->getAlignment()->setVertical('center'); 
-        $this->sheet->getStyle('A'.$this->currentRow.':V'.$this->currentRow)->applyFromArray(
+        $this->sheet->getStyle('A'.$this->currentRow.':Q'.$this->currentRow)->getAlignment()->setHorizontal('center');
+        $this->sheet->getStyle('A'.$this->currentRow.':Q'.$this->currentRow)->getAlignment()->setVertical('center'); 
+        $this->sheet->getStyle('A'.$this->currentRow.':Q'.$this->currentRow)->applyFromArray(
              [
             'font' => [
                 'bold' => false,
@@ -176,22 +171,10 @@ class ExportWhiteLabelManifest extends AbstractExportService
 
         $this->setColumnWidth('Q', 20);
         $this->setCellValue('Q'.$this->currentRow, "OBSERVAÇÕES"); 
-
-        $this->setColumnWidth('R', 20);
-        $this->setCellValue('R'.$this->currentRow, 'Commission Paid to');
-
-        $this->setColumnWidth('S', 20);
-        $this->setCellValue('S'.$this->currentRow, 'Bag');
+ 
         
-        $this->setColumnWidth('T', 20);
-        $this->setCellValue('T'.$this->currentRow, 'POBOX / NAME');
-        $this->setColumnWidth('U', 20);
-        $this->setCellValue('U'.$this->currentRow, 'Carrier Tracking');
-        $this->setColumnWidth('V', 20);
-        $this->setCellValue('V'.$this->currentRow, 'Marketplace');
-        
-        $this->setBackgroundColor('A'.$this->currentRow.':V'.$this->currentRow, "f2f2f2");
-        $this->setColor('A'.$this->currentRow.':W'.$this->currentRow, "000");
+        $this->setBackgroundColor('A'.$this->currentRow.':Q'.$this->currentRow, "f2f2f2");
+        $this->setColor('A'.$this->currentRow.':Q'.$this->currentRow, "000");
         $this->currentRow= $this->currentRow+3;
     }
  

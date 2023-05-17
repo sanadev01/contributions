@@ -90,7 +90,7 @@
                 <td colspan="2">
                     <div class="text-align:center;">
                         Nº VÔO <small><i>(Flight Number)</i></small> <br>
-                        . <br/>.
+                        <strong>{{ $flightNumber }}</strong> 
                     </div>
                 </td>
             </tr>
