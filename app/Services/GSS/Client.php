@@ -219,6 +219,7 @@ class Client{
                 $package->update([
                     'unit_response_list' => json_encode(['cn35'=>$data, 'manifest' => $reportData, 'dispatchID' => $dispatchID]),
                     'unit_code' => $id,
+                    'response' => 1,
                 ]); 
             }
             return $this->responseSuccessful($data, 'Container registration is successfull. You can download CN35 label');
