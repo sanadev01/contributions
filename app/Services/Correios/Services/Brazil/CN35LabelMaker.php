@@ -31,7 +31,7 @@ class CN35LabelMaker implements HasLableExport
         $this->officeAddress = '';
         $this->serialNumber = 1;
         $this->flightNumber = '';
-        $this->dispatchDate = '';
+        $this->dispatchDate = Carbon::now()->format('Y-m-d');
         $order = $container->orders->first();
         
         if($order){ 
