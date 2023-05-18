@@ -2,6 +2,7 @@
 
 namespace App\Services\Correios\Services\Brazil;
 
+use Carbon\Carbon;
 use App\Models\Warehouse\Container;
 use App\Services\Correios\Contracts\HasLableExport;
 
