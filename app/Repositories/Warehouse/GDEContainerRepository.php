@@ -32,6 +32,8 @@ class GDEContainerRepository {
                 'user_id' => Auth::id(),
                 'dispatch_number' => 0,
                 'origin_country' => 'US',
+                'origin_airport' => $request->origin_airport,
+                'flight_number' => $request->flight_number,
                 'seal_no' => $request->seal_no,
                 'origin_operator_name' => 'HERC',
                 'postal_category_code' => 'A',
@@ -57,7 +59,10 @@ class GDEContainerRepository {
         try {
             return  $container->update([
                 'seal_no' => $request->seal_no,
-                'unit_type' => $request->unit_type
+                'unit_type' => $request->unit_type,                
+                'origin_airport' => $request->origin_airport,
+                'flight_number' => $request->flight_number,
+                'destination_operator_name' => $request->destination_operator_name
             ]);
 
         } catch (\Exception $ex) {

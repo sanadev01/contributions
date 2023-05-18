@@ -182,9 +182,11 @@
                                                         @endif
                                                             <i class="fa fa-cloud-download"></i> Download Manifest
                                                         
-                                                        <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
-                                                            <i class="fa fa-cloud-download"></i> Download Manifest By Service
-                                                        </a>
+                                                            @if(!$deliveryBill->isGDE())
+                                                            <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i> Download Manifest By Service
+                                                            </a>
+                                                        @endif 
                                                         @if($deliveryBill->isRegistered() && $deliveryBill->isGSS())
                                                             @foreach (json_decode($deliveryBill->containers[0]->unit_response_list)->manifest->reports as $report)
                                                                 <a href="{{ route('warehouse.gss_container.reports.download',[explode(',', $report)[0], json_decode($deliveryBill->containers[0]->unit_response_list)->dispatchID]) }}" class="dropdown-item w-100">
@@ -192,9 +194,13 @@
                                                                 </a>
                                                             @endforeach
                                                         @endif
-                                                        @if ($deliveryBill->isRegistered() && $deliveryBill->isGDE())
-                                                            <a href="{{ route('warehouse.gde.manifest.download',$deliveryBill) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-cloud-download"></i> Download White Label Manifest
+                                                        @if ($deliveryBill->isRegistered() && $deliveryBill->isGDE())  
+                                                        
+                                                           <a href="{{ route('warehouse.gde.manifest.download',[$deliveryBill,'type'=>'us-customers']) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i>   Manifest to US Customers
+                                                            </a>
+                                                            <a href="{{ route('warehouse.gde.manifest.download',[$deliveryBill,'type'=>'brazil-customers']) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i>   Manifest to Brazilian Customs 
                                                             </a>
                                                         @endif
 
