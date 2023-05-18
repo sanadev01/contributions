@@ -97,6 +97,7 @@ class DeliveryBill extends Model
         if($this->containers->first()->services_subclass_code == ShippingService::GePS){
             return true;
         }
+        return false;
     }
     
     public function isAnjunChinaStandard()
@@ -118,6 +119,7 @@ class DeliveryBill extends Model
         if($this->containers->first()->services_subclass_code == ShippingService::Prime5 || $this->containers->first()->services_subclass_code == ShippingService::Prime5RIO){
             return true;
         }
+        return false;
     }
 
     public function isPostPlus()
@@ -125,6 +127,7 @@ class DeliveryBill extends Model
         if($this->containers->first()->services_subclass_code == ShippingService::Post_Plus_Registered){
             return true;
         }
+        return false;
     }
 
     public function isGSS()
@@ -132,6 +135,7 @@ class DeliveryBill extends Model
         if($this->containers->first()->services_subclass_code == ShippingService::GSS_IPA){
             return true;
         }
+        return false;
     }
 
     /**
@@ -148,8 +152,9 @@ class DeliveryBill extends Model
 
     public function isGDE()
     {
-        if($this->containers->first()->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL || ShippingService::GDE_FIRST_CLASS){
+        if(($this->containers->first()->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL) || ($this->containers->first()->services_subclass_code == ShippingService::GDE_FIRST_CLASS)){
             return true;
         }
+        return false;
     }
 }

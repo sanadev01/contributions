@@ -45,7 +45,7 @@ class ContainerRepository extends AbstractRepository{
         if ( !Auth::user()->isAdmin() ){
             $query->where('user_id',Auth::id());
         }
-        if($request->has('search')){
+        if($request->filled('search')){
             $query->where('dispatch_number', 'LIKE', '%' . $request->search . '%')
             ->orWhere('seal_no', 'LIKE', '%' . $request->search . '%');
         }
