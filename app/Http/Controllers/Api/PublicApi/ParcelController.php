@@ -92,11 +92,20 @@ class ParcelController extends Controller
             }
 
         }else{
-            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');;
+            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
             
             if($shippingService->isCorreiosService() && $volumeWeight > 65.15){
                 return apiResponse(false,"Your ". $volumeWeight ." lbs/in weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 66.15 lbs/in");
+            }
+        }
+
+        if($shippingService->isGDEService()) {
+            $weightLimit = optional($request->parcel)['measurement_unit'] == 'lbs/in' ? UnitsConverter::poundToKg($weight) : $weight;
+            if($weightLimit <= 0.453) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::GDE_FIRST_CLASS)->first();
+            } else {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)->first();
             }
         }
 
@@ -253,7 +262,7 @@ class ParcelController extends Controller
                 'shipping_service_name' => $order->shippingService->name
             ]);
 
-            if($recipientCountryId == Order::US && !$order->shippingService->isDomesticService()){
+            if($recipientCountryId == Order::US && !(!$order->shippingService->isDomesticService() || !$order->shippingService->isInboundDomesticService())){
                 DB::rollback();
 
                 return apiResponse(false, 'this service can not be use against US address');

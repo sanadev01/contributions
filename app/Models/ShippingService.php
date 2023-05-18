@@ -51,6 +51,7 @@ class ShippingService extends Model
     const Prime5RIO = 357;
     const GDE_PRIORITY_MAIL = 4387;
     const GDE_FIRST_CLASS = 4388;
+    const GSS_IPA = 477;
 
     
 
@@ -236,6 +237,14 @@ class ShippingService extends Model
     public function isInboundDomesticService()
     {
         if (collect($this->inboundDomesticShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isGSSService()
+    {
+        if($this->service_sub_class == self::GSS_IPA){
             return true;
         }
         return false;
