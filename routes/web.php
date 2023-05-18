@@ -298,6 +298,7 @@ Route::get('permission',function($id = null){
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container'); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
+
 Route::get('/clear-cache/{id}', function($id) {
     if($id === "1") {
         $artisanCmd = Artisan::call('cache:clear');
