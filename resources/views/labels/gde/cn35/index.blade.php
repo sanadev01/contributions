@@ -31,7 +31,7 @@
         table{
             /* margin: 0.05cm !important; */
             border-collapse: collapse;
-            width: 22cm;
+            width: 22.38cm;
             height: 11cm;
         }
         .column1{
@@ -76,7 +76,7 @@
                         <strong>{{ $serialNumber }}</strong>
                     </div>
                 </td>
-                <td colspan="2" style="text-align: center;font-size:18px;font-weight:bold;">
+                <td colspan="2" style="text-align: center;font-size:17px;font-weight:bold;">
                     {!! $officeAddress !!}
                 </td>
             </tr>
@@ -90,7 +90,7 @@
                 <td colspan="2">
                     <div class="text-align:center;">
                         Nº VÔO <small><i>(Flight Number)</i></small> <br>
-                        <strong>{{ $flightNumber }}</strong> 
+                        <strong>{{ $flightNumber }}</strong>
                     </div>
                 </td>
             </tr>
@@ -131,7 +131,6 @@
                         <div class="unit-code" style="width: 100%;display:block;">
                             {{$unitCode}}
                         </div>
-                        .
                     </div>
                 </td>
             </tr>
