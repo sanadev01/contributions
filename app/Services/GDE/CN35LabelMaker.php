@@ -28,7 +28,7 @@ class CN35LabelMaker implements HasLableExport
     {
  
 
-        $this->companyName = 'HomeDelivery Express Services';
+        $this->companyName = 'HomeDelivery GDE Services';
         $this->packetType = 'PACKET STANDARD';
         $this->officeAddress = '';
         $this->serialNumber = 1;
@@ -112,7 +112,7 @@ class CN35LabelMaker implements HasLableExport
     public function setType(string $weight)
     {
         $this->OrderWeight = $weight;
-        $this->officeAddress = "Herco Freight Forwarders Inc <br> 2200 NW 190<sup>th</sup> Avenue Suite#100  <br> Miami , FL 33182 Phone (305) 888-5191";
+        $this->officeAddress = "Herco Freight Forwarders Inc <br> 2200 NW 190<sup>th</sup> Avenue Suite#100  <br> Miami, FL, 33182, USA <br> Ph# (305) 888-5191";
 
         return $this;
     }
