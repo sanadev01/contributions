@@ -498,8 +498,8 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
         $this->setColumnValueAndWidth('FN',$this->currentRow,"PGA Packaging UOM 5 - 5");
         $this->setColumnValueAndWidth('FO',$this->currentRow,"PGA Packaging Qty 5 - 6");
         $this->setColumnValueAndWidth('FP',$this->currentRow,"PGA Packaging UOM 5 - 6");
-        $this->setColumnValueAndWidth('FQ',$this->currentRow,"Gross Net Quantity 6");
-        $this->setColumnValueAndWidth('FR',$this->currentRow,"Gross Net UOM 6");
+        $this->setColumnValueAndWidth('FQ',$this->currentRow,"Gross Net Quantity 5");
+        $this->setColumnValueAndWidth('FR',$this->currentRow,"Gross Net UOM 5");
         $this->setColumnValueAndWidth('FS',$this->currentRow,"HTS Number 6");
         $this->setColumnValueAndWidth('FT',$this->currentRow,"Description 6");
         $this->setColumnValueAndWidth('FU',$this->currentRow,"Line Item Value 6");
@@ -507,23 +507,67 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
         $this->setColumnValueAndWidth('FW',$this->currentRow,"PGA FDA Disclaimer 6");
         $this->setColumnValueAndWidth('FX',$this->currentRow,"PGA Product ID 6");
         $this->setColumnValueAndWidth('FY',$this->currentRow,"Prior Notice Confirmation Number 6");
+        $this->setColumnValueAndWidth('FZ',$this->currentRow,"PGA Packaging Qty 6 - 1");
 
-        $this->setColumnValueAndWidth('FZ',$this->currentRow,"Country of Origin 6");
-        $this->setColumnValueAndWidth('CR',$this->currentRow,"Prior Notice Confirmation Number 6");
-        $this->setColumnValueAndWidth('CS',$this->currentRow,"HTS Number 7");
-        $this->setColumnValueAndWidth('CT',$this->currentRow,"Description 7");
-        $this->setColumnValueAndWidth('CU',$this->currentRow,"Line Item Value 7");
-        $this->setColumnValueAndWidth('CV',$this->currentRow,"Country of Origin 7");
-        $this->setColumnValueAndWidth('CW',$this->currentRow,"PGA FDA Disclaimer 7");
-        $this->setColumnValueAndWidth('CX',$this->currentRow,"Prior Notice Confirmation Number 7");
-        $this->setColumnValueAndWidth('CY',$this->currentRow,"HTS Number 8");
-        $this->setColumnValueAndWidth('CZ',$this->currentRow,"Description 8");
-
-
-        $this->setColumnValueAndWidth('DA',$this->currentRow,"Line Item Value 8");
-        $this->setColumnValueAndWidth('DB',$this->currentRow,"Country of Origin 8");
-        $this->setColumnValueAndWidth('DC',$this->currentRow,"PGA FDA Disclaimer 8");
-        $this->setColumnValueAndWidth('DD',$this->currentRow,"Prior Notice Confirmation Number 8"); 
+        $this->setColumnValueAndWidth('GA',$this->currentRow,"PGA Packaging UOM 6 - 1");
+        $this->setColumnValueAndWidth('GB',$this->currentRow,"PGA Packaging Qty 6 - 2");
+        $this->setColumnValueAndWidth('GC',$this->currentRow,"PGA Packaging UOM 6 - 2");
+        $this->setColumnValueAndWidth('GD',$this->currentRow,"PGA Packaging Qty 6 - 3");
+        $this->setColumnValueAndWidth('GE',$this->currentRow,"PGA Packaging UOM 6 - 3");
+        $this->setColumnValueAndWidth('GF',$this->currentRow,"PGA Packaging Qty 6 - 4");
+        $this->setColumnValueAndWidth('GG',$this->currentRow,"PGA Packaging UOM 6 - 4");
+        $this->setColumnValueAndWidth('GH',$this->currentRow,"PGA Packaging Qty 6 - 5");
+        $this->setColumnValueAndWidth('GI',$this->currentRow,"PGA Packaging UOM 6 - 5");
+        $this->setColumnValueAndWidth('GJ',$this->currentRow,"PGA Packaging Qty 6 - 6");
+        $this->setColumnValueAndWidth('GK',$this->currentRow,"PGA Packaging UOM 6 - 6");
+        $this->setColumnValueAndWidth('GL',$this->currentRow,"Gross Net Quantity 6");
+        $this->setColumnValueAndWidth('GM',$this->currentRow,"Gross Net UOM 6");
+        $this->setColumnValueAndWidth('GN',$this->currentRow,"HTS Number 7");
+        $this->setColumnValueAndWidth('GO',$this->currentRow,"Description 7");
+        $this->setColumnValueAndWidth('GP',$this->currentRow,"Line Item Value 7");
+        $this->setColumnValueAndWidth('GQ',$this->currentRow,"Country of Origin 7");
+        $this->setColumnValueAndWidth('GR',$this->currentRow,"PGA FDA Disclaimer 7");
+        $this->setColumnValueAndWidth('GS',$this->currentRow,"PGA Product ID 7");
+        $this->setColumnValueAndWidth('GT',$this->currentRow,"Prior Notice Confirmation Number 7");
+        $this->setColumnValueAndWidth('GU',$this->currentRow,"PGA Packaging Qty 7 - 1");
+        $this->setColumnValueAndWidth('GV',$this->currentRow,"PGA Packaging UOM 7 - 1");
+        $this->setColumnValueAndWidth('GW',$this->currentRow,"PGA Packaging Qty 7 - 2");
+        $this->setColumnValueAndWidth('GX',$this->currentRow,"PGA Packaging UOM 7 - 2");
+        $this->setColumnValueAndWidth('GY',$this->currentRow,"PGA Packaging Qty 7 - 3");
+        $this->setColumnValueAndWidth('GZ',$this->currentRow,"PGA Packaging UOM 7 - 3");
+        
+        $this->setColumnValueAndWidth('HA',$this->currentRow,"PGA Packaging Qty 7 - 4");
+        $this->setColumnValueAndWidth('HB',$this->currentRow,"PGA Packaging UOM 7 - 4");
+        $this->setColumnValueAndWidth('HC',$this->currentRow,"PGA Packaging Qty 7 - 5");
+        $this->setColumnValueAndWidth('HD',$this->currentRow,"PGA Packaging UOM 7 - 5");
+        $this->setColumnValueAndWidth('HE',$this->currentRow,"PGA Packaging Qty 7 - 6");
+        $this->setColumnValueAndWidth('HF',$this->currentRow,"PGA Packaging UOM 7 - 6");
+        $this->setColumnValueAndWidth('HG',$this->currentRow,"Gross Net Quantity 7");
+        $this->setColumnValueAndWidth('HH',$this->currentRow,"Gross Net UOM 7");
+        $this->setColumnValueAndWidth('HI',$this->currentRow,"HTS Number 8");
+        $this->setColumnValueAndWidth('HJ',$this->currentRow,"Description 8");
+        $this->setColumnValueAndWidth('HK',$this->currentRow,"Line Item Value 8");
+        $this->setColumnValueAndWidth('HL',$this->currentRow,"Country of Origin 8");
+        $this->setColumnValueAndWidth('HM',$this->currentRow,"PGA FDA Disclaimer 8");
+        $this->setColumnValueAndWidth('HN',$this->currentRow,"PGA Product ID 8");
+        $this->setColumnValueAndWidth('HO',$this->currentRow,"Prior Notice Confirmation Number 8");
+        $this->setColumnValueAndWidth('HP',$this->currentRow,"PGA Packaging Qty 8- 1");
+        $this->setColumnValueAndWidth('HQ',$this->currentRow,"PGA Packaging UOM 8 - 1");
+        $this->setColumnValueAndWidth('HR',$this->currentRow,"PGA Packaging Qty 8 - 2");
+        $this->setColumnValueAndWidth('HS',$this->currentRow,"PGA Packaging UOM 8 - 2");
+        $this->setColumnValueAndWidth('HT',$this->currentRow,"PGA Packaging Qty 8 - 3");
+        $this->setColumnValueAndWidth('HU',$this->currentRow,"PGA Packaging UOM 8 - 3");
+        $this->setColumnValueAndWidth('HV',$this->currentRow,"PGA Packaging Qty 8 - 4");
+        $this->setColumnValueAndWidth('HW',$this->currentRow,"PGA Packaging UOM 8 - 4");
+        $this->setColumnValueAndWidth('HX',$this->currentRow,"PGA Packaging Qty 8 - 5");
+        $this->setColumnValueAndWidth('HY',$this->currentRow,"PGA Packaging UOM 8 - 5");
+        $this->setColumnValueAndWidth('HZ',$this->currentRow,"PGA Packaging Qty 8 - 6");
+        
+        $this->setColumnValueAndWidth('IA',$this->currentRow,"PGA Packaging UOM 8 - 6");
+        $this->setColumnValueAndWidth('IB',$this->currentRow,"Gross Net Quantity 8");
+        $this->setColumnValueAndWidth('IC',$this->currentRow,"Gross Net UOM 8");
+        $this->setColumnValueAndWidth('ID',$this->currentRow,"UOM 8");
+    
 
 
 
