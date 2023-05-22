@@ -300,17 +300,6 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
                  $this->setCellValue('IC'.$row, '');
                  $this->setCellValue('ID'.$row, '');
 
-
-
-
-
-
-
-
-
-
-
-
             }
             $row++;
         } 
@@ -318,7 +307,6 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
     }
     private function setExcelHeaderRow()
     {
- 
         $this->setColumnValueAndWidth('A',$this->currentRow, "Waybill Typ"); 
         $this->setColumnValueAndWidth('B',$this->currentRow, "AWB Prefix"); 
         $this->setColumnValueAndWidth('C',$this->currentRow, "AWB Number"); 
@@ -567,11 +555,6 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
         $this->setColumnValueAndWidth('IB',$this->currentRow,"Gross Net Quantity 8");
         $this->setColumnValueAndWidth('IC',$this->currentRow,"Gross Net UOM 8");
         $this->setColumnValueAndWidth('ID',$this->currentRow,"UOM 8");
-    
-
-
-
-
         
         $this->setBackgroundColor('A',$this->currentRow.':DD',$this->currentRow, "f2f2f2");
         $this->setColor('A',$this->currentRow.':DD',$this->currentRow, "000");
