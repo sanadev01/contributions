@@ -19,6 +19,7 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
     private $totalCommission = 0;
     private $totalAnjunCommission = 0;
     private $date;
+    private $uomMaxColumn = "CM";
     public function __construct(DeliveryBill $deliveryBill)
     {
         $this->deliveryBill = $deliveryBill;
@@ -27,6 +28,7 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
     }   
     public function handle()
     {
+
         $this->prepareExcelSheet();
         return $this->downloadExcel();
     }
@@ -36,6 +38,7 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
         $this->setExcelHeaderRow();        
         $row = $this->currentRow;
         foreach ($this->deliveryBill->containers as $container){
+           
         foreach ($container->orders as $package) {
                  $this->setCellValue('A'.$row, 'Master');
                  $this->setCellValue('B'.$row, $container->awb);
@@ -106,205 +109,127 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
                  $this->setCellValue('BO'.$row, '');
                  $this->setCellValue('BP'.$row, '');
                  $this->setCellValue('BQ'.$row, '');
-                 $this->setCellValue('BR'.$row, '');
-                 $this->setCellValue('BS'.$row, '');
-                 $this->setCellValue('BT'.$row, '');
-                 $this->setCellValue('BU'.$row, '');
-                 $this->setCellValue('BV'.$row, '');
-                 $this->setCellValue('BW'.$row, '');
-                 $this->setCellValue('BX'.$row, '');
-                 $this->setCellValue('BY'.$row, '');
-                 $this->setCellValue('BZ'.$row, '');
-                 
-                 $this->setCellValue('CA'.$row, '');
-                 $this->setCellValue('CB'.$row, '');
-                 $this->setCellValue('CC'.$row, '');
-                 $this->setCellValue('CD'.$row, '');
-                 $this->setCellValue('CE'.$row, '');
-                 $this->setCellValue('CF'.$row, '');
-                 $this->setCellValue('CG'.$row, '');
-                 $this->setCellValue('CH'.$row, '');
-                 $this->setCellValue('CI'.$row, '');
-                 $this->setCellValue('CJ'.$row, '');
-                 $this->setCellValue('CK'.$row, '');
-                 $this->setCellValue('CI'.$row, '');
-                 $this->setCellValue('CJ'.$row, '');
-                 $this->setCellValue('CK'.$row, '');
-                 $this->setCellValue('CL'.$row, '');
-                 $this->setCellValue('CM'.$row, '');
-                 $this->setCellValue('CN'.$row, '');
-                 $this->setCellValue('CO'.$row, '');
-                 $this->setCellValue('CP'.$row, '');
-                 $this->setCellValue('CQ'.$row, '');
-                 $this->setCellValue('CR'.$row, '');
-                 $this->setCellValue('CS'.$row, '');
-                 $this->setCellValue('CT'.$row, '');
-                 $this->setCellValue('CU'.$row, '');
-                 $this->setCellValue('CV'.$row, '');
-                 $this->setCellValue('CW'.$row, '');
-                 $this->setCellValue('CX'.$row, '');
-                 $this->setCellValue('CY'.$row, '');
-                 $this->setCellValue('CZ'.$row, '');
 
-                 $this->setCellValue('DA'.$row, '');
-                 $this->setCellValue('DB'.$row, '');
-                 $this->setCellValue('DC'.$row, '');
-                 $this->setCellValue('DD'.$row, '');
-                 $this->setCellValue('DE'.$row, '');
-                 $this->setCellValue('DF'.$row, '');
-                 $this->setCellValue('DG'.$row, '');
-                 $this->setCellValue('DH'.$row, '');
-                 $this->setCellValue('DI'.$row, '');
-                 $this->setCellValue('DJ'.$row, '');
-                 $this->setCellValue('DK'.$row, '');
-                 $this->setCellValue('DI'.$row, '');
-                 $this->setCellValue('DJ'.$row, '');
-                 $this->setCellValue('DK'.$row, '');
-                 $this->setCellValue('DL'.$row, '');
-                 $this->setCellValue('DM'.$row, '');
-                 $this->setCellValue('DN'.$row, '');
-                 $this->setCellValue('DO'.$row, '');
-                 $this->setCellValue('DP'.$row, '');
-                 $this->setCellValue('DQ'.$row, '');
-                 $this->setCellValue('DR'.$row, '');
-                 $this->setCellValue('DS'.$row, '');
-                 $this->setCellValue('DT'.$row, '');
-                 $this->setCellValue('DU'.$row, '');
-                 $this->setCellValue('DV'.$row, '');
-                 $this->setCellValue('DW'.$row, '');
-                 $this->setCellValue('DX'.$row, '');
-                 $this->setCellValue('DY'.$row, '');
-                 $this->setCellValue('DZ'.$row, '');
-                 
-                 $this->setCellValue('EA'.$row, '');
-                 $this->setCellValue('EB'.$row, '');
-                 $this->setCellValue('EC'.$row, '');
-                 $this->setCellValue('ED'.$row, '');
-                 $this->setCellValue('EE'.$row, '');
-                 $this->setCellValue('EF'.$row, '');
-                 $this->setCellValue('EG'.$row, '');
-                 $this->setCellValue('EH'.$row, '');
-                 $this->setCellValue('EI'.$row, '');
-                 $this->setCellValue('EJ'.$row, '');
-                 $this->setCellValue('EK'.$row, '');
-                 $this->setCellValue('EI'.$row, '');
-                 $this->setCellValue('EJ'.$row, '');
-                 $this->setCellValue('EK'.$row, '');
-                 $this->setCellValue('EL'.$row, '');
-                 $this->setCellValue('EM'.$row, '');
-                 $this->setCellValue('EN'.$row, '');
-                 $this->setCellValue('EO'.$row, '');
-                 $this->setCellValue('EP'.$row, '');
-                 $this->setCellValue('EQ'.$row, '');
-                 $this->setCellValue('ER'.$row, '');
-                 $this->setCellValue('ES'.$row, '');
-                 $this->setCellValue('ET'.$row, '');
-                 $this->setCellValue('EU'.$row, '');
-                 $this->setCellValue('EV'.$row, '');
-                 $this->setCellValue('EW'.$row, '');
-                 $this->setCellValue('EX'.$row, '');
-                 $this->setCellValue('EY'.$row, '');
-                 $this->setCellValue('EZ'.$row, '');
+                
 
-                 $this->setCellValue('FA'.$row, '');
-                 $this->setCellValue('FB'.$row, '');
-                 $this->setCellValue('FC'.$row, '');
-                 $this->setCellValue('FD'.$row, '');
-                 $this->setCellValue('FE'.$row, '');
-                 $this->setCellValue('FF'.$row, '');
-                 $this->setCellValue('FG'.$row, '');
-                 $this->setCellValue('FH'.$row, '');
-                 $this->setCellValue('FI'.$row, '');
-                 $this->setCellValue('FJ'.$row, '');
-                 $this->setCellValue('FK'.$row, '');
-                 $this->setCellValue('FI'.$row, '');
-                 $this->setCellValue('FJ'.$row, '');
-                 $this->setCellValue('FK'.$row, '');
-                 $this->setCellValue('FL'.$row, '');
-                 $this->setCellValue('FM'.$row, '');
-                 $this->setCellValue('FN'.$row, '');
-                 $this->setCellValue('FO'.$row, '');
-                 $this->setCellValue('FP'.$row, '');
-                 $this->setCellValue('FQ'.$row, '');
-                 $this->setCellValue('FR'.$row, '');
-                 $this->setCellValue('FS'.$row, '');
-                 $this->setCellValue('FT'.$row, '');
-                 $this->setCellValue('FU'.$row, '');
-                 $this->setCellValue('FV'.$row, '');
-                 $this->setCellValue('FW'.$row, '');
-                 $this->setCellValue('FX'.$row, '');
-                 $this->setCellValue('FY'.$row, '');
-                 $this->setCellValue('FZ'.$row, '');
+                 if(count($package->items)>0){
+                    $this->setValueAndHeading($package,$package->items[0],$row,['BR','BS','BT','BU','BV','BW','BX','BY','BZ','CA','CB','CC','CD','CE','CF','CG','CH','CI','CJ','CK','CL'],1);
+                 $uomColumn = 'CM';
+                }
 
-                 $this->setCellValue('GA'.$row, '');
-                 $this->setCellValue('GB'.$row, '');
-                 $this->setCellValue('GC'.$row, '');
-                 $this->setCellValue('GD'.$row, '');
-                 $this->setCellValue('GE'.$row, '');
-                 $this->setCellValue('GF'.$row, '');
-                 $this->setCellValue('GG'.$row, '');
-                 $this->setCellValue('GH'.$row, '');
-                 $this->setCellValue('GI'.$row, '');
-                 $this->setCellValue('GJ'.$row, '');
-                 $this->setCellValue('GK'.$row, '');
-                 $this->setCellValue('GI'.$row, '');
-                 $this->setCellValue('GJ'.$row, '');
-                 $this->setCellValue('GK'.$row, '');
-                 $this->setCellValue('GL'.$row, '');
-                 $this->setCellValue('GM'.$row, '');
-                 $this->setCellValue('GN'.$row, '');
-                 $this->setCellValue('GO'.$row, '');
-                 $this->setCellValue('GP'.$row, '');
-                 $this->setCellValue('GQ'.$row, '');
-                 $this->setCellValue('GR'.$row, '');
-                 $this->setCellValue('GS'.$row, '');
-                 $this->setCellValue('GT'.$row, '');
-                 $this->setCellValue('GU'.$row, '');
-                 $this->setCellValue('GV'.$row, '');
-                 $this->setCellValue('GW'.$row, '');
-                 $this->setCellValue('GX'.$row, '');
-                 $this->setCellValue('GY'.$row, '');
-                 $this->setCellValue('GZ'.$row, '');
+                if(count($package->items)>1){
+                    $this->setValueAndHeading($package,$package->items[1],$row,['CM','CN','CO','CP','CQ','CR','CS','CT','CU','CV','CW','CX','CY','CZ','DA','DB','DC','DD','DE','DF','DG'],2);
+                    $uomColumn = 'DH';
+               
+                }
 
-                 $this->setCellValue('HA'.$row, '');
-                 $this->setCellValue('HB'.$row, '');
-                 $this->setCellValue('HC'.$row, '');
-                 $this->setCellValue('HD'.$row, '');
-                 $this->setCellValue('HE'.$row, '');
-                 $this->setCellValue('HF'.$row, '');
-                 $this->setCellValue('HG'.$row, '');
-                 $this->setCellValue('HH'.$row, '');
-                 $this->setCellValue('HI'.$row, '');
-                 $this->setCellValue('HJ'.$row, '');
-                 $this->setCellValue('HK'.$row, '');
-                 $this->setCellValue('HI'.$row, '');
-                 $this->setCellValue('HJ'.$row, '');
-                 $this->setCellValue('HK'.$row, '');
-                 $this->setCellValue('HL'.$row, '');
-                 $this->setCellValue('HM'.$row, '');
-                 $this->setCellValue('HN'.$row, '');
-                 $this->setCellValue('HO'.$row, '');
-                 $this->setCellValue('HP'.$row, '');
-                 $this->setCellValue('HQ'.$row, '');
-                 $this->setCellValue('HR'.$row, '');
-                 $this->setCellValue('HS'.$row, '');
-                 $this->setCellValue('HT'.$row, '');
-                 $this->setCellValue('HU'.$row, '');
-                 $this->setCellValue('HV'.$row, '');
-                 $this->setCellValue('HW'.$row, '');
-                 $this->setCellValue('HX'.$row, '');
-                 $this->setCellValue('HY'.$row, '');
-                 $this->setCellValue('HZ'.$row, '');
+                
+                if(count($package->items)>2){
+                    $this->setValueAndHeading($package,$package->items[2],$row,['DH','DI','DJ', 'DK','DL','DM','DN','DO','DP','DQ','DR','DS','DT','DU','DV','DW','DX','DY','DZ','EA','EB'],3);
+                    $uomColumn = 'EC';
+                
+                }
 
-                 $this->setCellValue('IA'.$row, '');
-                 $this->setCellValue('IB'.$row, '');
-                 $this->setCellValue('IC'.$row, '');
-                 $this->setCellValue('ID'.$row, '');
+                                
+                if(count($package->items)>3){
+                    $this->setValueAndHeading($package,$package->items[3],$row,[ 'EC','ED','EE','EF','EG','EH','EI','EJ','EK','EL','EM','EN','EO','EP','EQ','ER','ES','ET','EU','EV','EW'],4);
+                    $uomColumn = 'EX';
+                
+                }
 
+               
+                if(count($package->items)>4){
+                    $this->setValueAndHeading($package,$package->items[4],$row,['EX','EY','EZ','FA','FB','FC','FD','FE','FF','FG','FH','FI','FJ','FK','FL','FM','FN','FO','FP','FQ','FR'],5);
+                    $uomColumn = 'FS';
+                
+                }
+
+               
+                if(count($package->items)>5){
+                    $this->setValueAndHeading($package,$package->items[5],$row,['FS','FT','FU','FV','FW','FX','FY','FZ','GA','GB','GC','GD','GE','GF','GG','GH','GI','GJ','GK','GL','GM'],6);
+                    $uomColumn = 'GN';
+                
+                }
+
+               
+                if(count($package->items)>6){
+                    $this->setValueAndHeading($package,$package->items[6],$row,['GN','GO','GP','GQ','GR','GS','GT','GU','GV','GW','GX','GY','GZ','HA','HB','HC','HD','HE','HF','HG','HH'],7);
+                    $uomColumn = 'HI';
+               
+                }
+
+               
+                if(count($package->items)>7){
+                    $this->setValueAndHeading($package,$package->items[7],$row,['HI','HJ','HK','HL','HM','HN','HO','HP','HQ','HR','HS','HT','HU','HV','HW','HX','HY','HZ','IA','IB','IC'],8);
+                    $uomColumn = 'ID';
+               
+                } 
+                if($uomColumn > $this->uomMaxColumn){
+                    $this->uomMaxColumn = $uomColumn;
+                }
+        
+        
             }
             $row++;
         } 
         $this->currentRow = $row; 
+       $newRow = 2;
+       $this->setColumnValueAndWidth($this->uomMaxColumn,1,"UOM 8");
+        foreach ($this->deliveryBill->containers as $container){
+            foreach ($container->orders as $package) {
+            $this->setColumnValueAndWidth($this->uomMaxColumn,$newRow,$package->measurement_unit); 
+                $newRow++;
+            }
+                $newRow++;
+        }
+    }
+    private function setValueAndHeading($package,$item,$row,$column,$number){
+
+        $this->setColumnValueAndWidth($column[0],1,"HTS Number $number");
+        $this->setColumnValueAndWidth($column[1],1,"Description $number");
+        $this->setColumnValueAndWidth($column[2],1,"Line Item Value  $number");
+        $this->setColumnValueAndWidth($column[3],1,"Country of Origin $number");
+        $this->setColumnValueAndWidth($column[4],1,"PGA FDA Disclaimer $number");
+        $this->setColumnValueAndWidth($column[5],1,"Prior Notice Confirmation Number $number");
+        $this->setColumnValueAndWidth($column[6],1,"PGA Product ID $number");
+        $this->setColumnValueAndWidth($column[7],1,"PGA Packaging Qty $number - 1");
+        $this->setColumnValueAndWidth($column[8],1,"PGA Packaging UOM $number - 1");
+        $this->setColumnValueAndWidth($column[9],1,"PGA Packaging Qty $number - 2");
+        $this->setColumnValueAndWidth($column[10],1,"PGA Packaging UOM $number - 2");
+        $this->setColumnValueAndWidth($column[11],1,"PGA Packaging Qty $number - 3");
+        $this->setColumnValueAndWidth($column[12],1,"PGA Packaging UOM $number - 3");
+        $this->setColumnValueAndWidth($column[13],1,"PGA Packaging Qty $number - 4");
+        $this->setColumnValueAndWidth($column[14],1,"PGA Packaging UOM $number - 4");
+        $this->setColumnValueAndWidth($column[15],1,"PGA Packaging QTY $number - 5");
+        $this->setColumnValueAndWidth($column[16],1,"PGA Packaging UOM $number - 5");
+        $this->setColumnValueAndWidth($column[17],1,"PGA Packaging QTY $number - 6");
+        $this->setColumnValueAndWidth($column[18],1,"PGA Packaging UOM $number - 6");
+        $this->setColumnValueAndWidth($column[19],1,"Gross Net Quantity $number");
+        $this->setColumnValueAndWidth($column[20],1,"Gross Net UOM $number"); 
+
+ 
+        $this->setColumnValueAndWidth($column[0],$row,"value $number [0]" );//hs code
+        $this->setColumnValueAndWidth($column[1],$row,"value $number [1]" );
+        $this->setColumnValueAndWidth($column[2],$row,"value $number [2]" );
+        $this->setColumnValueAndWidth($column[3],$row,"value $number [3]" );
+        $this->setColumnValueAndWidth($column[4],$row,"value $number [4]" );
+        $this->setColumnValueAndWidth($column[5],$row,"value $number [5]" );
+        $this->setColumnValueAndWidth($column[6],$row,"value $number [6]" );
+        $this->setColumnValueAndWidth($column[7],$row,"value $number [7]" );
+        $this->setColumnValueAndWidth($column[8],$row,"value $number [8]" );
+        $this->setColumnValueAndWidth($column[9],$row,"value $number [9]" );
+       $this->setColumnValueAndWidth($column[10],$row,"value $number [10]" );  
+       $this->setColumnValueAndWidth($column[11],$row,"value $number [11]" );  
+       $this->setColumnValueAndWidth($column[12],$row,"value $number [12]" );  
+       $this->setColumnValueAndWidth($column[13],$row,"value $number [13]" );  
+       $this->setColumnValueAndWidth($column[14],$row,"value $number [14]" );  
+       $this->setColumnValueAndWidth($column[15],$row,"value $number [15]" );  
+       $this->setColumnValueAndWidth($column[16],$row,"value $number [16]" );  
+       $this->setColumnValueAndWidth($column[17],$row,"value $number [17]" );  
+       $this->setColumnValueAndWidth($column[18],$row,"value $number [18]" );  
+       $this->setColumnValueAndWidth($column[19],$row,"value $number [19]" );  
+       $this->setColumnValueAndWidth($column[20],$row,"value $number [20]" );  
+
     }
     private function setExcelHeaderRow()
     {
@@ -380,183 +305,8 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
         $this->setColumnValueAndWidth('BO',$row,"Additional Reference Number B");
         $this->setColumnValueAndWidth('BP',$row,"Port of Entry");
         $this->setColumnValueAndWidth('BQ',$row,"Equipment Number");
-        $this->setColumnValueAndWidth('BR',$row,"HTS Number 1");
-        $this->setColumnValueAndWidth('BS',$row,"Description 1");
-        $this->setColumnValueAndWidth('BT',$row,"Line Item Value 1");
-        $this->setColumnValueAndWidth('BU',$row,"Country of Origin 1");
-        $this->setColumnValueAndWidth('BV',$row,"PGA FDA Disclaimer 1");
-        $this->setColumnValueAndWidth('BW',$row,"Prior Notice Confirmation Number 1");
-        $this->setColumnValueAndWidth('BX',$row,"PGA Product ID 1");
-        $this->setColumnValueAndWidth('BY',$row,"PGA Packaging Qty 1 - 1");
-        $this->setColumnValueAndWidth('BZ',$row,"PGA Packaging UOM 1 - 1");
-
-        $this->setColumnValueAndWidth('CA',$row,"PGA Packaging Qty 1 - 2");
-        $this->setColumnValueAndWidth('CB',$row,"PGA Packaging UOM 1 - 2");
-        $this->setColumnValueAndWidth('CC',$row,"PGA Packaging Qty 1 - 3");
-        $this->setColumnValueAndWidth('CD',$row,"PGA Packaging UOM 1 - 3");
-        $this->setColumnValueAndWidth('CE',$row,"PGA Packaging Qty 1 - 4");
-        $this->setColumnValueAndWidth('CF',$row,"PGA Packaging UOM 1 - 4");
-        $this->setColumnValueAndWidth('CG',$row,"PGA Packaging QTY 1 - 5");
-        $this->setColumnValueAndWidth('CH',$row,"PGA Packaging UOM 1 - 5");
-        $this->setColumnValueAndWidth('CI',$row,"PGA Packaging QTY 1 - 6");
-        $this->setColumnValueAndWidth('CJ',$row,"PGA Packaging UOM 1 - 6");
-        $this->setColumnValueAndWidth('CK',$row,"Gross Net Quantity 1");
-        $this->setColumnValueAndWidth('CL',$row,"Gross Net UOM 1");
-        $this->setColumnValueAndWidth('CM',$row,"HTS Number 2");
-        $this->setColumnValueAndWidth('CN',$row,"Description 2");
-        $this->setColumnValueAndWidth('CO',$row,"Line Item Value 2");
-        $this->setColumnValueAndWidth('CP',$row,"Country of Origin 2");
-        $this->setColumnValueAndWidth('CQ',$row,"PGA FDA Disclaimer 2");
-        $this->setColumnValueAndWidth('CR',$row,"PGA Product ID 2");
-        $this->setColumnValueAndWidth('CS',$row,"Prior Notice Confirmation Number 2");
-        $this->setColumnValueAndWidth('CT',$row,"PGA Packaging Qty 2 - 1");
-        $this->setColumnValueAndWidth('CU',$row,"PGA Packaging UOM 2 - 1");
-        $this->setColumnValueAndWidth('CV',$row,"PGA Packaging Qty 2 - 2");
-        $this->setColumnValueAndWidth('CW',$row,"PGA Packaging UOM 2 - 2");
-        $this->setColumnValueAndWidth('CX',$row,"PGA Packaging Qty 2 - 3");
-        $this->setColumnValueAndWidth('CY',$row,"PGA Packaging UOM 2 - 3");
-        $this->setColumnValueAndWidth('CZ',$row,"PGA Packaging Qty 2 - 4");
-        $this->setColumnValueAndWidth('DA',$row,"PGA Packaging UOM 2 - 4");
-        $this->setColumnValueAndWidth('DB',$row,"PGA Packaging Qty 2 - 5");
-        $this->setColumnValueAndWidth('DC',$row,"PGA Packaging UOM 2 - 5");
-        $this->setColumnValueAndWidth('DD',$row,"PGA Packaging Qty 2 - 6");
-        $this->setColumnValueAndWidth('DE',$row,"PGA Packaging UOM 2 - 6");
-        $this->setColumnValueAndWidth('DF',$row,"Gross Net Quantity 2");
-        $this->setColumnValueAndWidth('DG',$row,"Gross Net UOM 2");
 
 
-        $this->setColumnValueAndWidth('DH',$row,"HTS Number 3");
-        $this->setColumnValueAndWidth('DI',$row,"Description 3");
-        $this->setColumnValueAndWidth('DJ',$row,"Line Item Value 3");
-        $this->setColumnValueAndWidth('DK',$row,"Country of Origin 3");
-        $this->setColumnValueAndWidth('DL',$row,"PGA FDA Disclaimer 3");
-        $this->setColumnValueAndWidth('DM',$row,"PGA Product ID 3");
-        $this->setColumnValueAndWidth('DN',$row,"Prior Notice Confirmation Number 3");
-        $this->setColumnValueAndWidth('DO',$row,"PGA Packaging Qty 3 - 1");
-        $this->setColumnValueAndWidth('DP',$row,"PGA Packaging UOM 3 - 1");
-        $this->setColumnValueAndWidth('DQ',$row,"PGA Packaging Qty 3 - 2");
-        $this->setColumnValueAndWidth('DR',$row,"PGA Packaging UOM 3 - 2");
-        $this->setColumnValueAndWidth('DS',$row,"PGA Packaging Qty 3 - 3");
-        $this->setColumnValueAndWidth('DT',$row,"PGA Packaging UOM 3 - 3");
-        $this->setColumnValueAndWidth('DU',$row,"PGA Packaging Qty 3 - 4");
-        $this->setColumnValueAndWidth('DV',$row,"PGA Packaging UOM 3 - 4");
-        $this->setColumnValueAndWidth('DW',$row,"PGA Packaging Qty 3 - 5");
-        $this->setColumnValueAndWidth('DX',$row,"PGA Packaging UOM 3 - 5");
-        $this->setColumnValueAndWidth('DY',$row,"PGA Packaging Qty 3 - 6");
-        $this->setColumnValueAndWidth('DZ',$row,"PGA Packaging UOM 3 - 6");
-
-        $this->setColumnValueAndWidth('EA',$row,"Gross Net Quantity 3");
-        $this->setColumnValueAndWidth('EB',$row,"Gross Net UOM 3");
-        $this->setColumnValueAndWidth('EC',$row,"HTS Number 4");
-        $this->setColumnValueAndWidth('ED',$row,"Description 4");
-        $this->setColumnValueAndWidth('EE',$row,"Line Item Value 4");
-        $this->setColumnValueAndWidth('EF',$row,"Country of Origin 4");
-        $this->setColumnValueAndWidth('EG',$row,"PGA FDA Disclaimer 4");
-        $this->setColumnValueAndWidth('EH',$row,"PGA Product ID 4");
-        $this->setColumnValueAndWidth('EI',$row,"Prior Notice Confirmation Number 4");
-        $this->setColumnValueAndWidth('DJ',$row,"PGA Packaging Qty 4 - 1");
-        $this->setColumnValueAndWidth('EK',$row,"PGA Packaging UOM 4 - 1");
-        $this->setColumnValueAndWidth('EL',$row,"PGA Packaging Qty 4 - 2");
-        $this->setColumnValueAndWidth('EM',$row,"PGA Packaging UOM 4 - 2");
-        $this->setColumnValueAndWidth('EN',$row,"PGA Packaging Qty 4 - 3");
-        $this->setColumnValueAndWidth('EO',$row,"PGA Packaging UOM 4 - 3");
-        $this->setColumnValueAndWidth('EP',$row,"PGA Packaging Qty 4 - 4");
-        $this->setColumnValueAndWidth('EQ',$row,"PGA Packaging UOM 4 - 4");
-        $this->setColumnValueAndWidth('ER',$row,"PGA Packaging Qty 4 - 5");
-        $this->setColumnValueAndWidth('ES',$row,"PGA Packaging UOM 4 - 5");
-        $this->setColumnValueAndWidth('ET',$row,"PGA Packaging Qty 4 - 6");
-        $this->setColumnValueAndWidth('EU',$row,"PGA Packaging UOM 4 - 6");
-        $this->setColumnValueAndWidth('EV',$row,"Gross Net Quantity 4");
-        $this->setColumnValueAndWidth('EW',$row,"Gross Net UOM 4");
-        $this->setColumnValueAndWidth('EX',$row,"HTS Number 5");
-        $this->setColumnValueAndWidth('EY',$row,"Description 5");
-        $this->setColumnValueAndWidth('EZ',$row,"Line Item Value 5");
-
-        $this->setColumnValueAndWidth('FA',$row,"Country of Origin 5");
-        $this->setColumnValueAndWidth('FB',$row,"PGA FDA Disclaimer 5");
-        $this->setColumnValueAndWidth('FC',$row,"PGA Product ID 5");
-        $this->setColumnValueAndWidth('FD',$row,"Prior Notice Confirmation Number 5");
-        $this->setColumnValueAndWidth('FE',$row,"PGA Packaging Qty 5 - 1");
-        $this->setColumnValueAndWidth('FF',$row,"PGA Packaging UOM 5 - 1");
-        $this->setColumnValueAndWidth('FG',$row,"PGA Packaging Qty 5 - 2");
-        $this->setColumnValueAndWidth('FH',$row,"PGA Packaging UOM 5 - 2");
-        $this->setColumnValueAndWidth('FI',$row,"PGA Packaging Qty 5 - 3");
-        $this->setColumnValueAndWidth('FJ',$row,"PGA Packaging UOM 5 - 3");
-        $this->setColumnValueAndWidth('FK',$row,"PGA Packaging Qty 5 - 4");
-        $this->setColumnValueAndWidth('FL',$row,"PGA Packaging UOM 5 - 4");
-        $this->setColumnValueAndWidth('FM',$row,"PGA Packaging Qty 5 - 5");
-        $this->setColumnValueAndWidth('FN',$row,"PGA Packaging UOM 5 - 5");
-        $this->setColumnValueAndWidth('FO',$row,"PGA Packaging Qty 5 - 6");
-        $this->setColumnValueAndWidth('FP',$row,"PGA Packaging UOM 5 - 6");
-        $this->setColumnValueAndWidth('FQ',$row,"Gross Net Quantity 5");
-        $this->setColumnValueAndWidth('FR',$row,"Gross Net UOM 5");
-        $this->setColumnValueAndWidth('FS',$row,"HTS Number 6");
-        $this->setColumnValueAndWidth('FT',$row,"Description 6");
-        $this->setColumnValueAndWidth('FU',$row,"Line Item Value 6");
-        $this->setColumnValueAndWidth('FV',$row,"Country of Origin 6");
-        $this->setColumnValueAndWidth('FW',$row,"PGA FDA Disclaimer 6");
-        $this->setColumnValueAndWidth('FX',$row,"PGA Product ID 6");
-        $this->setColumnValueAndWidth('FY',$row,"Prior Notice Confirmation Number 6");
-        $this->setColumnValueAndWidth('FZ',$row,"PGA Packaging Qty 6 - 1");
-
-        $this->setColumnValueAndWidth('GA',$row,"PGA Packaging UOM 6 - 1");
-        $this->setColumnValueAndWidth('GB',$row,"PGA Packaging Qty 6 - 2");
-        $this->setColumnValueAndWidth('GC',$row,"PGA Packaging UOM 6 - 2");
-        $this->setColumnValueAndWidth('GD',$row,"PGA Packaging Qty 6 - 3");
-        $this->setColumnValueAndWidth('GE',$row,"PGA Packaging UOM 6 - 3");
-        $this->setColumnValueAndWidth('GF',$row,"PGA Packaging Qty 6 - 4");
-        $this->setColumnValueAndWidth('GG',$row,"PGA Packaging UOM 6 - 4");
-        $this->setColumnValueAndWidth('GH',$row,"PGA Packaging Qty 6 - 5");
-        $this->setColumnValueAndWidth('GI',$row,"PGA Packaging UOM 6 - 5");
-        $this->setColumnValueAndWidth('GJ',$row,"PGA Packaging Qty 6 - 6");
-        $this->setColumnValueAndWidth('GK',$row,"PGA Packaging UOM 6 - 6");
-        $this->setColumnValueAndWidth('GL',$row,"Gross Net Quantity 6");
-        $this->setColumnValueAndWidth('GM',$row,"Gross Net UOM 6");
-        $this->setColumnValueAndWidth('GN',$row,"HTS Number 7");
-        $this->setColumnValueAndWidth('GO',$row,"Description 7");
-        $this->setColumnValueAndWidth('GP',$row,"Line Item Value 7");
-        $this->setColumnValueAndWidth('GQ',$row,"Country of Origin 7");
-        $this->setColumnValueAndWidth('GR',$row,"PGA FDA Disclaimer 7");
-        $this->setColumnValueAndWidth('GS',$row,"PGA Product ID 7");
-        $this->setColumnValueAndWidth('GT',$row,"Prior Notice Confirmation Number 7");
-        $this->setColumnValueAndWidth('GU',$row,"PGA Packaging Qty 7 - 1");
-        $this->setColumnValueAndWidth('GV',$row,"PGA Packaging UOM 7 - 1");
-        $this->setColumnValueAndWidth('GW',$row,"PGA Packaging Qty 7 - 2");
-        $this->setColumnValueAndWidth('GX',$row,"PGA Packaging UOM 7 - 2");
-        $this->setColumnValueAndWidth('GY',$row,"PGA Packaging Qty 7 - 3");
-        $this->setColumnValueAndWidth('GZ',$row,"PGA Packaging UOM 7 - 3");
-        
-        $this->setColumnValueAndWidth('HA',$row,"PGA Packaging Qty 7 - 4");
-        $this->setColumnValueAndWidth('HB',$row,"PGA Packaging UOM 7 - 4");
-        $this->setColumnValueAndWidth('HC',$row,"PGA Packaging Qty 7 - 5");
-        $this->setColumnValueAndWidth('HD',$row,"PGA Packaging UOM 7 - 5");
-        $this->setColumnValueAndWidth('HE',$row,"PGA Packaging Qty 7 - 6");
-        $this->setColumnValueAndWidth('HF',$row,"PGA Packaging UOM 7 - 6");
-        $this->setColumnValueAndWidth('HG',$row,"Gross Net Quantity 7");
-        $this->setColumnValueAndWidth('HH',$row,"Gross Net UOM 7");
-        $this->setColumnValueAndWidth('HI',$row,"HTS Number 8");
-        $this->setColumnValueAndWidth('HJ',$row,"Description 8");
-        $this->setColumnValueAndWidth('HK',$row,"Line Item Value 8");
-        $this->setColumnValueAndWidth('HL',$row,"Country of Origin 8");
-        $this->setColumnValueAndWidth('HM',$row,"PGA FDA Disclaimer 8");
-        $this->setColumnValueAndWidth('HN',$row,"PGA Product ID 8");
-        $this->setColumnValueAndWidth('HO',$row,"Prior Notice Confirmation Number 8");
-        $this->setColumnValueAndWidth('HP',$row,"PGA Packaging Qty 8- 1");
-        $this->setColumnValueAndWidth('HQ',$row,"PGA Packaging UOM 8 - 1");
-        $this->setColumnValueAndWidth('HR',$row,"PGA Packaging Qty 8 - 2");
-        $this->setColumnValueAndWidth('HS',$row,"PGA Packaging UOM 8 - 2");
-        $this->setColumnValueAndWidth('HT',$row,"PGA Packaging Qty 8 - 3");
-        $this->setColumnValueAndWidth('HU',$row,"PGA Packaging UOM 8 - 3");
-        $this->setColumnValueAndWidth('HV',$row,"PGA Packaging Qty 8 - 4");
-        $this->setColumnValueAndWidth('HW',$row,"PGA Packaging UOM 8 - 4");
-        $this->setColumnValueAndWidth('HX',$row,"PGA Packaging Qty 8 - 5");
-        $this->setColumnValueAndWidth('HY',$row,"PGA Packaging UOM 8 - 5");
-        $this->setColumnValueAndWidth('HZ',$row,"PGA Packaging Qty 8 - 6");
-        
-        $this->setColumnValueAndWidth('IA',$row,"PGA Packaging UOM 8 - 6");
-        $this->setColumnValueAndWidth('IB',$row,"Gross Net Quantity 8");
-        $this->setColumnValueAndWidth('IC',$row,"Gross Net UOM 8");
-        $this->setColumnValueAndWidth('ID',$row,"UOM 8");
         
         // $this->setBackgroundColor('A',$this->currentRow.':ID',$this->currentRow, "2b5cab");
         // $this->setColor('A',$this->currentRow.':ID',$this->currentRow, "FFFFFF");
