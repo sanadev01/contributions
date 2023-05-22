@@ -464,7 +464,34 @@ class Order extends Model implements Package
 
     public function getTempWhrNumber()
     {
-        return "HD-{$this->change_id}";
+        $tempWhr =  $this->change_id;        
+        switch(strlen($tempWhr)){
+            case(5):
+                $tempWhr = (str_pad($tempWhr, 13, '20232023', STR_PAD_LEFT));
+                break;
+                case(6):
+                    $tempWhr = (str_pad($tempWhr, 13, '0232023', STR_PAD_LEFT));
+                    break;
+                    case(7):
+                        $tempWhr = (str_pad($tempWhr, 13, '232023', STR_PAD_LEFT));
+                        break;
+                        case(8):
+                                $tempWhr = (str_pad($tempWhr, 13, '32023', STR_PAD_LEFT)); 
+                            break;
+                            case(9):
+                                $tempWhr = (str_pad($tempWhr, 13, '2023', STR_PAD_LEFT));
+                                break;
+                                case(10):
+                                    $tempWhr = (str_pad($tempWhr, 13, '023', STR_PAD_LEFT));
+                                    break;
+                                    case(11):
+                                        $tempWhr = (str_pad($tempWhr, 13, '23', STR_PAD_LEFT));
+                                        break;
+                                        case(12):
+                                                $tempWhr = (str_pad($tempWhr, 13, '3', STR_PAD_LEFT)); 
+                                            break;
+        }
+        return "HD{$tempWhr}BR";
     }
 
     public function doCalculations($onVolumetricWeight=true)
