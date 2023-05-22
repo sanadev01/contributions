@@ -110,8 +110,6 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
                  $this->setCellValue('BP'.$row, '');
                  $this->setCellValue('BQ'.$row, '');
 
-                
-
                  if(count($package->items)>0){
                     $this->setValueAndHeading($package,$package->items[0],$row,['BR','BS','BT','BU','BV','BW','BX','BY','BZ','CA','CB','CC','CD','CE','CF','CG','CH','CI','CJ','CK','CL'],1);
                  $uomColumn = 'CM';
@@ -122,67 +120,61 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
                     $uomColumn = 'DH';
                
                 }
-
                 
                 if(count($package->items)>2){
                     $this->setValueAndHeading($package,$package->items[2],$row,['DH','DI','DJ', 'DK','DL','DM','DN','DO','DP','DQ','DR','DS','DT','DU','DV','DW','DX','DY','DZ','EA','EB'],3);
                     $uomColumn = 'EC';
                 
                 }
-
                                 
                 if(count($package->items)>3){
                     $this->setValueAndHeading($package,$package->items[3],$row,[ 'EC','ED','EE','EF','EG','EH','EI','EJ','EK','EL','EM','EN','EO','EP','EQ','ER','ES','ET','EU','EV','EW'],4);
                     $uomColumn = 'EX';
                 
                 }
-
                
                 if(count($package->items)>4){
                     $this->setValueAndHeading($package,$package->items[4],$row,['EX','EY','EZ','FA','FB','FC','FD','FE','FF','FG','FH','FI','FJ','FK','FL','FM','FN','FO','FP','FQ','FR'],5);
                     $uomColumn = 'FS';
                 
                 }
-
                
                 if(count($package->items)>5){
                     $this->setValueAndHeading($package,$package->items[5],$row,['FS','FT','FU','FV','FW','FX','FY','FZ','GA','GB','GC','GD','GE','GF','GG','GH','GI','GJ','GK','GL','GM'],6);
                     $uomColumn = 'GN';
                 
                 }
-
                
                 if(count($package->items)>6){
                     $this->setValueAndHeading($package,$package->items[6],$row,['GN','GO','GP','GQ','GR','GS','GT','GU','GV','GW','GX','GY','GZ','HA','HB','HC','HD','HE','HF','HG','HH'],7);
                     $uomColumn = 'HI';
                
                 }
-
                
                 if(count($package->items)>7){
                     $this->setValueAndHeading($package,$package->items[7],$row,['HI','HJ','HK','HL','HM','HN','HO','HP','HQ','HR','HS','HT','HU','HV','HW','HX','HY','HZ','IA','IB','IC'],8);
                     $uomColumn = 'ID';
                
-                } 
+                }
+
                 if($uomColumn > $this->uomMaxColumn){
                     $this->uomMaxColumn = $uomColumn;
                 }
-        
+                $row++;
         
             }
-            $row++;
         } 
         $this->currentRow = $row; 
-       $newRow = 2;
-       $this->setColumnValueAndWidth($this->uomMaxColumn,1,"UOM 8");
+        $newRow = 2;
+        $this->setColumnValueAndWidth($this->uomMaxColumn,1,"UOM 8");
         foreach ($this->deliveryBill->containers as $container){
             foreach ($container->orders as $package) {
             $this->setColumnValueAndWidth($this->uomMaxColumn,$newRow,$package->measurement_unit); 
                 $newRow++;
             }
-                $newRow++;
         }
     }
+
     private function setValueAndHeading($package,$item,$row,$column,$number){
 
         $this->setColumnValueAndWidth($column[0],1,"HTS Number $number");
@@ -207,30 +199,30 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
         $this->setColumnValueAndWidth($column[19],1,"Gross Net Quantity $number");
         $this->setColumnValueAndWidth($column[20],1,"Gross Net UOM $number"); 
 
- 
-        $this->setColumnValueAndWidth($column[0],$row,"value $number [0]" );//hs code
-        $this->setColumnValueAndWidth($column[1],$row,"value $number [1]" );
-        $this->setColumnValueAndWidth($column[2],$row,"value $number [2]" );
-        $this->setColumnValueAndWidth($column[3],$row,"value $number [3]" );
-        $this->setColumnValueAndWidth($column[4],$row,"value $number [4]" );
-        $this->setColumnValueAndWidth($column[5],$row,"value $number [5]" );
-        $this->setColumnValueAndWidth($column[6],$row,"value $number [6]" );
-        $this->setColumnValueAndWidth($column[7],$row,"value $number [7]" );
-        $this->setColumnValueAndWidth($column[8],$row,"value $number [8]" );
-        $this->setColumnValueAndWidth($column[9],$row,"value $number [9]" );
-       $this->setColumnValueAndWidth($column[10],$row,"value $number [10]" );  
-       $this->setColumnValueAndWidth($column[11],$row,"value $number [11]" );  
-       $this->setColumnValueAndWidth($column[12],$row,"value $number [12]" );  
-       $this->setColumnValueAndWidth($column[13],$row,"value $number [13]" );  
-       $this->setColumnValueAndWidth($column[14],$row,"value $number [14]" );  
-       $this->setColumnValueAndWidth($column[15],$row,"value $number [15]" );  
-       $this->setColumnValueAndWidth($column[16],$row,"value $number [16]" );  
-       $this->setColumnValueAndWidth($column[17],$row,"value $number [17]" );  
-       $this->setColumnValueAndWidth($column[18],$row,"value $number [18]" );  
-       $this->setColumnValueAndWidth($column[19],$row,"value $number [19]" );  
-       $this->setColumnValueAndWidth($column[20],$row,"value $number [20]" );  
+        $this->setColumnValueAndWidth($column[0],$row,$item->sh_code);
+        $this->setColumnValueAndWidth($column[1],$row,$item->description);
+        $this->setColumnValueAndWidth($column[2],$row,$item->value);
+        $this->setColumnValueAndWidth($column[3],$row,"US");
+        $this->setColumnValueAndWidth($column[4],$row,'');
+        $this->setColumnValueAndWidth($column[5],$row,'');
+        $this->setColumnValueAndWidth($column[6],$row,'');
+        $this->setColumnValueAndWidth($column[7],$row,'');
+        $this->setColumnValueAndWidth($column[8],$row,'');
+        $this->setColumnValueAndWidth($column[9],$row,'');
+       $this->setColumnValueAndWidth($column[10],$row,'');  
+       $this->setColumnValueAndWidth($column[11],$row,'');  
+       $this->setColumnValueAndWidth($column[12],$row,'');  
+       $this->setColumnValueAndWidth($column[13],$row,'');  
+       $this->setColumnValueAndWidth($column[14],$row,'');  
+       $this->setColumnValueAndWidth($column[15],$row,'');  
+       $this->setColumnValueAndWidth($column[16],$row,'');  
+       $this->setColumnValueAndWidth($column[17],$row,'');  
+       $this->setColumnValueAndWidth($column[18],$row,'');  
+       $this->setColumnValueAndWidth($column[19],$row,'');  
+       $this->setColumnValueAndWidth($column[20],$row,'');  
 
     }
+
     private function setExcelHeaderRow()
     {
         $row = $this->currentRow;
@@ -306,10 +298,6 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
         $this->setColumnValueAndWidth('BP',$row,"Port of Entry");
         $this->setColumnValueAndWidth('BQ',$row,"Equipment Number");
 
-
-        
-        // $this->setBackgroundColor('A',$this->currentRow.':ID',$this->currentRow, "2b5cab");
-        // $this->setColor('A',$this->currentRow.':ID',$this->currentRow, "FFFFFF");
         $this->currentRow++;    
     }
     public function setColumnValueAndWidth($column,$row,$value,$width=30)
