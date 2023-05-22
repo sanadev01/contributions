@@ -16,6 +16,11 @@ class Package implements \App\Services\Correios\Contracts\Package
     const SERVICE_CLASS_FIRSTCLASS = 3441;
     const SERVICE_CLASS_AJ_Standard = 33164;
     const SERVICE_CLASS_AJ_EXPRESS = 33172;
+    const SERVICE_CLASS_MILE_EXPRESS = 33173;
+    const SERVICE_CLASS_COLOMBIA_URBANO = 44162;
+    const SERVICE_CLASS_COLOMBIA_NACIONAL = 44163;
+    const SERVICE_CLASS_COLOMBIA_TRAYETOS = 44164;
+    const SERVICE_CLASS_PostNL = 87765;
     const SERVICE_CLASS_GePS = 537;
     const SERVICE_CLASS_GePS_EFormat = 540;
     const SERVICE_CLASS_Prime5 = 773;
@@ -25,6 +30,8 @@ class Package implements \App\Services\Correios\Contracts\Package
     const SERVICE_CLASS_Post_Plus_Prime = 777;
     const SERVICE_CLASS_Post_Plus_Premium = 778;
     const SERVICE_CLASS_Prime5RIO = 357;
+    const SERVICE_CLASS_GDE_PRIORITY = 4387;
+    const SERVICE_CLASS_GDE_FIRSTCLASS = 4388;
 
     public $customerControlCode = "";
     public $senderName = "HERCO";

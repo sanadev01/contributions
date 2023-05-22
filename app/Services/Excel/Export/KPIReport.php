@@ -37,7 +37,8 @@ class KPIReport extends AbstractExportService
         foreach ($this->trackings as $data) {
             
             if(isset($data['evento'])) {
-                if( $this->isAwaiting && optional(optional(optional($data)['evento'])[0])['descricao'] == $this->isAwaiting || !$this->isAwaiting){
+                if( $this->isAwaiting && optional(optional(optional($data)['evento'])[0])['descricao'] == $this->isAwaiting || !$this->isAwaiting){                   
+
                     if(optional($data) && isset(optional($data)['numero'])) { 
                         $this->setCellValue('A'.$row, $this->trackingCodeUsersName[optional($data)['numero']]);
                         $this->setCellValue('B'.$row, optional($data)['numero']);
@@ -71,6 +72,7 @@ class KPIReport extends AbstractExportService
                     $this->setCellValue('I'.$row, number_format($delivered/($row-2) * 100,2).'%');
                     $this->setCellValue('J'.$row, number_format($returned/($row-2) * 100,2).'%');
             }
+
 
 
         $this->currentRow = $row;

@@ -45,6 +45,9 @@ class UPSLabelRepository
             $this->getPrimaryLabel($order);
         }
 
+        if ($order->api_response) {
+            $this->convertLabelToPDF($order);
+        }
         return true;
     }
 

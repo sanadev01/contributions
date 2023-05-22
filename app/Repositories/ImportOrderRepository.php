@@ -46,6 +46,7 @@ class ImportOrderRepository
         }
         
         if ( $request->date ){
+            // dd($request->date);
             $query->where(function($query) use($request){
                 return $query->where('created_at', 'LIKE', "%{$request->date}%");
             });
@@ -65,6 +66,13 @@ class ImportOrderRepository
             $query->whereHas('user',function($query) use($request) {
                 return $query->where('name', 'LIKE', "%{$request->name}%");
             });
+        }
+
+        if ( $request->search ){
+            $query->whereHas('user',function($query) use($request) {
+                return $query->where('name', 'LIKE', "%{$request->search}%");
+            })->orWhere('total_orders', 'LIKE', "%{$request->search}%")
+            ->orWhere('file_name', 'LIKE', "%{$request->search}%");
         }
         
         $importOrders = $query
