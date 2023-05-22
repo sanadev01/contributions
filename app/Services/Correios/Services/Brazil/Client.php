@@ -90,7 +90,7 @@ class Client{
             $kg = UnitsConverter::poundToKg($order->getOriginalWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
         }
-        \Log::info('serviceSubClassCode: '. $serviceSubClassCode);
+
         $packet = new \App\Services\Correios\Models\Package();
 
         $packet->customerControlCode = $order->id;
@@ -105,7 +105,7 @@ class Client{
         $packet->recipientState = $order->recipient->state->code;
 //    $packet->recipientPhoneNumber = $order->recipient->phone;
         $packet->recipientEmail = $order->recipient->email;
-        $packet->distributionModality = $serviceSubClassCode;
+        $packet->distributionModality = $order->getDistributionModality();
         $packet->taxPaymentMethod = $order->getService() == 1 ? 'DDP' : 'DDU';
         $packet->totalWeight =  ceil($weight);
 
@@ -137,7 +137,7 @@ class Client{
         \Log::info(
             $packet
         );
-        
+
         try {
             
             $response = $this->client->post('/packet/v1/packages',[
@@ -150,7 +150,7 @@ class Client{
                     ]
                 ]
             ]);
-            
+
             $data = json_decode($response->getBody()->getContents());
             $trackingNumber = $data->packageResponseList[0]->trackingNumber;
 
@@ -164,8 +164,6 @@ class Client{
                     ],
                 ]);
 
-                \Log::info('Response');
-                \Log::info([$data]);
                 // store order status in order tracking
                 return $this->addOrderTracking($order);
             }
@@ -181,7 +179,13 @@ class Client{
     public function createContainer(Container $container)
     {
         try {
-            
+            \Log::info('token');
+            \Log::info('isAnjunService');
+            \Log::info($this->getAnjunToken());
+
+            \Log::info('token');
+            \Log::info('isCorrieosService');
+            \Log::info($this->getToken());
             $response = $this->client->post('/packet/v1/units',[
                 'headers' => [
                     'Authorization' => ($container->hasAnjunService()) ? "Bearer {$this->getAnjunToken()}" : "Bearer {$this->getToken()}"
@@ -271,7 +275,7 @@ class Client{
                 'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
                 'city' => 'Miami',
             ]);
-        }    
+        }
 
         return true;
     }

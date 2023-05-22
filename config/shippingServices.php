@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 return [
     'correios' => [
         'sub_classess' => [
+            33162 => 'Packet Standard',
             33162 => 'Packet Standard',
             33170 => 'Packet Express',
             33197 => 'Packet Mini',
@@ -19,18 +20,28 @@ return [
             33171 => 'SL Express Modal',
             33198 => 'SL Small Parcels',
             33164 => 'AJ Packet Standard',
+            34166 => "AJ China Standard",
+            33174 => "AJ China Express",
             33172 => 'AJ Packet Express',
+            33173 => 'Homedelivebr Express',
+            44162 => 'Colombia Urbano',
+            44163 => 'Colombia Nacional',
+            44164 => 'Colombia Trayetos',
             100 => 'Brazil Redispatch',
             537 => 'Global eParcel Prime',
             540 => 'Global eParcel Untracked Packet',
             773 => 'Prime5',
-            05 => 'USPS Ground',
             734 => 'Post Plus Registered',
             367 => 'Post Plus EMS',
+            05 => 'USPS Ground',
+            87765 => 'PostNL',
             541 => 'Parcel Post',
             777 => 'Post Plus Prime',
             778 => 'PrimeRIO',
             357 => 'Prime5RIO',
+            4387 => 'GDE Priority Mail',
+            4388 => 'GDE First Class',
+            477 => 'GSS IPA',
         ]
     ]
 ];
