@@ -32,6 +32,9 @@ return [
             778 => 'PrimeRIO',
             357 => 'Prime5RIO',
             477 => 'GSS IPA',
+            37634 => 'GSS EPMEI',
+            3674 => 'GSS EPMI',
+            3326 => 'GSS EFCM',
         ]
     ]
 ];

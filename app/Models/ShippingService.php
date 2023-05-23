@@ -43,7 +43,9 @@ class ShippingService extends Model
     const Post_Plus_Premium = 778;
     const Prime5RIO = 357;
     const GSS_IPA = 477;
-
+    const GSS_EPMEI = 37634;
+    const GSS_EPMI = 3674;
+    const GSS_EFCM = 3326;
 
     protected $guarded = [];
 
@@ -179,7 +181,7 @@ class ShippingService extends Model
 
     public function isGSSService()
     {
-        if($this->service_sub_class == self::GSS_IPA){
+        if($this->service_sub_class == self::GSS_IPA || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_EFCM){
             return true;
         }
         return false;
