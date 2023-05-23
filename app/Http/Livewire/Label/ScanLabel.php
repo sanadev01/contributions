@@ -14,6 +14,7 @@ use App\Services\GePS\Client;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\LabelRepository;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -99,6 +100,7 @@ class ScanLabel extends Component
     
     public function updatedTracking()
     {
+        Log::info('OrderArrivedAlert :updatedTracking');
         if($this->tracking){
             
             $order = Order::where('corrios_tracking_code', $this->tracking)->first();
@@ -157,8 +159,8 @@ class ScanLabel extends Component
                     'tracking_id' => $this->order->tracking_id,
                     'recpient' => $this->order->recipient->first_name,
                     'order_date' => $this->order->order_date->format('m-d-Y'),
-                ];
-                
+                ];  
+
                 if(in_array($newRow, $this->packagesRows)){
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order already exist']);
                     return $this->tracking = '';
@@ -168,12 +170,14 @@ class ScanLabel extends Component
 
                 array_push($this->newOrder,$this->order);
 
+                Log::info('OrderArrivedAlert :before scanner');
+      
                 if(auth()->user()->isScanner() && $order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
-                {
-                    $this->addOrderTracking($this->order);
-                    
+                {                
+                    $this->addOrderTracking($this->order); 
+                    Log::info('OrderArrivedAlert :mail is sending');
                     Mail::to($order->user->email)->send(new OrderArrivedAlert($order));
-
+                    Log::info('OrderArrivedAlert :mail sended');
                     if(!$this->order->arrived_date){
                         $date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
                         $this->order->update([
