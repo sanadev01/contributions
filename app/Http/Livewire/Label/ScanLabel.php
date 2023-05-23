@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire\Label;
 
-use App\Mail\User\OrderArrivedAlert;
 use DateTime;
+use Exception;
 use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\Order;
@@ -12,10 +12,11 @@ use Illuminate\Http\Request;
 use App\Models\OrderTracking;
 use App\Services\GePS\Client;
 use App\Models\ShippingService;
-use Illuminate\Support\Facades\Auth;
-use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Log;
+use App\Mail\User\OrderArrivedAlert;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
 
 class ScanLabel extends Component
@@ -100,7 +101,6 @@ class ScanLabel extends Component
     
     public function updatedTracking()
     {
-        Log::info('OrderArrivedAlert :updatedTracking');
         if($this->tracking){
             
             $order = Order::where('corrios_tracking_code', $this->tracking)->first();
@@ -169,15 +169,17 @@ class ScanLabel extends Component
                 array_push($this->packagesRows, $newRow);
 
                 array_push($this->newOrder,$this->order);
-
-                Log::info('OrderArrivedAlert :before scanner');
       
                 if(auth()->user()->isScanner() && $order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
                 {                
-                    $this->addOrderTracking($this->order); 
-                    Log::info('OrderArrivedAlert :mail is sending');
-                    Mail::to($order->user->email)->send(new OrderArrivedAlert($order));
-                    Log::info('OrderArrivedAlert :mail sended');
+                    $this->addOrderTracking($this->order);
+                    try{
+                        Mail::to($order->user->email)->send(new OrderArrivedAlert($order));
+                    }catch(Exception $e){
+                        Log::info($e->getMessage());
+                    }
+
+                    
                     if(!$this->order->arrived_date){
                         $date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
                         $this->order->update([

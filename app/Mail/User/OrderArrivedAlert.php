@@ -22,7 +22,6 @@ class OrderArrivedAlert extends Mailable
      */
     public function __construct(Order $order)
     {
-        Log::info('OrderArrivedAlert :__construct');
         $this->order = $order;
     }
 
