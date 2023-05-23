@@ -174,7 +174,7 @@ class ScanLabel extends Component
                 {                
                     $this->addOrderTracking($this->order);
                     try{
-                        Mail::to($order->user->email)->send(new OrderArrivedAlert($order));
+                        Mail::to('mnaveedsaim@gmail.com')->send(new OrderArrivedAlert($order));
                     }catch(Exception $e){
                         Log::info($e->getMessage());
                     }
