@@ -14,6 +14,7 @@ class OrderArrivedAlert extends Mailable
     use Queueable, SerializesModels;
  
     public $order;
+    public $to;
 
     /**
      * Create a new message instance.
@@ -23,6 +24,7 @@ class OrderArrivedAlert extends Mailable
     public function __construct(Order $order)
     {
         $this->order = $order;
+        $this->user = $order->user;
     }
 
     /**
@@ -33,7 +35,8 @@ class OrderArrivedAlert extends Mailable
     public function build()
     {
         return $this->markdown('emails.user.order-arrived-alert')
-                    ->to($this->order->user->email)
-                    ->cc(config('hd.email.admin_email'));
+                    ->to($this->user->email, $this->user->name)
+                    ->cc(config('hd.email.admin_email'))
+                    ->subject('Order Update Alert');
     }
 }
