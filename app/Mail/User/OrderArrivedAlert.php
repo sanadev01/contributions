@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class OrderArrivedAlert extends Mailable
 {
@@ -21,6 +22,7 @@ class OrderArrivedAlert extends Mailable
      */
     public function __construct(Order $order)
     {
+        Log::info('OrderArrivedAlert :__construct');
         $this->order = $order;
     }
 
@@ -31,6 +33,7 @@ class OrderArrivedAlert extends Mailable
      */
     public function build()
     {
+        Log::info('OrderArrivedAlert :builded');
         return $this->markdown('emails.user.order-arrived-alert')
         ->cc( config('hd.email.admin_email'));
     }
