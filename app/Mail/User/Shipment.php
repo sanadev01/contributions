@@ -21,6 +21,7 @@ class Shipment extends Mailable
     public function __construct(Order $order)
     {
         \Log::info('Shipment');
+        
         $this->order = $order;
     }
 
