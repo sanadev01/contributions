@@ -31,6 +31,7 @@ class OrderArrivedAlert extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.user.order-arrived-alert');
+        return $this->markdown('emails.user.order-arrived-alert')
+        ->cc( config('hd.email.admin_email'));
     }
 }
