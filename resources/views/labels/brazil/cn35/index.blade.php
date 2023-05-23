@@ -92,14 +92,14 @@
                     </div>
                     @if ($OrderWeight > 3)         
                         <div style="position: relative;left:215px !important; margin-top:-40px !important;">
-                            <p style="margin-left:60px !important; font-size:20px;font-weight:bold;">G</p>
+                            <p style="margin-left:70px !important; font-size:20px;font-weight:bold;">G</p>
                             <div style="width: 15px; height: 15px; border: 3px solid rgb(0, 0, 0);margin-left:316.5px !important;margin-top:-40px !important;"></div>
                             <p style="margin-left:140px !important; font-size:10px;">Over 3 kg</p>
                         </div>
                     @endif
                     @if ($OrderWeight <= 3)         
                         <div style="position: relative;left:215px !important; margin-top:-40px !important;">
-                            <p style="margin-left:60px !important; font-size:20px;font-weight:bold;">P</p>
+                            <p style="margin-left:70px !important; font-size:20px;font-weight:bold;">P</p>
                             <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:316.5px !important;margin-top:-40px !important;"></div>
                             <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:325px !important;margin-top:0px !important;"></div>
                             <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:308px !important;margin-top:-15px !important;"></div>

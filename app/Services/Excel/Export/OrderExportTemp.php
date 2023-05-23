@@ -49,46 +49,44 @@ class OrderExportTemp extends AbstractExportService
             $type = 'Prime';
          } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
             $type = 'ParcelUPU';
-         }
+         } 
             $user = $order->user; 
             $this->setCellValue('A'.$row, $order->containers->first()->awb);
-            $this->setCellValue('B'.$row, $order->warehouse_number );
+            $this->setCellValue('B'.$row, $order->containers->first()->seal_no );
             $this->setCellValue('C'.$row, (string)$this->getOrderTrackingCodes($order));
             $this->setCellValue('D'.$row, $order->customer_reference);
-            $this->setCellValue('E'.$row, $user->name);
+            $this->setCellValue('E'.$row, $order->recipient->getFullName());
             $this->setCellValue('F'.$row, $order->recipient->zipcode);
             $this->setCellValue('G'.$row, $order->recipient->state->name);
             $this->setCellValue('H'.$row, $order->recipient->city);
-            $this->setCellValue('I'.$row, $order->recipient->address);
-            $this->setCellValue('J'.$row, $order->recipient->street_no);
-            $this->setCellValue('K'.$row, $order->recipient->phone);
-            $this->setCellValue('L'.$row, $order->recipient->phone);
-            $this->setCellValue('M'.$row, $order->recipient->email);
-            $this->setCellValue('N'.$row, $order->recipient->country->name);
-            $this->setCellValue('O'.$row, '');
-            $this->setCellValue('P'.$row, $order->items->first()->description);
-            $this->setCellValue('Q'.$row, $order->items->first()->sh_code);
-            $this->setCellValue('R'.$row, $order->items->count());
-            $this->setCellValue('S'.$row, $order->getOriginalWeight()/$order->items->count());
-            $this->setCellValue('T'.$row, $order->getOriginalWeight());
-            $this->setCellValue('U'.$row, $order->items->sum('value')/$order->items->count());
-            $this->setCellValue('V'.$row, $order->items->sum('value'));
-            $this->setCellValue('W'.$row, 'USD');
-            $this->setCellValue('x'.$row, $type);
-            $this->setCellValue('Y'.$row, $order->containers->first()->tax_modality);
-            $this->setCellValue('Z'.$row, $order->recipient->tax_id);
-            $this->setCellValue('AA'.$row, '');   
-            $this->setCellValue('AB'.$row,'');
-            $this->setCellValue('AC'.$row,'B2C');
-            $this->setCellValue('AD'.$row, 'UZPO');
-            $this->setCellValue('AE'.$row, $order->carrierService());
-            $this->setCellValue('AF'.$row, 'UZPO-'.$type);
+            $this->setCellValue('I'.$row, $order->recipient->address.' '.$order->recipient->street_no);
+            $this->setCellValue('J'.$row, $order->recipient->phone.' ');
+            $this->setCellValue('K'.$row, $order->recipient->phone.' ');
+            $this->setCellValue('L'.$row, $order->recipient->email);
+            $this->setCellValue('M'.$row, $order->recipient->country->code);
+            $this->setCellValue('N'.$row, '');
+            $this->setCellValue('O'.$row, $order->items->first()->description);
+            $this->setCellValue('P'.$row, $order->items->first()->sh_code);
+            $this->setCellValue('Q'.$row, $order->items->count());
+            $this->setCellValue('R'.$row, $order->getOriginalWeight()/$order->items->count());
+            $this->setCellValue('S'.$row, $order->getOriginalWeight());
+            $this->setCellValue('T'.$row, $order->items->sum('value')/$order->items->count());
+            $this->setCellValue('U'.$row, $order->items->sum('value'));
+            $this->setCellValue('V'.$row, 'USD');
+            $this->setCellValue('W'.$row, $type);
+            $this->setCellValue('x'.$row, $order->containers->first()->tax_modality);
+            $this->setCellValue('Y'.$row, $order->recipient->tax_id);
+            $this->setCellValue('Z'.$row, '');   
+            $this->setCellValue('AA'.$row,'');
+            $this->setCellValue('AB'.$row,'B2C');
+            $this->setCellValue('AC'.$row, 'UZPO');
+            $this->setCellValue('AD'.$row, $order->carrierService());
+            $this->setCellValue('AE'.$row, 'UZPO-'.$type);
+            $this->setCellValue('AF'.$row,'');
             $this->setCellValue('AG'.$row,'');
             $this->setCellValue('AH'.$row,'');
             $this->setCellValue('AI'.$row,'');
-            $this->setCellValue('AJ'.$row,'');
-            $this->setCellValue('AK'.$row,$order->status==Order::STATUS_CANCEL?'TRUE':'FALSE'); 
-            
+            $this->setCellValue('AJ'.$row,$order->status==Order::STATUS_CANCEL?'TRUE':'FALSE');  
 
             
             $row++;
@@ -127,77 +125,73 @@ class OrderExportTemp extends AbstractExportService
         $this->setCellValue('I1', 'ADDRESS');
         
         $this->setColumnWidth('J', 25);
-        $this->setCellValue('J1', 'House Number');
+        $this->setCellValue('J1', 'PHONE NUMBER ');
         
         $this->setColumnWidth('K', 25);
-        $this->setCellValue('K1', 'PHONE NUMBER');
+        $this->setCellValue('K1', 'PHONE NORMALIZED');
 
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'PHONE NORMALIZED');
+        $this->setCellValue('L1', 'EMAIL');
         
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M1', 'EMAIL');
+        $this->setCellValue('M1', 'COUNTRY');
  
         
         $this->setColumnWidth('N', 20);
-        $this->setCellValue('N1', 'COUNTRY');
+        $this->setCellValue('N1', 'SKU CODE');
 
         $this->setColumnWidth('O', 20); 
-        $this->setCellValue('O1', 'SKU CODE');
+        $this->setCellValue('O1', 'DESCRIPTION OF CONTENT');
 
         $this->setColumnWidth('P', 20);
-        $this->setCellValue('P1', 'DESCRIPTION OF CONTENT');
+        $this->setCellValue('P1', 'HS CODE');
 
         $this->setColumnWidth('Q', 20);
-        $this->setCellValue('Q1', 'HS CODE');
+        $this->setCellValue('Q1', 'QUANTITY');
 
         $this->setColumnWidth('R', 20);
-        $this->setCellValue('R1', 'QUANTITY');
+        $this->setCellValue('R1', 'WEIGHT PER ITEM,KG');
 
         $this->setColumnWidth('S', 20);
-        $this->setCellValue('S1', 'WEIGHT PER ITEM,KG');
+        $this->setCellValue('S1', 'WEIGHT PER PARCEL,KG');
         
         $this->setColumnWidth('T', 20);
-        $this->setCellValue('T1', 'WEIGHT PER PARCEL,KG');
+        $this->setCellValue('T1', 'PRICE PER ITEM');
  
         $this->setColumnWidth('U', 20);
-        $this->setCellValue('U1', 'PRICE PER ITEM');
+        $this->setCellValue('U1', 'PRICE PER PARCEL');
 
         $this->setColumnWidth('V', 20);
-        $this->setCellValue('V1', 'PRICE PER PARCEL');
+        $this->setCellValue('V1', 'CURRENCY');
 
         $this->setColumnWidth('W', 20);
-        $this->setCellValue('W1', 'CURRENCY');
+        $this->setCellValue('W1', 'MAIL TYPE');
         $this->setColumnWidth('X', 20);
-        $this->setCellValue('X1', 'MAIL TYPE');
+        $this->setCellValue('X1', 'TAX TYPE');
         $this->setColumnWidth('Y', 20);
-        $this->setCellValue('Y1', 'TAX TYPE');
+        $this->setCellValue('Y1', 'TAX IDENTIFICATION');
         $this->setColumnWidth('Z', 20);
-        $this->setCellValue('Z1', 'TAX IDENTIFICATION');
+        $this->setCellValue('Z1', 'ROUTE INFO');
         $this->setColumnWidth('AA', 20);
-        $this->setCellValue('AA1', 'ROUTE INFO'); 
+        $this->setCellValue('AA1', 'SHIP DATE'); 
         $this->setColumnWidth('AB', 20);
-        $this->setCellValue('AB1', 'SHIP DATE'); 
+        $this->setCellValue('AB1', 'TRANSACTION TYPE'); 
         $this->setColumnWidth('AC', 20);
-        $this->setCellValue('AC1', 'TRANSACTION TYPE'); 
+        $this->setCellValue('AC1', 'SERVICE CODE'); 
         $this->setColumnWidth('AD', 20);
-        $this->setCellValue('AD1', 'SERVICE CODE'); 
+        $this->setCellValue('AD1', 'CARRIER SERVICE CODE'); 
         $this->setColumnWidth('AE', 20);
-        $this->setCellValue('AE1', 'CARRIER SERVICE CODE'); 
+        $this->setCellValue('AE1', 'CARRIER'); 
         $this->setColumnWidth('AF', 20);
-        $this->setCellValue('AF1', 'CARRIER'); 
+        $this->setCellValue('AF1', 'MANIFEST PARCEL NR'); 
         $this->setColumnWidth('AG', 20);
-        $this->setCellValue('AG1', 'MANIFEST PARCEL NR'); 
+        $this->setCellValue('AG1', 'EXTERNAL ID'); 
         $this->setColumnWidth('AH', 20);
-        $this->setCellValue('AH1', 'EXTERNAL ID'); 
+        $this->setCellValue('AH1', 'WARNING'); 
         $this->setColumnWidth('AI', 20);
-        $this->setCellValue('AI1', 'WARNING'); 
+        $this->setCellValue('AI1', 'ERRORS'); 
         $this->setColumnWidth('AJ', 20);
-        $this->setCellValue('AJ1', 'ERRORS');
-        $this->setColumnWidth('AK', 20);
-        $this->setCellValue('AK1', 'CANCELLED');
-        $this->setBackgroundColor('A1:AK1', '2b5cab');
-        $this->setColor('A1:AK1', 'FFFFFF');
+        $this->setCellValue('AJ1', 'CANCELLED'); 
 
         $this->currentRow++;
     }

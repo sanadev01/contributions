@@ -6,18 +6,69 @@
 <div class="modal-body" style="font-size: 15px;">
     @if ($totalOrder)
         <section class="card invoice-page">
-            @if(request('start') || request('end'))
-                <h4> <strong> @lang('sales-commission.start date') :</strong> {{ request('start') }}</h1>
-                <h4> <strong>@lang('sales-commission.end date') :</strong> {{ request('end') }}</h1>
-            @endif
-            <h4> <strong> @lang('sales-commission.Total Order') : </strong> {{ $totalOrder }}</h4>
-            <h4> <strong> @lang('sales-commission.Total Commission') : </strong>{{ $totalCommission }}</h4>
-            <h4> <strong> @lang('sales-commission.Users') : </strong></h4>
-            <ul>
-                @foreach ($userNames as $name)
-                    <li> {{ $name }} </li>
+        <table class="   ">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Pobox number</th>
+                    <th>Referrals</th>
+                    <th>Orders</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody> 
+                @foreach ($userSales as $sale) 
+                <tr> 
+                    <td>{{  $sale['name'] }}</td>
+                    <td>{{  $sale['pobox_number']  }}</td>
+                    <td>
+                        @foreach ($sale['referrer'] as $referrer)
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    {{ $referrer->first()->referrer->name }} 
+                                </td>
+                                <td>
+                                    {{  $referrer->count() }} 
+                                </td>
+                                <td>
+                                    {{ number_format($referrer->sum('commission'), 2) }} <br>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </td>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="3">
+                            <hr class="m-1">  
+                        </td>   
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td><strong>Total</strong></td>
+                        <td> <strong>  {{ $sale['orders'] }} </strong></td>
+                        <td><strong> {{ $sale['commission'] }} USD </strong></td>
+                    </tr>
+                
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <hr class="m-1">  
+                    </td>  
+                </tr>
                 @endforeach
-            </ul>
+                <tr>
+                    <td colspan="2"></td>
+                    <td><strong>Grand Total</strong></td>
+                    <td><strong>{{ $totalOrder }} </strong></td>
+                    <td> <strong>{{ $totalCommission}} USD </strong></td>
+                </tr>
+            </tbody>
+        </table>
+            @if(request('start') || request('end'))
+                <h4 class="mt-2">Period :  <b>{{ request('start') ? request('start').' to':'before'  }}   {{ request('end')??date('Y-m-d') }}</b></h4>
+            @endif 
         </section>
         @lang('sales-commission.Confirmation Message')
         <div class="modal-footer">
