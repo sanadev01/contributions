@@ -14,7 +14,7 @@ class OrderArrivedAlert extends Mailable
     use Queueable, SerializesModels;
  
     public $order;
-    public $to;
+    public $user;
 
     /**
      * Create a new message instance.
