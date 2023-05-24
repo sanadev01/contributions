@@ -50,7 +50,7 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
                  $this->setCellValue('H'.$row, $container->created_at->addDays(1));  
                  $this->setCellValue('I'.$row, $container->destination_operator_name);  
                  $this->setCellValue('J'.$row, $container->destination_operator_name); 
-                 $this->setCellValue('K'.$row, substr($container->flight_number, 0, 3));  
+                 $this->setCellValue('K'.$row, substr($container->flight_number, 0, 2));  
                  $this->setCellValue('L'.$row, $container->flight_number);  
                  $this->setCellValue('M'.$row, $container->created_at->addDays(1));   
                  $this->setCellValue('N'.$row, '');  
@@ -65,7 +65,7 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
                  $this->setCellValue('W'.$row, ($package->sender_city) ? $package->sender_city: 'Miami');
                  $this->setCellValue('X'.$row, ($package->sender_state_id) ? $package->senderState->code: 'FL');
                  $this->setCellValue('Y'.$row, ($package->sender_zipcode) ? $package->sender_zipcode: '33182');
-                 $this->setCellValue('Z'.$row, 'US');
+                 $this->setCellValue('Z'.$row, 'BR');
                  $this->setCellValue('AA'.$row, ($package->sender_phone) ? $package->sender_phone: '');
                  $this->setCellValue('AB'.$row, $package->recipient->getFullName());
                  $this->setCellValue('AC'.$row, '');
