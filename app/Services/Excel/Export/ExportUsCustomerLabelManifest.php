@@ -65,7 +65,7 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
                  $this->setCellValue('W'.$row, ($package->sender_city) ? $package->sender_city: 'Miami');
                  $this->setCellValue('X'.$row, ($package->sender_state_id) ? $package->senderState->code: 'FL');
                  $this->setCellValue('Y'.$row, ($package->sender_zipcode) ? $package->sender_zipcode: '33182');
-                 $this->setCellValue('Z'.$row,  $package->senderCountry->code ? $package->senderCountry->code: 'BR');
+                 $this->setCellValue('Z'.$row,  $package->senderCountry->code ? $package->senderCountry->code : 'BR');
                  $this->setCellValue('AA'.$row, ($package->sender_phone) ? $package->sender_phone: '');
                  $this->setCellValue('AB'.$row, $package->recipient->getFullName());
                  $this->setCellValue('AC'.$row, '');
