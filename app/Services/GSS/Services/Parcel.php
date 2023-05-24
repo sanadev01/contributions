@@ -13,6 +13,12 @@ class Parcel {
 
       if($order->shippingService->service_sub_class == ShippingService::GSS_IPA) {
          $type = 'IPA';
+      } elseif($order->shippingService->service_sub_class == ShippingService::GSS_EPMEI) {
+         $type = 'EPMEI';
+      } elseif($order->shippingService->service_sub_class == ShippingService::GSS_EPMI) {
+         $type = 'EPMI';
+      } elseif($order->shippingService->service_sub_class == ShippingService::GSS_EFCM) {
+         $type = 'EFCM';
       } 
 
       $refNo = $order->customer_reference;
@@ -37,7 +43,7 @@ class Parcel {
                'recipientAddress' => [
                   'firstName' => $order->recipient->first_name,
                   'lastName' => $order->recipient->last_name,
-                  'addressLine1' => $order->recipient->address.' '.optional($order->recipient)->address2.' '.$order->recipient->street_no,
+                  'addressLine1' => $order->recipient->address,
                   'addressLine2' => optional($order->recipient)->address2,
                   'addressLine3' => optional($order->recipient)->street_no,
                   // 'addressIsPOBox' => true,
@@ -60,16 +66,17 @@ class Parcel {
                   'packageType' => 'G',
                   'weight' => $order->weight,
                   'weightUnit' => ($order->measurement_unit == "lbs/in") ? 'LB' : 'KG',
+                  // 'returnServiceRequested' => true,
+                  'orderID' => "$order->id",
+                  'orderDate' => Carbon::today()->toDateString(),
+                  // 'paymentAndDeliveryTerms' => 'COD',
+                  'pfCorEEL' => 'X20230101123456',
+               ]+($type != "EFCM" ? [
                   'length' => $order->length,
                   'width' => $order->width,
                   'height' => $order->height,
                   'unitOfMeasurement' => ($order->measurement_unit == "lbs/in") ? 'IN' : 'CM',
-                  // 'returnServiceRequested' => true,
-                  'orderID' => "$order->id",
-                  'orderDate' => Carbon::now(),
-                  // 'paymentAndDeliveryTerms' => 'COD',
-                  'pfCorEEL' => 'X20230101123456',
-               ],
+                  ]:[]),
                //Items Information
                'items' => $this->setItemsDetails($order),              
             ];

@@ -132,7 +132,7 @@ class DeliveryBill extends Model
 
     public function isGSS()
     {
-        if($this->containers->first()->services_subclass_code == ShippingService::GSS_IPA){
+        if(($this->containers->first()->services_subclass_code == ShippingService::GSS_IPA) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EPMEI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EPMI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EFCM)){
             return true;
         }
         return false;

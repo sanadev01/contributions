@@ -15,15 +15,17 @@ class GSSContainerPackageRepository {
     {
         $error = null;
 
+        if($container->services_subclass_code != $order->shippingService->service_sub_class){
+            $error = 'Container service does not match';
+        }
         if(!$order->containers->isEmpty()) {
-            $error = "Order is already present in Container";
+            $error = "Order is already present in container";
         }
         if ($order->status != Order::STATUS_PAYMENT_DONE) {
             $error = 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid';
         }
         if ( (!$container->hasGSSService() && $order->shippingService->isGSSService()) 
             || ($container->hasGSSService() && !$order->shippingService->isGSSService())){
-
             $error = 'Order does not belong to this container. Please Check Packet Service';
         }
         if(!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {

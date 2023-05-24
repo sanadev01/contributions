@@ -63,7 +63,7 @@
                                             {{ $container->origin_country }}
                                         </td>
                                         <td>
-                                            {{ $container->getDestinationAriport() }}
+                                            {{ $container->destination_operator_name}}
                                         </td>
                                         <td>
                                             {{ $container->getContainerType() }}

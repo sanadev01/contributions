@@ -116,6 +116,16 @@ class Client{
         $piecesCount = 0;
         if($container->services_subclass_code == ShippingService::GSS_IPA) {
             $rateType = "IPA";
+            $foreignOECode = "CWB";
+        } elseif($container->services_subclass_code == ShippingService::GSS_EPMEI) {
+            $rateType = 'EPMEI';
+            $foreignOECode = "SAO";
+        } elseif($container->services_subclass_code == ShippingService::GSS_EPMI) {
+            $rateType = 'EPMI';
+            $foreignOECode = "RIO";
+        } elseif($container->services_subclass_code == ShippingService::GSS_EFCM) {
+            $rateType = 'EFCM';
+            $foreignOECode = "CWB";
         }
         if($containers[0]->awb) {
             foreach($containers as $package) {
@@ -126,7 +136,7 @@ class Client{
                 "rateType" => $rateType,
                 "dutiable" => true,
                 "receptacleType" => "E",
-                "foreignOECode" => "CWB",
+                "foreignOECode" => $foreignOECode,
                 "countryCode" => "BR",
                 "dateOfMailing" => Carbon::now(),
                 "pieceCount" => $piecesCount,
@@ -219,7 +229,7 @@ class Client{
                 $package->update([
                     'unit_response_list' => json_encode(['cn35'=>$data, 'manifest' => $reportData, 'dispatchID' => $dispatchID]),
                     'unit_code' => $id,
-                    'response' => 1,
+                    'response' => 1
                 ]); 
             }
             return $this->responseSuccessful($data, 'Container registration is successfull. You can download CN35 label');

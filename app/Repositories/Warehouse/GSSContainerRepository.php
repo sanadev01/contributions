@@ -20,7 +20,7 @@ class GSSContainerRepository {
         }
 
         return $query->where(function($query) {
-            $query->where('services_subclass_code', ShippingService::GSS_IPA);
+            $query->whereIn('services_subclass_code', [ShippingService::GSS_IPA, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_EFCM] );
         })->latest()->paginate();
 
     }

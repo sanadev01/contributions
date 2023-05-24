@@ -94,7 +94,10 @@ class OrderRepository
                     ShippingService::USPS_PRIORITY_INTERNATIONAL,
                     ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
                     ShippingService::USPS_GROUND,
-                    ShippingService::GSS_IPA
+                    ShippingService::GSS_IPA,
+                    ShippingService::GSS_EPMEI,
+                    ShippingService::GSS_EPMI,
+                    ShippingService::GSS_EFCM
                 ];
             }
             if($request->carrier == 'UPS'){
@@ -599,9 +602,12 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::GePS_EFormat)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_GROUND)
             || $shippingServices->contains('service_sub_class', ShippingService::Parcel_Post)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_IPA)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_EPMEI)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_EPMI)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_EFCM)
             || $shippingServices->contains('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)
-            || $shippingServices->contains('service_sub_class', ShippingService::GDE_FIRST_CLASS)
-            || $shippingServices->contains('service_sub_class', ShippingService::GSS_IPA))
+            || $shippingServices->contains('service_sub_class', ShippingService::GDE_FIRST_CLASS))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {
