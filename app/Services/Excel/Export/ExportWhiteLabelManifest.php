@@ -49,9 +49,9 @@ class ExportWhiteLabelManifest extends AbstractExportService
         $row = $this->currentRow;
         foreach ($this->deliveryBill->containers as $container) {
             foreach ($container->orders as $order) {
-                $this->setCellValue('A' . $row, $order->user->pobox_number);
+                $this->setCellValue('A' . $row, $order->customer_reference);
                 $this->setCellValue('B' . $row, $order->corrios_tracking_code);
-                $this->setCellValue('C' . $row, ' ' . $order->recipient->tax_id);
+                $this->setCellValue('C' . $row, ' ' . $order->sender_taxId);
                 $this->setCellValue('D' . $row, $order->getSenderFullName());
                 $this->setCellValue('E' . $row, ($order->sender_address) ? $order->sender_address : '2200 NW 129TH AVE');
                 $this->setCellValue('F' . $row, '');
@@ -59,13 +59,16 @@ class ExportWhiteLabelManifest extends AbstractExportService
                 $this->setCellValue('H' . $row, count($order->items));
                 $this->setCellValue('I' . $row, $order->getWeight('kg'));
                 $this->setCellValue('J' . $row, $order->getOrderValue());
-                $this->setCellValue('K' . $row, $order->items->first()->description);
                 $this->setCellValue('L' . $row, $order->recipient->country->code);
                 $this->setCellValue('M' . $row, $order->recipient->getFullName());
                 $this->setCellValue('N' . $row, $order->recipient->tax_id);
                 $this->setCellValue('O' . $row, $order->recipient->getAddress());
                 $this->setCellValue('P' . $row, '');
                 $this->setCellValue('Q' . $row, '');
+                foreach($order->items as $item){
+                    $this->setCellValue('K' . $row, $item->description);
+                    $row++;
+                }
                 $row++;
             }
         }
@@ -130,7 +133,7 @@ class ExportWhiteLabelManifest extends AbstractExportService
         $this->setCellValue('L' . $this->currentRow, "Country of Destination");
 
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M' . $this->currentRow, "Buyer NAme");
+        $this->setCellValue('M' . $this->currentRow, "Buyer Name");
 
         $this->setColumnWidth('N', 20);
         $this->setCellValue('N' . $this->currentRow, "TAX ID Buyer");
