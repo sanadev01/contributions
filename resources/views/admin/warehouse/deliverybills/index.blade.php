@@ -197,7 +197,7 @@
                                                         @if ($deliveryBill->isRegistered() && $deliveryBill->isGDE())  
                                                         
                                                            <a href="{{ route('warehouse.gde.manifest.download',[$deliveryBill,'type'=>'us-customers']) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-cloud-download"></i>   Manifest to US Customers
+                                                                <i class="fa fa-cloud-download"></i>   Manifest to US Customs
                                                             </a>
                                                             <a href="{{ route('warehouse.gde.manifest.download',[$deliveryBill,'type'=>'brazil-customers']) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i>   Manifest to Brazilian Customs 
