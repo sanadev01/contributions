@@ -77,9 +77,9 @@ class ExportWhiteLabelManifest extends AbstractExportService
              foreach ($package->items as $item) {
                     $this->setCellValue('I'.$row, $item->description);
                     $this->setCellValue('J'.$row, $item->sh_code);
-                    $this->row++;
+                    $row++;
                 }
-                $this->row++;
+                $row++;
                 $this->totalCustomerPaid +=  $package->gross_total;
                 $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package)['airport'];
                 $this->totalPieces++;
@@ -87,7 +87,6 @@ class ExportWhiteLabelManifest extends AbstractExportService
                 $this->totalCommission += optional($package->affiliateSale)->commission;
                 $this->totalAnjunCommission += $this->getValuePaidToCorrieos($container,$package)['commission'];
             }
-            $row++;
         }
         $this->setCellValue('E'.$row, "Total");
         $this->setCellValue('F'.$row, $this->totalPieces);
