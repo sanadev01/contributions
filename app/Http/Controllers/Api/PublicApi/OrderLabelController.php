@@ -28,7 +28,6 @@ use Illuminate\Support\Facades\DB;
 use App\Repositories\ColombiaLabelRepository;
 use App\Repositories\POSTNLLabelRepository;
 use App\Repositories\GDELabelRepository;
-use App\Repositories\GSSLabelRepository;
 
 
 class OrderLabelController extends Controller
