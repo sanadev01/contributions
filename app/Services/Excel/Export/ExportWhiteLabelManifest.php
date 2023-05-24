@@ -77,9 +77,9 @@ class ExportWhiteLabelManifest extends AbstractExportService
              foreach ($package->items as $item) {
                     $this->setCellValue('I'.$row, $item->description);
                     $this->setCellValue('J'.$row, $item->sh_code);
-                    $this->row++;
+                    $row++;
                 }
-                $this->row++;
+                $row++;
                 $this->totalCustomerPaid +=  $package->gross_total;
                 $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package)['airport'];
                 $this->totalPieces++;
@@ -87,7 +87,6 @@ class ExportWhiteLabelManifest extends AbstractExportService
                 $this->totalCommission += optional($package->affiliateSale)->commission;
                 $this->totalAnjunCommission += $this->getValuePaidToCorrieos($container,$package)['commission'];
             }
-            $row++;
         }
         $this->setCellValue('E'.$row, "Total");
         $this->setCellValue('F'.$row, $this->totalPieces);
@@ -121,56 +120,56 @@ class ExportWhiteLabelManifest extends AbstractExportService
         );
 
         $this->setColumnWidth('A', 20);
-        $this->setCellValue('A'.$this->currentRow, "Customer Reference");
+        $this->setCellValue('A'.$this->currentRow, "CÓDIGO INTERNO \n CLIENTE \n (se houver)");
 
         $this->setColumnWidth('B', 20);
-        $this->setCellValue('B'.$this->currentRow, "Tracking");
+        $this->setCellValue('B'.$this->currentRow, "Nº REMESSA \n (11 a 16 caracteres)");
 
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C'.$this->currentRow, "CPF or CNPJ");
+        $this->setCellValue('C'.$this->currentRow, "CPF/CNPJ/ \n PASSAPORTE \n (REMETENTE)");
 
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D'.$this->currentRow, "Sender Name");
+        $this->setCellValue('D'.$this->currentRow, "NOME DO REMETENTE");
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E'.$this->currentRow, "Sender Address");
+        $this->setCellValue('E'.$this->currentRow, "ENDEREÇO  \n REMETENTE \n  (Logadouro e número)");
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F'.$this->currentRow, "Address Complement");
+        $this->setCellValue('F'.$this->currentRow, "COMPLEMENTO \n ENDEREÇO \n REMETENTE");
 
         $this->setColumnWidth('G', 23);
-        $this->setCellValue('G'.$this->currentRow, "Zip code");
+        $this->setCellValue('G'.$this->currentRow, "CEP \n REMETENTE");
 
         $this->setColumnWidth('H', 25);
-        $this->setCellValue('H'.$this->currentRow, "Quantity of Volumes");
+        $this->setCellValue('H'.$this->currentRow, "QTDE. VOLUMES");
 
         $this->setColumnWidth('I', 25);
-        $this->setCellValue('I'.$this->currentRow, "Gross Weight");
+        $this->setCellValue('I'.$this->currentRow, "PESO BRUTO \nKG");
         
         $this->setColumnWidth('J', 25);
-        $this->setCellValue('J'.$this->currentRow, "Value of Goods");
+        $this->setCellValue('J'.$this->currentRow, "VALOR DA \n REMESSA \n USD");
   
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K'.$this->currentRow, "Description of Goods");
+        $this->setCellValue('K'.$this->currentRow, "DESCRIÇÃO DA \n REMESSA \n (com quntidade)");
         
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L'.$this->currentRow, "Country of Destination");
+        $this->setCellValue('L'.$this->currentRow, "PAÍS DE DESTINO");
 
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M'.$this->currentRow, "Buyer NAme");
+        $this->setCellValue('M'.$this->currentRow, "NOME \n DESTINATÁRIO");
         
         $this->setColumnWidth('N', 20);
-        $this->setCellValue('N'.$this->currentRow, "TAX ID Buyer");
+        $this->setCellValue('N'.$this->currentRow, "TAX ID \n DESTINATÁRIO");
 
         $this->setColumnWidth('O', 20);
         $this->sheet->getStyle('O')->getAlignment()->setHorizontal('center');
-        $this->setCellValue('O'.$this->currentRow, "Buyer Address");
+        $this->setCellValue('O'.$this->currentRow, "ENDEREÇO \n DESTINATARIO");
 
         $this->setColumnWidth('P', 20);
-        $this->setCellValue('P'.$this->currentRow, "Address complement");
+        $this->setCellValue('P'.$this->currentRow, "COMPOLEMENTO \n ENDEREÇO \n DESTINATÁRIO");
 
         $this->setColumnWidth('Q', 20);
-        $this->setCellValue('Q'.$this->currentRow, "Remarks"); 
+        $this->setCellValue('Q'.$this->currentRow, "OBSERVAÇÕES"); 
  
         
         $this->setBackgroundColor('A'.$this->currentRow.':Q'.$this->currentRow, "f2f2f2");
