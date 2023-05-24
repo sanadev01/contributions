@@ -6,12 +6,12 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('warehouse.containers.Edit Container')</h4>
-                        <a href="{{ route('warehouse.postplus_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
+                        <a href="{{ route('warehouse.gss_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
                     </div>
                     <hr>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('warehouse.postplus_containers.update',$container) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('warehouse.gss_containers.update',$container) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <input hidden type="text" name="id" value="{{$container->id}}">
@@ -57,10 +57,10 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code" disabled>
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            <option value="{{App\Models\ShippingService::GSS_IPA}}" {{ old('services_subclass_code',$container->services_subclass_code) == "{{App\Models\ShippingService::GSS_IPA}}" ? 'selected': '' }}>International Priority Airmail</option>
-                                            <option value="{{App\Models\ShippingService::GSS_EPMEI}}" {{ old('services_subclass_code',$container->services_subclass_code) == "{{App\Models\ShippingService::GSS_EPMEI}}" ? 'selected': '' }}>Pre-Sort Drop Shipment</option>
-                                            <option value="{{App\Models\ShippingService::GSS_EPMI}}" {{ old('services_subclass_code',$container->services_subclass_code) == "{{App\Models\ShippingService::GSS_EPMI}}" ? 'selected': '' }}>Pre-Sort Priority Mail International</option>
-                                            <option value="{{App\Models\ShippingService::GSS_EFCM}}" {{ old('services_subclass_code',$container->services_subclass_code) == "{{App\Models\ShippingService::GSS_EFCM}}" ? 'selected': '' }}>Pre-Sort First Class International</option>
+                                            <option value="{{App\Models\ShippingService::GSS_IPA}}" {{ old('services_subclass_code', $container->services_subclass_code) == '477' ? 'selected' : '' }}>International Priority Airmail</option>
+                                            <option value="{{App\Models\ShippingService::GSS_EPMEI}}" {{ old('services_subclass_code', $container->services_subclass_code) == '37634' ? 'selected' : '' }}>Pre-Sort Drop Shipment</option>
+                                            <option value="{{App\Models\ShippingService::GSS_EPMI}}" {{ old('services_subclass_code', $container->services_subclass_code) == '3674' ? 'selected' : '' }}>Pre-Sort Priority Mail International</option>
+                                            <option value="{{App\Models\ShippingService::GSS_EFCM}}" {{ old('services_subclass_code', $container->services_subclass_code) == '3326' ? 'selected' : '' }}>Pre-Sort First Class International</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>
