@@ -330,20 +330,3 @@ Route::get('/clear-cache/{id}', function($id) {
         return "Application Optimize Cleared";
     }
 });
-
- 
- 
-Route::get('order-update/{id}',function($id){
-    $order = Order::find($id);
-    $date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
-    $order->update([
-        'arrived_date' => $date
-    ]);
-    try{
-        Mail::send(new Shipment($order));
-    }catch(Exception $e){
-        echo $e->getMessage();
-    }
-
-    echo "mail send";
- });

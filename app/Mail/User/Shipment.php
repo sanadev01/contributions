@@ -35,6 +35,10 @@ class Shipment extends Mailable
         app()->setLocale($this->order->user->locale);
         return $this->markdown('emails.user.shipment')
                 ->subject('Order Update Alert')
-                ->to($this->order->user);
+                ->to($this->order->user)
+                ->cc(
+                    config('hd.email.admin_email'),
+                    config('hd.email.admin_name')
+                );
     }
 }
