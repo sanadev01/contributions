@@ -22,7 +22,7 @@ class AdjustmentController extends Controller
     }
     public function create()
     {
-        $this->authorize('create', Tax::class);
+        $this->authorize('createAdjustment', Tax::class);
         return view('admin.adjustment.create');
     }
 
@@ -34,11 +34,11 @@ class AdjustmentController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('createAdjustment', Tax::class);
         $request->validate([
             'adjustment' => 'required|numeric|min:.001',
             'user_id' => 'required|numeric',
         ]);
-        $this->authorize('create', Tax::class);
         $response = $this->adjustmentRepository->store($request);
         if (is_bool($response) && $response) {
             session()->flash('alert-success', 'Adjustment has been added successfully');
@@ -68,7 +68,7 @@ class AdjustmentController extends Controller
     public function edit($id)
     {
         $tax = Tax::find($id);
-        $this->authorize('update', $tax);
+        $this->authorize('updateAdjustment', $tax);
         return view('admin.adjustment.edit', compact('tax'));
     }
 
@@ -87,7 +87,7 @@ class AdjustmentController extends Controller
         ]);
         $tax = Tax::find($id);
 
-        $this->authorize('update', $tax);
+        $this->authorize('updateAdjustment', $tax);
         $response = $this->adjustmentRepository->update($request, $tax); 
         if ($response) {
             session()->flash('alert-success', 'Adjustment Updated');

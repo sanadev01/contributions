@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\GSSContainer;
+namespace App\Http\Livewire\GssContainer;
 
 use App\Models\Order;
 use Livewire\Component;
@@ -12,7 +12,6 @@ use App\Http\Controllers\Warehouse\GSSContainerPackageController;
 class Packages extends Component
 {
     public $container;
-    public $idContainer;
     public $orders;
     public $editMode;
     public $tracking;
@@ -24,7 +23,6 @@ class Packages extends Component
     public function mount($id = null, $editMode = null)
     {
         $this->container = Container::find($id);
-        $this->idContainer = $id;
         $this->error = null;
         $this->emit('scanFocus');
         $this->editMode = $editMode;
@@ -35,7 +33,7 @@ class Packages extends Component
         $this->dispatchBrowserEvent('scan-focus');
         $this->tracking = null;
         return view('livewire.gss-container.packages',[
-            'orders' => $this->getPackages($this->idContainer),
+            'orders' => $this->getPackages($this->container->id),
             'totalweight' => $this->totalWeight(),
             'num_of_Packages' => $this->totalPackages()
         ]);
@@ -52,9 +50,8 @@ class Packages extends Component
         $this->validate();
         $order = Order::where('corrios_tracking_code', $this->tracking)->first();
         if ($order){
-            $container = Container::find($this->idContainer);
             $gssContainerPackageRepository = new GSSContainerPackageRepository;
-            $response = $gssContainerPackageRepository->addOrderToContainer($container, $order);
+            $response = $gssContainerPackageRepository->addOrderToContainer($this->container, $order);
             if(!$response['success']){
                 return $this->error = $response['message'];
             }

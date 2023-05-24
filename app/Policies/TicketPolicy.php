@@ -32,7 +32,12 @@ class TicketPolicy
      */
     public function view(User $user, Ticket $ticket)
     {
-        return $user->hasPermission('show_ticket') && $ticket->user_id == $user->id;
+        return $user->hasPermission('show_ticket') && $ticket->user_id == $user->id || $user->hasPermission('reply_ticket');
+    }
+
+    public function show_ticket(User $user)
+    {
+        return $user->hasPermission('show_ticket');
     }
 
     /**
@@ -55,7 +60,7 @@ class TicketPolicy
      */
     public function update(User $user, Ticket $ticket)
     {
-        return $user->hasPermission('edit_ticket') && $ticket->user_id == $user->id;
+        return ($user->hasPermission('edit_ticket') && $ticket->user_id == $user->id )|| $user->hasPermission('reply_ticket');
     }
 
     /**
@@ -69,6 +74,22 @@ class TicketPolicy
     {
         return $user->hasPermission('delete_ticket') && $ticket->user_id == $user->id;
     }
+ 
+    public function reply(User $user)
+    {
+        return $user->hasPermission('reply_ticket');
+    }
+
+    public function open(User $user)
+    {
+        return $user->hasPermission('open_ticket');
+    }
+
+    public function close(User $user,Ticket $ticket=null)
+    {
+        return $user->hasPermission('close_ticket') || optional($ticket)->user_id == $user->id;
+    }
+ 
 
     /**
      * Determine whether the user can restore the model.

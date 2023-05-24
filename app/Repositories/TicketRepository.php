@@ -19,35 +19,23 @@ class TicketRepository
     {   
 
         $tickets = Ticket::query();
-
         $tickets->has('user')->withCount(['comments' => function($q){
             $q->where('read', '0')->where('user_id', '!=', auth()->id() ); 
         }]);
 
-        if (!auth()->user()->isAdmin()) {
+        if(Auth::user()->cannot('reply', Ticket::class)){
             $tickets->where('user_id', auth()->id());
         }
-
-        $tickets->when($request->filled('date'), function ($query) use ($request) {
-            return $query->where('created_at', 'LIKE', "%{$request->date}%");
-        });
-
-        $tickets->when($request->filled('pobox'), function ($query) use ($request) {
-            return $query->whereHas('user', function ($query) use ($request) {
-                return $query->where('pobox_number', 'like', '%'.$request->pobox.'%');
+        
+        $tickets->when($request->filled('searchTerm'), function ($query) use ($request) {
+            $query->whereHas('user', function ($query) use ($request) {
+                $query->where('name', 'LIKE', "%{$request->searchTerm}%");
             });
+            $query->orWhere('created_at', 'LIKE', '%'. $request->searchTerm . '%');
+            
+            $query->orWhere('open', 'LIKE', '%'. $request->searchTerm . '%');
+            $query->orWhere('subject', 'LIKE', '%'. $request->searchTerm . '%');
         });
-
-        $tickets->when($request->filled('user'), function ($query) use ($request) {
-            return $query->whereHas('user', function ($query) use ($request) {
-                return $query->where('name', 'like', '%'.$request->user.'%');
-            });
-        });
-
-        $tickets->when($request->filled('status'), function ($query) use ($request) {
-            return $query->where('open', $request->status);
-        });
-
         return $tickets->orderBy('id','DESC')->paginate(25);
     }
 
@@ -120,11 +108,7 @@ class TicketRepository
     }
 
     public function show(Ticket $ticket){
-
-        if (! $ticket || (\auth()->user()->isUser() && $ticket->user_id != Auth::id())) {
-            return new NotFoundHttpException('Not found');
-        }
-    
+            
         $ticket->comments()->where('read', false)->where('user_id', '!=', Auth::id())->update([
             'read' => true
         ]);
@@ -133,10 +117,6 @@ class TicketRepository
     }
 
     public function markcLose(Ticket $ticket){
-
-        if (! Auth::user()->isAdmin()) {
-            throw new UnauthorizedHttpException('You are not authorized to perform this action');
-        }
 
         $ticket->markClosed();
         return true;

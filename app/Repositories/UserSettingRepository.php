@@ -64,6 +64,9 @@ class UserSettingRepository {
         $request->has('post_plus') ? saveSetting('post_plus', true, $user->id) : saveSetting('post_plus', false, $user->id);
         $request->has('GSS_IPA') ? saveSetting('GSS_IPA', true, $user->id) : saveSetting('GSS_IPA', false, $user->id);
         $request->has('tax') ? saveSetting('tax', true, $user->id) : saveSetting('tax', false, $user->id);
+        $request->has('colombia_service') ? saveSetting('colombia_service', true, $user->id) : saveSetting('colombia_service', false, $user->id);
+        $request->has('geps_service') ? saveSetting('geps_service', true, $user->id) : saveSetting('geps_service', false, $user->id);
+        $request->has('postnl_service') ? saveSetting('postnl_service', true, $user->id) : saveSetting('postnl_service', false, $user->id);
         $request->has('volumetric_discount') ? saveSetting('volumetric_discount', true,$user->id) : saveSetting('volumetric_discount', false, $user->id);
         $request->has('marketplace_checked') ? saveSetting('marketplace_checked', true,$user->id) : saveSetting('marketplace_checked', false, $user->id);
         $request->has('pay_tax_service') ? saveSetting('pay_tax_service', true,$user->id) : saveSetting('pay_tax_service', false, $user->id);
@@ -73,7 +76,8 @@ class UserSettingRepository {
         ($request->discount_percentage != null ) ? saveSetting('discount_percentage', $request->discount_percentage, $user->id) : saveSetting('discount_percentage', 0, $user->id);
         ($request->marketplace != null ) ? saveSetting('marketplace', $request->marketplace, $user->id) : saveSetting('marketplace', 0, $user->id);
         ($request->fedex_profit != null ) ? saveSetting('fedex_profit', $request->fedex_profit, $user->id) : saveSetting('fedex_profit', 0, $user->id);
-        
+        ($request->colombia_profit != null ) ? saveSetting('colombia_profit', $request->colombia_profit, $user->id) : saveSetting('colombia_profit', 0, $user->id);
+
         ($request->weight != null ) ? saveSetting('weight', $request->weight, $user->id) : saveSetting('weight', 0, $user->id);
         ($request->length != null ) ? saveSetting('length', $request->length, $user->id) : saveSetting('length', 0, $user->id);
         ($request->width != null ) ? saveSetting('width', $request->width, $user->id) : saveSetting('width', 0, $user->id);
@@ -101,7 +105,7 @@ class UserSettingRepository {
                 }
             }
         }
-        
+
         $diffence = array_diff($ids,$newIds);
         foreach($diffence as $id){
             User::find($id)->update([

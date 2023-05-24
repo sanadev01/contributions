@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Consolidation;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Consolidation\CreateRequest;
 use App\Models\Order;
+use App\Models\Ticket;
 use App\Repositories\PreAlertRepository;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,7 @@ class SelectPackagesController extends Controller
      */
     public function index(PreAlertRepository $preAlertRepository)
     {
+        $this->authorize('consolidateParcel',Order::class);
         return view('admin.consolidation.index');
     }
 
@@ -28,6 +30,7 @@ class SelectPackagesController extends Controller
      */
     public function store(CreateRequest $request,PreAlertRepository $preAlertRepository)
     {
+        $this->authorize('consolidateParcel',Order::class);
         $consolidatedOrder = $preAlertRepository->createConsolidationRequest($request);
         if ( $consolidatedOrder ){
             session()->flash('alert-success',__('consolidation.success_message_created'));

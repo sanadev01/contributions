@@ -13,6 +13,7 @@ use App\Models\HandlingService;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderOrder;
+use App\Models\OrderTracking;
 use App\Models\PaymentInvoice;
 use App\Models\Permission;
 use App\Models\Pobox;
@@ -43,6 +44,7 @@ use App\Policies\HandlingServicePolicy;
 use App\Policies\OrderItemPolicy;
 use App\Policies\OrderOrderPolicy;
 use App\Policies\OrderPolicy;
+use App\Policies\OrderTrackingPolicy;
 use App\Policies\PaymentInvoicePolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\PoboxPolicy;
@@ -103,6 +105,7 @@ class AuthServiceProvider extends ServiceProvider
         Activity::class => ActivityPolicy::class,
         Product::class => ProductPolicy::class,
         Tax::class => TaxPolicy::class,
+        OrderTracking::class => OrderTrackingPolicy::class
     ];
 
     /**
@@ -117,5 +120,14 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('do_warehouse_operations',function(User $user){
             return $user->isAdmin() || $user->hasPermission('warehouse_operations');
         });
+        Gate::define('view_box_control',function(User $user){
+            return   $user->hasPermission('view_box_control') ||$user->isAdmin();
+        });
+        Gate::define('view_label_post',function(User $user){
+            return   $user->hasPermission('view_label_post') || $user->isAdmin();
+        });
+        Gate::define('view_api_docs',function(User $user){
+            return   $user->hasPermission('view_api_docs') ||$user->isAdmin();
+        }); 
     }
 }
