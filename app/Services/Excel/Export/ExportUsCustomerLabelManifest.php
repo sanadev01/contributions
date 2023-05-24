@@ -68,8 +68,8 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
                  $this->setCellValue('Z'.$row, 'US');
                  $this->setCellValue('AA'.$row, ($package->sender_phone) ? $package->sender_phone: '');
                  $this->setCellValue('AB'.$row, $package->recipient->getFullName());
-                 $this->setCellValue('AC'.$row, $package->warehouse_number);
-                 $this->setCellValue('AD'.$row, ($package->recipient->tax_id) ? $package->recipient->tax_id: '');
+                 $this->setCellValue('AC'.$row, '');
+                 $this->setCellValue('AD'.$row, '');
                  $this->setCellValue('AE'.$row, $package->recipient->address.' '.optional($package->recipient)->address2.' '.$package->recipient->street_no);
                  $this->setCellValue('AF'.$row, $package->recipient->city);
                  $this->setCellValue('AG'.$row, $package->recipient->State->code);
