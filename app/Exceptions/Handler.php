@@ -61,7 +61,8 @@ class Handler extends ExceptionHandler
                     ->back()
                     ->withInput($request->except('password'))
                     ->with([ 
-                        'alert-danger' => 'Validation Token was expired. Please try again']);
+                        'alert-danger' => 'Validation Token was expired. Please try again'
+                    ]);
         }   
 
         
