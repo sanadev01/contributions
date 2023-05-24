@@ -19,7 +19,10 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Mail\User\Shipment;
 use App\Models\AffiliateSale;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -328,11 +331,4 @@ Route::get('/clear-cache/{id}', function($id) {
         $artisanCmd = Artisan::call('optimize:clear');
         return "Application Optimize Cleared";
     }
-});
-
-Route::get('container-update/{id?}',function($id){
-   $container = Container::find($id)->update([
-       'sequence' => '10859'
-   ]);
-   return "Container Updated Successfully";
 });

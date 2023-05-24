@@ -8,12 +8,12 @@ use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\Order;
 use Livewire\Component;
+use App\Mail\User\Shipment;
 use Illuminate\Http\Request;
 use App\Models\OrderTracking;
 use App\Services\GePS\Client;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Log;
-use App\Mail\User\OrderArrivedAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Repositories\LabelRepository;
@@ -173,7 +173,7 @@ class ScanLabel extends Component
                 {                
                     $this->addOrderTracking($this->order);
                     try{
-                        Mail::send(new OrderArrivedAlert($this->order));
+                        Mail::send(new Shipment($this->order));
                     }catch(Exception $e){
                         Log::info($e->getMessage());
                     }
