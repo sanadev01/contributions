@@ -48,7 +48,7 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
                  $this->setCellValue('F'.$row, $container->origin_airport);  
                  $this->setCellValue('G'.$row, '');  
                  $this->setCellValue('H'.$row, $container->created_at->addDays(1));  
-                 $this->setCellValue('I'.$row, '');  
+                 $this->setCellValue('I'.$row, $container->destination_operator_name);  
                  $this->setCellValue('J'.$row, $container->destination_operator_name); 
                  $this->setCellValue('K'.$row, '');  
                  $this->setCellValue('L'.$row, $container->flight_number);  
