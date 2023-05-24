@@ -130,7 +130,7 @@ class ExportWhiteLabelManifest extends AbstractExportService
         $this->setCellValue('L' . $this->currentRow, "Country of Destination");
 
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M' . $this->currentRow, "Buyer NAme");
+        $this->setCellValue('M' . $this->currentRow, "Buyer Name");
 
         $this->setColumnWidth('N', 20);
         $this->setCellValue('N' . $this->currentRow, "TAX ID Buyer");
