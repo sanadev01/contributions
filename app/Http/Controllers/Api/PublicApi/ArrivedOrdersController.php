@@ -26,8 +26,8 @@ class ArrivedOrdersController extends Controller
         $data['orders'] = OrderResource::collection($orders
             ->when(
                 $itemsPerPage != "all" && $itemsPerPage > 0,
-                function ($query) use ($itemsPerPage) {
-                    return $query->offset($itemsPerPage * ((request('current_page') ?? 1) - 1))
+                function ($query) use ($itemsPerPage,$request) {
+                    return $query->offset($itemsPerPage * (($request->current_page ?? 1) - 1))
                         ->take($itemsPerPage);
                 }
             )->orderBy('id', 'DESC')->get());
