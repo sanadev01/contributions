@@ -401,6 +401,19 @@ class OrderRepository
                 'insurance_value' => 0,
                 'status' => $order->status < Order::STATUS_ORDER ?  Order::STATUS_ORDER : $order->status
             ]);
+
+            if($request->has('return_origin')) {
+                $order->update([ 'sinerlog_tran_id' => 1 ]);
+            }
+            elseif($request->has('dispose_parcel')) {
+                $order->update([ 'sinerlog_tran_id' => 2 ]);
+            }
+            elseif($request->has('return_individual')) {
+                $order->update([ 'sinerlog_tran_id' => 3 ]);
+            }
+            else {
+                $order->update([ 'sinerlog_tran_id' => null ]);
+            }
             
             $order->doCalculations();
 

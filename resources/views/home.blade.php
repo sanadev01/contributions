@@ -54,51 +54,11 @@
 
 @section('page')
     <!-- Dashboard Analytics Start -->
-    <section id="dashboard-analytics">
-        {{-- <x-stat-cards.all-stats/> --}}
+    <section id="dashboard-analytics"> 
         @if (!Auth::user()->isAdmin())
-            <div class="row">
-                <div class="col-12">
-                    <div class="card p-2">
-                        <div class="card-header d-flex flex-column align-items-start pb-0">
-                            <h2 class="mb-2">
-                                @lang('dashboard.your-pobox')
-                            </h2>
-                            <p class="mb-0">
-                                <strong> {{ auth()->user()->name . ' ' . auth()->user()->last_name }} <br>
-                                    {!! auth()->user()->pobox_number !!} </strong>
-                                <br>
-                                {{-- {!! auth()->user()->getPoboxAddress() ?? '' !!} <br> --}}
-                                <table>
-                                    <thead>
-                                        <tr>
-                                        <th  class="pl-0 pr-3">LTL Truck to</th>
-                                        <th>Parcels via UPS | FedEx | USPS sent to</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="pl-0 pr-3">{!! auth()->user()->getPoboxAddress() ?? '' !!}</td>
-                                            <td>
-                                                8305 NW 116<sup>th</sup> Avenue<br>
-                                                Doral , FL 33178<br>
-                                                United States <br>
-                                                <span>Ph#: +13058885191</span>
-                                            </td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <livewire:home.select-address>
         @endif
-        {{-- <x-charts.orders-charts/> --}}
-        
-        <livewire:dashboard.stats-filter/>
-        
+            <livewire:dashboard.stats-filter/>         
     </section>
     @section('modal')
         <x-modal/>
