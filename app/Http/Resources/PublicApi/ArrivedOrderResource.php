@@ -18,7 +18,7 @@ class ArrivedOrderResource extends JsonResource
 
             "tracking_code" => $this->corrios_tracking_code,
             "merchant" => $this->merchant,
-            "Dimensions" => $this->length . "X" . $this->length . "X" . $this->height,
+            "dimensions" => $this->length . "X" . $this->length . "X" . $this->height,
             "weight" => number_format($this->getWeight('kg'), 2),
             "recipient" => $this->recipient->first_name,
             "order_date" => $this->order_date->format('Y-m-d'),
