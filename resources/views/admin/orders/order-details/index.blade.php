@@ -17,95 +17,6 @@
         <h6 id="steps-uid-0-h-0" tabindex="-1" class="title current">@lang('orders.order-details.Step 1')</h6>
         <fieldset role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current p-4" aria-hidden="false">
             <div class="row">
-            <div class="col-md-8">
-                    @if($order->sinerlog_tran_id)
-                        <div class="controls row mb-1 align-items-center">
-                            <div class="col-md-1 pr-0">
-                                <div class="input-group">
-                                    <div class="vs-checkbox-con vs-checkbox-primary" title="Return Parcel to Origin">
-                                        <input type="checkbox" name="return_origin" id="returnParcel" @if($order->sinerlog_tran_id == 1) checked @endif>
-                                        <span class="vs-checkbox vs-checkbox-lg">
-                                            <span class="vs-checkbox--check">
-                                                <i class="vs-icon feather icon-check"></i>
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>    
-                            </div>
-                            <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Return All Parcels on My Account Cost</b></h5></label>
-                            <div class="col-md-1 pr-0">
-                                <div class="input-group">
-                                    <div class="vs-checkbox-con vs-checkbox-primary" title="Authorized to Dispose Parcel">
-                                        <input type="checkbox" name="dispose_parcel" id="disposeParcel" @if($order->sinerlog_tran_id == 2) checked @endif>
-                                        <span class="vs-checkbox vs-checkbox-lg">
-                                            <span class="vs-checkbox--check">
-                                                <i class="vs-icon feather icon-check"></i>
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>    
-                            </div>
-                            <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Disposal All Authorized</b></h5></label>
-                            <div class="col-md-1 pr-0">
-                                <div class="input-group">
-                                    <div class="vs-checkbox-con vs-checkbox-primary" title="Return Parcel to Individual">
-                                        <input type="checkbox" name="return_individual" id="returnIndividual" @if($order->sinerlog_tran_id == 3) checked @endif>
-                                        <span class="vs-checkbox vs-checkbox-lg">
-                                            <span class="vs-checkbox--check">
-                                                <i class="vs-icon feather icon-check"></i>
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>    
-                            </div>
-                            <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Choose Return by Individual Parcel</b></h5></label>
-                        </div>
-                    @else
-                        <div class="controls row mb-1 align-items-center">
-                            <div class="col-md-1 pr-0">
-                                <div class="input-group">
-                                    <div class="vs-checkbox-con vs-checkbox-primary" title="Return Parcel to Origin">
-                                        <input type="checkbox" name="return_origin" id="returnParcel" @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
-                                        <span class="vs-checkbox vs-checkbox-lg">
-                                            <span class="vs-checkbox--check">
-                                                <i class="vs-icon feather icon-check"></i>
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>    
-                            </div>
-                            <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Return All Parcels on My Account Cost</b></h5></label>
-                            <div class="col-md-1 pr-0">
-                                <div class="input-group">
-                                    <div class="vs-checkbox-con vs-checkbox-primary" title="Authorized to Dispose Parcel">
-                                        <input type="checkbox" name="dispose_parcel" id="disposeParcel" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
-                                        <span class="vs-checkbox vs-checkbox-lg">
-                                            <span class="vs-checkbox--check">
-                                                <i class="vs-icon feather icon-check"></i>
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>    
-                            </div>
-                            <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Disposal All Authorized</b></h5></label>
-                            <div class="col-md-1 pr-0">
-                                <div class="input-group">
-                                    <div class="vs-checkbox-con vs-checkbox-primary" title="Return Parcel to Individual">
-                                        <input type="checkbox" name="return_individual" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
-                                        <span class="vs-checkbox vs-checkbox-lg">
-                                            <span class="vs-checkbox--check">
-                                                <i class="vs-icon feather icon-check"></i>
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>    
-                            </div>
-                            <label class="col-md-3 text-left pl-0 mt-3"><h5><b>Choose Return by Individual Parcel</b></h5></label>
-                        </div>
-                    @endif
-                </div>
-            </div><br>
-            <div class="row">
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>@lang('orders.order-details.Customer Reference') <span class="text-danger"></span></label>
@@ -167,6 +78,81 @@
                 </div>
             </div>
             <hr>
+            <div class="col-md-8">
+                @if($order->sinerlog_tran_id)
+                    <div class="controls row mb-1 ">
+                        <div class="form-check form-check-inline">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
+                                <input type="checkbox" name="return_origin" id="returnParcel" @if($order->sinerlog_tran_id == 1) checked @endif>
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
+                                <input type="checkbox" name="dispose_all" id="disposeAll" @if($order->sinerlog_tran_id == 2) checked @endif>
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
+                                <input type="checkbox" name="individual_parcel" id="returnIndividual" @if($order->sinerlog_tran_id == 3) checked @endif>
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
+                        </div>
+                    </div>
+                @else
+                    <div class="controls row mb-1">
+                        <div class="form-check form-check-inline">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
+                                <input type="checkbox" name="return_origin" id="returnParcel" @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
+                                <input type="checkbox" name="dispose_all" id="disposeAll" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
+                                <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
+                        </div>
+                    </div>
+                @endif
+            </div>
             <div class="row col-12" id="itemLimit"><h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5></div>
             <livewire:order.order-details.order-items :order-id="$order->id"/>
             <hr>
@@ -418,11 +404,11 @@
 
     $('#returnParcel').change(function() {
          if($(this).is(":checked")){
-         $('#disposeParcel').prop('checked', false);
+         $('#disposeAll').prop('checked', false);
          $('#returnIndividual').prop('checked', false);
          }    
      });
-     $('#disposeParcel').change(function() {
+     $('#disposeAll').change(function() {
          if($(this).is(":checked")){
          $('#returnParcel').prop('checked', false);
          $('#returnIndividual').prop('checked', false);
@@ -431,7 +417,7 @@
      $('#returnIndividual').change(function() {
          if($(this).is(":checked")){
          $('#returnParcel').prop('checked', false);
-         $('#disposeParcel').prop('checked', false);
+         $('#disposeAll').prop('checked', false);
          }    
      });
 </script>
