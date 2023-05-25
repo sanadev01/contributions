@@ -9,7 +9,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ArrivedOrderController extends Controller
+class ArrivedOrdersController extends Controller
 {
     public function __invoke(Request $request)
     {
@@ -37,6 +37,5 @@ class ArrivedOrderController extends Controller
                 'data' => $data,
             ]
         );
-        # code...
     }
 }
