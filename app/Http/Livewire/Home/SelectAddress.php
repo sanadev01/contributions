@@ -16,8 +16,6 @@ class SelectAddress extends Component
 
     public function render()
     {
-        // if($this->type)
-        // session()->flash('alert-success',$this->type.' address Updated');
         return view('livewire.home.select-address',['user' => $this->user]);
     }
 
