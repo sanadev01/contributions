@@ -8,40 +8,29 @@ class SelectAddress extends Component
 {
     
     
-    public $userId;
-    public $type;
+    public $user;
+    public $type;    
 
-    public $selected = [];
-
-    
-
-    public function mount($userId=null, $selected = [])
+    public function mount()
     {
-        $this->userId = Auth::user()->isAdmin() ? $userId : Auth::id();
-        $this->selected = $selected;
+        $this->user = Auth::user();
     }
 
     public function render()
     {
-        $user = User::find(Auth::user()->id); 
         if($this->type)
         session()->flash('alert-success',$this->type.' address Updated');
-        return view('livewire.home.select-address',['user' => $user]);
+        return view('livewire.home.select-address',['user' => $this->user]);
 
     }
 
     public function setAddress($id, $type)
     {
-        $user = User::find($id);
-        $this->type = $type;
-        if($user && $type === "default") {
-            
-            saveSetting('default_address', true, $user->id);
-            saveSetting('user_address', false, $user->id);
-             
-        } else {
-            saveSetting('user_address', true, $user->id);
-            saveSetting('default_address', false, $user->id);
+        $id = $this->user->id;
+        dd(saveSetting('DEFAULT_ADDRESS', $type, $id),setting('default_address', null, $id));
+        // saveSetting('default_address', null, $id);
+        if($type){
+            saveSetting('DEFAULT_ADDRESS', $type, $id);
         }
 
     }
