@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Api\PublicApi;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PublicApi\OrderResource;
-use App\Http\Resources\PublicApi\PaginateOrderResource;
+use App\Http\Resources\PublicApi\ArrivedOrderResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +22,7 @@ class ArrivedOrdersController extends Controller
         });
         $data['total'] = $orders->count();
         $itemsPerPage = request('item_per_page') ?? "all";
-        $data['orders'] = OrderResource::collection($orders
+        $data['orders'] = ArrivedOrderResource::collection($orders
             ->when(
                 $itemsPerPage != "all" && $itemsPerPage > 0,
                 function ($query) use ($itemsPerPage,$request) {
