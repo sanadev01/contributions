@@ -44,7 +44,8 @@ class OrderResource extends JsonResource
             "discount" => $this->discount,
             "gross_total" => $this->gross_total,
             "recipient" => OrderRecipientResource::make($this->recipient),
-            "products" => OrderItemResource::collection($this->items)
+            "products" => OrderItemResource::collection($this->items),
+            'arrived_date' => $this->arrived_date,
         ];
     }
 
