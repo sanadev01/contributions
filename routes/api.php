@@ -61,6 +61,7 @@ Route::prefix('v1')->group(function(){
     
         // Authenticated Routes
         Route::middleware(['auth:api','checkPermission'])->group(function (){
+            Route::get('arrived-orders',ArrivedOrdersController::class);
             Route::get('deposits',DepositController::class);
             Route::get('balance', BalanceController::class);
             Route::resource('parcels', 'ParcelController')->only('store','show','destroy','update');
