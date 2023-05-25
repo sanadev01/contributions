@@ -9,7 +9,7 @@
                         <div class="col-xl-2  col-md-4 col-sm-6"  
                             @if(setting('default_address', null, $user->id) == 2 ) style="background-color: #dfede58c; border-radius: 15px;" @endif>
                             <input class="c-card" type="checkbox"
-                            wire:click="setAddress('{{ $user->id }}', '2')" name="defaultAddress" id="defaultAddress"
+                            wire:click="setAddress(2)" id="defaultAddress"
                             @if(setting('default_address', null, $user->id) == 2 ) checked @endif>
                             <strong><label for="defaultAddress">Default Address</label></strong>
                             <div class="card-content">
@@ -31,8 +31,8 @@
                         </div>
                         <div class="col-xl-2  col-md-4 col-sm-6"
                             @if(setting('default_address', null, $user->id) == 3) style="background-color: #dfede58c; border-radius: 15px;" @endif>
-                            <input class="c-card" type="checkbox" name="userAddress" id="userAddress" 
-                            @if(!$user->address) disabled @endif wire:click="setAddress('{{ $user->id }}', '3')"
+                            <input class="c-card" type="checkbox" id="userAddress" 
+                            @if(!$user->address) disabled @endif wire:click="setAddress(3)"
                             @if(setting('default_address', null, $user->id) == 3) checked 
                             @endif>
                             <strong><label for="userAddress">User Address</label></strong>
