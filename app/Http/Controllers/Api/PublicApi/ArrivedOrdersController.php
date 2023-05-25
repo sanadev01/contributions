@@ -31,10 +31,6 @@ class ArrivedOrdersController extends Controller
                 }
             )->orderBy('id', 'DESC')->get());
 
-        return response()->json(
-            [
-                'data' => $data,
-            ]
-        );
+            return apiResponse(true,"Check in orders get successfully",$data);
     }
 }
