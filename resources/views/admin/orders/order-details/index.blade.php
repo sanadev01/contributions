@@ -80,8 +80,8 @@
             <hr>
             <div class="col-md-8">
                 @if($order->sinerlog_tran_id)
-                    <div class="controls row mb-1 ">
-                        <div class="form-check form-check-inline">
+                    <div class="controls row mb-1">
+                        <div class="form-check form-check-inline mr-5">
                             <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
                                 <input type="checkbox" name="return_origin" id="returnParcel" @if($order->sinerlog_tran_id == 1) checked @endif>
                                 <span class="vs-checkbox vs-checkbox-lg">
@@ -92,7 +92,7 @@
                             </div>
                             <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
                         </div>
-                        <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline mr-5">
                             <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
                                 <input type="checkbox" name="dispose_all" id="disposeAll" @if($order->sinerlog_tran_id == 2) checked @endif>
                                 <span class="vs-checkbox vs-checkbox-lg">
@@ -103,7 +103,7 @@
                             </div>
                             <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
                         </div>
-                        <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline mr-5">
                             <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
                                 <input type="checkbox" name="individual_parcel" id="returnIndividual" @if($order->sinerlog_tran_id == 3) checked @endif>
                                 <span class="vs-checkbox vs-checkbox-lg">
@@ -117,7 +117,7 @@
                     </div>
                 @else
                     <div class="controls row mb-1">
-                        <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline mr-5">
                             <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
                                 <input type="checkbox" name="return_origin" id="returnParcel" @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
                                 <span class="vs-checkbox vs-checkbox-lg">
@@ -128,7 +128,7 @@
                             </div>
                             <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
                         </div>
-                        <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline mr-5">
                             <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
                                 <input type="checkbox" name="dispose_all" id="disposeAll" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
                                 <span class="vs-checkbox vs-checkbox-lg">
@@ -139,7 +139,7 @@
                             </div>
                             <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
                         </div>
-                        <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline mr-5">
                             <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
                                 <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
                                 <span class="vs-checkbox vs-checkbox-lg">
