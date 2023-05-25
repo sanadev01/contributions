@@ -15,6 +15,7 @@ class Table extends Component
     public $name = '';
     public $file_name = '';
     public $total = '';
+    public $search;
    
     public $sortBy = 'id';
     public $sortDesc = true;
@@ -33,6 +34,7 @@ class Table extends Component
             'name' => $this->name,
             'file_name' => $this->file_name,
             'total' => $this->total,
+            'search' => $this->search,
         ]),true,$this->pageSize,$this->sortBy,$this->sortDesc ? 'DESC' : 'asc');
     }
 }

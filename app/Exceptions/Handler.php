@@ -55,6 +55,9 @@ class Handler extends ExceptionHandler
         if (Request::capture()->expectsJson() && $exception instanceof ModelNotFoundException) {
             return apiResponse(false, 'no record found');
         }
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException){
+            return redirect()->back()->withInput($request->except('password'));
+        }
         
         return parent::render($request, $exception);
     }
