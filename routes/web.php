@@ -1,20 +1,9 @@
 <?php
 
 use App\Models\Order;
-use App\Models\Deposit as ModalDeposit;
-use App\Mail\User\Shipment;
-use App\Models\AffiliateSale;
-use App\Models\OrderTracking;
-use App\Models\CommissionSetting;
-use Illuminate\Support\Facades\DB;
-use App\Models\Warehouse\Container;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Artisan;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
-use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
@@ -273,9 +262,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id}',function($id){
-    
-    $deposit = ModalDeposit::where('uuid', $id)->latest()->first();
-    dd($deposit->depositAttchs()->delete());
+
     $labelPrinter = new CN23LabelMaker();
     $order = Order::find($id);
     // $order->status = 70;
@@ -295,9 +282,11 @@ Route::get('permission',function($id = null){
 Route::get('session-refresh/{slug?}', function($slug = null){
     if($slug){
         session()->forget('token');
+        Cache::forget('token');
         return 'Correios Token refresh';
     }
     session()->forget('anjun_token');
+    Cache::forget('anjun_token');
     return 'Anjun Token refresh';
 }); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
