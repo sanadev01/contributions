@@ -21,7 +21,7 @@ class ArrivedOrdersController extends Controller
             $query->whereDate('arrived_date',  '>=',$request->from . ' 00:00:00');
         });
         $data['total'] = $orders->count();
-        $itemsPerPage = request('item_per_page') ?? "all";
+        $itemsPerPage = request('item_per_page') ?? 50;
         $data['orders'] = ArrivedOrderResource::collection($orders
             ->when(
                 $itemsPerPage != "all" && $itemsPerPage > 0,
