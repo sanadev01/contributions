@@ -13,10 +13,14 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+<<<<<<< Updated upstream
 use App\Mail\User\Shipment;
 use App\Models\AffiliateSale;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+=======
+use Carbon\Carbon;
+>>>>>>> Stashed changes
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +32,13 @@ use Illuminate\Support\Facades\Mail;
 | contains the "web" middleware group. Now create something great!
 |
 */
+// $orders = Order::whereDate('created_at',Carbon::today() )
+//     ->whereDate('arrived_date', Carbon::today())
+//     ->groupBy('user_id')
+//     ->get();
 
+
+// dd($orders);
 Route::get('/', function (Shopify $shopifyClient) {
     $shop = "https://".request()->shop;
     if (request()->has('shop') ) {
