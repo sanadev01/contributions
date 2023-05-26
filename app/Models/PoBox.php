@@ -37,7 +37,6 @@ class PoBox extends Model
     public function getCompleteAddress()
     {
         $address = '';
-
         $address .= $this->address;
         $address .= '<br>';
         $address .= " {$this->city}, ";

@@ -23,10 +23,11 @@ class TicketRepository
         $tickets->has('user')->withCount(['comments' => function($q){
             $q->where('read', '0')->where('user_id', '!=', auth()->id() ); 
         }]);
-
-        if (!auth()->user()->isAdmin()) {
-            $tickets->where('user_id', auth()->id());
-        }
+  
+         if(Auth::user()->cannot('reply', Ticket::class)){
+             $tickets->where('user_id', auth()->id());
+         }
+ 
 
         $tickets->when($request->filled('date'), function ($query) use ($request) {
             return $query->where('created_at', 'LIKE', "%{$request->date}%");
@@ -120,11 +121,7 @@ class TicketRepository
     }
 
     public function show(Ticket $ticket){
-
-        if (! $ticket || (\auth()->user()->isUser() && $ticket->user_id != Auth::id())) {
-            return new NotFoundHttpException('Not found');
-        }
-    
+            
         $ticket->comments()->where('read', false)->where('user_id', '!=', Auth::id())->update([
             'read' => true
         ]);
@@ -133,10 +130,6 @@ class TicketRepository
     }
 
     public function markcLose(Ticket $ticket){
-
-        if (! Auth::user()->isAdmin()) {
-            throw new UnauthorizedHttpException('You are not authorized to perform this action');
-        }
 
         $ticket->markClosed();
         return true;

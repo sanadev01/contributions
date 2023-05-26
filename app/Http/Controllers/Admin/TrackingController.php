@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\OrderTracking;
 
 class TrackingController extends Controller
 {
@@ -15,6 +16,7 @@ class TrackingController extends Controller
      */
     public function index()
     {
+        $this->authorize('view',OrderTracking::class);        
         return view('ordertracking.index');
     }
 
