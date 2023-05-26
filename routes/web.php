@@ -18,6 +18,7 @@ use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,13 +30,25 @@ use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// $orders = Order::whereDate('created_at',Carbon::today() )
-//     ->whereDate('arrived_date', Carbon::today())
-//     ->groupBy('user_id')
-//     ->get();
 
 
-// dd($orders);
+$order = Order::find(4021); 
+$date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
+$order->update([
+    'arrived_date' => $date
+]);
+
+$order = Order::find(4022);  
+$order->update([
+    'arrived_date' => $date
+]);
+
+$orders = Order::where('arrived_date', '>=',$date.' 00:00:00')->where('arrived_date', '<=',$date.' 23:59:59')
+    ->groupBy('user_id')
+    ->get();
+
+
+dd($orders);
 Route::get('/', function (Shopify $shopifyClient) {
     $shop = "https://".request()->shop;
     if (request()->has('shop') ) {

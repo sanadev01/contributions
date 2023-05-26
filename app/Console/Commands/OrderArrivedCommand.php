@@ -53,7 +53,19 @@ class OrderArrivedCommand extends Command
             Mail::send(new Shipment($order));
         }catch(Exception $e){
             Log::info($e->getMessage());
-        }      
+        }
+        
+        $data = array(
+            'name' => "John Doe",
+        );
+    
+        Mail::send('emails.email', $data, function($message) {
+            $message->to('john@example.com', 'John Doe')
+                    ->subject('Laravel Email Attachment');
+            $message->attach('pathToFile');
+        });
+
+        
         return 0;
     }
 }
