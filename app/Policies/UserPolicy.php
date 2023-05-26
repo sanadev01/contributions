@@ -68,19 +68,11 @@ class UserPolicy
     {
         return $user->hasPermission('delete_user') && $model->user_id == $user->id; 
     }
-
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
-     * @return mixed
-     */
-    public function restore(User $user, User $model)
+    public function impersonate(User $user)
     {
-        //
+        return $user->hasPermission('impersonate'); 
     }
-
+ 
     /**
      * Determine whether the user can permanently delete the model.
      *

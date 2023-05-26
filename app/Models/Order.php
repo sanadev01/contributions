@@ -479,8 +479,8 @@ class Order extends Model implements Package
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
 
-        $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
-        $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
+        $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() ? 1 : 0 );
+        $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() ? 1 : 0 );
 
         // $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
         

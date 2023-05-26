@@ -7,12 +7,15 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">
-                            @if(auth()->user()->isAdmin())
-                                @lang('tickets.Support Tickets')
-                            @else
-                                @lang('tickets.My Tickets')
-                            @endif
+                            @can('reply',App\Models\Ticket::class)
+                                @lang('tickets.Support Tickets') 
+                            @endcan
+
+                            @cannot('reply',App\Models\Ticket::class)
+                            @lang('tickets.My Tickets') 
+                            @endcannot
                         </h4>
+
                         @user
                             <a href="{{ route('admin.tickets.create') }}" class="pull-right btn btn-primary"> @lang('tickets.Create New Ticket') </a>
                         @enduser
