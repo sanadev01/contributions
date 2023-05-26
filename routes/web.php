@@ -1,28 +1,12 @@
 <?php
 
-use App\Models\Rate;
 use App\Models\Order;
-use App\Models\OrderTracking;
-use App\Models\CommissionSetting;
-use App\Models\Product;
-use App\Models\Country;
-use App\Models\Recipient;
-use App\Models\ProfitPackage;
-use App\Models\ShippingService;
-use Illuminate\Support\Facades\DB;
-use App\Models\Warehouse\Container;
-use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Artisan;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
-use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use App\Mail\User\Shipment;
-use App\Models\AffiliateSale;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -300,35 +284,3 @@ Route::get('permission',function($id = null){
 
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container'); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
-
-
-Route::get('/clear-cache/{id}', function($id) {
-    if($id === "1") {
-        $artisanCmd = Artisan::call('cache:clear');
-        return "Application Cache Cleared";
-    }
-    if($id === "2") {
-        $artisanCmd = Artisan::call('config:cache');
-        return "Application Configuration Cache Cleared";
-    }
-    if($id === "3") {
-        $artisanCmd = Artisan::call('config:clear');
-        return "Application Configuration Cleared";
-    }
-    if($id === "4") {
-        $artisanCmd = Artisan::call('route:clear');
-        return "Application Route Cache Cleared";
-    }
-    if($id === "5") {
-        $artisanCmd = Artisan::call('view:clear');
-        return "Application View Cache Cleared";
-    }
-    if($id === "6") {
-        $artisanCmd = Artisan::call('optimize');
-        return "Application Optimized";
-    }
-    if($id === "7") {
-        $artisanCmd = Artisan::call('optimize:clear');
-        return "Application Optimize Cleared";
-    }
-});
