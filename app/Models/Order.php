@@ -522,7 +522,7 @@ class Order extends Model implements Package
                                                 $tempWhr = (str_pad($tempWhr, 13, '3', STR_PAD_LEFT)); 
                                             break;
         }
-        return "HD{$tempWhr}BR";
+        return "HD{$tempWhr}".(optional($this->recipient)->country->code??"BR");
     }
 
     public function doCalculations($onVolumetricWeight=true)
