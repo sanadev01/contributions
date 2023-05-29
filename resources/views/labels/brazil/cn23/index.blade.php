@@ -444,10 +444,12 @@
             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
             {{ $order->sender_email }} <br>
             2200 NW 129th Ave, Suite # 100, Miami, FL 33182 US
-            <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
-            <strong>CR#:</strong>{{ $order->customer_reference }} <br>
-            <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>
-            <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
+            <div style="font-size: 6.5px !important">
+                <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
+                <strong>CR#:</strong>{{ $order->customer_reference }} <br>
+                <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs 
+                <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
+            </div>
         </div>
     </div>
     <div class="complain_address">
