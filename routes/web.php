@@ -19,8 +19,6 @@ use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 |
 */
 
-
-
 Route::get('/', function (Shopify $shopifyClient) {
     $shop = "https://".request()->shop;
     if (request()->has('shop') ) {
