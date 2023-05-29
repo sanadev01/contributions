@@ -42,30 +42,21 @@ class OrderArrivedCommand extends Command
      * @return int
      */
     public function handle()
-    {            
-        $order = Order::find(4024); 
-        $date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
-        $order->update([
-            'arrived_date' => $date
-        ]);
+    {        
+        $date = (new DateTime('America/New_York'))->format('Y-m-d');
+        $users = Order::where('arrived_date', '>=',$date.' 00:00:00')->where('arrived_date', '<=',$date.' 23:59:59')
+                ->get()
+                ->groupBy('user_id');
+                foreach($users as  $userOrder){
+                    try{
+                        Mail::send(new Shipment($userOrder));
+                    }catch(Exception $e){
+                       echo $e->getMessage();
+                        Log::info(['order arrived error:',$e->getMessage()]);
+                    }
+                }
 
-        try{
-            Mail::send(new Shipment($order));
-        }catch(Exception $e){
-            Log::info($e->getMessage());
-        }
-        
-        $data = array(
-            'name' => "John Doe",
-        );
-    
-        Mail::send('emails.email', $data, function($message) {
-            $message->to('john@example.com', 'John Doe')
-                    ->subject('Laravel Email Attachment');
-            $message->attach('pathToFile');
-        });
 
-        
-        return 0;
+
     }
 }

@@ -172,14 +172,7 @@ class ScanLabel extends Component
       
                 if(auth()->user()->isScanner() && $order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
                 {                
-                    $this->addOrderTracking($this->order);
-                    try{
-                        Mail::send(new Shipment($this->order));
-                    }catch(Exception $e){
-                        Log::info($e->getMessage());
-                    }
-
-                    
+                    $this->addOrderTracking($this->order); 
                     if(!$this->order->arrived_date){
                         $date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
                         $this->order->update([

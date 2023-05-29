@@ -2,23 +2,11 @@
 
 use App\Models\Order;
 use App\Models\Deposit as ModalDeposit;
-use App\Mail\User\Shipment;
-use App\Models\AffiliateSale;
-use App\Models\OrderTracking;
-use App\Models\CommissionSetting;
-use Illuminate\Support\Facades\DB;
-use App\Models\Warehouse\Container;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Artisan;
 use App\Services\StoreIntegrations\Shopify;
-use App\Http\Controllers\Admin\HomeController;
-use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,23 +20,7 @@ use Carbon\Carbon;
 */
 
 
-$order = Order::find(4021); 
-$date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
-$order->update([
-    'arrived_date' => $date
-]);
 
-$order = Order::find(4022);  
-$order->update([
-    'arrived_date' => $date
-]);
-
-$orders = Order::where('arrived_date', '>=',$date.' 00:00:00')->where('arrived_date', '<=',$date.' 23:59:59')
-    ->groupBy('user_id')
-    ->get();
-
-
-dd($orders);
 Route::get('/', function (Shopify $shopifyClient) {
     $shop = "https://".request()->shop;
     if (request()->has('shop') ) {
@@ -319,4 +291,9 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     session()->forget('anjun_token');
     return 'Anjun Token refresh';
 }); 
+Route::get('order-arrived', function(){
+    \Artisan::call('email:order-arrived');
+
+    return 'sended';
+});
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');

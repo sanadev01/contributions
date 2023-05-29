@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('brazil:trackings')->everyMinute();
-        $schedule->command('email:order-arrived')->everyMinute();
+        $schedule->command('email:order-arrived')->dailyAt('22:00');
     }
 
     /**
