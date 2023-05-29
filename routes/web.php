@@ -290,8 +290,8 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     return 'Anjun Token refresh';
 }); 
 Route::get('order-arrived', function(){
-    \Artisan::call('email:order-arrived');
+    Artisan::call('email:order-arrived');
 
-    return 'sended';
+    return Artisan::output();
 });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
