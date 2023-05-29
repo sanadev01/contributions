@@ -281,8 +281,8 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 Route::get('order-arrived', function(){
-    \Artisan::call('email:order-arrived');
-    return 'sended';
+    Artisan::call('email:order-arrived');
+    return Artisan::output();
 });
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container'); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
