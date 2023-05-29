@@ -492,35 +492,26 @@ class Order extends Model implements Package
             'sinerlog_url_label' => $url
         ]);
     }
-
+    
     public function getTempWhrNumber()
     {
         $tempWhr =  $this->change_id;        
         switch(strlen($tempWhr)){
             case(5):
-                $tempWhr = (str_pad($tempWhr, 13, '20232023', STR_PAD_LEFT));
+                $tempWhr = (str_pad($tempWhr, 10, '32023', STR_PAD_LEFT));
                 break;
                 case(6):
-                    $tempWhr = (str_pad($tempWhr, 13, '0232023', STR_PAD_LEFT));
+                    $tempWhr = (str_pad($tempWhr, 10, '2023', STR_PAD_LEFT));
                     break;
                     case(7):
-                        $tempWhr = (str_pad($tempWhr, 13, '232023', STR_PAD_LEFT));
+                        $tempWhr = (str_pad($tempWhr, 10, '023', STR_PAD_LEFT));
                         break;
                         case(8):
-                                $tempWhr = (str_pad($tempWhr, 13, '32023', STR_PAD_LEFT)); 
+                                $tempWhr = (str_pad($tempWhr, 10, '23', STR_PAD_LEFT)); 
                             break;
                             case(9):
-                                $tempWhr = (str_pad($tempWhr, 13, '2023', STR_PAD_LEFT));
+                                $tempWhr = (str_pad($tempWhr, 10, '3', STR_PAD_LEFT));
                                 break;
-                                case(10):
-                                    $tempWhr = (str_pad($tempWhr, 13, '023', STR_PAD_LEFT));
-                                    break;
-                                    case(11):
-                                        $tempWhr = (str_pad($tempWhr, 13, '23', STR_PAD_LEFT));
-                                        break;
-                                        case(12):
-                                                $tempWhr = (str_pad($tempWhr, 13, '3', STR_PAD_LEFT)); 
-                                            break;
         }
         return "HD{$tempWhr}".(optional($this->recipient)->country->code??"BR");
     }
