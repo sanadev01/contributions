@@ -263,9 +263,8 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id}',function($id){
-    
+
     $labelPrinter = new CN23LabelMaker();
-    
     $order = Order::find($id);
     // $order->status = 70;
     // $order->save();
@@ -281,6 +280,3 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-
-Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container'); 
-Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
