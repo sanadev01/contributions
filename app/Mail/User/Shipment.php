@@ -42,9 +42,6 @@ class Shipment extends Mailable
                 ->subject('Order Update Alert')
                 ->to($this->user)
                 ->attach($this->filePath)
-                ->cc(
-                    config('hd.email.admin_email'),
-                    config('hd.email.admin_name')
-                );
+                ->cc('ecommerce@homedeliverybr.com');
     }
 }
