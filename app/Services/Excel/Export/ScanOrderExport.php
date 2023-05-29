@@ -34,6 +34,14 @@ class ScanOrderExport extends AbstractExportService
         return $this->download();
     }
 
+    
+    public function getFilePath()
+    {
+        $this->prepareExcelSheet();
+
+        return $this->downloadExcel();
+    }
+
     private function prepareExcelSheet()
     {
         $this->setExcelHeaderRow();

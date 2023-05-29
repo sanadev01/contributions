@@ -280,7 +280,9 @@ Route::get('permission',function($id = null){
     Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
     return Artisan::output();
 });
-
-
+Route::get('order-arrived', function(){
+    \Artisan::call('email:order-arrived');
+    return 'sended';
+});
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container'); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
