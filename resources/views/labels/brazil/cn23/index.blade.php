@@ -440,9 +440,10 @@
             <br>
         </div>
         <div class="right-block">
-            <h2>Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2>
+            <h2 style="margin-bottom: 0px !important">Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2>
             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
             {{ $order->sender_email }} <br>
+            2200 NW 129th Ave, Suite # 100, Miami, FL 33182 US
             <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
             <strong>CR#:</strong>{{ $order->customer_reference }} <br>
             <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>
