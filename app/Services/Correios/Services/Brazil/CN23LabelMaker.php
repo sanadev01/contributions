@@ -25,6 +25,7 @@ class CN23LabelMaker implements HasLableExport
     private $items;
     private $sumplementryItems;
     private $hasSuplimentary;
+    private $senderAddress;
 
     public function __construct()
     {
@@ -39,6 +40,7 @@ class CN23LabelMaker implements HasLableExport
         Rua Acaçá 47- Ipiranga <br>
         Sao Paulo CEP 04201-020';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
+        $this->senderAddress = '';
     }
 
     public function setOrder(Order $order)
@@ -47,6 +49,7 @@ class CN23LabelMaker implements HasLableExport
         $this->recipient = $order->recipient;
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
+        $this->getSenderAddress($this->order);
 
         if ($this->order->shippingService->isAnjunService()) {
             $this->contractNumber = 'Contrato:  9912501700';
@@ -178,6 +181,22 @@ class CN23LabelMaker implements HasLableExport
             'suplimentaryItems' => $this->sumplementryItems,
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
+            'senderAddress' => $this->senderAddress,
         ];
+    }
+
+    private function getSenderAddress(Order $order) {
+   
+        if(!$order->user->address && !$order->user->zipcode) {
+            $this->senderAddress = "$order->sender_first_name $order->sender_last_name<br>2200 NW 129th Ave - Suite # 100, Miami, FL 33182 US<br> Ph#: +13058885191";
+        }
+        if($order->user->address) {
+            $senderState = $order->user->state;
+            $senderCountry = $order->user->country()->first();
+            $userAddress = $order->user->address;
+            $userZip = $order->user->zipcode;
+            $this->senderAddress = "$order->sender_first_name $order->sender_last_name<br>$userAddress, $senderState->code, $userZip $senderCountry->code";
+        }
+        return $this;
     }
 }
