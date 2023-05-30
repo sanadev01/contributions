@@ -26,6 +26,7 @@ class CN23LabelMaker implements HasLableExport
     private $sumplementryItems;
     private $hasSuplimentary;
     private $activeAddress;
+    private $hasReturn;
 
     public function __construct()
     {
@@ -50,6 +51,7 @@ class CN23LabelMaker implements HasLableExport
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
+        $this->checkReturn($this->order);
 
         if ($this->order->shippingService->isAnjunService()) {
             $this->contractNumber = 'Contrato:  9912501700';
@@ -182,6 +184,7 @@ class CN23LabelMaker implements HasLableExport
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
             'activeAddress' => $this->activeAddress,
+            'hasReturn' => $this->hasReturn,
         ];
     }
 
@@ -194,5 +197,26 @@ class CN23LabelMaker implements HasLableExport
             $this->activeAddress = "2200 NW 129th Ave - Suite # 100, Miami, FL 33182 US";
         }
         return $this;
+    }
+
+    private function checkReturn(Order $order)
+    {
+        if($order->sinerlog_tran_id) {
+            if($order->sinerlog_tran_id == 1  || $order->sinerlog_tran_id == 3) {
+                $this->hasReturn = true;
+            }
+            if($order->sinerlog_tran_id == 2) {
+                $this->hasReturn = false;
+            }
+        }
+        else {
+            if(setting('return_origin', null, auth()->user()->id) || setting('individual_parcel', null, auth()->user()->id)) {
+                $this->hasReturn = true;
+            }
+            if(setting('dispose_all', null, auth()->user()->id)) {
+                $this->hasReturn = false;
+            }
+        }
+        return $this;    
     }
 }
