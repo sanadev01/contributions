@@ -26,7 +26,7 @@ class CN23LabelMaker implements HasLableExport
     private $sumplementryItems;
     private $hasSuplimentary;
     private $activeAddress;
-    private $hasReturn;
+    private $isReturn;
 
     public function __construct()
     {
@@ -184,7 +184,7 @@ class CN23LabelMaker implements HasLableExport
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
             'activeAddress' => $this->activeAddress,
-            'hasReturn' => $this->hasReturn,
+            'isReturn' => $this->isReturn,
         ];
     }
 
@@ -202,19 +202,15 @@ class CN23LabelMaker implements HasLableExport
     private function checkReturn(Order $order)
     {
         if($order->sinerlog_tran_id) {
+            $this->isReturn = false;
             if($order->sinerlog_tran_id == 1  || $order->sinerlog_tran_id == 3) {
-                $this->hasReturn = true;
+                $this->isReturn = true;
             }
-            if($order->sinerlog_tran_id == 2) {
-                $this->hasReturn = false;
-            }
-        }
-        else {
-            if(setting('return_origin', null, auth()->user()->id) || setting('individual_parcel', null, auth()->user()->id)) {
-                $this->hasReturn = true;
-            }
-            if(setting('dispose_all', null, auth()->user()->id)) {
-                $this->hasReturn = false;
+        }else {
+            $id = auth()->user()->id;
+            $this->isReturn = false;
+            if(setting('return_origin', null, $id) || setting('individual_parcel', null, $id)) {
+                $this->isReturn = true;
             }
         }
         return $this;    
