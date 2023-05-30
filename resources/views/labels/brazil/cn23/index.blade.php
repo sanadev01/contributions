@@ -443,7 +443,11 @@
             <h2 style="margin-bottom: 0px !important">Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2>
             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
             {{ $order->sender_email }} <br>
+            @if( $order->user->pobox_number == 'HERCO 1278')
+            2844 S 1030 W South Salt Lake, UT, 84119, US
+            @else
             2200 NW 129th Ave, Suite # 100, Miami, FL 33182 US
+            @endif
             <div style="font-size: 6.5px !important">
                 <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
                 <strong>CR#:</strong>{{ $order->customer_reference }} <br>
