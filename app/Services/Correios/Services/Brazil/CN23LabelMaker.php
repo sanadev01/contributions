@@ -25,7 +25,7 @@ class CN23LabelMaker implements HasLableExport
     private $items;
     private $sumplementryItems;
     private $hasSuplimentary;
-    private $senderAddress;
+    private $activeAddress;
 
     public function __construct()
     {
@@ -40,7 +40,7 @@ class CN23LabelMaker implements HasLableExport
         Rua Acaçá 47- Ipiranga <br>
         Sao Paulo CEP 04201-020';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
-        $this->senderAddress = '';
+        $this->activeAddress = '';
     }
 
     public function setOrder(Order $order)
@@ -49,7 +49,7 @@ class CN23LabelMaker implements HasLableExport
         $this->recipient = $order->recipient;
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
-        $this->getSenderAddress($this->order);
+        $this->getActiveAddress($this->order);
 
         if ($this->order->shippingService->isAnjunService()) {
             $this->contractNumber = 'Contrato:  9912501700';
@@ -181,21 +181,25 @@ class CN23LabelMaker implements HasLableExport
             'suplimentaryItems' => $this->sumplementryItems,
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
-            'senderAddress' => $this->senderAddress,
+            'activeAddress' => $this->activeAddress,
         ];
     }
 
-    private function getSenderAddress(Order $order) {
+    private function getActiveAddress(Order $order) {
    
-        if(!$order->user->address && !$order->user->zipcode) {
-            $this->senderAddress = "$order->sender_first_name $order->sender_last_name<br>2200 NW 129th Ave - Suite # 100, Miami, FL 33182 US<br> Ph#: +13058885191";
+        if(setting('default_address', null, $order->user->id) == 2) {
+            $this->activeAddress = "$order->sender_first_name $order->sender_last_name<br>2200 NW 129th Ave - Suite # 100, Miami, FL 33182 US<br> Ph#: +13058885191";
+            \Log::info('Active Address Default 2');
+            \Log::info($this->activeAddress);
         }
-        if($order->user->address) {
+        if(setting('default_address', null, $order->user->id) == 3) {
             $senderState = $order->user->state;
             $senderCountry = $order->user->country()->first();
             $userAddress = $order->user->address;
             $userZip = $order->user->zipcode;
-            $this->senderAddress = "$order->sender_first_name $order->sender_last_name<br>$userAddress, $senderState->code, $userZip $senderCountry->code";
+            $this->activeAddress = "$order->sender_first_name $order->sender_last_name<br>$userAddress, $senderState->code, $userZip $senderCountry->code";
+            \Log::info('Active Address User 3');
+            \Log::info($this->activeAddress);
         }
         return $this;
     }
