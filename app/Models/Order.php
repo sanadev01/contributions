@@ -492,7 +492,7 @@ class Order extends Model implements Package
             'sinerlog_url_label' => $url
         ]);
     }
-    
+
     public function getTempWhrNumber()
     {
         $tempWhr =  $this->change_id;        
