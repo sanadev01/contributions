@@ -185,21 +185,13 @@ class CN23LabelMaker implements HasLableExport
         ];
     }
 
-    private function getActiveAddress(Order $order) {
-   
-        if(setting('default_address', null, $order->user->id) == 2) {
-            $this->activeAddress = "$order->sender_first_name $order->sender_last_name<br>2200 NW 129th Ave - Suite # 100, Miami, FL 33182 US<br> Ph#: +13058885191";
-            \Log::info('Active Address Default 2');
-            \Log::info($this->activeAddress);
-        }
-        if(setting('default_address', null, $order->user->id) == 3) {
-            $senderState = $order->user->state;
-            $senderCountry = $order->user->country()->first();
-            $userAddress = $order->user->address;
-            $userZip = $order->user->zipcode;
-            $this->activeAddress = "$order->sender_first_name $order->sender_last_name<br>$userAddress, $senderState->code, $userZip $senderCountry->code";
-            \Log::info('Active Address User 3');
-            \Log::info($this->activeAddress);
+    private function getActiveAddress(Order $order)
+    {
+        if(setting('default_address', null, $order->user_id) == 3) {
+            $user = $order->user;
+            $this->activeAddress = $user->address.', '.$user->state->code.', '.$user->zipcode.', '.$user->country()->first()->code;
+        }else{
+            $this->activeAddress = "2200 NW 129th Ave - Suite # 100, Miami, FL 33182 US";
         }
         return $this;
     }
