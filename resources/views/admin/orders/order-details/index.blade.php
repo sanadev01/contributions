@@ -120,6 +120,9 @@
         </div>
     </div>
 </div>
+<div id="myComponent">
+    <!-- Component content -->
+</div>
 @endsection
 
 @section('js')
@@ -143,6 +146,7 @@
             $("#itemLimit").hide();
             $("#rateBtn").hide();
         }
+        Livewire.emit('getShCodes', service);
     })
 
     //USPS PRIORITY INTERNATIONAL SERVICE FOR RATES CALL 
