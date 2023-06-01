@@ -146,7 +146,6 @@
             $("#itemLimit").hide();
             $("#rateBtn").hide();
         }
-        Livewire.emit('getShCodes', service);
     })
 
     //USPS PRIORITY INTERNATIONAL SERVICE FOR RATES CALL 
@@ -210,6 +209,7 @@
 
     $('#us_shipping_service').ready(function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        Livewire.emit('getShCodes', service);
         if(service == 3440 || service == 3441) {
 
           return  getUspsRates();
@@ -225,6 +225,7 @@
 
     $('#us_shipping_service').on('change',function(){
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        Livewire.emit('getShCodes', service);
         
         if(service == 3440 || service == 3441 || service == 05) {
 

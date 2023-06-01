@@ -38,7 +38,7 @@ class SearchShCode extends Component
 
     public function getShCodes($service)
     {
-        if($service == ShippingService::Post_Plus_Prime) {
+        if(($service == ShippingService::GDE_PRIORITY_MAIL) || ($service == ShippingService::GDE_PRIORITY_MAIL)) {
             $this->codes = $this->getCodesByLength(10);
         }else {
             $this->codes = $this->getCodesByLength(6);
