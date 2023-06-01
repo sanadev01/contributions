@@ -158,7 +158,6 @@ class ScanLabel extends Component
 
                 if($this->orderExist($order->id, $this->packagesRows)){
                     $existCount++;
-                    //  $this->tracking = '';
                      continue;
                 }
                 
@@ -168,7 +167,7 @@ class ScanLabel extends Component
       
                 if(auth()->user()->isScanner() && $order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
                 {
-                    $this->addOrderTracking($this->order);
+                    $this->addOrderTracking($order);
                     if(!$order->arrived_date){
                         $order->update([
                             'arrived_date' => $date
