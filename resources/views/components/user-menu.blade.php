@@ -27,12 +27,14 @@
                     </a>
                 </li>
                 @endif
+                @can('view',App\Models\OrderTracking::class)
                 <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
                     <a href="{{ route('admin.tracking.index') }}" target="_blank">
                         <i class="icon_adjst feather icon-map-pin"></i>
                         <span class="menu-title">@lang('menu.trackings')</span>
                     </a>
                 </li>
+                @endcan
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.profile.index') }}">
                         <i class="icon_adjst feather icon-user-check"></i>
@@ -66,7 +68,7 @@
                 </li>
             @endcan
 
-            @can('viewAny', App\Models\Order::class)
+            @can('view',App\Models\OrderTracking::class)
                 <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
                     <a href="{{ route('admin.tracking.index') }}" target="_blank">
                         <img src="{{ asset('images/icon/tracking.svg') }}" alt="Tracking">
@@ -106,7 +108,7 @@
                     </a>
                 </li>
             @endcan
-            @can('labelPrint', App\Models\Order::class)
+            @can('printBulkLabel', App\Models\Order::class)
                 <li class="{{ $isActive(['admin.label.scan.create']) }}">
                     <a href="{{ route('admin.label.scan.create') }}">
                         <img src="{{ asset('images/icon/print.svg') }}" alt="Printer">
@@ -120,7 +122,7 @@
                     <span class="menu-title" data-i18n="Dashboard">Accounting</span>
                 </a>
                 <ul class="menu-content"> 
-                    @can('viewAny', App\Models\PaymentInvoice::class)
+                    @can('viewPaymentInvoice', App\Models\PaymentInvoice::class)
                     <li class="nav-item {{ $isActive(['admin.payment-invoices.index','admin.payment-invoices.edit']) }} ml-2">
                         <a href="{{ route('admin.payment-invoices.index') }}">
                             <i class="icon_adjst feather icon-circle"></i>
@@ -148,14 +150,16 @@
                                     <span class="menu-title">@lang('HD Liability')</span>
                                 </a>
                             </li>
+                        @endadmin
+                    @endcan
+                        @can('view',App\Models\Tax::class)
                             <li class="nav-item {{ $isActive(['admin.tax.index']) }} ml-2">
                                 <a href="{{ route('admin.tax.index') }}">
                                     <i class="icon_adjst feather icon-circle"></i>
                                     <span class="menu-title">Tax Payment</span>
                                 </a>
                             </li>
-                        @endadmin
-                    @endcan
+                        @endcan
                 </ul>
             </li>
 
@@ -270,6 +274,7 @@
             @endcan
 
 
+            @can('view_calculator')
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
                     <img src="{{ asset('images/icon/calculator.svg') }}" alt="Rates" width="19px">
@@ -290,7 +295,7 @@
                     </li>
                 </ul>
             </li>
-
+            @endcan
             {{-- Reports --}}
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
@@ -457,6 +462,7 @@
             </li>
             @endadmin
 
+            @can('show_ticket', App\Models\Ticket::class)
             <li class="nav-item {{ $isActive(['admin.tickets.index','admin.tickets.show']) }}">
                 <a class="nav-link" href="{{ route('admin.tickets.index') }}">
                     <i class="icon_adjst feather icon-message-circle" style="color: #3db64c;"></i>
@@ -464,6 +470,7 @@
                     <livewire:components.support-ticket/>
                 </a>
             </li>
+            @endcan
 
             @can('viewAny', Spatie\Activitylog\Models\Activity::class)
             <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
@@ -483,14 +490,14 @@
                     </li>
                 @endcan
             @endadmin
-
+            @can('viewTrashedOrder',App\Models\Order::class)
             <li class="nav-item {{ $isActive(['admin.trash-orders.index']) }}">
                 <a href="{{ route('admin.trash-orders.index') }}">
                     <i class="icon_adjst feather icon-trash" style="color: #ff5a5a;"></i>
                     <span class="menu-title">@lang('menu.Trashed Orders')</span>
                 </a>
             </li>
-
+            @endcan
             {{-- @can('viewAny', Spatie\Activitylog\Models\Activity::class) --}}
             {{-- @endcan --}}
             <x-shared-menu></x-shared-menu>

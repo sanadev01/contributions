@@ -1,19 +1,12 @@
 <?php
 
 use App\Models\Order;
-use App\Models\OrderTracking;
-use App\Models\CommissionSetting;
-use Illuminate\Support\Facades\DB;
-use App\Models\Warehouse\Container;
-use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Artisan;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
-use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use App\Models\AffiliateSale;
 
 /*
 |--------------------------------------------------------------------------
@@ -269,9 +262,8 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id}',function($id){
-    
+
     $labelPrinter = new CN23LabelMaker();
-    
     $order = Order::find($id);
     // $order->status = 70;
     // $order->save();
@@ -290,47 +282,16 @@ Route::get('permission',function($id = null){
 Route::get('session-refresh/{slug?}', function($slug = null){
     if($slug){
         session()->forget('token');
+        Cache::forget('token');
         return 'Correios Token refresh';
     }
     session()->forget('anjun_token');
+    Cache::forget('anjun_token');
     return 'Anjun Token refresh';
 }); 
+Route::get('order-arrived', function(){
+    Artisan::call('email:order-arrived');
+
+    return Artisan::output();
+});
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
-
-Route::get('/clear-cache/{id}', function($id) {
-    if($id === "1") {
-        $artisanCmd = Artisan::call('cache:clear');
-        return "Application Cache Cleared";
-    }
-    if($id === "2") {
-        $artisanCmd = Artisan::call('config:cache');
-        return "Application Configuration Cache Cleared";
-    }
-    if($id === "3") {
-        $artisanCmd = Artisan::call('config:clear');
-        return "Application Configuration Cleared";
-    }
-    if($id === "4") {
-        $artisanCmd = Artisan::call('route:clear');
-        return "Application Route Cache Cleared";
-    }
-    if($id === "5") {
-        $artisanCmd = Artisan::call('view:clear');
-        return "Application View Cache Cleared";
-    }
-    if($id === "6") {
-        $artisanCmd = Artisan::call('optimize');
-        return "Application Optimized";
-    }
-    if($id === "7") {
-        $artisanCmd = Artisan::call('optimize:clear');
-        return "Application Optimize Cleared";
-    }
-});
-
-Route::get('container-update/{id?}',function($id){
-   $container = Container::find($id)->update([
-       'sequence' => '10859'
-   ]);
-   return "Container Updated Successfully";
-});
