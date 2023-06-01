@@ -32,7 +32,7 @@ class NcmValidator implements Rule
         if( $this->service->isGDEService() && strlen($value) != 10 ) {
             return false;
         }
-        if ( !$this->service->isGDEService() && strlen($value) !=6 ){
+        if( !$this->service->isGDEService() && strlen($value) !=6 ){
             return false;
         }
         
