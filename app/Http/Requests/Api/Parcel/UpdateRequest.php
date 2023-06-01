@@ -67,7 +67,7 @@ class UpdateRequest extends FormRequest
 
             "products.*.sh_code" => [
                 "required",
-                new NcmValidator()
+                new NcmValidator($request->parcel['service_id'])
             ],
             "products.*.description" => "required",
             "products.*.quantity" => "required|min:1",

@@ -231,7 +231,7 @@ class ShippingService extends Model
 
     public function isGDEService()
     {
-        if($this->service_sub_class == self::GDE_PRIORITY_MAIL || self::GDE_FIRST_CLASS){
+        if(in_array($this->service_sub_class, [self::GDE_PRIORITY_MAIL, self::GDE_FIRST_CLASS])){
             return true;
         }
         return false;

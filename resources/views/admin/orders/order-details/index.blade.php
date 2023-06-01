@@ -199,6 +199,9 @@
         </div>
     </div>
 </div>
+<div id="myComponent">
+    <!-- Component content -->
+</div>
 @endsection
 
 @section('js')
@@ -287,6 +290,7 @@
 
     $('#us_shipping_service').ready(function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        Livewire.emit('getShCodes', service);
         if(service == shippingServiceCodes.USPS_PRIORITY || service == shippingServiceCodes.USPS_FIRSTCLASS) {
 
         //   return  getUspsRates();
@@ -308,6 +312,7 @@
 
     $('#us_shipping_service').on('change',function(){
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        Livewire.emit('getShCodes', service);
         
         if(service == shippingServiceCodes.USPS_PRIORITY  || service == shippingServiceCodes.USPS_FIRSTCLASS || service == shippingServiceCodes.USPS_GROUND) {
 
