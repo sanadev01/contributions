@@ -6,7 +6,7 @@ use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
-use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Http\Controllers\Admin\Order\OrderUSLabelController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -294,4 +294,5 @@ Route::get('order-arrived', function(){
 
     return Artisan::output();
 });
+Route::get('/temp-order-report',TempOrderReportController::class);
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
