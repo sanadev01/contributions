@@ -1,7 +1,7 @@
 @can('do_warehouse_operations')
 <li class="nav-item has-sub sidebar-group">
     <a href="#">
-        <img src="{{ asset('images/icon/warehouse.svg') }}" alt="warehouse">
+        <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-archive"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
         <span class="menu-title">@lang('menu.Warehouse.menu')</span>
     </a>
     <ul class="menu-content">
@@ -24,15 +24,18 @@
                     <span class="menu-title">@lang('menu.Warehouse.Delivery Bill')</span>
                 </a>
             </li>
+            
             <li class="#">
                 <a href="{{ route('warehouse.unitinfo.create') }}">
                     <i class="feather icon-circle"></i>
                     <span class="menu-title">Unit Info</span>
                 </a>
             </li>
-            <li class="nav-item has-sub sidebar-group">
+            
+            <li class="nav-item has-sub sidebar-group" style="height: auto;">
                 <a href="#">
-                    <!-- <img src="{{ asset('images/icon/warehouse.svg') }}" alt="warehouse"> -->
+                <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-archive"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+
                     <span class="menu-title">@lang('menu.Warehouse.Containers')</span>
                 </a>
                 <ul class="menu-content">
@@ -42,7 +45,7 @@
                             <span class="menu-title">@lang('menu.Warehouse.Correios')</span>
                         </a>
                     </li>
-                    <li class="{{ $isActive(['warehouse.usps_containers.index','warehouse.usps_containers.create','warehouse.usps_containers.edit','warehouse.usps_container.packages.index']) }}">
+                    <li class="{{ $isActive(['warehouse.usps_containers.index','warehouse.usps_containers.create','warehouse.usps_containers.edit','warehouse.usps-container.packages']) }}">
                         <a href="{{ route('warehouse.usps_containers.index') }}">
                             <i class="feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Warehouse.USPS')</span>
@@ -54,6 +57,34 @@
                             <span class="menu-title">@lang('menu.Warehouse.Sinerlog')</span>
                         </a>
                     </li> -->
+                    <li class="{{ $isActive(['warehouse.gde_containers.index','warehouse.gde_containers.create','warehouse.gde_containers.edit','warehouse.gde_container.packages.index']) }}">
+                        <a href="{{ route('warehouse.gde_containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">GDE</span>
+                        </a>
+                    </li>
+                    <li class="{{ $isActive(['warehouse.mile-express-containers.index','warehouse.mile-express-containers.create','warehouse.mile-express-containers.edit']) }}">
+                        <a href="{{ route('warehouse.mile-express-containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Warehouse.HD Express Courier')</span>
+                        </a>
+                    <li class="{{ $isActive(['warehouse.postnl_containers.index','warehouse.postnl_containers.create','warehouse.postnl_containers.edit','warehouse.postnl_container.packages.index']) }}">
+                        <a href="{{ route('warehouse.postnl_containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Warehouse.PostNL')</span>
+                        </a>
+                    <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
+                        <a href="{{ route('warehouse.chile_containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Warehouse.Chile')</span>
+                        </a>
+                    </li>
+                    <li class="{{ $isActive(['warehouse.colombia-containers.index','warehouse.colombia-containers.create','warehouse.colombia-containers.edit','warehouse.colombia-container.packages']) }}">
+                        <a href="{{ route('warehouse.colombia-containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Warehouse.Colombia')</span>
+                        </a>
+                    </li>
                     <li class="{{ $isActive(['warehouse.geps_containers.index','warehouse.geps_containers.create','warehouse.geps_containers.edit','warehouse.geps_container.packages.index']) }}">
                         <a href="{{ route('warehouse.geps_containers.index') }}">
                             <i class="feather icon-circle"></i>
@@ -72,6 +103,12 @@
                             <span class="menu-title">@lang('menu.Warehouse.PostPlus')</span>
                         </a>
                     </li>
+                    <li class="{{ $isActive(['warehouse.gss_containers.index','warehouse.gss_containers.create','warehouse.gss_containers.edit','warehouse.gss_container.packages.index']) }}">
+                        <a href="{{ route('warehouse.gss_containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">GSS</span>
+                        </a>
+                    </li>
                     
                     <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
                         <a href="{{ route('warehouse.chile_containers.index') }}">
@@ -82,6 +119,7 @@
                 </ul>
             </li>
         @endadmin
+        
     </ul>
 </li>
 @endcan

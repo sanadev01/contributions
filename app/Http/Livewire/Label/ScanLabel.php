@@ -69,7 +69,7 @@ class ScanLabel extends Component
 
     public function removeRow($index)
     {
-        $this->removeOrderTracking($this->packagesRows[$index]['tracking_code']);
+        $this->removeOrderTracking($this->packagesRows[$index]['id']);
         unset($this->packagesRows[$index]);
     }
     
@@ -103,19 +103,13 @@ class ScanLabel extends Component
     {
         if($this->tracking){
             
-            $order = Order::where('corrios_tracking_code', $this->tracking)->first();
-            $this->order = $order;
-
-            // if($order->shippingService->service_sub_class == ShippingService::GePS || $order->shippingService->service_sub_class == ShippingService::GePS_EFormat){
-            //     $gepsClient = new Client();   
-            //     $response = $gepsClient->confirmShipment($order->corrios_tracking_code);
-            //     if (!$response['success']) {
-            //         $this->dispatchBrowserEvent('get-error', ['errorMessage' => $response['message']]);
-            //         return $this->tracking = '';
-            //     }
-            // }
-
-            if($this->order){
+            $orders = Order::where('corrios_tracking_code', $this->tracking)->orwhere('us_api_tracking_code',$this->tracking)->get();
+            $existCount = 0;
+            $date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
+            
+            foreach($orders as $order){
+                
+            if($order){
                 if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_ARRIVE_AT_WAREHOUSE){
                     $lastScanned = $order->trackings()->where('status_code',Order::STATUS_ARRIVE_AT_WAREHOUSE)->first();
                     
@@ -123,69 +117,80 @@ class ScanLabel extends Component
                         $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'package already scanned on '.$lastScanned->created_at->format('m/d/Y H:i:s').'']);
                     }
                 }
-                if($this->order->status == Order::STATUS_REFUND){
+                if($order->status == Order::STATUS_REFUND){
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order is Cancelled / Refunded']);
                     return $this->tracking = '';
                 }
-                if(!$this->order->is_paid){
+                if(!$order->is_paid){
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Payment is pending']);
                     return $this->tracking = '';
                 }
-                if($this->order->status == Order::STATUS_CANCEL){
+                if($order->status == Order::STATUS_CANCEL){
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order is Cancelled']);
                     return $this->tracking = '';
                 }
                 
-                if($this->order->status == Order::STATUS_REJECTED){
+                if($order->status == Order::STATUS_REJECTED){
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Rejected']);
                     return $this->tracking = '';
                 }
                 
-                if($this->order->status == Order::STATUS_RELEASE){
+                if($order->status == Order::STATUS_RELEASE){
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Release']);
                     return $this->tracking = '';
                 }
-
                 
                 $newRow = [
+                    'id' => $order->id,
                     'tracking_code' => $this->tracking,
-                    'pobox' => $this->order->user->pobox_number,
-                    'driver' => optional(optional($this->order->driverTracking)->user)->name,
-                    'pickup_date' => optional(optional($this->order->driverTracking)->created_at)->format('m-d-Y'),
-                    'client' => $this->order->merchant,
-                    'dimensions' => $this->order->length . ' x ' . $this->order->length . ' x ' . $this->order->height,
-                    'kg' => $this->order->getWeight('kg'),
-                    'reference' => $this->order->id,
-                    'tracking_id' => $this->order->tracking_id,
-                    'recpient' => $this->order->recipient->first_name,
-                    'order_date' => $this->order->order_date->format('m-d-Y'),
-                ];  
+                    'pobox' => $order->user->pobox_number,
+                    'driver' => optional(optional($order->driverTracking)->user)->name,
+                    'pickup_date' => optional(optional($order->driverTracking)->created_at)->format('m-d-Y'),
+                    'client' => $order->merchant,
+                    'dimensions' => $order->length . ' x ' . $order->length . ' x ' . $order->height,
+                    'kg' => $order->getWeight('kg'),
+                    'reference' => $order->id,
+                    'tracking_id' => $order->tracking_id,
+                    'recpient' => $order->recipient->first_name,
+                    'order_date' => $order->order_date->format('m-d-Y'),
+                ];
 
-                if(in_array($newRow, $this->packagesRows)){
-                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order already exist']);
-                    return $this->tracking = '';
+                if($this->orderExist($order->id, $this->packagesRows)){
+                    $existCount++;
+                     continue;
                 }
                 
                 array_push($this->packagesRows, $newRow);
 
-                array_push($this->newOrder,$this->order);
+                array_push($this->newOrder,$order);
       
                 if(auth()->user()->isScanner() && $order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
-                {                
-                    $this->addOrderTracking($this->order); 
-                    if(!$this->order->arrived_date){
-                        $date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
-                        $this->order->update([
+                {
+                    $this->addOrderTracking($order);
+                    if(!$order->arrived_date){
+                        $order->update([
                             'arrived_date' => $date
                         ]);
                     }
                 }
                 
-                $this->tracking = '';
             }
+            }
+            if($existCount>0)
+            $this->dispatchBrowserEvent('get-error', ['errorMessage' => $existCount==1||count($orders)==$existCount?'Order already exist':$existCount." orders already exist ".(count($orders)-$existCount)." order Checked In"]);
+
+                $this->tracking = '';
         }
         $this->tracking = '';
     }
+    function orderExist($id, $orders) {
+        foreach ($orders as   $order) {
+            if ($order['id'] === $id) {
+                return true;
+            }
+        }
+        return false;
+     }
 
     public function printLabel(LabelRepository $labelRepository)
     {
@@ -271,9 +276,9 @@ class ScanLabel extends Component
         return true;
     }
 
-    public function removeOrderTracking($tracking_code)
+    public function removeOrderTracking($id)
     {
-        $order = Order::where('corrios_tracking_code', $tracking_code)->first();
+        $order = Order::where('id', $id)->first();
         
         if($order->trackings->isNotEmpty() && $order->trackings()->count() < 3)
         {

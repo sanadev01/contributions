@@ -4,6 +4,7 @@ namespace App\Services\Correios\Services\Brazil;
 
 use Exception;
 use App\Models\Order;
+use App\Models\User;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use App\Services\Correios\Contracts\HasLableExport;
 use App\Services\Correios\Models\Package;
@@ -25,6 +26,8 @@ class CN23LabelMaker implements HasLableExport
     private $items;
     private $sumplementryItems;
     private $hasSuplimentary;
+    private $activeAddress;
+    private $isReturn;
 
     public function __construct()
     {
@@ -39,6 +42,7 @@ class CN23LabelMaker implements HasLableExport
         Rua Acaçá 47- Ipiranga <br>
         Sao Paulo CEP 04201-020';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
+        $this->activeAddress = '';
     }
 
     public function setOrder(Order $order)
@@ -47,8 +51,10 @@ class CN23LabelMaker implements HasLableExport
         $this->recipient = $order->recipient;
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
+        $this->getActiveAddress($this->order);
+        $this->checkReturn($this->order);
 
-        if ($this->order->shippingService->isAnjunService()) {
+        if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->is_anjun_china) {
             $this->contractNumber = 'Contrato:  9912501700';
             $this->hasAnjunLabel = true;
         }
@@ -62,7 +68,7 @@ class CN23LabelMaker implements HasLableExport
     }
 
     public function setPacketType(int $packetType)
-    {
+    { 
         switch($packetType):
             case Package::SERVICE_CLASS_EXPRESS:
                 $this->packetType = 'Packet Express';
@@ -178,6 +184,36 @@ class CN23LabelMaker implements HasLableExport
             'suplimentaryItems' => $this->sumplementryItems,
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
+            'activeAddress' => $this->activeAddress,
+            'isReturn' => $this->isReturn,
         ];
+    }
+
+    private function getActiveAddress(Order $order)
+    {
+        if(setting('default_address', null, $order->user_id) == 3) {
+            $user = $order->user;
+            $this->activeAddress = $user->address.', '.$user->state->code.', '.$user->zipcode.', '.$user->country()->first()->code;
+        }else{
+            $this->activeAddress = "2200 NW 129th Ave - Suite # 100, Miami, FL 33182 US";
+        }
+        return $this;
+    }
+
+    private function checkReturn(Order $order)
+    {
+        if($order->sinerlog_tran_id) {
+            $this->isReturn = false;
+            if($order->sinerlog_tran_id == 1  || $order->sinerlog_tran_id == 3) {
+                $this->isReturn = true;
+            }
+        }else {
+            $id = auth()->user()->id;
+            $this->isReturn = false;
+            if(setting('return_origin', null, $id) || setting('individual_parcel', null, $id)) {
+                $this->isReturn = true;
+            }
+        }
+        return $this;    
     }
 }
