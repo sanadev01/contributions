@@ -138,9 +138,6 @@ class OrderRepository
                     ShippingService::Post_Plus_Premium,
                 ];
             }
-            if($request->carrier == 'GDE'){
-                $service = [ ShippingService::GDE_Service ];
-            }
             if($request->carrier == 'Anjun China'){
                 $service = [
                     ShippingService::AJ_Standard_CN, 
