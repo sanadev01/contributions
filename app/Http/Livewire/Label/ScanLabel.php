@@ -145,7 +145,6 @@ class ScanLabel extends Component
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Release']);
                     return $this->tracking = '';
                 }
-
                 
                 $newRow = [
                     'tracking_code' => $this->tracking,

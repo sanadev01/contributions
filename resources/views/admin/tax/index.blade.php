@@ -4,30 +4,35 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">
-                            @lang('tax.Manage Tax Services')
-                        </h4> 
+                    <div class="card-header d-flex justify-content-end pb-2">
+                        @section('title', __('tax.Manage Tax Services'))
+                        @can('create', App\Models\HandlingService::class)
                         <div>
+                        <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
+                            class="btn btn-primary mr-1 waves-effect waves-light"><i
+                                class="feather icon-filter"></i></button>
                         @can('createAdjustment',App\Models\Tax::class)
                             <a href="{{ route('admin.adjustment.create') }}" class="btn btn-success">
                                 @lang('tax.Adjustment')
                             </a>
                         @endcan
                         @can('create',App\Models\Tax::class)
-                            <a href="{{ route('admin.tax.create') }}" class="btn btn-primary">
-                                @lang('tax.Pay Tax')
-                            </a>
+                        <a href="{{ route('admin.tax.create') }}" class="btn btn-primary">
+                            @lang('tax.Pay Tax')
+                        </a>
+                        @endcan
+                        </div>
                         @endcan
                         </div> 
                     </div></br>
-                    <div class="table-responsive-md mt-1 mr-4 ml-4">
-                        <div class="filters p-2">
+                    <div class="table-responsive-md mt-1 mr-4 ml-4 mb-5">
+                        <div class="filters p-2" id="dateSearch"
+                            @if (old('search', request('search'))) style="display: block" @endif>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <form action="" method="GET">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('tax.Search By Name, Warehouse No. or Tracking Code')">
                                             </div>
                                             <div class="col-md-4">
@@ -38,7 +43,7 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <form action="{{ route('admin.reports.tax-report') }}" method="GET">
                                         <input type="hidden" class="form-control" name="search" value="{{ old('search',request('search')) }}">
                                         <div class="row col-md-12">
@@ -55,7 +60,7 @@
                                                 <input type="date" class="form-control" name="end_date" >
                                             </div>
                                             <div class="col-md-2">
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-success">
                                                     Download
                                                 </button>
                                             </div>
@@ -64,7 +69,7 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table mb-0 table-responsive-md">
+                        <table class="table mb-0 table-bordered table-responsive-sm">
                             <thead>
                                 <tr>
                                     <th style="min-width: 100px;">
@@ -140,26 +145,26 @@
                                     </td>
                                     <td class="d-flex">
                                        
-                                          @if(!$tax->is_refunded)  
-                                            @if(!$tax->is_adjustment)
-                                                <a href="{{  route('admin.tax.edit',$tax->id) }}" title="Edit tax" class="btn btn-primary mr-2" title="Edit">
-                                                    <i class="feather icon-edit"></i>
-                                                </a>
-                                                <button  class="btn btn-danger mr-2"  title="Refund" onclick="return refund(['{{$tax->id}}']);">
-                                                    <i class="feather icon-corner-down-left"></i>
-                                                </button>
-                                            @else
-                                                <a href="{{  route('admin.adjustment.edit',$tax->id) }}" title="Edit adjustment" class="btn btn-primary mr-2" title="Edit">
-                                                    <i class="feather icon-edit"></i>
-                                                </a>
-                                            @endif
-                                        @elseif($tax->is_refunded)
-                                        <button  class="btn btn-danger mr-2" title="Refunded">
-                                            <i class="feather icon-check"></i>
-                                        </button>
-                                        @endif
-                                        
-                                    </td>
+                                        @if(!$tax->is_refunded)  
+                                          @if(!$tax->is_adjustment)
+                                              <a href="{{  route('admin.tax.edit',$tax->id) }}" title="Edit tax" class="btn btn-primary mr-2" title="Edit">
+                                                  <i class="feather icon-edit"></i>
+                                              </a>
+                                              <button  class="btn btn-danger mr-2"  title="Refund" onclick="return refund(['{{$tax->id}}']);">
+                                                  <i class="feather icon-corner-down-left"></i>
+                                              </button>
+                                          @else
+                                              <a href="{{  route('admin.adjustment.edit',$tax->id) }}" title="Edit adjustment" class="btn btn-primary mr-2" title="Edit">
+                                                  <i class="feather icon-edit"></i>
+                                              </a>
+                                          @endif
+                                      @elseif($tax->is_refunded)
+                                      <button  class="btn btn-danger mr-2" title="Refunded">
+                                          <i class="feather icon-check"></i>
+                                      </button>
+                                      @endif
+                                      
+                                  </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -170,6 +175,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 @endsection

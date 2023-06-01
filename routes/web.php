@@ -18,7 +18,6 @@ use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function (Shopify $shopifyClient) {
     $shop = "https://".request()->shop;
     if (request()->has('shop') ) {
@@ -131,6 +130,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
             Route::post('/show-profit-package-rates', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showRates'])->name('show-profit-rates');
             Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
+            Route::get('shipping-country-rates/{shipping_service}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'postNLCountryRates'])->name('country-rates');
+            Route::get('view-shipping-country-rates/{shipping_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'showPostNLCountryRates'])->name('view-shipping-country-rates');
         });
 
         Route::namespace('Connect')->group(function(){
@@ -262,8 +263,9 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id}',function($id){
-
+    
     $labelPrinter = new CN23LabelMaker();
+    
     $order = Order::find($id);
     // $order->status = 70;
     // $order->save();
@@ -278,20 +280,9 @@ Route::get('permission',function($id = null){
     Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
     return Artisan::output();
 });
-
-Route::get('session-refresh/{slug?}', function($slug = null){
-    if($slug){
-        session()->forget('token');
-        Cache::forget('token');
-        return 'Correios Token refresh';
-    }
-    session()->forget('anjun_token');
-    Cache::forget('anjun_token');
-    return 'Anjun Token refresh';
-}); 
 Route::get('order-arrived', function(){
     Artisan::call('email:order-arrived');
-
     return Artisan::output();
 });
+Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container'); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
