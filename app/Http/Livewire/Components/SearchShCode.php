@@ -33,17 +33,21 @@ class SearchShCode extends Component
 
         $this->search = old('sh_code', optional($shCode)->code );
         
-        $this->codes = ShCode::whereRaw('CHAR_LENGTH(code) = ?', [6])->orderBy('description','ASC')->get();
+        $this->codes = $this->getCodesByLength(6); 
     }
 
     public function getShCodes($service)
     {
         if($service == ShippingService::Post_Plus_Prime) {
-            $this->codes = ShCode::whereRaw('CHAR_LENGTH(code) = ?', [10])->orderBy('description','ASC')->get();
+            $this->codes = $this->getCodesByLength(10);
         }else {
-            $this->codes = ShCode::whereRaw('CHAR_LENGTH(code) = ?', [6])->orderBy('description','ASC')->get();
+            $this->codes = $this->getCodesByLength(6);
         }
         return $this->render();
+    }
+
+    public function getCodesByLength($length) {
+        return ShCode::whereRaw('CHAR_LENGTH(code) = ?', [$length])->orderBy('description','ASC')->get();
     }
 
     public function render()
