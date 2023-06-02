@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Storage;
 class ScanLabel extends Component
 {
     public $packagesRows;
-    public $tracking = '';
+    public $tracking = '9261290221581600001287';
     public $orderStatus = '';
     public $start_date;
     public $end_date;
@@ -33,10 +33,34 @@ class ScanLabel extends Component
     public $newOrder = [];
     public $totalWeight = 0;
     public $totalPieces = 0;
+    public $excel = 0;
 
     protected $listeners = ['user:updated' => 'getUser',
                              'clear-search' => 'removeUser'   
                             ];
+
+    public $ids=[];
+    public $refs=[];
+    
+    // protected $rules = [
+    //     'ids' => 'required|array',
+    //     'refs' => 'required|array',
+    // ]; 
+    
+    public function submit()
+    { 
+        //  $this->validate();
+        foreach($this->ids as $key=>$id){
+
+            $order = Order::find($id);
+            dd($this->refs[$key]);
+            $order->update([
+                'customer_reference'=>$this->refs[$key],
+            ]);
+            $packagesRows[$key]['customer_reference'] =  $this->refs[$key]; 
+        }
+
+    }
 
     public function mount()
     {
@@ -57,6 +81,7 @@ class ScanLabel extends Component
     {
         array_push($this->packagesRows,[
             'tracking_code' => '',
+            'us_api_tracking_code' => '',
             'client' => '',
             'dimensions' => '',
             'kg' => '',
@@ -84,6 +109,7 @@ class ScanLabel extends Component
         }
         if($this->order){
             $this->packagesRows[$index]['tracking_code'] = $trackingCode;
+            $this->packagesRows[$index]['us_api_tracking_code'] = $this->order->us_api_tracking_code;
             $this->packagesRows[$index]['pobox'] = $this->order->user->pobox_number;
             $this->packagesRows[$index]['driver'] =  optional(optional($this->order->driverTracking)->user)->name;
             $this->packagesRows[$index]['pickup_date'] = optional(optional($this->order->driverTracking)->created_at)->format('m-d-Y');
@@ -138,12 +164,11 @@ class ScanLabel extends Component
                 if($order->status == Order::STATUS_RELEASE){
                     $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Release']);
                     return $this->tracking = '';
-                }
-
-                
+                } 
                 $newRow = [
                     'id' => $order->id,
-                    'tracking_code' => $this->tracking,
+                    'tracking_code' => $order->corrios_tracking_code,
+                    'us_api_tracking_code' => $order->us_api_tracking_code,
                     'pobox' => $order->user->pobox_number,
                     'driver' => optional(optional($order->driverTracking)->user)->name,
                     'pickup_date' => optional(optional($order->driverTracking)->created_at)->format('m-d-Y'),
@@ -151,6 +176,7 @@ class ScanLabel extends Component
                     'dimensions' => $order->length . ' x ' . $order->length . ' x ' . $order->height,
                     'kg' => $order->getWeight('kg'),
                     'reference' => $order->id,
+                    'customer_reference' => $order->customer_reference,
                     'tracking_id' => $order->tracking_id,
                     'recpient' => $order->recipient->first_name,
                     'order_date' => $order->order_date->format('m-d-Y'),
@@ -164,6 +190,9 @@ class ScanLabel extends Component
                 array_push($this->packagesRows, $newRow);
 
                 array_push($this->newOrder,$order);
+
+                array_push($this->ids,$order->id);
+                array_push($this->refs,$order->customer_reference);
       
                 if(auth()->user()->isScanner() && $order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
                 {
@@ -192,7 +221,7 @@ class ScanLabel extends Component
         }
         return false;
      }
-
+ 
     public function printLabel(LabelRepository $labelRepository)
     {
         foreach($this->newOrder as $order){

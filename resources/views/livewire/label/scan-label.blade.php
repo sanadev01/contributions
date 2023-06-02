@@ -23,7 +23,8 @@
             @endif
         </div>
         
-        <div class="col-4 d-flex justify-content-end">
+        <div class="col-4 d-flex justify-content-end"> 
+ 
             @if(!$searchOrder)
                 <form action="{{ route('admin.label.scan.store') }}" method="post">
                     @csrf
@@ -33,8 +34,7 @@
                     @endforeach
                     <button type="submit" class="btn btn-primary mr-2" title="@lang('orders.import-excel.Download')">
                         <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Arrival Report
-                    </button>
-                    
+                    </button> 
                 </form>
                 @if (!auth()->user()->hasRole('driver'))
                     <form action="{{ route('admin.label.scan.store') }}" method="post">
@@ -45,7 +45,8 @@
                         @endforeach
                         <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
                             <i class="feather icon-download"></i> @lang('orders.import-excel.Download') All
-                        </button>
+                        </button>  
+                            
                     
                     </form>
                 @endif
@@ -65,6 +66,7 @@
                     </form>
                 @endif
             @endif
+                 @include('/livewire/label/update-customer-reference')
         </div>
         <div class="row col-12 d-flex justify-content-end">
             <form wire:submit.prevent="search" class="col-12">
@@ -125,6 +127,7 @@
             <th>@lang('orders.print-label.Dimensions')</th>
             <th>@lang('orders.print-label.Kg')</th>
             <th>@lang('orders.print-label.Reference')#</th>
+            <th>Additional Reference #</th>
             <th>@lang('Carrier Tracking')</th>
             <th>@lang('orders.print-label.Recpient')</th>
             <th>@lang('orders.print-label.Date')</th>
@@ -137,13 +140,19 @@
         @if($searchOrder)
             @foreach ($searchOrder as $package)
                 <tr>
-                    <td>{{ $package->corrios_tracking_code }}</td>
+                    <td> 
+                            {{ $package->corrios_tracking_code }}
+                          
+                                {{ $package->us_api_tracking_code }}
+                            
+                    </td>
                     <td>{{ $package->user->pobox_number }}</td>
                     <td>{{ optional(optional($package->driverTracking)->user)->name }}</td>
                     <td>{{ $package->merchant }}</td>
                     <td>{{ $package->length }} x {{ $package->length }} x {{ $package->height }}</td>
                     <td>{{ number_format($package->getWeight('kg'),2)}}</td>
                     <td>{{ $package->id }}</td>
+                    <td>{{ $package->customer_reference }}</td>
                     <td>{{ $package->tracking_id }}</td>
                     <td>{{ $package->recipient->first_name }}</td>
                     <td>{{ $package->order_date }}</td>
@@ -164,6 +173,8 @@
                 <tr id="{{ $key }}">
                     <td>
                         {{ $package['tracking_code'] }}
+                        <hr>
+                        {{ $package['us_api_tracking_code'] }}
                     </td>
                     <td>
                         {{ $package['pobox'] }}
@@ -184,6 +195,9 @@
                         @if ($package['reference'])
                             HD-{{ $package['reference'] }}
                         @endif 
+                    </td>
+                    <td> 
+                             {{ $package['customer_reference'] }} 
                     </td>
                     <td>
                         {{ $package['tracking_id'] }}
