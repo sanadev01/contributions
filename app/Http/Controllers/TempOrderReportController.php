@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Services\Excel\Export\OrderExport;
+use App\Services\Excel\Export\TempOrderExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -3536,7 +3536,7 @@ class TempOrderReportController extends Controller
         ])->get(); 
 
     } 
-       $export =  new OrderExport($orders,Auth::id());
+       $export =  new TempOrderExport($orders,Auth::id());
          $export->handle();
        return $export->download();
     }

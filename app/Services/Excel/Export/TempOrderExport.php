@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
-class OrderExport extends AbstractExportService
+class TempOrderExport extends AbstractExportService
 {
     private $orders;
     private $user;
@@ -62,8 +62,8 @@ class OrderExport extends AbstractExportService
                 $this->setCellValue('U'.$row, $order->carrierCost());
                 $this->setCellValue('V'.$row, optional($order->us_secondary_label_cost)['api_cost']);
                 $this->setCellValue('W'.$row,setting('marketplace_checked', null, $user->id)?  setting('marketplace', null, $user->id):'');
-                $this->setCellValue('X'.$row, );
- 
+                $this->setCellValue('X'.$row, $this->orderProductsValue($order->items->toArray()));
+
                  
 
             
@@ -80,10 +80,11 @@ class OrderExport extends AbstractExportService
         $this->setCellValue('M'.$row, "=SUM(M1:M{$row})");
         $this->setCellValue('Q'.$row, "=SUM(Q1:Q{$row})");
         $this->setCellValue('R'.$row, "=SUM(R1:R{$row})");
+        $this->setCellValue('X'.$row, "=SUM(X1:X{$row})");
 
         
         $this->mergeCells("A{$row}:F{$row}");
-        $this->setBackgroundColor("A{$row}:W{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:X{$row}", 'adfb84');
         $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
         $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
 
@@ -171,6 +172,12 @@ class OrderExport extends AbstractExportService
         $this->setColor('A1:X1', 'FFFFFF');
 
         $this->currentRow++;
+    }
+    function orderProductsValue($products)
+    {
+        return array_reduce($products,function($count,$product){
+            return  $count + ($product['value'])*($product['quantity']);
+        });
     }
 
     private function checkValue($value)
