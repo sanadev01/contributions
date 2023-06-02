@@ -48,18 +48,16 @@ class ScanLabel extends Component
     // ]; 
     
     public function submit()
-    { 
-        //  $this->validate();
-        foreach($this->ids as $key=>$id){
-
-            $order = Order::find($id);
-            dd($this->refs[$key]);
+    {
+        dd($this->ids);
+        foreach($this->ids as $key=>$id){ 
+            $order = Order::find($id); 
             $order->update([
                 'customer_reference'=>$this->refs[$key],
             ]);
-            $packagesRows[$key]['customer_reference'] =  $this->refs[$key]; 
+            $this->packagesRows[$key]['customer_reference'] = $this->refs[$key];
         }
-
+        // $this->render();
     }
 
     public function mount()
@@ -84,6 +82,7 @@ class ScanLabel extends Component
             'us_api_tracking_code' => '',
             'client' => '',
             'dimensions' => '',
+            'customer_reference' => '',
             'kg' => '',
             'reference' => '',
             'recpient' => '',
@@ -94,6 +93,8 @@ class ScanLabel extends Component
 
     public function removeRow($index)
     {
+        unset($this->ids[$index]);
+        unset($this->refs[$index]);
         $this->removeOrderTracking($this->packagesRows[$index]['id']);
         unset($this->packagesRows[$index]);
     }

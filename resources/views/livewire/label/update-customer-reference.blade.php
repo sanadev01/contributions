@@ -1,6 +1,6 @@
 <div>
   <!-- Button trigger modal --> 
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"  wire:ignore.self>
      Update Additional Reference
 </button> 
 
@@ -20,28 +20,33 @@
              <table class="table table-bordered">
                  <tr>
                      <th>@lang('orders.print-label.Barcode')</th> 
-                     <th>Additional Reference #</th> 
+                     <th>Additional Reference #</th>
                  </tr>
-                     @foreach ($packagesRows as $key => $package)
-                         <tr id="{{ $key }}">
-                             <td>
-                                 {{ $package['tracking_code'] }}
-                             </td> 
-                             <td>
-                                 <input type="text" name="ids.{{ $loop->index }}" value="{{ $ids[$key]}}">
-                                 {{-- @error('ids.{{ $loop->index }}') <span class="error">{{ $message }}</span> @enderror --}}
-                                 <input type="text" name="refs.{{ $loop->index }}" value="{{ $refs[$key]}}">
-                                 {{-- @error('ref.{{ $loop->index }}') <span class="error">{{ $message }}</span> @enderror --}}
-                             </td>
-                         </tr>
-                     @endforeach
+                    @foreach ($packagesRows as $key => $package)
+                        @if($refs[$key])
+                            <tr id="{{ $key }}">
+                                <td>
+                                    {{ $package['tracking_code'] }}
+                                </td> 
+                                <td>
+                                    <input type="hidden" wire:model.defer="ids.{{ $loop->index }}" 
+                                    {{-- value="{{ $ids[$key]}}" --}}
+                                    >
+                                    {{-- @error('ids.{{ $loop->index }}') <span class="error">{{ $message }}</span> @enderror --}}
+                                    <input type="text"  wire:model.defer="refs.{{ $loop->index }}" 
+                                    {{-- value="{{ $refs[$key]}}" --}}
+                                    >
+                                    {{-- @error('ref.{{ $loop->index }}') <span class="error">{{ $message }}</span> @enderror --}}
+                                </td>
+                            </tr>
+                        @endif
+                    @endforeach
              </table>
          </div>
          <div class="modal-footer">
              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-             <button type="button" class="btn btn-primary"   wire:click='submit'>Update</button>
+             <button class="btn btn-primary" wire:click="submit">Update</button>
          </div>
-    {{-- </form> --}}
    </div>
  </div>
 </div>
