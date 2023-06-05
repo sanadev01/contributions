@@ -64,16 +64,16 @@
                 @endif 
             </div>
          
-        <div class="form-group row col-4">
             @if($searchOrder)
-                <h4>Total Weight: <span class="text-danger">{{ number_format((float)$totalWeight, 2, '.', '') }} Kg</span></h4>
-                <h4 class="ml-2">Total Pieces: <span class="text-danger">{{ $totalPieces }}</span></h4>
+                <div class="form-group row col-4">
+                    <h4>Total Weight: <span class="text-danger">{{ number_format((float)$totalWeight, 2, '.', '') }} Kg</span></h4>
+                    <h4 class="ml-2">Total Pieces: <span class="text-danger">{{ $totalPieces }}</span></h4>
+                </div>
             @endif
-        </div>
         <div class="row col-12 d-flex justify-content-end">
             <form wire:submit.prevent="search" class="col-12 m-0 p-0">
                 <div class="row col-12 p-0 m-0">
-                    <div class="offset-7 col-2">
+                    <div class="offset-5 col-2">
                         <div class="form-group">
                             <div class="controls">
                                 <label class="d-flex">@lang('parcel.User POBOX Number')</label>
@@ -84,7 +84,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="offset-7 col-2">
+                    <div class="col-2">
                         <div class="form-group">
                             <div class="controls">
                                 <label class="d-flex">Start Date</label>
@@ -266,39 +266,8 @@
             </div>
         </div>
     @endif
-    <div class="modal fade" id="additional" tabindex="-1" role="dialog" aria-labelledby="additionalModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="additionalModalLabel">Update Additional Reference</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form wire:submit.prevent="additional">
-                    <div class="modal-body">
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>Additional Reference #</th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input class="form-control" type="text" wire:model.defer="customer_ref">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Update</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-  
 
-@include('layouts.livewire.loading')
+    @include('layouts.livewire.loading')
 </div>
 <script>
     window.addEventListener('get-error', event => {
