@@ -10,12 +10,9 @@ use App\Services\Excel\Import\ShcodeImportService;
 class ShcodeRepository
 {
     public function get()
-    {   
-        $sixDigitCodes = ShCode::whereRaw('LENGTH(code) = 6')->orderBy('description','ASC')->get()->toArray();
-        $tenDigitCodes = ShCode::whereRaw('LENGTH(code) = 10')->orderBy('description','ASC')->get()->toArray();
-        $shCode = array_merge($sixDigitCodes, $tenDigitCodes);
+    {
+        $shCode = ShCode::orderByRaw('CHAR_LENGTH(code)')->orderBy('description','ASC')->get();
         return $shCode;
-
     }
 
     public function store(Request $request)

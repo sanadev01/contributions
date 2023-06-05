@@ -43,24 +43,24 @@
                                     @foreach ($shCodes as $shCode)
                                         <tr>
                                             <td>
-                                                {{ $shCode['code'] }}
+                                                {{ $shCode->code }}
                                             </td>
                                             <td>
-                                                {{ optional(explode('-------', $shCode['description']))[0] }}
+                                                {{ optional(explode('-------', $shCode->description))[0] }}
                                             </td>
                                             <td>
-                                                {{ optional(explode('-------', $shCode['description']))[1] }}
+                                                {{ optional(explode('-------', $shCode->description))[1] }}
                                             </td>
                                             <td>
-                                                {{ optional(explode('-------', $shCode['description']))[2] }}
+                                                {{ optional(explode('-------', $shCode->description))[2] }}
                                             </td>
                                             <td class="d-flex">
-                                                <a href="{{ route('admin.shcode.edit', $shCode['id']) }}"
+                                                <a href="{{ route('admin.shcode.edit', $shCode) }}"
                                                     class="btn btn-primary mr-2" title="Edit Shcode">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
 
-                                                <form action="{{ route('admin.shcode.destroy', $shCode['id']) }}"
+                                                <form action="{{ route('admin.shcode.destroy', $shCode) }}"
                                                     method="post" onsubmit="return confirmDelete()">
                                                     @csrf
                                                     @method('DELETE')
