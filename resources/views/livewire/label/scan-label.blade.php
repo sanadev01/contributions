@@ -14,7 +14,7 @@
                 <div class="form-group row col-lg-4 col-md-3 col-sm-3 col-xs-3  pr-2 pl-0">
                     <label class="col-3 text-left"> @lang('orders.print-label.Scan Package')</label>
                     <input type="text" @if (count($packagesRows) == 300) readonly @endif
-                        class="form-control col-9 hd-search" wire:model.debounce.500ms="trackinfg">
+                        class="form-control col-9 hd-search" wire:model.debounce.500ms="tracking">
                     <span class="text-danger offset-3"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows) }} / 300</span>
                 </div>
                 
