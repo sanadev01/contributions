@@ -64,12 +64,12 @@
                 @endif 
             </div>
          
+        <div class="form-group row col-4">
             @if($searchOrder)
-                <div class="form-group row col-4">
-                    <h4>Total Weight: <span class="text-danger">{{ number_format((float)$totalWeight, 2, '.', '') }} Kg</span></h4>
-                    <h4 class="ml-2">Total Pieces: <span class="text-danger">{{ $totalPieces }}</span></h4>
-                </div>
+                <h4>Total Weight: <span class="text-danger">{{ number_format((float)$totalWeight, 2, '.', '') }} Kg</span></h4>
+                <h4 class="ml-2">Total Pieces: <span class="text-danger">{{ $totalPieces }}</span></h4>
             @endif
+        </div>
         <div class="row col-12 d-flex justify-content-end">
             <form wire:submit.prevent="search" class="col-12 m-0 p-0">
                 <div class="row col-12 p-0 m-0">
@@ -267,7 +267,7 @@
         </div>
     @endif
 
-    @include('layouts.livewire.loading')
+@include('layouts.livewire.loading')
 </div>
 <script>
     window.addEventListener('get-error', event => {
