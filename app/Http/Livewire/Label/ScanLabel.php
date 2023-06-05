@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Storage;
 class ScanLabel extends Component
 {
     public $packagesRows;
-    public $tracking = '9261290221581600001287';
+    public $tracking = '';
     public $orderStatus = '';
     public $start_date;
     public $end_date;
