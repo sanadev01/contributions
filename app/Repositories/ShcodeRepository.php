@@ -11,7 +11,9 @@ class ShcodeRepository
 {
     public function get()
     {   
-        $shCode = ShCode::orderBy('description','ASC')->get();
+        $sixDigitCodes = ShCode::whereRaw('LENGTH(code) = 6')->orderBy('description','ASC')->get()->toArray();
+        $tenDigitCodes = ShCode::whereRaw('LENGTH(code) = 10')->orderBy('description','ASC')->get()->toArray();
+        $shCode = array_merge($sixDigitCodes, $tenDigitCodes);
         return $shCode;
 
     }
