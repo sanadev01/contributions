@@ -67,7 +67,7 @@ class UpdateRequest extends FormRequest
 
             "products.*.sh_code" => [
                 "required",
-                new NcmValidator()
+                new NcmValidator($request->parcel['service_id'])
             ],
             "products.*.description" => "required",
             "products.*.quantity" => "required|min:1",
@@ -103,6 +103,10 @@ class UpdateRequest extends FormRequest
             $rules['sender.sender_phone'] = 'sometimes|string|max:100';
 
             $rules['recipient.phone'] = 'required|string|max:12';
+        }
+
+        if ($shippingService && $shippingService->isPostNLService()) {
+            $rules['products.*.description'] = 'required|max:45';
         }
 
         return $rules;

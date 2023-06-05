@@ -33,13 +33,19 @@ class CreateRequest extends FormRequest
             'items.*.sh_code' => ($this->order->products->isNotEmpty()) ? 'sometimes' : [
                 'required',
                 'numeric',
-                new NcmValidator()
+                new NcmValidator($this->shipping_service_id)
             ], 
             'items.*.description' => 'required|max:200', 
             'items.*.quantity' => 'required|gt:0', 
             'items.*.value' => 'required|gt:0', 
             'items.*.dangrous_item' => 'required', 
         ];
+
+        $shippingService = ShippingService::find($this->shipping_service_id ?? null);
+
+        if($shippingService && $shippingService->isPostNLService()) {
+            $rules['items.*.description'] = 'required|max:45';
+        }
         
         return $rules;
         
