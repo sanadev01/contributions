@@ -145,7 +145,7 @@ class ScanLabel extends Component
                 }
                 
                 if($order->status == Order::STATUS_RELEASE){
-                    $this->dispatchBrowserEvent('get-error', ['type'=>'success','message' => 'Order Release']);
+                    $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => 'Order Release']);
                     return $this->tracking = '';
                 } 
                 $newRow = [
