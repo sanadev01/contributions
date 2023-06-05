@@ -49,7 +49,6 @@ class ScanLabel extends Component
     
     public function submit()
     {
-        dd($this->ids);
         foreach($this->ids as $key=>$id){ 
             $order = Order::find($id); 
             $order->update([
