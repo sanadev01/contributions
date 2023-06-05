@@ -143,7 +143,7 @@
                     <th>@lang('orders.print-label.Dimensions')</th>
                     <th>@lang('orders.print-label.Kg')</th>
                     <th>@lang('orders.print-label.Reference')#</th>
-                    <th>Additional Reference #</th>
+                    <th>@lang('orders.print-label.Additional Reference') #</th>
                     <th>@lang('Carrier Tracking')</th>
                     <th>@lang('orders.print-label.Recpient')</th>
                     <th>@lang('orders.print-label.Date')</th>
