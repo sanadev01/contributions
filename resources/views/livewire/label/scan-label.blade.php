@@ -10,15 +10,23 @@
 
     <div class="col-md-12">
         <div class="hd-card mb-3">
-            <div class="card-header d-flex justify-content-between">
-                <div class="form-group row col-5 pr-2 pl-0">
+            <div class="card-header d-flex justify-content-between align-items-start">
+                <div class="form-group row col-lg-4 col-md-3 col-sm-3 col-xs-3  pr-2 pl-0">
                     <label class="col-3 text-left"> @lang('orders.print-label.Scan Package')</label>
                     <input type="text" @if (count($packagesRows) == 300) readonly @endif
                         class="form-control col-9 hd-search" wire:model.debounce.500ms="tracking">
                     <span class="text-danger offset-3"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows) }} / 300</span>
                 </div>
+                
+                <div class="form-group row col-lg-4 col-md-3 col-sm-3 col-xs-3  pr-2 pl-0" >
+                    <label class="col-3 text-left">@lang('orders.print-label.Additional Reference') </label>
+                    <input type="text" @if (count($packagesRows) == 0) readonly @endif class="form-control col-9 hd-search" wire:model.debounce.500ms="customerReference">
+                     
 
-                <div class="col-lg-4 cold-md-3 col-sm-3 col-xs-3 d-flex justify-content-end mb-5 pr-0">
+
+                </div>
+
+                <div class="col-lg-4 col-md-3 col-sm-3 col-xs-3 d-flex justify-content-end pr-0">
                     <button onclick="toggleLogsSearch()" class="btn btn-primary mr-2 waves-effect waves-light"
                         style="height:33px;">
                         <i class="feather icon-search"></i>
@@ -63,14 +71,15 @@
 
                             </form>
                         @endif
-                    @endif
+                    @endif 
+
                 </div>
             </div>
         </div>
     </div>
-    <div class="row col-12 d-flex justify-content-end">
-        <form wire:submit.prevent="search" class="col-12">
-            <div class="row mt-2 hide" @if ($this->start_date || $this->end_date) style="display: flex !important" @endif
+    <div class="row col-12 m-0 p-0">
+        <form wire:submit.prevent="search" class="col-12 m-0 p-0">
+            <div class="row mt-2 hide d-flex justify-content-end m-0 p-0" @if ($this->start_date || $this->end_date) style="display: flex !important" @endif
                 id="logSearch">
                 <div class="col-2">
                     <div class="form-group">
@@ -105,7 +114,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-1 col-sm-1 pl-0 col-xs-1 mt-0">
+                <div class="col-lg-1 col-md-1 col-sm-1 pl-0 col-xs-1 mt-0 d-flex justify-end">
                     <div class="form-group">
                         <div class="controls">
                             <button type="submit" class="btn btn-primary hd-mt-20" wire:click="search">
@@ -134,6 +143,7 @@
                     <th>@lang('orders.print-label.Dimensions')</th>
                     <th>@lang('orders.print-label.Kg')</th>
                     <th>@lang('orders.print-label.Reference')#</th>
+                    <th>@lang('orders.print-label.Additional Reference') #</th>
                     <th>@lang('Carrier Tracking')</th>
                     <th>@lang('orders.print-label.Recpient')</th>
                     <th>@lang('orders.print-label.Date')</th>
@@ -154,13 +164,14 @@
                 @if ($searchOrder)
                     @foreach ($searchOrder as $package)
                         <tr>
-                            <td>{{ $package->corrios_tracking_code }}</td>
+                            <td>{{ $package->corrios_tracking_code }} <hr> {{ $package->us_api_tracking_code }} </td>
                             <td>{{ $package->user->pobox_number }}</td>
                             <td>{{ optional(optional($package->driverTracking)->user)->name }}</td>
                             <td>{{ $package->merchant }}</td>
                             <td>{{ $package->length }} x {{ $package->length }} x {{ $package->height }}</td>
                             <td>{{ $package->getWeight('kg') }}</td>
                             <td>{{ $package->id }}</td>
+                            <td>{{ $package->customer_reference }}</td>
                             <td>{{ $package->tracking_id }}</td>
                             <td>{{ $package->recipient->first_name }}</td>
                             <td>{{ $package->order_date }}</td>
@@ -181,6 +192,8 @@
                         <tr id="{{ $key }}">
                             <td>
                                 {{ $package['tracking_code'] }}
+                                <hr>
+                                {{ $package['us_api_tracking_code'] }}
                             </td>
                             <td>
                                 {{ $package['pobox'] }}
@@ -202,6 +215,7 @@
                                     HD-{{ $package['reference'] }}
                                 @endif
                             </td>
+                            <td>   {{ $package['customer_reference'] }}  </td>
                             <td>
                                 {{ $package['tracking_id'] }}
                             </td>
@@ -245,7 +259,7 @@
                         </tr>
                     @endforeach
                 @else
-                    <x-tables.no-record colspan="12"></x-tables.no-record>
+                    <x-tables.no-record colspan="13"></x-tables.no-record>
                 @endif
             </tbody>
         </table>
@@ -273,6 +287,18 @@
                         <p class="h3 text-danger" style="text-align: center !important;">You have reached your labels
                             print limit</p>
                     </div>
+                <form wire:submit.prevent="additional">
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Additional Reference #</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input class="form-control" type="text" wire:model.defer="customer_ref">
+                                </td>
+                            </tr>
+                        </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="removeCss()"
@@ -289,7 +315,7 @@
 </div>
 <script>
     window.addEventListener('get-error', event => {
-        $('#error_message').addClass('d-flex justify-content-center alert alert-danger');
-        $('#error_message').empty().append("<h4 class='text-danger'>" + event.detail.errorMessage + "</h4>");
+        $('#error_message').addClass('alert alert-'+event.detail.type);
+        $('#error_message').empty().append("<h4 class='text-'"+event.detail.type+">" +event.detail.message+ "</h4>"); 
     })
 </script>

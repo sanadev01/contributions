@@ -1,21 +1,10 @@
 <?php
 
 namespace App\Http\Livewire\Label;
-
 use DateTime;
-use Exception;
-use Carbon\Carbon;
-use App\Models\Role;
 use App\Models\Order;
 use Livewire\Component;
-use App\Mail\User\Shipment;
-use Illuminate\Http\Request;
 use App\Models\OrderTracking;
-use App\Services\GePS\Client;
-use App\Models\ShippingService;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
 
@@ -33,14 +22,14 @@ class ScanLabel extends Component
     public $newOrder = [];
     public $totalWeight = 0;
     public $totalPieces = 0;
-
-    protected $listeners = ['user:updated' => 'getUser',
-                             'clear-search' => 'removeUser'   
-                            ];
-
+    public $excel = 0;
+    public $customerReference = '';
+    protected $listeners = [
+                            'user:updated' => 'getUser',
+                            'clear-search' => 'removeUser'
+                           ];
     public function mount()
     {
-        
         $this->packagesRows = old('package',[]);
         $this->tracking  = $this->tracking;
         $this->newOrder  = $this->newOrder;
@@ -57,8 +46,10 @@ class ScanLabel extends Component
     {
         array_push($this->packagesRows,[
             'tracking_code' => '',
+            'us_api_tracking_code' => '',
             'client' => '',
             'dimensions' => '',
+            'customer_reference' => '',
             'kg' => '',
             'reference' => '',
             'recpient' => '',
@@ -68,7 +59,7 @@ class ScanLabel extends Component
     }
 
     public function removeRow($index)
-    {
+    { 
         $this->removeOrderTracking($this->packagesRows[$index]['id']);
         unset($this->packagesRows[$index]);
     }
@@ -79,11 +70,12 @@ class ScanLabel extends Component
         $this->order = $order;
 
         if(!$order->isPaid() && !$order->is_paid){ 
-            $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Payment is pending']);
+            $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => 'Order Payment is pending']);
             return $this->tracking = '';
         }
         if($this->order){
             $this->packagesRows[$index]['tracking_code'] = $trackingCode;
+            $this->packagesRows[$index]['us_api_tracking_code'] = $this->order->us_api_tracking_code;
             $this->packagesRows[$index]['pobox'] = $this->order->user->pobox_number;
             $this->packagesRows[$index]['driver'] =  optional(optional($this->order->driverTracking)->user)->name;
             $this->packagesRows[$index]['pickup_date'] = optional(optional($this->order->driverTracking)->created_at)->format('m-d-Y');
@@ -99,8 +91,25 @@ class ScanLabel extends Component
         }
     }
     
+    public function updatedCustomerReference()
+    { 
+
+          if(count($this->packagesRows)>0 && $this->customerReference!=''){
+            $firstKey = key($this->packagesRows); 
+           
+            $order = Order::find($this->packagesRows[$firstKey]['id']);
+            $newReference = $order->customer_reference.'-'.$this->customerReference;
+            $order->update([
+                'customer_reference' => $newReference
+            ]);
+          $this->packagesRows[$firstKey]['customer_reference'] = $newReference;
+          $this->dispatchBrowserEvent('get-error', ['type'=>'success','message' => 'Customer reference updated']);
+          }
+          $this->customerReference='';
+    }
+
     public function updatedTracking()
-    {
+        {
         if($this->tracking){
             
             $orders = Order::where('corrios_tracking_code', $this->tracking)->orwhere('us_api_tracking_code',$this->tracking)->get();
@@ -114,35 +123,35 @@ class ScanLabel extends Component
                     $lastScanned = $order->trackings()->where('status_code',Order::STATUS_ARRIVE_AT_WAREHOUSE)->first();
                     
                     if ($lastScanned) {
-                        $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'package already scanned on '.$lastScanned->created_at->format('m/d/Y H:i:s').'']);
+                        $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => 'package already scanned on '.$lastScanned->created_at->format('m/d/Y H:i:s').'']);
                     }
                 }
                 if($order->status == Order::STATUS_REFUND){
-                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order is Cancelled / Refunded']);
+                    $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => 'Order is Cancelled / Refunded']);
                     return $this->tracking = '';
                 }
                 if(!$order->is_paid){
-                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Payment is pending']);
+                    $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => 'Order Payment is pending']);
                     return $this->tracking = '';
                 }
                 if($order->status == Order::STATUS_CANCEL){
-                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order is Cancelled']);
+                    $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => 'Order is Cancelled']);
                     return $this->tracking = '';
                 }
                 
                 if($order->status == Order::STATUS_REJECTED){
-                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Rejected']);
+                    $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => 'Order Rejected']);
                     return $this->tracking = '';
                 }
                 
                 if($order->status == Order::STATUS_RELEASE){
-                    $this->dispatchBrowserEvent('get-error', ['errorMessage' => 'Order Release']);
+                    $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => 'Order Release']);
                     return $this->tracking = '';
-                }
-                
+                } 
                 $newRow = [
                     'id' => $order->id,
-                    'tracking_code' => $this->tracking,
+                    'tracking_code' => $order->corrios_tracking_code,
+                    'us_api_tracking_code' => $order->us_api_tracking_code,
                     'pobox' => $order->user->pobox_number,
                     'driver' => optional(optional($order->driverTracking)->user)->name,
                     'pickup_date' => optional(optional($order->driverTracking)->created_at)->format('m-d-Y'),
@@ -150,6 +159,7 @@ class ScanLabel extends Component
                     'dimensions' => $order->length . ' x ' . $order->length . ' x ' . $order->height,
                     'kg' => $order->getWeight('kg'),
                     'reference' => $order->id,
+                    'customer_reference' => $order->customer_reference,
                     'tracking_id' => $order->tracking_id,
                     'recpient' => $order->recipient->first_name,
                     'order_date' => $order->order_date->format('m-d-Y'),
@@ -163,6 +173,7 @@ class ScanLabel extends Component
                 array_push($this->packagesRows, $newRow);
 
                 array_push($this->newOrder,$order);
+ 
       
                 if(auth()->user()->isScanner() && $order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
                 {
@@ -177,7 +188,7 @@ class ScanLabel extends Component
             }
             }
             if($existCount>0)
-            $this->dispatchBrowserEvent('get-error', ['errorMessage' => $existCount==1||count($orders)==$existCount?'Order already exist':$existCount." orders already exist ".(count($orders)-$existCount)." order Checked In"]);
+            $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => $existCount==1||count($orders)==$existCount?'Order already exist':$existCount." orders already exist ".(count($orders)-$existCount)." order Checked In"]);
 
                 $this->tracking = '';
         }
@@ -191,7 +202,7 @@ class ScanLabel extends Component
         }
         return false;
      }
-
+ 
     public function printLabel(LabelRepository $labelRepository)
     {
         foreach($this->newOrder as $order){
@@ -287,5 +298,5 @@ class ScanLabel extends Component
 
         return true;
 
-    }
+    } 
 }

@@ -368,6 +368,7 @@ return [
         'Client' => 'Client',
         'Dimensions' => 'Dimensions',
         'Kg' => 'Kg',
+        'Additional Reference'=> 'Additional Reference',
         'Reference' => 'Reference',
         'Recpient' => 'Recpient',
         'Action' => 'Action',
