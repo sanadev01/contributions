@@ -34,6 +34,7 @@ class ScanLabel extends Component
     public $totalWeight = 0;
     public $totalPieces = 0;
     public $excel = 0;
+    public $customer_ref = 0;
 
     protected $listeners = ['user:updated' => 'getUser',
                              'clear-search' => 'removeUser'   
@@ -41,23 +42,6 @@ class ScanLabel extends Component
 
     public $ids=[];
     public $refs=[];
-    
-    // protected $rules = [
-    //     'ids' => 'required|array',
-    //     'refs' => 'required|array',
-    // ]; 
-    
-    public function submit()
-    {
-        foreach($this->ids as $key=>$id){ 
-            $order = Order::find($id); 
-            $order->update([
-                'customer_reference'=>$this->refs[$key],
-            ]);
-            $this->packagesRows[$key]['customer_reference'] = $this->refs[$key];
-        }
-        // $this->render();
-    }
 
     public function mount()
     {
@@ -317,5 +301,10 @@ class ScanLabel extends Component
 
         return true;
 
+    }
+
+    public function additional()
+    {
+        dd(132);
     }
 }
