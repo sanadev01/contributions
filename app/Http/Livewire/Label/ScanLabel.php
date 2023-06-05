@@ -94,7 +94,7 @@ class ScanLabel extends Component
     public function updatedCustomerReference()
     { 
 
-          if(count($this->packagesRows)>0){
+          if(count($this->packagesRows)>0 && $this->customerReference!=''){
             $firstKey = key($this->packagesRows); 
            
             $order = Order::find($this->packagesRows[$firstKey]['id']);
@@ -103,11 +103,9 @@ class ScanLabel extends Component
                 'customer_reference' => $newReference
             ]);
           $this->packagesRows[$firstKey]['customer_reference'] = $newReference;
-          }
-
           $this->dispatchBrowserEvent('get-error', ['type'=>'success','message' => 'Customer reference updated']);
-
-
+          }
+          $this->customerReference='';
     }
 
     public function updatedTracking()
