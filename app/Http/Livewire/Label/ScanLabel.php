@@ -90,25 +90,6 @@ class ScanLabel extends Component
             $this->addRow();
         }
     }
-    
-    public function updatedCustomerReference()
-    { 
-
-          if(count($this->packagesRows)>0){
-            $firstKey = key($this->packagesRows); 
-           
-            $order = Order::find($this->packagesRows[$firstKey]['id']);
-            $newReference = $order->customer_reference.'-'.$this->customerReference;
-            $order->update([
-                'customer_reference' => $newReference
-            ]);
-          $this->packagesRows[$firstKey]['customer_reference'] = $newReference;
-          }
-
-          $this->dispatchBrowserEvent('get-error', ['type'=>'success','message' => 'Customer reference updated']);
-
-
-    }
 
     public function updatedTracking()
         {
@@ -300,5 +281,22 @@ class ScanLabel extends Component
 
         return true;
 
-    } 
+    }
+    
+    public function updatedCustomerReference()
+    {
+
+          if(count($this->packagesRows)>0 && $this->customerReference!=''){
+            $firstKey = key($this->packagesRows); 
+           
+            $order = Order::find($this->packagesRows[$firstKey]['id']);
+            $newReference = $order->customer_reference.'-'.$this->customerReference;
+            $order->update([
+                'customer_reference' => $newReference
+            ]);
+          $this->packagesRows[$firstKey]['customer_reference'] = $newReference;
+          $this->dispatchBrowserEvent('get-error', ['type'=>'success','message' => 'Customer reference updated']);
+          }
+          $this->customerReference='';
+    }
 }

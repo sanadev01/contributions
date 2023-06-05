@@ -16,8 +16,8 @@
                 <span class="text-danger offset-2"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows)}} / 300</span>
             </div>
             <div class="form-group row col-4 ">
-                <label class="col-3 text-right"> Ref</label>
-                <input type="text" @if (count($packagesRows) == 300) readonly @endif class="form-control col-8" wire:model.debounce.500ms="customerReference">
+                <label class="col-3 text-left">@lang('orders.print-label.Additional Reference') </label>
+                <input type="text" @if (count($packagesRows) == 0) readonly @endif class="form-control col-8" wire:model.debounce.500ms="customerReference">
                 
             </div>
             <div class="col-4 d-flex justify-content-end float-right">
@@ -129,7 +129,7 @@
             <th>@lang('orders.print-label.Dimensions')</th>
             <th>@lang('orders.print-label.Kg')</th>
             <th>@lang('orders.print-label.Reference')#</th>
-            <th>Additional Reference #</th>
+            <th>@lang('orders.print-label.Additional Reference') #</th>
             <th>@lang('Carrier Tracking')</th>
             <th>@lang('orders.print-label.Recpient')</th>
             <th>@lang('orders.print-label.Date')</th>
