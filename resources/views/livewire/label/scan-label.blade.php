@@ -23,7 +23,7 @@
             @endif
         </div>
         
-        <div class="col-4 d-flex justify-content-end"> 
+        <div class="col-4 d-flex justify-content-end">
             @if(!$searchOrder)
                 <form action="{{ route('admin.label.scan.store') }}" method="post">
                     @csrf
@@ -45,7 +45,7 @@
                         @endforeach
                         <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
                             <i class="feather icon-download"></i> @lang('orders.import-excel.Download') All
-                        </button>                            
+                        </button>
                     
                     </form>
                 @endif
