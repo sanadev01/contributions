@@ -9,70 +9,70 @@
     <div class="row mb-3 col-12" id="error_message">
 
     </div>
-    <div class="col-12 row mb-5">
-        <div class="form-group row col-4">
-            <label class="col-2 text-right"> @lang('orders.print-label.Scan Package')</label>
-            <input type="text" @if (count($packagesRows) == 300) readonly @endif class="form-control col-8" wire:model.debounce.500ms="tracking">
-            <span class="text-danger offset-2"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows)}} / 300</span>
-        </div>
-        
+    <div class="col-12 row mb-5 justify-content-between p-0 m-0"> 
+            <div class="form-group row col-4 ">
+                <label class="col-3 text-right"> @lang('orders.print-label.Scan Package')</label>
+                <input type="text" @if (count($packagesRows) == 300) readonly @endif class="form-control col-8" wire:model.debounce.500ms="tracking">
+                <span class="text-danger offset-2"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows)}} / 300</span>
+            </div>
+            <div class="form-group row col-4 ">
+                <label class="col-3 text-right"> Ref</label>
+                <input type="text" @if (count($packagesRows) == 300) readonly @endif class="form-control col-8" wire:model.debounce.500ms="customerReference">
+                
+            </div>
+            <div class="col-4 d-flex justify-content-end float-right">
+                @if(!$searchOrder)
+                    <form action="{{ route('admin.label.scan.store') }}" method="post">
+                        @csrf
+                        @foreach ($packagesRows as $key => $package)
+                            <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
+                            <input type="hidden" name="excel" value="1">
+                        @endforeach
+                        <button type="submit" class="btn btn-primary mr-2" title="@lang('orders.import-excel.Download')">
+                            <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Arrival Report
+                        </button>
+                        
+                    </form>
+                    @if (!auth()->user()->hasRole('driver'))
+                        <form action="{{ route('admin.label.scan.store') }}" method="post">
+                            @csrf
+                            @foreach ($packagesRows as $key => $package)
+                                <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
+                                <input type="hidden" name="excel" value="0">
+                            @endforeach
+                            <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
+                                <i class="feather icon-download"></i> @lang('orders.import-excel.Download') All
+                            </button>
+                        
+                        </form>
+                    @endif
+                @else
+                    @if (!$searchOrder->isEmpty())
+                        <br>
+                        <form action="{{ route('admin.label.scan.update', 10) }}" method="post">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" name="start_date" value="{{ $start_date }}">
+                            <input type="hidden" name="end_date" value="{{ $end_date }}">
+                            <input type="hidden" name="userId" value="{{ $user_id }}">
+                            <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
+                                <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Sacn List
+                            </button>
+
+                        </form>
+                    @endif
+                @endif 
+            </div>
+         
         <div class="form-group row col-4">
             @if($searchOrder)
                 <h4>Total Weight: <span class="text-danger">{{ number_format((float)$totalWeight, 2, '.', '') }} Kg</span></h4>
                 <h4 class="ml-2">Total Pieces: <span class="text-danger">{{ $totalPieces }}</span></h4>
             @endif
         </div>
-        
-        <div class="col-4 d-flex justify-content-end">
-            @if(!$searchOrder)
-                <form action="{{ route('admin.label.scan.store') }}" method="post">
-                    @csrf
-                    @foreach ($packagesRows as $key => $package)
-                        <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
-                        <input type="hidden" name="excel" value="1">
-                    @endforeach
-                    <button type="submit" class="btn btn-primary mr-2" title="@lang('orders.import-excel.Download')">
-                        <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Arrival Report
-                    </button>
-                    
-                </form>
-                @if (!auth()->user()->hasRole('driver'))
-                    <form action="{{ route('admin.label.scan.store') }}" method="post">
-                        @csrf
-                        @foreach ($packagesRows as $key => $package)
-                            <input type="hidden" name="order[]" value="{{ $package['reference'] }}">
-                            <input type="hidden" name="excel" value="0">
-                        @endforeach
-                        <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
-                            <i class="feather icon-download"></i> @lang('orders.import-excel.Download') All
-                        </button>
-                    
-                    </form>
-                @endif
-            @else
-                @if (!$searchOrder->isEmpty())
-                    <br>
-                    <form action="{{ route('admin.label.scan.update', 10) }}" method="post">
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" name="start_date" value="{{ $start_date }}">
-                        <input type="hidden" name="end_date" value="{{ $end_date }}">
-                        <input type="hidden" name="userId" value="{{ $user_id }}">
-                        <button type="submit" class="btn btn-success mr-2" title="@lang('orders.import-excel.Download')">
-                            <i class="feather icon-download"></i> @lang('orders.import-excel.Download') Sacn List
-                        </button>
-
-                    </form>
-                @endif
-            @endif
-            
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#additional"  wire:ignore.self>
-                Update Additional Reference
-           </button> 
-        </div>
         <div class="row col-12 d-flex justify-content-end">
-            <form wire:submit.prevent="search" class="col-12">
-                <div class="row col-12">
+            <form wire:submit.prevent="search" class="col-12 m-0 p-0">
+                <div class="row col-12 p-0 m-0">
                     <div class="offset-7 col-2">
                         <div class="form-group">
                             <div class="controls">
@@ -106,10 +106,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-1">
-                        <div class="form-group">
+                    <div class="col-1 d-flex justify-content-end p-0 m-0">
+                        <div class="form-group  p-0 m-0">
                             <div class="controls">
-                                <button type="submit" class="btn btn-primary mt-4" wire:click="search">
+                                <button type="submit" class="btn btn-primary mt-4 " wire:click="search">
                                     <i class="feather icon-search"></i>  Search
                                 </button>
                             </div>
@@ -279,7 +279,6 @@
                     <div class="modal-body">
                         <table class="table table-bordered">
                             <tr>
-                                <th>@lang('orders.print-label.Barcode')</th> 
                                 <th>Additional Reference #</th>
                             </tr>
                             <tr>
@@ -303,7 +302,7 @@
 </div>
 <script>
     window.addEventListener('get-error', event => {
-        $('#error_message').addClass('alert alert-danger');
-        $('#error_message').empty().append("<h4 class='text-danger'>" +event.detail.errorMessage+ "</h4>");
-    })
+        $('#error_message').addClass('alert alert-'+event.detail.type);
+        $('#error_message').empty().append("<h4 class='text-'"+event.detail.type+">" +event.detail.message+ "</h4>"); 
+    }) 
 </script>
