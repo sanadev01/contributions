@@ -266,37 +266,6 @@
             </div>
         </div>
     @endif
-    <div class="modal fade" id="additional" tabindex="-1" role="dialog" aria-labelledby="additionalModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="additionalModalLabel">Update Additional Reference</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form wire:submit.prevent="additional">
-                    <div class="modal-body">
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>Additional Reference #</th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input class="form-control" type="text" wire:model.defer="customer_ref">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Update</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-  
 
 @include('layouts.livewire.loading')
 </div>
