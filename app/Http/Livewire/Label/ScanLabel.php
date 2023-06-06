@@ -21,15 +21,17 @@ class ScanLabel extends Component
     public $searchOrder = [];
     public $newOrder = [];
     public $totalWeight = 0;
-    public $totalPieces = 0;
-    public $excel = 0;
+    public $totalPieces = 0; 
     public $customerReference = '';
+    public $updateReferecene = false;
     protected $listeners = [
                             'user:updated' => 'getUser',
                             'clear-search' => 'removeUser'
-                           ];
+                            ];
+
     public function mount()
     {
+        
         $this->packagesRows = old('package',[]);
         $this->tracking  = $this->tracking;
         $this->newOrder  = $this->newOrder;
@@ -90,34 +92,23 @@ class ScanLabel extends Component
             $this->addRow();
         }
     }
-    
-    public function updatedCustomerReference()
-    { 
-
-          if(count($this->packagesRows)>0 && $this->customerReference!=''){
-            $firstKey = key($this->packagesRows); 
-           
-            $order = Order::find($this->packagesRows[$firstKey]['id']);
-            $newReference = $order->customer_reference.'-'.$this->customerReference;
-            $order->update([
-                'customer_reference' => $newReference
-            ]);
-          $this->packagesRows[$firstKey]['customer_reference'] = $newReference;
-          $this->dispatchBrowserEvent('get-error', ['type'=>'success','message' => 'Customer reference updated']);
-          }
-          $this->customerReference='';
-    }
 
     public function updatedTracking()
-        {
+    {
         if($this->tracking){
             
-            $orders = Order::where('corrios_tracking_code', $this->tracking)->orwhere('us_api_tracking_code',$this->tracking)->get();
-            $existCount = 0;
-            $date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
+            $order = Order::where('corrios_tracking_code', $this->tracking)->first();
             
-            foreach($orders as $order){
-                
+
+            // if($order->shippingService->service_sub_class == ShippingService::GePS || $order->shippingService->service_sub_class == ShippingService::GePS_EFormat){
+            //     $gepsClient = new Client();   
+            //     $response = $gepsClient->confirmShipment($order->corrios_tracking_code);
+            //     if (!$response['success']) {
+            //         $this->dispatchBrowserEvent('get-error', ['errorMessage' => $response['message']]);
+            //         return $this->tracking = '';
+            //     }
+            // }
+
             if($order){
                 if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_ARRIVE_AT_WAREHOUSE){
                     $lastScanned = $order->trackings()->where('status_code',Order::STATUS_ARRIVE_AT_WAREHOUSE)->first();
@@ -147,7 +138,9 @@ class ScanLabel extends Component
                 if($order->status == Order::STATUS_RELEASE){
                     $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => 'Order Release']);
                     return $this->tracking = '';
-                } 
+                }
+
+                
                 $newRow = [
                     'id' => $order->id,
                     'tracking_code' => $order->corrios_tracking_code,
@@ -164,45 +157,34 @@ class ScanLabel extends Component
                     'recpient' => $order->recipient->first_name,
                     'order_date' => $order->order_date->format('m-d-Y'),
                 ];
-
-                if($this->orderExist($order->id, $this->packagesRows)){
-                    $existCount++;
-                     continue;
+ 
+                if(in_array($newRow, $this->packagesRows)){
+                    $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => 'Order already exist']);
+                    return $this->tracking = '';
                 }
                 
                 array_push($this->packagesRows, $newRow);
 
                 array_push($this->newOrder,$order);
- 
-      
+                
+                $this->updateReferecene =  $order->us_api_tracking_code?true:false;
                 if(auth()->user()->isScanner() && $order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
-                {
-                    $this->addOrderTracking($order);
+                {                
+                    $this->addOrderTracking($order); 
                     if(!$order->arrived_date){
+                        $date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
                         $order->update([
                             'arrived_date' => $date
                         ]);
                     }
                 }
                 
-            }
-            }
-            if($existCount>0)
-            $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => $existCount==1||count($orders)==$existCount?'Order already exist':$existCount." orders already exist ".(count($orders)-$existCount)." order Checked In"]);
-
                 $this->tracking = '';
+            }
         }
         $this->tracking = '';
     }
-    function orderExist($id, $orders) {
-        foreach ($orders as   $order) {
-            if ($order['id'] === $id) {
-                return true;
-            }
-        }
-        return false;
-     }
- 
+
     public function printLabel(LabelRepository $labelRepository)
     {
         foreach($this->newOrder as $order){
@@ -298,5 +280,22 @@ class ScanLabel extends Component
 
         return true;
 
-    } 
+    }
+    
+    public function updatedCustomerReference()
+    { 
+
+          if(count($this->packagesRows)>0 && $this->customerReference!=''){
+            $lastKey = array_key_last($this->packagesRows); 
+           
+            $order = Order::find($this->packagesRows[$lastKey]['id']);
+            $newReference = $order->customer_reference.'-'.$this->customerReference;
+            $order->update([
+                'customer_reference' => $newReference
+            ]);
+          $this->packagesRows[$lastKey]['customer_reference'] = $newReference;
+          $this->dispatchBrowserEvent('get-error', ['type'=>'success','message' => 'Additional reference updated']);
+          }
+          $this->customerReference='';
+    }
 }
