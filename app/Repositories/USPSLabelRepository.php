@@ -141,7 +141,9 @@ class USPSLabelRepository
 
         $labelPrinter = new USPSLabelMaker();
         $labelPrinter->saveLabel($base64_pdf, $fileName);
-        // return (new UpdateCN23Label($order))->run(); 
+        if($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL) {
+            return (new UpdateCN23Label($order))->run(); 
+        }
         return true;
     }
 
