@@ -295,7 +295,7 @@ class ScanLabel extends Component
                 'customer_reference' => $newReference
             ]);
           $this->packagesRows[$firstKey]['customer_reference'] = $newReference;
-          $this->dispatchBrowserEvent('get-error', ['type'=>'success','message' => 'Customer reference updated']);
+          $this->dispatchBrowserEvent('get-error', ['type'=>'success','message' => 'Additional reference updated']);
           }
           $this->customerReference='';
     }
