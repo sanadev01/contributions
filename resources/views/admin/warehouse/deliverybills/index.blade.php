@@ -110,6 +110,8 @@
                                                     <span class="badge badge-info text-white">D</span>
                                                 @elseif($deliveryBill->isPostPlus())
                                                 <span class="badge badge-warning text-black">P</span>
+                                                @elseif($deliveryBill->isGDE())
+                                                    <span class="badge badge-secondary">GDE</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif
@@ -149,7 +151,20 @@
                                                                 <i class="fa fa-cloud-download"></i> Download PostPlus Manifest
                                                             </a>
                                                         @endif -->
-
+                                                        @if(!$deliveryBill->isGDE())
+                                                            <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i> Download Manifest By Service
+                                                            </a>
+                                                        @endif
+                                                        @if ($deliveryBill->isRegistered() && $deliveryBill->isGDE()) 
+                                                           <a href="{{ route('warehouse.gde.manifest.download',[$deliveryBill,'type'=>'us-customers']) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i>   Manifest to US Customs
+                                                            </a>
+                                                            <a href="{{ route('warehouse.gde.manifest.download',[$deliveryBill,'type'=>'brazil-customers']) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i>   Manifest to Brazilian Customs 
+                                                            </a>
+                                                        @endif
+                                                        
                                                         <a href="{{ route('warehouse.audit-report.show',$deliveryBill) }}" class="dropdown-item w-100">
                                                             <i class="fa fa-cloud-download"></i> Audit Report
                                                         </a>

@@ -31,6 +31,8 @@ return [
             777 => 'Post Plus Prime',
             778 => 'PrimeRIO',
             357 => 'Prime5RIO',
+            4387 => 'GDE Priority Mail',
+            4388 => 'GDE First Class',
         ]
     ]
 ];

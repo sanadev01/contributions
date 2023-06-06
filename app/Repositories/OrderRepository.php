@@ -546,7 +546,9 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::GePS)
             || $shippingServices->contains('service_sub_class', ShippingService::GePS_EFormat)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_GROUND)
-            || $shippingServices->contains('service_sub_class', ShippingService::Parcel_Post))
+            || $shippingServices->contains('service_sub_class', ShippingService::Parcel_Post)
+            || $shippingServices->contains('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)
+            || $shippingServices->contains('service_sub_class', ShippingService::GDE_FIRST_CLASS))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {
@@ -556,7 +558,9 @@ class OrderRepository
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS
                         && $shippingService->service_sub_class != ShippingService::USPS_PRIORITY_INTERNATIONAL
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL
-                        && $shippingService->service_sub_class != ShippingService::USPS_GROUND;
+                        && $shippingService->service_sub_class != ShippingService::USPS_GROUND
+                        && $shippingService->service_sub_class != ShippingService::GDE_PRIORITY_MAIL
+                        && $shippingService->service_sub_class != ShippingService::GDE_FIRST_CLASS;
                 });
             }
             if(!setting('ups', null, User::ROLE_ADMIN))
