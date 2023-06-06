@@ -88,7 +88,7 @@ class DeliveryBill extends Model
 
     public function isGDE()
     {
-        if(($this->containers->first()->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL) || ($this->containers->first()->services_subclass_code == ShippingService::GDE_FIRST_CLASS)){
+        if($this->containers->first()->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL || $this->containers->first()->services_subclass_code == ShippingService::GDE_FIRST_CLASS){
             return true;
         }
         return false;
