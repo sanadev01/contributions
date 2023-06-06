@@ -284,17 +284,17 @@ class ScanLabel extends Component
     }
     
     public function updatedCustomerReference()
-    {
+    { 
 
           if(count($this->packagesRows)>0 && $this->customerReference!=''){
-            $firstKey = key($this->packagesRows); 
+            $lastKey = array_key_last($this->packagesRows); 
            
-            $order = Order::find($this->packagesRows[$firstKey]['id']);
+            $order = Order::find($this->packagesRows[$lastKey]['id']);
             $newReference = $order->customer_reference.'-'.$this->customerReference;
             $order->update([
                 'customer_reference' => $newReference
             ]);
-          $this->packagesRows[$firstKey]['customer_reference'] = $newReference;
+          $this->packagesRows[$lastKey]['customer_reference'] = $newReference;
           $this->dispatchBrowserEvent('get-error', ['type'=>'success','message' => 'Additional reference updated']);
           }
           $this->customerReference='';
