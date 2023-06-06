@@ -16,7 +16,7 @@
                 <span class="text-danger offset-2"> @lang('orders.print-label.Scan Package Message') {{ count($packagesRows)}} / 300</span>
             </div>
             <div class="form-group row col-4 ">
-                 @if (count($packagesRows) != 0)
+                 @if ($updateReferecene)
                     <label class="col-3 text-left">@lang('orders.print-label.Additional Reference') </label>
                     <input type="text" class="form-control col-8" wire:model.debounce.500ms="customerReference">
                 @endif
