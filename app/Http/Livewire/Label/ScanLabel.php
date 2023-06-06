@@ -21,8 +21,7 @@ class ScanLabel extends Component
     public $searchOrder = [];
     public $newOrder = [];
     public $totalWeight = 0;
-    public $totalPieces = 0;
-    public $excel = 0;
+    public $totalPieces = 0; 
     public $customerReference = '';
     protected $listeners = [
                             'user:updated' => 'getUser',
@@ -95,12 +94,8 @@ class ScanLabel extends Component
         {
         if($this->tracking){
             
-            $orders = Order::where('corrios_tracking_code', $this->tracking)->orwhere('us_api_tracking_code',$this->tracking)->get();
-            $existCount = 0;
-            $date = (new DateTime('America/New_York'))->format('Y-m-d h:i:s');
-            
-            foreach($orders as $order){
-                
+            $order = Order::where('corrios_tracking_code', $this->tracking)->first();
+
             if($order){
                 if($order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_ARRIVE_AT_WAREHOUSE){
                     $lastScanned = $order->trackings()->where('status_code',Order::STATUS_ARRIVE_AT_WAREHOUSE)->first();
@@ -147,11 +142,11 @@ class ScanLabel extends Component
                     'recpient' => $order->recipient->first_name,
                     'order_date' => $order->order_date->format('m-d-Y'),
                 ];
-
-                if($this->orderExist($order->id, $this->packagesRows)){
-                    $existCount++;
-                     continue;
-                }
+ 
+                if($order->status == Order::STATUS_RELEASE){
+                    $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => 'Order Release']);
+                    return $this->tracking = '';
+                } 
                 
                 array_push($this->packagesRows, $newRow);
 
@@ -168,7 +163,6 @@ class ScanLabel extends Component
                     }
                 }
                 
-            }
             }
             if($existCount>0)
             $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => $existCount==1||count($orders)==$existCount?'Order already exist':$existCount." orders already exist ".(count($orders)-$existCount)." order Checked In"]);
