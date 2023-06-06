@@ -143,11 +143,12 @@
         @if($searchOrder)
             @foreach ($searchOrder as $package)
                 <tr>
-                    <td> 
-                            {{ $package->corrios_tracking_code }}
-                          
-                                {{ $package->us_api_tracking_code }}
-                            
+                    <td>
+                        {{ $package['tracking_code'] }}
+                        @if( $package['us_api_tracking_code'])
+                            <hr>
+                            {{ $package['us_api_tracking_code'] }}
+                        @endif
                     </td>
                     <td>{{ $package->user->pobox_number }}</td>
                     <td>{{ optional(optional($package->driverTracking)->user)->name }}</td>
@@ -176,8 +177,10 @@
                 <tr id="{{ $key }}">
                     <td>
                         {{ $package['tracking_code'] }}
-                        <hr>
-                        {{ $package['us_api_tracking_code'] }}
+                        @if( $package['us_api_tracking_code'])
+                            <hr>
+                            {{ $package['us_api_tracking_code'] }}
+                        @endif
                     </td>
                     <td>
                         {{ $package['pobox'] }}
