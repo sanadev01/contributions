@@ -33,7 +33,6 @@ class CreateRequest extends FormRequest
             'items.*.sh_code' => ($this->order->products->isNotEmpty()) ? 'sometimes' : [
                 'required',
                 'numeric',
-                new NcmValidator($this->shipping_service_id)
             ], 
             'items.*.description' => 'required|max:200', 
             'items.*.quantity' => 'required|gt:0', 
