@@ -32,7 +32,7 @@ class MileExpressLabelRepository
     {
         $this->order->update([
             'api_response' => null,
-            'corrios_tracking_code' => 'HD'.date('d').date('m').$this->order->id.'BR',
+            'corrios_tracking_code' => 'HD'.date('d').date('m').substr(date('s'), 1, 1).$this->order->id.'BR',
         ]); 
         $this->printCN23();        
         return true; 
@@ -48,7 +48,7 @@ class MileExpressLabelRepository
             if(!$this->order->corrios_tracking_code){
                 $this->order->update([
                     'api_response' => null,
-                    'corrios_tracking_code' => 'HD'.date('d').date('m').$this->order->id.'BR',
+                    'corrios_tracking_code' => 'HD'.date('d').date('m').substr(date('s'), 1, 1).$this->order->id.'BR',
                 ]);
             }
             $this->addOrderTracking();
