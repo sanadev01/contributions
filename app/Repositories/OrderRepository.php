@@ -361,11 +361,11 @@ class OrderRepository
             if ($order->products->isEmpty()) {
 
                 $order->items()->delete();
-
+                $gdeService = $order->shippingService->isGDEService();
                 foreach ($request->get('items',[]) as $item) {
 
                     $order->items()->create([
-                        'sh_code' => optional($item)['sh_code'],
+                        'sh_code' => $gdeService? optional($item)['sh_code'] : substr(optional($item)['sh_code'], 0, 6),
                         'description' => optional($item)['description'],
                         'quantity' => optional($item)['quantity'],
                         'value' => optional($item)['value'],

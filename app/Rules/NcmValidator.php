@@ -29,11 +29,8 @@ class NcmValidator implements Rule
      */
     public function passes($attribute, $value)
     {
-        if( $this->service->isGDEService() && strlen($value) != 10 ) {
-            return false;
-        }
-        if( !$this->service->isGDEService() && strlen($value) !=6 ){
-            return false;
+        if( strlen($value) >= 6 ){
+            return true;
         }
         
         $found = ShCode::where('code',$value)->first();
