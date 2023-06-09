@@ -69,7 +69,7 @@ class ScanOrderExport extends AbstractExportService
             $this->setCellValue('N'.$row, optional(optional($order->driverTracking)->created_at)->format('m-d-Y'));
             $this->setCellValue('O'.$row, $order->status < 80 ?'Scanned in the warehouse':'Shipped');
             $this->setCellValue('P'.$row, $order->customer_reference);
-            
+
             $this->count++ ;
             $row++;
         }
@@ -157,6 +157,7 @@ class ScanOrderExport extends AbstractExportService
         
         $this->setColumnWidth('O', 20);
         $this->setCellValue('O7', 'Status');
+
         $this->setColumnWidth('P', 20);
         $this->setCellValue('P7', 'Additional Reference');
 
