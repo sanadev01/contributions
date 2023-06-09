@@ -31,14 +31,10 @@ class SearchShCode extends Component
     public function render()
     {
         $lang = app()->getLocale();
-        $codes = ShCode::orderByRaw("FIELD(description, 
-        (SELECT description FROM sh_codes WHERE description LIKE '%-------$lang%'),
-        description)")
-        ->get(['id', 'code', 'description'])
+        $codes = ShCode::get(['id', 'code', 'description'])
         ->map(function ($shCode) use ($lang) {
             $descriptions = explode('-------', $shCode->description);
             $description = '';
-    
             switch ($lang) {
                 case 'en':
                     $description = $descriptions[0];
