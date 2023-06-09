@@ -70,12 +70,13 @@
         .service-info{
             position: absolute;
             left: 69mm;
-            top:13mm;
+            top:1mm;
         }
         .service-name{
             text-align: center;
             font-weight: bold;
             font-size: 15pt;
+            margin-bottom: 5px;
         }
         /* .contract-code{
             font-size: 8pt;
@@ -375,9 +376,10 @@
         <div class="order-infoline"></div>
         <strong>Service: </strong> {{ $service }} <br>
     </div>
-    <div class="service-info ">
+    <div class="service-info">
         <div class="service-name">
             {!! $packetType !!}
+            <h1>{{ $recipient->country->code }}</h1>
         </div>
         {{-- <div class="contract-code">
             {!! $contractNumber !!}
