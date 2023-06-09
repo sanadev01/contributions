@@ -158,6 +158,9 @@ class ScanOrderExport extends AbstractExportService
         $this->setColumnWidth('O', 20);
         $this->setCellValue('O7', 'Status');
 
+        $this->setColumnWidth('P', 20);
+        $this->setCellValue('P7', 'Additional Reference');
+
         $this->setBackgroundColor('A7:P7', '2b5cab');
         $this->setColor('A7:P7', 'FFFFFF');
         $this->currentRow++;
