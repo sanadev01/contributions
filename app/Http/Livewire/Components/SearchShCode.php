@@ -30,8 +30,34 @@ class SearchShCode extends Component
 
     public function render()
     {
+        $lang = app()->getLocale();
+        $codes = ShCode::orderByRaw("FIELD(description, 
+        (SELECT description FROM sh_codes WHERE description LIKE '%-------$lang%'),
+        description)")
+        ->get(['id', 'code', 'description'])
+        ->map(function ($shCode) use ($lang) {
+            $descriptions = explode('-------', $shCode->description);
+            $description = '';
+    
+            switch ($lang) {
+                case 'en':
+                    $description = $descriptions[0];
+                    break;
+                case 'pt':
+                    $description = $descriptions[1];
+                    break;
+                case 'es':
+                    $description = $descriptions[2];
+                    break;
+                default:
+                    $description = $descriptions[0];
+            }
+            $shCode->description = $description;
+
+            return $shCode;
+        })->sortBy('description')->values();
         return view('livewire.components.search-sh-code',[
-            'codes' => ShCode::orderBy('description','ASC')->get()
+            'codes' => $codes
         ]);
     }
 
