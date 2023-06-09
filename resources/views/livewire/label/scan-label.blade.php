@@ -19,7 +19,7 @@
                 </div>
                 
                 <div class="form-group row col-lg-4 col-md-3 col-sm-3 col-xs-3  pr-2 pl-0" >
-                    @if ($updateReferecene)
+                    @if(count($packagesRows) > 0)
                         <label class="col-3 text-left">@lang('orders.print-label.Additional Reference') </label>
                         <input type="text" class="form-control col-8" wire:model.debounce.500ms="customerReference">
                     @endif
