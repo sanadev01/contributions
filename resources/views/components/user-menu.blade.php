@@ -457,36 +457,36 @@
                     @endadmin
                     </ul>
                 </li>
-                @can('view_calculator')
-                    <li class="nav-item has-sub sidebar-group">
-                        <a href="#">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-divide-square">
-                                <rect x="3" y="3" width="18" height="18" rx="2"
-                                    ry="2"></rect>
-                                <line x1="8" y1="12" x2="16" y2="12"></line>
-                                <line x1="12" y1="16" x2="12" y2="16"></line>
-                                <line x1="12" y1="8" x2="12" y2="8"></line>
-                            </svg>
-                            <span class="menu-title" data-i18n="Dashboard">Calculators</span>
-                        </a>
-                        <ul class="menu-content">
-                            <li class="nav-item {{ $isActive(['calculator.index']) }} ">
-                                <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
-                                    <i class="feather icon-circle"></i>
-                                    <span class="menu-title" data-i18n="Apps">@lang('menu.calculator')</span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ $isActive(['us-calculator.index']) }} ">
-                                <a class="nav-link" href="{{ route('us-calculator.index') }}" target="_blank">
-                                    <i class="feather icon-circle"></i>
-                                    <span class="menu-title" data-i18n="Apps">@lang('menu.uscalculator')</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endcan
+
+                <li class="nav-item has-sub sidebar-group">
+                    <a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-divide-square">
+                            <rect x="3" y="3" width="18" height="18" rx="2"
+                                ry="2"></rect>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                            <line x1="12" y1="16" x2="12" y2="16"></line>
+                            <line x1="12" y1="8" x2="12" y2="8"></line>
+                        </svg>
+                        <span class="menu-title" data-i18n="Dashboard">Calculators</span>
+                    </a>
+                    <ul class="menu-content">
+                        <li class="nav-item {{ $isActive(['calculator.index']) }} ">
+                            <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title" data-i18n="Apps">@lang('menu.calculator')</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ $isActive(['us-calculator.index']) }} ">
+                            <a class="nav-link" href="{{ route('us-calculator.index') }}" target="_blank">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title" data-i18n="Apps">@lang('menu.uscalculator')</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 @can('view',App\Models\OrderTracking::class)
                     <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
                         <a href="{{ route('admin.tracking.index') }}" target="_blank">
