@@ -23,7 +23,6 @@ class ScanLabel extends Component
     public $totalWeight = 0;
     public $totalPieces = 0; 
     public $customerReference = '';
-    public $updateReferecene = false;
     protected $listeners = [
                             'user:updated' => 'getUser',
                             'clear-search' => 'removeUser'
@@ -166,8 +165,7 @@ class ScanLabel extends Component
                 array_push($this->packagesRows, $newRow);
 
                 array_push($this->newOrder,$order);
-                
-                $this->updateReferecene =  $order->us_api_tracking_code?true:false;
+                 
                 if(auth()->user()->isScanner() && $order->trackings->isNotEmpty() && $order->trackings()->latest()->first()->status_code >= Order::STATUS_PAYMENT_DONE && $order->trackings()->latest()->first()->status_code < Order::STATUS_ARRIVE_AT_WAREHOUSE)
                 {                
                     $this->addOrderTracking($order); 
