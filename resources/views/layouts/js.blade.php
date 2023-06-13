@@ -1,12 +1,18 @@
 <!-- BEGIN: Vendor JS-->
 <script src="{{ asset('app-assets/vendors/js/vendors.min.js') }}"></script>
 <!-- BEGIN Vendor JS-->
-
+@php
+    $toasterRoutes = ['admin.orders.index', 'admin.orders.edit', 'admin.orders.show', 'admin.trash-orders.index'];
+@endphp
 <!-- BEGIN: Page Vendor JS-->
 <script src="{{ asset('app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-<script src="{{ asset('app-assets/vendors/js/charts/apexcharts.min.js') }}"></script>
+@if(Route::currentRouteName() === 'home')
+    <script src="{{ asset('app-assets/vendors/js/charts/apexcharts.min.js') }}"></script>
+@endif
 <script src="{{ asset('app-assets/vendors/js/extensions/tether.min.js') }}"></script>
-<script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}"></script>
+@if(in_array(Route::currentRouteName(), $toasterRoutes))
+    <script src="{{ asset('app-assets/vendors/js/extensions/toastr.min.js') }}"></script>
+@endif
 <!-- END: Page Vendor JS-->
 
 <!-- BEGIN: Theme JS-->
