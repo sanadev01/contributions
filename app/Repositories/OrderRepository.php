@@ -361,7 +361,8 @@ class OrderRepository
             if ($order->products->isEmpty()) {
 
                 $order->items()->delete();
-                $gdeService = $order->shippingService->isGDEService();
+                $shippingService = ShippingService::find($request->shipping_service_id); 
+                $gdeService = $shippingService->isGDEService();
                 foreach ($request->get('items',[]) as $item) {
 
                     $order->items()->create([
