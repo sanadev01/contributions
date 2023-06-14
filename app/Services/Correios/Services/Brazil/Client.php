@@ -174,9 +174,12 @@ class Client{
             
               $error = new PackageError($e->getResponse()->getBody()->getContents());
               if($error->getErrors()=="GTW-006: Token inválido."){
-                \Log::info('Correios Token refresh automatically'); 
-               session()->forget('token');
-               return $this->createPackage($order);
+                    \Log::info('Correios Token refresh automatically'); 
+                    session()->forget('token');
+                    Cache::forget('token'); 
+                    session()->forget('anjun_token');
+                    Cache::forget('anjun_token');
+                return $this->createPackage($order);
               }
               return $error;
 
