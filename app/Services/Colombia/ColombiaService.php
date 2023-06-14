@@ -180,7 +180,7 @@ class ColombiaService
                     'placeSenderBe' => $this->setSenderPlace($order),
                     'strAditionalShipping' => '',
                     'strIdentification' => $order->warehouse_number,
-                    'strObservation' => '',
+                    'strObservation' => $order->warehouse_number,
                     'strReference' => ($order->customer_reference) ? $order->customer_reference.' '.$order->user->pobox_number : $order->user->pobox_number,
                 ]
             ],
