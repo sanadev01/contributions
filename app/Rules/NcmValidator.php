@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use App\Models\ShCode;
+use App\Models\ShippingService;
 use Illuminate\Contracts\Validation\Rule;
 
 class NcmValidator implements Rule
@@ -12,9 +13,11 @@ class NcmValidator implements Rule
      *
      * @return void
      */
-    public function __construct()
+    private $service;
+
+    public function __construct($service)
     {
-        //
+        $this->service = ShippingService::find($service);
     }
 
     /**
@@ -26,8 +29,8 @@ class NcmValidator implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ( strlen($value) !=6 ){
-            return false;
+        if( strlen($value) >= 6 ){
+            return true;
         }
         
         $found = ShCode::where('code',$value)->first();

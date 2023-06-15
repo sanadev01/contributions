@@ -22,9 +22,7 @@ class SwedenPostContainerPackageRepository
             $error = 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid';
         }
 
-        if ((!$container->hasSwedenPostService() && $order->shippingService->isSwedenPostService())
-            || ($container->hasSwedenPostService() && !$order->shippingService->isSwedenPostService())
-        ) {
+        if ((!$container->hasSwedenPostService() || !$order->shippingService->isSwedenPostService())){
             $error = 'Order does not belong to this container. Please Check Packet Service';
         }
         if (!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
