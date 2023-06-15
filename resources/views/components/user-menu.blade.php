@@ -693,12 +693,6 @@
                     </a>
                 </li>
             @endcan
-<<<<<<< HEAD
-            
-            <x-shared-menu></x-shared-menu>
-            @endif
-=======
->>>>>>> c228652a3f7c889c4e9fea023a1441558331308e
         </ul>
     </div>
 </div>
