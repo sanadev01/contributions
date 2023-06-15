@@ -87,7 +87,7 @@ return [
             'Contains Perfume' => 'Contains perfume/aerosol/nail polish',
             'Contains Flammable Liquid' => 'Contains Flammable Liquid',
         ],
-        'declaration' => '<h3 class="text-danger">Disclaimer</h3> <br> <p class="h3 text-danger">By clicking on save order you agree that you have read and confirm that all information in this statement has been filled out by me and is correct and I am 100% responsible for the information contained herein.</p>',
+        'declaration' => '<h3 class="text-danger">Disclaimer</h3> <br> <p class="h3 text-black">By clicking on save order you agree that you have read and confirm that all information in this statement has been filled out by me and is correct and I am 100% responsible for the information contained herein.</p>',
         'Warning Message' => 'Please do not include other goods within the same box containing books, newspapers and magazines or taxes will be applied to those additional items. These products must be the sole items with the box to obtain the tax exemption (i.e. books, newspapers and magazines).',
         'Parcel Rate' => 'Parcel Rate',
         'Charge-msg1' => 'You will be charged',

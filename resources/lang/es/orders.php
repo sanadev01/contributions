@@ -79,7 +79,7 @@ return [
             'Contains Perfume' => 'Contiene perfume / aerosol / esmalte de uñas',
             'Contains Flammable Liquid' => 'Contiene líquido inflamable',
         ],
-        'declaration' => '<h3 class="text-danger">Descargo de responsabilidad</h3> <br> <p class="h3 text-danger">Al hacer clic en guardar pedido, acepta que ha leído y confirma que toda la información de esta declaración ha sido completada por mí y es correcta y soy 100% responsable de la información contenida en este documento.</p>',
+        'declaration' => '<h3 class="text-danger">Descargo de responsabilidad</h3> <br> <p class="h3 text-black">Al hacer clic en guardar pedido, acepta que ha leído y confirma que toda la información de esta declaración ha sido completada por mí y es correcta y soy 100% responsable de la información contenida en este documento.</p>',
         'Parcel Rate' => 'Tarifa de paquetería',
         'Charge-msg1' => 'Se le cobrará',
         'Charge-msg2' => 'para su paquete',
