@@ -174,15 +174,9 @@ class Client{
             
               $error = new PackageError($e->getResponse()->getBody()->getContents());
               if($error->getErrors()=="GTW-006: Token inválido."){
-                if($order->shippingService->isAnjunService()){
-                    \Log::info('Anjun Token refresh automatically'); 
-                    session()->forget('anjun_token');
+                    \Log::info('Token refresh automatically'); 
                     Cache::forget('anjun_token');
-                }else{
-                    \Log::info('Correios Token refresh automatically'); 
-                    session()->forget('token');
-                    Cache::forget('token'); 
-                } 
+                    Cache::forget('token');
                 return $this->createPackage($order);
               }
               return $error;
