@@ -169,7 +169,15 @@ class Client{
             }
             return null;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
-            return new PackageError($e->getResponse()->getBody()->getContents());
+            
+            $error = new PackageError($e->getResponse()->getBody()->getContents());
+            if($error->getErrors()=="GTW-006: Token inválido."){
+                  \Log::info('Token refresh automatically'); 
+                  Cache::forget('anjun_token');
+                  Cache::forget('token');
+              return $this->createPackage($order);
+            }
+            return $error;
         }
         catch (\Exception $exception){
             return new PackageError($exception->getMessage());
