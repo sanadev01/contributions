@@ -5,10 +5,10 @@ namespace App\Services\Colombia;
 use Exception;
 use App\Models\Region;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
-use Illuminate\Support\Facades\Log;
 
 class ColombiaService
 {
@@ -180,7 +180,7 @@ class ColombiaService
                     'placeSenderBe' => $this->setSenderPlace($order),
                     'strAditionalShipping' => '',
                     'strIdentification' => $order->warehouse_number,
-                    'strObservation' => $order->warehouse_number,
+                    'strObservation' => $order->warehouse_number.' '.implode(", ", $order->items()->pluck('description')->toArray()),
                     'strReference' => ($order->customer_reference) ? $order->customer_reference.' '.$order->user->pobox_number : $order->user->pobox_number,
                 ]
             ],
