@@ -3,6 +3,10 @@
 <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/hd-label-logo.png') }}">
 {{-- <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600" rel="stylesheet"> --}}
 
+@php
+    $invoiceRoutes = ['admin.payment-invoices.index', 'admin.payment-invoices.invoice.index', 'admin.payment-invoices.invoice.edit', 'admin.payment-invoices.invoice.checkout.index'];
+    $toasterRoutes = ['admin.orders.index', 'admin.orders.edit', 'admin.orders.show', 'admin.trash-orders.index'];
+@endphp
 <!-- BEGIN: Vendor CSS-->
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/vendors.min.css') }}">
 {{-- <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/charts/apexcharts.css') }}"> --}}
@@ -16,25 +20,30 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/bootstrap-extended.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/colors.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/components.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/themes/dark-layout.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/themes/semi-dark-layout.css') }}">
+<!-- <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/themes/dark-layout.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/themes/semi-dark-layout.css') }}"> -->
 
 {{-- Toggleable Css --}}
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/menu/menu-types/vertical-menu.css') }}">
 
-
-<!-- BEGIN: Page CSS-->
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/colors/palette-gradient.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/dashboard-analytics.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/card-analytics.css') }}">
+@if(Route::currentRouteName() === 'admin.home')
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/colors/palette-gradient.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/dashboard-analytics.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/card-analytics.css') }}">
+@endif
 <!-- END: Page CSS-->
-<link href="{{ asset('app-assets/vendors/css/tables/datatable/datatables.min.css') }}" rel="stylesheet">
+{{-- <link href="{{ asset('app-assets/vendors/css/tables/datatable/datatables.min.css') }}" rel="stylesheet"> --}}
+@if(in_array(Route::currentRouteName(), $invoiceRoutes))
+    <link rel="stylesheet" href="{{ asset('app-assets/css/pages/invoice.css') }}">
+@endif
 
-<link rel="stylesheet" href="{{ asset('app-assets/css/pages/invoice.css') }}">
 <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/pickadate/pickadate.css') }}">
+@if(in_array(Route::currentRouteName(), $toasterRoutes))
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.css') }}">
+@endif
+{{-- <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/pickadate/pickadate.css') }}"> --}}
 
 <style>
     .body {
