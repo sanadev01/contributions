@@ -10,10 +10,9 @@ use App\Services\Excel\Import\ShcodeImportService;
 class ShcodeRepository
 {
     public function get()
-    {   
-        $shCode = ShCode::orderBy('description','ASC')->get();
+    {
+        $shCode = ShCode::orderByRaw('CHAR_LENGTH(code)')->orderBy('description','ASC')->get();
         return $shCode;
-
     }
 
     public function store(Request $request)
