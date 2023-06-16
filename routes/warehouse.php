@@ -51,6 +51,10 @@ use App\Http\Controllers\Warehouse\PostPlusUnitRegisterController;
 use App\Http\Controllers\Warehouse\PostPlusCN35DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusCN38DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusManifestDownloadController;
+use App\Http\Controllers\Warehouse\HDExpressContainerController;
+use App\Http\Controllers\Warehouse\HDExpressUnitRegisterController;
+use App\Http\Controllers\Warehouse\HDExpressContainerPackageController;
+
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Export\OrderExportTemp;
 use Illuminate\Support\Facades\Auth;
@@ -132,6 +136,11 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('postplus_container/{container}/download/', PostPlusCN35DownloadController::class)->name('postplus_container.download');
     Route::get('postplus/{delivery_bill}/cn38', PostPlusCN38DownloadController::class)->name('postplus.cn38.download');
     Route::get('postplus/{delivery_bill}/manifest', PostPlusManifestDownloadController::class)->name('postplus.manifest.download');
+
+    // Routes for HD Express container
+    Route::resource('hd-express-containers', HDExpressContainerController::class);
+    Route::get('hd-express-container/{container}/packages', HDExpressContainerPackageController::class)->name('hd-express-container.packages');
+    Route::get('hd-express-container/{container}/register', HDExpressUnitRegisterController::class)->name('hd-express-container.register');
 });
 
 

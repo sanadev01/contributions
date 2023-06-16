@@ -46,9 +46,9 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->isPostPlusService()) {
                 return $this->postPlusLabel();
             }
-            // if ($this->order->shippingService->is_milli_express) {
-            //     return $this->mileExpressLabel();
-            // }
+            if ($this->order->shippingService->is_hd_express) {
+                return $this->hdExpressLabel();
+            }
         }
         if ($this->order->recipient->country_id == Order::CHILE) {
 
@@ -94,12 +94,12 @@ class HandleCorreiosLabelsRepository
     //     return $this->renderLabel($this->request, $this->order, $colombiaLabelRepository->getError());
     // }
 
-    // public function mileExpressLabel()
-    // {
-    //     $mileExpressLabelRepository = new MileExpressLabelRepository();
-    //     $mileExpressLabelRepository->run($this->order,$this->update); 
-    //     return $this->renderLabel($this->request, $this->order, $mileExpressLabelRepository->getError());
-    // }
+    public function hdExpressLabel()
+    {
+        $hdExpressLabelRepository = new HDExpressLabelRepository();
+        $hdExpressLabelRepository->run($this->order,$this->update); 
+        return $this->renderLabel($this->request, $this->order, $hdExpressLabelRepository->getError());
+    }
 
     // public function postNLLabel()
     // {

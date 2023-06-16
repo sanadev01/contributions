@@ -42,6 +42,7 @@ class ShippingService extends Model
     const Post_Plus_Prime = 777;
     const Post_Plus_Premium = 778;
     const Prime5RIO = 357;
+    const HD_Express = 33173;
 
 
     protected $guarded = [];
@@ -233,9 +234,15 @@ class ShippingService extends Model
             self::Parcel_Post,
         ];
     }
-    public function getIsMilliExpressAttribute()
+
+    public function isHDExpressService()
+    {
+        return $this->service_sub_class == ShippingService::HD_Express;
+    }
+
+    public function getIsHDExpressAttribute()
     { 
-        return $this->service_sub_class == ShippingService::Mile_Express;
+        return $this->service_sub_class == ShippingService::HD_Express;
     }
     public function getIsUspsPriorityAttribute()
     { 
