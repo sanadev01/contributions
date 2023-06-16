@@ -110,9 +110,13 @@ class OrderStatusController extends Controller
                     $order->update([
                         'status' => $request->status,
                         'is_paid' => false
-                    ]);
+                    ]); 
                     //SendOrderMailNotification 
-                    $this->sendTransactionMail($order, $preStatus, $user);
+                    try {
+                        \Mail::send(new OrderNotification($order, $preStatus, $user));
+                    } catch (\Exception $ex) {
+                        \Log::info('Order notification email send error: ' . $ex->getMessage());
+                    }
                 }
                 return $this->commit();
 
@@ -141,7 +145,7 @@ class OrderStatusController extends Controller
         try {
             \Mail::send(new NotifyTransaction($deposit, $preStatus, $user));
         } catch (\Exception $ex) {
-            \Log::info('Notify Transaction email send error: ' . $ex->getMessage());
+            \Log::info('Order status Notify Transaction email send error: ' . $ex->getMessage());
         }
     }
 }

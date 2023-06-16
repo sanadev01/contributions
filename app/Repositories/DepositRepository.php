@@ -354,7 +354,7 @@ class DepositRepository
         try {
             \Mail::send(new NotifyTransaction($deposit, null, $user));
         } catch (\Exception $ex) {
-            \Log::info('Notify Transaction email send error: '.$ex->getMessage());
+            \Log::info('Deposite Notify Transaction email send error: '.$ex->getMessage());
         }
     }
     
