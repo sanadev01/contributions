@@ -20,7 +20,7 @@ class SearchShCode extends Component
         $this->name = $name;
         
         if ( $code ){
-            $shCode = ShCode::where('code',$code)->first();
+            $shCode = ShCode::where('code','LIKE', "{$code}%")->first();
         }
         if ($order && $order->products->isNotEmpty()) {
             $this->orderInventory = true;
