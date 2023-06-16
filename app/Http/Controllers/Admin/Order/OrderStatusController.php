@@ -111,8 +111,6 @@ class OrderStatusController extends Controller
                         'status' => $request->status,
                         'is_paid' => false
                     ]);
-                    //SendOrderMailNotification 
-                    // $this->sendTransactionMail($order, $preStatus, $user);
                 }
                 return $this->commit();
 
