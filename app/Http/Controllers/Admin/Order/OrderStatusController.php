@@ -110,7 +110,13 @@ class OrderStatusController extends Controller
                     $order->update([
                         'status' => $request->status,
                         'is_paid' => false
-                    ]);
+                    ]); 
+                    //SendOrderMailNotification 
+                    try {
+                        \Mail::send(new OrderNotification($order, $preStatus, $user));
+                    } catch (\Exception $ex) {
+                        \Log::info('Order notification email send error: ' . $ex->getMessage());
+                    }
                 }
                 return $this->commit();
 
