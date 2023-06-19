@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Warehouse\ContainerRepository;
-use App\Http\Requests\Warehouse\Container\CreateContainerRequest;
-use App\Http\Requests\Warehouse\Container\UpdateContainerRequest;
 use App\Models\Warehouse\Container;
+use App\Repositories\Warehouse\HDExpressContainerRepository;
+use App\Http\Requests\Warehouse\HDExpressContainer\CreateContainerRequest;
+use App\Http\Requests\Warehouse\HDExpressContainer\UpdateContainerRequest;
 
 class HDExpressContainerController extends Controller
 {
@@ -15,13 +15,14 @@ class HDExpressContainerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(HDExpressContainerRepository $hdExpressContainerRepository)
     {
         if (!auth()->user()->isAdmin()) {
             abort(403);
         }
+        $containers = $hdExpressContainerRepository->get();
 
-        return view('admin.warehouse.hdExpressContainer.index');
+        return view('admin.warehouse.hdExpressContainers.index', compact('containers'));
     }
 
     /**
@@ -35,7 +36,7 @@ class HDExpressContainerController extends Controller
             abort(403);
         }
 
-        return view('admin.warehouse.mileExpressContainer.create');
+        return view('admin.warehouse.hdExpressContainers.create');
     }
 
     /**
@@ -44,17 +45,17 @@ class HDExpressContainerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateContainerRequest $request, ContainerRepository $containerRepository)
+    public function store(CreateContainerRequest $request, HDExpressContainerRepository $hdExpressContainerRepository)
     {
         if (!auth()->user()->isAdmin()) {
             abort(403);
         }
-        if ($containerRepository->store($request) ){
+        if ($hdExpressContainerRepository->store($request) ){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
-            return redirect()->route('warehouse.mile-express-containers.index');
+            return redirect()->route('warehouse.hd-express-containers.index');
         }
 
-        session()->flash('alert-danger', $containerRepository->getError());
+        session()->flash('alert-danger', $hdExpressContainerRepository->getError());
         return back()->withInput();
     }
 
@@ -64,18 +65,18 @@ class HDExpressContainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Container $mile_express_container)
+    public function edit(Container $hd_express_container)
     {
         if (!auth()->user()->isAdmin()) {
             abort(403);
         }
 
-        if ($mile_express_container->isRegistered()) {
+        if ($hd_express_container->isRegistered()) {
             return back();
         }
         
-        return view('admin.warehouse.mileExpressContainer.edit')->with([
-            'container' => $mile_express_container
+        return view('admin.warehouse.hdExpressContainers.edit')->with([
+            'container' => $hd_express_container
         ]);
     }
 
@@ -86,17 +87,17 @@ class HDExpressContainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateContainerRequest $request, Container $mile_express_container, ContainerRepository $containerRepository)
+    public function update(UpdateContainerRequest $request, Container $hd_express_container, HDExpressContainerRepository $hdExpressContainerRepository)
     {
-        if ($mile_express_container->isRegistered()) {
+        if ($hd_express_container->isRegistered()) {
             return back();
         }
-        if ( $containerRepository->update($mile_express_container, $request) ){
+        if ( $hdExpressContainerRepository->update($hd_express_container, $request) ){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
-            return redirect()->route('warehouse.mile-express-containers.index');
+            return redirect()->route('warehouse.hd-express-containers.index');
         }
 
-        session()->flash('alert-danger', $containerRepository->getError());
+        session()->flash('alert-danger', $hdExpressContainerRepository->getError());
         return back()->withInput();
     }
 
@@ -106,22 +107,22 @@ class HDExpressContainerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Container $mile_express_container, ContainerRepository $containerRepository)
+    public function destroy(Container $hd_express_container, HDExpressContainerRepository $hdExpressContainerRepository)
     {
         if (!auth()->user()->isAdmin()) {
             abort(403);
         }
 
-        if ($mile_express_container->isRegistered()) {
+        if ($hd_express_container->isRegistered()) {
             return back();
         }
         
-        if ($containerRepository->delete($mile_express_container) ){
+        if ($hdExpressContainerRepository->delete($hd_express_container) ){
             session()->flash('alert-success', 'Container Deleted');
-            return redirect()->route('warehouse.colombia-containers.index');
+            return redirect()->route('warehouse.hd-express-containers.index');
         }
 
-        session()->flash('alert-danger', $containerRepository->getError());
+        session()->flash('alert-danger', $hdExpressContainerRepository->getError());
         return back();
     }
 }

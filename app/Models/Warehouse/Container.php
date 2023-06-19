@@ -90,6 +90,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Post Plus';
         }elseif($this->services_subclass_code == '357'){
             return 'Prime5RIO';
+        }
+        elseif($this->services_subclass_code == ShippingService::HD_Express){
+            return 'HD Express';
         }else {
             return 'FirstClass';
         }
@@ -126,6 +129,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif($this->services_subclass_code == '734'){
             return 13;
+        }
+        elseif($this->services_subclass_code == ShippingService::HD_Express){
+            return 14;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -207,5 +213,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasPostPlusService()
     {
         return $this->services_subclass_code == ShippingService::Post_Plus_Registered || $this->services_subclass_code == ShippingService::Post_Plus_EMS || $this->services_subclass_code == ShippingService::Post_Plus_Prime || $this->services_subclass_code == ShippingService::Post_Plus_Premium;
+    }
+
+    public function hasHDExpressService()
+    {
+        return $this->services_subclass_code == ShippingService::HD_Express;
     }
 }

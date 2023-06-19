@@ -19,7 +19,7 @@
                 Shows the sinerlog label
              -->
              @if ($order->sinerlog_tran_id != '')
-            <iframe src="{{$renderLabel}}" style="width:100%; height:700px;" frameborder="0">
+            <iframe src="@isset($renderLabel) {{$renderLabel}} @endisset" style="width:100%; height:700px;" frameborder="0">
                 
             </iframe>
             @else

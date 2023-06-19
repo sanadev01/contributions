@@ -57,6 +57,7 @@ return [
         'GePS' => 'GePS',
         'Prime5' => 'Prime5',
         'PostPlus' => 'Post Plus',
+        'HD Express' => 'HD Express',
         // 'Sinerlog' => 'Sinerlog',
     ],
     'Affiliate' => [

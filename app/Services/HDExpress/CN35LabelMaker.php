@@ -27,7 +27,7 @@ class CN35LabelMaker implements HasLableExport
 
     public function __construct(Container $container)
     {
-        $this->companyName = '<img src="'.public_path('images/hd-1cm.png').'" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
+        $this->companyName = '';
         $this->packetType = 'PACKET STANDARD';
         $this->officeAddress = '';
         $this->serialNumber = 1;
@@ -56,11 +56,8 @@ class CN35LabelMaker implements HasLableExport
     public function setService(int $service)
     {
         $this->service = $service; 
-
-        if ( $this->service == 15 ){
-            $this->packetType = 'Homedelivebr Express';
-            $this->companyName = 'HD Express';
-        }
+        $this->packetType = 'Homedeliverybr Express';
+        $this->companyName = 'HD Express';
 
         return $this;
     }
@@ -133,17 +130,17 @@ class CN35LabelMaker implements HasLableExport
 
     public function render()
     {
-        return view('labels.milli-express.cn35.index',$this->getViewData());
+        return view('labels.hd-express.cn35.index',$this->getViewData());
     }
 
     public function download()
     {
-        return \PDF::loadView('labels.milli-express.cn35.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.hd-express.cn35.index',$this->getViewData())->stream();
     }
 
     public function saveAs($path)
     {
-        return \PDF::loadView('labels.milli-express.cn35.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.hd-express.cn35.index',$this->getViewData())->save($path);
     }
 
     private function getViewData()

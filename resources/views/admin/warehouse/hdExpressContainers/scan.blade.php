@@ -11,16 +11,23 @@
                         </h4>
                         <div>
                             <a href="{{ route('warehouse.hd-express-containers.index') }}" class="btn btn-primary"> @lang('warehouse.containers.List Containers') </a>
-                            <!-- <a href="{{ route('warehouse.usps-container.manifest',$container) }}" class="btn btn-success"> <i class="fa fa-arrow-down"></i> Download </a> -->
                         </div>
                     </div>
                     <div class="card-content card-body">
                         <div class="mt-1">
-                            <livewire:h-d-express.container :container="$container" :ordersCollection="$ordersCollection" :editMode="$editMode">
+                            <livewire:hd-container.packages :id="$container->id" :editMode="$editMode">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+@endsection
+@section('js')
+<script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
+<script>
+    window.addEventListener('scan-focus', event => {
+        $("#scan").focus();
+    });
+</script>
 @endsection

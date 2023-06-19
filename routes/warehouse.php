@@ -53,6 +53,7 @@ use App\Http\Controllers\Warehouse\PostPlusCN38DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusManifestDownloadController;
 use App\Http\Controllers\Warehouse\HDExpressContainerController;
 use App\Http\Controllers\Warehouse\HDExpressUnitRegisterController;
+use App\Http\Controllers\Warehouse\HDExpressCN35DownloadController;
 use App\Http\Controllers\Warehouse\HDExpressContainerPackageController;
 
 use App\Models\Warehouse\Container;
@@ -139,8 +140,9 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
 
     // Routes for HD Express container
     Route::resource('hd-express-containers', HDExpressContainerController::class);
-    Route::get('hd-express-container/{container}/packages', HDExpressContainerPackageController::class)->name('hd-express-container.packages');
+    Route::resource('hd-express-container.packages', HDExpressContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('hd-express-container/{container}/register', HDExpressUnitRegisterController::class)->name('hd-express-container.register');
+    Route::get('hd-express-container/{container}/download', HDExpressCN35DownloadController::class)->name('hd-express-container.download');
 });
 
 
