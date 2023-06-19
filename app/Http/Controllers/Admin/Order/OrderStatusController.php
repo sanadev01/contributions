@@ -114,14 +114,11 @@ class OrderStatusController extends Controller
                    $this->sendOrderStatusMail($order, $preStatus, $user);
                    return $this->commit();
                 }
-                return $this->rollback("Unable to change");              
-
+                return $this->rollback("Order status can not be change.");
             }
-            return $this->rollback("Unable to change");        
-
+            return $this->rollback("Order status can not be change.");        
         } catch (Exception $e) {
             return $this->rollback($e->getMessage());
-
         }
     }
     public function commit()
