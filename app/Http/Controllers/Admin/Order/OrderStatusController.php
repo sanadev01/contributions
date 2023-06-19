@@ -51,9 +51,8 @@ class OrderStatusController extends Controller
                         'is_credit' => true,
                     ]);
 
-                    if ($order) {
-                        $order->deposits()->sync($deposit->id);
-                    }
+                    $order->deposits()->sync($deposit->id);
+                    
                     $order->update([
                         'status'  => $request->status,
                         'is_paid' => false
