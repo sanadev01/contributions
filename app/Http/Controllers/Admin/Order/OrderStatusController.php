@@ -97,6 +97,7 @@ class OrderStatusController extends Controller
                     $order->update([
                         'status' => $request->status,
                     ]);
+                   $this->sendOrderStatusMail($order, $preStatus, $user);
                     return $this->commit();
                 }
                 // optional($order->affiliateSale)->delete();
@@ -110,17 +111,13 @@ class OrderStatusController extends Controller
                         'status' => $request->status,
                         'is_paid' => false
                     ]); 
-                    //SendOrderMailNotification 
-                    try {
-                        \Mail::send(new OrderNotification($order, $preStatus, $user));
-                    } catch (\Exception $ex) {
-                        \Log::info('Order notification email send error: ' . $ex->getMessage());
-                    }
+                   $this->sendOrderStatusMail($order, $preStatus, $user);
                 }
-                return $this->commit();
+                return $this->rollback("Unable to change");
+                
 
             }
-            return $this->rollback("Unhandle status selected");
+            return $this->rollback("Unable to change");        
 
         } catch (Exception $e) {
             return $this->rollback($e->getMessage());
@@ -139,6 +136,16 @@ class OrderStatusController extends Controller
         return apiResponse(false, $message);
     }
 
+    public function sendOrderStatusMail($order, $preStatus, $user)
+    {
+         //SendOrderMailNotification 
+         try {
+            \Mail::send(new OrderNotification($order, $preStatus, $user));
+        } catch (\Exception $ex) {
+            \Log::info('Order notification email send error: ' . $ex->getMessage());
+        }
+        # code...
+    }
     private function sendTransactionMail($deposit, $preStatus, $user)
     {
         try {
