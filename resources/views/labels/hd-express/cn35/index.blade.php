@@ -7,7 +7,7 @@
     <title>Document</title>
     <style>
         @page {
-            size: 22cm 11cm;
+            size: 21.7cm 10.5cm;
             margin: 0px;
             padding: 0px;
         }
