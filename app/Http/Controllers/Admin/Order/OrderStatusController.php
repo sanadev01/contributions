@@ -112,9 +112,9 @@ class OrderStatusController extends Controller
                         'is_paid' => false
                     ]); 
                    $this->sendOrderStatusMail($order, $preStatus, $user);
+                   return $this->commit();
                 }
-                return $this->rollback("Unable to change");
-                
+                return $this->rollback("Unable to change");              
 
             }
             return $this->rollback("Unable to change");        
