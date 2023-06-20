@@ -173,7 +173,7 @@ class Client{
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             
               $error = new PackageError($e->getResponse()->getBody()->getContents());
-              if($error->getErrors()=="GTW-006: Token inválido."){
+              if($error->getErrors()=="GTW-006: Token inválido." || $error->getErrors()=="GTW-007: Token expirado."){
                     \Log::info('Token refresh automatically'); 
                     Cache::forget('anjun_token');
                     Cache::forget('token');
