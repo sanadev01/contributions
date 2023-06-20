@@ -496,7 +496,7 @@ class Order extends Model implements Package
         ]);
     }
 
-    public function getTempWhrNumber()
+    public function getTempWhrNumber($api=false)
     {
         $tempWhr =  $this->change_id;        
         switch(strlen($tempWhr)){
@@ -516,7 +516,7 @@ class Order extends Model implements Package
                                 $tempWhr = (str_pad($tempWhr, 10, '3', STR_PAD_LEFT));
                                 break;
         }
-        return "HD{$tempWhr}".(optional($this->recipient)->country->code??"BR");
+        return ($api?'TM':'HD')."{$tempWhr}".(optional($this->recipient)->country->code??"BR");
     }
 
     public function doCalculations($onVolumetricWeight=true)
