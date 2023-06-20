@@ -493,7 +493,7 @@ class Order extends Model implements Package
         ]);
     }
 
-    public function getTempWhrNumber($api=false)
+    public function getTempWhrNumber($api)
     {
         $tempWhr =  $this->change_id;        
         switch(strlen($tempWhr)){
