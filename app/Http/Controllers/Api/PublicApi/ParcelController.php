@@ -257,7 +257,7 @@ class ParcelController extends Controller
             });
 
             $order->update([
-                'warehouse_number' => "TEMP-{$order->change_id}",
+                'warehouse_number' => $order->getTempWhrNumber(true),
                 "order_value" => $orderValue,
                 'shipping_service_name' => $order->shippingService->name
             ]);
