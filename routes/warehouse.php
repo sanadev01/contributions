@@ -51,6 +51,13 @@ use App\Http\Controllers\Warehouse\PostPlusUnitRegisterController;
 use App\Http\Controllers\Warehouse\PostPlusCN35DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusCN38DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusManifestDownloadController;
+use App\Http\Controllers\Warehouse\GSSContainerController;
+use App\Http\Controllers\Warehouse\GSSContainerPackageController;
+use App\Http\Controllers\Warehouse\GSSUnitRegisterController;
+use App\Http\Controllers\Warehouse\GSSCN35DownloadController;
+use App\Http\Controllers\Warehouse\GSSCN38DownloadController;
+use App\Http\Controllers\Warehouse\GSSManifestDownloadController;
+use App\Http\Controllers\Warehouse\GSSReportsDownloadController;
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Export\OrderExportTemp;
 use Illuminate\Support\Facades\Auth;
@@ -132,6 +139,15 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('postplus_container/{container}/download/', PostPlusCN35DownloadController::class)->name('postplus_container.download');
     Route::get('postplus/{delivery_bill}/cn38', PostPlusCN38DownloadController::class)->name('postplus.cn38.download');
     Route::get('postplus/{delivery_bill}/manifest', PostPlusManifestDownloadController::class)->name('postplus.manifest.download');
+
+    // Routes for GSS Container
+    Route::resource('gss_containers', GSSContainerController::class);
+    Route::resource('gss_container.packages', GSSContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('gss_container/{container}/register', GSSUnitRegisterController::class)->name('gss_container.register');
+    Route::get('gss_container/{container}/download/', GSSCN35DownloadController::class)->name('gss_container.download');
+    Route::get('gss/{delivery_bill}/cn38', GSSCN38DownloadController::class)->name('gss_container.cn38.download');
+    Route::get('gss/{delivery_bill}/manifest', GSSManifestDownloadController::class)->name('gss_container.manifest.download');
+    Route::get('gss/{reports}/manifest/{dispatch}', GSSReportsDownloadController::class)->name('gss_container.reports.download');
 });
 
 
