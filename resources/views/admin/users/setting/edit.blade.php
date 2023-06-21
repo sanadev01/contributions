@@ -320,6 +320,23 @@
                                     </div>
                                 </div>
                                 @endif
+                                @if(setting('GSS_IPA', null, \App\Models\User::ROLE_ADMIN))
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">GSS<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="GSS IPA">
+                                                <input type="checkbox" name="GSS_IPA" id="GSS_IPA" @if(setting('GSS_IPA', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
                                 {{-- <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Stripe<span class="text-danger"></span></label>
                                     <div class="col-md-6">

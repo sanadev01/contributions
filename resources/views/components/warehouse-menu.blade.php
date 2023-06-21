@@ -72,6 +72,12 @@
                             <span class="menu-title">@lang('menu.Warehouse.PostPlus')</span>
                         </a>
                     </li>
+                    <li class="{{ $isActive(['warehouse.gss_containers.index','warehouse.gss_containers.create','warehouse.gss_containers.edit','warehouse.gss_container.packages.index']) }}">
+                        <a href="{{ route('warehouse.gss_containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">GSS</span>
+                        </a>
+                    </li>
                     <li class="{{ $isActive(['warehouse.hd-express-containers.index','warehouse.hd-express-containers.create','warehouse.hd-express-containers.edit','warehouse.hd-express-containers.packages.index']) }}">
                         <a href="{{ route('warehouse.hd-express-containers.index') }}">
                             <i class="feather icon-circle"></i>

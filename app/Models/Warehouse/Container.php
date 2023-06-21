@@ -90,8 +90,15 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Post Plus';
         }elseif($this->services_subclass_code == '357'){
             return 'Prime5RIO';
-        }
-        elseif($this->services_subclass_code == ShippingService::HD_Express){
+        }elseif($this->services_subclass_code == ShippingService::GSS_IPA){
+            return 'International Priority Airmail';
+        }elseif($this->services_subclass_code == ShippingService::GSS_EPMEI){
+            return 'Pre-Sort Drop Shipment';
+        }elseif($this->services_subclass_code == ShippingService::GSS_EPMI){
+            return 'Pre-Sort Priority Mail International';
+        }elseif($this->services_subclass_code == ShippingService::GSS_EFCM){
+            return 'Pre-Sort First Class International';
+        }elseif($this->services_subclass_code == ShippingService::HD_Express){
             return 'HD Express';
         }else {
             return 'FirstClass';
@@ -213,6 +220,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasPostPlusService()
     {
         return $this->services_subclass_code == ShippingService::Post_Plus_Registered || $this->services_subclass_code == ShippingService::Post_Plus_EMS || $this->services_subclass_code == ShippingService::Post_Plus_Prime || $this->services_subclass_code == ShippingService::Post_Plus_Premium;
+    }
+
+    public function hasGSSService()
+    {
+        return $this->services_subclass_code == ShippingService::GSS_IPA || $this->services_subclass_code == ShippingService::GSS_EPMEI || $this->services_subclass_code == ShippingService::GSS_EPMI || $this->services_subclass_code == ShippingService::GSS_EFCM;
     }
 
     public function hasHDExpressService()

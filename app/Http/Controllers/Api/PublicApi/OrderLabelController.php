@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\PostPlusLabelRepository;
+use App\Repositories\GSSLabelRepository;
 use App\Repositories\HDExpressLabelRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -123,6 +124,14 @@ class OrderLabelController extends Controller
                     $postPlusLabelRepository = new PostPlusLabelRepository();
                     $postPlusLabelRepository->get($order);
                     $error = $postPlusLabelRepository->getError();
+                    if ($error){
+                        return $this->rollback($error);
+                    }
+                }
+                if ($order->shippingService->isGSSService()) {
+                    $gssLabelRepository = new GSSLabelRepository();
+                    $gssLabelRepository->get($order);
+                    $error = $gssLabelRepository->getError();
                     if ($error){
                         return $this->rollback($error);
                     }

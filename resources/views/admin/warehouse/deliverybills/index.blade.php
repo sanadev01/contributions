@@ -110,6 +110,8 @@
                                                     <span class="badge badge-info text-white">D</span>
                                                 @elseif($deliveryBill->isPostPlus())
                                                 <span class="badge badge-warning text-black">P</span>
+                                                @elseif($deliveryBill->isGSS())
+                                                <span class="badge badge-secondary text-black">GSS</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif
@@ -144,11 +146,13 @@
                                                         <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                             <i class="fa fa-cloud-download"></i> Download Manifest By Service
                                                         </a>
-                                                        <!-- @if($deliveryBill->isRegistered() && $deliveryBill->isPostPlus())
-                                                            <a href="{{ route('warehouse.postplus.manifest.download',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-cloud-download"></i> Download PostPlus Manifest
-                                                            </a>
-                                                        @endif -->
+                                                        @if($deliveryBill->isRegistered() && $deliveryBill->isGSS())
+                                                            @foreach (json_decode($deliveryBill->containers[0]->unit_response_list)->manifest->reports as $report)
+                                                                <a href="{{ route('warehouse.gss_container.reports.download',[explode(',', $report)[0], json_decode($deliveryBill->containers[0]->unit_response_list)->dispatchID]) }}" class="dropdown-item w-100">
+                                                                    <i class="fa fa-cloud-download"></i> {{ explode(',', $report)[0] }}
+                                                                </a>
+                                                            @endforeach
+                                                        @endif
 
                                                         <a href="{{ route('warehouse.audit-report.show',$deliveryBill) }}" class="dropdown-item w-100">
                                                             <i class="fa fa-cloud-download"></i> Audit Report
