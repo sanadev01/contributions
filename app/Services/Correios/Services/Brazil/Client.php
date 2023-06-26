@@ -172,14 +172,18 @@ class Client{
             return null;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             
-              $error = new PackageError($e->getResponse()->getBody()->getContents());
-              if($error->getErrors()=="GTW-006: Token inválido." || $error->getErrors()=="GTW-007: Token expirado."){
-                    \Log::info('Token refresh automatically'); 
-                    Cache::forget('anjun_token');
-                    Cache::forget('token');
-                return $this->createPackage($order);
-              }
-              return $error;
+            $responseError = $e->getResponse()->getBody()->getContents();
+            $errorCopy = new PackageError($responseError);
+            $errorMessage = $errorCopy->getErrors();
+            if($errorMessage=="GTW-006: Token inválido." || $errorMessage=="GTW-007: Token expirado."){
+                \Log::info('Token refresh automatically'); 
+                Cache::forget('anjun_token');
+                Cache::forget('token');
+            return $this->createPackage($order);
+            }
+
+            $error = new PackageError($responseError);
+            return $error;
 
         }
         catch (\Exception $exception){
