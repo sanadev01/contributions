@@ -94,6 +94,14 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'GDE Priority Mail';
         }elseif($this->services_subclass_code == ShippingService::GDE_FIRST_CLASS){
             return 'GDE First Class';
+        }elseif($this->services_subclass_code == ShippingService::GSS_IPA){
+            return 'International Priority Airmail';
+        }elseif($this->services_subclass_code == ShippingService::GSS_EPMEI){
+            return 'Pre-Sort Drop Shipment';
+        }elseif($this->services_subclass_code == ShippingService::GSS_EPMI){
+            return 'Pre-Sort Priority Mail International';
+        }elseif($this->services_subclass_code == ShippingService::GSS_EFCM){
+            return 'Pre-Sort First Class International';
         }else {
             return 'FirstClass';
         }
@@ -222,5 +230,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasGDEService()
     {
         return $this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL || $this->services_subclass_code == ShippingService::GDE_FIRST_CLASS;
+    }
+
+    public function hasGSSService()
+    {
+        return $this->services_subclass_code == ShippingService::GSS_IPA || $this->services_subclass_code == ShippingService::GSS_EPMEI || $this->services_subclass_code == ShippingService::GSS_EPMI || $this->services_subclass_code == ShippingService::GSS_EFCM;
     }
 }

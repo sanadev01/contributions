@@ -94,4 +94,11 @@ class DeliveryBill extends Model
         return false;
     }
 
+    public function isGSS()
+    {
+        if(($this->containers->first()->services_subclass_code == ShippingService::GSS_IPA) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EPMEI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EPMI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EFCM)){
+            return true;
+        }
+    }
+
 }
