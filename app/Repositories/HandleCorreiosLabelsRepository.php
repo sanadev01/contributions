@@ -64,7 +64,7 @@ class HandleCorreiosLabelsRepository
 
 
         if ($this->order->recipient->country_id == Order::US) {
-            if ($this->order->shippingService->is_usps_priority || $this->order->shippingService->is_usps_firstclass || $this->order->shippingService->is_usps_ground) {
+            if ($this->order->shippingService->is_usps_priority || $this->order->shippingService->is_usps_firstclass || $this->order->shippingService->is_usps_ground || $this->order->shippingService->is_gde_priority || $this->order->shippingService->is_gde_first_class) {
                 return $this->uspsLabel();
             }
 

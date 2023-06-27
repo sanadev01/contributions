@@ -35,6 +35,8 @@ return [
             37634 => 'GSS EPMEI',
             3674 => 'GSS EPMI',
             3326 => 'GSS EFCM',
+            4387 => 'GDE Priority Mail',
+            4388 => 'GDE First Class',
         ]
     ]
 ];
