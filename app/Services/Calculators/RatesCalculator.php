@@ -2,13 +2,15 @@
 
 namespace App\Services\Calculators;
 
+use Exception;
+use function ceil;
 use App\Models\Order;
 use App\Models\Profit;
+use App\Models\Region;
+use App\Models\Country;
 use App\Models\ProfitPackage;
 use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
-use Exception;
-use function ceil;
 
 class RatesCalculator
 {
@@ -58,10 +60,14 @@ class RatesCalculator
         {
             $this->rates = $service->rates()->byRegion($this->recipient->country_id, optional($this->recipient->commune)->region->id)->first();
 
+        }elseif($this->recipient->country_id == Country::US){
+            $region = Region::where('code', optional($this->recipient->state)->code)->first(); 
+            $this->rates = $service->rates()->byRegion($this->recipient->country_id, optional($region)->id)->first();
+
         }else{
             $this->rates = $this->shippingService->rates()->byCountry($this->recipient->country_id)->first();
         }
-
+        // dd($this->rates, $this->recipient->country_id, $this->recipient->state->id);
         $this->initializeDims();
 
         $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight($originalRate): $this->originalWeight;
@@ -138,7 +144,6 @@ class RatesCalculator
         if ( $weight<100 ){
             $weight = 100;
         }
-
         $rates = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(2);
         $secRate = [];
         foreach($rates as $rate){
@@ -146,13 +151,19 @@ class RatesCalculator
         }
         if($this->order->id){
             if(optional($secRate)[1]){
+                \Log::info('rates1');
+                \Log::info($secRate[1]['leve']);
                 $rate = $secRate[1]['leve'];
             }else{
                 $rate = $secRate[0]['leve'];
+                \Log::info('rates2');
+                \Log::info($secRate[2]['leve']);
             }
         }else{
+            \Log::info('rates3');
             $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
             $rate = $rate['leve'];
+            \Log::info($rate['leve']);
         }
 
 
