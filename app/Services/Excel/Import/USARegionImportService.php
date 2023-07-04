@@ -23,7 +23,7 @@ class USARegionImportService extends AbstractImportService
     {
         $regions = collect();
 
-        foreach (range(2, 49) as $row) 
+        foreach (range(2, 9) as $row) 
         {
             $regions->push([
                 'country_id' => 250,
