@@ -61,13 +61,12 @@ class RatesCalculator
             $this->rates = $service->rates()->byRegion($this->recipient->country_id, optional($this->recipient->commune)->region->id)->first();
 
         }elseif($this->recipient->country_id == Country::US){
-            $region = Region::where('code', $this->getUSAZone(optional($this->recipient->state)->code))->first(); 
+            $region = Region::where('code', getUSAZone(optional($this->recipient->state)->code))->first(); 
             $this->rates = $service->rates()->byRegion($this->recipient->country_id, optional($region)->id)->first();
 
         }else{
             $this->rates = $this->shippingService->rates()->byCountry($this->recipient->country_id)->first();
         }
-        // dd($this->rates, $this->recipient->country_id, $this->recipient->state->id);
         $this->initializeDims();
 
         $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight($originalRate): $this->originalWeight;
@@ -151,21 +150,14 @@ class RatesCalculator
         }
         if($this->order->id){
             if(optional($secRate)[1]){
-                \Log::info('rates1');
-                \Log::info($secRate[1]['leve']);
                 $rate = $secRate[1]['leve'];
             }else{
                 $rate = $secRate[0]['leve'];
-                \Log::info('rates2');
-                \Log::info($secRate[2]['leve']);
             }
         }else{
-            \Log::info('rates3');
             $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
             $rate = $rate['leve'];
-            \Log::info($rate['leve']);
         }
-
 
         if (! $addProfit) {
             return $rate;
@@ -314,20 +306,4 @@ class RatesCalculator
         return self::$errors;
     }
 
-    public function getUSAZone($state)
-    {
-        if($state == 'FL') {
-            return 'Z3';
-        }elseif(in_array($state, ['AL', 'GA', 'SC'])) {
-            return 'Z4';
-        }elseif(in_array($state, ['LA','AR', 'MS', 'TN', 'NC', 'KY', 'VA', 'DE', 'MD', 'OH', 'NJ', 'PA'])) {
-            return 'Z5';
-        }elseif(in_array($state, ['TX', 'OK', 'KS', 'NE', 'MO', 'IA', 'IL', 'WI', 'NY', 'CT', 'RI', 'VT', 'NH', 'ME', 'MA', 'MI'])) {
-            return 'Z6';
-        }elseif(in_array($state, ['NM', 'CO', 'SD', 'ND', 'MN'])) {
-            return 'Z7';
-        }elseif(in_array($state, ['AZ', 'UT', 'WY', 'MT', 'ID', 'NV', 'OR', 'WA', 'CA', 'AK', 'HI'])) {
-            return 'Z8';
-        }
-    }
 }
