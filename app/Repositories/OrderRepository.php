@@ -629,9 +629,7 @@ class OrderRepository
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS
                         && $shippingService->service_sub_class != ShippingService::USPS_PRIORITY_INTERNATIONAL
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL
-                        && $shippingService->service_sub_class != ShippingService::USPS_GROUND
-                        && $shippingService->service_sub_class != ShippingService::GDE_PRIORITY_MAIL
-                        && $shippingService->service_sub_class != ShippingService::GDE_FIRST_CLASS;
+                        && $shippingService->service_sub_class != ShippingService::USPS_GROUND;
                 });
             }
             if(!setting('ups', null, User::ROLE_ADMIN))
@@ -667,6 +665,14 @@ class OrderRepository
                 $this->shippingServiceError = 'PostNL is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::PostNL;
+                });
+            }
+
+            if (!setting('gde', null, User::ROLE_ADMIN)) {
+                $this->shippingServiceError = 'GDE is not enabled for this user';
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::GDE_PRIORITY_MAIL
+                        && $shippingService->service_sub_class != ShippingService::GDE_FIRST_CLASS;
                 });
             }
 

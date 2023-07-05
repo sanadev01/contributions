@@ -219,3 +219,20 @@ function orderProductsValue($products)
            return  $count + ($product['value'])*($product['quantity']);
     });
 }
+
+function getUSAZone($state)
+{
+    if($state == 'FL') {
+        return 'Z3';
+    }elseif(in_array($state, ['AL', 'GA', 'SC'])) {
+        return 'Z4';
+    }elseif(in_array($state, ['LA','AR', 'MS', 'TN', 'NC', 'KY', 'VA', 'DE', 'MD', 'OH', 'NJ', 'PA'])) {
+        return 'Z5';
+    }elseif(in_array($state, ['TX', 'OK', 'KS', 'NE', 'MO', 'IA', 'IL', 'WI', 'NY', 'CT', 'RI', 'VT', 'NH', 'ME', 'MA', 'MI'])) {
+        return 'Z6';
+    }elseif(in_array($state, ['NM', 'CO', 'SD', 'ND', 'MN'])) {
+        return 'Z7';
+    }elseif(in_array($state, ['AZ', 'UT', 'WY', 'MT', 'ID', 'NV', 'OR', 'WA', 'CA', 'AK', 'HI'])) {
+        return 'Z8';
+    }
+}

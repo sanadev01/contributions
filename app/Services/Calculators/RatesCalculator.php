@@ -2,13 +2,15 @@
 
 namespace App\Services\Calculators;
 
+use Exception;
+use function ceil;
 use App\Models\Order;
 use App\Models\Profit;
+use App\Models\Region;
+use App\Models\Country;
 use App\Models\ProfitPackage;
 use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
-use Exception;
-use function ceil;
 
 class RatesCalculator
 {
@@ -58,10 +60,13 @@ class RatesCalculator
         {
             $this->rates = $service->rates()->byRegion($this->recipient->country_id, optional($this->recipient->commune)->region->id)->first();
 
+        }elseif($this->recipient->country_id == Country::US){
+            $region = Region::where('code', getUSAZone(optional($this->recipient->state)->code))->first(); 
+            $this->rates = $service->rates()->byRegion($this->recipient->country_id, optional($region)->id)->first();
+
         }else{
             $this->rates = $this->shippingService->rates()->byCountry($this->recipient->country_id)->first();
         }
-
         $this->initializeDims();
 
         $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight($originalRate): $this->originalWeight;
@@ -138,7 +143,6 @@ class RatesCalculator
         if ( $weight<100 ){
             $weight = 100;
         }
-
         $rates = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(2);
         $secRate = [];
         foreach($rates as $rate){
@@ -154,7 +158,6 @@ class RatesCalculator
             $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
             $rate = $rate['leve'];
         }
-
 
         if (! $addProfit) {
             return $rate;
@@ -302,4 +305,5 @@ class RatesCalculator
     {
         return self::$errors;
     }
+
 }

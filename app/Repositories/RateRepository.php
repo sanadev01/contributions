@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Excel\ImportCharges\ImportRates;
 use App\Services\Excel\ImportCharges\ImportCourierExpressRates;
 use App\Services\Excel\ImportCharges\ImportPostNLRates;
+use App\Services\Excel\ImportCharges\ImportGDERates;
 
 class RateRepository
 {
@@ -34,6 +35,9 @@ class RateRepository
                     $importCourierExpressService->handle();
                 }elseif ($shippingService && $shippingService->service_sub_class == ShippingService::PostNL) {
                     $importPostNLRates = new ImportPostNLRates($file, $shippingService, $request);
+                    $importPostNLRates->handle();
+                }elseif ($shippingService && ($shippingService->service_sub_class == ShippingService::GDE_PRIORITY_MAIL || $shippingService->service_sub_class == ShippingService::GDE_FIRST_CLASS)) {
+                    $importPostNLRates = new ImportGDERates($file, $shippingService, $request);
                     $importPostNLRates->handle();
                 }else
                 {

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Order;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
@@ -263,6 +264,9 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id}',function($id){
+    
+    DB::table('rates')->where('shipping_service_id', '=', $id)->delete();
+    return "Shipping Rates Deleted";
     
     $labelPrinter = new CN23LabelMaker();
     
