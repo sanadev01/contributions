@@ -144,4 +144,42 @@ abstract class AbstractExportService
 
         return $this;
     }
+    
+    protected function applyBorder($cells,$type,$color)
+    {
+        foreach($cells as $cell){ 
+        $this->sheet->getStyle($cell)
+                ->getBorders()
+                ->getOutline()
+                ->setBorderStyle($type)
+                ->setColor($color); 
+        }
+
+    }
+    protected function applyBottomBorder($cells,$type,$color)
+    {
+        foreach($cells as $cell){ 
+            $this->sheet->getStyle($cell)
+                    ->getBorders()->getBottom()
+                    ->setBorderStyle($type)
+                    ->setColor($color); 
+            }
+    }
+    protected function setStyle($cells,$color='000000',$size=5,$name='Verdana')
+    {
+        foreach($cells as $cell){
+            $this->sheet->getStyle($cell)->applyFromArray(
+                [
+                    'font' => [
+                        'bold' => true,
+                        'color' => [
+                            'rgb' => $color
+                        ],
+                        'size' => $size,
+                        'name' => $name
+                    ]
+                ]
+            );
+        }
+    }
 }
