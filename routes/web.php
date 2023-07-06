@@ -288,5 +288,7 @@ Route::get('order-arrived', function(){
     Artisan::call('email:order-arrived');
     return Artisan::output();
 });
+
+//This is my dev test comment
 Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container'); 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
