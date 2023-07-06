@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Rates;
 
+use App\Models\Rate;
 use Illuminate\Http\Request;
 use App\Models\ProfitPackage;
 use App\Models\ProfitSetting;
-use App\Http\Controllers\Controller;
 use App\Models\ShippingService;
+use App\Http\Controllers\Controller;
 use App\Repositories\Reports\RateReportsRepository;
 
 class UserRateController extends Controller
@@ -81,6 +82,21 @@ class UserRateController extends Controller
         $service = $request->serviceName;
         $packageId = $request->packageId;
 
+        return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId'));
+    }
+
+    public function showProfitRegions(Request $request)
+    {
+        $shippingRegionRates = Rate::where('shipping_service_id', $request->serviceId)->get();
+        return view('admin.rates.profit-packages.user-profit-package.regions', compact('shippingRegionRates'));
+    }
+
+    public function getProfitRegionsRates(Request $request)
+    {
+        dd($request->all());
+        $rates = 
+        $service = ShippingService::where('id', $request->serviceId)->value('name');
+        $packageId = '';
         return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId'));
     }
     

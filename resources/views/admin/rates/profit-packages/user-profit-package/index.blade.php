@@ -26,12 +26,21 @@
                                                 {{ $rateSetting->shippingService->name }}
                                             </td>
                                             <td>
-                                                <form action="{{ route('admin.rates.show-profit-rates') }}" method="POST">
+                                                <form action="
+                                                    @if($rateSetting->shippingService->isGDEService())
+                                                        {{ route('admin.rates.show-profit-regions') }}
+                                                    @else
+                                                        {{ route('admin.rates.show-profit-rates') }}
+                                                    @endif
+                                                
+                                                " method="POST">
                                                     @csrf
                                                     <input type="hidden" name="serviceId" value="{{ $rateSetting->service_id }}">
                                                     <input type="hidden" name="serviceName" value="{{ $rateSetting->shippingService->name }}">
                                                     <input type="hidden" name="packageId" value="{{ $rateSetting->package_id }}">
-                                                    <button type="submit" class="btn btn-success btn-sm">View Rates</button>
+                                                    <button type="submit" class="btn btn-success btn-sm">
+                                                        @if($rateSetting->shippingService->isGDEService()) View Zone Rates @else View Rates @endif
+                                                    </button>
                                                 </form>
                                             </td>
                                             
