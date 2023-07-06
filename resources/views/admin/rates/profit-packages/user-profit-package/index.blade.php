@@ -20,16 +20,33 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach($settings as $rateSetting)
+                                        <tr>
+                                            <td>
+                                                {{ $rateSetting->shippingService->name }}
+                                            </td>
+                                            <td>
+                                                <form action="{{ route('admin.rates.show-profit-rates') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="serviceId" value="{{ $rateSetting->service_id }}">
+                                                    <input type="hidden" name="serviceName" value="{{ $rateSetting->shippingService->name }}">
+                                                    <input type="hidden" name="packageId" value="{{ $rateSetting->package_id }}">
+                                                    <button type="submit" class="btn btn-success btn-sm">View Rates</button>
+                                                </form>
+                                            </td>
+                                            
+                                        </tr>
+                                    @endforeach
                                     @foreach($rates as $rate)
                                         <tr>
                                             <td>
                                                 {{ $rate['service'] }}
                                             </td>
                                             <td>
-                                                <form action="{{ route('admin.rates.show-profit-rates') }}" method="POST">
+                                                <form action="{{ route('admin.rates.show-service-rates') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="rates" value="{{ $rate['rates'] }}">
-                                                    <input type="hidden" name="service" value="{{ $rate['service'] }}">
+                                                    <input type="hidden" name="serviceId" value="{{ $rate['service'] }}">
                                                     <input type="hidden" name="packageId" value="{{ $rate['packageId'] }}">
                                                     <button type="submit" class="btn btn-success btn-sm">View Rates</button>
                                                 </form>

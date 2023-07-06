@@ -25,23 +25,9 @@ class UserRateController extends Controller
         $settings = ProfitSetting::where('user_id', auth()->user()->id)->get();
         if(!$settings->isEmpty())
         {
-            foreach($settings as $setting)
-            {
-                $service = ShippingService::where('id', $setting->service_id)->first();
-                if($service){
-                    $rates = $rateReportsRepository->getRateReport($setting->package_id, $setting->service_id);
-                    $this->rates[] = [
-                        'service' => $service->name,
-                        'rates' => $rates,
-                        'packageId' => $setting->package_id,
-                    ];
-                }
-            }
+            $settings = $settings;
 
-            $rates = $this->rates;
-            $packageId = $this->packageId;
-            
-        } elseif(auth()->user()->package_id){
+        }elseif(auth()->user()->package_id){
             $packageId = auth()->user()->package_id;
             $rates = $rateReportsRepository->getRateReport($packageId);
 
@@ -74,7 +60,7 @@ class UserRateController extends Controller
         }
 
         $rates = $this->rates;
-        return view('admin.rates.profit-packages.user-profit-package.index', compact('rates'));
+        return view('admin.rates.profit-packages.user-profit-package.index', compact('rates', 'settings'));
     }
 
     public function showRates(Request $request)
@@ -83,6 +69,16 @@ class UserRateController extends Controller
 
         $rates = collect($rates);
         $service = $request->service;
+        $packageId = $request->packageId;
+
+        return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId'));
+    }
+
+    public function showPackageRates(Request $request)
+    {
+        $rateReportsRepository = new RateReportsRepository();
+        $rates = $rateReportsRepository->getRateReport($request->packageId, $request->service);
+        $service = $request->serviceName;
         $packageId = $request->packageId;
 
         return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId'));
