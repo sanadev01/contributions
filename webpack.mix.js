@@ -11,8 +11,9 @@ const mix = require('laravel-mix');
  |
  */
 
-mix
-    // .js('resources/js/app.js', 'public/js')
-    .js('resources/js/pages/barcode.js', 'public/js/pages/barcode/reader.js')
-    .js('resources/js/pages/scanner.js', 'public/js/pages').version();
+// mix 
+//     .js('resources/js/pages/barcode.js', 'public/js/pages/barcode/reader.js')
+//     .js('resources/js/pages/scanner.js', 'public/js/pages').version();
     // .sass('resources/sass/app.scss', 'public/css');
+
+    mix.sass('resources/scss/app.scss', 'public/scss');

@@ -1,6 +1,5 @@
 @extends('layouts.master')
-
-@section('css')
+@section('css') 
     <script src="{{ asset('app-assets/vendors/js/charts/echarts/echarts.min.js') }}"></script>
     <style>
         .order-card {
@@ -49,11 +48,39 @@
         .f-right {
             float: right;
         }
-
     </style>
 @endsection
 
-@section('page')
+@section('page') 
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb light-color"> 
+                <li class="breadcrumb-item"><a href="#">  <img src="{{ asset('images/icon/dashboard.svg') }}" alt="dashboard"></a></li>
+                {{-- <li class="breadcrumb-item"><a href="#">Library</a></li> --}}
+                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+            </ol>
+        </nav> 
+    {{-- contact us --}}
+    <div class='row no-gutters d-flex align-items-center'>
+        <div class="col-4">
+            <div class="light-green-color welcome-admin">
+                <dl class="mt-2 vertical-center p-2">
+                    <dt class="font-weight-bold">Welcome back, {{ Auth::user()->name }} 👋</dt>
+                    <dd class="font-weight-light">Your current kpi report is here</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="col-8 light-green-color p-2"> 
+                <div class="row mt-0 ">
+                    <div class="col-12 pb-xl-2 pb-1 h-25">
+                        <a href="{{ url('tickets') }}" target="_blank"> <img class="banner rounded-4"
+                                src="{{ asset('images/kpi-banner.png') }}" width="100%" height="auto" alt="contact us">
+                        </a>
+                    </div>
+                </div>  
+        </div>
+
+    </div>
+
     <!-- Dashboard Analytics Start -->
     <section id="dashboard-analytics">
         {{-- <x-stat-cards.all-stats/> --}}
@@ -70,26 +97,26 @@
                                     {!! auth()->user()->pobox_number !!} </strong>
                                 <br>
                                 {{-- {!! auth()->user()->getPoboxAddress() ?? '' !!} <br> --}}
-                                <table>
-                                    <thead>
-                                        <tr>
-                                        <th  class="pl-0 pr-3">LTL Truck to</th>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="pl-0 pr-3">LTL Truck to</th>
                                         <th>Parcels via UPS | FedEx | USPS sent to</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="pl-0 pr-3">{!! auth()->user()->getPoboxAddress() ?? '' !!}</td>
-                                            <td>
-                                                8305 NW 116<sup>th</sup> Avenue<br>
-                                                Doral , FL 33178<br>
-                                                United States <br>
-                                                <span>Ph#: +13058885191</span>
-                                            </td>
-                                        </tr>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="pl-0 pr-3">{!! auth()->user()->getPoboxAddress() ?? '' !!}</td>
+                                        <td>
+                                            8305 NW 116<sup>th</sup> Avenue<br>
+                                            Doral , FL 33178<br>
+                                            United States <br>
+                                            <span>Ph#: +13058885191</span>
+                                        </td>
+                                    </tr>
 
-                                    </tbody>
-                                </table>
+                                </tbody>
+                            </table>
                             </p>
                         </div>
                     </div>
@@ -97,11 +124,11 @@
             </div>
         @endif
         {{-- <x-charts.orders-charts/> --}}
-        
-        <div class="card">
-            <livewire:dashboard.stats-filter/>
+
+        <div class="card  border-radius-15 mt-3">
+            <livewire:dashboard.stats-filter />
         </div>
-        
+
     </section>
     <!-- Dashboard Analytics end -->
 @endsection

@@ -1,15 +1,15 @@
 <!-- BEGIN: Main Menu-->
 <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow menu-collapsed" data-scroll-to-active="true" style="touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-    {!! $header !!}
+    {!! $header !!}  
     <div class="shadow-bottom"></div>
     <div class="main-menu-content ps ps--active-y">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" style="color: #454f5b; font-family: 'Karla-Regular', Helvetica, Arial, sans-serif;">
             @if (auth()->user()->hasRole('scanner') || auth()->user()->hasRole('driver'))
-                <li class="nav-item {{ $isActive('home') }}">
+                  <li class="nav-item {{ $isActive(['admin.home']) }}">
                     <a class="nav-link" href="{{ route('admin.home') }}">
                         {{-- <i class="icon_adjst feather icon-home"></i> --}}
                         <img src="{{ asset('images/icon/dashboard.svg') }}" alt="dashboard">
-                        <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
+                    <span data-i18n="Dashboard" style="color: #3CB64B !important"> @lang('menu.dashboard') </span>
                     </a>
                 </li>
                 @if (auth()->user()->hasRole('driver'))
@@ -42,7 +42,7 @@
                     </a>
                 </li>
             @else
-            <li class="nav-item {{ $isActive('home') }}">
+            <li class="nav-item {{ $isActive('admin.home') }}">
                 <a class="nav-link" href="{{ route('admin.home') }}">
                     <img src="{{ asset('images/icon/dashboard.svg') }}" alt="dashboard">
                     {{-- <i class="icon_adjst feather icon-home"></i> --}}
