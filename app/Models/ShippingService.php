@@ -436,11 +436,10 @@ class ShippingService extends Model
         $zone = getUSAZone($order->recipient->state->code);
         $region = Region::where('country_id', $order->recipient->country_id)->where('code', $zone)->first();
         $weight = ceil(WeightCalculator::kgToGrams($order->weight));
-
         if ( $weight<100 ){
             $weight = 100;
         }
-        $serviceRates = $this->rates()->where('region_id',$region->id)->first();
+        $serviceRates = $region->rates()->first();
         if($serviceRates){
             $rate = collect($serviceRates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
             if(($rate)['leve'] && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, $order->user_id)){

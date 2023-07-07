@@ -2,7 +2,7 @@
     <div class="row filter-btn">
         <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
             class="btn btn-primary mr-1 mb-1 waves-effect waves-light"><i
-                class="feather icon-filter"></i>&nbsp;FILTER</button>
+                class="feather icon-filter"></i>&nbsp;FILTERS</button>
     </div>
     <div class="row col-10">
         <div class=" col-10 text-left mb-2 pl-0" id="dateSearch"

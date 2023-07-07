@@ -20,23 +20,26 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($rates as $rate)
+                                    @foreach($settings as $setting)
                                         <tr>
                                             <td>
-                                                {{ $rate['service'] }}
+                                                {{ $setting->shippingService->name }}
                                             </td>
                                             <td>
-                                                <form action="{{ route('admin.rates.show-profit-rates') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="rates" value="{{ $rate['rates'] }}">
-                                                    <input type="hidden" name="service" value="{{ $rate['service'] }}">
-                                                    <input type="hidden" name="packageId" value="{{ $rate['packageId'] }}">
-                                                    <button type="submit" class="btn btn-success btn-sm">View Rates</button>
-                                                </form>
+                                                <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$setting->service_id,'packageId'=>$setting->package_id]) }}" class="btn btn-success btn-sm">View Rates</a>
                                             </td>
                                             
                                         </tr>
-                                    @endforeach
+                                        @endforeach
+                                        <tr>
+                                            <td>
+                                                {{ $service->name }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$setting->service_id,'packageId'=>$setting->package_id] ) }}" class="btn btn-success btn-sm">View Rates</a>
+                                            </td>
+                                            
+                                        </tr>
                                 </tbody>
                             </table>
                         </div>

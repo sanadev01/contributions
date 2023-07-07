@@ -11,7 +11,7 @@ use App\Services\Excel\Export\ProfitPackageRateExport;
 
 class RateDownloadController extends Controller
 {
-    public function __invoke($packageId,Request $request, RateReportsRepository $rateReportsRepository)
+    public function __invoke($packageId, $regionRates = null, Request $request, RateReportsRepository $rateReportsRepository)
     {
         if($request->service){
             $ServiceId = $request->service;
@@ -24,10 +24,15 @@ class RateDownloadController extends Controller
         }
         if($packageId == 0 ){
             $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();
-            $rates = collect($service->rates[0]->data);         
+            $rates = collect($service->rates[0]->data);    
         }else{
             $rates = $rateReportsRepository->getRateReport($packageId);
         }
+        
+        if($packageId == 'gde'){
+            $rates = collect(json_decode($regionRates, true));
+        }
+        
         $exportService = new ProfitPackageRateExport($rates);
         return $exportService->handle();
     }
