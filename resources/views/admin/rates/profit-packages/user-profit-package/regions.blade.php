@@ -36,6 +36,7 @@
                                             <form action="{{ route('admin.rates.show-profit-region-rates') }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="serviceId" value="{{ $rate->shipping_service_id }}">
+                                                <input type="hidden" name="id" value="{{ $rate->id }}">
                                                 <button type="submit" class="btn btn-success btn-sm"> View </button>
                                             </form>
                                         </th>

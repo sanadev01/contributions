@@ -93,11 +93,8 @@ class UserRateController extends Controller
 
     public function getProfitRegionsRates(Request $request)
     {
-        dd($request->all());
-        $rates = 
-        $service = ShippingService::where('id', $request->serviceId)->value('name');
-        $packageId = '';
-        return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId'));
+        $serviceRates = Rate::find($request->id);
+        return view('admin.rates.profit-packages.user-profit-package.region-rates', compact('serviceRates'));
     }
     
 }
