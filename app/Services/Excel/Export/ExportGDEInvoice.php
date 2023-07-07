@@ -130,12 +130,12 @@ class ExportGDEInvoice extends AbstractExportService
             $this->setBorder(['A'.$row.':I'.$row], false);
             $row++;
         }
-        $orderValue = number_format($this->order->order_value,2);
+        $orderValue = "$ ".number_format($this->order->order_value,2);
         $this->setCellValue('E'.$row, $this->order->items->sum('quantity'));
         $this->setCellValue('F'.$row, $this->order->getWeight());
         $this->setCellValue('G'.$row, "kg");
-        $this->setCellValue('H'.$row, $orderValue );
-        $this->setCellValue('I'.$row, "$ ". $orderValue);
+        $this->setCellValue('H'.$row, $orderValue);
+        $this->setCellValue('I'.$row, $orderValue);
         $this->setBackgroundColor("E{$row}:F{$row}", 'fff');
         $this->setBackgroundColor("I{$row}", 'fff');
         $this->setBorder(['A'.$row.':I'.$row], false);
@@ -144,20 +144,20 @@ class ExportGDEInvoice extends AbstractExportService
 
     public function setItemFooter()
     {
-        $row = $this->row;
+        $row = $this->row+1;
         $this->mergeCells('F'.$row.':H'.$row);
         $this->mergeCells('F'.($row + 1).':H'.($row + 1));
         $this->mergeCells('F'.($row + 2).':H'.($row + 2));
         $this->mergeCells('F'.($row + 3).':H'.($row + 3));
 
         $this->setCellValue('F'.$row, 'Value of Goods: ');
-        $this->setCellValue('I'.($row), '$ 0');
+        $this->setCellValue('I'.($row), '$ 0.00');
         $this->setCellValue('F'.($row + 1), 'International Freight: ');
-        $this->setCellValue('I'.($row + 1), '$ 0');
+        $this->setCellValue('I'.($row + 1), '$ '. number_format($this->order->user_declared_freight,2) );
         $this->setCellValue('F'.($row + 2), 'Other Charges: ');
-        $this->setCellValue('I'.($row + 2), '$ 0');
+        $this->setCellValue('I'.($row + 2), '$ 0.00');
         $this->setCellValue('F'.($row + 3), 'Total');
-        $this->setCellValue('I'.($row + 3), '$ '. number_format($this->order->order_value,2));
+        $this->setCellValue('I'.($row + 3), '$ '. number_format($this->order->order_value+$this->order->user_declared_freight,2));
         $this->setBold('F'.$row.':H'.($row + 4).$row, true);
         $this->row = $row + 4;
     }
