@@ -92,6 +92,9 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::post('order/update/status',OrderStatusController::class)->name('order.update.status');
 
             Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
+            
+            Route::get('gde/{order}/invoice', GDEInvoiceDownloadController::class)->name('gde.invoice.download');
+            
         });
         //Cancel Lable Route for GePS & Prime5
         Route::get('order/{order}/cancel-label', [\App\Http\Controllers\Admin\Order\OrderLabelController::class, 'cancelLabel'])->name('order.label.cancel');
