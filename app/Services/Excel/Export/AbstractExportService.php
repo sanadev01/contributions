@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
 abstract class AbstractExportService
 {
     protected $spreadSheet;
@@ -144,42 +145,15 @@ abstract class AbstractExportService
 
         return $this;
     }
-    
-    protected function applyBorder($cells,$type,$color)
+    protected function setBorder($cells, $isBottom)
     {
         foreach($cells as $cell){ 
-        $this->sheet->getStyle($cell)
-                ->getBorders()
-                ->getOutline()
-                ->setBorderStyle($type)
-                ->setColor($color); 
-        }
-
-    }
-    protected function applyBottomBorder($cells,$type,$color)
-    {
-        foreach($cells as $cell){ 
-            $this->sheet->getStyle($cell)
-                    ->getBorders()->getBottom()
-                    ->setBorderStyle($type)
-                    ->setColor($color); 
-            }
-    }
-    protected function setStyle($cells,$color='000000',$size=5,$name='Verdana')
-    {
-        foreach($cells as $cell){
-            $this->sheet->getStyle($cell)->applyFromArray(
-                [
-                    'font' => [
-                        'bold' => true,
-                        'color' => [
-                            'rgb' => $color
-                        ],
-                        'size' => $size,
-                        'name' => $name
-                    ]
-                ]
-            );
+            $cell = $this->sheet->getStyle($cell)
+                ->getBorders();
+                $cell = $isBottom ? $cell->getBottom(): $cell->getOutline();
+                
+                $cell->setBorderStyle(Border::BORDER_THIN)
+                ->setColor(new Color('000'));
         }
     }
 }
