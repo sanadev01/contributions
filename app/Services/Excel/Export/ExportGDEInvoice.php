@@ -118,7 +118,6 @@ class ExportGDEInvoice extends AbstractExportService
         $row =  15;
         foreach ($this->order->items as $key => $item) {
             $totalValue = "$ ".number_format($this->order->order_value / count($this->order->items),2);
-
             $this->setCellValue('A'.$row, $key + 1);
             $this->setCellValue('B'.$row, $this->order->customer_reference);
             $this->setCellValue('C'.$row, $item->description);
