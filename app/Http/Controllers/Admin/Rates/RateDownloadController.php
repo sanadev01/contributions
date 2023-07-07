@@ -30,9 +30,9 @@ class RateDownloadController extends Controller
         }
         
         if($packageId == 'gde'){
-            $gdeRates = collect(json_decode($regionRates, true));
-            $rates = $gdeRates;       
+            $rates = collect(json_decode($regionRates, true));
         }
+        
         $exportService = new ProfitPackageRateExport($rates);
         return $exportService->handle();
     }
