@@ -25,88 +25,46 @@ class UserRateController extends Controller
         $this->authorize('userSellingRates',ProfitPackage::class);
 
         $settings = ProfitSetting::where('user_id', auth()->user()->id)->get();
-        if(!$settings->isEmpty())
-        {
-            $settings = $settings;
-
-        }elseif(auth()->user()->package_id){
-            $packageId = auth()->user()->package_id;
-            $rates = $rateReportsRepository->getRateReport($packageId);
-
-            $service = ShippingService::where('name', 'Packet Standard')->first();
-            $this->rates[] = [
-                'service' => $service->name,
-                'rates' => $rates,
-                'packageId' => $packageId,
-            ];
-
-        }else{
-            
-            $packageId = ProfitPackage::where('type', 'default')->first()->id; 
-            $rates = $rateReportsRepository->getRateReport($packageId);
-            
-            $service = ShippingService::where('name', 'Packet Standard')->first();
-            $this->rates[] = [
-                'service' => $service->name,
-                'rates' => $rates,
-                'packageId' => $packageId,
-            ];
-        }
+        
         $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();
-        if($service){
-            $this->rates[] = [
-                'service' => $service->name,
-                'rates' => collect($service->rates[0]->data),
-                'packageId' => 0,
-            ];
-        }
-
-        $rates = $this->rates;
-        return view('admin.rates.profit-packages.user-profit-package.index', compact('rates', 'settings'));
+        
+        return view('admin.rates.profit-packages.user-profit-package.index', compact('service', 'settings'));
     }
 
-    public function showRates(Request $request)
+    public function showPackageRates($id,$packageId)
     {
-        $rates = json_decode($request->rates, true);
-
-        $rates = collect($rates);
-        $service = $request->service;
-        $packageId = $request->packageId;
-
-        return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId'));
-    }
-
-    public function showPackageRates(Request $request)
-    {
-        $rateReportsRepository = new RateReportsRepository();
-        $rates = $rateReportsRepository->getRateReport($request->packageId, $request->service);
-        $service = $request->serviceName;
-        $packageId = $request->packageId;
-
-        return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId'));
-    }
-
-    public function showProfitRegions(Request $request)
-    {
-        $shippingRegionRates = Rate::where('shipping_service_id', $request->serviceId)->get();
-        return view('admin.rates.profit-packages.user-profit-package.regions', compact('shippingRegionRates'));
-    }
-
-    public function getProfitRegionsRates(Request $request)
-    {
-        $serviceRates = Rate::find($request->id);
-
-        if($serviceRates && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
-            $type = 'gde_fc_profit';
-            if($serviceRates->shippingService->service_sub_class == ShippingService::GDE_PRIORITY_MAIL){
-                $type = 'gde_pm_profit';
+        $profit = null;
+        if($packageId  == 'region'){
+            $isGDE = true;
+            $rates = Rate::find($id);
+            if($rates && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
+                $type = 'gde_fc_profit';
+                if($rates->shippingService->service_sub_class == ShippingService::GDE_PRIORITY_MAIL){
+                    $type = 'gde_pm_profit';
+                }
+                $userProfit = setting($type, null, auth()->user()->id);
+                $adminProfit = setting($type, null, User::ROLE_ADMIN);
+                $profit = $userProfit ? $userProfit : $adminProfit;
+                $service = $rates->shippingService->name;
+                $rates = $rates->data;
+                $packageId = $id;
+                return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
             }
-            $userProfit = setting($type, null, auth()->user()->id);
-            $adminProfit = setting($type, null, User::ROLE_ADMIN);
-            $profit = $userProfit ? $userProfit : $adminProfit; 
+
         }
 
-        return view('admin.rates.profit-packages.user-profit-package.region-rates', compact('serviceRates', 'profit'));
+        $service = ShippingService::find($id);
+        
+        if($service->isGDEService()){
+            $shippingRegions = Rate::where('shipping_service_id', $service->id)->get();
+            return view('admin.rates.profit-packages.user-profit-package.regions', compact('shippingRegions'));
+        }
+        
+        $service = $service->name;
+        $rateReportsRepository = new RateReportsRepository();
+        $rates = $rateReportsRepository->getRateReport($packageId, $id);
+        $isGDE = false;
+        return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
     }
     
 }

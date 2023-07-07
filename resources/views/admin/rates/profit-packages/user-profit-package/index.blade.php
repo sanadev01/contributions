@@ -20,49 +20,26 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($settings as $rateSetting)
+                                    @foreach($settings as $setting)
                                         <tr>
                                             <td>
-                                                {{ $rateSetting->shippingService->name }}
+                                                {{ $setting->shippingService->name }}
                                             </td>
                                             <td>
-                                                <form action="
-                                                    @if($rateSetting->shippingService->isGDEService())
-                                                        {{ route('admin.rates.show-profit-regions') }}
-                                                    @else
-                                                        {{ route('admin.rates.show-profit-rates') }}
-                                                    @endif
-                                                
-                                                " method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="serviceId" value="{{ $rateSetting->service_id }}">
-                                                    <input type="hidden" name="serviceName" value="{{ $rateSetting->shippingService->name }}">
-                                                    <input type="hidden" name="packageId" value="{{ $rateSetting->package_id }}">
-                                                    <button type="submit" class="btn btn-success btn-sm">
-                                                        @if($rateSetting->shippingService->isGDEService()) View Zone Rates @else View Rates @endif
-                                                    </button>
-                                                </form>
+                                                <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$setting->service_id,'packageId'=>$setting->package_id]) }}" class="btn btn-success btn-sm">View Rates</a>
                                             </td>
                                             
                                         </tr>
-                                    @endforeach
-                                    @foreach($rates as $rate)
+                                        @endforeach
                                         <tr>
                                             <td>
-                                                {{ $rate['service'] }}
+                                                {{ $service->name }}
                                             </td>
                                             <td>
-                                                <form action="{{ route('admin.rates.show-service-rates') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="rates" value="{{ $rate['rates'] }}">
-                                                    <input type="hidden" name="serviceId" value="{{ $rate['service'] }}">
-                                                    <input type="hidden" name="packageId" value="{{ $rate['packageId'] }}">
-                                                    <button type="submit" class="btn btn-success btn-sm">View Rates</button>
-                                                </form>
+                                                <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$setting->service_id,'packageId'=>$setting->package_id] ) }}" class="btn btn-success btn-sm">View Rates</a>
                                             </td>
                                             
                                         </tr>
-                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

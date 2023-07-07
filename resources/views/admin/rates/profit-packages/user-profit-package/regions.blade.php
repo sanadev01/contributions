@@ -24,22 +24,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($shippingRegionRates as $rate)
+                                @foreach ($shippingRegions as $region)
                                     <tr>
-                                        <th>
-                                            {{ optional($rate->country)->name }}
-                                        </th>
-                                        <th>
-                                            {{ optional($rate->region)->name }}
-                                        </th>
-                                        <th>
-                                            <form action="{{ route('admin.rates.show-profit-region-rates') }}" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="serviceId" value="{{ $rate->shipping_service_id }}">
-                                                <input type="hidden" name="id" value="{{ $rate->id }}">
-                                                <button type="submit" class="btn btn-success btn-sm"> View </button>
-                                            </form>
-                                        </th>
+                                        <td>
+                                            {{ optional($region->country)->name }}
+                                        </td>
+                                        <td>
+                                            {{ optional($region->region)->name }}
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$region->id,'packageId'=>'region'] ) }}" class="btn btn-success btn-sm">View Rates</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
