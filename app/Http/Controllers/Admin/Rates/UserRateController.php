@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Rates;
 
 use App\Models\Rate;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\ProfitPackage;
 use App\Models\ProfitSetting;
@@ -94,7 +95,18 @@ class UserRateController extends Controller
     public function getProfitRegionsRates(Request $request)
     {
         $serviceRates = Rate::find($request->id);
-        return view('admin.rates.profit-packages.user-profit-package.region-rates', compact('serviceRates'));
+
+        if($serviceRates && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
+            $type = 'gde_fc_profit';
+            if($serviceRates->shippingService->service_sub_class == ShippingService::GDE_PRIORITY_MAIL){
+                $type = 'gde_pm_profit';
+            }
+            $userProfit = setting($type, null, auth()->user()->id);
+            $adminProfit = setting($type, null, User::ROLE_ADMIN);
+            $profit = $userProfit ? $userProfit : $adminProfit; 
+        }
+
+        return view('admin.rates.profit-packages.user-profit-package.region-rates', compact('serviceRates', 'profit'));
     }
     
 }

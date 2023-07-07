@@ -9,8 +9,18 @@
                         <div class="col-6">
                             <h4 class="mb-0">{{ $serviceRates->shippingService->name }}  @lang('menu.Rates')</h4>
                         </div>
+                        @php
+                            $regionRates = [];
+                            foreach ($serviceRates->data as $rate) {
+                                $regionRates[] = [
+                                    'weight' => optional($rate)['weight'],
+                                    'leve' => number_format(($profit / 100) * $rate['leve'] + $rate['leve'], 2),
+                                ];
+                            }
+                            $jsonData = json_encode($regionRates);
+                        @endphp
                         <div class="col-6 d-flex justify-content-end">
-                            <a href="" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
+                            <a href="{{ route('admin.rates.rates.exports', ['package' => 'gde', 'regionRates' => urlencode($jsonData)]) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
                             <a href="{{ route('admin.rates.user-rates.index') }}" class="btn btn-primary mx-3">@lang('profitpackage.back to list')</a>  
                         </div>
                     </div>
@@ -32,9 +42,8 @@
                                                 {{ optional($rate)['weight'] . ' g' }}
                                             </td>
                                             <td>
-                                                {{ $rate['leve'] }}
+                                                {{ number_format(($profit / 100) * $rate['leve'] + $rate['leve'], 2) }}
                                             </td>
-                                            
                                         </tr>
                                     @endforeach
                                 </tbody>
