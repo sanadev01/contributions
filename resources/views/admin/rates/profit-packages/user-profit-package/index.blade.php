@@ -31,6 +31,16 @@
                                             
                                         </tr>
                                         @endforeach
+                                        @if($gdeService)
+                                            <tr>
+                                                <td>
+                                                    {{ $gdeService->name }}
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$gdeService->id,'packageId'=>$setting->package_id] ) }}" class="btn btn-success btn-sm">View Rates</a>
+                                                </td>
+                                            </tr>
+                                        @endif
                                         <tr>
                                             <td>
                                                 {{ $service->name }}
@@ -38,7 +48,6 @@
                                             <td>
                                                 <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$setting->service_id,'packageId'=>$setting->package_id] ) }}" class="btn btn-success btn-sm">View Rates</a>
                                             </td>
-                                            
                                         </tr>
                                 </tbody>
                             </table>

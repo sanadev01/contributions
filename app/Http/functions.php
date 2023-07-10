@@ -236,3 +236,15 @@ function getUSAZone($state)
         return 'Z8';
     }
 }
+
+function getJsonData($rates, $profit)
+{
+    $ratesArray = [];
+    foreach ($rates as $rate) {
+        $ratesArray[] = [
+            'weight' => optional($rate)['weight'],
+            'leve' => number_format(($profit / 100) * $rate['leve'] + $rate['leve'], 2),
+        ];
+    }
+    return json_encode($ratesArray);
+}

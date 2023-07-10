@@ -22,13 +22,18 @@ class UserRateController extends Controller
      */
     public function index(RateReportsRepository $rateReportsRepository)
     {
+        $gdeService = '';
         $this->authorize('userSellingRates',ProfitPackage::class);
 
         $settings = ProfitSetting::where('user_id', auth()->user()->id)->get();
+
+        if(setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
+            $gdeService = ShippingService::where('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)->first();
+        }
         
         $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();
         
-        return view('admin.rates.profit-packages.user-profit-package.index', compact('service', 'settings'));
+        return view('admin.rates.profit-packages.user-profit-package.index', compact('service', 'settings', 'gdeService'));
     }
 
     public function showPackageRates($id,$packageId)
