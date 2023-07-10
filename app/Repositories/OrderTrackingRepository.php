@@ -196,10 +196,11 @@ class OrderTrackingRepository
         return $response;
     }
 
-    public function getTrackings() {
+    public function getTrackings($request) {
         $users = Setting::where('key', 'MARKETPLACE')->where('value', 'AMAZON')->pluck('user_id')->toArray();
         $trackingCodes = Order::whereIn('user_id', $users)
         ->where('status', Order::STATUS_SHIPPED)
+        ->whereBetween('order_date', [$request->start_date, $request->end_date])
         ->pluck('corrios_tracking_code')
         ->toArray();
         return $trackingCodes;
