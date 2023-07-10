@@ -16,7 +16,7 @@ class TrackingController extends Controller
         $orderTrackingRepository = new OrderTrackingRepository($search);
         $this->trackings = $orderTrackingRepository->getTrackings();
 
-            if(!is_null($this->trackings))
+            if(!empty($this->trackings))
             {
                 return apiResponse(true,'Trackings Found',['hdTrackings'=> $this->trackings]); 
             }
