@@ -2,12 +2,14 @@
 
 namespace App\Repositories;
 use App\Models\Order;
+use App\Models\Setting;
 use App\Facades\UPSFacade;
 use App\Models\ShippingService;
 use App\Facades\USPSTrackingFacade;
 use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
 use App\Services\SwedenPost\DirectLinkTrackingService;
+
 class OrderTrackingRepository
 {
 
@@ -192,5 +194,14 @@ class OrderTrackingRepository
         $response = array_reverse($response);
 
         return $response;
+    }
+
+    public function getMarketPlaceTrackings() {
+        $users = Setting::where('key', 'MARKETPLACE')->where('value', 'AMAZON')->pluck('user_id')->toArray();
+        $trackingCodes = Order::whereIn('user_id', $users)
+        ->where('status', Order::STATUS_SHIPPED)
+        ->pluck('corrios_tracking_code')
+        ->toArray();
+        return $trackingCodes;
     }
 }
