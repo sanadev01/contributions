@@ -8,8 +8,6 @@ use App\Services\Excel\Export\ContainerExport;
 
 class Container extends Component
 {
-    private $query;
-    public $packetType='';
     public $dispatchNumber='';
     public $sealNo='';
     public $search='';
@@ -42,7 +40,6 @@ class Container extends Component
             'service' => $this->service,
             'dispatchNumber' => $this->dispatchNumber,
             'sealNo' => $this->sealNo,
-            'packetType' => $this->packetType,
             'search' => $this->search,
             'unitCode' => $this->unitCode,
             'paginate'=> $paginate
