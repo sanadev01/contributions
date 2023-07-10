@@ -22,16 +22,15 @@ class UserRateController extends Controller
      */
     public function index(RateReportsRepository $rateReportsRepository)
     {
-        $gdeService = '';
+        $shippingServices = [ShippingService::Brazil_Redispatch];
         $this->authorize('userSellingRates',ProfitPackage::class);
 
         $settings = ProfitSetting::where('user_id', auth()->user()->id)->get();
-
+        
         if(setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
-            $service = ShippingService::whereIn('service_sub_class', [ShippingService::Brazil_Redispatch, ShippingService::GDE_PRIORITY_MAIL, ShippingService::GDE_FIRST_CLASS])->get();
-        }else {
-            $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();
+            $shippingServices = array_merge($shippingServices, $this->getActiveProfit());
         }
+        $service = ShippingService::whereIn('service_sub_class', $shippingServices)->get();
 
         return view('admin.rates.profit-packages.user-profit-package.index', compact('service', 'settings'));
     }
@@ -70,6 +69,23 @@ class UserRateController extends Controller
         $rates = $rateReportsRepository->getRateReport($packageId, $id);
         $isGDE = false;
         return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
+    }
+
+    public function getActiveProfit() {
+
+        $activeServiceRate = [];
+        $userProfitFC = setting('gde_fc_profit', null, auth()->user()->id);
+        $userProfitPM = setting('gde_pm_profit', null, auth()->user()->id);
+        $adminProfitFC = setting('gde_fc_profit', null, User::ROLE_ADMIN);
+        $adminProfitPM = setting('gde_pm_profit', null, User::ROLE_ADMIN);
+        if($adminProfitFC || $userProfitFC){
+            array_push($activeServiceRate, ShippingService::GDE_FIRST_CLASS);
+        }
+        if($adminProfitPM || $userProfitPM){
+            array_push($activeServiceRate, ShippingService::GDE_PRIORITY_MAIL);
+        }
+
+        return $activeServiceRate;
     }
     
 }
