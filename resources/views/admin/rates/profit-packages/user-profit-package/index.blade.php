@@ -31,15 +31,18 @@
                                             
                                         </tr>
                                         @endforeach
-                                        <tr>
-                                            <td>
-                                                {{ $service->name }}
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$setting->service_id,'packageId'=>$setting->package_id] ) }}" class="btn btn-success btn-sm">View Rates</a>
-                                            </td>
-                                            
-                                        </tr>
+                                        @if($services)
+                                            @foreach($services as $service)
+                                                <tr>
+                                                    <td>
+                                                        {{ $service->name }}
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$service->id,'packageId'=>$service->id] ) }}" class="btn btn-success btn-sm">View Rates</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                 </tbody>
                             </table>
                         </div>

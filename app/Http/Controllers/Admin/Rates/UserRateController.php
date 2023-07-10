@@ -22,13 +22,16 @@ class UserRateController extends Controller
      */
     public function index(RateReportsRepository $rateReportsRepository)
     {
+        $shippingServices = [ShippingService::Brazil_Redispatch];
         $this->authorize('userSellingRates',ProfitPackage::class);
 
         $settings = ProfitSetting::where('user_id', auth()->user()->id)->get();
         
-        $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();
+        $shippingServices = array_merge($shippingServices, $this->getActiveProfitService());
         
-        return view('admin.rates.profit-packages.user-profit-package.index', compact('service', 'settings'));
+        $services = ShippingService::whereIn('service_sub_class', $shippingServices)->get();
+
+        return view('admin.rates.profit-packages.user-profit-package.index', compact('services', 'settings'));
     }
 
     public function showPackageRates($id,$packageId)
@@ -65,6 +68,21 @@ class UserRateController extends Controller
         $rates = $rateReportsRepository->getRateReport($packageId, $id);
         $isGDE = false;
         return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
+    }
+
+    public function getActiveProfitService() {
+
+        $activeService = [];
+        if(setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
+            if(setting('gde_fc_profit', null, User::ROLE_ADMIN) || $setting('gde_fc_profit', null, auth()->user()->id)) {
+                array_push($activeService, ShippingService::GDE_FIRST_CLASS);
+            }
+            if(setting('gde_pm_profit', null, User::ROLE_ADMIN) || setting('gde_pm_profit', null, auth()->user()->id)) {
+                array_push($activeService, ShippingService::GDE_PRIORITY_MAIL);
+            }
+        }
+
+        return $activeService;
     }
     
 }

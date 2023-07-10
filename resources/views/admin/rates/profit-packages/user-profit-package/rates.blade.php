@@ -10,7 +10,11 @@
                             <h4 class="mb-0">{{ $service }}  @lang('menu.Rates')</h4>
                         </div>
                         <div class="col-6 d-flex justify-content-end">
-                            <a href="{{ route('admin.rates.rates.exports',$packageId) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
+                            @if($isGDE)
+                                <a href="{{ route('admin.rates.rates.exports', ['package' => 'gde', 'regionRates' => urlencode(getJsonData($rates, $profit))]) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
+                            @else
+                                <a href="{{ route('admin.rates.rates.exports',$packageId) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
+                            @endif
                             <a href="{{ route('admin.rates.user-rates.index') }}" class="btn btn-primary mx-3">@lang('profitpackage.back to list')</a>  
                         </div>
                     </div>
