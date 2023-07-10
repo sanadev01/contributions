@@ -44,6 +44,7 @@
                                         <option value="">All</option>
                                         <option value="{{ json_encode(['NX', 'IX']) }}">Correios Brazil</option>
                                         <option value="{{ json_encode(['AJ-IX', 'AJ-NX']) }}">Anjun </option>
+                                        <option value="{{ json_encode(['AJC-NX', 'AJC-IX']) }}">Anjun China</option>
                                     </select>
                                 </div>
                                 <div class="col-md-1 d-flex mt-2">
