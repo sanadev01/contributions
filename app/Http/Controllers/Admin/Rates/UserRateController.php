@@ -74,14 +74,11 @@ class UserRateController extends Controller
     public function getActiveProfit() {
 
         $activeServiceRate = [];
-        $userProfitFC = setting('gde_fc_profit', null, auth()->user()->id);
-        $userProfitPM = setting('gde_pm_profit', null, auth()->user()->id);
-        $adminProfitFC = setting('gde_fc_profit', null, User::ROLE_ADMIN);
-        $adminProfitPM = setting('gde_pm_profit', null, User::ROLE_ADMIN);
-        if($adminProfitFC || $userProfitFC){
+
+        if(setting('gde_fc_profit', null, User::ROLE_ADMIN) || $setting('gde_fc_profit', null, auth()->user()->id)) {
             array_push($activeServiceRate, ShippingService::GDE_FIRST_CLASS);
         }
-        if($adminProfitPM || $userProfitPM){
+        if(setting('gde_pm_profit', null, User::ROLE_ADMIN) || setting('gde_pm_profit', null, auth()->user()->id)) {
             array_push($activeServiceRate, ShippingService::GDE_PRIORITY_MAIL);
         }
 
