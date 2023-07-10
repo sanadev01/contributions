@@ -31,17 +31,16 @@ class ContainerRepository extends AbstractRepository{
         if($request->filled('startDate')||$request->filled('endDate')){ 
             $query->whereBetween('created_at', [$request->startDate??date('2020-01-01'), $request->endDate??date('Y-m-d')]);
         } 
+        $services = ['NX','IX', 'XP','AJ-NX','AJ-IX'];
         if($request->filled('service')){
-            return $query->whereIn('services_subclass_code', json_decode($request->service))->latest()->paginate(50);
-
-        } else{
-            if($request->filled('paginate') && !$request->paginate){
-                return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX'])->latest()->get();       
-            }else{
-
-            }
-
-            return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX'])->latest()->paginate(50);       
+             $services = json_decode($request->service);
+        }
+        
+        
+        if($request->filled('paginate') && !$request->paginate){
+            return $query->whereIn('services_subclass_code', $services)->latest()->get();
+        }else{
+            return $query->whereIn('services_subclass_code', $services)->latest()->paginate(50);     
         }
 
      }
