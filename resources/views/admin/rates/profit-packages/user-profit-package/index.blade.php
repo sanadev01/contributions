@@ -31,8 +31,8 @@
                                             
                                         </tr>
                                         @endforeach
-                                        @if($service)
-                                            @foreach($service as $service)
+                                        @if($services)
+                                            @foreach($services as $service)
                                                 <tr>
                                                     <td>
                                                         {{ $service->name }}

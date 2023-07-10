@@ -27,12 +27,11 @@ class UserRateController extends Controller
 
         $settings = ProfitSetting::where('user_id', auth()->user()->id)->get();
         
-        if(setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
-            $shippingServices = array_merge($shippingServices, $this->getActiveProfitService());
-        }
-        $service = ShippingService::whereIn('service_sub_class', $shippingServices)->get();
+        $shippingServices = array_merge($shippingServices, $this->getActiveProfitService());
+        
+        $services = ShippingService::whereIn('service_sub_class', $shippingServices)->get();
 
-        return view('admin.rates.profit-packages.user-profit-package.index', compact('service', 'settings'));
+        return view('admin.rates.profit-packages.user-profit-package.index', compact('services', 'settings'));
     }
 
     public function showPackageRates($id,$packageId)
@@ -74,12 +73,13 @@ class UserRateController extends Controller
     public function getActiveProfitService() {
 
         $activeService = [];
-
-        if(setting('gde_fc_profit', null, User::ROLE_ADMIN) || $setting('gde_fc_profit', null, auth()->user()->id)) {
-            array_push($activeService, ShippingService::GDE_FIRST_CLASS);
-        }
-        if(setting('gde_pm_profit', null, User::ROLE_ADMIN) || setting('gde_pm_profit', null, auth()->user()->id)) {
-            array_push($activeService, ShippingService::GDE_PRIORITY_MAIL);
+        if(setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
+            if(setting('gde_fc_profit', null, User::ROLE_ADMIN) || $setting('gde_fc_profit', null, auth()->user()->id)) {
+                array_push($activeService, ShippingService::GDE_FIRST_CLASS);
+            }
+            if(setting('gde_pm_profit', null, User::ROLE_ADMIN) || setting('gde_pm_profit', null, auth()->user()->id)) {
+                array_push($activeService, ShippingService::GDE_PRIORITY_MAIL);
+            }
         }
 
         return $activeService;
