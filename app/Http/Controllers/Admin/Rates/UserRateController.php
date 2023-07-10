@@ -28,12 +28,12 @@ class UserRateController extends Controller
         $settings = ProfitSetting::where('user_id', auth()->user()->id)->get();
 
         if(setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
-            $gdeService = ShippingService::where('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)->first();
+            $service = ShippingService::whereIn('service_sub_class', [ShippingService::Brazil_Redispatch, ShippingService::GDE_PRIORITY_MAIL, ShippingService::GDE_FIRST_CLASS])->get();
+        }else {
+            $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();
         }
-        
-        $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();
-        
-        return view('admin.rates.profit-packages.user-profit-package.index', compact('service', 'settings', 'gdeService'));
+
+        return view('admin.rates.profit-packages.user-profit-package.index', compact('service', 'settings'));
     }
 
     public function showPackageRates($id,$packageId)

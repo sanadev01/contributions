@@ -31,24 +31,18 @@
                                             
                                         </tr>
                                         @endforeach
-                                        @if($gdeService)
-                                            <tr>
-                                                <td>
-                                                    {{ $gdeService->name }}
-                                                </td>
-                                                <td>
-                                                    <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$gdeService->id,'packageId'=>$setting->package_id] ) }}" class="btn btn-success btn-sm">View Rates</a>
-                                                </td>
-                                            </tr>
+                                        @if($service)
+                                            @foreach($service as $service)
+                                                <tr>
+                                                    <td>
+                                                        {{ $service->name }}
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$service->id,'packageId'=>$service->id] ) }}" class="btn btn-success btn-sm">View Rates</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         @endif
-                                        <tr>
-                                            <td>
-                                                {{ $service->name }}
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$setting->service_id,'packageId'=>$setting->package_id] ) }}" class="btn btn-success btn-sm">View Rates</a>
-                                            </td>
-                                        </tr>
                                 </tbody>
                             </table>
                         </div>
