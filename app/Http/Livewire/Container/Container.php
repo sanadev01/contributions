@@ -16,9 +16,8 @@ class Container extends Component
     public $startDate=null;
     public $endDate=null;
     public $service=null;
-    public function render(ContainerRepository $containerRepository)
+    public function render()
     {
- 
         return view('livewire.container.container',[
             'containers' => $this->getContainers()
         ]); 
