@@ -25,25 +25,34 @@
                     <div class="card-content card-body" style="min-height: 100vh;">
 
                         <div class="mb-2 row col-md-12 hide"
-                            @if ($this->search || $this->packetType) style="display: flex !important;" @endif id="logSearch">
-                            <form class="col-12 d-flex pl-0" wire:submit.prevent="render">
+                            @if ($this->search || $this->startDate || $this->endDate || $this->service) style="display: flex !important;" @endif id="logSearch"> 
                                 <div class="col-2 pl-0">
                                     <label>Search</label>
-                                    <input type="search" class="form-control" wire:model.defer="search">
+                                    <input type="search" class="form-control" wire:model.debounce.1000ms="search">
                                 </div>
                                 <div class="col-2">
-                                    <label>Distribution Service Class</label>
-                                    <select class="form-control" wire:model="packetType">
-                                        <option value="">Select Type</option>
-                                        <option value="NX">Packet Standard</option>
-                                        <option value="IX">Packet Express</option>
-                                        <option value="XP">Packet Mini</option>
-                                        <option value="AJ-NX">Anjun Standard</option>
-                                        <option value="AJ-IX">Anjun Express</option>
-                                        <option value="AJC-NX">Anjun China Standard</option>
-                                        <option value="AJC-IX">Anjun China Express</option>
+                                    <label>Start Date</label>
+                                    <input type="date" class="form-control mb-2 mr-sm-2" wire:model="startDate">
+                                </div>
+                                <div class="col-2">
+                                    <label>End Date</label>
+                                    <input type="date" class="form-control" wire:model="endDate">
+                                </div>
+                                <div class="col-2">
+                                    <label>Service</label>
+                                    <select class="form-control mb-2 mr-sm-2" wire:model="service">
+                                        <option value="">All</option>
+                                        <option value="{{ json_encode(['NX', 'IX']) }}">Correios Brazil</option>
+                                        <option value="{{ json_encode(['AJ-IX', 'AJ-NX']) }}">Anjun </option>
                                     </select>
                                 </div>
+                                <div class="col-md-1 d-flex mt-2">
+                                    <div class="mt-4">
+                                        <button wire:click="download" class="btn btn-success waves-effect waves-light"
+                                            type="submit">Download</button>
+                                    </div>
+                                </div>
+ 
                                 <div class="mt-1">
                                     <button type="submit" class="btn btn-primary mt-4">
                                         <i class="fa fa-search"></i>
@@ -53,8 +62,7 @@
                                         <i class="fa fa-undo" data-bs-toggle="tooltip" title=""
                                             data-bs-original-title="fa fa-undo" aria-label="fa fa-undo"
                                             aria-hidden="true"></i></button>
-                                </div>
-                            </form>
+                                </div> 
 
 
                         </div>
