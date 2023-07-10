@@ -14,7 +14,7 @@ class TrackingController extends Controller
     public function __invoke($search = null)
     {
         $orderTrackingRepository = new OrderTrackingRepository($search);
-        $this->trackings = $orderTrackingRepository->getMarketPlaceTrackings();
+        $this->trackings = $orderTrackingRepository->getTrackings();
 
             if(!is_null($this->trackings))
             {

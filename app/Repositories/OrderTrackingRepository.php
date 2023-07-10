@@ -235,7 +235,7 @@ class OrderTrackingRepository
         return $response;
     }
 
-    public function getMarketPlaceTrackings() {
+    public function getTrackings() {
         $users = Setting::where('key', 'MARKETPLACE')->where('value', 'AMAZON')->pluck('user_id')->toArray();
         $trackingCodes = Order::whereIn('user_id', $users)
         ->where('status', Order::STATUS_SHIPPED)
