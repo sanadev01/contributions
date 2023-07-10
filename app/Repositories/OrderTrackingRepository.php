@@ -5,6 +5,7 @@ namespace App\Repositories;
 use stdClass;
 use Exception;
 use App\Models\Order;
+use App\Models\Setting;
 use App\Facades\UPSFacade;
 use App\Models\ShippingService;
 use App\Facades\USPSTrackingFacade;
@@ -232,6 +233,15 @@ class OrderTrackingRepository
         $response = array_reverse($response);
 
         return $response;
+    }
+
+    public function getTrackings() {
+        $users = Setting::where('key', 'MARKETPLACE')->where('value', 'AMAZON')->pluck('user_id')->toArray();
+        $trackingCodes = Order::whereIn('user_id', $users)
+        ->where('status', Order::STATUS_SHIPPED)
+        ->pluck('corrios_tracking_code')
+        ->toArray();
+        return $trackingCodes;
     }
 
 }
