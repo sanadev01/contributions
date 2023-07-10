@@ -54,12 +54,7 @@ class ContainerRepository extends AbstractRepository{
         } 
         if($request->filled('sealNo')){
           $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
-        }
-        if($request->filled('packetType')){
-            $packetType = [$request->packetType];
-        }else{
-           $packetType= ['NX','IX', 'XP','AJ-NX','AJ-IX','AJC-NX','AJC-IX']; 
-        }
+        } 
 
         if($request->filled('unitCode')){
             $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
@@ -73,7 +68,22 @@ class ContainerRepository extends AbstractRepository{
             return $query->whereIn('services_subclass_code', ['CO-NX'])->latest()->paginate(50);
         }
 
-        return $query->whereIn('services_subclass_code', $packetType)->latest()->paginate(50);
+         
+        if($request->filled('startDate')||$request->filled('endDate')){ 
+            $query->whereBetween('created_at', [$request->startDate??date('2020-01-01'), $request->endDate??date('Y-m-d')]);
+        } 
+        $services = ['NX','IX', 'XP','AJ-NX','AJ-IX','AJC-NX','AJC-IX'];
+        if($request->filled('service')){
+             $services = json_decode($request->service);
+        }
+        
+        
+        if($request->filled('paginate') && !$request->paginate){
+            return $query->whereIn('services_subclass_code', $services)->latest()->get();
+        }else{
+            return $query->whereIn('services_subclass_code', $services)->latest()->paginate(50);     
+        }
+        return $query->whereIn('services_subclass_code', $services)->latest()->paginate(50);
     }
 
     public function store(Request $request)
