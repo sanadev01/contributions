@@ -8,7 +8,6 @@ use App\Services\Excel\Export\ContainerExport;
 
 class Container extends Component
 {
-    private $query;
     public $packetType='';
     public $dispatchNumber='';
     public $sealNo='';
