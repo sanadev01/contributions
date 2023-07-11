@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ContainerRepository extends AbstractRepository{
 
-    public function get(Request $request)
+    public function get(Request $request, $paginate)
     {
         $query = Container::query();
 
@@ -35,13 +35,11 @@ class ContainerRepository extends AbstractRepository{
         if($request->filled('service')){
              $services = json_decode($request->service);
         }
-        dd($request->filled('paginate'), $request->paginate);
-        if($request->filled('paginate') && !$request->paginate){
-            return $query->whereIn('services_subclass_code', $services)->latest()->get();
-        }else{
-            return $query->whereIn('services_subclass_code', $services)->latest()->paginate(50);     
-        }
+        $query->whereIn('services_subclass_code', $services)->latest();
+        
+        $query = $paginate ? $query->paginate(50) : $query->where('unit_code', '!=', null )->get();
 
+        return $query;
      }
 
     public function store(Request $request)

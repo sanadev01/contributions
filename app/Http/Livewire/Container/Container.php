@@ -18,16 +18,16 @@ class Container extends Component
     public function render()
     {
         return view('livewire.container.container',[
-            'containers' => $this->getContainers()
+            'containers' => $this->getContainers($paginate = true)
         ]); 
     }
-    public function getContainers()
+    public function getContainers($paginate = true)
     {  
-        return (new ContainerRepository)->get($this->getRequestData());
+        return (new ContainerRepository)->get($this->getRequestData(), $paginate);
     }
     public function download()
     {  
-        $export = new ContainerExport($this->getContainers()); 
+        $export = new ContainerExport($this->getContainers($paginate = false)); 
          $export->handle();
         return $export->download();
     }
