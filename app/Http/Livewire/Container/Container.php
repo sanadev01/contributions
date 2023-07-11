@@ -18,21 +18,21 @@ class Container extends Component
     public function render()
     {
         return view('livewire.container.container',[
-            'containers' => $this->getContainers()
+            'containers' => $this->getContainers($paginate = true)
         ]); 
     }
-    public function getContainers($paginate=true)
+    public function getContainers($paginate = true)
     {  
-        return (new ContainerRepository)->get($this->getRequestData($paginate));
+        return (new ContainerRepository)->get($this->getRequestData(), $paginate);
     }
     public function download()
     {  
-        $export = new ContainerExport($this->getContainers(false)); 
+        $export = new ContainerExport($this->getContainers($paginate = false)); 
          $export->handle();
         return $export->download();
     }
 
-    public function getRequestData($paginate=true)
+    public function getRequestData()
     {
         return request()->merge([
             'startDate' => $this->startDate,
@@ -42,7 +42,6 @@ class Container extends Component
             'sealNo' => $this->sealNo,
             'packetType' => $this->packetType,
             'unitCode' => $this->unitCode,
-            'paginate'=> $paginate,
         ]);
     }
 }
