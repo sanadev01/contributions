@@ -255,6 +255,36 @@ class Client{
         }
     }
 
+    
+    public function getServiceRates($order, $rateType) {
+        
+        $url = $this->baseUrl . '/Utility/CalculatePostage';
+        $body = [
+            "countryCode" => "BR",
+            "postalCode" => $order->recipient->zipcode,
+            "rateType" => $rateType,
+            "serviceType" => "LBL",
+            "packageWeight" => $order->weight,
+            "unitOfWeight" => $order->measurement_unit == "lbs/in" ? 'LB' : 'KG',
+            "packageLength" => $order->length,
+            "packageWidth" => $order->width,
+            "packageHeight" => $order->height,
+            "unitOfMeasurement" => $order->measurement_unit == "lbs/in" ? 'IN' : 'CM',
+            "rateAdjustmentCode" => "NORMAL RATE",
+            "nonRectangular" => "0",
+            "extraServiceCode" => "",
+            "entryFacilityZip" => "",
+            "customerReferenceID" => ""
+        ];
+        $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+        $data= json_decode($response);
+        if ($response->successful() && $data->success == true) {
+            return $this->responseSuccessful($data, 'Rate Calculation Successful');
+        } else {
+            return $this->responseUnprocessable($data->message);
+        }
+    }
+
     public static function responseUnprocessable($message)
     {
         return response()->json([

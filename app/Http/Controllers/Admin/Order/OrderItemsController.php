@@ -8,6 +8,7 @@ use App\Models\Deposit;
 use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
+use App\Services\GSS\Client;
 use Illuminate\Http\Request;
 use App\Models\OrderTracking;
 use App\Models\PaymentInvoice;
@@ -59,7 +60,11 @@ class OrderItemsController extends Controller
             'USPS_FIRSTCLASS_INTERNATIONAL' => ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
             'UPS_GROUND' => ShippingService::UPS_GROUND,
             'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
-            'FEDEX_GROUND' => ShippingService::USPS_GROUND,
+            'USPS_GROUND' => ShippingService::USPS_GROUND,
+            'GSS_IPA' => ShippingService::GSS_IPA,
+            'GSS_EPMI' => ShippingService::GSS_EPMI,
+            'GSS_EPMEI' => ShippingService::GSS_EPMEI,
+            'GSS_EFCM' => ShippingService::GSS_EFCM,
         ];
         
         return view('admin.orders.order-details.index',compact('order','shippingServices', 'error', 'countryConstants', 'shippingServiceCodes'));
@@ -239,6 +244,40 @@ class OrderItemsController extends Controller
             'success' => true,
             'total_amount' => number_format($response->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'], 2),
         ];
+    }
+
+    public function GSSRates(Request $request)
+    {
+        $order = Order::find($request->order_id);
+        if($request->service == ShippingService::GSS_IPA) {
+            $rateType = 'IPA';
+        } elseif($request->service == ShippingService::GSS_EPMEI) {
+            $rateType = 'EPMEI';
+        } elseif($request->service == ShippingService::GSS_EPMI) {
+            $rateType = 'EPMI';
+        } elseif($request->service == ShippingService::GSS_EFCM) {
+            $rateType = 'EFCM';
+        } 
+
+        $client = new Client();
+        $response =  $client->getServiceRates($order, $rateType);
+        $data = $response->getData();
+
+        if ($data->isSuccess && $data->output->calculatedPostage > 0){
+            $rate = $data->output->calculatedPostage;
+            
+            return (array)[
+                'success' => true,
+                'total_amount' => number_format($rate, 2),
+            ];
+        } else {
+            return (array)[
+                'success' => false,
+                'error' => 'server error occured',
+            ];
+        }
+
+        
     }
 
 }

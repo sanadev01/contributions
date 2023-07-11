@@ -457,4 +457,25 @@ class ShippingService extends Model
         return 0;
     }
     
+    public function getGSSRate($order){
+        
+        $client = new Client();
+        $response =  $client->getServiceRates($order);
+        $data = $response->getData();
+        if ($data->isSuccess && $data->output->calculatedPostage > 0){
+            $rate = $data->output->calculatedPostage;
+            if(setting('gss', null, User::ROLE_ADMIN) && setting('gss', null, $order->user_id)){
+                $type = 'gde_fc_profit';
+                if($this->service_sub_class == self::GDE_PRIORITY_MAIL){
+                    $type = 'gde_pm_profit';
+                }
+                $userProfit = setting($type, null, $order->user_id);
+                $adminProfit = setting($type, null, User::ROLE_ADMIN);
+                $profit = $userProfit ? $userProfit : $adminProfit; 
+                $rate = ($profit / 100) * $rate + $rate;
+                return number_format($rate,2);
+            }
+        }
+        return 0;
+    }
 }

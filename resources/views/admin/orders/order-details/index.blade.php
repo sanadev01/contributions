@@ -208,19 +208,19 @@
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 
 <script>
-    const shippingServiceCodes = @json($shippingServiceCodes)
-
+    const shippingServiceCodes = @json($shippingServiceCodes);
     $("#rateBtn").hide();
     $("#itemLimit").hide();
     $('#shipping_service_id').on('change',function(){
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        
         $('#user_declared_freight').val(
             parseFloat($('option:selected', this).attr("data-cost"))
         );
         if(service == shippingServiceCodes.USPS_PRIORITY_INTERNATIONAL|| service == shippingServiceCodes.USPS_FIRSTCLASS_INTERNATIONAL) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
+        }else if(service == shippingServiceCodes.GSS_IPA  || service == shippingServiceCodes.GSS_EPMI || service == shippingServiceCodes.GSS_EPMEI || service == shippingServiceCodes.GSS_EFCM) {
+            return getGSSRates();
         }else if(service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
             $("#rateBtn").hide();
@@ -420,6 +420,28 @@
                 console.log(error);
                 $('#loading').fadeOut();
         })
+    }
+
+    function getGSSRates(){
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        var order_id = $('#order_id').val();
+
+        $('#loading').fadeIn();
+        $.get('{{ route("api.usps_rates") }}',{
+                service: service,
+                order_id: order_id,
+            }).then(function(response){
+                if(response.success == true){
+                    $('#user_declared_freight').val(response.total_amount);
+                    $('#user_declared_freight').prop('readonly', true);
+                }
+                $('#loading').fadeOut();
+
+            }).catch(function(error){
+                console.log(error);
+                $('#loading').fadeOut();
+        })
+
     }
 
     $('#returnParcel').change(function() {
