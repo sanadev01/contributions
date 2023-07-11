@@ -37,19 +37,20 @@ class AnjunReport extends AbstractExportService
             $this->setCellValue('B'.$row, $order->warehouse_number);
             $this->setCellValue('C'.$row, $order->user->name);
             $this->setCellValue('D'.$row, $order->corrios_tracking_code);
-            $this->setCellValue('E'.$row, round($order->gross_total,2));
-            $this->setCellValue('F'.$row, $this->getValuePaidToCorrieos($order)['airport']);
-            $this->setCellValue('G'.$row, $this->getValuePaidToCorrieos($order)['commission']);
-            $this->setCellValue('H'.$row, $order->status_name);
+            $this->setCellValue('E'.$row, optional(optional($order->containers)[0])->unit_code);
+            $this->setCellValue('F'.$row, round($order->gross_total,2));
+            $this->setCellValue('G'.$row, $this->getValuePaidToCorrieos($order)['airport']);
+            $this->setCellValue('H'.$row, $this->getValuePaidToCorrieos($order)['commission']);
+            $this->setCellValue('I'.$row, $order->status_name);
             $row++;
         }
 
         $this->currentRow = $row;
 
-        $this->setCellValue('E'.$row, "=SUM(E1:E{$row})");
         $this->setCellValue('F'.$row, "=SUM(F1:F{$row})");
         $this->setCellValue('G'.$row, "=SUM(G1:G{$row})");
-        $this->setBackgroundColor("A{$row}:G{$row}", 'adfb84');
+        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
+        $this->setBackgroundColor("A{$row}:H{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()
@@ -65,21 +66,24 @@ class AnjunReport extends AbstractExportService
 
         $this->setColumnWidth('D', 20);
         $this->setCellValue('D1', 'Tracking Code');
-
+        
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Amount Customers Paid');
+        $this->setCellValue('E1', 'Unit Code');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Correios (Anjun)');
+        $this->setCellValue('F1', 'Amount Customers Paid');
 
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Anjun Commission');
-        
-        $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Status');
+        $this->setCellValue('G1', 'Correios (Anjun)');
 
-        $this->setBackgroundColor('A1:H1', '2b5cab');
-        $this->setColor('A1:H1', 'FFFFFF');
+        $this->setColumnWidth('H', 20);
+        $this->setCellValue('H1', 'Anjun Commission');
+        
+        $this->setColumnWidth('I', 20);
+        $this->setCellValue('I1', 'Status');
+
+        $this->setBackgroundColor('A1:I1', '2b5cab');
+        $this->setColor('A1:I1', 'FFFFFF');
 
         $this->currentRow++;
 
