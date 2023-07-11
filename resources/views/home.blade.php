@@ -245,7 +245,7 @@
                     'Pending',
                     'Released',
                     'Cancelled',
-                    'refunded',
+                    'Refunded',
                 ],
                 datasets: [{
                     label: 'My Orders',
