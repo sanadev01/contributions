@@ -427,7 +427,7 @@
         var order_id = $('#order_id').val();
 
         $('#loading').fadeIn();
-        $.get('{{ route("api.usps_rates") }}',{
+        $.get('{{ route("api.gssRates") }}',{
                 service: service,
                 order_id: order_id,
             }).then(function(response){

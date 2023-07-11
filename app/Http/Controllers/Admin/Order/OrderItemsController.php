@@ -257,7 +257,7 @@ class OrderItemsController extends Controller
             $rateType = 'EPMI';
         } elseif($request->service == ShippingService::GSS_EFCM) {
             $rateType = 'EFCM';
-        } 
+        }
 
         $client = new Client();
         $response =  $client->getServiceRates($order, $rateType);
