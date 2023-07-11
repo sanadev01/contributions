@@ -21,18 +21,18 @@ class Container extends Component
             'containers' => $this->getContainers()
         ]); 
     }
-    public function getContainers($paginate=true)
+    public function getContainers()
     {  
-        return (new ContainerRepository)->get($this->getRequestData($paginate));
+        return (new ContainerRepository)->get($this->getRequestData());
     }
     public function download()
     {  
-        $export = new ContainerExport($this->getContainers(false)); 
+        $export = new ContainerExport($this->getContainers()); 
          $export->handle();
         return $export->download();
     }
 
-    public function getRequestData($paginate=true)
+    public function getRequestData()
     {
         return request()->merge([
             'startDate' => $this->startDate,
@@ -42,7 +42,6 @@ class Container extends Component
             'sealNo' => $this->sealNo,
             'packetType' => $this->packetType,
             'unitCode' => $this->unitCode,
-            'paginate'=> $paginate,
         ]);
     }
 }

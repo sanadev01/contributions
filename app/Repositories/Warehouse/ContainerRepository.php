@@ -35,8 +35,7 @@ class ContainerRepository extends AbstractRepository{
         if($request->filled('service')){
              $services = json_decode($request->service);
         }
-        
-        
+        dd($request->filled('paginate'), $request->paginate);
         if($request->filled('paginate') && !$request->paginate){
             return $query->whereIn('services_subclass_code', $services)->latest()->get();
         }else{
