@@ -126,28 +126,54 @@
         @endif
         {{-- <x-charts.orders-charts/> --}}
 
+
+
         <div class="card  border-radius-15 mt-3">
             <livewire:dashboard.stats-filter />
         </div>
-        <div class="row mt-3">
-            <div class="card col-7 border-radius-15 p-5">
-                <canvas id="bar"></canvas>
-
+        <div class="d-flex">
+            <div class="col-6 card border-radius-15">
+                <div class="p-2 mx-1">
+                    <canvas id="bar"></canvas>
+                </div>
             </div>
-            <div class="card col-5 border-radius-15 p-5">
-                <p>Total Orders</p>
-                <div class="row">
-                    <div class="col-6">
-                        <h6>Total Monthly Order</h6> 
-                        <h2> {{ $orders['currentmonthTotal'] }} </h2>
+            <div class="offset-1  col-5 card border-radius-15">
+                <div class="px-5 py-1 mx-1">
+                    <h3 class="pt-2 font-weight-bold">Total Orders</h3>
+                    <div class="d-flex justify-content-around">
+                        <div>
+                            <h6 class='font-weight-light'>Total Monthly Order</h6>
+                            <h2> {{ $orders['currentmonthTotal'] }} </h2>
+                            <div class="d-flex align-items-center">
+                                <img class="mb-2" src="{{ asset('images/icon/' . ($orders['percentIncreaseThisMonth'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
+                                <h6 class="font-weight-light"> 
+                                    <span class="{{ $orders['percentIncreaseThisMonth'] > 0 ? 'text-success' : 'text-danger' }}">
+                                        {{ $orders['percentIncreaseThisMonth'] }} %
+                                    </span> month
+                                </h6>
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="font-weight-light">Total Year Order</h6>
+                            <h2> {{ $orders['currentYearTotal'] }} </h2>
+                            <div class="d-flex  align-items-center">
+                                <img
+                                    src="{{ asset('images/icon/' . ($orders['percentIncreaseThisYear'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
+                                <h6 class="font-weight-light">
+                                    <span
+                                        class="{{ $orders['percentIncreaseThisYear'] > 0 ? 'text-success' : 'text-danger' }}">
+                                        {{ $orders['percentIncreaseThisYear'] }} % </span>
+                                    year
+                                </h6>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6"> 
-                        <h6>Total Year Order</h6> 
-                        <h2> {{ $orders['currentYearTotal'] }} </h2>
+                    <div class="d-flex justify-content-center" style="height:300px">
+                        <canvas id="doughnut"></canvas>
                     </div>
                 </div>
-                <canvas id="doughnut"></canvas> 
             </div>
+
         </div>
 
         </div>
@@ -160,60 +186,104 @@
 
     <script>
         const bar = document.getElementById('bar');
-
+        const labels = {!! json_encode($orders['months'], JSON_HEX_TAG) !!}
+        const totalShippedCount = {!! json_encode($orders['totalShippedCount'], JSON_HEX_TAG) !!}
+        const totalOrderCount = {!! json_encode($orders['totalOrderCount'], JSON_HEX_TAG) !!}
+        const doughnutData = {!! json_encode($orders['doughnutData'], JSON_HEX_TAG) !!}
         new Chart(bar, {
             type: 'bar',
             data: {
-                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                labels: labels,
                 datasets: [{
-                    label: 'Sales Analytics',
-                    data: [12, 19, 12, 19, 3, 5, 2, 3, 3, 5, 2, 3],
+                    label: 'Shipped Orders',
+                    data: totalShippedCount,
                     borderWidth: 1
                 }, {
                     label: 'Total Orders',
-                    data: [12, 1, 3, 19, 3, 5, 2, 3, 3, 5, 2, 3],
+                    data: totalOrderCount,
                     borderWidth: 1
                 }, ]
             },
             options: {
                 scales: {
-                    y: {
-                        beginAtZero: true
+                    xAxes: [{
+                        offset: true,
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            usePointStyle: true,
+                        },
                     }
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            display: false
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display: false
+                        }
+                    }],
                 }
             }
         });
 
-
-
-        const doughnut = document.getElementById('doughnut');
-
+        var doughnut = document.getElementById('doughnut');
         new Chart(doughnut, {
             type: 'doughnut',
             data: {
                 labels: [
-                    'Red',
-                    'Blue',
-                    'Yellow'
+                    'Shipped',
+                    'Paid',
+                    'Pending',
+                    'Released',
+                    'Cancelled',
+                    'refunded',
                 ],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [300, 50, 100],
+                    label: 'My Orders',
+                    data: doughnutData,
                     backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
+                        'rgb(22, 93, 255)',
+                        'rgb(80, 205, 137)',
+                        'rgb(255, 199, 0)',
+                        'rgb(114, 57, 234)',
+                        'rgb(242, 94, 94)',
+                        'rgb(181, 189, 203)'
                     ],
                     hoverOffset: 4
                 }]
             },
             options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            usePointStyle: true,
+                        },
                     }
+                },
+                cutout: 60,
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            display: false
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display: false
+                        }
+                    }]
                 }
-            }
+            },
         });
     </script>
 @endsection
