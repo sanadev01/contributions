@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Reports;
 use App\Jobs\ExportOrder;
 use Illuminate\Http\Request;
+use App\Jobs\ExportAnjunReport;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
@@ -24,13 +25,14 @@ class OrderExportController extends Controller
 
         $report = Reports::create([
             'user_id' => Auth::id(),
-            'name' => 'Orders Export',
+            'name' => $request->type == "anjun"? "Anjun Report" : "Orders Export",
             'start_date' => $startDate,
             'end_date' => $endDate,
         ]);
         
         $request->merge(['report' => $report->id]);
         ExportOrder::dispatch($request->all(), Auth::user());
+        
         return redirect()->route('admin.reports.export-orders');
     }
 }
