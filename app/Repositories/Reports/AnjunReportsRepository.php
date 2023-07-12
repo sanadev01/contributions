@@ -33,26 +33,4 @@ class AnjunReportsRepository
         return $paginate ? $query->paginate($pageSize):$query->get();
     }
 
-    public function getAnjunReport($request)
-    {
-        $orders = Order::has('user')->where('status', '>=', Order::STATUS_PAYMENT_DONE);
-        $orders->whereHas('shippingService',function($orders) {
-            return $orders->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express]);
-        });
-        if (Auth::user()->isUser()) {
-            $orders->where('user_id', Auth::id());
-        }
-        $startDate  = $request->start_date.' 00:00:00';
-        $endDate    = $request->end_date.' 23:59:59';
-        if ( $request->start_date ){
-            $orders->where('order_date','>=',$startDate);
-        }
-        if ( $request->end_date ){
-            $orders->where('order_date','<=',$endDate);
-        }
-
-        return $orders->orderBy('id')->get();
-
-    }
-
 }
