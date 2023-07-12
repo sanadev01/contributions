@@ -67,7 +67,7 @@
                 <div class="ml-3">
                     <dl>
                         <div class="font-weight-bold large-heading-text pt-3 ">Welcome back, {{ Auth::user()->name }} 👋</div>
-                        <dd class="   font-weight-light pb-2 mb-4">Your current kpi report is here</dd>
+                        <dd class="font-weight-light pb-2 mb-4">Your current kpi report is here</dd>
                     </dl>
                 </div>
             </div>
@@ -129,13 +129,10 @@
         {{-- <x-charts.orders-charts/> --}}
         <div class="card border-radius-15 mb-3">
             <livewire:dashboard.stats-filter />
-        </div>
-
-
- 
+        </div> 
             <div class="row no-gutters">
-                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 ">
-                    <div class="mr-lg-2 mr-md-0 card border-radius-15">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 card border-radius-15">
+                    <div class="mr-lg-2 mr-md-0 ">
                         <h4 class="pt-3 pl-3 font-weight-light">Shipped Orders Analytics</h4>
                         <canvas id="bar"></canvas>
                     </div>
