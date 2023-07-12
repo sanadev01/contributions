@@ -62,18 +62,20 @@
     </nav>
     {{-- contact us --}}
     <div class='row no-gutters d-flex align-items-center'>
-        <div class="col-4">
-            <div class="light-green-color welcome-admin">
-                <dl class="mt-2 vertical-center p-2">
-                    <dt class="font-weight-bold">Welcome back, {{ Auth::user()->name }} 👋</dt>
-                    <dd class="font-weight-light">Your current kpi report is here</dd>
-                </dl>
+        <div class="col-xl-4 col-lg-12">
+            <div class="light-green-color welcome-admin height-100">
+                <div class="ml-3">
+                    <dl>
+                        <p class="font-weight-bold dt pt-3 ">Welcome back, {{ Auth::user()->name }} 👋</p>
+                        <dd class="   font-weight-light pb-2 mb-4">Your current kpi report is here</dd>
+                    </dl>
+                </div>
             </div>
         </div>
-        <div class="col-8 light-green-color p-2">
+        <div class="col-xl-8 col-lg-12 light-green-color  border-radius-15 p-2">
             <div class="row mt-0 ">
                 <div class="col-12 pb-xl-2 pb-1 h-25">
-                    <a href="{{ url('tickets') }}" target="_blank"> <img class="banner rounded-4"
+                    <a href="{{ url('tickets') }}" target="_blank"> <img class="banner border-radius-15" rounded-corners
                             src="{{ asset('images/kpi-banner.png') }}" width="100%" height="auto" alt="contact us">
                     </a>
                 </div>
@@ -125,19 +127,16 @@
             </div>
         @endif
         {{-- <x-charts.orders-charts/> --}}
-
-
-
         <div class="card  border-radius-15 mt-3">
             <livewire:dashboard.stats-filter />
-        </div>
-        <div class="d-flex">
-            <div class="col-6 card border-radius-15">
+        </div> 
+        <div class="row mx-1">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 card border-radius-15">
                 <div class="p-2 mx-1">
                     <canvas id="bar"></canvas>
                 </div>
             </div>
-            <div class="offset-1  col-5 card border-radius-15">
+            <div class="offset-lg-1 col-lg-5 col-md-12 col-sm-12 col-xs-12 card border-radius-15">
                 <div class="px-5 py-1 mx-1">
                     <h3 class="pt-2 font-weight-bold">Total Orders</h3>
                     <div class="d-flex justify-content-around">
@@ -145,9 +144,11 @@
                             <h6 class='font-weight-light'>Total Monthly Order</h6>
                             <h2> {{ $orders['currentmonthTotal'] }} </h2>
                             <div class="d-flex align-items-center">
-                                <img class="mb-2" src="{{ asset('images/icon/' . ($orders['percentIncreaseThisMonth'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
-                                <h6 class="font-weight-light"> 
-                                    <span class="{{ $orders['percentIncreaseThisMonth'] > 0 ? 'text-success' : 'text-danger' }}">
+                                <img class="mb-2"
+                                    src="{{ asset('images/icon/' . ($orders['percentIncreaseThisMonth'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
+                                <h6 class="font-weight-light">
+                                    <span
+                                        class="{{ $orders['percentIncreaseThisMonth'] > 0 ? 'text-success' : 'text-danger' }}">
                                         {{ $orders['percentIncreaseThisMonth'] }} %
                                     </span> month
                                 </h6>
@@ -169,7 +170,8 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-center" style="height:300px">
-                        <canvas id="doughnut"></canvas>
+                        <canvas id="doughnut"></canvas> 
+
                     </div>
                 </div>
             </div>
@@ -185,6 +187,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+        
+
         const bar = document.getElementById('bar');
         const labels = {!! json_encode($orders['months'], JSON_HEX_TAG) !!}
         const totalShippedCount = {!! json_encode($orders['totalShippedCount'], JSON_HEX_TAG) !!}
@@ -197,11 +201,13 @@
                 datasets: [{
                     label: 'Shipped Orders',
                     data: totalShippedCount,
-                    borderWidth: 1
+                    borderWidth: 1,
+                    backgroundColor: '#1171b2',
                 }, {
                     label: 'Total Orders',
                     data: totalOrderCount,
-                    borderWidth: 1
+                    borderWidth: 1,
+                    backgroundColor: '#1ec09a',
                 }, ]
             },
             options: {
@@ -221,69 +227,69 @@
                     }
                 },
                 scales: {
-                    xAxes: [{
-                        gridLines: {
-                            display: false
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Past 12 Month'
                         }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            display: false
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Orders Value'
                         }
-                    }],
+                    }
                 }
             }
         });
 
-        var doughnut = document.getElementById('doughnut');
-        new Chart(doughnut, {
-            type: 'doughnut',
-            data: {
-                labels: [
-                    'Shipped',
-                    'Paid',
-                    'Pending',
-                    'Released',
-                    'Cancelled',
-                    'Refunded',
-                ],
-                datasets: [{
-                    label: 'My Orders',
-                    data: doughnutData,
-                    backgroundColor: [
-                        'rgb(22, 93, 255)',
-                        'rgb(80, 205, 137)',
-                        'rgb(255, 199, 0)',
-                        'rgb(114, 57, 234)',
-                        'rgb(242, 94, 94)',
-                        'rgb(181, 189, 203)'
-                    ],
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        labels: {
-                            usePointStyle: true,
-                        },
-                    }
-                },
-                cutout: 60,
-                scales: {
-                    xAxes: [{
-                        gridLines: {
-                            display: false
-                        }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            display: false
-                        }
-                    }]
-                }
-            },
-        });
+        var ctx = document.getElementById('doughnut');
+var doughnutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: [
+            'Shipped',
+            'Paid',
+            'Pending',
+            'Released',
+            'Cancelled',
+            'Refunded',
+        ],
+        datasets: [{
+            label: 'My Orders',
+            data: doughnutData,
+            backgroundColor: [
+                'rgb(22, 93, 255)',
+                'rgb(80, 205, 137)',
+                'rgb(255, 199, 0)',
+                'rgb(114, 57, 234)',
+                'rgb(242, 94, 94)',
+                'rgb(181, 189, 203)'
+            ],
+            hoverOffset: 4
+        }]
+    },
+    options: {
+        cutout: 70,
+        plugins: {
+          
+      legend: {
+        fullSize:true,
+        position:'right',
+        align:'center',
+
+        lineWidth:4,
+        text:"hello",
+        display: true,
+            textAlign:'right',
+        labels:{ 
+            usePointStyle:true
+        }
+      }
+        },  
+    }
+});
     </script>
 @endsection

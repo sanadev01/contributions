@@ -303,7 +303,7 @@ body.fixed-footer footer.footer-dark {
         padding-left: 25px;
         transition: padding 0.35s ease 0s !important; }
       .main-menu.menu-light .navigation > li {
-        padding: 0 }
+        padding: 0  }
         .main-menu.menu-light .navigation > li > a .label {
           margin-top: 4px;
           margin-right: 5px; }

@@ -101,7 +101,7 @@
             @endif
 
             @can('importExcel', App\Models\Order::class)
-                <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
+                <li class="nav-item {{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
                     <a href="{{ route('admin.import.import-excel.index') }}">
                         <img src="{{ asset('images/icon/uploadfile.svg') }}" alt="Upload files">
                         <span class="menu-title">@lang('menu.import-excel-order.excel')</span>
@@ -109,7 +109,7 @@
                 </li>
             @endcan
             @can('printBulkLabel', App\Models\Order::class)
-                <li class="{{ $isActive(['admin.label.scan.create']) }}">
+                <li class="nav-item {{ $isActive(['admin.label.scan.create']) }}">
                     <a href="{{ route('admin.label.scan.create') }}">
                         <img src="{{ asset('images/icon/print.svg') }}" alt="Printer">
                         <span class="menu-title">@lang('menu.Print Label')</span>
