@@ -19,7 +19,7 @@ class ExportAnjunReport implements ShouldQueue
 
     public $request;
     public $user;
-    public $orderRepository;
+    public $reportRepository;
     /**
      * Create a new job instance.
      *
@@ -41,7 +41,6 @@ class ExportAnjunReport implements ShouldQueue
     {
         $request = new Request($this->request);
         $orders = $this->reportRepository->getAnjunReport($request, $this->user);
- 
         $id = $this->user->id;
         $exportService = new AnjunReport($orders, $id);
         $url = $exportService->handle();

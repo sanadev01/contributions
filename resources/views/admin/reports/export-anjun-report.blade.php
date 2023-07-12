@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-content">
                         <div class="card-header">
-                            <h4 class="mb-0">Export Anjun Report</h4>
+                            <h4 class="mb-0">Download Anjun Report</h4>
                         </div>
                         <div class="card-body">
                             <livewire:order.export-order /> 

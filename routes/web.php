@@ -90,7 +90,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
             Route::post('order/update/status',OrderStatusController::class)->name('order.update.status');
-            Route::get('anjun-report', AnjunReportExportController::class)->name('reports.export-anjun');
 
 
             Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
@@ -180,7 +179,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::get('export-orders', [App\Http\Controllers\Admin\Reports\OrderReportController::class,'download'])->name('reports.export-orders');
         Route::get('unpaid-orders-report', [App\Http\Controllers\Admin\Reports\UnPaidOrdersController::class, 'index'])->name('reports.unpaid-orders');
         Route::post('unpaid-orders-download', [App\Http\Controllers\Admin\Reports\UnPaidOrdersController::class, 'download'])->name('reports.unpaid-orders-download');
-        Route::get('export-anjun-report', [App\Http\Controllers\Admin\Reports\AnjunReportController::class,'download'])->name('anjun-report');
 
         Route::namespace('Inventory')->as('inventory.')->prefix('inventory')->group(function(){
             Route::resource('product', ProductController::class);
