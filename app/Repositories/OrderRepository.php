@@ -409,41 +409,41 @@ class OrderRepository
         if ($user->isUser()) {
             $orders->where('user_id', $user->id);
         }
-        if ($request['type'] == 'domestic') {
+        if (optional($request)['type'] == 'domestic') {
             \Log::info('type');
-            \Log::info($request['type']);
+            \Log::info(optional($request)['type']);
             $orders->whereHas('shippingService', function($query) {
                 return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND, ShippingService::USPS_GROUND]);
             })->orWhereNotNull('us_api_tracking_code');
         }
 
-        if ($request['type'] == 'anjun') {
+        if (optional($request)['type'] == 'anjun') {
             \Log::info('type');
-            \Log::info($request['type']);
+            \Log::info(optional($request)['type']);
             $orders->whereHas('shippingService',function($orders) {
                 return $orders->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express]);
             })
             ->where('status', '>=', Order::STATUS_PAYMENT_DONE);
         }
 
-        if ($request['type'] && !in_array($request['type'], ['domestic', 'anjun'])) {
+        if (optional($request)['type'] && !in_array(optional($request)['type'], ['domestic', 'anjun'])) {
             \Log::info('type in status');
-            \Log::info($request['type']);
-            $orders->where('status','=',$request['type']);
+            \Log::info(optional($request)['type']);
+            $orders->where('status','=',optional($request)['type']);
         }
 
-        if (optional($request)['is_trashed']) {
+        if (optional(optional($request))['is_trashed']) {
             $orders->onlyTrashed();
         }
 
-        $startDate  = $request['start_date'].' 00:00:00';
-        $endDate    = $request['end_date'].' 23:59:59';
-        if ( $request['start_date'] ){
+        $startDate  = optional($request)['start_date'].' 00:00:00';
+        $endDate    = optional($request)['end_date'].' 23:59:59';
+        if ( optional($request)['start_date'] ){
             \Log::info('start_date');
             \Log::info($startDate);
             $orders->where('order_date' , '>=',$startDate);
         }
-        if ( $request['end_date'] ){
+        if ( optional($request)['end_date'] ){
             \Log::info('end_date');
             \Log::info($endDate);
             $orders->where('order_date' , '<=',$endDate);
