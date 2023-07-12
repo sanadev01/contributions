@@ -25,14 +25,17 @@ class OrderExportController extends Controller
 
         $report = Reports::create([
             'user_id' => Auth::id(),
-            'name' => $request->type == "anjun"? "Anjun Report" : "Orders Export",
+            'name' => $request->type == "Anjun"? "Anjun Report" : "Orders Export",
             'start_date' => $startDate,
             'end_date' => $endDate,
         ]);
         
         $request->merge(['report' => $report->id]);
-        ExportOrder::dispatch($request->all(), Auth::user());
-        
+        if($request->type == "Anjun"){
+            ExportAnjunReport::dispatch($request->all(), Auth::user());
+        }else {
+            ExportOrder::dispatch($request->all(), Auth::user());
+        }
         return redirect()->route('admin.reports.export-orders');
     }
 }
