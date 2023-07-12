@@ -40,11 +40,9 @@ class ExportOrder implements ShouldQueue
      */
     public function handle()
     {
-        $request = new Request($this->request);
-
-        $orders = $this->orderRepository->getOdersForExport($request, $this->user);
+        $orders = $this->orderRepository->getOdersForExport(optional($this->request), $this->user);
         $id = $this->user->id;
-        if($request->type == 'anjun'){
+        if(optional($this->request)['type'] == 'anjun'){
             $exportService = new AnjunReport($orders, $id);
         }else{
             $exportService = new OrderExport($orders, $id);
@@ -52,7 +50,7 @@ class ExportOrder implements ShouldQueue
         $url = $exportService->handle();
 
         if($url) {
-            $report = Reports::find($request->report);
+            $report = Reports::find(optional($this->request)['report']);
             $report->update(['path'=> $url, 'is_complete' => true]);
         }
         
