@@ -66,7 +66,7 @@
             <div class="light-green-color welcome-admin height-100">
                 <div class="ml-3">
                     <dl>
-                        <p class="font-weight-bold dt pt-3 ">Welcome back, {{ Auth::user()->name }} 👋</p>
+                        <div class="font-weight-bold large-heading-text pt-3 ">Welcome back, {{ Auth::user()->name }} 👋</div>
                         <dd class="   font-weight-light pb-2 mb-4">Your current kpi report is here</dd>
                     </dl>
                 </div>
@@ -132,19 +132,18 @@
         </div>
 
 
-
-        <div class="pl-3">
-            <div class="row">
-                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 card border-radius-15">
-                    <div class="p-3">
-                        <h3 class="pt-3 pl-3 font-weight-bold">Shipped Orders Analytics</h3>
+ 
+            <div class="row no-gutters">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 ">
+                    <div class="mr-lg-2 mr-md-0 card border-radius-15">
+                        <h4 class="pt-3 pl-3 font-weight-light">Shipped Orders Analytics</h4>
                         <canvas id="bar"></canvas>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 ">
-                    <div class="p-3 card border-radius-15">
+                    <div class="ml-lg-2 ml-md-0 card border-radius-15">
                         <div>
-                            <h3 class="pt-3 pl-3 font-weight-bold">Total Orders</h3>
+                            <h4 class="pt-4 pl-3 font-weight-light ">Total Orders</h4>
                             <div class="d-flex justify-content-around">
                                 <div>
                                     <h6 class='font-weight-light'>Total Monthly Order</h6>
@@ -182,8 +181,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div> 
         </div>
 
     </section>

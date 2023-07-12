@@ -3,7 +3,7 @@
     <div class="row col-12 mt-4 no-gutters">
         <div class=" col-11 text-left mb-5">
             <div class="row my-3">
-                <div class="col-md-4">
+                <div class="col-md-4 mb-3">
                     <label for="">@lang('dashboard.Start Date')</label>
                     <input type="date" class="form-control form-control h-75 border-radius-10" wire:model="startDate">
                 </div>
