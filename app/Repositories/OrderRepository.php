@@ -401,6 +401,8 @@ class OrderRepository
     
     public function getOdersForExport($request, $user)
     {
+        \Log::info('request');
+        \Log::info($request->all());
         $orders = Order::where('status','>=',Order::STATUS_ORDER)
         ->has('user');
 
@@ -408,12 +410,16 @@ class OrderRepository
             $orders->where('user_id', $user->id);
         }
         if ($request->type == 'domestic') {
+            \Log::info('type');
+            \Log::info($request->type);
             $orders->whereHas('shippingService', function($query) {
                 return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND, ShippingService::USPS_GROUND]);
             })->orWhereNotNull('us_api_tracking_code');
         }
 
         if ($request->type == 'anjun') {
+            \Log::info('type');
+            \Log::info($request->type);
             $orders->whereHas('shippingService',function($orders) {
                 return $orders->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express]);
             })
@@ -421,6 +427,8 @@ class OrderRepository
         }
 
         if ($request->type && !in_array($request->type, ['domestic', 'anjun'])) {
+            \Log::info('type in status');
+            \Log::info($request->type);
             $orders->where('status','=',$request->type);
         }
 
@@ -431,9 +439,13 @@ class OrderRepository
         $startDate  = $request->start_date.' 00:00:00';
         $endDate    = $request->end_date.' 23:59:59';
         if ( $request->start_date ){
+            \Log::info('start_date');
+            \Log::info($startDate);
             $orders->where('order_date' , '>=',$startDate);
         }
         if ( $request->end_date ){
+            \Log::info('end_date');
+            \Log::info($endDate);
             $orders->where('order_date' , '<=',$endDate);
         }
         
