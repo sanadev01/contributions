@@ -32,8 +32,4 @@ class AnjunReportController extends Controller
         return $exportService->handle();
     }
 
-    public function download()
-    {
-        return view('admin.reports.export-anjun-report');
-    }
 }

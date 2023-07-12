@@ -91,7 +91,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
             Route::post('order/update/status',OrderStatusController::class)->name('order.update.status');
 
-
             Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
         });
         //Cancel Lable Route for GePS & Prime5
@@ -101,7 +100,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('parcels',SelectPackagesController::class)->only('index','store','edit','update');
             Route::resource('parcels.services',ServicesController::class)->only('index','store');
         });
-
 
         Route::namespace('Payment')->group(function(){
             Route::resource('payment-invoices', PaymentInvoiceController::class)->only(['index','store','destroy']);
