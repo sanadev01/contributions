@@ -37,7 +37,8 @@
                                     </form>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <form action="{{ route('admin.reports.anjun.create') }}" method="GET" target="_blank">
+                                    <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
+                                        <input type="hidden" name="type" value="anjun">
                                         @csrf
                                         <div class="row">
                                             <div class="offset-1 col-md-5">

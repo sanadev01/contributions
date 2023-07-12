@@ -475,7 +475,14 @@ class OrderRepository
             })->orWhereNotNull('us_api_tracking_code');
         }
 
-        if ($request->type && $request->type != 'domestic') {
+        if ($request->type == 'anjun') {
+            $orders->whereHas('shippingService',function($orders) {
+                return $orders->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express]);
+            })
+            ->where('status', '>=', Order::STATUS_PAYMENT_DONE);
+        }
+        
+        if ($request->type && !in_array($request->type, ['domestic', 'anjun'])) {
             $orders->where('status','=',$request->type);
         }
 
