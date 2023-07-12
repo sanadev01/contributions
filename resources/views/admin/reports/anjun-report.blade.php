@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="col-6 text-right">
                                     <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
-                                        <input type="hidden" name="type" value="Anjun">
+                                        <input type="hidden" name="type" value="anjun">
                                         @csrf
                                         <div class="row">
                                             <div class="offset-1 col-md-5">
