@@ -28,13 +28,13 @@
             -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
             box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
             border: none;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             -webkit-transition: all 0.3s ease-in-out;
             transition: all 0.3s ease-in-out;
         }
 
         .card_block .card-block {
-            padding: 25px;
+            padding: 30px;
         }
 
         .order-card i {
@@ -127,57 +127,63 @@
             </div>
         @endif
         {{-- <x-charts.orders-charts/> --}}
-        <div class="card  border-radius-15 mt-3">
+        <div class="card border-radius-15 mb-3">
             <livewire:dashboard.stats-filter />
-        </div> 
-        <div class="row mx-1">
-            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 card border-radius-15">
-                <div class="p-2 mx-1">
-                    <canvas id="bar"></canvas>
-                </div>
-            </div>
-            <div class="offset-lg-1 col-lg-5 col-md-12 col-sm-12 col-xs-12 card border-radius-15">
-                <div class="px-5 py-1 mx-1">
-                    <h3 class="pt-2 font-weight-bold">Total Orders</h3>
-                    <div class="d-flex justify-content-around">
-                        <div>
-                            <h6 class='font-weight-light'>Total Monthly Order</h6>
-                            <h2> {{ $orders['currentmonthTotal'] }} </h2>
-                            <div class="d-flex align-items-center">
-                                <img class="mb-2"
-                                    src="{{ asset('images/icon/' . ($orders['percentIncreaseThisMonth'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
-                                <h6 class="font-weight-light">
-                                    <span
-                                        class="{{ $orders['percentIncreaseThisMonth'] > 0 ? 'text-success' : 'text-danger' }}">
-                                        {{ $orders['percentIncreaseThisMonth'] }} %
-                                    </span> month
-                                </h6>
-                            </div>
-                        </div>
-                        <div>
-                            <h6 class="font-weight-light">Total Year Order</h6>
-                            <h2> {{ $orders['currentYearTotal'] }} </h2>
-                            <div class="d-flex  align-items-center">
-                                <img
-                                    src="{{ asset('images/icon/' . ($orders['percentIncreaseThisYear'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
-                                <h6 class="font-weight-light">
-                                    <span
-                                        class="{{ $orders['percentIncreaseThisYear'] > 0 ? 'text-success' : 'text-danger' }}">
-                                        {{ $orders['percentIncreaseThisYear'] }} % </span>
-                                    year
-                                </h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-center" style="height:300px">
-                        <canvas id="doughnut"></canvas> 
-
-                    </div>
-                </div>
-            </div>
-
         </div>
 
+
+
+        <div class="pl-3">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 card border-radius-15">
+                    <div class="p-3">
+                        <h3 class="pt-3 pl-3 font-weight-bold">Shipped Orders Analytics</h3>
+                        <canvas id="bar"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 ">
+                    <div class="p-3 card border-radius-15">
+                        <div>
+                            <h3 class="pt-3 pl-3 font-weight-bold">Total Orders</h3>
+                            <div class="d-flex justify-content-around">
+                                <div>
+                                    <h6 class='font-weight-light'>Total Monthly Order</h6>
+                                    <h2> {{ $orders['currentmonthTotal'] }} </h2>
+                                    <div class="d-flex align-items-center">
+                                        <img class="mb-2"
+                                            src="{{ asset('images/icon/' . ($orders['percentIncreaseThisMonth'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
+                                        <h6 class="font-weight-light">
+                                            <span
+                                                class="{{ $orders['percentIncreaseThisMonth'] > 0 ? 'text-success' : 'text-danger' }}">
+                                                {{ $orders['percentIncreaseThisMonth'] }} %
+                                            </span> month
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="font-weight-light">Total Year Order</h6>
+                                    <h2> {{ $orders['currentYearTotal'] }} </h2>
+                                    <div class="d-flex  align-items-center">
+                                        <img
+                                            src="{{ asset('images/icon/' . ($orders['percentIncreaseThisYear'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
+                                        <h6 class="font-weight-light">
+                                            <span
+                                                class="{{ $orders['percentIncreaseThisYear'] > 0 ? 'text-success' : 'text-danger' }}">
+                                                {{ $orders['percentIncreaseThisYear'] }} % </span>
+                                            year
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center" style="height:300px">
+                                <canvas id="doughnut"></canvas>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
 
     </section>
@@ -187,8 +193,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        
-
         const bar = document.getElementById('bar');
         const labels = {!! json_encode($orders['months'], JSON_HEX_TAG) !!}
         const totalShippedCount = {!! json_encode($orders['totalShippedCount'], JSON_HEX_TAG) !!}
@@ -238,7 +242,7 @@
                         display: true,
                         title: {
                             display: true,
-                            text: 'Orders Value'
+                            text: '#Orders'
                         }
                     }
                 }
@@ -246,50 +250,50 @@
         });
 
         var ctx = document.getElementById('doughnut');
-var doughnutChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-        labels: [
-            'Shipped',
-            'Paid',
-            'Pending',
-            'Released',
-            'Cancelled',
-            'Refunded',
-        ],
-        datasets: [{
-            label: 'My Orders',
-            data: doughnutData,
-            backgroundColor: [
-                'rgb(22, 93, 255)',
-                'rgb(80, 205, 137)',
-                'rgb(255, 199, 0)',
-                'rgb(114, 57, 234)',
-                'rgb(242, 94, 94)',
-                'rgb(181, 189, 203)'
-            ],
-            hoverOffset: 4
-        }]
-    },
-    options: {
-        cutout: 70,
-        plugins: {
-          
-      legend: {
-        fullSize:true,
-        position:'right',
-        align:'center',
+        var doughnutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    'Shipped',
+                    'Paid',
+                    'Pending',
+                    'Released',
+                    'Cancelled',
+                    'Refunded',
+                ],
+                datasets: [{
+                    label: '#Orders',
+                    data: doughnutData,
+                    backgroundColor: [
+                        'rgb(22, 93, 255)',
+                        'rgb(80, 205, 137)',
+                        'rgb(255, 199, 0)',
+                        'rgb(114, 57, 234)',
+                        'rgb(242, 94, 94)',
+                        'rgb(181, 189, 203)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                cutout: 70,
+                plugins: {
 
-        lineWidth:4,
-        text:"hello",
-        display: true,
-            textAlign:'right',
-        labels:{ 
-            usePointStyle:true
-        }
-      }
-        },  
-    }
-});
+                    legend: {
+                        fullSize: true,
+                        position: 'right',
+                        align: 'center',
+
+                        lineWidth: 4,
+                        text: "hello",
+                        display: true,
+                        textAlign: 'right',
+                        labels: {
+                            usePointStyle: true
+                        }
+                    }
+                },
+            }
+        });
     </script>
 @endsection
