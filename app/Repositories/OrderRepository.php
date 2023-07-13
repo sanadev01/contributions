@@ -400,43 +400,44 @@ class OrderRepository
     }
     
     public function getOrdersForExport($request, $user)
-    {
-        $orders = Order::where('status','>=',Order::STATUS_ORDER)
-        ->has('user');
+{
+        $orders = Order::where('status', '>=', Order::STATUS_ORDER)->has('user');
 
         if ($user->isUser()) {
             $orders->where('user_id', $user->id);
         }
+
         if ($request->type == 'domestic') {
-            $orders->whereHas('shippingService', function($query) {
-                return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND, ShippingService::USPS_GROUND]);
-            })->orWhereNotNull('us_api_tracking_code');
-        }
-
-        if ($request->type == 'anjun') {
-            $orders->whereHas('shippingService',function($orders) {
-                return $orders->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express]);
-            })
-            ->where('status', '>=', Order::STATUS_PAYMENT_DONE);
-        }
-
-        if ($request->type && $request->type != 'domestic') {
-            $orders->where('status','=',$request->type);
+            $orders->where(function ($query) {
+                $query->whereHas('shippingService', function ($query) {
+                    $query->whereIn('service_sub_class', [
+                        ShippingService::USPS_PRIORITY,
+                        ShippingService::USPS_FIRSTCLASS,
+                        ShippingService::UPS_GROUND,
+                        ShippingService::FEDEX_GROUND,
+                        ShippingService::USPS_GROUND
+                    ]);
+                })->orWhereNotNull('us_api_tracking_code');
+            });
+        } elseif ($request->type && $request->type != 'domestic') {
+            $orders->where('status', '=', $request->type);
         }
 
         if ($request->is_trashed) {
             $orders->onlyTrashed();
         }
 
-        $startDate  = $request->start_date.' 00:00:00';
-        $endDate    = $request->end_date.' 23:59:59';
-        if ($request->start_date ){
-            $orders->where('order_date' , '>=',$startDate);
+        $startDate = $request->start_date . ' 00:00:00';
+        $endDate = $request->end_date . ' 23:59:59';
+
+        if ($request->start_date) {
+            $orders->where('order_date', '>=', $startDate);
         }
-        if ($request->end_date ){
-            $orders->where('order_date' , '<=',$endDate);
+
+        if ($request->end_date) {
+            $orders->where('order_date', '<=', $endDate);
         }
-        
+
         return $orders->orderBy('id')->get();
     }
 
