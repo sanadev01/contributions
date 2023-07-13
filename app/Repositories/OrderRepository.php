@@ -400,7 +400,7 @@ class OrderRepository
     }
     
     public function getOrdersForExport($request, $user)
-{
+    {
         $orders = Order::where('status', '>=', Order::STATUS_ORDER)->has('user');
 
         if ($user->isUser()) {
@@ -419,7 +419,7 @@ class OrderRepository
                     ]);
                 })->orWhereNotNull('us_api_tracking_code');
             });
-        } elseif ($request->type && $request->type != 'domestic') {
+        } elseif ($request->type) {
             $orders->where('status', '=', $request->type);
         }
 
