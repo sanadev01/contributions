@@ -132,19 +132,19 @@
         </div> 
             <div class="row no-gutters">
                 <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 card border-radius-15">
-                    <div class="mr-lg-2 mr-md-0 ">
-                        <h4 class="pt-3 pl-3 font-weight-light">Shipped Orders Analytics</h4>
+                    <div class="mr-lg-3 mr-md-0 ">
+                        <h4 class="pt-4 pl-3 font-weight-light">Shipped Orders Analytics</h4>
                         <canvas id="bar"></canvas>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 ">
-                    <div class="ml-lg-2 ml-md-0 card border-radius-15">
+                    <div class="ml-lg-3 ml-md-0 card border-radius-15">
                         <div>
                             <h4 class="pt-4 pl-3 font-weight-light ">Total Orders</h4>
                             <div class="d-flex justify-content-around">
                                 <div>
                                     <h6 class='font-weight-light'>Total Monthly Order</h6>
-                                    <h2> {{ $orders['currentmonthTotal'] }} </h2>
+                                    <h2 class='font-weight-bold'> {{ $orders['currentmonthTotal'] }} </h2>
                                     <div class="d-flex align-items-center">
                                         <img class="mb-2"
                                             src="{{ asset('images/icon/' . ($orders['percentIncreaseThisMonth'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
@@ -158,7 +158,7 @@
                                 </div>
                                 <div>
                                     <h6 class="font-weight-light">Total Year Order</h6>
-                                    <h2> {{ $orders['currentYearTotal'] }} </h2>
+                                    <h1  class='font-weight-bold'> {{ $orders['currentYearTotal'] }} </h1>
                                     <div class="d-flex  align-items-center">
                                         <img
                                             src="{{ asset('images/icon/' . ($orders['percentIncreaseThisYear'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
@@ -220,7 +220,12 @@
                 },
                 plugins: {
                     legend: {
-                        labels: {
+                        
+                        fullSize: true,
+                        align: 'end', 
+                        lineWidth: 4, 
+                        display: true,
+                        labels: {  
                             usePointStyle: true,
                         },
                     }
@@ -229,15 +234,13 @@
                     x: {
                         display: true,
                         title: {
-                            display: true,
-                            text: 'Past 12 Month'
+                            display: true, 
                         }
                     },
                     y: {
                         display: true,
                         title: {
-                            display: true,
-                            text: '#Orders'
+                            display: true, 
                         }
                     }
                 }
@@ -277,10 +280,8 @@
                     legend: {
                         fullSize: true,
                         position: 'right',
-                        align: 'center',
-
-                        lineWidth: 4,
-                        text: "hello",
+                        align: 'center', 
+                        lineWidth: 4, 
                         display: true,
                         textAlign: 'right',
                         labels: {

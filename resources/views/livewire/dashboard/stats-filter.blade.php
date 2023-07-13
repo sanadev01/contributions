@@ -13,9 +13,6 @@
                 </div>
             </div>
         </div>
-        {{-- <div class="row d-flex justify-content-center col-12"> --}}
-  
- 
         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
             <div class="card_block bg-c-green order-card  border-radius-15 mx-1">
                 <div class="card-block border-radius-15 pb-2">

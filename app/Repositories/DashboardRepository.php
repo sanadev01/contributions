@@ -64,7 +64,7 @@ class DashboardRepository
                 return Carbon::parse($val->created_at)->format('Y-M');
             });
         $months = array_map(function ($key, $value) {
-            return $key;
+            return substr($key,5);
         }, array_keys($totalOrderByMonth->toArray()), $totalOrderByMonth->toArray());
 
         $totalOrderCount = array_map(function ($key, $value) {
@@ -79,8 +79,7 @@ class DashboardRepository
             $totalOrderCount[] = 0.001;
             $totalShippedCount[] = 0.001;
         }
-        //bar  chart end 
-
+        //bar  chart end
 
         // doughnut chart started
         $newValue = $currentYearTotal;
