@@ -399,10 +399,8 @@ class OrderRepository
         return $this->error;
     }
     
-    public function getOdersForExport($request, $user)
+    public function getOrdersForExport($request, $user)
     {
-        \Log::info('request');
-        \Log::info($request);
         $orders = Order::where('status','>=',Order::STATUS_ORDER)
         ->has('user');
 
