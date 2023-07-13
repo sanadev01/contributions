@@ -6,21 +6,20 @@ use App\Models\User;
 use App\Models\Reports;
 use Illuminate\Http\Request;
 use Illuminate\Bus\Queueable;
-use App\Repositories\OrderRepository;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Services\Excel\Export\AnjunReport;
-use App\Services\Excel\Export\OrderExport;
+use App\Repositories\Reports\AnjunReportsRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class ExportOrder implements ShouldQueue
+class ExportAnjunReport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $request;
     public $user;
-    public $orderRepository;
+    public $reportRepository;
     /**
      * Create a new job instance.
      *
@@ -30,7 +29,7 @@ class ExportOrder implements ShouldQueue
     {
         $this->user = $user;
         $this->request = $request;
-        $this->orderRepository = new OrderRepository();
+        $this->reportRepository = new AnjunReportsRepository();
     }
 
     /**
@@ -41,11 +40,10 @@ class ExportOrder implements ShouldQueue
     public function handle()
     {
         $request = new Request($this->request);
-        $orders = $this->orderRepository->getOrdersForExport($request, $this->user);
+        $orders = $this->reportRepository->getAnjunReport($request, $this->user);
         $id = $this->user->id;
-        $exportService = new OrderExport($orders, $id);
+        $exportService = new AnjunReport($orders, $id);
         $url = $exportService->handle();
-
         if($url) {
             $report = Reports::find($request->report);
             $report->update(['path'=> $url, 'is_complete' => true]);
