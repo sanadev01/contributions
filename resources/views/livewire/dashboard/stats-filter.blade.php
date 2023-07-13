@@ -5,11 +5,11 @@
             <div class="row my-3">
                 <div class="col-md-4 mb-3">
                     <label for="">@lang('dashboard.Start Date')</label>
-                    <input type="date" class="form-control form-control h-75 border-radius-10" wire:model="startDate">
+                    <input type="date" class="form-control h-75 border-radius-10" wire:model="startDate">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mb-3">
                     <label for="">@lang('dashboard.End Date')</label>
-                    <input type="date" placeholder="dd/mm/yy" class="form-control form-control h-75 border-radius-10" wire:model="endDate">
+                    <input type="date" class="form-control h-75 border-radius-10" wire:model="endDate">
                 </div>
             </div>
         </div>
