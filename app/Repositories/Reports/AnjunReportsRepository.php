@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\ShippingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Warehouse\DeliveryBill;
 
 class AnjunReportsRepository
 {
@@ -35,25 +36,22 @@ class AnjunReportsRepository
 
     public function getAnjunReport($request, $user)
     {
-        $orders = Order::has('user')->where('status', '>=', Order::STATUS_PAYMENT_DONE);
-        $orders->whereHas('shippingService',function($orders) {
-            return $orders->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express]);
+        $query = DeliveryBill::query();
+        $query->whereHas('containers', function ($query) use ($request) {
+            return $query->whereIn('services_subclass_code', ["AJ-IX","AJ-NX"]);
         });
-        if ($user->isUser()) {
-            $orders->where('user_id', $user->id);
-        }
-
+        
         $startDate  = $request['start_date'].' 00:00:00';
         $endDate    = $request['end_date'].' 23:59:59';
+
         if ( $request['start_date'] ){
-            $orders->where('order_date','>=',$startDate);
+            $query->where('created_at','>=',$startDate);
         }
         if ( $request['end_date'] ){
-            $orders->where('order_date','<=',$endDate);
+            $query->where('created_at','<=',$endDate);
         }
-
-        return $orders->orderBy('id')->get();
-
+dd($query->get());
+        return $query->get();
     }
 
 }
