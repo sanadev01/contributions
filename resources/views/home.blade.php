@@ -377,44 +377,5 @@
 
         var chart = new ApexCharts(document.querySelector("#doughnut"), options);
         chart.render();
-
-        // var doughnutChart = new Chart(ctx, {
-        //     type: 'doughnut',
-        //     data: {
-        //         labels: [
-        //             'Shipped',
-        //             'Paid',
-        //             'Pending',
-        //             'Released',
-        //             'Cancelled',
-        //             'Refunded',
-        //         ],
-        //         datasets: [{
-        //             label: '#Orders',
-        //             data: 
-        //             backgroundColor: [
-        //             ],
-        //             hoverOffset: 4
-        //         }]
-        //     },
-        //     options: {
-        //         cutout: 70,
-        //         plugins: {
-
-        //             legend: {
-        //                 fullSize: true,
-        //                 position: 'right',
-        //                 align: 'center', 
-        //                 lineWidth: 4, 
-        //                 display: true,
-        //                 textAlign: 'right',
-        //                 labels: {
-        //                     usePointStyle: true
-        //                 }
-        //             }
-        //         },
-        //     }
-        // });
-        
     </script>
 @endsection
