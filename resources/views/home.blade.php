@@ -48,6 +48,93 @@
         .f-right {
             float: right;
         }
+
+
+
+        @media screen and (min-width: 1900px) and (max-width: 3000px) {
+            #doughnut {
+                width: 480px;
+            }
+            .card-font-size{ 
+                font-size:1.4rem;
+            }
+        }
+        @media screen and (min-width: 1700px) and (max-width: 1900px) {
+            #doughnut {
+                width: 450px;
+            }
+            .card-font-size{ 
+                font-size:1.3rem;
+            }
+        }
+        @media screen and (min-width: 1500px) and (max-width: 1700px) {
+            #doughnut {
+                width: 400px;
+            }
+            .card-font-size{ 
+                font-size:1.2rem;
+            }
+        }
+        @media screen and (min-width: 1350px) and (max-width: 1500px) {
+            #doughnut {
+                width: 380px;
+            }
+            .card-font-size{ 
+                font-size:1.1rem;
+            }
+
+        }
+        @media screen and (min-width: 1200px) and (max-width: 1350px) {
+            #doughnut {
+                width: 350px;
+            }
+            .card-font-size{ 
+                font-size:1rem;
+            }
+
+        }
+
+        @media screen and (min-width: 992px) and (max-width: 1300px) {
+            #doughnut {
+                width: 335px;
+            }
+            .card-font-size{ 
+                font-size:.9rem;
+            }
+        }
+
+        @media screen and (min-width: 768px) and (max-width: 992px) {
+            #doughnut {
+                width: 300px;
+            }
+            .card-font-size{ 
+                font-size:.8rem;
+            }
+        }
+
+        @media screen and (min-width: 500px) and (max-width: 768px) {
+            .card-font-size{ 
+                font-size:1.1rem;
+            }
+            #doughnut {
+                width: 350px;
+                height:auto;
+            }
+        }
+        @media screen and (min-width: 0px) and (max-width: 500px) {
+            .card-font-size{ 
+                font-size:1rem;
+            }
+            #doughnut {
+                width: auto;
+                height:auto;
+            }
+        }
+        @media (max-width: 768px) {
+            .sm-wrap-column {
+                flex-direction: column; 
+            } 
+            } 
     </style>
 @endsection
 
@@ -66,7 +153,8 @@
             <div class="light-green-color welcome-admin height-100">
                 <div class="ml-3">
                     <dl>
-                        <div class="font-weight-bold large-heading-text pt-3 ">Welcome back, {{ Auth::user()->name }} 👋</div>
+                        <div class="font-weight-bold large-heading-text pt-3 ">Welcome back, {{ Auth::user()->name }} 👋
+                        </div>
                         <dd class="font-weight-light pb-2 mb-4">Your current kpi report is here</dd>
                     </dl>
                 </div>
@@ -127,58 +215,54 @@
             </div>
         @endif
         {{-- <x-charts.orders-charts/> --}}
-        <div class="card border-radius-15 mb-3">
+        <div class="card border-radius-15 mb-4">
             <livewire:dashboard.stats-filter />
-        </div> 
-            <div class="row no-gutters">
-                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 card border-radius-15">
-                    <div class="mr-lg-3 mr-md-0 ">
-                        <h4 class="pt-4 pl-3 font-weight-light">Shipped Orders Analytics</h4>
-                        <canvas id="bar"></canvas>
-                    </div>
+        </div>
+        <div class="d-flex sm-wrap-column">
+            <div class="p-2  flex-grow-1 card border-radius-15">
+                <div class="mr-lg-3 mr-md-0 ">
+                    <h4 class="pt-lg-4 pt-md-3 pt-sm-1 pl-3 font-weight-light card-font-size">Shipped Orders Analytics</h4>
+                    <canvas id="bar"></canvas>
                 </div>
-                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 ">
-                    <div class="ml-lg-3 ml-md-0 card border-radius-15">
-                        <div>
-                            <h4 class="pt-4 pl-3 font-weight-light ">Total Orders</h4>
-                            <div class="d-flex justify-content-around">
-                                <div>
-                                    <h6 class='font-weight-light'>Total Monthly Order</h6>
-                                    <h2 class='font-weight-bold'> {{ $orders['currentmonthTotal'] }} </h2>
-                                    <div class="d-flex align-items-center">
-                                        <img class="mb-2"
-                                            src="{{ asset('images/icon/' . ($orders['percentIncreaseThisMonth'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
-                                        <h6 class="font-weight-light">
-                                            <span
-                                                class="{{ $orders['percentIncreaseThisMonth'] > 0 ? 'text-success' : 'text-danger' }}">
-                                                {{ $orders['percentIncreaseThisMonth'] }} %
-                                            </span> month
-                                        </h6>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h6 class="font-weight-light">Total Year Order</h6>
-                                    <h1  class='font-weight-bold'> {{ $orders['currentYearTotal'] }} </h1>
-                                    <div class="d-flex  align-items-center">
-                                        <img
-                                            src="{{ asset('images/icon/' . ($orders['percentIncreaseThisYear'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
-                                        <h6 class="font-weight-light">
-                                            <span
-                                                class="{{ $orders['percentIncreaseThisYear'] > 0 ? 'text-success' : 'text-danger' }}">
-                                                {{ $orders['percentIncreaseThisYear'] }} % </span>
-                                            year
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center" style="height:300px">
-                                <canvas id="doughnut"></canvas>
-
-                            </div>
+            </div>
+            <div class="ml-md-4 ml-sm-0 p-2 card border-radius-15 " id="doughnutCard">
+                <h4 class="pt-lg-4 pt-md-3 pt-sm-1 pl-3 font-weight-light card-font-size">Total Orders</h4>
+                  <div class="d-flex my-xl-2 my-lg-2 justify-content-around">
+                    <div class="mx-xl-5 mx-lg-2">
+                        <h6 class='font-weight-light  '>Total Monthly Order</h6>
+                        <h2 class='font-weight-bold  md-font-size'> {{ $orders['currentmonthTotal'] }} </h2>
+                        <div class="d-flex mt-xl-3 mt-lg-1 align-items-center">
+                            <img class="mb-lg-2 mb-sm-1"
+                                src="{{ asset('images/icon/' . ($orders['percentIncreaseThisMonth'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
+                            <h6 class="font-weight-light card-font-size">
+                                <span
+                                    class=" {{ $orders['percentIncreaseThisMonth'] > 0 ? 'text-success' : 'text-danger' }}">
+                                    {{ $orders['percentIncreaseThisMonth'] }} %
+                                </span> month
+                            </h6>
                         </div>
                     </div>
+                    <div class="mx-xl-5 mx-lg-2">
+                        <h6 class="font-weight-light  ">Total Year Order</h6>
+                        <h1 class='font-weight-bold md-font-size'> {{ $orders['currentYearTotal'] }} </h1>
+                        <div class="d-flex mt-xl-3 mt-lg-1 align-items-center">
+                            <img
+                                src="{{ asset('images/icon/' . ($orders['percentIncreaseThisYear'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
+                            <h6 class="font-weight-light card-font-size">
+                                <span
+                                    class="{{ $orders['percentIncreaseThisYear'] > 0 ? 'text-success' : 'text-danger' }}">
+                                    {{ $orders['percentIncreaseThisYear'] }} % </span>
+                                year
+                            </h6>
+                        </div>
+                    </div>
+                </div>  
+                <div class="d-flex justify-content-center align-items-center h-75">
+                    <div id="doughnut"></div>
                 </div>
-            </div> 
+            </div>
+        </div>
+
         </div>
 
     </section>
@@ -220,12 +304,12 @@
                 },
                 plugins: {
                     legend: {
-                        
+
                         fullSize: true,
-                        align: 'end', 
-                        lineWidth: 4, 
+                        align: 'end',
+                        lineWidth: 4,
                         display: true,
-                        labels: {  
+                        labels: {
                             usePointStyle: true,
                         },
                     }
@@ -234,24 +318,29 @@
                     x: {
                         display: true,
                         title: {
-                            display: true, 
+                            display: true,
                         }
                     },
                     y: {
                         display: true,
                         title: {
-                            display: true, 
+                            display: true,
                         }
                     }
                 }
             }
         });
-
-        var ctx = document.getElementById('doughnut');
-        var doughnutChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: [
+        //donut stated
+        var options = {
+            colors:[
+                        'rgb(22, 93, 255)',
+                        'rgb(80, 205, 137)',
+                        'rgb(255, 199, 0)',
+                        'rgb(114, 57, 234)',
+                        'rgb(242, 94, 94)',
+                        'rgb(181, 189, 203)'
+            ],
+                            labels: [
                     'Shipped',
                     'Paid',
                     'Pending',
@@ -259,37 +348,73 @@
                     'Cancelled',
                     'Refunded',
                 ],
-                datasets: [{
-                    label: '#Orders',
-                    data: doughnutData,
-                    backgroundColor: [
-                        'rgb(22, 93, 255)',
-                        'rgb(80, 205, 137)',
-                        'rgb(255, 199, 0)',
-                        'rgb(114, 57, 234)',
-                        'rgb(242, 94, 94)',
-                        'rgb(181, 189, 203)'
-                    ],
-                    hoverOffset: 4
-                }]
+            series: doughnutData,
+            chart: {
+                type: 'donut',
+                width: '100%',
             },
-            options: {
-                cutout: 70,
-                plugins: {
-
-                    legend: {
-                        fullSize: true,
-                        position: 'right',
-                        align: 'center', 
-                        lineWidth: 4, 
-                        display: true,
-                        textAlign: 'right',
-                        labels: {
-                            usePointStyle: true
-                        }
-                    }
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '75%',
+                    },
                 },
-            }
-        });
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 400
+                    },
+                    legend: {
+                        position: 'right',
+                        offsetY: 0,
+                        width: 100,
+                    }
+                }
+            }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#doughnut"), options);
+        chart.render();
+
+        // var doughnutChart = new Chart(ctx, {
+        //     type: 'doughnut',
+        //     data: {
+        //         labels: [
+        //             'Shipped',
+        //             'Paid',
+        //             'Pending',
+        //             'Released',
+        //             'Cancelled',
+        //             'Refunded',
+        //         ],
+        //         datasets: [{
+        //             label: '#Orders',
+        //             data: 
+        //             backgroundColor: [
+        //             ],
+        //             hoverOffset: 4
+        //         }]
+        //     },
+        //     options: {
+        //         cutout: 70,
+        //         plugins: {
+
+        //             legend: {
+        //                 fullSize: true,
+        //                 position: 'right',
+        //                 align: 'center', 
+        //                 lineWidth: 4, 
+        //                 display: true,
+        //                 textAlign: 'right',
+        //                 labels: {
+        //                     usePointStyle: true
+        //                 }
+        //             }
+        //         },
+        //     }
+        // });
+        
     </script>
 @endsection
