@@ -50,6 +50,7 @@ class AnjunReportsRepository
         if ( $request['end_date'] ){
             $query->where('created_at','<=',$endDate);
         }
+
         return $query->get();
     }
 
