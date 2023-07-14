@@ -40,9 +40,9 @@ class ExportAnjunReport implements ShouldQueue
     public function handle()
     {
         $request = new Request($this->request);
-        $orders = $this->reportRepository->getAnjunReport($request, $this->user);
+        $deliveryBills = $this->reportRepository->getAnjunReport($request, $this->user);
         $id = $this->user->id;
-        $exportService = new AnjunReport($orders, $id);
+        $exportService = new AnjunReport($deliveryBills, $id);
         $url = $exportService->handle();
         if($url) {
             $report = Reports::find($request->report);
