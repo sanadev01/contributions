@@ -55,41 +55,50 @@
             #doughnut {
                 width: 480px;
             }
-            .card-font-size{ 
-                font-size:1.4rem;
+
+            .card-font-size {
+                font-size: 1.4rem;
             }
         }
+
         @media screen and (min-width: 1700px) and (max-width: 1900px) {
             #doughnut {
                 width: 450px;
             }
-            .card-font-size{ 
-                font-size:1.3rem;
+
+            .card-font-size {
+                font-size: 1.3rem;
             }
         }
+
         @media screen and (min-width: 1500px) and (max-width: 1700px) {
             #doughnut {
                 width: 400px;
             }
-            .card-font-size{ 
-                font-size:1.2rem;
+
+            .card-font-size {
+                font-size: 1.2rem;
             }
         }
+
         @media screen and (min-width: 1350px) and (max-width: 1500px) {
             #doughnut {
                 width: 380px;
             }
-            .card-font-size{ 
-                font-size:1.1rem;
+
+            .card-font-size {
+                font-size: 1.1rem;
             }
 
         }
+
         @media screen and (min-width: 1200px) and (max-width: 1350px) {
             #doughnut {
                 width: 350px;
             }
-            .card-font-size{ 
-                font-size:1rem;
+
+            .card-font-size {
+                font-size: 1rem;
             }
 
         }
@@ -98,8 +107,9 @@
             #doughnut {
                 width: 335px;
             }
-            .card-font-size{ 
-                font-size:.9rem;
+
+            .card-font-size {
+                font-size: .9rem;
             }
         }
 
@@ -107,34 +117,45 @@
             #doughnut {
                 width: 300px;
             }
-            .card-font-size{ 
-                font-size:.8rem;
+
+            .card-font-size {
+                font-size: .8rem;
             }
         }
 
         @media screen and (min-width: 500px) and (max-width: 768px) {
-            .card-font-size{ 
-                font-size:1.1rem;
+            .card-font-size {
+                font-size: 1.1rem;
             }
+
             #doughnut {
                 width: 350px;
-                height:auto;
+                height: auto;
             }
         }
+
         @media screen and (min-width: 0px) and (max-width: 500px) {
-            .card-font-size{ 
-                font-size:1rem;
+            .card-font-size {
+                font-size: 1rem;
             }
+
             #doughnut {
                 width: auto;
-                height:auto;
+                height: auto;
             }
         }
+
         @media (max-width: 768px) {
             .sm-wrap-column {
-                flex-direction: column; 
-            } 
-            } 
+                flex-direction: column;
+            }
+        }
+#donut {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
     </style>
 @endsection
 
@@ -227,7 +248,7 @@
             </div>
             <div class="ml-md-4 ml-sm-0 p-2 card border-radius-15 " id="doughnutCard">
                 <h4 class="pt-lg-4 pt-md-3 pt-sm-1 pl-3 font-weight-light card-font-size">Total Orders</h4>
-                  <div class="d-flex my-xl-2 my-lg-2 justify-content-around">
+                <div class="d-flex my-xl-2 my-lg-2 justify-content-around">
                     <div class="mx-xl-5 mx-lg-2">
                         <h6 class='font-weight-light  '>Total Monthly Order</h6>
                         <h2 class='font-weight-bold  md-font-size'> {{ $orders['currentmonthTotal'] }} </h2>
@@ -256,9 +277,9 @@
                             </h6>
                         </div>
                     </div>
-                </div>  
+                </div>
                 <div class="d-flex justify-content-center align-items-center h-75">
-                    <div id="doughnut"></div>
+                    <div id="donut"></div>
                 </div>
             </div>
         </div>
@@ -270,6 +291,7 @@
 @endsection
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-base.min.js"></script>
 
     <script>
         const bar = document.getElementById('bar');
@@ -330,52 +352,34 @@
                 }
             }
         });
-        //donut stated
-        var options = {
-            colors:[
-                        'rgb(22, 93, 255)',
-                        'rgb(80, 205, 137)',
-                        'rgb(255, 199, 0)',
-                        'rgb(114, 57, 234)',
-                        'rgb(242, 94, 94)',
-                        'rgb(181, 189, 203)'
-            ],
-                            labels: [
-                    'Shipped',
-                    'Paid',
-                    'Pending',
-                    'Released',
-                    'Cancelled',
-                    'Refunded',
-                ],
-            series: doughnutData,
-            chart: {
-                type: 'donut',
-                width: '100%',
-            },
-            plotOptions: {
-                pie: {
-                    donut: {
-                        size: '75%',
-                    },
-                },
-            },
-            responsive: [{
-                breakpoint: 480,
-                options: {
-                    chart: {
-                        width: 400
-                    },
-                    legend: {
-                        position: 'right',
-                        offsetY: 0,
-                        width: 100,
-                    }
-                }
-            }]
-        };
+        //donut
+        anychart.onDocumentReady(function () {
+    var chart = anychart.pie([ 
+        {x: "Shipped", value: doughnutData[0],color:'#ff0000'},
+        {x: "Done", value:  doughnutData[1]},
+        {x: "Pending", value:  doughnutData[2]},
+        {x: "Release", value:  doughnutData[3]},
+        {x: "Cancelled", value:  doughnutData[4]},
+        {x: "Refund", value:  doughnutData[5]}
+    ]);
 
-        var chart = new ApexCharts(document.querySelector("#doughnut"), options);
-        chart.render();
+    chart.innerRadius("75%");
+
+    var label = anychart.standalones.label();
+    label.text("Total :"+ doughnutData.reduce((a, b) => a + b, 0));
+    label.width("100%");
+    label.height("100%");
+    label.adjustFontSize(true);
+    label.fontColor("#60727b");
+    label.hAlign("center");
+    label.vAlign("middle");
+
+    // set the label as the center content
+    chart.center().content(label);
+
+    chart.title("");
+    chart.container("donut");
+    chart.draw();
+}); 
     </script>
 @endsection
