@@ -40,6 +40,9 @@ Route::get('order-ups-sender-rates', [App\Http\Controllers\Admin\Order\OrderUPSL
 // Rates for FedEx
 Route::get('order-fedex-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'fedExRates'])->name('api.fedExRates');
 
+//Route for GSS
+Route::get('order-gss-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'GSSRates'])->name('api.gssRates');
+
 Route::post('update/inventory-order', Api\InventoryOrderUpdateController::class)->name('api.inventory.order.update');
 
 Route::prefix('v1')->middleware('auth:api')->group(function(){

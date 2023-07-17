@@ -73,7 +73,7 @@ class SettingController extends Controller
         $request->has('geps_service') ? saveSetting('geps_service', true, $this->adminId) : saveSetting('geps_service', false, $this->adminId);
         $request->has('sweden_post') ? saveSetting('sweden_post', true, $this->adminId) : saveSetting('sweden_post', false, $this->adminId);
         $request->has('post_plus') ? saveSetting('post_plus', true, $this->adminId) : saveSetting('post_plus', false, $this->adminId);
-        $request->has('GSS_IPA') ? saveSetting('GSS_IPA', true, $this->adminId) : saveSetting('GSS_IPA', false, $this->adminId);
+        $request->has('gss') ? saveSetting('gss', true, $this->adminId) : saveSetting('gss', false, $this->adminId);
         $request->has('colombia_service') ? saveSetting('colombia_service', true, $this->adminId) : saveSetting('colombia_service', false, $this->adminId);
         $request->has('postnl_service') ? saveSetting('postnl_service', true, $this->adminId) : saveSetting('postnl_service', false, $this->adminId);
         $request->has('gde') ? saveSetting('gde', true, $this->adminId) : saveSetting('gde', false, $this->adminId);
@@ -84,6 +84,12 @@ class SettingController extends Controller
         ($request->colombia_profit != null ) ? saveSetting('colombia_profit', $request->colombia_profit, $this->adminId) : saveSetting('colombia_profit', 0, $this->adminId);
         ($request->gde_pm_profit != null ) ? saveSetting('gde_pm_profit', $request->gde_pm_profit, $this->adminId) : saveSetting('gde_pm_profit', 0, $this->adminId);
         ($request->gde_fc_profit != null ) ? saveSetting('gde_fc_profit', $request->gde_fc_profit, $this->adminId) : saveSetting('gde_fc_profit', 0, $this->adminId);
+        ($request->gss_api_discount != null ) ? saveSetting('gss_api_discount', $request->gss_api_discount, $this->adminId) : saveSetting('gss_api_discount', 0, $this->adminId);
+        if($request->gss_user_discount != null && $request->gss_api_discount < $request->gss_user_discount) {
+            session()->flash('alert-danger', 'GSS User Discount Value Cannot be Greater than its API Discount !!');
+            return back();
+        }
+        ($request->gss_user_discount != null ) ? saveSetting('gss_user_discount', $request->gss_user_discount, $this->adminId) : saveSetting('gss_user_discount', 0, $this->adminId);
 
         session()->flash('alert-success', 'setting.Settings Saved');
         return back();

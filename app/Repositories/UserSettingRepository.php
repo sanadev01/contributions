@@ -62,7 +62,7 @@ class UserSettingRepository {
         $request->has('geps_service') ? saveSetting('geps_service', true, $user->id) : saveSetting('geps_service', false, $user->id);
         $request->has('sweden_post') ? saveSetting('sweden_post', true, $user->id) : saveSetting('sweden_post', false, $user->id);
         $request->has('post_plus') ? saveSetting('post_plus', true, $user->id) : saveSetting('post_plus', false, $user->id);
-        $request->has('GSS_IPA') ? saveSetting('GSS_IPA', true, $user->id) : saveSetting('GSS_IPA', false, $user->id);
+        $request->has('gss') ? saveSetting('gss', true, $user->id) : saveSetting('gss', false, $user->id);
         $request->has('tax') ? saveSetting('tax', true, $user->id) : saveSetting('tax', false, $user->id);
         $request->has('colombia_service') ? saveSetting('colombia_service', true, $user->id) : saveSetting('colombia_service', false, $user->id);
         $request->has('geps_service') ? saveSetting('geps_service', true, $user->id) : saveSetting('geps_service', false, $user->id);
@@ -80,6 +80,8 @@ class UserSettingRepository {
         ($request->colombia_profit != null ) ? saveSetting('colombia_profit', $request->colombia_profit, $user->id) : saveSetting('colombia_profit', 0, $user->id);
         ($request->gde_pm_profit != null ) ? saveSetting('gde_pm_profit', $request->gde_pm_profit,$user->id) : saveSetting('gde_pm_profit', 0,$user->id);
         ($request->gde_fc_profit != null ) ? saveSetting('gde_fc_profit', $request->gde_fc_profit,$user->id) : saveSetting('gde_fc_profit', 0,$user->id);
+        ($request->gss_api_discount != null ) ? saveSetting('gss_api_discount', $request->gss_api_discount, $user->id) : saveSetting('gss_api_discount', 0, $user->id);
+        ($request->gss_user_discount != null ) ? saveSetting('gss_user_discount', $request->gss_user_discount, $user->id) : saveSetting('gss_user_discount', 0, $user->id);
 
         ($request->weight != null ) ? saveSetting('weight', $request->weight, $user->id) : saveSetting('weight', 0, $user->id);
         ($request->length != null ) ? saveSetting('length', $request->length, $user->id) : saveSetting('length', 0, $user->id);
