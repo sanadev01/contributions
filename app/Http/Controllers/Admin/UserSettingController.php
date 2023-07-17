@@ -31,6 +31,10 @@ class UserSettingController extends Controller
             'password' => 'nullable|min:8',
         ]);
         
+        if($request->gss_user_discount != null && $request->gss_api_discount < $request->gss_user_discount) {
+            session()->flash('alert-danger', 'GSS User Discount Value Cannot be Greater than its API Discount !!');
+            return back();
+        }
         $userSettingRepository->store($request, $user);
         session()->flash('alert-success','user.User Setting Updated Successfully');
         return back();
