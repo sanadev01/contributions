@@ -73,7 +73,7 @@
                                                 class="btn btn-primary btn-sm">
                                                 <i class="feather icon-eye"></i> View Region Rates
                                             </a> 
-                                            <a href="{{ route('admin.rates.download-shipping-region-rates', $rate->shippingService) }}" class="mx-2 btn btn-success">
+                                            <a href="{{ route('admin.rates.rates.exports', ['package' => 'gde']) }}" class="mx-2 btn btn-success">
                                                 <i class="feather icon-download"></i> Download
                                             </a>
                                             

@@ -12,7 +12,7 @@
                         <hr>
                     </div> 
                     <div> 
-                        <a href="{{ route('admin.rates.download-shipping-region-rates', $shipping_service->id ) }}" class="mx-2 btn btn-success">
+                        <a href="{{ route('admin.rates.rates.exports', ['package' => 'gde']) }}" class="mx-2 btn btn-success">
                             <i class="feather icon-download"></i> Download
                         </a>
                     @can('create', App\Models\Rate::class)

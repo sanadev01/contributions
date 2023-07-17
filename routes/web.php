@@ -124,7 +124,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('shipping-rates', RateController::class)->only(['create', 'store', 'index', 'show']);
             Route::get('view-shipping-rates/{shipping_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'showShippingRates'])->name('view-shipping-rates');
             Route::get('shipping-rates-download/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'downloadShippingRates'])->name('download-shipping-rates');
-            Route::get('shipping-region-rates-download/{shipping_service}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'downloadShippingRegionRates'])->name('download-shipping-region-rates');
             Route::get('shipping-region-rates/{shipping_service}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'shippingRegionRates'])->name('region-rates');
             Route::get('view-shipping-region-rates/{shipping_rate}', [\App\Http\Controllers\Admin\Rates\RateController::class, 'showShippingRegionRates'])->name('view-shipping-region-rates');
             Route::resource('accrual-rates', AccrualRateController::class)->only(['create', 'store', 'index']);

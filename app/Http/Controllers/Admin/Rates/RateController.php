@@ -81,20 +81,6 @@ class RateController extends Controller
         return $exportService->handle();
     }
 
-
-    public function downloadShippingRegionRates(ShippingService $shippingService)
-    {  
-         
-         
-        $rates = Rate::where([
-            ['shipping_service_id', $shippingService->id],
-            ['region_id', '!=', null]
-        ])->get(); 
-
-        $exportService = new ShippingServiceRegionRateExport($rates);
-        return $exportService->handle();
-    }
-
     public function shippingRegionRates(RateRepository $repository, ShippingService $shipping_service)
     {
         $this->authorizeResource(Rate::class);
