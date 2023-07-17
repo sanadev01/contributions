@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\RateRepository;
 use App\Http\Requests\Admin\Rate\CreateRequest;
 use App\Services\Excel\Export\ShippingServiceRateExport;
+use App\Services\Excel\Export\ShippingServiceRegionRateExport;
 
 class RateController extends Controller
 {   
@@ -75,8 +76,22 @@ class RateController extends Controller
     {
         $this->authorizeResource(Rate::class);
         
-        $shipping_rate = Rate::findorfail($id);
+        $shipping_rate = Rate::findorfail($id); 
         $exportService = new ShippingServiceRateExport($shipping_rate->data);
+        return $exportService->handle();
+    }
+
+
+    public function downloadShippingRegionRates(ShippingService $shippingService)
+    {  
+         
+         
+        $rates = Rate::where([
+            ['shipping_service_id', $shippingService->id],
+            ['region_id', '!=', null]
+        ])->get(); 
+
+        $exportService = new ShippingServiceRegionRateExport($rates);
         return $exportService->handle();
     }
 
@@ -84,6 +99,7 @@ class RateController extends Controller
     {
         $this->authorizeResource(Rate::class);
         $shippingRegionRates = $repository->getRegionRates($shipping_service);
+        
         
         return view('admin.rates.shipping-rates.region.index', compact('shipping_service', 'shippingRegionRates'));
     }
