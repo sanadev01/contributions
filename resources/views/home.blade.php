@@ -150,12 +150,13 @@
                 flex-direction: column;
             }
         }
-#donut {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
+
+        #donut {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
     </style>
 @endsection
 
@@ -353,33 +354,26 @@
             }
         });
         //donut
-        anychart.onDocumentReady(function () {
-    var chart = anychart.pie([ 
-        {x: "Shipped", value: doughnutData[0],color:'#ff0000'},
-        {x: "Done", value:  doughnutData[1]},
-        {x: "Pending", value:  doughnutData[2]},
-        {x: "Release", value:  doughnutData[3]},
-        {x: "Cancelled", value:  doughnutData[4]},
-        {x: "Refund", value:  doughnutData[5]}
-    ]);
-
-    chart.innerRadius("75%");
-
-    var label = anychart.standalones.label();
-    label.text("Total :"+ doughnutData.reduce((a, b) => a + b, 0));
-    label.width("100%");
-    label.height("100%");
-    label.adjustFontSize(true);
-    label.fontColor("#60727b");
-    label.hAlign("center");
-    label.vAlign("middle");
-
-    // set the label as the center content
-    chart.center().content(label);
-
-    chart.title("");
-    chart.container("donut");
-    chart.draw();
-}); 
+        anychart.onDocumentReady(function() {
+            var chart = anychart.pie(doughnutData);
+            chart.innerRadius("75%");
+            var label = anychart.standalones.label();
+            label.text("Total :" + doughnutData.reduce((a, b) => a + b.value, 0));
+            label.width("100%");
+            label.height("100%");
+            label.adjustFontSize(false);
+            label.fontColor("#60727b");
+            label.hAlign("center");
+            label.vAlign("middle");
+            // set the label as the center content
+            chart.center().content(label);
+            chart.title("");
+            chart.container("donut");            
+            // chart.legend().unlisten("click", function(){});
+            // chart.unlisten("click",function(){}); 
+            chart.draw();          
+             // remove all listeners
+               
+        });
     </script>
 @endsection

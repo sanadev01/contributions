@@ -115,13 +115,15 @@ class DashboardRepository
             'months'              => $months,
             'percentIncreaseThisMonth' => $percentIncreaseThisMonth,
             'percentIncreaseThisYear'  => $percentIncreaseThisYear,
-            'doughnutData' => [
-                $shippedOrderCount,
-                $doneOrderCount,
-                $pendingOrderCount,
-                $releaseOrderCount,
-                $cancelledOrderCount,
-                $refundOrderCount,
+            'doughnutData' =>
+            [
+                ['x'=> "Shipped", 'value'=> $shippedOrderCount],
+                ['x'=> "Done", 'value'=>  $doneOrderCount],
+                ['x'=> "Pending", 'value'=>   $pendingOrderCount],
+                ['x'=> "Release", 'value'=>   $releaseOrderCount],
+                ['x'=> "Refund/Cancelled", 'value'=>    $cancelledOrderCount+$refundOrderCount]
+            
+ 
             ]
 
         ];
