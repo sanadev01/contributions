@@ -273,8 +273,6 @@
                 </li>
             @endcan
 
-
-            @can('view_calculator')
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
                     <img src="{{ asset('images/icon/calculator.svg') }}" alt="Rates" width="19px">
@@ -295,7 +293,7 @@
                     </li>
                 </ul>
             </li>
-            @endcan
+            
             {{-- Reports --}}
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
@@ -498,8 +496,7 @@
                 </a>
             </li>
             @endcan
-            {{-- @can('viewAny', Spatie\Activitylog\Models\Activity::class) --}}
-            {{-- @endcan --}}
+            
             <x-shared-menu></x-shared-menu>
             @endif
         </ul>

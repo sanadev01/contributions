@@ -46,6 +46,9 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->isPostPlusService()) {
                 return $this->postPlusLabel();
             }
+            if ($this->order->shippingService->isGSSService()) {
+                return $this->uspsGSSLabel();
+            }
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
             // }
@@ -61,7 +64,7 @@ class HandleCorreiosLabelsRepository
 
 
         if ($this->order->recipient->country_id == Order::US) {
-            if ($this->order->shippingService->is_usps_priority || $this->order->shippingService->is_usps_firstclass || $this->order->shippingService->is_usps_ground) {
+            if ($this->order->shippingService->is_usps_priority || $this->order->shippingService->is_usps_firstclass || $this->order->shippingService->is_usps_ground || $this->order->shippingService->is_gde_priority || $this->order->shippingService->is_gde_first_class) {
                 return $this->uspsLabel();
             }
 
@@ -162,6 +165,13 @@ class HandleCorreiosLabelsRepository
         $postPlusLabelRepository = new PostPlusLabelRepository(); 
         $postPlusLabelRepository->run($this->order,$this->update); //by default consider false
         return $this->renderLabel($this->request, $this->order, $postPlusLabelRepository->getError());
+    }
+
+    public function uspsGSSLabel()
+    {
+        $gssLabelRepository = new GSSLabelRepository(); 
+        $gssLabelRepository->run($this->order,$this->update); //by default consider false
+        return $this->renderLabel($this->request, $this->order, $gssLabelRepository->getError());
     }
 
     public function renderLabel($request, $order, $error)

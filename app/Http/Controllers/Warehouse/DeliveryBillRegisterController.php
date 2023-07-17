@@ -25,7 +25,7 @@ class DeliveryBillRegisterController extends Controller
             session()->flash('alert-danger','This delivery bill has already been registered');
             return back();
         }
-        if($deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus())  {            
+        if($deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE())  {            
             
             $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->setCN38Code(),

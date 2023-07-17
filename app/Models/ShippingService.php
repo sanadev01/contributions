@@ -42,7 +42,12 @@ class ShippingService extends Model
     const Post_Plus_Prime = 777;
     const Post_Plus_Premium = 778;
     const Prime5RIO = 357;
-
+    const GDE_PRIORITY_MAIL = 4387;
+    const GDE_FIRST_CLASS = 4388;
+    const GSS_IPA = 477;
+    const GSS_EPMEI = 37634;
+    const GSS_EPMI = 3674;
+    const GSS_EFCM = 3326;
 
     protected $guarded = [];
 
@@ -167,12 +172,36 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isGDEService()
+    {
+        if(in_array($this->service_sub_class, [self::GDE_PRIORITY_MAIL, self::GDE_FIRST_CLASS])){
+            return true;
+        }
+        return false;
+    }
+
+    public function isInboundDomesticService()
+    {
+        if (collect($this->inboundDomesticShippingServices())->contains($this->service_sub_class)) {
+            return true;
+        }
+        return false;
+    }
+
     public function isGePSeFormatService()
     {
         if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
             return true;
         }
 
+        return false;
+    }
+
+    public function isGSSService()
+    {
+        if($this->service_sub_class == self::GSS_IPA || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_EFCM){
+            return true;
+        }
         return false;
     }
 
@@ -233,6 +262,15 @@ class ShippingService extends Model
             self::Parcel_Post,
         ];
     }
+
+    private function inboundDomesticShippingServices()
+    {
+        return [
+            self::GDE_PRIORITY_MAIL,
+            self::GDE_FIRST_CLASS,
+        ];
+    }
+
     public function getIsMilliExpressAttribute()
     { 
         return $this->service_sub_class == ShippingService::Mile_Express;
@@ -280,6 +318,14 @@ class ShippingService extends Model
     public function getIsUspsGroundAttribute()
     { 
         return $this->service_sub_class == ShippingService::USPS_GROUND;
+    }
+    public function getIsGdePriorityAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::GDE_PRIORITY_MAIL;
+    }
+    public function getIsGdeFirstClassAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::GDE_FIRST_CLASS;
     }
     
 }

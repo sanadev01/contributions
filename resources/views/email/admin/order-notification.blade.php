@@ -6,7 +6,7 @@ The <strong>{{ $user }}</strong> has perfomed an activity on <strong>Date:</stro
 <strong>Pobox No:</strong> {{ $order->user->pobox_number }}<br>
 <strong>For Username: </strong> {{ $order->user->name }}<br>
 @if(!empty($preStatus))
-<strong>Warehouse No:</strong> {{ $order->id }} <br>
+<strong>Warehouse No:</strong> {{ $order->warehouse_number }} <br>
 <strong>Order Status (Previous): </strong> {{ $preStatus }}<br>
 <strong>Order Status (Current): </strong> {{ $newStatus }}<br>
 @endif

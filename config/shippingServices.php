@@ -31,6 +31,12 @@ return [
             777 => 'Post Plus Prime',
             778 => 'PrimeRIO',
             357 => 'Prime5RIO',
+            477 => 'GSS IPA',
+            37634 => 'GSS EPMEI',
+            3674 => 'GSS EPMI',
+            3326 => 'GSS EFCM',
+            4387 => 'GDE Priority Mail',
+            4388 => 'GDE First Class',
         ]
     ]
 ];

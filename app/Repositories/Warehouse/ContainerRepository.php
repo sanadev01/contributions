@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ContainerRepository extends AbstractRepository{
 
-    public function get(Request $request)
+    public function get(Request $request, $paginate)
     {
         $query = Container::query();
 
@@ -28,8 +28,19 @@ class ContainerRepository extends AbstractRepository{
         if($request->filled('unitCode')){
             $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
         } 
-        return $query->whereIn('services_subclass_code', ['NX','IX', 'XP','AJ-NX','AJ-IX'])->latest()->paginate(50);
-    }
+        if($request->filled('startDate')||$request->filled('endDate')){ 
+            $query->whereBetween('created_at', [$request->startDate??date('2020-01-01'), $request->endDate??date('Y-m-d')]);
+        } 
+        $services = ['NX','IX', 'XP','AJ-NX','AJ-IX'];
+        if($request->filled('service')){
+             $services = json_decode($request->service);
+        }
+        $query->whereIn('services_subclass_code', $services)->latest();
+        
+        $query = $paginate ? $query->paginate(50) : $query->where('unit_code', '!=', null )->get();
+
+        return $query;
+     }
 
     public function store(Request $request)
     {

@@ -91,7 +91,11 @@ class OrderRepository
                     ShippingService::USPS_FIRSTCLASS,
                     ShippingService::USPS_PRIORITY_INTERNATIONAL,
                     ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
-                    ShippingService::USPS_GROUND
+                    ShippingService::USPS_GROUND,
+                    ShippingService::GSS_IPA,
+                    ShippingService::GSS_EPMEI,
+                    ShippingService::GSS_EPMI,
+                    ShippingService::GSS_EFCM
                 ];
             }
             if($request->carrier == 'UPS'){
@@ -409,37 +413,45 @@ class OrderRepository
         return $this->error;
     }
     
-    public function getOdersForExport($request, $user)
+    public function getOrdersForExport($request, $user)
     {
-        $orders = Order::where('status','>=',Order::STATUS_ORDER)
-        ->has('user');
+        $orders = Order::where('status', '>=', Order::STATUS_ORDER)->has('user');
 
         if ($user->isUser()) {
             $orders->where('user_id', $user->id);
         }
-        if ($request->type == 'domestic') {
-            $orders->whereHas('shippingService', function($query) {
-                return $query->whereIn('service_sub_class', [ShippingService::USPS_PRIORITY,ShippingService::USPS_FIRSTCLASS,ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND, ShippingService::USPS_GROUND]);
-            })->orWhereNotNull('us_api_tracking_code');
-        }
 
-        if ($request->type && $request->type != 'domestic') {
-            $orders->where('status','=',$request->type);
+        if ($request->type == 'domestic') {
+            $orders->where(function ($query) {
+                $query->whereHas('shippingService', function ($query) {
+                    $query->whereIn('service_sub_class', [
+                        ShippingService::USPS_PRIORITY,
+                        ShippingService::USPS_FIRSTCLASS,
+                        ShippingService::UPS_GROUND,
+                        ShippingService::FEDEX_GROUND,
+                        ShippingService::USPS_GROUND
+                    ]);
+                })->orWhereNotNull('us_api_tracking_code');
+            });
+        } elseif ($request->type) {
+            $orders->where('status', '=', $request->type);
         }
 
         if ($request->is_trashed) {
             $orders->onlyTrashed();
         }
 
-        $startDate  = $request->start_date.' 00:00:00';
-        $endDate    = $request->end_date.' 23:59:59';
-        if ( $request->start_date ){
-            $orders->where('order_date' , '>=',$startDate);
+        $startDate = $request->start_date . ' 00:00:00';
+        $endDate = $request->end_date . ' 23:59:59';
+
+        if ($request->start_date) {
+            $orders->where('order_date', '>=', $startDate);
         }
-        if ( $request->end_date ){
-            $orders->where('order_date' , '<=',$endDate);
+
+        if ($request->end_date) {
+            $orders->where('order_date', '<=', $endDate);
         }
-        
+
         return $orders->orderBy('id')->get();
     }
 
@@ -560,7 +572,13 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::GePS)
             || $shippingServices->contains('service_sub_class', ShippingService::GePS_EFormat)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_GROUND)
-            || $shippingServices->contains('service_sub_class', ShippingService::Parcel_Post))
+            || $shippingServices->contains('service_sub_class', ShippingService::Parcel_Post)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_IPA)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_EPMEI)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_EPMI)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_EFCM)
+            || $shippingServices->contains('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)
+            || $shippingServices->contains('service_sub_class', ShippingService::GDE_FIRST_CLASS))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {
@@ -570,7 +588,9 @@ class OrderRepository
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS
                         && $shippingService->service_sub_class != ShippingService::USPS_PRIORITY_INTERNATIONAL
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL
-                        && $shippingService->service_sub_class != ShippingService::USPS_GROUND;
+                        && $shippingService->service_sub_class != ShippingService::USPS_GROUND
+                        && $shippingService->service_sub_class != ShippingService::GDE_PRIORITY_MAIL
+                        && $shippingService->service_sub_class != ShippingService::GDE_FIRST_CLASS;
                 });
             }
             if(!setting('ups', null, User::ROLE_ADMIN))
@@ -592,6 +612,13 @@ class OrderRepository
                 $this->shippingServiceError = 'GePS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::GePS;
+                });
+            }
+
+            if (!setting('GSS_IPA', null, User::ROLE_ADMIN) && !setting('GSS_IPA', null, auth()->user()->id)) {
+                $this->shippingServiceError = 'GSS is not enabled for this user';
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::GSS_IPA;
                 });
             }
             

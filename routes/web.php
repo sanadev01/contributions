@@ -101,7 +101,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('parcels.services',ServicesController::class)->only('index','store');
         });
 
-
         Route::namespace('Payment')->group(function(){
             Route::resource('payment-invoices', PaymentInvoiceController::class)->only(['index','store','destroy']);
             Route::prefix('payment-invoices')->as('payment-invoices.')->group(function () {
@@ -294,4 +293,5 @@ Route::get('order-arrived', function(){
 
     return Artisan::output();
 });
+Route::get('/temp-order-report/{number}',TempOrderReportController::class);
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');

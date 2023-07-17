@@ -93,6 +93,15 @@ class ParcelController extends Controller
             }
         }
 
+        if($shippingService->isGDEService()) {
+            $weightLimit = optional($request->parcel)['measurement_unit'] == 'lbs/in' ? UnitsConverter::poundToKg($weight) : $weight;
+            if($weightLimit <= 0.453) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::GDE_FIRST_CLASS)->first();
+            } else {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)->first();
+            }
+        }
+
         $senderCountryID = $request->sender['sender_country_id'] ?? null;
         $senderStateID = $request->sender['sender_state_id'] ?? null;
         
