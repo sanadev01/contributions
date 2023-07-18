@@ -13,7 +13,7 @@ use App\Services\Excel\Export\ShippingServiceRegionRateExport;
 
 class RateDownloadController extends Controller
 {
-    public function __invoke($packageId, $regionRates = null, Request $request, RateReportsRepository $rateReportsRepository)
+    public function __invoke($packageId, Request $request, RateReportsRepository $rateReportsRepository)
     { 
         if($request->service){
             $ServiceId = $request->service;
@@ -24,17 +24,12 @@ class RateDownloadController extends Controller
             }
 
         }
-                
-        if($packageId == 'gde'){
-            $service = ShippingService::where('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)->first();
-            
-        $rates = Rate::where([
-            ['shipping_service_id', $service->id],
-            ['region_id', '!=', null]
-        ])->get(); 
 
-        $exportService = new ShippingServiceRegionRateExport($rates);
-        return $exportService->handle(); 
+        $service = ShippingService::find($packageId);
+        
+        if($service->isGDEService() &&  $service->rates){
+            $exportService = new ShippingServiceRegionRateExport($service->rates);
+            return $exportService->handle(); 
         }
         if($packageId == 0 ){
             $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();

@@ -76,8 +76,13 @@ class RateController extends Controller
     {
         $this->authorizeResource(Rate::class);
         
-        $shipping_rate = Rate::findorfail($id); 
-        $exportService = new ShippingServiceRateExport($shipping_rate->data);
+        $shippingRate = Rate::findorfail($id);
+        
+        if($shippingRate->region){
+            $exportService = new ShippingServiceRegionRateExport($shippingRate->shippingService->rates);
+        }else{
+            $exportService = new ShippingServiceRateExport($shippingRate->data);
+        }
         return $exportService->handle();
     }
 

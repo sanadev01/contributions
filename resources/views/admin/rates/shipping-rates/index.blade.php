@@ -32,59 +32,39 @@
                         </thead>
                         <tbody>
                             @foreach ($shippingRates as $rate)
-                                @if (!$rate->region)
-                                    <tr>
-                                        <th>
-                                            {{ optional($rate->shippingService)->name }}
-                                        </th>
-                                        <th>
-                                            {{ optional($rate->country)->name }}
-                                        </th>
-                                        <th>
-                                            @if(optional($rate->shippingService)->name == "PostNL")
-                                                <a href="{{ route('admin.rates.country-rates', $rate->shippingService) }}"
-                                                    class="btn btn-primary btn-sm">
-                                                    <i class="feather icon-eye"></i> View Country Rates
-                                                </a>
-                                            @else
-                                                <a href="{{ route('admin.rates.view-shipping-rates', $rate) }}"
-                                                    class="btn btn-primary btn-sm">
-                                                    <i class="feather icon-eye"></i> View
-                                                </a>
-                                                |
-                                                <a href="{{ route('admin.rates.download-shipping-rates', $rate) }}"
-                                                    class="btn btn-success btn-sm">
-                                                    <i class="feather icon-download"></i> Download
-                                                </a>
-                                            @endif
-                                        </th>
-                                    </tr>
-                                @endif
-                                @if ($rate->region)
-                                    <tr>
-                                        <th>
-                                            {{ optional($rate->shippingService)->name }}
-                                        </th>
-                                        <th>
-                                            {{ optional($rate->country)->name }} / Regions
-                                        </th>
-                                        <th>
-                                            <a href="{{ route('admin.rates.region-rates', $rate->shippingService) }}"
+                                <tr>
+                                    <th>
+                                        {{ optional($rate->shippingService)->name }}
+                                    </th>
+                                    <th>
+                                        {{ optional($rate->country)->name }}
+                                    </th>
+                                    <th>
+                                        @if(optional($rate->shippingService)->name == "PostNL")
+                                            <a href="{{ route('admin.rates.country-rates', $rate->shippingService) }}"
                                                 class="btn btn-primary btn-sm">
-                                                <i class="feather icon-eye"></i> View Region Rates
-                                            </a> 
-                                            <a href="{{ route('admin.rates.rates.exports', ['package' => 'gde']) }}" class="mx-2 btn btn-success">
+                                                <i class="feather icon-eye"></i> View Country Rates
+                                            </a>
+                                        @else
+                                            <a class="btn btn-primary btn-sm" href="
+                                                @if ($rate->region)
+                                                    {{ route('admin.rates.region-rates', $rate->shippingService) }}
+                                                @else
+                                                    {{ route('admin.rates.view-shipping-rates', $rate) }}
+                                                @endif
+                                                ">
+                                                <i class="feather icon-eye"></i> View
+                                            </a>
+                                            |
+                                            <a href="{{ route('admin.rates.download-shipping-rates', $rate) }}" class="btn btn-success btn-sm">
                                                 <i class="feather icon-download"></i> Download
                                             </a>
-                                            
-                                        </th>
-                                    </tr>
-                                @endif
-                                
+                                        @endif
+                                    </th>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    {{-- {{ $shippingRates->links() }} --}}
                 </div>
             </div>
         </div>
