@@ -29,7 +29,6 @@ class Parcel {
                   'firstName' => $order->sender_first_name,
                   'lastName' => $order->sender_last_name,
                   'addressLine1' => ($order->sender_address) ? substr($order->sender_address, 0, 35): '2200 NW 129TH AVE',
-                  'addressLine2' => ($order->sender_address) ? substr($order->sender_address, 35): '',
                   // 'addressIsPOBox' => true,
                   'city' => ($order->sender_city) ? $order->sender_city: 'Miami',
                   'province' => ($order->sender_state_id) ? $order->senderState->code: 'FL',
@@ -45,8 +44,6 @@ class Parcel {
                   'firstName' => $order->recipient->first_name,
                   'lastName' => $order->recipient->last_name,
                   'addressLine1' => substr($order->recipient->address, 0, 35),
-                  'addressLine2' => substr($order->recipient->address, 35),
-                  'addressLine3' => optional($order->recipient)->address2,
                   // 'addressIsPOBox' => true,
                   'city' => $order->recipient->city,
                   'province' => $order->recipient->State->code,
@@ -81,6 +78,15 @@ class Parcel {
                //Items Information
                'items' => $this->setItemsDetails($order),              
             ];
+            if (strlen($order->sender_address) > 35) {
+               $packet['senderAddress']['addressLine2'] = substr($order->sender_address, 35);
+            }
+            if (strlen($order->recipient->address) > 35) {
+               $packet['recipientAddress']['addressLine2'] = substr($order->recipient->address, 35);
+            }
+            if ($order->recipient->address2) {
+               $packet['recipientAddress']['addressLine3'] = substr($order->recipient->address2, 0, 35);
+            }
       return $packet;
    }
 
