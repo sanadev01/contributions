@@ -17,6 +17,7 @@ use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Requests\Api\Parcel\UpdateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
+use App\Models\Document;
 use App\Repositories\ApiShippingServiceRepository;
 use Illuminate\Support\Facades\Validator;
 use FlyingLuscas\Correios\Client;
