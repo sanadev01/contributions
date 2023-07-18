@@ -275,7 +275,24 @@ class ParcelController extends Controller
                     return apiResponse(false, $this->apiShippingService->getError());
                 }
             }
+            if($request->parcel['invoice_base64']){                
+                $base64 = $request->parcel['invoice_base64'];
+                if($base64){
+                $name = time().'.'.getFileTypeByBase64($base64);
+                $path = storage_path('app/documents/'.$name); 
+                file_put_contents($path,base64_decode($base64));
+                $invoice = Document::create([
+                        'name' => 'order invoice',
+                        'size' => strlen($base64),
+                        'type' => 'image/'.getFileTypeByBase64($base64),
+                        'path' => $name
+                    ]); 
+                $order->update([
+                        'purchase_invoice' => $invoice->id
+                    ]); 
+                }
 
+            }
             $order->doCalculations();
 
             DB::commit();
