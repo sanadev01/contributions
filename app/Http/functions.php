@@ -248,3 +248,32 @@ function getJsonData($rates, $profit)
     }
     return json_encode($ratesArray);
 }
+function getFileType($base64)
+    {
+        $data = substr($base64,0,5);
+        switch (strtoupper($data))
+        {
+            case "IVBOR":
+                return "png";
+            case "/9J/4":
+                return "jpg";
+            case "AAAAI":
+                return "mp4";
+            case "JVBER":
+                return "pdf";
+            case "AAABA":
+                return "ico";
+            case "UMFYI":
+                return "rar";
+            case "E1XYD":
+                return "rtf";
+            case "U1PKC":
+                return "txt"; 
+            case "SUQzA":
+                return "mp3";
+            case "77U/M":
+                return "srt";
+            default:
+                return null;
+        }
+}

@@ -17,6 +17,7 @@ use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Requests\Api\Parcel\UpdateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
+use App\Models\Document;
 use App\Repositories\ApiShippingServiceRepository;
 use Illuminate\Support\Facades\Validator;
 use FlyingLuscas\Correios\Client;
@@ -275,7 +276,24 @@ class ParcelController extends Controller
                     return apiResponse(false, $this->apiShippingService->getError());
                 }
             }
-
+            if(optional($request->parcel)['invoice_file']){
+                $base64 = $request->parcel['invoice_file'];
+                $type = getFileType($base64);
+                if(in_array($type,['png','pdf','jpeg'])){
+                    $name = time().'.'.$type;
+                    $path = storage_path('app/documents/'.$name); 
+                    file_put_contents($path,base64_decode($base64)); 
+                    $invoice = Document::create([
+                            'name' => 'order invoice',
+                            'size' => strlen($base64),
+                            'type' => mime_content_type($path),
+                            'path' => $name
+                    ]); 
+                    $order->update([
+                            'purchase_invoice' => $invoice->id
+                    ]);
+                }
+            }
             $order->doCalculations();
 
             DB::commit();
