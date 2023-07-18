@@ -193,6 +193,7 @@ class ParcelController extends Controller
                 "is_shipment_added" => true,
                 'status' => Order::STATUS_ORDER,
                 'user_declared_freight' => optional($request->parcel)['shipment_value']??0,
+                'sinerlog_tran_id' => optional($request->parcel)['return']??1,
 
                 "sender_first_name" => optional($request->sender)['sender_first_name'],
                 "sender_last_name" => optional($request->sender)['sender_last_name'],
