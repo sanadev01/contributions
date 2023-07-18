@@ -10,12 +10,17 @@
                         @section('title', __('Shipping Service : ') . $shipping_service->name)
 
                         <hr>
-                    </div>
+                    </div> 
+                    <div> 
+                        <a href="{{ route('admin.rates.rates.exports', $shipping_service) }}" class="mx-2 btn btn-success">
+                            <i class="feather icon-download"></i> Download
+                        </a>
                     @can('create', App\Models\Rate::class)
                         <a href="{{ route('admin.rates.shipping-rates.index') }}" class="pull-right btn btn-primary">
                             @lang('shipping-rates.Return to List')
                         </a>
                     @endcan
+                    </div>
                 </div>
                 <hr>
                 <div class="card-content card-body">
