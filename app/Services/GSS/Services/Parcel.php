@@ -28,7 +28,8 @@ class Parcel {
                'senderAddress' => [
                   'firstName' => $order->sender_first_name,
                   'lastName' => $order->sender_last_name,
-                  'addressLine1' => ($order->sender_address) ? $order->sender_address: '2200 NW 129TH AVE',
+                  'addressLine1' => ($order->sender_address) ? substr($order->sender_address, 0, 35): '2200 NW 129TH AVE',
+                  'addressLine2' => ($order->sender_address) ? substr($order->sender_address, 35): '',
                   // 'addressIsPOBox' => true,
                   'city' => ($order->sender_city) ? $order->sender_city: 'Miami',
                   'province' => ($order->sender_state_id) ? $order->senderState->code: 'FL',
@@ -43,9 +44,9 @@ class Parcel {
                'recipientAddress' => [
                   'firstName' => $order->recipient->first_name,
                   'lastName' => $order->recipient->last_name,
-                  'addressLine1' => $order->recipient->address,
-                  'addressLine2' => optional($order->recipient)->address2,
-                  'addressLine3' => optional($order->recipient)->street_no,
+                  'addressLine1' => substr($order->recipient->address, 0, 35),
+                  'addressLine2' => substr($order->recipient->address, 35),
+                  'addressLine3' => optional($order->recipient)->address2,
                   // 'addressIsPOBox' => true,
                   'city' => $order->recipient->city,
                   'province' => $order->recipient->State->code,
