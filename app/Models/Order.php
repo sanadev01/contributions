@@ -529,7 +529,6 @@ class Order extends Model implements Package
             $this->calculateProfit($shippingCost, $shippingService);
         }elseif ($shippingService && $shippingService->isGSSService()) {
             $shippingCost = $this->user_declared_freight;
-            $this->calculateDiscount($shippingCost, $shippingService);
         }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
@@ -545,9 +544,7 @@ class Order extends Model implements Package
         $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $this->user_profit;
 
         $discount = 0; // not implemented yet
-        if($shippingService->isGSSService()) {
-            $discount = $this->discount;
-        }
+        
         $gross_total = $total - $discount;
 
         $this->update([
@@ -597,17 +594,6 @@ class Order extends Model implements Package
         $profit = $profit_percentage / 100;
 
         $this->user_profit = $shippingCost * $profit;
-        return true;
-    }
-
-    public function calculateDiscount($shippingCost, $shippingService)
-    {
-        if (in_array($shippingService->service_sub_class,[ShippingService::GSS_IPA, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_EFCM])) {
-            $discount_percentage = (setting('gss', null, $this->user->id)  &&  setting('gss_user_discount', null, $this->user->id) != 0) ?  setting('gss_user_discount', null, $this->user->id) : setting('gss_user_discount', null, User::ROLE_ADMIN);
-        }
-        $discount = $discount_percentage / 100;
-
-        $this->discount = $shippingCost * $discount;
         return true;
     }
 
