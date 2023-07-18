@@ -248,7 +248,7 @@ function getJsonData($rates, $profit)
     }
     return json_encode($ratesArray);
 }
-function getFileTypeByBase64($base64)
+function getFileType($base64)
     {
         $data = substr($base64,0,5);
         switch (strtoupper($data))
@@ -276,4 +276,4 @@ function getFileTypeByBase64($base64)
             default:
                 return null;
         }
-    }
+}
