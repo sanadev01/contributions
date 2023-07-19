@@ -169,10 +169,12 @@ class ApiShippingServiceRepository
                 $this->error = 'Seleceted Shipping service is not available for your account.';
                 return false;
             }
+            
             $request = new Request();
             $request->merge(['order_id' => $order->id, 'service' => $order->shippingService->service_sub_class]);
             $orderItemController = new OrderItemsController(new OrderRepository());
             $response = $orderItemController->GSSRates($request);
+
             if($response['success'])
             {
                 $order->update([
