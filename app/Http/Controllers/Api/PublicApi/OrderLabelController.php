@@ -27,14 +27,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\ColombiaLabelRepository;
 use App\Repositories\POSTNLLabelRepository;
-use App\Repositories\GDELabelRepository;
 
 
 class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order)
     {
-
         if(Auth::id() != $order->user_id){
             return apiResponse(false,'Order not found');
         }
@@ -82,7 +80,7 @@ class OrderLabelController extends Controller
 
             if ($order->recipient->country_id == Order::US) {
                 // For USPS
-                if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $order->shippingService->service_sub_class == ShippingService::USPS_GROUND) {
+                if (in_array($order->shippingService->service_sub_class, [ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS, ShippingService::USPS_GROUND, ShippingService::GDE_PRIORITY_MAIL, ShippingService::GDE_FIRST_CLASS])) {
                     $uspsLabelRepository = new USPSLabelRepository();
                     $uspsLabelRepository->handle($order);
 
@@ -135,14 +133,7 @@ class OrderLabelController extends Controller
                         return $this->rollback($error);
                     }
                 }
-                if ($order->shippingService->isGDEService()) {
-                    $gdeLabelRepository = new GDELabelRepository();
-                    $gdeLabelRepository->get($order);
-                    $error = $gdeLabelRepository->getError();
-                    if ($error){
-                        return $this->rollback($error);
-                    }
-                }
+                
                 if ($order->shippingService->isGSSService()) {
                     $gssLabelRepository = new GSSLabelRepository();
                     $gssLabelRepository->get($order);
