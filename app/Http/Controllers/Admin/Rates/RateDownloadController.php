@@ -27,7 +27,8 @@ class RateDownloadController extends Controller
 
         $service = ShippingService::find($packageId);
         
-        if($service->isGDEService() &&  $service->rates){
+        // dd($service);
+        if(optional($service)->rates && $service->isGDEService()){
             $exportService = new ShippingServiceRegionRateExport($service->rates);
             return $exportService->handle(); 
         }
@@ -37,7 +38,6 @@ class RateDownloadController extends Controller
         }else{
             $rates = $rateReportsRepository->getRateReport($packageId);
         }
-
         
         $exportService = new ProfitPackageRateExport($rates);
         return $exportService->handle();
