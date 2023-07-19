@@ -277,6 +277,15 @@ class ParcelController extends Controller
                     return apiResponse(false, $this->apiShippingService->getError());
                 }
             }
+
+            if ($order->shippingService->isGSSService()) {
+                if(!$this->apiShippingService->getGSSRates($order))
+                {
+                    DB::rollback();
+                    return apiResponse(false, $this->apiShippingService->getError());
+                }
+            }
+            
             if(optional($request->parcel)['invoice_file']){
                 $base64 = $request->parcel['invoice_file'];
                 $type = getFileType($base64);
