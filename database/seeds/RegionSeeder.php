@@ -16,5 +16,8 @@ class RegionSeeder extends Seeder
         Region::truncate();
         $regionImportService = new RegionImportService();
         $regionImportService->handle();
+
+        $usaRegionImportService = new USARegionImportService();
+        $usaRegionImportService->handle();
     }
 }
