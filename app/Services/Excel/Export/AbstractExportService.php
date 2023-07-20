@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
 
 abstract class AbstractExportService
 {
@@ -143,5 +145,16 @@ abstract class AbstractExportService
         $this->sheet->mergeCells($range);
 
         return $this;
+    }
+    protected function setBorder($cells, $isBottom)
+    {
+        foreach($cells as $cell){ 
+            $cell = $this->sheet->getStyle($cell)
+                ->getBorders();
+                $cell = $isBottom ? $cell->getBottom(): $cell->getOutline();
+                
+                $cell->setBorderStyle(Border::BORDER_THIN)
+                ->setColor(new Color('000'));
+        }
     }
 }
