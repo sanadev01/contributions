@@ -26,7 +26,9 @@
                                                 {{ $setting->shippingService->name }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$setting->service_id,'packageId'=>$setting->package_id]) }}" class="btn btn-success btn-sm">View Rates</a>
+                                                <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$setting->service_id,'packageId'=>$setting->package_id]) }}" class="btn btn-primary btn-sm">View Rates</a>
+                                                |
+                                                <a href="{{ route('admin.rates.rates.exports', $setting->service_id) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
                                             </td>
                                             
                                         </tr>
@@ -38,7 +40,9 @@
                                                         {{ $service->name }}
                                                     </td>
                                                     <td>
-                                                        <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$service->id,'packageId'=>$service->id] ) }}" class="btn btn-success btn-sm">View Rates</a>
+                                                        <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$service->id,'packageId'=>$service->id] ) }}" class="btn btn-primary btn-sm">View Rates</a>
+                                                        |
+                                                        <a href="{{ route('admin.rates.rates.exports', $service) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
                                                     </td>
                                                 </tr>
                                             @endforeach

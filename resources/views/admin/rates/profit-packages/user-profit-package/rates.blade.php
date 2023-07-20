@@ -7,11 +7,11 @@
                 <div class="card">
                     <div class="row pt-3 pl-2">
                         <div class="col-6">
-                            <h4 class="mb-0">{{ $service }}  @lang('menu.Rates')</h4>
+                            <h4 class="mb-0">{{ $service->name }}  @lang('menu.Rates')</h4>
                         </div>
                         <div class="col-6 d-flex justify-content-end">
                             @if($isGDE)
-                                <a href="{{ route('admin.rates.rates.exports', ['package' => 'gde', 'regionRates' => urlencode(getJsonData($rates, $profit))]) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
+                                <a href="{{ route('admin.rates.rates.exports', $service) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
                             @else
                                 <a href="{{ route('admin.rates.rates.exports',$packageId) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
                             @endif
@@ -36,7 +36,7 @@
                                                 {{ optional($rate)['weight'] . ' g' }}
                                             </td>
                                             <td>
-                                                @if ($service == 'Brazil Redispatch')
+                                                @if ($service->name == 'Brazil Redispatch')
                                                     ${{ optional($rate)['leve'] }}
                                                 @elseif($isGDE)
                                                     {{ number_format(($profit / 100) * $rate['leve'] + $rate['leve'], 2) }}

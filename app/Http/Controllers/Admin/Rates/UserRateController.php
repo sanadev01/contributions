@@ -37,6 +37,7 @@ class UserRateController extends Controller
     public function showPackageRates($id,$packageId)
     {
         $profit = null;
+        
         if($packageId  == 'region'){
             $isGDE = true;
             $rates = Rate::find($id);
@@ -48,7 +49,7 @@ class UserRateController extends Controller
                 $userProfit = setting($type, null, auth()->user()->id);
                 $adminProfit = setting($type, null, User::ROLE_ADMIN);
                 $profit = $userProfit ? $userProfit : $adminProfit;
-                $service = $rates->shippingService->name;
+                $service = $rates->shippingService;
                 $rates = $rates->data;
                 $packageId = $id;
                 return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
@@ -63,7 +64,7 @@ class UserRateController extends Controller
             return view('admin.rates.profit-packages.user-profit-package.regions', compact('shippingRegions'));
         }
         
-        $service = $service->name;
+        // $service = $service;
         $rateReportsRepository = new RateReportsRepository();
         $rates = $rateReportsRepository->getRateReport($packageId, $id);
         $isGDE = false;
