@@ -3,6 +3,7 @@
 use App\Models\Region;
 use Illuminate\Database\Seeder;
 use App\Services\Excel\Import\RegionImportService;
+use App\Services\Excel\Import\USARegionImportService;
 
 class RegionSeeder extends Seeder
 {
