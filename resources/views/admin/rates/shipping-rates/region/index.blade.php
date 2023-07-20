@@ -52,11 +52,11 @@
                                             class="btn btn-primary btn-sm">
                                             <i class="feather icon-eye"></i> View
                                         </a>
-                                        |
+                                        {{-- |
                                         <a href="{{ route('admin.rates.download-shipping-rates', $rate) }}"
                                             class="btn btn-success btn-sm">
                                             <i class="feather icon-download"></i> Download
-                                        </a>
+                                        </a> --}}
                                     </th>
                                 </tr>
                             @endforeach

@@ -61,7 +61,7 @@ class ShippingServiceRegionRateExport extends AbstractExportService
         $this->setCellValue('B2', 'Weight Kg');
         foreach ($this->rates as $key => $rate) {
             $this->setColumnWidth($this->numberToLetter($key + 2), 20);
-            $this->setCellValue($this->numberToLetter($key + 2) . '2', $rate->region->name . ' Rate ($)');
+            $this->setCellValue($this->numberToLetter($key + 2) . '2', optional($rate->region)->name . ' Rate ($)');
         }
         $this->currentRow++;
     }
