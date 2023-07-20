@@ -2,31 +2,32 @@
 
 namespace App\Http\Controllers\Api\PublicApi;
 
-use App\Events\AutoChargeAmountEvent;
+use Exception;
 use App\Models\Order;
 use App\Events\OrderPaid;
 use Illuminate\Http\Request;
 // use App\Repositories\LabelRepository;
 use App\Services\GePS\Client;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Repositories\AnjunLabelRepository;
+use Illuminate\Support\Facades\Auth;
+use App\Events\AutoChargeAmountEvent;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\GSSLabelRepository;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
+use App\Repositories\AnjunLabelRepository;
 use App\Repositories\FedExLabelRepository;
-use App\Repositories\SwedenPostLabelRepository;
+use App\Repositories\POSTNLLabelRepository;
 use Illuminate\Database\Eloquent\Collection;
+use App\Repositories\ColombiaLabelRepository;
+use App\Repositories\PostPlusLabelRepository;
+use App\Repositories\SwedenPostLabelRepository;
+use App\Repositories\MileExpressLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
-use App\Repositories\PostPlusLabelRepository;
-use App\Repositories\GSSLabelRepository;
-use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Repositories\ColombiaLabelRepository;
-use App\Repositories\POSTNLLabelRepository;
 
 
 class OrderLabelController extends Controller
@@ -138,6 +139,14 @@ class OrderLabelController extends Controller
                     $gssLabelRepository = new GSSLabelRepository();
                     $gssLabelRepository->get($order);
                     $error = $gssLabelRepository->getError();
+                    if ($error){
+                        return $this->rollback($error);
+                    }
+                }
+                if ($order->shippingService->is_milli_express) {
+                    $mileExpressLabelRepository = new MileExpressLabelRepository();
+                    $mileExpressLabelRepository->run($order, true);
+                    $error = $mileExpressLabelRepository->getError();
                     if ($error){
                         return $this->rollback($error);
                     }
