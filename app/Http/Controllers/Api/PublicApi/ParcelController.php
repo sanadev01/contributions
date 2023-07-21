@@ -58,6 +58,11 @@ class ParcelController extends Controller
             return apiResponse(false,'Selected shipping service is currently not available.');
         }
 
+        if (!serviceActive($shippingService)) {
+            return apiResponse(false,'Selected shipping service is not active against your account!!.');
+        }
+
+
         if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->isAnjunService()) {
             return apiResponse(false,$shippingService->name.' is currently not available.');
         }
@@ -611,6 +616,12 @@ class ParcelController extends Controller
             DB::rollback();
            return apiResponse(false,$ex->getMessage());
         }
+    }
+
+    public function serviceActive($shippingService) {
+
+        $setting = Setting::where('user_id', Auth::id())->get();
+        
     }
 
 }
