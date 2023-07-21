@@ -14,6 +14,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Models\PackageError;
+use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 
 class Client{
 
@@ -70,9 +71,10 @@ class Client{
             $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
             $response = json_decode($request);
             if($response->success) {
+                $label = $this->makePDFLabel($response);
                 $order->update([
                     'corrios_tracking_code' => $response->trackingNumber,
-                    'api_response' => $request,
+                    'api_response' => json_encode($label),
                     'cn23' => [
                         "tracking_code" => $response->trackingNumber,
                         "stamp_url" => route('warehouse.cn23.download',$order->id),
@@ -299,6 +301,26 @@ class Client{
             'output' => $output,
             'message' =>  $message,
         ]);
+    }
+
+    private function makePDFLabel($response) {
+        $pdf = PDFMerger::init();
+        $label = "app/labels/{$response->trackingNumber}";
+        foreach ($response->labels as $index => $labelBase64) {
+            $labelContent = base64_decode($labelBase64);
+            $pagePath = storage_path("{$label}_{$index}.pdf");
+            file_put_contents($pagePath, $labelContent);
+            $pdf->addPDF($pagePath);
+        }
+        $pdf->merge();
+        
+        // Remove individual pages
+        foreach ($response->labels as $index => $labelBase64) {
+            $pagePath = storage_path("{$label}_{$index}.pdf");
+            unlink($pagePath);
+        }
+        $mergedPdf = $pdf->output();
+        return base64_encode($mergedPdf);
     }
     
 }
