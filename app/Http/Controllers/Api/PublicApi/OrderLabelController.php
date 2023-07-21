@@ -34,6 +34,7 @@ class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order)
     {
+        return dd($order->shippingService->is_milli_express);
         if(Auth::id() != $order->user_id){
             return apiResponse(false,'Order not found');
         }
@@ -143,7 +144,7 @@ class OrderLabelController extends Controller
                         return $this->rollback($error);
                     }
                 }
-                if ($order->shippingService->is_milli_express) {
+                if ($order->shippingService->is_milli_express) { 
                     $mileExpressLabelRepository = new MileExpressLabelRepository();
                     $mileExpressLabelRepository->run($order, true);
                     $error = $mileExpressLabelRepository->getError();

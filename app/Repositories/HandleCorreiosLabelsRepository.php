@@ -56,9 +56,9 @@ class HandleCorreiosLabelsRepository
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
             // }
-            if ($this->order->shippingService->is_milli_express) {
-                return $this->mileExpressLabel();
-            }
+        }
+        if ($this->order->shippingService->is_milli_express) {
+            return $this->mileExpressLabel();
         }
         if ($this->order->recipient->country_id == Order::CHILE) {
 
