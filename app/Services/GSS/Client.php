@@ -72,7 +72,7 @@ class Client{
             if($response->success) {
                 $order->update([
                     'corrios_tracking_code' => $response->trackingNumber,
-                    'api_response' => json_encode($request),
+                    'api_response' => $request,
                     'cn23' => [
                         "tracking_code" => $response->trackingNumber,
                         "stamp_url" => route('warehouse.cn23.download',$order->id),
