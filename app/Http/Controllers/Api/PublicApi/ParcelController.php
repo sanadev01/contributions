@@ -7,20 +7,21 @@ use App\Models\State;
 use App\Models\ApiLog;
 use App\Models\Country;
 use Illuminate\Http\Request;
+use App\Models\ProfitSetting;
 use App\Models\ShippingService;
+use FlyingLuscas\Correios\Client;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
+use Illuminate\Support\Facades\Validator;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Requests\Api\Parcel\UpdateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
 use App\Repositories\ApiShippingServiceRepository;
-use Illuminate\Support\Facades\Validator;
-use FlyingLuscas\Correios\Client;
-use Illuminate\Support\Facades\Log;
 
 class ParcelController extends Controller
 {
