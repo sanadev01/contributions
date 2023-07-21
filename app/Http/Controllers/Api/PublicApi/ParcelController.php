@@ -59,27 +59,27 @@ class ParcelController extends Controller
             return apiResponse(false,'Selected shipping service is currently not available.');
         }
 
-        if (!$this->serviceActive($shippingService)) {
-            return apiResponse(false,'Selected shipping service is not active against your account!!.');
-        }
-
-
+        
+        
         if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->isAnjunService()) {
             return apiResponse(false,$shippingService->name.' is currently not available.');
         }
-
+        
         if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
             if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
                 return apiResponse(false,$shippingService->name.' is currently not available.');
             }
-
+            
             if ($shippingService->service_sub_class == ShippingService::Packet_Standard) {
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Standard)->first();
             }
-
+            
             if ($shippingService->service_sub_class == ShippingService::Packet_Express) {
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Express)->first();
             }
+        }
+        if (!$this->serviceActive($shippingService)) {
+            return apiResponse(false,'Selected shipping service is not active against your account!!.');
         }
 
         if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
