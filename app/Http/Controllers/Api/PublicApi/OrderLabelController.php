@@ -34,7 +34,6 @@ class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order)
     {
-        return dd($order->shippingService->is_milli_express);
         if(Auth::id() != $order->user_id){
             return apiResponse(false,'Order not found');
         }
