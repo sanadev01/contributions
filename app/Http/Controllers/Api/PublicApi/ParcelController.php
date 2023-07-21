@@ -58,7 +58,7 @@ class ParcelController extends Controller
             return apiResponse(false,'Selected shipping service is currently not available.');
         }
 
-        if (!serviceActive($shippingService)) {
+        if (!$this->serviceActive($shippingService)) {
             return apiResponse(false,'Selected shipping service is not active against your account!!.');
         }
 
@@ -620,8 +620,22 @@ class ParcelController extends Controller
 
     public function serviceActive($shippingService) {
 
-        $setting = Setting::where('user_id', Auth::id())->get();
-        
+        $userId = Auth::id();
+        $profitSetting = ProfitSetting::where('user_id', $userId)
+            ->where('service_id',$shippingService->id)
+            ->where('package_id', '!=', null)
+            ->first();
+        if($profitSetting){
+            return true;
+        }
+        if( ($shippingService->isGDEService() && setting('gde', null, $userId)) ||
+            ($shippingService->isGSSService() && setting('gss', null, $userId)) ||
+            ($shippingService->service_sub_class == ShippingService::FEDEX_GROUND && setting('fedex', null, $userId)))
+        {
+            return true;
+        }
+           
+        return false;
     }
 
 }
