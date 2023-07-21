@@ -628,12 +628,12 @@ class ParcelController extends Controller
         if($profitSetting){
             return true;
         }
-        if( ($shippingService->isGDEService() && setting('gde', null, $userId)) ||
-            ($shippingService->isGSSService() && setting('gss', null, $userId)) ||
-            ($shippingService->service_sub_class == ShippingService::FEDEX_GROUND && setting('fedex', null, $userId)))
-        {
-            return true;
-        }
+        // if( ($shippingService->isGDEService() && setting('gde', null, $userId)) ||
+        //     ($shippingService->isGSSService() && setting('gss', null, $userId)) ||
+        //     ($shippingService->service_sub_class == ShippingService::FEDEX_GROUND && setting('fedex', null, $userId)))
+        // {
+        //     return true;
+        // }
            
         return false;
     }
