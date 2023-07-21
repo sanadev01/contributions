@@ -78,9 +78,9 @@ class ParcelController extends Controller
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Express)->first();
             }
         }
-        if (!$this->serviceActive($shippingService)) {
-            return apiResponse(false,'Selected shipping service is not active against your account!!.');
-        }
+        // if (!$this->serviceActive($shippingService)) {
+        //     return apiResponse(false,'Selected shipping service is not active against your account!!.');
+        // }
 
         if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
