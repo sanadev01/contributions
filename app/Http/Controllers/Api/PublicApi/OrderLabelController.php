@@ -143,7 +143,7 @@ class OrderLabelController extends Controller
                         return $this->rollback($error);
                     }
                 }
-                if ($order->shippingService->is_milli_express) {
+                if ($order->shippingService->is_milli_express) { 
                     $mileExpressLabelRepository = new MileExpressLabelRepository();
                     $mileExpressLabelRepository->run($order, true);
                     $error = $mileExpressLabelRepository->getError();
