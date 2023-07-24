@@ -18,14 +18,14 @@
                 Sinerlog modification
                 Shows the sinerlog label
              -->
-             @if ($order->sinerlog_tran_id != '')
-            <iframe src="{{$renderLabel}}" style="width:100%; height:700px;" frameborder="0">
+            @if ($order->sinerlog_tran_id != '')
+                <iframe src="@isset($renderLabel) {{$renderLabel}} @endisset" style="width:100%; height:700px;" frameborder="0">
                 
-            </iframe>
+                </iframe>
             @else
-            <iframe src="https://docs.google.com/gview?url={{ route('order.label.download', encrypt($order->id)) }}&embedded=true&time{{md5(microtime())}}" style="width:100%; height:700px;" frameborder="0">
-                <iframe src="{{ route('order.label.download', encrypt($order->id)) }}" style="width:100%; height:700px;" frameborder="0"></iframe>
-            </iframe>
+                <iframe src="https://docs.google.com/gview?url={{ route('order.label.download', encrypt($order->id)) }}&embedded=true&time{{md5(microtime())}}" style="width:100%; height:700px;" frameborder="0">
+                    <iframe src="{{ route('order.label.download', encrypt($order->id)) }}" style="width:100%; height:700px;" frameborder="0"></iframe>
+                </iframe>
             @endif
         @else
             <div class="alert alert-danger">
