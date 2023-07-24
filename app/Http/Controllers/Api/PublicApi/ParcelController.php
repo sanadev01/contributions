@@ -147,9 +147,12 @@ class ParcelController extends Controller
             return apiResponse(false, 'this service is not availaible for US address');
         }
         
-        if (!$this->serviceActive($shippingService)) {
-            return apiResponse(false,'Selected shipping service is not active against your account!!.');
-        }
+        Log::info('shippingService');
+        Log::info($shippingService->name);
+        Log::info($shippingService->id);
+        // if (!$this->serviceActive($shippingService)) {
+        //     return apiResponse(false,'Selected shipping service is not active against your account!!.');
+        // }
         DB::beginTransaction();
 
         try {
