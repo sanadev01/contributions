@@ -78,10 +78,7 @@ class ParcelController extends Controller
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Express)->first();
             }
         }
-        // if (!$this->serviceActive($shippingService)) {
-        //     return apiResponse(false,'Selected shipping service is not active against your account!!.');
-        // }
-
+        
         if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
@@ -150,6 +147,9 @@ class ParcelController extends Controller
             return apiResponse(false, 'this service is not availaible for US address');
         }
         
+        if (!$this->serviceActive($shippingService)) {
+            return apiResponse(false,'Selected shipping service is not active against your account!!.');
+        }
         DB::beginTransaction();
 
         try {
@@ -627,16 +627,17 @@ class ParcelController extends Controller
             ->where('service_id',$shippingService->id)
             ->where('package_id', '!=', null)
             ->first();
+            
         if($profitSetting){
             return true;
         }
-        // if( ($shippingService->isGDEService() && setting('gde', null, $userId)) ||
-        //     ($shippingService->isGSSService() && setting('gss', null, $userId)) ||
-        //     ($shippingService->service_sub_class == ShippingService::FEDEX_GROUND && setting('fedex', null, $userId)))
-        // {
-        //     return true;
-        // }
-           
+        if( $shippingService->isOfUnitedStates() ||
+            $shippingService->isDomesticService() ||
+            $shippingService->isInternationalService() ||
+            $shippingService->isInboundDomesticService() )
+        {
+            return true;
+        }
         return false;
     }
 
