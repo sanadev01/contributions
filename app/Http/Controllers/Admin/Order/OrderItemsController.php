@@ -7,6 +7,7 @@ use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
+use App\Services\GSS\Client;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
@@ -203,5 +204,47 @@ class OrderItemsController extends Controller
             'success' => true,
             'total_amount' => number_format($response->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'], 2),
         ];
+    }
+
+    public function GSSRates(Request $request)
+    {
+        $service = $request->service;
+        $order = Order::find($request->order_id);
+        if($service == ShippingService::GSS_IPA) {
+            $rateType = 'IPA';
+        } elseif($service == ShippingService::GSS_EPMEI) {
+            $rateType = 'EPMEI';
+        } elseif($service == ShippingService::GSS_EPMI) {
+            $rateType = 'EPMI';
+        } elseif($service == ShippingService::GSS_EFCM) {
+            $rateType = 'EFCM';
+        }
+
+        $client = new Client();
+        $response =  $client->getServiceRates($order, $rateType);
+        $data = $response->getData();
+
+        if ($data->isSuccess && $data->output->calculatedPostage > 0){
+            $rate = $data->output->calculatedPostage;
+            
+            if (in_array($service,[ShippingService::GSS_IPA, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_EFCM])) {
+                $discountPercentage = (setting('gss', null, $order->user->id)  &&  setting('gss_user_discount', null, $order->user->id) != 0) ?  setting('gss_user_discount', null, $order->user->id) : setting('gss_user_discount', null, User::ROLE_ADMIN);
+            }
+            $discount = ($discountPercentage / 100) * $rate;
+    
+            $discountedRate = $rate - $discount;
+
+            return (array)[
+                'success' => true,
+                'total_amount' => number_format($discountedRate, 2),
+            ];
+        } else {
+            return (array)[
+                'success' => false,
+                'error' => 'server error occured',
+            ];
+        }
+
+        
     }
 }

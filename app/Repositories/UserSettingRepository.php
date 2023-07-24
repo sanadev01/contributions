@@ -73,6 +73,8 @@ class UserSettingRepository {
         ($request->discount_percentage != null ) ? saveSetting('discount_percentage', $request->discount_percentage, $user->id) : saveSetting('discount_percentage', 0, $user->id);
         ($request->marketplace != null ) ? saveSetting('marketplace', $request->marketplace, $user->id) : saveSetting('marketplace', 0, $user->id);
         ($request->fedex_profit != null ) ? saveSetting('fedex_profit', $request->fedex_profit, $user->id) : saveSetting('fedex_profit', 0, $user->id);
+        ($request->gss_api_discount != null ) ? saveSetting('gss_api_discount', $request->gss_api_discount, $user->id) : saveSetting('gss_api_discount', 0, $user->id);
+        ($request->gss_user_discount != null ) ? saveSetting('gss_user_discount', $request->gss_user_discount, $user->id) : saveSetting('gss_user_discount', 0, $user->id);
         
         ($request->weight != null ) ? saveSetting('weight', $request->weight, $user->id) : saveSetting('weight', 0, $user->id);
         ($request->length != null ) ? saveSetting('length', $request->length, $user->id) : saveSetting('length', 0, $user->id);

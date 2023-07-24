@@ -481,6 +481,8 @@ class Order extends Model implements Package
         if ($shippingService && in_array($shippingService->service_sub_class, $this->usShippingServicesSubClasses())) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
+        }elseif ($shippingService && $shippingService->isGSSService()) {
+            $shippingCost = $this->user_declared_freight;
         }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }

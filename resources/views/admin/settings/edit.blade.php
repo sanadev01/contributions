@@ -192,14 +192,18 @@
                                     <label class="col-md-3 text-md-right">GSS<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <div class="vs-checkbox-con vs-checkbox-primary" title="GSS IPA">
-                                                <input type="checkbox" name="GSS_IPA" id="GSS_IPA" @if(setting('GSS_IPA', null, \App\Models\User::ROLE_ADMIN)) checked @endif>
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="GSS">
+                                                <input type="checkbox" name="gss" id="gss" @if(setting('gss', null, \App\Models\User::ROLE_ADMIN)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
                                                     </span>
                                                 </span>
                                             </div>
+                                            <span class="offset-2 mr-2 mt-2">API Discount (%) :</span>
+                                            <input type="number" name="gss_api_discount" step="0.01" min=0 class="form-control col-2" id="gss_api_discount" value="{{ setting('gss_api_discount', null, $adminId) }}">
+                                            <span class="ml-3 mr-2 mt-2">User Discount (%) :</span>
+                                            <input type="number" name="gss_user_discount" step="0.01" min=0 class="form-control col-2" id="gss_user_discount" value="{{ setting('gss_user_discount', null, $adminId) }}">
                                         </div>
                                     </div>
                                 </div>

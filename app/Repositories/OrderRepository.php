@@ -10,6 +10,7 @@ use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
+use App\Services\GSS\GSSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
 use App\Services\GePS\GePSShippingService;
@@ -497,6 +498,14 @@ class OrderRepository
             }
         } else
         {
+            $gssShippingService = new GSSShippingService($order);
+            foreach (ShippingService::whereIn('service_sub_class', [ShippingService::GSS_IPA, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_EFCM])->get() as $shippingService) 
+            {
+                if ($gssShippingService->isAvailableFor($shippingService)) {
+                    $shippingServices->push($shippingService);
+                }
+            }
+            
             foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService) 
             {
                 if ($shippingService->isAvailableFor($order)) {
@@ -601,7 +610,7 @@ class OrderRepository
                 });
             }
 
-            if (!setting('GSS_IPA', null, User::ROLE_ADMIN) && !setting('GSS_IPA', null, auth()->user()->id)) {
+            if (!setting('gss', null, User::ROLE_ADMIN) && !setting('gss', null, auth()->user()->id)) {
                 $this->shippingServiceError = 'GSS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::GSS_IPA;
