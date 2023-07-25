@@ -79,9 +79,8 @@ class ParcelController extends Controller
         }
         
         if($shippingService->is_anjun_china){
-          
             if(orderProductsValue($request->products)< 5) {
-            return apiResponse(false, $shippingService->name.' parcel Value cannot be less than $5'); 
+                return apiResponse(false, $shippingService->name.' parcel Value cannot be less than $5'); 
             }
         }
 
@@ -689,25 +688,31 @@ class ParcelController extends Controller
 
     public function serviceActive($shippingService) {
         $userId = Auth::id();
+        if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Standard) {
+            $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
+        }
+
+        if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Express) {
+            $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
+        }
+
         $profitSetting = ProfitSetting::where('user_id', $userId)
             ->where('service_id',$shippingService->id)
             ->where('package_id', '!=', null)
             ->first();
-            if(!$profitSetting && $shippingService->isAnjunService()){
-                return true;
-            }
-            if($profitSetting) {
-                return true;
-            }
-            if( $shippingService->isOfUnitedStates() ||
-                $shippingService->isDomesticService() ||
-                $shippingService->isInternationalService() ||
-                $shippingService->isInboundDomesticService() ||
-                $shippingService->isGSSService() ||
-                $shippingService->isGDEService() )
-            {
-                return true;
-            }
+
+        if($profitSetting) {
+            return true;
+        }
+        if( $shippingService->isOfUnitedStates() ||
+            $shippingService->isDomesticService() ||
+            $shippingService->isInternationalService() ||
+            $shippingService->isInboundDomesticService() ||
+            $shippingService->isGSSService() ||
+            $shippingService->isGDEService() )
+        {
+            return true;
+        }
         return false;
     }
 
