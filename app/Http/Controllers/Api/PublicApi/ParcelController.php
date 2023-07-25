@@ -88,7 +88,7 @@ class ParcelController extends Controller
             }
 
         }else{
-            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');;
+            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
             
             if($shippingService->isCorreiosService() && $volumeWeight > 65.15){
@@ -621,23 +621,23 @@ class ParcelController extends Controller
     }
 
     public function serviceActive($shippingService) {
-
         $userId = Auth::id();
         $profitSetting = ProfitSetting::where('user_id', $userId)
             ->where('service_id',$shippingService->id)
             ->where('package_id', '!=', null)
             ->first();
-            
-        if($profitSetting){
-            return true;
-        }
-        if( $shippingService->isOfUnitedStates() ||
-            $shippingService->isDomesticService() ||
-            $shippingService->isInternationalService() ||
-            $shippingService->isInboundDomesticService() )
-        {
-            return true;
-        }
+            if($profitSetting){
+                return true;
+            }
+            if( $shippingService->isOfUnitedStates() ||
+                $shippingService->isDomesticService() ||
+                $shippingService->isInternationalService() ||
+                $shippingService->isInboundDomesticService() ||
+                $shippingService->isGSSService() ||
+                $shippingService->isGDEService() )
+            {
+                return true;
+            }
         return false;
     }
 
