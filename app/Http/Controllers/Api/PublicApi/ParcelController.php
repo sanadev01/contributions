@@ -693,7 +693,10 @@ class ParcelController extends Controller
             ->where('service_id',$shippingService->id)
             ->where('package_id', '!=', null)
             ->first();
-            if($profitSetting){
+            if(!$profitSetting && $shippingService->isAnjunService()){
+                return true;
+            }
+            if($profitSetting) {
                 return true;
             }
             if( $shippingService->isOfUnitedStates() ||
