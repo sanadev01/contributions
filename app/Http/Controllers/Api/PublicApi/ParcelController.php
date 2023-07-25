@@ -6,22 +6,23 @@ use App\Models\Order;
 use App\Models\State;
 use App\Models\ApiLog;
 use App\Models\Country;
+use App\Models\Document;
 use Illuminate\Http\Request;
+use App\Models\ProfitSetting;
 use App\Models\ShippingService;
+use FlyingLuscas\Correios\Client;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
+use Illuminate\Support\Facades\Validator;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Requests\Api\Parcel\UpdateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
-use App\Models\Document;
 use App\Repositories\ApiShippingServiceRepository;
-use Illuminate\Support\Facades\Validator;
-use FlyingLuscas\Correios\Client;
-use Illuminate\Support\Facades\Log;
 
 class ParcelController extends Controller
 {
@@ -172,6 +173,10 @@ class ParcelController extends Controller
             }
         }
         
+        if (!$this->serviceActive($shippingService)) {
+            return apiResponse(false,'Selected shipping service is not active against your account!!.');
+        }
+
         DB::beginTransaction();
 
         try {
@@ -680,6 +685,27 @@ class ParcelController extends Controller
             DB::rollback();
            return apiResponse(false,$ex->getMessage());
         }
+    }
+
+    public function serviceActive($shippingService) {
+        $userId = Auth::id();
+        $profitSetting = ProfitSetting::where('user_id', $userId)
+            ->where('service_id',$shippingService->id)
+            ->where('package_id', '!=', null)
+            ->first();
+            if($profitSetting){
+                return true;
+            }
+            if( $shippingService->isOfUnitedStates() ||
+                $shippingService->isDomesticService() ||
+                $shippingService->isInternationalService() ||
+                $shippingService->isInboundDomesticService() ||
+                $shippingService->isGSSService() ||
+                $shippingService->isGDEService() )
+            {
+                return true;
+            }
+        return false;
     }
 
 }
