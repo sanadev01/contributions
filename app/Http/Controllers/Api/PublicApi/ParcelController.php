@@ -623,10 +623,16 @@ class ParcelController extends Controller
         }
     }
 
-    public function serviceActive($shippingService) {
-
-        $userId = Auth::id();
-        $profitSetting = ProfitSetting::where('user_id', $userId)
+    public function serviceActive($shippingService)
+    {
+        if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Standard) {
+            $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
+        }
+        if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Express) {
+            $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
+        }
+        
+        $profitSetting = ProfitSetting::where('user_id', Auth::id())
             ->where('service_id',$shippingService->id)
             ->where('package_id', '!=', null)
             ->first();
