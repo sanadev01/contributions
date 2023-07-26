@@ -245,7 +245,7 @@ class ParcelController extends Controller
                 'shipping_service_name' => $order->shippingService->name
             ]);
 
-            if($recipientCountryId == Order::US && !$order->shippingService->isDomesticService()){
+            if($recipientCountryId == Order::US && !(!$order->shippingService->isDomesticService() || !$order->shippingService->isInboundDomesticService())){
                 DB::rollback();
 
                 return apiResponse(false, 'this service can not be use against US address');

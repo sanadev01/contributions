@@ -90,6 +90,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
             Route::post('order/update/status',OrderStatusController::class)->name('order.update.status');
+            Route::get('gde/{order}/invoice', GDEInvoiceDownloadController::class)->name('gde.invoice.download');
 
             Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
         });
@@ -126,9 +127,9 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('accrual-rates/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'showRates'])->name('show-accrual-rates');
             Route::get('accrual-rates-download/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'downloadRates'])->name('download-accrual-rates');
             Route::resource('user-rates', UserRateController::class)->only(['index']);
-            Route::get('rates-exports/{package}', RateDownloadController::class)->name('rates.exports');
+            Route::get('rates-exports/{package}/{regionRates?}', RateDownloadController::class)->name('rates.exports');
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
-            Route::post('/show-profit-package-rates', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showRates'])->name('show-profit-rates');
+            Route::get('/show-profit-package-rates/{id}/{packageId}', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showPackageRates'])->name('show-profit-rates');
             Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
         });
 

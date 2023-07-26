@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Reports\RateReportsRepository;
 use App\Services\Excel\Export\ProfitSampleRateExport;
 use App\Services\Excel\Export\ProfitPackageRateExport;
+use App\Services\Excel\Export\ShippingServiceRegionRateExport;
 
 class RateDownloadController extends Controller
 {
@@ -22,6 +23,14 @@ class RateDownloadController extends Controller
             }
 
         }
+
+        $service = ShippingService::find($packageId);
+        
+        if(optional($service)->rates && $service->isGDEService()){
+            $exportService = new ShippingServiceRegionRateExport($service->rates);
+            return $exportService->handle(); 
+        }
+
         if($packageId == 0 ){
             $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();
             $rates = collect($service->rates[0]->data);         
