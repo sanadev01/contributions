@@ -2,6 +2,8 @@
 
 namespace App\Services\Excel\Export;
 
+use Illuminate\Support\Facades\Auth;
+
 class ShippingServiceRegionRateExport extends AbstractExportService
 {
     private $rates;
@@ -19,9 +21,10 @@ class ShippingServiceRegionRateExport extends AbstractExportService
         }
     }
 
-    public function __construct($rates)
+    public function __construct($rates, $profit)
     {
         $this->rates = $rates;
+        $this->profit = $profit;
         parent::__construct();
     }
 
@@ -35,7 +38,6 @@ class ShippingServiceRegionRateExport extends AbstractExportService
     private function prepareExcelSheet()
     {
         $this->setExcelHeaderRow();
-
         foreach ($this->rates as $rateKey => $rate) {
 
             $row = 3;
@@ -45,7 +47,7 @@ class ShippingServiceRegionRateExport extends AbstractExportService
                     $this->setCellValue("A" . $row, $data['weight']);
                     $this->setCellValue("B" . $row, ($data['weight'] / 1000) . ' Kg');
                 };
-                $this->setCellValue($this->numberToLetter($rateKey + 2) . $row, $data['leve']);
+                $this->setCellValue($this->numberToLetter($rateKey + 2) . $row, Auth::user()->isUser() ? number_format(($this->profit / 100) * $data['leve'] + $data['leve'], 2) : $data['leve']);
                 $row++;
             }
         }

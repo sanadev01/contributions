@@ -42,13 +42,7 @@ class UserRateController extends Controller
             $isGDE = true;
             $rates = Rate::find($id);
             if($rates && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
-                $type = 'gde_fc_profit';
-                if($rates->shippingService->service_sub_class == ShippingService::GDE_PRIORITY_MAIL){
-                    $type = 'gde_pm_profit';
-                }
-                $userProfit = setting($type, null, auth()->user()->id);
-                $adminProfit = setting($type, null, User::ROLE_ADMIN);
-                $profit = $userProfit ? $userProfit : $adminProfit;
+                $profit = getGDEProfit($rates, $rates->shippingService->service_sub_class);
                 $service = $rates->shippingService;
                 $rates = $rates->data;
                 $packageId = $id;
