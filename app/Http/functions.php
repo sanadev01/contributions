@@ -201,3 +201,16 @@ function getJsonData($rates, $profit)
     }
     return json_encode($ratesArray);
 }
+
+function getGDEProfit($rates, $service)
+{
+    if($service == ShippingService::GDE_PRIORITY_MAIL){
+        $type = 'gde_pm_profit';
+    }
+    if($service == ShippingService::GDE_FIRST_CLASS){
+        $type = 'gde_fc_profit';
+    }
+    $userProfit = setting($type, null, auth()->user()->id);
+    $adminProfit = setting($type, null, User::ROLE_ADMIN);
+    return $profit = $userProfit ? $userProfit : $adminProfit;
+}
