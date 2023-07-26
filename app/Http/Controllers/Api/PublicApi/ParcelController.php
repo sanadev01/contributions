@@ -147,12 +147,9 @@ class ParcelController extends Controller
             return apiResponse(false, 'this service is not availaible for US address');
         }
         
-        Log::info('shippingService');
-        Log::info($shippingService->name);
-        Log::info($shippingService->id);
-        // if (!$this->serviceActive($shippingService)) {
-        //     return apiResponse(false,'Selected shipping service is not active against your account!!.');
-        // }
+        if (!$this->serviceActive($shippingService)) {
+            return apiResponse(false,'Selected shipping service is not active against your account!!.');
+        }
         DB::beginTransaction();
 
         try {
@@ -636,18 +633,18 @@ class ParcelController extends Controller
             ->where('service_id',$shippingService->id)
             ->where('package_id', '!=', null)
             ->first();
-            if($profitSetting){
-                return true;
-            }
-            if( $shippingService->isOfUnitedStates() ||
-                $shippingService->isDomesticService() ||
-                $shippingService->isInternationalService() ||
-                $shippingService->isInboundDomesticService() ||
-                $shippingService->isGSSService() ||
-                $shippingService->isGDEService() )
-            {
-                return true;
-            }
+        if($profitSetting){
+            return true;
+        }
+        if( $shippingService->isOfUnitedStates() ||
+            $shippingService->isDomesticService() ||
+            $shippingService->isInternationalService() ||
+            $shippingService->isInboundDomesticService() ||
+            $shippingService->isGSSService() ||
+            $shippingService->isGDEService() )
+        {
+            return true;
+        }
         return false;
     }
 
