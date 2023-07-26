@@ -185,11 +185,8 @@ class PreAlertRepository
                     'weight_discount' => null,
                 ]);
             }
-            \Log::info('request order Logs');
-            \Log::info([$order]);
-            \Log::info($status);
-            \Log::info('request Logs');
-            \Log::info([$request]);
+            \Log::info('Parcel request');
+            \Log::info($request->all());
             $order->update(
                 $request->only($data)
             );
@@ -213,8 +210,9 @@ class PreAlertRepository
                     ]);
                 }
             }
-            \Log::info('Parcel Update Before Mails');
-            \Log::info($order->status);
+            \Log::info('Parcel Update');
+            \Log::info([$data]);
+            
             if($order->status == Order::STATUS_PREALERT_TRANSIT){
                 try {
                     \Log::info('STATUS_PREALERT_TRANSIT');
@@ -238,8 +236,6 @@ class PreAlertRepository
                     \Log::info('Consolidation email send error: '.$ex->getMessage());
                 }
             }
-            \Log::info('Parcel Update After Mails');
-            \Log::info($order->status);
             if( $order->status == Order::STATUS_ORDER ){
                 $order->doCalculations();
             }
@@ -247,6 +243,7 @@ class PreAlertRepository
 
         } catch (\Exception $ex) {
             \Log::info('Parcel Update error: '.$ex->getMessage());
+            return null;
         }
     }
 
