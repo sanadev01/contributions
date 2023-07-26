@@ -117,134 +117,125 @@ class PreAlertRepository
 
     public function update(Request $request, Order $order)
     {
-        try{
-            $data = [];
+        $data = [];
 
-            $data = [ 'merchant', 'carrier', 'tracking_id','customer_reference','user_id', 'order_date'];
+        $data = [ 'merchant', 'carrier', 'tracking_id','customer_reference','user_id', 'order_date'];
 
-            if ( !Auth::user()->isAdmin() && $order->status<Order::STATUS_ORDER){
-                $request->merge([
-                    'user_id' => Auth::id()
-                ]);
-            }
-
-            if ( Auth::user()->can('addWarehouseNumber',Order::class) ){
-                $request->merge([
-                    'warehouse_number' => $request->whr_number
-                ]);
-                $data[] = 'warehouse_number';
-            }
-
-            $status = $order->status;
-
-            if ( $order->status < Order::STATUS_ORDER ){
-                $status = $order->isConsolidated() ? Order::STATUS_CONSOLIDATED : Order::STATUS_PREALERT_READY;
-            }
-            if ( Auth::user()->can('addShipmentDetails',Order::class) ){
-                $request->merge([
-                    'measurement_unit' => $request->unit,
-                    'is_shipment_added' => true,
-                    'status' => $status
-                ]);
-
-                $data[] = 'status';
-                $data[] = 'is_shipment_added';
-                $data[] = 'weight';
-                $data[] = 'measurement_unit';
-                $data[] = 'length';
-                $data[] = 'width';
-                $data[] = 'height';
-                $data[] = 'weight_discount';
-
-            }
-            //CHECK VOL WEIGHT OF PARCEL AND SET DISCOUNT
-            $totalDiscountPercentage = 0;
-            $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
-            $discountPercentage = setting('discount_percentage', null, $order->user->id);
-            
-            if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
-                return false;
-            }
-            if ( $request->measurement_unit == 'kg/cm' ){
-                $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
-            }else {
-                $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
-            }
-            $volumeWeight = round($volumetricWeight > $request->weight ? $volumetricWeight : $request->weight,2);
-            $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-            if ($volumeWeight > $request->weight) {
-
-                $consideredWeight = $volumeWeight - $request->weight;
-                $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
-                $totalDiscountedWeight = $consideredWeight - $volumeWeight;
-                $request->merge([
-                    'weight_discount' => $totalDiscountedWeight,
-                ]);
-            }else {
-                $request->merge([
-                    'weight_discount' => null,
-                ]);
-            }
-            \Log::info('Parcel request');
-            \Log::info($request->all());
-            $order->update(
-                $request->only($data)
-            );
-
-            if ( $request->hasFile('invoiceFile') ){
-                $order->attachInvoice( $request->file('invoiceFile') );
-            }
-
-            if ($request->hasFile('images')) {
-                foreach ($order->images as $oldImage) {
-                    $oldImage->delete();
-                }
-
-                foreach ($request->file('images') as $image) {
-                    $document = Document::saveDocument($image);
-                    $order->images()->create([
-                        'name' => $document->getClientOriginalName(),
-                        'size' => $document->getSize(),
-                        'type' => $document->getMimeType(),
-                        'path' => $document->filename
-                    ]);
-                }
-            }
-            \Log::info('Parcel Update');
-            \Log::info([$data]);
-            
-            if($order->status == Order::STATUS_PREALERT_TRANSIT){
-                try {
-                    \Log::info('STATUS_PREALERT_TRANSIT');
-                    \Mail::send(new ShipmentTransit($order));
-                } catch (\Exception $ex) {
-                    \Log::info('Shipment transit email send error: '.$ex->getMessage());
-                }
-            }else{
-                try {
-                    \Log::info('STATUS_READ');
-                    \Mail::send(new ShipmentReady($order));
-                } catch (\Exception $ex) {
-                    \Log::info('Shipment ready email send error: '.$ex->getMessage());
-                }
-            }
-            
-            if( $order->isConsolidated() ){
-                try {
-                    \Mail::send(new OrderCombined($order));
-                } catch (\Exception $ex) {
-                    \Log::info('Consolidation email send error: '.$ex->getMessage());
-                }
-            }
-            if( $order->status == Order::STATUS_ORDER ){
-                $order->doCalculations();
-            }
-            return $order;
-
-        } catch (\Exception $ex) {
-            \Log::info('Parcel Update error: '.$ex->getMessage());
-            return null;
+        if ( !Auth::user()->isAdmin() && $order->status<Order::STATUS_ORDER){
+            $request->merge([
+                'user_id' => Auth::id()
+            ]);
         }
+
+        if ( Auth::user()->can('addWarehouseNumber',Order::class) ){
+            $request->merge([
+                'warehouse_number' => $request->whr_number
+            ]);
+            $data[] = 'warehouse_number';
+        }
+
+        $status = $order->status;
+
+        if ( $order->status < Order::STATUS_ORDER ){
+            $status = $order->isConsolidated() ? Order::STATUS_CONSOLIDATED : Order::STATUS_PREALERT_READY;
+        }
+        if ( Auth::user()->can('addShipmentDetails',Order::class) ){
+            $request->merge([
+                'measurement_unit' => $request->unit,
+                'is_shipment_added' => true,
+                'status' => $status
+            ]);
+
+            $data[] = 'status';
+            $data[] = 'is_shipment_added';
+            $data[] = 'weight';
+            $data[] = 'measurement_unit';
+            $data[] = 'length';
+            $data[] = 'width';
+            $data[] = 'height';
+            $data[] = 'weight_discount';
+
+        }
+        //CHECK VOL WEIGHT OF PARCEL AND SET DISCOUNT
+        $totalDiscountPercentage = 0;
+        $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
+        $discountPercentage = setting('discount_percentage', null, $order->user->id);
+        
+        if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
+            return false;
+        }
+        if ( $request->measurement_unit == 'kg/cm' ){
+            $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
+        }else {
+            $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'in');
+        }
+        $volumeWeight = round($volumetricWeight > $request->weight ? $volumetricWeight : $request->weight,2);
+        $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
+        if ($volumeWeight > $request->weight) {
+
+            $consideredWeight = $volumeWeight - $request->weight;
+            $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
+            $totalDiscountedWeight = $consideredWeight - $volumeWeight;
+            $request->merge([
+                'weight_discount' => $totalDiscountedWeight,
+            ]);
+        }else {
+            $request->merge([
+                'weight_discount' => null,
+            ]);
+        }
+        
+        $order->update(
+            $request->only($data)
+        );
+
+        if ( $request->hasFile('invoiceFile') ){
+            $order->attachInvoice( $request->file('invoiceFile') );
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($order->images as $oldImage) {
+                $oldImage->delete();
+            }
+
+            foreach ($request->file('images') as $image) {
+                $document = Document::saveDocument($image);
+                $order->images()->create([
+                    'name' => $document->getClientOriginalName(),
+                    'size' => $document->getSize(),
+                    'type' => $document->getMimeType(),
+                    'path' => $document->filename
+                ]);
+            }
+        }
+
+        if($order->status == Order::STATUS_PREALERT_TRANSIT){
+            try {
+                \Log::info('STATUS_PREALERT_TRANSIT');
+                \Mail::send(new ShipmentTransit($order));
+            } catch (\Exception $ex) {
+                \Log::info('Shipment transit email send error: '.$ex->getMessage());
+            }
+        }else{
+            try {
+                \Log::info('STATUS_READ');
+                \Mail::send(new ShipmentReady($order));
+            } catch (\Exception $ex) {
+                \Log::info('Shipment ready email send error: '.$ex->getMessage());
+            }
+        }
+        
+        if( $order->isConsolidated() ){
+            try {
+                \Mail::send(new OrderCombined($order));
+            } catch (\Exception $ex) {
+                \Log::info('Consolidation email send error: '.$ex->getMessage());
+            }
+        }
+        if( $order->status == Order::STATUS_ORDER ){
+            $order->doCalculations();
+        }
+        return $order;
     }
 
     public function delete(Order $order,$soft=true)
