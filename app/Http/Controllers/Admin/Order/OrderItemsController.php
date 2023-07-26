@@ -208,35 +208,13 @@ class OrderItemsController extends Controller
 
     public function GSSRates(Request $request)
     {
-        $service = $request->service;
-        $order = Order::find($request->order_id);
-        if($service == ShippingService::GSS_IPA) {
-            $rateType = 'IPA';
-        } elseif($service == ShippingService::GSS_EPMEI) {
-            $rateType = 'EPMEI';
-        } elseif($service == ShippingService::GSS_EPMI) {
-            $rateType = 'EPMI';
-        } elseif($service == ShippingService::GSS_EFCM) {
-            $rateType = 'EFCM';
-        }
-
         $client = new Client();
-        $response =  $client->getServiceRates($order, $rateType);
+        $response =  $client->getServiceRates($request);
         $data = $response->getData();
-
-        if ($data->isSuccess && $data->output->calculatedPostage > 0){
-            $rate = $data->output->calculatedPostage;
-            
-            if (in_array($service,[ShippingService::GSS_IPA, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_EFCM])) {
-                $discountPercentage = (setting('gss', null, $order->user->id)  &&  setting('gss_user_discount', null, $order->user->id) != 0) ?  setting('gss_user_discount', null, $order->user->id) : setting('gss_user_discount', null, User::ROLE_ADMIN);
-            }
-            $discount = ($discountPercentage / 100) * $rate;
-    
-            $discountedRate = $rate - $discount;
-
+        if ($data->isSuccess && $data->output > 0){
             return (array)[
                 'success' => true,
-                'total_amount' => number_format($discountedRate, 2),
+                'total_amount' => number_format($data->output, 2),
             ];
         } else {
             return (array)[

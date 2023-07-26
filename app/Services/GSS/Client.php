@@ -257,8 +257,20 @@ class Client{
         }
     }
 
-    public function getServiceRates($order, $rateType) {
+    public function getServiceRates($request) {
         
+        $service = $request->service;
+        $order = Order::find($request->order_id);
+        if($service == ShippingService::GSS_IPA) {
+            $rateType = 'IPA';
+        } elseif($service == ShippingService::GSS_EPMEI) {
+            $rateType = 'EPMEI';
+        } elseif($service == ShippingService::GSS_EPMI) {
+            $rateType = 'EPMI';
+        } elseif($service == ShippingService::GSS_EFCM) {
+            $rateType = 'EFCM';
+        }
+
         $url = $this->baseUrl . '/Utility/CalculatePostage';
         $body = [
             "countryCode" => "BR",
@@ -280,7 +292,14 @@ class Client{
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
         $data= json_decode($response);
         if ($response->successful() && $data->success == true) {
-            return $this->responseSuccessful($data, 'Rate Calculation Successful');
+
+            $rate = $data->calculatedPostage;
+            $discountPercentage = (setting('gss', null, $order->user->id)  &&  setting('gss_user_discount', null, $order->user->id) != 0) ?  setting('gss_user_discount', null, $order->user->id) : setting('gss_user_discount', null, User::ROLE_ADMIN);
+            $discount = ($discountPercentage / 100) * $rate;
+    
+            $discountedRate = $rate - $discount;
+
+            return $this->responseSuccessful($discountedRate, 'Rate Calculation Successful');
         } else {
             return $this->responseUnprocessable($data->message);
         }
