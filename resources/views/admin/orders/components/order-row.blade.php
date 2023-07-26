@@ -186,6 +186,13 @@
                             <i class="feather icon-copy"></i>@lang('orders.actions.duplicate-order')
                         </a>
                    @endcan
+
+                   @if(optional($order->shippingService)->isGDEService()) 
+                        <a href="{{ route('admin.gde.invoice.download', $order->id) }}" class="dropdown-item w-100"> 
+                            <i class="fa fa-cloud-download"></i>GDE Invoice 
+                        </a> 
+                    @endif
+
                     @if( Auth::user()->isActive() && !$order->isTrashed() && Auth::user()->isAdmin() || !$order->isPaid())
                     <form action="{{ route('admin.orders.destroy',$order->encrypted_id) }}" method="post" onsubmit="return confirmDelete()">
                         @csrf

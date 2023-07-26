@@ -13,4 +13,9 @@ class Region extends Model
     {
         return $this->hasMany(Commune::class);
     }
+
+    public function rates()
+    {
+        return $this->hasMany(Rate::class);
+    }
 }

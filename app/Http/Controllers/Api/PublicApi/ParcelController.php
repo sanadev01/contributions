@@ -78,10 +78,7 @@ class ParcelController extends Controller
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Express)->first();
             }
         }
-        // if (!$this->serviceActive($shippingService)) {
-        //     return apiResponse(false,'Selected shipping service is not active against your account!!.');
-        // }
-
+        
         if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
@@ -91,7 +88,7 @@ class ParcelController extends Controller
             }
 
         }else{
-            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');;
+            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
             
             if($shippingService->isCorreiosService() && $volumeWeight > 65.15){
@@ -150,6 +147,12 @@ class ParcelController extends Controller
             return apiResponse(false, 'this service is not availaible for US address');
         }
         
+        Log::info('shippingService');
+        Log::info($shippingService->name);
+        Log::info($shippingService->id);
+        // if (!$this->serviceActive($shippingService)) {
+        //     return apiResponse(false,'Selected shipping service is not active against your account!!.');
+        // }
         DB::beginTransaction();
 
         try {
@@ -628,23 +631,31 @@ class ParcelController extends Controller
         }
     }
 
-    public function serviceActive($shippingService) {
-
-        $userId = Auth::id();
-        $profitSetting = ProfitSetting::where('user_id', $userId)
+    public function serviceActive($shippingService)
+    {
+        if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Standard) {
+            $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
+        }
+        if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Express) {
+            $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
+        }
+        
+        $profitSetting = ProfitSetting::where('user_id', Auth::id())
             ->where('service_id',$shippingService->id)
             ->where('package_id', '!=', null)
             ->first();
-        if($profitSetting){
-            return true;
-        }
-        // if( ($shippingService->isGDEService() && setting('gde', null, $userId)) ||
-        //     ($shippingService->isGSSService() && setting('gss', null, $userId)) ||
-        //     ($shippingService->service_sub_class == ShippingService::FEDEX_GROUND && setting('fedex', null, $userId)))
-        // {
-        //     return true;
-        // }
-           
+            if($profitSetting){
+                return true;
+            }
+            if( $shippingService->isOfUnitedStates() ||
+                $shippingService->isDomesticService() ||
+                $shippingService->isInternationalService() ||
+                $shippingService->isInboundDomesticService() ||
+                $shippingService->isGSSService() ||
+                $shippingService->isGDEService() )
+            {
+                return true;
+            }
         return false;
     }
 

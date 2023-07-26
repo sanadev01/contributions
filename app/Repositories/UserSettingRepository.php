@@ -67,6 +67,7 @@ class UserSettingRepository {
         $request->has('volumetric_discount') ? saveSetting('volumetric_discount', true,$user->id) : saveSetting('volumetric_discount', false, $user->id);
         $request->has('marketplace_checked') ? saveSetting('marketplace_checked', true,$user->id) : saveSetting('marketplace_checked', false, $user->id);
         $request->has('pay_tax_service') ? saveSetting('pay_tax_service', true,$user->id) : saveSetting('pay_tax_service', false, $user->id);
+        $request->has('gde') ? saveSetting('gde', true,$user->id) : saveSetting('gde', false, $user->id)
 
         ($request->usps_profit != null ) ? saveSetting('usps_profit', $request->usps_profit, $user->id) : saveSetting('usps_profit', 0, $user->id);
         ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $user->id) : saveSetting('ups_profit', 0, $user->id);
@@ -75,6 +76,8 @@ class UserSettingRepository {
         ($request->fedex_profit != null ) ? saveSetting('fedex_profit', $request->fedex_profit, $user->id) : saveSetting('fedex_profit', 0, $user->id);
         ($request->gss_api_discount != null ) ? saveSetting('gss_api_discount', $request->gss_api_discount, $user->id) : saveSetting('gss_api_discount', 0, $user->id);
         ($request->gss_user_discount != null ) ? saveSetting('gss_user_discount', $request->gss_user_discount, $user->id) : saveSetting('gss_user_discount', 0, $user->id);
+        ($request->gde_pm_profit != null ) ? saveSetting('gde_pm_profit', $request->gde_pm_profit,$user->id) : saveSetting('gde_pm_profit', 0,$user->id);
+        ($request->gde_fc_profit != null ) ? saveSetting('gde_fc_profit', $request->gde_fc_profit,$user->id) : saveSetting('gde_fc_profit', 0,$user->id)
         
         ($request->weight != null ) ? saveSetting('weight', $request->weight, $user->id) : saveSetting('weight', 0, $user->id);
         ($request->length != null ) ? saveSetting('length', $request->length, $user->id) : saveSetting('length', 0, $user->id);

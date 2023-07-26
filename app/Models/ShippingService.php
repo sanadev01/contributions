@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\User;
+use App\Models\Region;
 use App\Models\ProfitPackage;
 use Illuminate\Database\Eloquent\Model;
 use LaravelJsonColumn\Traits\JsonColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Services\Calculators\RatesCalculator;
+use App\Services\Calculators\WeightCalculator;
 
 class ShippingService extends Model
 {
@@ -78,6 +81,9 @@ class ShippingService extends Model
 
     public function getRateFor(Order $order,$withProfit=true, $calculateOnVolumeMetricWeight = true)
     {
+        if($this->isGDEService() && $order){
+            return $this->getGDERate($order);
+        }
         $rate = round($this->getCalculator($order, $calculateOnVolumeMetricWeight)->getRate($withProfit),2);
         return $rate;
     }
@@ -326,6 +332,31 @@ class ShippingService extends Model
     public function getIsGdeFirstClassAttribute()
     { 
         return $this->service_sub_class == ShippingService::GDE_FIRST_CLASS;
+    }
+
+    public function getGDERate($order){
+        $zone = getUSAZone($order->recipient->state->code);
+        $region = Region::where('country_id', $order->recipient->country_id)->where('code', $zone)->first();
+        $weight = ceil(WeightCalculator::kgToGrams($order->weight));
+        if ( $weight<100 ){
+            $weight = 100;
+        }
+        $serviceRates = $region->rates()->first();
+        if($serviceRates){
+            $rate = collect($serviceRates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
+            if(($rate)['leve'] && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, $order->user_id)){
+                $type = 'gde_fc_profit';
+                if($this->service_sub_class == self::GDE_PRIORITY_MAIL){
+                    $type = 'gde_pm_profit';
+                }
+                $userProfit = setting($type, null, $order->user_id);
+                $adminProfit = setting($type, null, User::ROLE_ADMIN);
+                $profit = $userProfit ? $userProfit : $adminProfit; 
+                $rate = ($profit / 100) * $rate['leve'] + $rate['leve'];
+                return number_format($rate,2);
+            }
+        }
+        return 0;
     }
     
 }
