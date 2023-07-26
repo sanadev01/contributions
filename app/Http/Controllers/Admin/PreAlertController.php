@@ -85,8 +85,7 @@ class PreAlertController extends Controller
     public function update(PreAlertUpdateRequest $request, Order $parcel, PreAlertRepository $preAlertRepository)
     {
         $this->authorize('update', $parcel);
-        $order = $preAlertRepository->update($request, $parcel);
-        dd($order);
+
         if ( $order = $preAlertRepository->update($request, $parcel)){
             session()->flash('alert-success','parcel.Parcel Updated');
            if ($order->status == Order::STATUS_PREALERT_READY) {
