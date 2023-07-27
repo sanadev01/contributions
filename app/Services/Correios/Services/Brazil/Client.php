@@ -103,7 +103,7 @@ class Client{
         $packet->recipientAddressNumber = $order->recipient->street_no;
         $packet->recipientZipCode = cleanString($order->recipient->zipcode);
         $packet->recipientState = $order->recipient->state->code;
-        $packet->recipientPhoneNumber = $order->recipient->phone;
+        $packet->recipientPhoneNumber = preg_replace('/^\+55/', '', $order->recipient->phone);
         $packet->recipientEmail = $order->recipient->email;
         $packet->distributionModality = $order->getDistributionModality();
         $packet->taxPaymentMethod = $order->getService() == 1 ? 'DDP' : 'DDU';
@@ -134,9 +134,9 @@ class Client{
 
         $packet->items = $items;
 
-        \Log::info(
-            $packet
-        );
+        // \Log::info(
+        //     $packet
+        // );
 
         try {
             
@@ -174,7 +174,8 @@ class Client{
             $responseError = $e->getResponse()->getBody()->getContents();
             $errorCopy = new PackageError($responseError); 
             $errorMessage = $errorCopy->getErrors();
-            \Log::info('error message',$errorMessage);
+            \Log::info('error message');
+            \Log::info($errorMessage);
             if($errorMessage=="GTW-006: Token inválido." || $errorMessage=="GTW-007: Token expirado."){
                 \Log::info('Token refresh automatically'); 
                 Cache::forget('anjun_token');
