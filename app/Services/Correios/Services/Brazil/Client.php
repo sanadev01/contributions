@@ -103,7 +103,7 @@ class Client{
         $packet->recipientAddressNumber = $order->recipient->street_no;
         $packet->recipientZipCode = cleanString($order->recipient->zipcode);
         $packet->recipientState = $order->recipient->state->code;
-//    $packet->recipientPhoneNumber = $order->recipient->phone;
+        $packet->recipientPhoneNumber = preg_replace('/^\+55/', '', $order->recipient->phone);;
         $packet->recipientEmail = $order->recipient->email;
         $packet->distributionModality = $serviceSubClassCode;
         $packet->taxPaymentMethod = $order->getService() == 1 ? 'DDP' : 'DDU';
