@@ -266,10 +266,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{id}',function($id){
-    
-    DB::table('rates')->where('shipping_service_id', '=', $id)->delete();
-    return "Shipping Rates Deleted";
+Route::get('test-label/{id?}',function($id = 91277){
     
     $labelPrinter = new CN23LabelMaker();
     
