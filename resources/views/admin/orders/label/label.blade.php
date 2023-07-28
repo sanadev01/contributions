@@ -29,7 +29,11 @@
             @endif
         @else
             <div class="alert alert-danger">
-                {{ $error }}
+                <ul> 
+                    @foreach(explode('<br>',$error) as $e)
+                    <li>{{ $e}}</li>
+                    @endforeach
+                </ul>
             </div>
         @endif
     </div>

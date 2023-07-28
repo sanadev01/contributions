@@ -10,8 +10,7 @@ use LaravelJsonColumn\Traits\JsonColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Services\Calculators\RatesCalculator;
-use App\Services\Calculators\WeightCalculator;
-
+use App\Services\Calculators\WeightCalculator; 
 class ShippingService extends Model
 {
     use JsonColumn;
@@ -51,6 +50,7 @@ class ShippingService extends Model
     const GSS_EPMEI = 37634;
     const GSS_EPMI = 3674;
     const GSS_EFCM = 3326;
+    const TOTAL_EXPRESS = 3336;
 
     protected $guarded = [];
 
@@ -161,6 +161,10 @@ class ShippingService extends Model
         }
 
         return false;
+    }
+    public function getIsTotalExpressAttribute()
+    {
+        return $this->service_sub_class == self::TOTAL_EXPRESS;
     }
     public function isSwedenPostService()
     {

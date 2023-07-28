@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use App\Http\Requests\Admin\Service\CreateShippingService; 
 use App\Http\Requests\Admin\Service\UpdateShippingService; 
-use App\Repositories\ShippingServiceRepository; 
-
+use App\Repositories\ShippingServiceRepository;
+use Illuminate\Support\Facades\Artisan; 
 
 class ShippingServiceController extends Controller
 {   
@@ -23,6 +23,9 @@ class ShippingServiceController extends Controller
      */
     public function index(ShippingServiceRepository $repository)
     {
+        Artisan::call('db:seed', [
+            '--class' => 'ShippingServiceSeeder',
+        ]);
         $shippingservices = $repository->get(); 
         return view('admin.shippingservices.index', compact('shippingservices'));
     }
