@@ -66,21 +66,30 @@ class Client
         try {
             $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/orders", $shippingRequest);
             $response = json_decode($request); 
-            if ($response->status=="SUCCESS") {
-
-                $order->update([
-                    'corrios_tracking_code' => $response->data->volumes->reference,
-                    'api_response' => json_encode($response),
-                    'cn23' => [
-                        "tracking_code" => $response->data->volumes->reference,
-                        "stamp_url" => route('warehouse.cn23.download', $order->id),
-                        'leve' => false
-                    ],
-                ]);
-                // store order status in order tracking
-                return $this->addOrderTracking($order);
+            if ($response->status=="SUCCESS" && $response->id) {
+                $getLabel = Http::withHeaders($this->getHeaders())->get("$this->baseUrl/v1/orders/$response->id/cn23-merged");
+                $getLabelResponse = json_decode($getLabel);
+                if($getLabel->status=="SUCCESS") {
+                    $mergedResponse = [
+                        'orderResponse' => $request,
+                        'labelResponse' => $getLabel,
+                    ];
+                    $order->update([
+                        'corrios_tracking_code' => $response->reference,
+                        'api_response' => json_encode($mergedResponse),
+                        'cn23' => [
+                            "tracking_code" => $response->reference,
+                            "stamp_url" => route('warehouse.cn23.download',$order->id),
+                            'leve' => false
+                        ],
+                    ]);
+                    // store order status in order tracking
+                    return $this->addOrderTracking($order);
+                }
+                if($getLabel->status=="ERROR") {
+                    return new PackageError(new HandleError($request));
+                }
             } else {
-                
                 return new PackageError(new HandleError($request));
             }
         } catch (\Exception $exception) {
