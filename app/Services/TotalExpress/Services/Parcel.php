@@ -19,34 +19,38 @@ class Parcel
    }
    public function getRequestBody()
    {
-
-
+      if (app()->isProduction()) {
+         $contractId = config('total_express.production.contractId');
+      } else {
+         $contractId = config('total_express.test.contractId');
+      }
       return [
          "order_number" => $this->order->id,
-         "contract_id" => "129",
+         "contract_id" => $contractId,
          "sales_channel_id" => null,
          "sales_channel_order_number" => null,
          "incoterm" => "DDP",
-         "is_landed_cost" => true,
-         "observations" => "This is my first order",
+         "is_landed_cost" => false,
+         "observations" => " ",
          "return_insurance" => false,
          "currency" => "USD",
          "quantity" => 1,
          "estimated_delivery_date" => ((new DateTime())->modify('+3 days'))->format('Y-m-d'),
 
          'customer_full_name' => $this->order->recipient->getFullName(),
+         'customer_document_type' => "CPF",
          'customer_address' => $this->order->recipient->address,
-         'customer_address_number' => optional($this->order->recipient)->address2,
-         'customer_address_complement' => optional($this->order->recipient)->street_no,
+         'customer_address_complement' => optional($this->order->recipient)->address2,
+         'customer_address_number' => optional($this->order->recipient)->stree_no,
          'customer_city' => $this->order->recipient->city,
          'customer_state' => $this->order->recipient->State->code,
          'customer_postal_code' => cleanString($this->order->recipient->zipcode),
          'customer_country' => $this->order->recipient->country->code,
-         'customer_phone' => ($this->order->recipient->phone) ? $this->order->recipient->phone : '',
+         'customer_phone' => ($this->order->recipient->phone) ? substr($this->order->recipient->phone, -11) : '',
          'customer_email' => ($this->order->recipient->email) ? $this->order->recipient->email : '',
          'customer_document_number' => ($this->order->recipient->tax_id) ? $this->order->recipient->tax_id : '',
          "customer_address_reference" => optional($this->order->recipient)->street_no,
-         "customer_phone_country_code" => "+55",
+         "customer_phone_country_code" => substr($this->order->recipient->phone, 0, 3),
 
          'seller_name' => $this->order->getSenderFullName(),
          'seller_address' => ($this->order->sender_address) ? $this->order->sender_address : '2200 NW 129TH AVE',

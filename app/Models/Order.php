@@ -859,4 +859,12 @@ class Order extends Model implements Package
         return encrypt($this->id);
     }
 
+    public function totalExpressLabelUrl()
+    {
+        if (!$this->api_response) {
+            return null;
+        }
+        return json_decode($this->api_response)->labelResponse->download_url;
+    }
+
 }
