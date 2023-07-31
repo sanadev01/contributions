@@ -102,6 +102,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Pre-Sort Priority Mail International';
         }elseif($this->services_subclass_code == ShippingService::GSS_EFCM){
             return 'Pre-Sort First Class International';
+        }elseif($this->services_subclass_code == ShippingService::TOTAL_EXPRESS){
+            return 'Total Express';
         }else {
             return 'FirstClass';
         }
@@ -144,6 +146,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif( $this->services_subclass_code == ShippingService::GDE_FIRST_CLASS) {
             return 15;
+        }elseif( $this->services_subclass_code == ShippingService::TOTAL_EXPRESS) {
+            return 16;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -235,5 +239,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasGSSService()
     {
         return $this->services_subclass_code == ShippingService::GSS_IPA || $this->services_subclass_code == ShippingService::GSS_EPMEI || $this->services_subclass_code == ShippingService::GSS_EPMI || $this->services_subclass_code == ShippingService::GSS_EFCM;
+    }
+
+    public function hasTotalExpressService()
+    {
+        return $this->services_subclass_code == ShippingService::TOTAL_EXPRESS;
     }
 }

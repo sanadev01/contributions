@@ -63,6 +63,10 @@ use App\Http\Controllers\Warehouse\GDEContainerPackageController;
 use App\Http\Controllers\Warehouse\GDEUnitRegisterController;
 use App\Http\Controllers\Warehouse\GDECN35DownloadController;
 use App\Http\Controllers\Warehouse\GDEManifestDownloadController;
+use App\Http\Controllers\Warehouse\TotalExpressContainerController;
+use App\Http\Controllers\Warehouse\TotalExpressContainerPackageController;
+use App\Http\Controllers\Warehouse\TotalExpressUnitRegisterController;
+use App\Http\Controllers\Warehouse\TotalExpressCN35DownloadController;
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Export\OrderExportTemp;
 use Illuminate\Support\Facades\Auth;
@@ -160,6 +164,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('gde_container/{container}/register', GDEUnitRegisterController::class)->name('gde_container.register');
     Route::get('gde_container/{container}/download', GDECN35DownloadController::class)->name('gde_container.download');
     Route::get('gde/{delivery_bill}/manifest', GDEManifestDownloadController::class)->name('gde.manifest.download');
+
+    // Routes for Total Express Container
+    Route::resource('totalexpress_containers', TotalExpressContainerController::class);
+    Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('totalexpress_container/{container}/register', TotalExpressUnitRegisterController::class)->name('totalexpress_container.register');
+    Route::get('totalexpress_container/{container}/download', TotalExpressCN35DownloadController::class)->name('totalexpress_container.download');
 });
 
 

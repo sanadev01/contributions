@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\GSS;
+namespace App\Services\TotalExpress;
 
 use App\Models\Warehouse\Container;
 
@@ -9,8 +9,8 @@ class CN35LabelHandler
 
     public static function handle(Container $container)
     {
-        if (!$container->hasGSSService()) {
-            return response()->json([ 'isSuccess' => false,  'message'  => "Only GSS container allowed!" ], 422);
+        if (!$container->hasTotalExpressService()) {
+            return response()->json([ 'isSuccess' => false,  'message'  => "Only Total Express container allowed!" ], 422);
         }
 
         $cn35Label = json_decode($container->unit_response_list)->cn35->labels[0];
