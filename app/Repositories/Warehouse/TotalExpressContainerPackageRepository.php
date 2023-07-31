@@ -10,36 +10,30 @@ use Illuminate\Support\Facades\Session;
 
 class TotalExpressContainerPackageRepository {
 
-
     public function addOrderToContainer($container, $order)
     {
         $error = null;
 
+        if($container->services_subclass_code != $order->shippingService->service_sub_class){
+            $error = 'container service does not match';
+        }
         if(!$order->containers->isEmpty()) {
             $error = "Order is already present in Container";
         }
         if ($order->status != Order::STATUS_PAYMENT_DONE) {
             $error = 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid';
         }
-        if ( (!$container->hasGePSService() && $order->shippingService->isGePSService()) 
-            || ($container->hasGePSService() && !$order->shippingService->isGePSService())){
+        if ( (!$container->hasTotalExpressService() ||  !$order->shippingService->isTotalExpressService())){
 
             $error = 'Order does not belong to this container. Please Check Packet Service';
         }
         if(!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
             $container->orders()->attach($order->id);
             $this->addOrderTracking($order);
-            $gepsClient = new Client();   
-            $response = $gepsClient->confirmShipment($order->corrios_tracking_code);
-            if (!$response['success']) {
-                Session::flash('alert-class', 'alert-info');
-                $message = "Order Added in the Container Successfully, But ".$response['message'];
-            }else{
                 Session::flash('alert-class', 'alert-success');
                 $message = 'Order Added in the Container Successfully';
-            }
             return [
-                'success' => false,
+                'success' => true,
                 'message' => $message
             ];
         }
