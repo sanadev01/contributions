@@ -267,7 +267,7 @@ Route::get('test-label/{id}',function($id){
     $order = Order::find($id);
     // $order->status = 70;
     // $order->save();
-    dd($order);
+    // dd($order);
     $labelPrinter->setOrder($order);
     $labelPrinter->setService(2);
     
