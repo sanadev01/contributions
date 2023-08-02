@@ -14,6 +14,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Models\PackageError;
+use App\Services\TotalExpress\Services\Overpack;
 
 class Client
 {
@@ -76,7 +77,7 @@ class Client
                 if($getLabelResponse->status=="SUCCESS") {
 
                     $mergedResponse = [
-                        'orderResponse' => $request,
+                        'orderResponse' => $response,
                         'labelResponse' => $getLabelResponse,
                     ];
                     // dump(optional(optional($getLabelResponse->data)->cn23_numbers)[0]);
@@ -119,6 +120,43 @@ class Client
         }
 
         return true;
+    }
+
+    function registerUnit($container) {
+        
+        try{
+                $overpack = new Overpack($container);
+                $overpackRequest =  $overpack->getRequestBody();
+                $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/overpacks", $overpackRequest);
+                $response = json_decode($request);
+                if($response->status=="SUCCESS"){
+                    $container->update([
+                    'unit_code' => $response->data->reference,
+                    'unit_response_list' => json_decode($request),
+                    'response' => '1',
+                ]);
+                return [
+                    'type'=>'alert-success',
+                    'message'=>'Package Registration success. You can print Label now'
+                ];
+
+            }
+            else{
+                return [ 
+                    'type'=>'alert-danger',
+                    'message'=> (string)new HandleError($request)
+                ]; 
+            }
+
+           
+        }catch(\Throwable $e){
+            
+            return [
+                'type'=>'alert-danger',
+                'message'=>$e->getMessage()
+            ];
+        }
+            
     }
 
 }

@@ -53,8 +53,8 @@ class Packages extends Component
         $order = Order::where('corrios_tracking_code', $this->tracking)->first();
         if ($order){
             $container = Container::find($this->idContainer);
-            $gssContainerPackageRepository = new GSSContainerPackageRepository;
-            $response = $gssContainerPackageRepository->addOrderToContainer($container, $order);
+            $totalExpressContainerPackageRepository = new TotalExpressContainerPackageRepository;
+            $response = $totalExpressContainerPackageRepository->addOrderToContainer($container, $order);
             if(!$response['success']){
                 return $this->error = $response['message'];
             }
@@ -66,8 +66,8 @@ class Packages extends Component
 
     public function removeOrder($id)
     {
-        $gssContainerPackageRepository = new GSSContainerPackageRepository;
-        $response = $gssContainerPackageRepository->removeOrderFromContainer($this->container, $id);
+        $totalExpressContainerPackageRepository = new TotalExpressContainerPackageRepository;
+        $response = $totalExpressContainerPackageRepository->removeOrderFromContainer($this->container, $id);
         $this->error = null;
     }
 
