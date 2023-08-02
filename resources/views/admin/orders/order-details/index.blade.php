@@ -219,7 +219,7 @@
         if(service == shippingServiceCodes.USPS_PRIORITY_INTERNATIONAL|| service == shippingServiceCodes.USPS_FIRSTCLASS_INTERNATIONAL) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
-        }else if(service == shippingServiceCodes.GSS_IPA  || service == shippingServiceCodes.GSS_EPMI || service == shippingServiceCodes.GSS_EPMEI || service == shippingServiceCodes.GSS_EFCM) {
+        }else if(service == shippingServiceCodes.GSS_PMI  || service == shippingServiceCodes.GSS_EPMI || service == shippingServiceCodes.GSS_EPMEI || service == shippingServiceCodes.GSS_FCM || service == shippingServiceCodes.GSS_EMS) {
             return getGSSRates();
         }else if(service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();

@@ -95,10 +95,11 @@ class OrderRepository
                     ShippingService::USPS_PRIORITY_INTERNATIONAL,
                     ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
                     ShippingService::USPS_GROUND,
-                    ShippingService::GSS_IPA,
+                    ShippingService::GSS_PMI,
                     ShippingService::GSS_EPMEI,
                     ShippingService::GSS_EPMI,
-                    ShippingService::GSS_EFCM
+                    ShippingService::GSS_FCM,
+                    ShippingService::GSS_EMS
                 ];
             }
             if($request->carrier == 'UPS'){
@@ -561,7 +562,7 @@ class OrderRepository
         }else
         {
             $gssShippingService = new GSSShippingService($order);
-            foreach (ShippingService::whereIn('service_sub_class', [ShippingService::GSS_IPA, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_EFCM])->get() as $shippingService) 
+            foreach (ShippingService::whereIn('service_sub_class', [ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS])->get() as $shippingService) 
             {
                 if ($gssShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
@@ -630,10 +631,11 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::GePS_EFormat)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_GROUND)
             || $shippingServices->contains('service_sub_class', ShippingService::Parcel_Post)
-            || $shippingServices->contains('service_sub_class', ShippingService::GSS_IPA)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_PMI)
             || $shippingServices->contains('service_sub_class', ShippingService::GSS_EPMEI)
             || $shippingServices->contains('service_sub_class', ShippingService::GSS_EPMI)
-            || $shippingServices->contains('service_sub_class', ShippingService::GSS_EFCM)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_FCM)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_EMS)
             || $shippingServices->contains('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)
             || $shippingServices->contains('service_sub_class', ShippingService::GDE_FIRST_CLASS))
         {
@@ -670,10 +672,10 @@ class OrderRepository
                 });
             }
 
-            if (!setting('GSS_IPA', null, User::ROLE_ADMIN) && !setting('GSS_IPA', null, auth()->user()->id)) {
+            if (!setting('gss', null, User::ROLE_ADMIN) && !setting('gss', null, auth()->user()->id)) {
                 $this->shippingServiceError = 'GSS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                    return $shippingService->service_sub_class != ShippingService::GSS_IPA;
+                    return $shippingService->service_sub_class != ShippingService::GSS_PMI;
                 });
             }
             
