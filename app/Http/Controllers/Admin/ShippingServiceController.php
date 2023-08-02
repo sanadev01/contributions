@@ -23,9 +23,6 @@ class ShippingServiceController extends Controller
      */
     public function index(ShippingServiceRepository $repository)
     {
-        Artisan::call('db:seed', [
-            '--class' => 'ShippingServiceSeeder',
-        ]);
         $shippingservices = $repository->get(); 
         return view('admin.shippingservices.index', compact('shippingservices'));
     }
