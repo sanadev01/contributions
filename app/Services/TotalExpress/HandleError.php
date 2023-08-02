@@ -26,15 +26,19 @@ class HandleError
     {
         try {
             $decode_response = json_decode($this->response);
-            $messages = '';
+            $messages = '';  
             foreach ($decode_response->messages as $errors) {
-                foreach ($errors as $key => $params) {
 
-                    foreach ($params as $param) {
-                        $messages .= $key . ' => ' . $param . ' <br>';
+                try{
+                    foreach ($errors as $key => $params){
+                        foreach ($params as $param){
+                            $messages .= $key . ' => ' . $param . ' <br>';
+                        }
                     }
+                }catch(\Throwable $e){
+                    return $errors;
                 }
-            }
+            } 
             return  $this->removeLastBR($messages);;
         } catch (\Throwable $e) {
             return 'An error occurred during ' . $e->getMessage();
