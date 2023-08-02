@@ -864,7 +864,8 @@ class Order extends Model implements Package
         if (!$this->api_response) {
             return null;
         }
-        return json_decode($this->api_response)->labelResponse->download_url;
+        $decode = json_decode($this->api_response);
+        return $decode->labelResponse->data->download_url;
     }
 
 }

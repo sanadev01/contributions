@@ -72,18 +72,20 @@ class Client
             if ($response->status=="SUCCESS" && $response->data && $response->data->id) {
                 $id = $response->data->id; 
                 $getLabel = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/orders/$id/cn23-merged");
-                 
                 $getLabelResponse = json_decode($getLabel);
                 if($getLabelResponse->status=="SUCCESS") {
+
                     $mergedResponse = [
                         'orderResponse' => $request,
-                        'labelResponse' => $getLabel,
+                        'labelResponse' => $getLabelResponse,
                     ];
+                    // dump(optional(optional($getLabelResponse->data)->cn23_numbers)[0]);
+                    // dd($getLabelResponse);
                     $order->update([
-                        'corrios_tracking_code' => $response->reference,
+                        'corrios_tracking_code' => optional(optional($getLabelResponse->data)->cn23_numbers)[0],
                         'api_response' => json_encode($mergedResponse),
                         'cn23' => [
-                            "tracking_code" => $response->reference,
+                            "tracking_code" =>  optional(optional($getLabelResponse->data)->cn23_numbers)[0],
                             "stamp_url" => route('warehouse.cn23.download',$order->id),
                             'leve' => false
                         ],

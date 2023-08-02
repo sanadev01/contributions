@@ -25,7 +25,7 @@ class Parcel
          $contractId = config('total_express.test.contractId');
       }
       return [
-         "order_number" => $this->order->id,
+         "order_number" => '12112'.$this->order->id,
          "contract_id" => $contractId,
          "sales_channel_id" => null,
          "sales_channel_order_number" => null,

@@ -21,10 +21,10 @@ class TotalExpressLabelRepository
 
     public function get(Order $order)
     {
-        return $this->update($order);
         if ( $order->getCN23() ){
             return $this->printLabel($order);
         }
+        return $this->update($order);
     }
 
     public function update(Order $order)
@@ -40,11 +40,7 @@ class TotalExpressLabelRepository
     {
         if($order->api_response)
         {
-            $response = json_decode($order->api_response);
-            $base64_pdf = $response->prints[0]->content;
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
-            // return true;
-            return (new UpdateCN23Label($order))->run(); 
+            return true;
         }
     }
 
