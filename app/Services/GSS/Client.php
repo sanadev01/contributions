@@ -116,8 +116,8 @@ class Client{
         $url = "$this->baseUrl/Receptacle/CreateReceptacleForRateTypeToDestination";
         $weight = 0;
         $piecesCount = 0;
-        if($container->services_subclass_code == ShippingService::GSS_IPA) {
-            $rateType = "IPA";
+        if($container->services_subclass_code == ShippingService::GSS_PMI) {
+            $rateType = "PMI";
             $foreignOECode = "CWB";
         } elseif($container->services_subclass_code == ShippingService::GSS_EPMEI) {
             $rateType = 'EPMEI';
@@ -125,8 +125,11 @@ class Client{
         } elseif($container->services_subclass_code == ShippingService::GSS_EPMI) {
             $rateType = 'EPMI';
             $foreignOECode = "RIO";
-        } elseif($container->services_subclass_code == ShippingService::GSS_EFCM) {
-            $rateType = 'EFCM';
+        } elseif($container->services_subclass_code == ShippingService::GSS_FCM) {
+            $rateType = 'FCM';
+            $foreignOECode = "CWB";
+        } elseif($container->services_subclass_code == ShippingService::GSS_EMS) {
+            $rateType = 'EMS';
             $foreignOECode = "CWB";
         }
         if($containers[0]->awb) {
@@ -261,14 +264,16 @@ class Client{
         
         $service = $request->service;
         $order = Order::find($request->order_id);
-        if($service == ShippingService::GSS_IPA) {
-            $rateType = 'IPA';
+        if($service == ShippingService::GSS_PMI) {
+            $rateType = 'PMI';
         } elseif($service == ShippingService::GSS_EPMEI) {
             $rateType = 'EPMEI';
         } elseif($service == ShippingService::GSS_EPMI) {
             $rateType = 'EPMI';
-        } elseif($service == ShippingService::GSS_EFCM) {
-            $rateType = 'EFCM';
+        } elseif($service == ShippingService::GSS_FCM) {
+            $rateType = 'FCM';
+        } elseif($service == ShippingService::GSS_EMS) {
+            $rateType = 'EMS';
         }
 
         $url = $this->baseUrl . '/Utility/CalculatePostage';

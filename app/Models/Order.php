@@ -346,10 +346,11 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GDE_PRIORITY_MAIL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GDE_FIRST_CLASS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_IPA ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_PMI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EFCM) {
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS) {
 
                 return 'USPS';
 

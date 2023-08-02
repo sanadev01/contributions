@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Rates;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
@@ -25,9 +26,11 @@ class RateDownloadController extends Controller
         }
 
         $service = ShippingService::find($packageId);
-        
         if(optional($service)->rates && $service->isGDEService()){
-            $exportService = new ShippingServiceRegionRateExport($service->rates);
+            if($service->rates && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
+                $profit = getGDEProfit($service->rates, $service->service_sub_class);
+            }
+            $exportService = new ShippingServiceRegionRateExport($service->rates, $profit);
             return $exportService->handle(); 
         }
 
