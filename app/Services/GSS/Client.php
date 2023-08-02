@@ -116,7 +116,7 @@ class Client{
         $url = "$this->baseUrl/Receptacle/CreateReceptacleForRateTypeToDestination";
         $weight = 0;
         $piecesCount = 0;
-        if($container->services_subclass_code == ShippingService::GSS_IPA) {
+        if($container->services_subclass_code == ShippingService::GSS_PMI) {
             $rateType = "IPA";
             $foreignOECode = "CWB";
         } elseif($container->services_subclass_code == ShippingService::GSS_EPMEI) {
@@ -125,8 +125,11 @@ class Client{
         } elseif($container->services_subclass_code == ShippingService::GSS_EPMI) {
             $rateType = 'EPMI';
             $foreignOECode = "RIO";
-        } elseif($container->services_subclass_code == ShippingService::GSS_EFCM) {
-            $rateType = 'EFCM';
+        } elseif($container->services_subclass_code == ShippingService::GSS_FCM) {
+            $rateType = 'FCM';
+            $foreignOECode = "CWB";
+        }elseif($container->services_subclass_code == ShippingService::GSS_EMS) {
+            $rateType = 'EMS';
             $foreignOECode = "CWB";
         }
         if($containers[0]->awb) {

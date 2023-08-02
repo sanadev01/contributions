@@ -57,10 +57,11 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code" disabled>
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            <option value="{{App\Models\ShippingService::GSS_IPA}}" {{ old('services_subclass_code', $container->services_subclass_code) == '477' ? 'selected' : '' }}>International Priority Airmail</option>
-                                            <option value="{{App\Models\ShippingService::GSS_EPMEI}}" {{ old('services_subclass_code', $container->services_subclass_code) == '37634' ? 'selected' : '' }}>Pre-Sort Drop Shipment</option>
-                                            <option value="{{App\Models\ShippingService::GSS_EPMI}}" {{ old('services_subclass_code', $container->services_subclass_code) == '3674' ? 'selected' : '' }}>Pre-Sort Priority Mail International</option>
-                                            <option value="{{App\Models\ShippingService::GSS_EFCM}}" {{ old('services_subclass_code', $container->services_subclass_code) == '3326' ? 'selected' : '' }}>Pre-Sort First Class International</option>
+                                            <option value="{{App\Models\ShippingService::GSS_PMI}}" {{ old('services_subclass_code', $container->services_subclass_code) == '477' ? 'selected' : '' }}>Priority Mail International</option>
+                                            <option value="{{App\Models\ShippingService::GSS_EPMEI}}" {{ old('services_subclass_code', $container->services_subclass_code) == '37634' ? 'selected' : '' }}>Priority Mail Express International (Pre-Sort)</option>
+                                            <option value="{{App\Models\ShippingService::GSS_EPMI}}" {{ old('services_subclass_code', $container->services_subclass_code) == '3674' ? 'selected' : '' }}>Priority Mail International (Pre-Sort)</option>
+                                            <option value="{{App\Models\ShippingService::GSS_FCM}}" {{ old('services_subclass_code', $container->services_subclass_code) == '3326' ? 'selected' : '' }}>First Class Package International</option>
+                                            <option value="{{App\Models\ShippingService::GSS_EMS}}" {{ old('services_subclass_code', $container->services_subclass_code) == '3326' ? 'selected' : '' }}>Priority Mail Express International (Nationwide)</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>

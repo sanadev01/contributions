@@ -11,15 +11,17 @@ class Parcel {
 
    public function getRequestBody($order) {
 
-      if($order->shippingService->service_sub_class == ShippingService::GSS_IPA) {
-         $type = 'IPA';
+      if($order->shippingService->service_sub_class == ShippingService::GSS_PMI) {
+         $type = 'PMI';
       } elseif($order->shippingService->service_sub_class == ShippingService::GSS_EPMEI) {
          $type = 'EPMEI';
       } elseif($order->shippingService->service_sub_class == ShippingService::GSS_EPMI) {
          $type = 'EPMI';
-      } elseif($order->shippingService->service_sub_class == ShippingService::GSS_EFCM) {
-         $type = 'EFCM';
-      } 
+      } elseif($order->shippingService->service_sub_class == ShippingService::GSS_FCM) {
+         $type = 'FCM';
+      } elseif($order->shippingService->service_sub_class == ShippingService::GSS_EMS) {
+         $type = 'EMS';
+      }
 
       $refNo = $order->customer_reference;
       $packet = [

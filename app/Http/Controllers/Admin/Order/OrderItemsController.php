@@ -61,10 +61,11 @@ class OrderItemsController extends Controller
             'UPS_GROUND' => ShippingService::UPS_GROUND,
             'FEDEX_GROUND' => ShippingService::FEDEX_GROUND,
             'USPS_GROUND' => ShippingService::USPS_GROUND,
-            'GSS_IPA' => ShippingService::GSS_IPA,
+            'GSS_PMI' => ShippingService::GSS_PMI,
             'GSS_EPMI' => ShippingService::GSS_EPMI,
             'GSS_EPMEI' => ShippingService::GSS_EPMEI,
-            'GSS_EFCM' => ShippingService::GSS_EFCM,
+            'GSS_FCM' => ShippingService::GSS_FCM,
+            'GSS_EMS' => ShippingService::GSS_EMS,
         ];
         
         return view('admin.orders.order-details.index',compact('order','shippingServices', 'error', 'countryConstants', 'shippingServiceCodes'));
@@ -250,14 +251,16 @@ class OrderItemsController extends Controller
     {
         $service = $request->service;
         $order = Order::find($request->order_id);
-        if($service == ShippingService::GSS_IPA) {
-            $rateType = 'IPA';
+        if($service == ShippingService::GSS_PMI) {
+            $rateType = 'PMI';
         } elseif($service == ShippingService::GSS_EPMEI) {
             $rateType = 'EPMEI';
         } elseif($service == ShippingService::GSS_EPMI) {
             $rateType = 'EPMI';
-        } elseif($service == ShippingService::GSS_EFCM) {
-            $rateType = 'EFCM';
+        } elseif($service == ShippingService::GSS_FCM) {
+            $rateType = 'FCM';
+        } elseif($service == ShippingService::GSS_EMS) {
+            $rateType = 'EMS';
         }
 
         $client = new Client();
@@ -267,7 +270,7 @@ class OrderItemsController extends Controller
         if ($data->isSuccess && $data->output->calculatedPostage > 0){
             $rate = $data->output->calculatedPostage;
             
-            if (in_array($service,[ShippingService::GSS_IPA, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_EFCM])) {
+            if (in_array($service,[ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS])) {
                 $discountPercentage = (setting('gss', null, $order->user->id)  &&  setting('gss_user_discount', null, $order->user->id) != 0) ?  setting('gss_user_discount', null, $order->user->id) : setting('gss_user_discount', null, User::ROLE_ADMIN);
             }
             $discount = ($discountPercentage / 100) * $rate;

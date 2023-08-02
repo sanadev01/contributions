@@ -41,10 +41,11 @@ return [
             357 => 'Prime5RIO',
             4387 => 'GDE Priority Mail',
             4388 => 'GDE First Class',
-            477 => 'GSS IPA',
+            477 => 'GSS PMI',
             37634 => 'GSS EPMEI',
             3674 => 'GSS EPMI',
-            3326 => 'GSS EFCM',
+            3326 => 'GSS FCM',
+            4367 => 'GSS EMS',
         ]
     ]
 ];
