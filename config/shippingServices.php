@@ -37,6 +37,7 @@ return [
             3326 => 'GSS EFCM',
             4387 => 'GDE Priority Mail',
             4388 => 'GDE First Class',
+            283 => 'Total Express',
         ]
     ]
 ];
