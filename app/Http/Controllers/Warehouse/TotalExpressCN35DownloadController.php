@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Services\GePS\CN35LabelMaker;
 use Carbon\Carbon;
 
+use App\Services\TotalExpress\Client;
 class TotalExpressCN35DownloadController extends Controller
 {
     /**
@@ -18,23 +19,16 @@ class TotalExpressCN35DownloadController extends Controller
      */
     public function __invoke(Container $container)
     {
-        $order = $container->orders->first();
-        if($order){
-            $orderWeight = $order->getOriginalWeight('kg');
+        // dd($container->unit_response_list); 
+        if ( $container->unit_response_list == null ){
+            abort(403,'Overpack not register.');
         }
-        $cn35Maker = new CN35LabelMaker();
-        $cn35Maker->setDispatchNumber($container->dispatch_number)
-                     ->setService($container->getServiceCode())
-                     ->setDispatchDate(Carbon::now()->format('Y-m-d'))
-                     ->setSerialNumber(1)
-                     ->setOriginAirport('MIA')
-                     ->setType($orderWeight)
-                     ->setDestinationAirport($container->getDestinationAriport())
-                     ->setWeight($container->getWeight())
-                     ->setItemsCount($container->getPiecesCount())
-                     ->setUnitCode($container->getUnitCode());
-
-        return $cn35Maker->download();
+         
+        $client = new Client();
+        $response =  $client->overpackLabel($container); 
+       
+        session()->flash($response['type'],$response['message']);
+        return back();
         
     }
 }

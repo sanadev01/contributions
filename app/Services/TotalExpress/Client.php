@@ -129,10 +129,12 @@ class Client
                 $overpackRequest =  $overpack->getRequestBody();
                 $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/overpacks", $overpackRequest);
                 $response = json_decode($request);
+                \Log::info('over pack');
+                \Log::info([$response]);
                 if($response->status=="SUCCESS"){
                     $container->update([
                     'unit_code' => $response->data->reference,
-                    'unit_response_list' => json_decode($request),
+                    'unit_response_list' => $request,
                     'response' => '1',
                 ]);
                 return [
@@ -141,10 +143,10 @@ class Client
                 ];
 
             }
-            else{
+            else{ 
                 return [ 
                     'type'=>'alert-danger',
-                    'message'=> (string)new HandleError($request)
+                    'message'=> ''.new HandleError($request)
                 ]; 
             }
 
@@ -157,6 +159,38 @@ class Client
             ];
         }
             
+    }
+    function overpackLabel($container) {
+          
+        try{
+            $response = json_decode($container->unit_response_list);
+            $data =  $response->data;
+            $request = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/overpacks/$data->id/label");
+            $response = json_decode($request);
+            \Log::info('over pack label');
+            \Log::info([$response]);
+            if($response->status=="SUCCESS"){
+            return [
+                'type'=>'alert-success',
+                'message'=>'label'
+            ];
+
+        }
+        else{ 
+            return [ 
+                'type'=>'alert-danger',
+                'message'=> ''.new HandleError($request)
+            ]; 
+        }
+
+       
+    }catch(\Throwable $e){
+        
+        return [
+            'type'=>'alert-danger',
+            'message'=>$e->getMessage()
+        ];
+    }
     }
 
 }

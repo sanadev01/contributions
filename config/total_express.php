@@ -1,17 +1,20 @@
 <?php
+   $testBaseUrl = 'https://hmlapi.nobordist.com';
+   $productionBaseUrl = 'https://hmlapi-total.nobordist.com';
+  
 return [
-    'test' => [ 
+  'test' => [ 
         "email"=>  "marcio.freitas@hercoinc.com",
         "password"=> "91227898010937YYDHg!", 
-        'baseUrl' => 'https://hmlapi.nobordist.com',
-        'baseAuthUrl' => 'https://hmlapi.nobordist.com/authenticate/total/seller',
+        'baseUrl' => $testBaseUrl,
+        'baseAuthUrl' => "$testBaseUrl/authenticate/total/seller",
         'contractId' => '109',
     ],
     'production' => [
         'email' => 'marcio.freitas@hercoinc.com',
-        'password' => 'password',
-        'baseUrl' => 'https://hmlapi-total.nobordist.com',
-        'baseAuthUrl' => 'https://hmlapi-total.nobordist.com/authenticate/total/seller',
+        'password' => 'Hercomv1504!',
+        'baseUrl' => $productionBaseUrl,
+        'baseAuthUrl' => "$productionBaseUrl/authenticate/total/seller",
         'contractId' => '129',
         ],
     ];

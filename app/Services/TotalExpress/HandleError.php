@@ -26,6 +26,9 @@ class HandleError
     {
         try {
             $decode_response = json_decode($this->response);
+                if(!in_array($decode_response->status , [200,422,'ERROR'])){
+                    return $decode_response->status. ' '. optional($decode_response)->error;
+                }
             $messages = '';  
             foreach ($decode_response->messages as $errors) {
 
