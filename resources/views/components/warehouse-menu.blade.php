@@ -110,6 +110,13 @@
                         </a>
                     </li>
                     
+                    <li class="{{ $isActive(['warehouse.totalexpress_containers.index','warehouse.totalexpress_containers.create','warehouse.totalexpress_containers.edit','warehouse.totalexpress_container.packages.index']) }}">
+                        <a href="{{ route('warehouse.totalexpress_containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">Total Express</span>
+                        </a>
+                    </li>
+                    
                     <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
                         <a href="{{ route('warehouse.chile_containers.index') }}">
                             <i class="feather icon-circle"></i>

@@ -59,7 +59,7 @@ class ShippingService extends Model
     const GSS_EPMI = 3674;
     const GSS_FCM = 3326;
     const GSS_EMS = 4367;
-    
+    const TOTAL_EXPRESS = 283;
 
     protected $guarded = [];
 
@@ -430,6 +430,10 @@ class ShippingService extends Model
     {
         return self::AJ_Standard_CN  == $this->service_sub_class;
 
+    }
+    public function getIsTotalExpressAttribute()
+    {
+        return $this->service_sub_class == self::TOTAL_EXPRESS;
     }
 
     public function getGDERate($order){

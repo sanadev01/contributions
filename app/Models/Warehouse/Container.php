@@ -127,6 +127,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'First Class Package International';
         }elseif($this->services_subclass_code == ShippingService::GSS_EMS){
             return 'Priority Mail Express International (Nationwide)';
+        }
+        elseif($this->services_subclass_code == ShippingService::TOTAL_EXPRESS){
+            return 'Total Express';
         }else {
             return 'FirstClass';
         }
@@ -185,10 +188,16 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif( $this->services_subclass_code == ShippingService::GDE_FIRST_CLASS) {
             return 17;
-        }  
+        }
+        elseif( $this->services_subclass_code == ShippingService::TOTAL_EXPRESS) {
+            return 18;
+        }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
-
+    public function hasTotalExpressService()
+    {
+        return $this->services_subclass_code == ShippingService::TOTAL_EXPRESS;
+    }
     public function getDestinationAriport()
     {
         if($this->destination_operator_name == 'SAOD'){
