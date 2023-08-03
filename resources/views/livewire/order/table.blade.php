@@ -148,6 +148,7 @@
                                 <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}">PAYMENT_PENDING</option>
                                 <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}">PAYMENT_DONE</option>
                                 <option value="{{ App\Models\Order::STATUS_SHIPPED }}">SHIPPED</option>
+                                <option value="Total Express">Total Express</option>
                             </select>
                         </th>
                         <th>

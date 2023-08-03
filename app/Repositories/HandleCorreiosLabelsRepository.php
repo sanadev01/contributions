@@ -16,6 +16,7 @@ use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\ColombiaLabelRepository;
 use App\Repositories\AnjunLabelRepository;
+use App\Services\TotalExpress\TotalExpressLabelRepository;
 class HandleCorreiosLabelsRepository
 {
     public $order;
@@ -52,6 +53,9 @@ class HandleCorreiosLabelsRepository
             }
             if ($this->order->shippingService->isGSSService()) {
                 return $this->uspsGSSLabel();
+            }
+            if ($this->order->shippingService->is_total_express) {
+                return $this->totalExpressLabel();
             }
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
@@ -121,7 +125,12 @@ class HandleCorreiosLabelsRepository
         $postNLLabelRepository->run($this->order,$this->update); 
         return $this->renderLabel($this->request, $this->order, $postNLLabelRepository->getError());
     }
-
+    public function totalExpressLabel()
+    {
+        $totalExpress = new TotalExpressLabelRepository(); ///by default consider false
+        $totalExpress->run($this->order,$this->update);
+        return $this->renderLabel($this->request, $this->order, $totalExpress->getError());
+    }
     public function gepsLabel()
     {
         $gepsLabelRepository = new GePSLabelRepository(); ///by default consider false

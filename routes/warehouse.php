@@ -74,6 +74,10 @@ use App\Http\Controllers\Warehouse\GDEContainerPackageController;
 use App\Http\Controllers\Warehouse\GDEUnitRegisterController;
 use App\Http\Controllers\Warehouse\GDECN35DownloadController;
 use App\Http\Controllers\Warehouse\GDEManifestDownloadController;
+use App\Http\Controllers\Warehouse\TotalExpressContainerController;
+use App\Http\Controllers\Warehouse\TotalExpressContainerPackageController;
+use App\Http\Controllers\Warehouse\TotalExpressUnitRegisterController;
+use App\Http\Controllers\Warehouse\TotalExpressCN35DownloadController;
 use App\Http\Controllers\Warehouse\GSSContainerController;
 use App\Http\Controllers\Warehouse\GSSContainerPackageController;
 use App\Http\Controllers\Warehouse\GSSUnitRegisterController;
@@ -202,6 +206,14 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('gss/{delivery_bill}/cn38', GSSCN38DownloadController::class)->name('gss_container.cn38.download');
     Route::get('gss/{delivery_bill}/manifest', GSSManifestDownloadController::class)->name('gss_container.manifest.download');
     Route::get('gss/{reports}/manifest/{dispatch}', GSSReportsDownloadController::class)->name('gss_container.reports.download');
+
+    // Routes for Total Express Container
+    Route::resource('totalexpress_containers', TotalExpressContainerController::class);
+    Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('totalexpress_container/{container}/register', TotalExpressUnitRegisterController::class)->name('totalexpress_container.register');
+    Route::get('totalexpress_container/{container}/download', TotalExpressCN35DownloadController::class)->name('totalexpress_container.download');
+    
+    
 });
 
 

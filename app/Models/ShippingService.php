@@ -59,7 +59,7 @@ class ShippingService extends Model
     const GSS_EPMI = 3674;
     const GSS_FCM = 3326;
     const GSS_EMS = 4367;
-    
+    const TOTAL_EXPRESS = 283;
 
     protected $guarded = [];
 

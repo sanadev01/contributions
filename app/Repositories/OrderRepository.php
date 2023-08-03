@@ -140,6 +140,11 @@ class OrderRepository
                     ShippingService::Post_Plus_Premium,
                 ];
             }
+            if($request->carrier == 'Total Express'){
+                $service = [
+                    ShippingService::TOTAL_EXPRESS, 
+                ];
+            }
             if($request->carrier == 'Anjun China'){
                 $service = [
                     ShippingService::AJ_Standard_CN, 
