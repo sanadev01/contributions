@@ -54,12 +54,12 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->isGSSService()) {
                 return $this->uspsGSSLabel();
             }
-            if ($this->order->shippingService->is_total_express) {
-                return $this->totalExpressLabel();
-            }
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
             // }
+        }
+        if ($this->order->shippingService->is_total_express) {
+            return $this->totalExpressLabel();
         }
         if ($this->order->shippingService->is_milli_express) {
             return $this->mileExpressLabel();
