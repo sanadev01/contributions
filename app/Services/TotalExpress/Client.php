@@ -31,12 +31,10 @@ class Client
             $this->email = config('total_express.production.email');
             $this->password = config('total_express.production.password');
             $this->baseUrl = config('total_express.production.baseUrl');
-            $this->baseAuthUrl = config('total_express.production.baseAuthUrl');
         } else {
             $this->email = config('total_express.test.email');
             $this->password = config('total_express.test.password');
-            $this->baseUrl = config('total_express.test.baseUrl');
-            $this->baseAuthUrl = config('total_express.test.baseAuthUrl');
+            $this->baseUrl = config('total_express.test.baseUrl'); 
         }
 
 
@@ -47,7 +45,7 @@ class Client
             'email' => $this->email,
             'password' => $this->password
         ];
-        $response = $this->client->post($this->baseAuthUrl, ['json' => $authParams]);
+        $response = $this->client->post("$this->baseUrl/authenticate/total/seller", ['json' => $authParams]);
         $data = json_decode($response->getBody()->getContents());
         if ($data->auth_token) {
             $this->token = $data->auth_token;
