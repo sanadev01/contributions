@@ -46,6 +46,7 @@ return [
             3674 => 'GSS EPMI',
             3326 => 'GSS FCM',
             4367 => 'GSS EMS',
+            283 => 'Total Express',
         ]
     ]
 ];
