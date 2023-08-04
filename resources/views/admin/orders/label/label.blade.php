@@ -36,9 +36,13 @@
             </iframe>
             @endif
         @else
-            <div class="alert alert-danger">
-                {{ $error }}
-            </div>
+        <div class="alert alert-danger">
+            <ul> 
+                @foreach(explode('<br>',$error) as $e)
+                <li>{{ $e}}</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
     </div>
 @endif

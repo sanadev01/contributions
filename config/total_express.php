@@ -5,7 +5,7 @@ return [
         "email"=>  "marcio.freitas@hercoinc.com",
         "password"=> "91227898010937YYDHg!", 
         'baseUrl' =>  'https://hmlapi.nobordist.com', 
-        'contractId' => '107',
+        'contractId' => '109',
     ],
     'production' => [
         'email' => 'marcio.freitas@hercoinc.com',
