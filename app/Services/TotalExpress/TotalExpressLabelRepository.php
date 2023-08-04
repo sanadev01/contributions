@@ -16,6 +16,9 @@ class TotalExpressLabelRepository
 
     public function run(Order $order, $update)
     {
+        if($update){
+            return $this->update($order);
+        }
         return $this->get($order);
     }
 
