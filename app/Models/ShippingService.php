@@ -214,10 +214,6 @@ class ShippingService extends Model
         }
         return false;
     }
-    public function isTotalExpressService()
-    {
-        return $this->service_sub_class == self::TOTAL_EXPRESS;
-    }
 
     private function anjunShippingServices()
     {
