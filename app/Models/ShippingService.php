@@ -106,6 +106,11 @@ class ShippingService extends Model
 
         return self::$calculator;
     }
+        
+    public function getIsTotalExpressAttribute()
+    {
+        return $this->service_sub_class == self::TOTAL_EXPRESS;
+    }
 
     public function profitPackages()
     {
@@ -430,10 +435,6 @@ class ShippingService extends Model
     {
         return self::AJ_Standard_CN  == $this->service_sub_class;
 
-    }
-    public function getIsTotalExpressAttribute()
-    {
-        return $this->service_sub_class == self::TOTAL_EXPRESS;
     }
 
     public function getGDERate($order){
