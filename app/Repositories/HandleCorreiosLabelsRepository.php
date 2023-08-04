@@ -33,7 +33,6 @@ class HandleCorreiosLabelsRepository
     }
     public function handle()
     {
-         
         if ($this->order->recipient->country_id == Order::BRAZIL) {
 
             if ($this->order->shippingService->isGePSService()) {
