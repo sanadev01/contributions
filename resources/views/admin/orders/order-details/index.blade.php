@@ -215,6 +215,8 @@
         if(service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
+        }else if(service == 477  || service == 3674 || service == 37634 || service == 3326) {
+            return getGSSRates();
         }else if(service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
             $("#rateBtn").hide();
@@ -406,6 +408,28 @@
         })
     }
 
+    function getGSSRates(){
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        var order_id = $('#order_id').val();
+
+        $('#loading').fadeIn();
+        $.get('{{ route("api.gssRates") }}',{
+                service: service,
+                order_id: order_id,
+            }).then(function(response){
+                if(response.success == true){
+                    $('#user_declared_freight').val(response.total_amount);
+                    $('#user_declared_freight').prop('readonly', true);
+                }
+                $('#loading').fadeOut();
+
+            }).catch(function(error){
+                console.log(error);
+                $('#loading').fadeOut();
+        })
+
+    }
+    
     $('#returnParcel').change(function() {
          if($(this).is(":checked")){
          $('#disposeAll').prop('checked', false);

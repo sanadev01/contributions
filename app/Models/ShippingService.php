@@ -47,10 +47,11 @@ class ShippingService extends Model
     const Prime5RIO = 357;
     const GDE_PRIORITY_MAIL = 4387;
     const GDE_FIRST_CLASS = 4388;
-    const GSS_IPA = 477;
+    const GSS_PMI = 477;
     const GSS_EPMEI = 37634;
     const GSS_EPMI = 3674;
-    const GSS_EFCM = 3326;
+    const GSS_FCM = 3326;
+    const GSS_EMS = 4367;
 
     protected $guarded = [];
 
@@ -205,7 +206,7 @@ class ShippingService extends Model
 
     public function isGSSService()
     {
-        if($this->service_sub_class == self::GSS_IPA || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_EFCM){
+        if($this->service_sub_class == self::GSS_PMI || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_FCM || $this->service_sub_class == self::GSS_EMS){
             return true;
         }
         return false;

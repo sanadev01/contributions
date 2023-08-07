@@ -94,14 +94,16 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'GDE Priority Mail';
         }elseif($this->services_subclass_code == ShippingService::GDE_FIRST_CLASS){
             return 'GDE First Class';
-        }elseif($this->services_subclass_code == ShippingService::GSS_IPA){
-            return 'International Priority Airmail';
+        }elseif($this->services_subclass_code == ShippingService::GSS_PMI){
+            return 'Priority Mail International';
         }elseif($this->services_subclass_code == ShippingService::GSS_EPMEI){
-            return 'Pre-Sort Drop Shipment';
+            return 'Priority Mail Express International (Pre-Sort)';
         }elseif($this->services_subclass_code == ShippingService::GSS_EPMI){
-            return 'Pre-Sort Priority Mail International';
-        }elseif($this->services_subclass_code == ShippingService::GSS_EFCM){
-            return 'Pre-Sort First Class International';
+            return 'Priority Mail International (Pre-Sort)';
+        }elseif($this->services_subclass_code == ShippingService::GSS_FCM){
+            return 'First Class Package International';
+        }elseif($this->services_subclass_code == ShippingService::GSS_EMS){
+            return 'Priority Mail Express International (Nationwide)';
         }else {
             return 'FirstClass';
         }
@@ -234,6 +236,6 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasGSSService()
     {
-        return $this->services_subclass_code == ShippingService::GSS_IPA || $this->services_subclass_code == ShippingService::GSS_EPMEI || $this->services_subclass_code == ShippingService::GSS_EPMI || $this->services_subclass_code == ShippingService::GSS_EFCM;
+        return $this->services_subclass_code == ShippingService::GSS_PMI || $this->services_subclass_code == ShippingService::GSS_EPMEI || $this->services_subclass_code == ShippingService::GSS_EPMI || $this->services_subclass_code == ShippingService::GSS_FCM || $this->services_subclass_code == ShippingService::GSS_EMS;
     }
 }

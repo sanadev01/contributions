@@ -5,7 +5,10 @@ namespace App\Repositories;
 use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
+use Illuminate\Http\Request;
 use App\Models\ShippingService;
+use App\Repositories\OrderRepository;
+use App\Http\Controllers\Admin\Order\OrderItemsController;
 
 class ApiShippingServiceRepository
 {
@@ -148,6 +151,40 @@ class ApiShippingServiceRepository
         }
 
         return false;
+    }
+
+    public function getGSSRates($order) {
+
+        if ($order->weight > $order->shippingService->max_weight_allowed) {
+            
+            $this->error = 'The weight of the package exceeds the maximum allowed weight for this service.';
+            return false;
+        }
+
+        if (in_array($order->shippingService->service_sub_class, [ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS]))
+        {
+            if(!setting('gss', null, $order->user->id))
+            {
+                $this->error = 'Seleceted Shipping service is not available for your account.';
+                return false;
+            }
+            
+            $request = new Request();
+            $request->merge(['order_id' => $order->id, 'service' => $order->shippingService->service_sub_class]);
+            $orderItemController = new OrderItemsController(new OrderRepository());
+            $response = $orderItemController->GSSRates($request);
+
+            if($response['success'])
+            {
+                $order->update([
+                    'user_declared_freight' => $response['total_amount'],
+                ]);
+
+                return true;
+            }
+
+            $this->error = 'server error, could not get rates';
+        }
     }
 
     public function getError()

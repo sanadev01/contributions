@@ -346,10 +346,11 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GDE_PRIORITY_MAIL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GDE_FIRST_CLASS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_IPA ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_PMI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EFCM) {
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS) {
 
                 return 'USPS';
 
@@ -481,6 +482,8 @@ class Order extends Model implements Package
         if ($shippingService && in_array($shippingService->service_sub_class, $this->usShippingServicesSubClasses())) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
+        }elseif ($shippingService && $shippingService->isGSSService()) {
+            $shippingCost = $this->user_declared_freight;
         }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }

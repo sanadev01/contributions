@@ -31,10 +31,11 @@ return [
             777 => 'Post Plus Prime',
             778 => 'PrimeRIO',
             357 => 'Prime5RIO',
-            477 => 'GSS IPA',
+            477 => 'GSS PMI',
             37634 => 'GSS EPMEI',
             3674 => 'GSS EPMI',
-            3326 => 'GSS EFCM',
+            3326 => 'GSS FCM',
+            3326 => 'GSS EMS',
             4387 => 'GDE Priority Mail',
             4388 => 'GDE First Class',
         ]
