@@ -88,32 +88,51 @@ class UpdateCN23Label
         } elseif($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
             if(count($this->order->items) > 5) {
                 $this->pdfi = new PDFRotate('P', 'mm', array(212.9, 275));
-                $this->printShippingOrderValues(116.7, 212.5, 135.8, 212.5, 135, 215, 12.5, 234.3, 131.8, 213, 116.6, 211.1, 116.7, 215);
+                $this->printShippingOrderValues(107.7, 230, 119.8, 230, 118.7, 232, 12.5, 234.3, 117.5, 230.1, 107.3, 228.3, 107.7, 232.2);
                 
             }else{
                 $this->pdfi = new PDFRotate('L', 'mm', array(147, 212.9));
-                $this->printShippingOrderValues(116.7, 92.5, 135.8, 92.5, 135, 95.2, 12.5, 114.7, 131.8, 92.9, 116.8, 91.2, 116.7, 95.2);
+                $this->printShippingOrderValues(107.7, 92.5, 120.8, 92.5, 121, 95.2, 12.5, 114.7, 116.5, 93.2, 107.3, 91.2, 107.3, 95.2);
             }
             //FOR CPF
-            $this->pdfi->SetFont("Arial", "B", 7);
-            $this->pdfi->RotatedText(186, 29.2, 'CPF:', 0);
+            // $this->pdfi->SetFont("Arial", "B", 7);
+            // $this->pdfi->RotatedText(186, 29.2, 'CPF:', 0);
             //FOR ITEMS SH CODE
-            foreach($this->order->items  as $key=>$item){
-                $this->pdfi->SetFont("Arial", "B", 7);
-                $this->pdfi->RotatedText(142, 74+($key*4), $item->sh_code, 0);
-                //USA
-                $this->pdfi->SetFont("Arial", "B", 7);
-                $this->pdfi->RotatedText(175.5, 74+($key*4), 'USA', 0);
+            if(count($this->order->items) > 5) {
+                foreach($this->order->items  as $key=>$item){
+                    $this->pdfi->SetFont("Arial", "B", 7);
+                    $this->pdfi->RotatedText(133, 71+($key*4.5), $item->sh_code, 0);
+                    //USA
+                    $this->pdfi->SetFont("Arial", "B", 7);
+                    $this->pdfi->RotatedText(169, 71+($key*4.5), 'USA', 0);
+                }
+            } else {
+                foreach($this->order->items  as $key=>$item){
+                    $this->pdfi->SetFont("Arial", "5", 7);
+                    $this->pdfi->RotatedText(133, 72.5+($key*3.7), $item->sh_code, 0);
+                    //USA
+                    $this->pdfi->SetFont("Arial", "B", 7);
+                    $this->pdfi->RotatedText(169, 72.5+($key*3.7), 'USA', 0);
+                }
             }
             // FOR RETURN ADDRESS
-            $this->printReturnAddress(60.7, 22, 40, 12, 26, 29, 32, 35, 6, '');
+            $this->printReturnAddress(35.7, 27, 78, 7.2, 28.7, 30.7, 33.1, 35, 6, 'B');
             //FOR BOX CHECK
             $this->pdfi->SetFont("Arial", "B", 7);
             if(count($this->order->items) > 5) {
-                $this->pdfi->RotatedText(98.7, 218.7, 'X', 0);
+                $this->pdfi->RotatedText(94, 235.7, 'X', 0);
             } else {
-                $this->pdfi->RotatedText(98.7, 98.7, 'X', 0);
+                $this->pdfi->RotatedText(93.8, 98.7, 'X', 0);
             }
+
+            //FOR SENDER PHONE
+            $this->pdfi->SetFont("Arial", "B", 6.5);
+            $this->pdfi->RotatedText(56, 19.3, $this->order->sender_phone? $this->order->sender_phone : '' , 00);
+
+            //FOR RECEIVER EMAIL
+            $this->pdfi->SetFont("Arial", "B", 6.5);
+            $this->pdfi->RotatedText(71, 48.5, $this->order->recipient->email, 00);
+
             $this->pdfi->Output($this->pdf_file, 'F');
             
             return true;
@@ -145,7 +164,7 @@ class UpdateCN23Label
         $this->pdfi->RotatedText($cw, $ch, number_format($userDeclaredFreight, 2, '.', ','), 0);
         //FOR TOTAL ORDER VALUE
         $this->pdfi->SetFillColor(255, 255, 255);
-        $this->pdfi->Rect($bw, $bh, 8, 2.5, "F");
+        $this->pdfi->Rect($bw, $bh, 8, 2.2, "F");
         $this->pdfi->SetFont("Arial", "B", 5);
         $this->pdfi->RotatedText($fw, $fh, number_format($userDeclaredFreight + $this->order->order_value, 2, '.', ','), 0);
 
@@ -158,9 +177,14 @@ class UpdateCN23Label
         $this->pdfi->RotatedText($rectLM, $textLine1H, "DEVOLUCAO", 0);
         $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
         $this->pdfi->RotatedText($rectLM, $textLine2H, "Homedeliverybr", 0);
-        $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
-        $this->pdfi->RotatedText($rectLM, $textLine3H, "Rua Acaca 47- Ipiranga", 0);
-        $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
-        $this->pdfi->RotatedText($rectLM, $textLine4H, "Sao Paulo CEP 04201-020", 0);
+        if($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
+            $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
+            $this->pdfi->RotatedText($rectLM, $textLine3H, "Rua Acaca 47- Ipiranga, Sao Paulo CEP 04201-020", 0);
+        }else {
+            $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
+            $this->pdfi->RotatedText($rectLM, $textLine3H, "Rua Acaca 47- Ipiranga", 0);
+            $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
+            $this->pdfi->RotatedText($rectLM, $textLine4H, "Sao Paulo CEP 04201-020", 0);
+        }
     }
 }

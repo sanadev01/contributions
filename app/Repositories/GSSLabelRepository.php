@@ -42,12 +42,7 @@ class GSSLabelRepository
     {
         if($order->api_response)
         {
-            $response = json_decode($order->api_response);
-            if(count($response->labels) > 1) {
-                $this->addLabelPages($response);
-            } else {
-                Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($response->labels[0]));
-            }
+            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($order->api_response));
             return true;
             // return (new UpdateCN23Label($order))->run(); 
         }
@@ -67,23 +62,6 @@ class GSSLabelRepository
     public function getError()
     {
         return $this->error;
-    }
-
-    private function addLabelPages($response) {
-
-        $pdf = PDFMerger::init();
-        $label = "app/labels/{$response->trackingNumber}";
-        $page1 = storage_path("$label(1).pdf");
-        $page2 = storage_path("$label(2).pdf");
-        file_put_contents($page1, base64_decode($response->labels[0]));
-        file_put_contents($page2, base64_decode($response->labels[1]));
-        $pdf->addPDF($page1);
-        $pdf->addPDF($page2);
-        $pdf->merge();
-        unlink(storage_path("$label(1).pdf"));
-        unlink(storage_path("$label(2).pdf"));
-        
-        $pdf->save(storage_path("$label.pdf"));
     }
 
 }

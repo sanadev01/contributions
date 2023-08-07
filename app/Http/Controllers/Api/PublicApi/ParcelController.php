@@ -256,6 +256,14 @@ class ParcelController extends Controller
                 }
             }
 
+            if ($order->shippingService->isGSSService()) {
+                if(!$this->usShippingService->getGSSRates($order))
+                {
+                    DB::rollback();
+                    return apiResponse(false, $this->usShippingService->getError());
+                }
+            }
+
             $order->doCalculations();
 
             DB::commit();
