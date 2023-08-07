@@ -108,11 +108,11 @@ class UpdateCN23Label
                 }
             } else {
                 foreach($this->order->items  as $key=>$item){
-                    $this->pdfi->SetFont("Arial", "5", 7);
-                    $this->pdfi->RotatedText(133, 72.5+($key*3.7), $item->sh_code, 0);
+                    $this->pdfi->SetFont("Arial", "B", 7);
+                    $this->pdfi->RotatedText(133, 71.5+($key*3.7), $item->sh_code, 0);
                     //USA
                     $this->pdfi->SetFont("Arial", "B", 7);
-                    $this->pdfi->RotatedText(169, 72.5+($key*3.7), 'USA', 0);
+                    $this->pdfi->RotatedText(169, 71.5+($key*3.7), 'USA', 0);
                 }
             }
             // FOR RETURN ADDRESS
@@ -126,8 +126,11 @@ class UpdateCN23Label
             }
 
             //FOR SENDER PHONE
+            $this->pdfi->SetFillColor(255, 255, 255);
+            $this->pdfi->Rect(57, 17, 25, 2.5, "F");
             $this->pdfi->SetFont("Arial", "B", 6.5);
             $this->pdfi->RotatedText(56, 19.3, $this->order->sender_phone? $this->order->sender_phone : '' , 00);
+
 
             //FOR RECEIVER EMAIL
             $this->pdfi->SetFont("Arial", "B", 6.5);
