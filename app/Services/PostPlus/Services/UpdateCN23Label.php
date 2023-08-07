@@ -101,18 +101,18 @@ class UpdateCN23Label
             if(count($this->order->items) > 5) {
                 foreach($this->order->items  as $key=>$item){
                     $this->pdfi->SetFont("Arial", "B", 7);
-                    $this->pdfi->RotatedText(133, 74.5+($key*4.8), $item->sh_code, 0);
+                    $this->pdfi->RotatedText(133, 71+($key*4.5), $item->sh_code, 0);
                     //USA
                     $this->pdfi->SetFont("Arial", "B", 7);
-                    $this->pdfi->RotatedText(169, 74.5+($key*4.8), 'USA', 0);
+                    $this->pdfi->RotatedText(169, 71+($key*4.5), 'USA', 0);
                 }
             } else {
                 foreach($this->order->items  as $key=>$item){
-                    $this->pdfi->SetFont("Arial", "B", 7);
-                    $this->pdfi->RotatedText(133, 76+($key*4), $item->sh_code, 0);
+                    $this->pdfi->SetFont("Arial", "5", 7);
+                    $this->pdfi->RotatedText(133, 72.5+($key*3.7), $item->sh_code, 0);
                     //USA
                     $this->pdfi->SetFont("Arial", "B", 7);
-                    $this->pdfi->RotatedText(169, 76+($key*4), 'USA', 0);
+                    $this->pdfi->RotatedText(169, 72.5+($key*3.7), 'USA', 0);
                 }
             }
             // FOR RETURN ADDRESS
