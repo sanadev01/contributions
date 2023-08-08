@@ -9,7 +9,7 @@ class CN35LabelHandler
 
     public static function handle(Container $container)
     {
-        if (!$container->hasTotalExpressService()) {
+        if (!$container->has_total_express_service) {
             return response()->json([ 'isSuccess' => false,  'message'  => "Only Total Express container allowed!" ], 422);
         }
 

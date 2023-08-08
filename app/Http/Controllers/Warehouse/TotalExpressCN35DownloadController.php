@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Warehouse;
 
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
-use App\Http\Controllers\Controller;
-// use App\Services\GePS\CN35LabelMaker;
-use App\Services\Correios\Services\Brazil\CN35LabelMaker;
+use App\Http\Controllers\Controller;  
 use Carbon\Carbon;
-
+use App\Services\TotalExpress\CN35LabelMaker;
 use App\Services\TotalExpress\Client;
 class TotalExpressCN35DownloadController extends Controller
 {
