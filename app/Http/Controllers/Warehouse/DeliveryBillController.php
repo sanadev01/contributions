@@ -43,6 +43,7 @@ class DeliveryBillController extends Controller
      */
     public function store(CreateDeliveryBillRequest $request, DeliveryBillRepository $deliveryBillRepository)
     {
+        
         if ( $container = $deliveryBillRepository->store($request) ){
             session()->flash('alert-success', 'Delivery Bill Created Successfully');
             return redirect()->route('warehouse.delivery_bill.index');
