@@ -157,4 +157,8 @@ class DeliveryBill extends Model
         }
         return false;
     }
+    public function containerShippingService($subService)
+    {
+       return $this->containers->first()->services_subclass_code == $subService;
+    }
 }
