@@ -112,7 +112,7 @@ class Client{
 
     public function createReceptacle($container)
     {
-        $containers = Container::where('awb', $container->awb)->get();
+        // $containers = Container::where('awb', $container->awb)->get();
         $url = "$this->baseUrl/Receptacle/CreateReceptacleForRateTypeToDestination";
         $weight = 0;
         $piecesCount = 0;
@@ -126,17 +126,17 @@ class Client{
             $rateType = 'EPMI';
             $foreignOECode = "RIO";
         } elseif($container->services_subclass_code == ShippingService::GSS_FCM) {
-            $rateType = 'FCM';
+            $rateType = 'EFCM';
             $foreignOECode = "CWB";
         }elseif($container->services_subclass_code == ShippingService::GSS_EMS) {
             $rateType = 'EMS';
             $foreignOECode = "CWB";
         }
-        if($containers[0]->awb) {
-            foreach($containers as $package) {
-                $weight+= UnitsConverter::kgToPound($package->getWeight());
-                $piecesCount = $package->getPiecesCount();
-            }
+        // if($containers[0]->awb) {
+        //     foreach($containers as $package) {
+                $weight = UnitsConverter::kgToPound($container->getWeight());
+                $piecesCount = $container->getPiecesCount();
+            // }
             $body = [
                 "rateType" => $rateType,
                 "dutiable" => true,
@@ -147,33 +147,34 @@ class Client{
                 "pieceCount" => $piecesCount,
                 "weightInLbs" => $weight,
             ];
+            // dd($body);
             $response = Http::withHeaders($this->getHeaders())->post($url, $body);
             $data= json_decode($response);
     
             if ($response->successful() && $data->success == true) { 
                 
-                return $this->addPackagesToReceptacle($data->receptacleID, $containers);
+                return $this->addPackagesToReceptacle($data->receptacleID, $container);
 
             } else {
                 return $this->responseUnprocessable($data->message);
             }
-        }
-        else {
-            return $this->responseUnprocessable("Airway Bill Number is Required for Processing.");
-        }
+        // }
+        // else {
+        //     return $this->responseUnprocessable("Airway Bill Number is Required for Processing.");
+        // }
     }
 
-    public function addPackagesToReceptacle($id, $containers)
+    public function addPackagesToReceptacle($id, $container)
     {
         $codes = [];
-        foreach ($containers as $key => $container) {
+        // foreach ($containers as $key => $container) {
             foreach ($container->orders as $key => $item) {
                 $codesToPush = [
                     $item->corrios_tracking_code,
                 ];
                 array_push($codes, $codesToPush);
             }
-        }
+        // }
         $parcels = implode(",", array_merge(...$codes));
         $url = $this->baseUrl . '/Package/AddPackagesToReceptacle';
         $body = [
