@@ -1,12 +1,11 @@
 <?php 
 
-namespace App\Services\TotalExpress;
+namespace App\Services\TotalExpress\CN35;
 
 use App\Services\Correios\Contracts\HasLableExport;
 
 class CN35LabelMaker implements HasLableExport
 {
-
     private $companyName;
     private $packetType;
     private $dispatchNumber;
@@ -21,7 +20,6 @@ class CN35LabelMaker implements HasLableExport
     private $service;
     private $unitCode;
     private $OrderWeight;
-
     public function __construct()
     {
         $this->companyName = '<img src="'.public_path('images/hd-1cm.png').'" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
@@ -35,23 +33,6 @@ class CN35LabelMaker implements HasLableExport
     public function setCompanyName($companyName)
     {
         $this->companyName = $companyName;
-        return $this;
-    }
-
-    public function setService(int $service)
-    {
-        $this->service = $service;
-
-        if ( $this->service == 1 || $this->service == 9 ) {
-            $this->packetType = 'PACKET EXPRESS';
-        }
-        if ( $this->service == 2 || $this->service == 8 ) {
-            $this->packetType = 'PACKET STANDARD';
-        }
-        if ( $this->service == 3 ){
-            $this->packetType = 'PACKET MINI';
-        }
-
         return $this;
     }
 

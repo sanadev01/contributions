@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;  
 use Carbon\Carbon;
-use App\Services\TotalExpress\CN35LabelMaker;
+use App\Services\TotalExpress\CN35\CN35LabelMaker;
 use App\Services\TotalExpress\Client;
 class TotalExpressCN35DownloadController extends Controller
 {
@@ -25,7 +25,6 @@ class TotalExpressCN35DownloadController extends Controller
             }
             $cn23Maker = new CN35LabelMaker();
             $cn23Maker->setDispatchNumber($container->dispatch_number)
-                         ->setService($container->getServiceCode())
                          ->setDispatchDate(Carbon::now()->format('Y-m-d'))
                          ->setSerialNumber(1)
                          ->setOriginAirport('BR')
