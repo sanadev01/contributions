@@ -67,6 +67,7 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Prime5RIO}}">Prime5RIO</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GDE_PRIORITY}}">GDE Priority Mail</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GDE_FIRSTCLASS}}">GDE First Class</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_TOTAL_EXPRESS}}">Total Express</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>

@@ -90,6 +90,10 @@ class IndexTable extends Component
             'name' => 'GDE First Class',
             'value' => Package::SERVICE_CLASS_GDE_FIRSTCLASS,
         ];
+        $this->services[18] = [
+            'name' => 'Total Express',
+            'value' => Package::SERVICE_CLASS_TOTAL_EXPRESS,
+        ];
         return $this->services;
     }
 }
