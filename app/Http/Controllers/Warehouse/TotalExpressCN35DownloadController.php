@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
-use App\Services\GePS\CN35LabelMaker;
+use App\Services\TotalExpress\CN35\CN35LabelMaker;
 use Carbon\Carbon;
 
 use App\Services\TotalExpress\Client;
@@ -19,7 +19,27 @@ class TotalExpressCN35DownloadController extends Controller
      */
     public function __invoke(Container $container)
     {
-        // dd($container->unit_response_list); 
+        if(request()->get('type')=='hd'){
+            $order = $container->orders->first();
+            if($order){
+                $orderWeight = $order->getOriginalWeight('kg');
+            }
+            $cn23Maker = new CN35LabelMaker();
+            $cn23Maker->setDispatchNumber($container->dispatch_number)
+                         ->setDispatchDate(Carbon::now()->format('Y-m-d'))
+                         ->setSerialNumber(1)
+                         ->setOriginAirport('BR')
+                         ->setType($orderWeight)
+                         ->setDestinationAirport($container->getDestinationAriport())
+                         ->setWeight($container->getWeight())
+                         ->setItemsCount($container->getPiecesCount())
+                         ->setUnitCode($container->getUnitCode()); 
+            // if($container->hasAnjunService()){
+              $cn23Maker->setCompanyName('TotalExpress'); 
+            // }
+            return $cn23Maker->download();
+        }
+
         if ( $container->unit_response_list == null ){
             abort(403,'Overpack not register.');
         }

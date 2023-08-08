@@ -194,7 +194,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
-    public function hasTotalExpressService()
+    public function getHasTotalExpressServiceAttribute()
     {
         return $this->services_subclass_code == ShippingService::TOTAL_EXPRESS;
     }
