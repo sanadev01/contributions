@@ -3,7 +3,7 @@
 
 namespace App\Services\Correios\Models;
 
-
+use App\Models\ShippingService;
 class Package implements \App\Services\Correios\Contracts\Package
 {
 
@@ -27,6 +27,7 @@ class Package implements \App\Services\Correios\Contracts\Package
     const SERVICE_CLASS_Prime5RIO = 357;
     const SERVICE_CLASS_GDE_PRIORITY = 4387;
     const SERVICE_CLASS_GDE_FIRSTCLASS = 4388;
+    const SERVICE_CLASS_TOTAL_EXPRESS = ShippingService::TOTAL_EXPRESS;
 
     public $customerControlCode = "";
     public $senderName = "HERCO";

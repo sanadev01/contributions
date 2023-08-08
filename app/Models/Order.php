@@ -381,6 +381,12 @@ class Order extends Model implements Package
                 return 'PostPlus';
 
             }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS ){
+
+                return 'Total Express';
+
+            }
+            
             return 'Correios Brazil';
         }
 
@@ -854,6 +860,15 @@ class Order extends Model implements Package
     public function getEncryptedIdAttribute()
     {
         return encrypt($this->id);
+    }
+
+    public function totalExpressLabelUrl()
+    {
+        if (!$this->api_response) {
+            return null;
+        }
+        $decode = json_decode($this->api_response);
+        return $decode->labelResponse->data->download_url;
     }
 
 }

@@ -138,6 +138,11 @@ class OrderRepository
                     ShippingService::Post_Plus_Premium,
                 ];
             }
+            if($request->carrier == 'Total Express'){
+                $service = [
+                    ShippingService::TOTAL_EXPRESS, 
+                ];
+            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });
