@@ -23,7 +23,7 @@ class TotalExpressContainerPackageRepository {
         if ($order->status != Order::STATUS_PAYMENT_DONE) {
             $error = 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid';
         }
-        if ( (!$container->hasTotalExpressService() ||  !$order->shippingService->is_total_express)){
+        if ( (!$container->has_total_express_service ||  !$order->shippingService->is_total_express)){
 
             $error = 'Order does not belong to this container. Please Check Packet Service';
         }
