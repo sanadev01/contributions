@@ -85,7 +85,7 @@ class Client
                     }
                 }
                 if($order->api_response) {
-                    usleep( 300000 ); //Sleep for 3 second. 
+                    sleep(5); //Sleep for 5 second. 
                     $apiResponse = json_decode($order->api_response); 
                     $response = $apiResponse->orderResponse; 
                     $id = $response->data->id;  
