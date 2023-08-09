@@ -63,42 +63,59 @@ class Client
     public function createPackage(Order $order)
     {
         $shippingRequest = (new Parcel($order))->getRequestBody();
-
+        $apiResponse = json_decode($order->api_response); 
         try {
-            $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/orders", $shippingRequest);
-            $response = json_decode($request); 
-              
-            if ($response->status=="SUCCESS" && $response->data && $response->data->id) {
-                $id = $response->data->id; 
-                $getLabel = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/orders/$id/cn23-merged");
-                $getLabelResponse = json_decode($getLabel);
-                if($getLabelResponse->status=="SUCCESS") {
+                if(!$order->api_response){
+                    $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/orders", $shippingRequest);
+                    $response = json_decode($request); 
 
-                    $mergedResponse = [
+                    if ($response->status=="SUCCESS" && $response->data && $response->data->id ) {
+                
+                        $mergedResponse = [
+                            'orderResponse' => $response,
+                            'labelResponse' => null,
+                        ];
+                        $order->update([
+                                    'api_response' => json_encode($mergedResponse),
+                        ]);
+                        $order->refresh();
+
+                    } else {
+                        return new PackageError(new HandleError($request));
+                    }
+                }
+                if($order->api_response) {
+                    $apiResponse = json_decode($order->api_response); 
+                    $response = $apiResponse->orderResponse; 
+                    $id = $response->data->id;  
+                    $getLabel = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/orders/$id/cn23-merged");
+                    $getLabelResponse = json_decode($getLabel);
+
+                    if ($getLabelResponse->status=="SUCCESS"){
+                        $mergedResponse = [
                         'orderResponse' => $response,
                         'labelResponse' => $getLabelResponse,
-                    ];
-                    // dump(optional(optional($getLabelResponse->data)->cn23_numbers)[0]);
-                    // dd($getLabelResponse);
-                    $order->update([
-                        'corrios_tracking_code' => optional(optional($getLabelResponse->data)->cn23_numbers)[0],
-                        'api_response' => json_encode($mergedResponse),
-                        'cn23' => [
-                            "tracking_code" =>  optional(optional($getLabelResponse->data)->cn23_numbers)[0],
-                            "stamp_url" => route('warehouse.cn23.download',$order->id),
-                            'leve' => false
-                        ],
-                    ]);
+                        ];
+
+                        $order->update([
+                            'corrios_tracking_code' => optional(optional($getLabelResponse->data)->cn23_numbers)[0],
+                            'api_response' => json_encode($mergedResponse),
+                            'cn23' => [
+                                "tracking_code" =>  optional(optional($getLabelResponse->data)->cn23_numbers)[0],
+                                "stamp_url" => route('warehouse.cn23.download',$order->id),
+                                'leve' => false
+                            ],
+                        ]);
+                    }
+                    else{
+                        return new PackageError(new HandleError($getLabel));
+                    }
+
                     // store order status in order tracking
                     return $this->addOrderTracking($order);
                 }
-                if($getLabelResponse->status=="ERROR") {
-                    
-                    return new PackageError(new HandleError($getLabel));
-                }
-            } else {
-                return new PackageError(new HandleError($request));
-            }
+                
+            
         } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
