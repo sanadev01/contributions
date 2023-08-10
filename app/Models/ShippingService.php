@@ -338,6 +338,10 @@ class ShippingService extends Model
     { 
         return $this->service_sub_class == ShippingService::GDE_FIRST_CLASS;
     }
+    function getIsBrazilRedispatchAttribute() {
+        return $this->service_sub_class == ShippingService::Brazil_Redispatch;
+        
+    }
 
     public function getGDERate($order){
         $zone = getUSAZone($order->recipient->state->code);

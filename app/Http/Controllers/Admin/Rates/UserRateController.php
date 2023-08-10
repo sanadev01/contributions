@@ -53,13 +53,21 @@ class UserRateController extends Controller
 
         $service = ShippingService::find($id);
         
+
         if($service->isGDEService()){
             $shippingRegions = Rate::where('shipping_service_id', $service->id)->get();
             return view('admin.rates.profit-packages.user-profit-package.regions', compact('shippingRegions'));
         }
+        if($service->is_brazil_redispatch){
+            $rates = ($service->rates->first()->data);
+        $isGDE = false;
+             
+            return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
+        }
         
         $rateReportsRepository = new RateReportsRepository();
         $rates = $rateReportsRepository->getRateReport($packageId, $id);
+       
         $isGDE = false;
         return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
     }

@@ -80,7 +80,7 @@ class DepositRepository
             $query->where('created_at','>=',$request->dateFrom. ' 00:00:00');
         }
 
-        if ( $request->filled('dateTo') || $default){
+        if ( $request->filled('dateTo') && $default){
             
             $query->where('created_at','<=',$request->dateTo. ' 23:59:59');
         }
