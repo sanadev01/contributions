@@ -112,7 +112,7 @@ class Client{
 
     public function createReceptacle($container)
     {
-        $containers = Container::where('awb', $container->awb)->get();
+        // $containers = Container::where('awb', $container->awb)->get();
         $url = "$this->baseUrl/Receptacle/CreateReceptacleForRateTypeToDestination";
         $weight = 0;
         $piecesCount = 0;
@@ -132,11 +132,9 @@ class Client{
             $rateType = 'EMS';
             $foreignOECode = "CWB";
         }
-        if($containers[0]->awb) {
-            foreach($containers as $package) {
-                $weight+= UnitsConverter::kgToPound($package->getWeight());
-                $piecesCount = $package->getPiecesCount();
-            }
+        // if($containers[0]->awb) {
+            $weight+= UnitsConverter::kgToPound($container->getWeight());
+            $piecesCount = $container->getPiecesCount();
             $body = [
                 "rateType" => $rateType,
                 "dutiable" => true,
@@ -152,27 +150,25 @@ class Client{
     
             if ($response->successful() && $data->success == true) { 
                 
-                return $this->addPackagesToReceptacle($data->receptacleID, $containers);
+                return $this->addPackagesToReceptacle($data->receptacleID, $container);
 
             } else {
                 return $this->responseUnprocessable($data->message);
             }
-        }
-        else {
-            return $this->responseUnprocessable("Airway Bill Number is Required for Processing.");
-        }
+        // }
+        // else {
+        //     return $this->responseUnprocessable("Airway Bill Number is Required for Processing.");
+        // }
     }
 
-    public function addPackagesToReceptacle($id, $containers)
+    public function addPackagesToReceptacle($id, $container)
     {
         $codes = [];
-        foreach ($containers as $key => $container) {
-            foreach ($container->orders as $key => $item) {
-                $codesToPush = [
-                    $item->corrios_tracking_code,
-                ];
-                array_push($codes, $codesToPush);
-            }
+        foreach ($container->orders as $key => $item) {
+            $codesToPush = [
+                $item->corrios_tracking_code,
+            ];
+            array_push($codes, $codesToPush);
         }
         $parcels = implode(",", array_merge(...$codes));
         $url = $this->baseUrl . '/Package/AddPackagesToReceptacle';
@@ -183,25 +179,25 @@ class Client{
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
         $data= json_decode($response);
         if ($response->successful() && $data->success == true) {
-            return $this->moveReceptacleToOpenDispatch($id, $containers);
+            return $this->moveReceptacleToOpenDispatch($id, $container);
         } else {
             return $this->responseUnprocessable($data->message);
         }
     }
 
-    public function moveReceptacleToOpenDispatch($id, $containers)
+    public function moveReceptacleToOpenDispatch($id, $container)
     {
         $url = $this->baseUrl . "/Receptacle/MoveReceptacleToOpenDispatch/$id";
         $response = Http::withHeaders($this->getHeaders())->get($url);
         $data = json_decode($response);
         if ($response->successful() && $data->success == true) {
-            return $this->closeDispatch($id, $containers);
+            return $this->closeDispatch($id, $container);
         } else {
             return $this->responseUnprocessable($data->message);
         }
     }
 
-    public function closeDispatch($id, $containers)
+    public function closeDispatch($id, $container)
     {
         $url = $this->baseUrl . '/Dispatch/CloseDispatch';
         $body = [
@@ -211,13 +207,13 @@ class Client{
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
         $data= json_decode($response);
         if ($response->successful() && $data->success == true) {
-            return $this->getReceptacleLabel($id, $containers, $data->dispatchID);
+            return $this->getReceptacleLabel($id, $container, $data->dispatchID);
         } else {
             return $this->responseUnprocessable($data->message);
         }
     }
 
-    public function getReceptacleLabel($id, $containers, $dispatchID) {
+    public function getReceptacleLabel($id, $container, $dispatchID) {
 
         $url = $this->baseUrl . '/Receptacle/GetReceptacleLabel';
         $body = [
@@ -229,14 +225,12 @@ class Client{
         $reportsUrl = $this->baseUrl . "/Dispatch/GetRequiredReportsForDispatch/$dispatchID";
         $reportsResponse = Http::withHeaders($this->getHeaders())->get($reportsUrl);
         $reportData = json_decode($reportsResponse);
-        if ($response->successful() && $data->success == true) {
-            foreach($containers as $package) {
-                $package->update([
-                    'unit_response_list' => json_encode(['cn35'=>$data, 'manifest' => $reportData, 'dispatchID' => $dispatchID]),
-                    'unit_code' => $id,
-                    'response' => 1
-                ]); 
-            }
+        if ($response->successful() && $data->success == true) {  
+            $container->update([
+                'unit_response_list' => json_encode(['cn35'=>$data, 'manifest' => $reportData, 'dispatchID' => $dispatchID]),
+                'unit_code' => $id,
+                'response' => 1
+            ]); 
             return $this->responseSuccessful($data, 'Container registration is successfull. You can download CN35 label');
         } else {
             return $this->responseUnprocessable($data->message);
