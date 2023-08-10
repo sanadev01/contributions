@@ -53,6 +53,11 @@ class DepositRepository
             });
         }
 
+        $default =  true;
+        if($request->filled('type') ||$request->filled('trackingCode') ||$request->filled('warehouseNumber') ||$request->filled('uuid') || $request->filled('last_four_digits') ||$request->filled('description') ||$request->filled('balance')||$request->filled('card')){
+            $default = false;
+        };
+        
         if ( $request->filled('warehouseNumber') ){
             $query->where('order_id','LIKE',"%{$request->warehouseNumber}%");
         }
@@ -70,12 +75,13 @@ class DepositRepository
         if ( $request->filled('uuid') ){
             $query->where('uuid','LIKE',"%{$request->uuid}%");
         }
-
-        if ( $request->filled('dateFrom') ){
+        // dd($default);
+        if ( $request->filled('dateFrom') && $default){
             $query->where('created_at','>=',$request->dateFrom. ' 00:00:00');
         }
 
-        if ( $request->filled('dateTo') ){
+        if ( $request->filled('dateTo') || $default){
+            
             $query->where('created_at','<=',$request->dateTo. ' 23:59:59');
         }
 
