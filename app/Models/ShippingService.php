@@ -340,7 +340,6 @@ class ShippingService extends Model
     }
     function getIsBrazilRedispatchAttribute() {
         return $this->service_sub_class == ShippingService::Brazil_Redispatch;
-        
     }
 
     public function getGDERate($order){
