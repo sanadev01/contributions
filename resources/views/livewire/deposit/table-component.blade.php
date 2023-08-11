@@ -65,7 +65,7 @@
         <tr>
             <th>
                 <input type="search" wire:model.debounce.500ms="uuid" class="form-control">
-            </th>            
+            </th>
             @admin
             <th>
                 <input type="search" wire:model.debounce.500ms="user" class="form-control">
@@ -112,9 +112,9 @@
                         </a>
                     @elseif($deposit->order_id)
                         <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
-                            {{ $deposit->order->corrios_tracking_code }}
-                        </a>    
-                    @endif    
+                            {{ optional($deposit->order)->corrios_tracking_code }}
+                        </a>
+                    @endif
                 </td>
                 <td>
                     @if($deposit->order_id)
@@ -122,8 +122,8 @@
                         {{ optional($deposit->order)->warehouse_number??"$deposit->order_id  Order Deleted "}}
                             </a>
                     @else
-                         {{  "$deposit->order_id  Order Deleted "}} 
-                    @endif 
+                         {{  "$deposit->order_id  Order Deleted "}}
+                    @endif
                 </td>
                 <td>
                     {{ $deposit->last_four_digits  }}

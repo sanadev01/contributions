@@ -33,16 +33,15 @@ class DepositRepository
 
     public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
-        $query = Deposit::with(['order','user']); 
-
-        if ($paginate == false) {
-            $query->with('orders');
+        $query =Deposit::with([
+            'order:id,corrios_tracking_code',
+            'orders:id,corrios_tracking_code,us_api_tracking_code',
+            'user:id,name,email'
+        ]);
+        $user = Auth::user();
+        if (!$user->isAdmin()) {
+            $query->where('user_id', $user->id);
         }
-
-        if ( !Auth::user()->isAdmin() ){
-            $query->where('user_id',Auth::id());
-        }
-
         if ( $request->user ){
             $query->whereHas('user',function($query) use($request) {
                 return $query->where('pobox_number',"%{$request->user}%")
@@ -52,68 +51,50 @@ class DepositRepository
                             ->orWhere('id', $request->user);
             });
         }
-
-        $default =  true;
-        if($request->filled('type') ||$request->filled('trackingCode') ||$request->filled('warehouseNumber') ||$request->filled('uuid') || $request->filled('last_four_digits') ||$request->filled('description') ||$request->filled('balance')||$request->filled('card')){
-            $default = false;
-        };
-        
-        if ( $request->filled('warehouseNumber') ){
+        if($request->filled('warehouseNumber')){
             $query->where('order_id','LIKE',"%{$request->warehouseNumber}%");
         }
-
-        if ( $request->filled('trackingCode') ){
+        if($request->filled('trackingCode') ){
             $query->whereHas('orders',function($query) use($request){
                 return $query->where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%");
             })->orWhereHas('order',function($query) use($request){
                 return $query->where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%");
             });
         }
-
-        if ( $request->filled('type') ){
+        if($request->filled('type')){
             $query->where('is_credit',$request->type);
         }
-
-        if ( $request->filled('uuid') ){
+        if($request->filled('uuid')){
             $query->where('uuid','LIKE',"%{$request->uuid}%");
         }
-        // dd($default);
-        if ( $request->filled('dateFrom') && $default){
-            $query->where('created_at','>=',$request->dateFrom. ' 00:00:00');
+        $default =  true;
+        if($request->filled('trackingCode')){
+            $default = false;
+        };
+        if($default && $request->filled('dateFrom') && $request->filled('dateTo') ) {
+            $query->whereBetween('created_at', [$request->dateFrom . ' 00:00:00', $request->dateTo . ' 23:59:59']);
         }
-
-        if ( $request->filled('dateTo') && $default){
-            
-            $query->where('created_at','<=',$request->dateTo. ' 23:59:59');
-        }
-
-
-        if ( $request->filled('last_four_digits') ){
+        if($request->filled('last_four_digits')){
             $query->where('last_four_digits','LIKE',"%{$request->last_four_digits}%");
         }
-
-        if ( $request->filled('description') ){
+        if($request->filled('description')){
             $query->where('description','LIKE',"%{$request->description}%");
         }
-
-        if ( $request->filled('balance') ){
+        if($request->filled('balance')){
             $query->where('balance','LIKE',"%{$request->balance}%");
         }
-
-        if ( $request->filled('card') ){
+        if($request->filled('card')){
             $query->where('last_four_digits','LIKE',"%{$request->card}%");
         }
-
         $query->orderBy($orderBy,$orderType);
         $query->latest('id');
-
-        return $paginate ? $query->paginate($pageSize) : $query->get(); 
+        return $paginate ? $query->paginate($pageSize) : $query->get();
     }
 
     public function store(Request $request)
     {
         $paymentGateway = setting('PAYMENT_GATEWAY', null, null, true);
-        
+
         DB::beginTransaction();
 
         try {
@@ -210,7 +191,7 @@ class DepositRepository
     private function stripePayment($request)
     {
         $stripeSecret = setting('STRIPE_SECRET', null, null, true);
-        
+
         Stripe::setApiKey($stripeSecret);
         try {
             $charge =Charge::create ([
@@ -233,7 +214,7 @@ class DepositRepository
     private function stripeAchPayment($request)
     {
         $stripeSecret = setting('STRIPE_SECRET', null, null, true);
-        
+
         Stripe::setApiKey($stripeSecret);
 
         try {
@@ -253,7 +234,7 @@ class DepositRepository
 
             return false;
         }
-        
+
     }
 
     private function verifyCustomer($customer, $request)
@@ -278,7 +259,7 @@ class DepositRepository
 
             return false;
         }
-        
+
     }
 
     private function stripeAchCharge($customer, $request)
@@ -290,8 +271,8 @@ class DepositRepository
             $stripe = new \Stripe\StripeClient($stripeSecret);
 
             $charge = $stripe->charges->create([
-                'amount' => (float)$request->amount * 100, 
-                'currency' => 'usd', 
+                'amount' => (float)$request->amount * 100,
+                'currency' => 'usd',
                 'customer' => $customer->id,
             ]);
 
@@ -313,7 +294,7 @@ class DepositRepository
             $balance = $lastTransaction->balance;
         }
         // if ($request->has('attachment')) {
-            
+
         //     $this->fileName = time().'.'.$request->attachment->extension();
         //     $request->attachment->storeAs('deposits', $this->fileName);
         // }
@@ -358,16 +339,16 @@ class DepositRepository
             \Log::info('Deposite Notify Transaction email send error: '.$ex->getMessage());
         }
     }
-    
+
     public function getUserLiability(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='DESC')
     {
 
         $lastDeposits =  Deposit::select(DB::raw('MAX(id) as id'))
                 ->groupBy('user_id')->when($request->dateFrom,function($query,$from){
                     $query->where('created_at','>=',$from. ' 00:00:00');
-                }) 
+                })
                 ->when($request->balance,function($query,$balance){
-                    $query->where('balance',$balance); 
+                    $query->where('balance',$balance);
                 })->when($request->dateTo,function($query,$to){
                     $query->where('created_at','<=',$to. ' 23:59:59');
                 })->whereHas('user',function($query) use($request){
@@ -385,13 +366,13 @@ class DepositRepository
                 })
                 ->get();
         $query =  Deposit::whereIn('id',$lastDeposits->pluck('id'));
-        $hdlability = $paginate ? $query->paginate($pageSize) : $query->get(); 
+        $hdlability = $paginate ? $query->paginate($pageSize) : $query->get();
         $sortParam = $orderBy=="name" ? 'user.'.$orderBy : $orderBy;
         if($orderType == 'asc'){
             return $hdlability->sortBy($sortParam);
         }
         return $hdlability->sortByDesc($sortParam);
-        
+
     }
-    
+
 }
