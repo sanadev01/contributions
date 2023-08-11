@@ -35,7 +35,7 @@ class DeliveryBillRegisterController extends Controller
         } 
 
  
-        if($deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE())  {            
+        if($deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE() || $deliveryBill->isHDExpress())  {            
             
             $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->setCN38Code(),

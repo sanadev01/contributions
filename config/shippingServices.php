@@ -39,6 +39,7 @@ return [
             4387 => 'GDE Priority Mail',
             4388 => 'GDE First Class',
             283 => 'Total Express',
+            33173 => 'HD Express',
         ]
     ]
 ];

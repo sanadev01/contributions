@@ -143,6 +143,11 @@ class OrderRepository
                     ShippingService::TOTAL_EXPRESS, 
                 ];
             }
+            if($request->carrier == 'HD Express'){
+                $service = [
+                    ShippingService::HD_Express
+                ];
+            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });

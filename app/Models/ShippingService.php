@@ -52,6 +52,7 @@ class ShippingService extends Model
     const GSS_FCM = 3326;
     const GSS_EMS = 4367;
     const TOTAL_EXPRESS = 283;
+    const HD_Express = 33173;
 
     protected $guarded = [];
 
@@ -191,6 +192,11 @@ class ShippingService extends Model
         return false;
     }
 
+    public function isHDExpressService()
+    {
+        return $this->service_sub_class == ShippingService::HD_Express;
+    }
+
     public function isInboundDomesticService()
     {
         if (collect($this->inboundDomesticShippingServices())->contains($this->service_sub_class)) {
@@ -284,7 +290,7 @@ class ShippingService extends Model
 
     public function getIsMilliExpressAttribute()
     { 
-        return $this->service_sub_class == ShippingService::Mile_Express;
+        return $this->service_sub_class == ShippingService::HD_Express;
     }
     public function getIsUspsPriorityAttribute()
     { 

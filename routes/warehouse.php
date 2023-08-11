@@ -67,6 +67,10 @@ use App\Http\Controllers\Warehouse\TotalExpressContainerController;
 use App\Http\Controllers\Warehouse\TotalExpressContainerPackageController;
 use App\Http\Controllers\Warehouse\TotalExpressUnitRegisterController;
 use App\Http\Controllers\Warehouse\TotalExpressCN35DownloadController;
+use App\Http\Controllers\Warehouse\HDExpressContainerController;
+use App\Http\Controllers\Warehouse\HDExpressUnitRegisterController;
+use App\Http\Controllers\Warehouse\HDExpressCN35DownloadController;
+use App\Http\Controllers\Warehouse\HDExpressContainerPackageController;
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Export\OrderExportTemp;
 use Illuminate\Support\Facades\Auth;
@@ -170,6 +174,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('totalexpress_container/{container}/register', TotalExpressUnitRegisterController::class)->name('totalexpress_container.register');
     Route::get('totalexpress_container/{container}/download', TotalExpressCN35DownloadController::class)->name('totalexpress_container.download');
+
+    // Routes for HD Express container
+    Route::resource('hd-express-containers', HDExpressContainerController::class);
+    Route::resource('hd-express-container.packages', HDExpressContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('hd-express-container/{container}/register', HDExpressUnitRegisterController::class)->name('hd-express-container.register');
+    Route::get('hd-express-container/{container}/download', HDExpressCN35DownloadController::class)->name('hd-express-container.download');
 });
 
 

@@ -53,6 +53,9 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->is_total_express) {
                 return $this->totalExpressLabel();
             }
+            if ($this->order->shippingService->is_hd_express) {
+                return $this->hdExpressLabel();
+            }
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
             // }
@@ -101,12 +104,12 @@ class HandleCorreiosLabelsRepository
     //     return $this->renderLabel($this->request, $this->order, $colombiaLabelRepository->getError());
     // }
 
-    // public function mileExpressLabel()
-    // {
-    //     $mileExpressLabelRepository = new MileExpressLabelRepository();
-    //     $mileExpressLabelRepository->run($this->order,$this->update); 
-    //     return $this->renderLabel($this->request, $this->order, $mileExpressLabelRepository->getError());
-    // }
+    public function hdExpressLabel()
+    {
+        $hdExpressLabelRepository = new HDExpressLabelRepository();
+        $hdExpressLabelRepository->run($this->order,$this->update); 
+        return $this->renderLabel($this->request, $this->order, $hdExpressLabelRepository->getError());
+    }
 
     // public function postNLLabel()
     // {

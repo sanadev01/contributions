@@ -96,7 +96,7 @@ class ScanLabel extends Component
     {
         if($this->tracking){
             
-            $order = Order::where('corrios_tracking_code', $this->tracking)->first();
+            $order = Order::where('corrios_tracking_code', $this->tracking)->Orwhere('tracking_id',$this->tracking)->first();
             
 
             // if($order->shippingService->service_sub_class == ShippingService::GePS || $order->shippingService->service_sub_class == ShippingService::GePS_EFormat){

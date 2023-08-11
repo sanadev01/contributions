@@ -20,6 +20,7 @@ use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\PostPlusLabelRepository;
 use App\Repositories\GSSLabelRepository;
+use App\Repositories\HDExpressLabelRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -131,6 +132,14 @@ class OrderLabelController extends Controller
                     $gssLabelRepository = new GSSLabelRepository();
                     $gssLabelRepository->get($order);
                     $error = $gssLabelRepository->getError();
+                    if ($error){
+                        return $this->rollback($error);
+                    }
+                }
+                if ($order->shippingService->isHDExpressService()) {
+                    $hdExpressLabelRepository = new HDExpressLabelRepository();
+                    $hdExpressLabelRepository->run($order, false);
+                    $error = $hdExpressLabelRepository->getError();
                     if ($error){
                         return $this->rollback($error);
                     }
