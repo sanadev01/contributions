@@ -34,9 +34,9 @@ class DepositRepository
     public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
         $query =Deposit::with([
-            'order:id,corrios_tracking_code', // Specify the fields you want for the order relationship
-            'orders:id,corrios_tracking_code,us_api_tracking_code', // Specify the fields you want for the order relationship
-            'user:id,name,email' // Specify the fields you want for the user relationship
+            'order:id,corrios_tracking_code',
+            'orders:id,corrios_tracking_code,us_api_tracking_code',
+            'user:id,name,email'
         ]);
         $user = Auth::user();
         if (!$user->isAdmin()) {
@@ -68,10 +68,10 @@ class DepositRepository
             $query->where('uuid','LIKE',"%{$request->uuid}%");
         }
         $default =  true;
-        if($request->filled('type') || $request->filled('trackingCode') ||$request->filled('warehouseNumber') ||$request->filled('uuid') || $request->filled('last_four_digits') ||$request->filled('description') ||$request->filled('balance')||$request->filled('card')){
+        if($request->filled('trackingCode')){
             $default = false;
         };
-        if($request->filled('dateFrom') && $request->filled('dateTo') && $default) {
+        if($default && $request->filled('dateFrom') && $request->filled('dateTo') ) {
             $query->whereBetween('created_at', [$request->dateFrom . ' 00:00:00', $request->dateTo . ' 23:59:59']);
         }
         if($request->filled('last_four_digits')){
