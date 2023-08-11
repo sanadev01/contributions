@@ -123,12 +123,7 @@
                             </a>
                     @elseif
                          {{  "$deposit->order_id  Order Deleted "}} 
-                    @endif    
-                    {{-- @if($deposit->hasOrder())
-                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
-                            {{ $deposit->orders()->first()->warehouse_number }}
-                        </a>
-                    @endif --}}
+                    @endif 
                 </td>
                 <td>
                     {{ $deposit->last_four_digits  }}
