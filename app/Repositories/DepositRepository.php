@@ -33,7 +33,7 @@ class DepositRepository
 
     public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
-        $query = Deposit::with('order');
+        $query = Deposit::with(['order','user']);
 
         if ($paginate == false) {
             $query->with('orders');
