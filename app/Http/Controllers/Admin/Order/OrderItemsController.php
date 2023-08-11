@@ -7,6 +7,7 @@ use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
+use App\Services\GSS\Client;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
@@ -203,5 +204,25 @@ class OrderItemsController extends Controller
             'success' => true,
             'total_amount' => number_format($response->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'], 2),
         ];
+    }
+
+    public function GSSRates(Request $request)
+    {
+        $client = new Client();
+        $response =  $client->getServiceRates($request);
+        $data = $response->getData();
+        if ($data->isSuccess && $data->output > 0){
+            return (array)[
+                'success' => true,
+                'total_amount' => number_format($data->output, 2),
+            ];
+        } else {
+            return (array)[
+                'success' => false,
+                'error' => 'server error occured',
+            ];
+        }
+
+        
     }
 }

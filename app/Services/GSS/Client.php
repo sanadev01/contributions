@@ -3,6 +3,7 @@
 namespace App\Services\GSS;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderTracking;
 use App\Models\ShippingService;
@@ -14,6 +15,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Models\PackageError;
+use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 
 class Client{
 
@@ -70,9 +72,10 @@ class Client{
             $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
             $response = json_decode($request);
             if($response->success) {
+                $label = $this->makePDFLabel($response);
                 $order->update([
                     'corrios_tracking_code' => $response->trackingNumber,
-                    'api_response' => json_encode($response),
+                    'api_response' => json_encode($label),
                     'cn23' => [
                         "tracking_code" => $response->trackingNumber,
                         "stamp_url" => route('warehouse.cn23.download',$order->id),
@@ -114,8 +117,8 @@ class Client{
         $url = "$this->baseUrl/Receptacle/CreateReceptacleForRateTypeToDestination";
         $weight = 0;
         $piecesCount = 0;
-        if($container->services_subclass_code == ShippingService::GSS_IPA) {
-            $rateType = "IPA";
+        if($container->services_subclass_code == ShippingService::GSS_PMI) {
+            $rateType = "PMI";
             $foreignOECode = "CWB";
         } elseif($container->services_subclass_code == ShippingService::GSS_EPMEI) {
             $rateType = 'EPMEI';
@@ -123,8 +126,11 @@ class Client{
         } elseif($container->services_subclass_code == ShippingService::GSS_EPMI) {
             $rateType = 'EPMI';
             $foreignOECode = "RIO";
-        } elseif($container->services_subclass_code == ShippingService::GSS_EFCM) {
-            $rateType = 'EFCM';
+        } elseif($container->services_subclass_code == ShippingService::GSS_FCM) {
+            $rateType = 'FCM';
+            $foreignOECode = "CWB";
+        } elseif($container->services_subclass_code == ShippingService::GSS_EMS) {
+            $rateType = 'EMS';
             $foreignOECode = "CWB";
         }
         if($containers[0]->awb) {
@@ -255,6 +261,56 @@ class Client{
         }
     }
 
+    public function getServiceRates($request) {
+        
+        $service = $request->service;
+        $order = Order::find($request->order_id);
+        if($service == ShippingService::GSS_PMI) {
+            $rateType = 'PMI';
+        } elseif($service == ShippingService::GSS_EPMEI) {
+            $rateType = 'EPMEI';
+        } elseif($service == ShippingService::GSS_EPMI) {
+            $rateType = 'EPMI';
+        } elseif($service == ShippingService::GSS_FCM) {
+            $rateType = 'FCM';
+        } elseif($service == ShippingService::GSS_EMS) {
+            $rateType = 'EMS';
+        }
+
+        $url = $this->baseUrl . '/Utility/CalculatePostage';
+        $body = [
+            "countryCode" => "BR",
+            "postalCode" => $order->recipient->zipcode,
+            "rateType" => $rateType,
+            "serviceType" => "LBL",
+            "packageWeight" => $order->weight,
+            "unitOfWeight" => $order->measurement_unit == "lbs/in" ? 'LB' : 'KG',
+            "packageLength" => $order->length,
+            "packageWidth" => $order->width,
+            "packageHeight" => $order->height,
+            "unitOfMeasurement" => $order->measurement_unit == "lbs/in" ? 'IN' : 'CM',
+            "rateAdjustmentCode" => "NORMAL RATE",
+            "nonRectangular" => "0",
+            "extraServiceCode" => "",
+            "entryFacilityZip" => "",
+            "customerReferenceID" => ""
+        ];
+        $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+        $data= json_decode($response);
+        if ($response->successful() && $data->success == true) {
+
+            $rate = $data->calculatedPostage;
+            $discountPercentage = (setting('gss', null, $order->user->id)  &&  setting('gss_user_discount', null, $order->user->id) != 0) ?  setting('gss_user_discount', null, $order->user->id) : setting('gss_user_discount', null, User::ROLE_ADMIN);
+            $discount = ($discountPercentage / 100) * $rate;
+    
+            $discountedRate = $rate - $discount;
+
+            return $this->responseSuccessful($discountedRate, 'Rate Calculation Successful');
+        } else {
+            return $this->responseUnprocessable($data->message);
+        }
+    }
+
     public static function responseUnprocessable($message)
     {
         return response()->json([
@@ -269,6 +325,26 @@ class Client{
             'output' => $output,
             'message' =>  $message,
         ]);
+    }
+
+    private function makePDFLabel($response) {
+        $pdf = PDFMerger::init();
+        $label = "app/labels/{$response->trackingNumber}";
+        foreach ($response->labels as $index => $labelBase64) {
+            $labelContent = base64_decode($labelBase64);
+            $pagePath = storage_path("{$label}_{$index}.pdf");
+            file_put_contents($pagePath, $labelContent);
+            $pdf->addPDF($pagePath);
+        }
+        $pdf->merge();
+        
+        // Remove individual pages
+        foreach ($response->labels as $index => $labelBase64) {
+            $pagePath = storage_path("{$label}_{$index}.pdf");
+            unlink($pagePath);
+        }
+        $mergedPdf = $pdf->output();
+        return base64_encode($mergedPdf);
     }
     
 }

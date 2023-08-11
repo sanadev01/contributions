@@ -54,6 +54,12 @@
                             <span class="menu-title">@lang('menu.Warehouse.Sinerlog')</span>
                         </a>
                     </li> -->
+                    <li class="{{ $isActive(['warehouse.gde_containers.index','warehouse.gde_containers.create','warehouse.gde_containers.edit','warehouse.gde_container.packages.index']) }}">
+                        <a href="{{ route('warehouse.gde_containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">GDE</span>
+                        </a>
+                    </li>
                     <li class="{{ $isActive(['warehouse.geps_containers.index','warehouse.geps_containers.create','warehouse.geps_containers.edit','warehouse.geps_container.packages.index']) }}">
                         <a href="{{ route('warehouse.geps_containers.index') }}">
                             <i class="feather icon-circle"></i>
@@ -76,6 +82,12 @@
                         <a href="{{ route('warehouse.gss_containers.index') }}">
                             <i class="feather icon-circle"></i>
                             <span class="menu-title">GSS</span>
+                        </a>
+                    </li>
+                    <li class="{{ $isActive(['warehouse.totalexpress_containers.index','warehouse.totalexpress_containers.create','warehouse.totalexpress_containers.edit','warehouse.totalexpress_container.packages.index']) }}">
+                        <a href="{{ route('warehouse.totalexpress_containers.index') }}">
+                            <i class="feather icon-circle"></i>
+                            <span class="menu-title">Total Express</span>
                         </a>
                     </li>
                     <li class="{{ $isActive(['warehouse.hd-express-containers.index','warehouse.hd-express-containers.create','warehouse.hd-express-containers.edit','warehouse.hd-express-containers.packages.index']) }}">

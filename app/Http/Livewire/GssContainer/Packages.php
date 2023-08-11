@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\GSSContainer;
+namespace App\Http\Livewire\GssContainer;
 
 use App\Models\Order;
 use Livewire\Component;

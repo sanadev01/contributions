@@ -110,6 +110,8 @@
                                                     <span class="badge badge-info text-white">D</span>
                                                 @elseif($deliveryBill->isPostPlus())
                                                 <span class="badge badge-warning text-black">P</span>
+                                                @elseif($deliveryBill->isGDE())
+                                                    <span class="badge badge-secondary">GDE</span>
                                                 @elseif($deliveryBill->isGSS())
                                                 <span class="badge badge-secondary text-black">GSS</span>
                                                 @else
@@ -143,9 +145,26 @@
                                                         @endif
                                                         <a href="{{ route('warehouse.delivery_bill.manifest', $deliveryBill) }}"
                                                             class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Manifest
-                                                        <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
-                                                            <i class="fa fa-cloud-download"></i> Download Manifest By Service
                                                         </a>
+                                                        <!-- @if($deliveryBill->isRegistered() && $deliveryBill->isPostPlus())
+                                                            <a href="{{ route('warehouse.postplus.manifest.download',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i> Download PostPlus Manifest
+                                                            </a>
+                                                        @endif -->
+                                                        @if(!$deliveryBill->isGDE())
+                                                            <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i> Download Manifest By Service
+                                                            </a>
+                                                        @endif
+                                                        @if ($deliveryBill->isRegistered() && $deliveryBill->isGDE()) 
+                                                           <a href="{{ route('warehouse.gde.manifest.download',[$deliveryBill,'type'=>'us-customers']) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i>   Manifest to US Customs
+                                                            </a>
+                                                            <a href="{{ route('warehouse.gde.manifest.download',[$deliveryBill,'type'=>'brazil-customers']) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-cloud-download"></i>   Manifest to Brazilian Customs 
+                                                            </a>
+                                                        @endif
+                                                        
                                                         @if($deliveryBill->isRegistered() && $deliveryBill->isGSS())
                                                             @foreach (json_decode($deliveryBill->containers[0]->unit_response_list)->manifest->reports as $report)
                                                                 <a href="{{ route('warehouse.gss_container.reports.download',[explode(',', $report)[0], json_decode($deliveryBill->containers[0]->unit_response_list)->dispatchID]) }}" class="dropdown-item w-100">

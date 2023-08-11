@@ -172,3 +172,45 @@ function getAutoChargeData(User $user)
         'limit' => setting('charge_limit', null, $user->id),
     ];
 }
+
+function getUSAZone($state)
+{
+    if($state == 'FL') {
+        return 'Z3';
+    }elseif(in_array($state, ['AL', 'GA', 'SC'])) {
+        return 'Z4';
+    }elseif(in_array($state, ['LA','AR', 'MS', 'TN', 'NC', 'KY', 'VA', 'DE', 'MD', 'OH', 'NJ', 'PA'])) {
+        return 'Z5';
+    }elseif(in_array($state, ['TX', 'OK', 'KS', 'NE', 'MO', 'IA', 'IL', 'WI', 'NY', 'CT', 'RI', 'VT', 'NH', 'ME', 'MA', 'MI'])) {
+        return 'Z6';
+    }elseif(in_array($state, ['NM', 'CO', 'SD', 'ND', 'MN'])) {
+        return 'Z7';
+    }elseif(in_array($state, ['AZ', 'UT', 'WY', 'MT', 'ID', 'NV', 'OR', 'WA', 'CA', 'AK', 'HI'])) {
+        return 'Z8';
+    }
+}
+
+function getJsonData($rates, $profit)
+{
+    $ratesArray = [];
+    foreach ($rates as $rate) {
+        $ratesArray[] = [
+            'weight' => optional($rate)['weight'],
+            'leve' => number_format(($profit / 100) * $rate['leve'] + $rate['leve'], 2),
+        ];
+    }
+    return json_encode($ratesArray);
+}
+
+function getGDEProfit($rates, $service)
+{
+    if($service == ShippingService::GDE_PRIORITY_MAIL){
+        $type = 'gde_pm_profit';
+    }
+    if($service == ShippingService::GDE_FIRST_CLASS){
+        $type = 'gde_fc_profit';
+    }
+    $userProfit = setting($type, null, auth()->user()->id);
+    $adminProfit = setting($type, null, User::ROLE_ADMIN);
+    return $profit = $userProfit ? $userProfit : $adminProfit;
+}

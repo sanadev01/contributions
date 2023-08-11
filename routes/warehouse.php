@@ -58,6 +58,15 @@ use App\Http\Controllers\Warehouse\GSSCN35DownloadController;
 use App\Http\Controllers\Warehouse\GSSCN38DownloadController;
 use App\Http\Controllers\Warehouse\GSSManifestDownloadController;
 use App\Http\Controllers\Warehouse\GSSReportsDownloadController;
+use App\Http\Controllers\Warehouse\GDEContainerController;
+use App\Http\Controllers\Warehouse\GDEContainerPackageController;
+use App\Http\Controllers\Warehouse\GDEUnitRegisterController;
+use App\Http\Controllers\Warehouse\GDECN35DownloadController;
+use App\Http\Controllers\Warehouse\GDEManifestDownloadController;
+use App\Http\Controllers\Warehouse\TotalExpressContainerController;
+use App\Http\Controllers\Warehouse\TotalExpressContainerPackageController;
+use App\Http\Controllers\Warehouse\TotalExpressUnitRegisterController;
+use App\Http\Controllers\Warehouse\TotalExpressCN35DownloadController;
 use App\Http\Controllers\Warehouse\HDExpressContainerController;
 use App\Http\Controllers\Warehouse\HDExpressUnitRegisterController;
 use App\Http\Controllers\Warehouse\HDExpressCN35DownloadController;
@@ -152,6 +161,19 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('gss/{delivery_bill}/cn38', GSSCN38DownloadController::class)->name('gss_container.cn38.download');
     Route::get('gss/{delivery_bill}/manifest', GSSManifestDownloadController::class)->name('gss_container.manifest.download');
     Route::get('gss/{reports}/manifest/{dispatch}', GSSReportsDownloadController::class)->name('gss_container.reports.download');
+
+    // Routes for GDE Container
+    Route::resource('gde_containers', GDEContainerController::class);
+    Route::resource('gde_container.packages', GDEContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('gde_container/{container}/register', GDEUnitRegisterController::class)->name('gde_container.register');
+    Route::get('gde_container/{container}/download', GDECN35DownloadController::class)->name('gde_container.download');
+    Route::get('gde/{delivery_bill}/manifest', GDEManifestDownloadController::class)->name('gde.manifest.download');
+
+    // Routes for Total Express Container
+    Route::resource('totalexpress_containers', TotalExpressContainerController::class);
+    Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('totalexpress_container/{container}/register', TotalExpressUnitRegisterController::class)->name('totalexpress_container.register');
+    Route::get('totalexpress_container/{container}/download', TotalExpressCN35DownloadController::class)->name('totalexpress_container.download');
 
     // Routes for HD Express container
     Route::resource('hd-express-containers', HDExpressContainerController::class);

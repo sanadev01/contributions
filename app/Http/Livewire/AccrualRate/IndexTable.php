@@ -82,6 +82,18 @@ class IndexTable extends Component
             'name' => 'Prime5RIO',
             'value' => Package::SERVICE_CLASS_Prime5RIO,
         ];
+        $this->services[16] = [
+            'name' => 'GDE Priority Mail',
+            'value' => Package::SERVICE_CLASS_GDE_PRIORITY,
+        ];
+        $this->services[17] = [
+            'name' => 'GDE First Class',
+            'value' => Package::SERVICE_CLASS_GDE_FIRSTCLASS,
+        ];
+        $this->services[18] = [
+            'name' => 'Total Express',
+            'value' => Package::SERVICE_CLASS_TOTAL_EXPRESS,
+        ];
         return $this->services;
     }
 }

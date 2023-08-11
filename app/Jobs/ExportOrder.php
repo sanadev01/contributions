@@ -9,6 +9,7 @@ use Illuminate\Bus\Queueable;
 use App\Repositories\OrderRepository;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Services\Excel\Export\AnjunReport;
 use App\Services\Excel\Export\OrderExport;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -40,11 +41,11 @@ class ExportOrder implements ShouldQueue
     public function handle()
     {
         $request = new Request($this->request);
-        $orders = $this->orderRepository->getOdersForExport($request, $this->user);
- 
+        $orders = $this->orderRepository->getOrdersForExport($request, $this->user);
         $id = $this->user->id;
         $exportService = new OrderExport($orders, $id);
         $url = $exportService->handle();
+
         if($url) {
             $report = Reports::find($request->report);
             $report->update(['path'=> $url, 'is_complete' => true]);

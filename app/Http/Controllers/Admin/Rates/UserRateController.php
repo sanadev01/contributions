@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Rates;
 
+use App\Models\Rate;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\ProfitPackage;
 use App\Models\ProfitSetting;
-use App\Http\Controllers\Controller;
 use App\Models\ShippingService;
+use App\Http\Controllers\Controller;
 use App\Repositories\Reports\RateReportsRepository;
 
 class UserRateController extends Controller
@@ -20,72 +22,67 @@ class UserRateController extends Controller
      */
     public function index(RateReportsRepository $rateReportsRepository)
     {
+        $shippingServices = [ShippingService::Brazil_Redispatch];
         $this->authorize('userSellingRates',ProfitPackage::class);
 
         $settings = ProfitSetting::where('user_id', auth()->user()->id)->get();
-        if(!$settings->isEmpty())
-        {
-            foreach($settings as $setting)
-            {
-                $service = ShippingService::where('id', $setting->service_id)->first();
-                if($service){
-                    $rates = $rateReportsRepository->getRateReport($setting->package_id, $setting->service_id);
-                    $this->rates[] = [
-                        'service' => $service->name,
-                        'rates' => $rates,
-                        'packageId' => $setting->package_id,
-                    ];
-                }
-            }
+        
+        $shippingServices = array_merge($shippingServices, $this->getActiveProfitService());
+        
+        $services = ShippingService::whereIn('service_sub_class', $shippingServices)->get();
 
-            $rates = $this->rates;
-            $packageId = $this->packageId;
-            
-        } elseif(auth()->user()->package_id){
-            $packageId = auth()->user()->package_id;
-            $rates = $rateReportsRepository->getRateReport($packageId);
-
-            $service = ShippingService::where('name', 'Packet Standard')->first();
-            $this->rates[] = [
-                'service' => $service->name,
-                'rates' => $rates,
-                'packageId' => $packageId,
-            ];
-
-        }else{
-            
-            $packageId = ProfitPackage::where('type', 'default')->first()->id; 
-            $rates = $rateReportsRepository->getRateReport($packageId);
-            
-            $service = ShippingService::where('name', 'Packet Standard')->first();
-            $this->rates[] = [
-                'service' => $service->name,
-                'rates' => $rates,
-                'packageId' => $packageId,
-            ];
-        }
-        $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();
-        if($service){
-            $this->rates[] = [
-                'service' => $service->name,
-                'rates' => collect($service->rates[0]->data),
-                'packageId' => 0,
-            ];
-        }
-
-        $rates = $this->rates;
-        return view('admin.rates.profit-packages.user-profit-package.index', compact('rates'));
+        return view('admin.rates.profit-packages.user-profit-package.index', compact('services', 'settings'));
     }
 
-    public function showRates(Request $request)
+    public function showPackageRates($id,$packageId)
     {
-        $rates = json_decode($request->rates, true);
+        $profit = null;
 
-        $rates = collect($rates);
-        $service = $request->service;
-        $packageId = $request->packageId;
+        if($packageId  == 'region'){
+            $isGDE = true;
+            $rates = Rate::find($id);
+            if($rates && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
+                $profit = getGDEProfit($rates, $rates->shippingService->service_sub_class);
+                $service = $rates->shippingService;
+                $rates = $rates->data;
+                $packageId = $id;
+                return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
+            }
 
-        return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId'));
+        }
+
+        $service = ShippingService::find($id);
+        
+
+        if($service->isGDEService()){
+            $shippingRegions = Rate::where('shipping_service_id', $service->id)->get();
+            return view('admin.rates.profit-packages.user-profit-package.regions', compact('shippingRegions'));
+        }
+        if($service->is_brazil_redispatch){
+            $rates = $service->rates->first()->data;
+            $isGDE = false;  
+            return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
+        }
+        
+        $rateReportsRepository = new RateReportsRepository();
+        $rates = $rateReportsRepository->getRateReport($packageId, $id);
+        $isGDE = false;
+        return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
+    }
+
+    public function getActiveProfitService() {
+
+        $activeService = [];
+        if(setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
+            if(setting('gde_fc_profit', null, User::ROLE_ADMIN) || $setting('gde_fc_profit', null, auth()->user()->id)) {
+                array_push($activeService, ShippingService::GDE_FIRST_CLASS);
+            }
+            if(setting('gde_pm_profit', null, User::ROLE_ADMIN) || setting('gde_pm_profit', null, auth()->user()->id)) {
+                array_push($activeService, ShippingService::GDE_PRIORITY_MAIL);
+            }
+        }
+
+        return $activeService;
     }
     
 }

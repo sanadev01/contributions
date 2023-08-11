@@ -12,6 +12,7 @@ use App\Repositories\PostPlusLabelRepository;
 use App\Repositories\SwedenPostLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Services\TotalExpress\TotalExpressLabelRepository;
 
 class HandleCorreiosLabelsRepository
 {
@@ -49,6 +50,9 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->isGSSService()) {
                 return $this->uspsGSSLabel();
             }
+            if ($this->order->shippingService->is_total_express) {
+                return $this->totalExpressLabel();
+            }
             if ($this->order->shippingService->is_hd_express) {
                 return $this->hdExpressLabel();
             }
@@ -67,7 +71,7 @@ class HandleCorreiosLabelsRepository
 
 
         if ($this->order->recipient->country_id == Order::US) {
-            if ($this->order->shippingService->is_usps_priority || $this->order->shippingService->is_usps_firstclass || $this->order->shippingService->is_usps_ground) {
+            if ($this->order->shippingService->is_usps_priority || $this->order->shippingService->is_usps_firstclass || $this->order->shippingService->is_usps_ground || $this->order->shippingService->is_gde_priority || $this->order->shippingService->is_gde_first_class) {
                 return $this->uspsLabel();
             }
 
@@ -114,6 +118,12 @@ class HandleCorreiosLabelsRepository
     //     return $this->renderLabel($this->request, $this->order, $postNLLabelRepository->getError());
     // }
 
+    public function totalExpressLabel()
+    {
+        $totalExpress = new TotalExpressLabelRepository(); ///by default consider false
+        $totalExpress->run($this->order,$this->update);
+        return $this->renderLabel($this->request, $this->order, $totalExpress->getError());
+    }
     public function gepsLabel()
     {
         $gepsLabelRepository = new GePSLabelRepository(); ///by default consider false

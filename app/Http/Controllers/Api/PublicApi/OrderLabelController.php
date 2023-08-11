@@ -75,7 +75,7 @@ class OrderLabelController extends Controller
 
             if ($order->recipient->country_id == Order::US) {
                 // For USPS
-                if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $order->shippingService->service_sub_class == ShippingService::USPS_GROUND) {
+                if (in_array($order->shippingService->service_sub_class, [ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS, ShippingService::USPS_GROUND, ShippingService::GDE_PRIORITY_MAIL, ShippingService::GDE_FIRST_CLASS])) {
                     $uspsLabelRepository = new USPSLabelRepository();
                     $uspsLabelRepository->handle($order);
 

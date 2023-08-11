@@ -34,6 +34,7 @@
                                             <option value="" selected>@lang('shipping-rates.Select Country')</option>
                                             <option value="30">Brazil</option>
                                             <option value="46">Chile</option>
+                                            <option value="250">United States</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
@@ -64,6 +65,9 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_Prime}}">Post Plus Prime</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_Premium}}">PrimeRIO</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Prime5RIO}}">Prime5RIO</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GDE_PRIORITY}}">GDE Priority Mail</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GDE_FIRSTCLASS}}">GDE First Class</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_TOTAL_EXPRESS}}">Total Express</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>

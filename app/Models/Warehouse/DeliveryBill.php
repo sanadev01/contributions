@@ -86,11 +86,24 @@ class DeliveryBill extends Model
         }
     }
 
-    public function isGSS()
+    public function isGDE()
     {
-        if(($this->containers->first()->services_subclass_code == ShippingService::GSS_IPA) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EPMEI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EPMI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EFCM)){
+        if($this->containers->first()->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL || $this->containers->first()->services_subclass_code == ShippingService::GDE_FIRST_CLASS){
             return true;
         }
+        return false;
+    }
+
+    public function isGSS()
+    {
+        if(($this->containers->first()->services_subclass_code == ShippingService::GSS_PMI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EPMEI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EPMI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_FCM) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EMS)){
+            return true;
+        }
+    }
+
+    public function containerShippingService($subService)
+    {
+       return $this->containers->first()->services_subclass_code == $subService;
     }
 
     public function isHDExpress()

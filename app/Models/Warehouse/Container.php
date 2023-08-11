@@ -90,14 +90,22 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Post Plus';
         }elseif($this->services_subclass_code == '357'){
             return 'Prime5RIO';
-        }elseif($this->services_subclass_code == ShippingService::GSS_IPA){
-            return 'International Priority Airmail';
+        }elseif($this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL){
+            return 'GDE Priority Mail';
+        }elseif($this->services_subclass_code == ShippingService::GDE_FIRST_CLASS){
+            return 'GDE First Class';
+        }elseif($this->services_subclass_code == ShippingService::GSS_PMI){
+            return 'Priority Mail International';
         }elseif($this->services_subclass_code == ShippingService::GSS_EPMEI){
-            return 'Pre-Sort Drop Shipment';
+            return 'Priority Mail Express International (Pre-Sort)';
         }elseif($this->services_subclass_code == ShippingService::GSS_EPMI){
-            return 'Pre-Sort Priority Mail International';
-        }elseif($this->services_subclass_code == ShippingService::GSS_EFCM){
-            return 'Pre-Sort First Class International';
+            return 'Priority Mail International (Pre-Sort)';
+        }elseif($this->services_subclass_code == ShippingService::GSS_FCM){
+            return 'First Class Package International';
+        }elseif($this->services_subclass_code == ShippingService::GSS_EMS){
+            return 'Priority Mail Express International (Nationwide)';
+        }elseif($this->services_subclass_code == ShippingService::TOTAL_EXPRESS){
+            return 'Total Express';
         }elseif($this->services_subclass_code == ShippingService::HD_Express){
             return 'HD Express';
         }else {
@@ -137,8 +145,16 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         elseif($this->services_subclass_code == '734'){
             return 13;
         }
-        elseif($this->services_subclass_code == ShippingService::HD_Express){
+        elseif( $this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL) {
             return 14;
+        }
+        elseif( $this->services_subclass_code == ShippingService::GDE_FIRST_CLASS) {
+            return 15;
+        }elseif( $this->services_subclass_code == ShippingService::TOTAL_EXPRESS) {
+            return 16;
+        }
+        elseif($this->services_subclass_code == ShippingService::HD_Express){
+            return 17;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -222,9 +238,19 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         return $this->services_subclass_code == ShippingService::Post_Plus_Registered || $this->services_subclass_code == ShippingService::Post_Plus_EMS || $this->services_subclass_code == ShippingService::Post_Plus_Prime || $this->services_subclass_code == ShippingService::Post_Plus_Premium;
     }
 
+    public function hasGDEService()
+    {
+        return $this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL || $this->services_subclass_code == ShippingService::GDE_FIRST_CLASS;
+    }
+
     public function hasGSSService()
     {
-        return $this->services_subclass_code == ShippingService::GSS_IPA || $this->services_subclass_code == ShippingService::GSS_EPMEI || $this->services_subclass_code == ShippingService::GSS_EPMI || $this->services_subclass_code == ShippingService::GSS_EFCM;
+        return $this->services_subclass_code == ShippingService::GSS_PMI || $this->services_subclass_code == ShippingService::GSS_EPMEI || $this->services_subclass_code == ShippingService::GSS_EPMI || $this->services_subclass_code == ShippingService::GSS_FCM || $this->services_subclass_code == ShippingService::GSS_EMS;
+    }
+
+    public function getHasTotalExpressServiceAttribute()
+    {
+        return $this->services_subclass_code == ShippingService::TOTAL_EXPRESS;
     }
 
     public function hasHDExpressService()

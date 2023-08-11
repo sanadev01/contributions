@@ -26,8 +26,10 @@ class AnjunReportController extends Controller
 
     public function create(Request $request, AnjunReportsRepository $anjunReportsRepository)
     {
+
         $orders = $anjunReportsRepository->getAnjunReport($request);
         $exportService = new AnjunReport($orders);
         return $exportService->handle();
     }
+
 }
