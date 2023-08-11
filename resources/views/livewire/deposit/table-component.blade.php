@@ -98,7 +98,7 @@
             </th>
         </tr>
         </thead>
-        <tbody>
+        <tbody> 
             @foreach($deposits as $deposit)
             <tr>
                 <td>{{ $deposit->uuid }}</td>
@@ -106,9 +106,10 @@
                 <td>{{ optional($deposit->user)->name }}</td>
                 @endadmin
                 <td>
-                    @if($deposit->hasOrder() && $deposit->firstOrder()->hasSecondLabel())
+                    
+                    @if(optional($deposit->firstOrder())->hasSecondLabel())
                         <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
-                            {{ ($deposit->orders->first->us_api_tracking_code) }} 
+                            {{ $deposit->firstOrder()->us_api_tracking_code }}
                         </a>
                     @elseif($deposit->order_id)
                         <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
@@ -117,9 +118,9 @@
                     @endif
                 </td>
                 <td> 
-                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
-                            {{ optional($deposit->order)->warehouse_number??"$deposit->order_id  Order Deleted "}}
-                        </a>
+                    <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
+                        {{ optional($deposit->order)->warehouse_number??"$deposit->order_id  Order Deleted "}}
+                    </a>
                 </td>
                 <td>
                     {{ $deposit->last_four_digits  }}
