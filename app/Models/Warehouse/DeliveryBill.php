@@ -106,4 +106,12 @@ class DeliveryBill extends Model
        return $this->containers->first()->services_subclass_code == $subService;
     }
 
+    public function isHDExpress()
+    {
+        if($this->containers->first()->services_subclass_code == ShippingService::HD_Express){
+            return true;
+        }
+        return false;
+    }
+
 }

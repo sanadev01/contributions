@@ -106,6 +106,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Priority Mail Express International (Nationwide)';
         }elseif($this->services_subclass_code == ShippingService::TOTAL_EXPRESS){
             return 'Total Express';
+        }elseif($this->services_subclass_code == ShippingService::HD_Express){
+            return 'HD Express';
         }else {
             return 'FirstClass';
         }
@@ -150,6 +152,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 15;
         }elseif( $this->services_subclass_code == ShippingService::TOTAL_EXPRESS) {
             return 16;
+        }
+        elseif($this->services_subclass_code == ShippingService::HD_Express){
+            return 17;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -246,5 +251,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function getHasTotalExpressServiceAttribute()
     {
         return $this->services_subclass_code == ShippingService::TOTAL_EXPRESS;
+    }
+
+    public function hasHDExpressService()
+    {
+        return $this->services_subclass_code == ShippingService::HD_Express;
     }
 }
