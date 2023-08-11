@@ -33,11 +33,11 @@ class DepositRepository
 
     public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
-        $query = Deposit::with('order');
+        $query = Deposit::with('order')->with('orders');
 
-        if ($paginate == false) {
-            $query->with('orders');
-        }
+        // if ($paginate == false) {
+        //     $query->;
+        // }
 
         if ( !Auth::user()->isAdmin() ){
             $query->where('user_id',Auth::id());
