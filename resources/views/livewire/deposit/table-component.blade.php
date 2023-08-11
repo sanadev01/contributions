@@ -98,7 +98,7 @@
             </th>
         </tr>
         </thead>
-        <tbody> 
+        <tbody>
             @foreach($deposits as $deposit)
             <tr>
                 <td>{{ $deposit->uuid }}</td>
@@ -106,8 +106,7 @@
                 <td>{{ optional($deposit->user)->name }}</td>
                 @endadmin
                 <td>
-                    
-                    @if(optional($deposit->firstOrder())->hasSecondLabel())
+                    @if($deposit->hasOrder() && $deposit->firstOrder()->hasSecondLabel())
                         <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
                             {{ $deposit->firstOrder()->us_api_tracking_code }}
                         </a>
@@ -115,16 +114,21 @@
                         <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
                             {{ $deposit->order->corrios_tracking_code }}
                         </a>    
-                    @endif
+                    @endif    
                 </td>
-                <td> 
+                <td>
                     @if($deposit->order_id)
                     <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
                         {{ optional($deposit->order)->warehouse_number??"$deposit->order_id  Order Deleted "}}
-                    </a>
+                            </a>
                     @elseif
                          {{  "$deposit->order_id  Order Deleted "}} 
-                    @endif
+                    @endif    
+                    {{-- @if($deposit->hasOrder())
+                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
+                            {{ $deposit->orders()->first()->warehouse_number }}
+                        </a>
+                    @endif --}}
                 </td>
                 <td>
                     {{ $deposit->last_four_digits  }}
