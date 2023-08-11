@@ -33,7 +33,7 @@ class DepositRepository
 
     public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
-        $query = Deposit::query();
+        $query = Deposit::with(['order','user']); 
 
         if ($paginate == false) {
             $query->with('orders');
@@ -64,6 +64,8 @@ class DepositRepository
 
         if ( $request->filled('trackingCode') ){
             $query->whereHas('orders',function($query) use($request){
+                return $query->where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%");
+            })->orWhereHas('order',function($query) use($request){
                 return $query->where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%");
             });
         }

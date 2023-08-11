@@ -98,7 +98,7 @@
             </th>
         </tr>
         </thead>
-        <tbody>
+        <tbody> 
             @foreach($deposits as $deposit)
             <tr>
                 <td>{{ $deposit->uuid }}</td>
@@ -106,31 +106,21 @@
                 <td>{{ optional($deposit->user)->name }}</td>
                 @endadmin
                 <td>
-                    @if($deposit->hasOrder() && $deposit->firstOrder()->hasSecondLabel())
+                    
+                    @if(optional($deposit->firstOrder())->hasSecondLabel())
                         <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
                             {{ $deposit->firstOrder()->us_api_tracking_code }}
                         </a>
-                    @elseif($deposit->order_id && $deposit->getOrder($deposit->order_id))
-                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->getOrder($deposit->order_id)) }}" class="w-100" title="Show Order Details">
-                            {{ $deposit->getOrder($deposit->order_id)->corrios_tracking_code }}
+                    @elseif($deposit->order_id)
+                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
+                            {{ $deposit->order->corrios_tracking_code }}
                         </a>    
-                    @endif    
+                    @endif
                 </td>
-                <td>
-                    @if($deposit->order_id != null)
-                        @if($deposit->getOrder($deposit->order_id))
-                            <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->getOrder($deposit->order_id)) }}" class="w-100" title="Show Order Details">
-                                {{ $deposit->getOrder($deposit->order_id)->warehouse_number }}
-                            </a>
-                        @else
-                            <p class="font-italic text-danger">{{$deposit->order_id}} : Order Deleted</p> 
-                        @endif    
-                    @endif    
-                    {{-- @if($deposit->hasOrder())
-                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
-                            {{ $deposit->orders()->first()->warehouse_number }}
-                        </a>
-                    @endif --}}
+                <td> 
+                    <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
+                        {{ optional($deposit->order)->warehouse_number??"$deposit->order_id  Order Deleted "}}
+                    </a>
                 </td>
                 <td>
                     {{ $deposit->last_four_digits  }}
