@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Order;
+use App\Models\ProfitPackage;
 use Illuminate\Support\Facades\Artisan;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
@@ -261,6 +262,9 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id}',function($id){
+
+    $profitPacket = ProfitPackage::find($id);
+    dd($profitPacket);
 
     $labelPrinter = new CN23LabelMaker();
     $order = Order::find($id);
