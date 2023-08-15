@@ -14,7 +14,7 @@ class AddIndexToDepositsTable extends Migration
     public function up()
     {
         Schema::table('deposits', function (Blueprint $table) {
-            $table->index('order_id');
+            $table->index(['order_id','corrios_tracking_code']);
         });
     }
 
