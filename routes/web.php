@@ -293,5 +293,6 @@ Route::get('order-arrived', function(){
 
     return Artisan::output();
 });
+
 Route::get('/temp-order-report/{number}',TempOrderReportController::class);
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
