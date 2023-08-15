@@ -154,7 +154,7 @@ class RatesCalculator
             $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
             \Log::info('total leve check');
             \Log::info($rate['leve']);
-            $rate = isset($rate['leve']) ? $rate['leve'] : null;
+            $rate = optional($rate)['leve'];
         }
 
         
