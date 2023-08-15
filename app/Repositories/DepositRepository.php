@@ -3,7 +3,6 @@
 
 namespace App\Repositories;
 
-
 use Stripe\Charge;
 use Stripe\Stripe;
 use Carbon\Carbon;
