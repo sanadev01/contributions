@@ -33,7 +33,11 @@ class DepositRepository
 
     public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
-        $query =Deposit::query();
+        $query =Deposit::with([
+            'order:id,corrios_tracking_code',
+            'orders:id,corrios_tracking_code,us_api_tracking_code',
+            'user:id,name,email'
+        ]);
         $user = Auth::user();
         if (!$user->isAdmin()) {
             $query->where('user_id', $user->id);
@@ -51,7 +55,9 @@ class DepositRepository
             $query->where('order_id','LIKE',"%{$request->warehouseNumber}%");
         }
         if($request->filled('trackingCode') ){
-            $query->whereHas('order',function($query) use($request){
+            $query->whereHas('orders',function($query) use($request){
+                return $query->where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%");
+            })->orWhereHas('order',function($query) use($request){
                 return $query->where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%");
             });
         }
