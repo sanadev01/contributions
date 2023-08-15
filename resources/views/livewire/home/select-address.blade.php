@@ -40,8 +40,8 @@
                                 <div class="card-state-icon"></div>
                                 @if($user->address)
                                     {{$user->address}}<sup>th</sup> {{$user->address2}}
-                                    {{$user->street_no}}, {{$user->state->code}} {{$user->zipcode}}<br>
-                                    {{$user->country->name}} <br>
+                                    {{$user->street_no}}, {{ optional($user->state)->code }} {{$user->zipcode}}<br>
+                                    {{ optional($user->country)->name }} <br>
                                     <span>Ph#: {{$user->phone}}</span><br>
                                     <span>{{$user->email}}</span>
                                 @else
