@@ -118,9 +118,9 @@
                 </td>
                 <td>
                     @if($deposit->order_id)
-                    <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
-                        {{ optional($deposit->order)->warehouse_number??"$deposit->order_id  Order Deleted "}}
-                            </a>
+                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
+                            {{ $deposit->getOrder($deposit->order_id)->warehouse_number }}
+                        </a>
                     @else
                          {{  "$deposit->order_id  Order Deleted "}}
                     @endif
