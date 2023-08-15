@@ -7,6 +7,7 @@ namespace App\Repositories;
 use Stripe\Charge;
 use Stripe\Stripe;
 use Carbon\Carbon;
+use App\Models\User;
 use Stripe\Customer;
 use App\Models\Order;
 use App\Models\State;
@@ -21,7 +22,8 @@ use App\Models\BillingInformation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\Admin\NotifyTransaction;
-use App\Models\User;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use App\Services\PaymentServices\AuthorizeNetService;
 
@@ -31,59 +33,84 @@ class DepositRepository
     protected $fileName;
     protected $chargeID;
 
-    public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
+    public function get(Request $request, $paginate = true, $pageSize = 50, $orderBy = 'id', $orderType = 'asc')
     {
-        $query =Deposit::query();
-        $user = Auth::user();
-        if (!$user->isAdmin()) {
-            $query->where('user_id', $user->id);
+        $cacheKey = 'filtered_deposits_' . md5(serialize($request->all()));
+        $expirationInSeconds = 3600; // Cache expiration time in seconds
+
+        $cachedResults = Cache::get($cacheKey);
+
+        if ($cachedResults === null) {
+            $query = Deposit::query();
+
+            $user = Auth::user();
+            if (!$user->isAdmin()) {
+                $query->where('user_id', $user->id);
+            }
+
+            if ($request->user) {
+                $query->whereHas('user', function ($query) use ($request) {
+                    $query->where('pobox_number', 'LIKE', "%{$request->user}%")
+                        ->orWhere('name', 'LIKE', "%{$request->user}%")
+                        ->orWhere('last_name', 'LIKE', "%{$request->user}%")
+                        ->orWhere('email', 'LIKE', "%{$request->user}%")
+                        ->orWhere('id', $request->user);
+                });
+            }
+            
+            if ($request->filled('warehouseNumber')) {
+                $query->where('order_id', 'LIKE', "%{$request->warehouseNumber}%");
+            }
+
+            if ($request->filled('trackingCode')) {
+                $query->whereHas('order', function ($query) use ($request) {
+                    $query->where('corrios_tracking_code', 'LIKE', "%{$request->trackingCode}%");
+                });
+            }
+
+            if ($request->filled('type')) {
+                $query->where('is_credit', $request->type);
+            }
+
+            if ($request->filled('uuid')) {
+                $query->where('uuid', 'LIKE', "%{$request->uuid}%");
+            }
+
+            if ($request->filled('dateFrom') && $request->filled('dateTo')) {
+                $query->whereBetween('created_at', [$request->dateFrom . ' 00:00:00', $request->dateTo . ' 23:59:59']);
+            }
+
+            if ($request->filled('last_four_digits')) {
+                $query->where('last_four_digits', 'LIKE', "%{$request->last_four_digits}%");
+            }
+
+            if ($request->filled('description')) {
+                $query->where('description', 'LIKE', "%{$request->description}%");
+            }
+
+            if ($request->filled('balance')) {
+                $query->where('balance', 'LIKE', "%{$request->balance}%");
+            }
+
+            if ($request->filled('card')) {
+                $query->where('last_four_digits', 'LIKE', "%{$request->card}%");
+            }
+
+            $query->orderBy($orderBy, $orderType);
+            $query->latest('id');
+
+            if ($paginate) {
+                $results = $query->paginate($pageSize);
+                Cache::put($cacheKey, $results, $expirationInSeconds);
+            } else {
+                $results = $query->get();
+            }
+        } else {
+            $results = $cachedResults;
         }
-        if ( $request->user ){
-            $query->whereHas('user',function($query) use($request) {
-                return $query->where('pobox_number',"%{$request->user}%")
-                            ->orWhere('name','LIKE',"%{$request->user}%")
-                            ->orWhere('last_name','LIKE',"%{$request->user}%")
-                            ->orWhere('email','LIKE',"%{$request->user}%")
-                            ->orWhere('id', $request->user);
-            });
-        }
-        if($request->filled('warehouseNumber')){
-            $query->where('order_id','LIKE',"%{$request->warehouseNumber}%");
-        }
-        if($request->filled('trackingCode') ){
-            $query->whereHas('order',function($query) use($request){
-                return $query->where('corrios_tracking_code','LIKE',"%{$request->trackingCode}%");
-            });
-        }
-        if($request->filled('type')){
-            $query->where('is_credit',$request->type);
-        }
-        if($request->filled('uuid')){
-            $query->where('uuid','LIKE',"%{$request->uuid}%");
-        }
-        $default =  true;
-        if($request->filled('trackingCode')){
-            $default = false;
-        };
-        if($default && $request->filled('dateFrom') && $request->filled('dateTo') ) {
-            $query->whereBetween('created_at', [$request->dateFrom . ' 00:00:00', $request->dateTo . ' 23:59:59']);
-        }
-        if($request->filled('last_four_digits')){
-            $query->where('last_four_digits','LIKE',"%{$request->last_four_digits}%");
-        }
-        if($request->filled('description')){
-            $query->where('description','LIKE',"%{$request->description}%");
-        }
-        if($request->filled('balance')){
-            $query->where('balance','LIKE',"%{$request->balance}%");
-        }
-        if($request->filled('card')){
-            $query->where('last_four_digits','LIKE',"%{$request->card}%");
-        }
-        $query->orderBy($orderBy,$orderType);
-        $query->latest('id');
-        return $paginate ? $query->paginate($pageSize) : $query->get();
+        return $results;
     }
+
 
     public function store(Request $request)
     {
