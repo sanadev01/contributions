@@ -35,7 +35,7 @@ class DepositRepository
     public function get(Request $request, $paginate = true, $pageSize = 50, $orderBy = 'id', $orderType = 'asc')
     {
         $cacheKey = 'filtered_deposits_' . md5(serialize($request->all()));
-        $expirationInSeconds = 3600; // Cache expiration time in seconds
+        $expirationInSeconds = 300; // Cache expiration time in seconds
 
         $cachedResults = Cache::get($cacheKey);
 
