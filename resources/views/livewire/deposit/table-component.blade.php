@@ -122,7 +122,9 @@
                             {{ $deposit->getOrder($deposit->order_id)->warehouse_number }}
                         </a>
                     @else
-                         {{  "$deposit->order_id  Order Deleted "}}
+                        @if($deposit->order_id)
+                            {{  "$deposit->order_id  Order Deleted "}}
+                        @endif
                     @endif
                 </td>
                 <td>
