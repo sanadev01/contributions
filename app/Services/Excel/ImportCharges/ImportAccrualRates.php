@@ -50,14 +50,11 @@ class ImportAccrualRates extends AbstractImportService
             if($this->service == ShippingService::Prime5 || $this->service == ShippingService::Post_Plus_Prime){
                 $limit = 33;
             }
+            }
             if($this->service == ShippingService::GePS){
                 $limit = 27;
-            }
             if($this->service == ShippingService::Post_Plus_Registered){
                 $limit = 22;
-            }
-            if($this->service == ShippingService::TOTAL_EXPRESS){
-                $limit = 306;
             }
         }
 
