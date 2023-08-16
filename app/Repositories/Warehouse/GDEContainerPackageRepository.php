@@ -16,9 +16,9 @@ class GDEContainerPackageRepository {
     {
         $error = null;
 
-        if($container->services_subclass_code != $order->shippingService->service_sub_class){
-            $error = 'container service does not match';
-        }
+        // if($container->services_subclass_code != $order->shippingService->service_sub_class){
+        //     $error = 'container service does not match';
+        // }
         if(!$order->containers->isEmpty()) {
             $error = "Order is already present in Container";
         }

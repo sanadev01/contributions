@@ -49,7 +49,7 @@ class DeliveryBillRepository extends AbstractRepository
         }
 
         $query->whereDoesntHave('deliveryBills');
-
+        $query->latest('id');
         return $query->get();
     }
 
