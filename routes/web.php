@@ -263,8 +263,8 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id}',function($id){
 
-    $profitPacket = ProfitPackage::find($id);
-    dd($profitPacket);
+    // $profitPacket = ProfitPackage::find($id);
+    // dd($profitPacket);
 
     $labelPrinter = new CN23LabelMaker();
     $order = Order::find($id);
