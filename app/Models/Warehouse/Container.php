@@ -114,7 +114,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }elseif($this->services_subclass_code == 'FirstClass International'){
             return 'USPS Ground';
         }elseif($this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL){
-            return 'GDE Priority Mail';
+            return 'GDE';
         }elseif($this->services_subclass_code == ShippingService::GDE_FIRST_CLASS){
             return 'GDE First Class';
         }elseif($this->services_subclass_code == ShippingService::GSS_PMI){
