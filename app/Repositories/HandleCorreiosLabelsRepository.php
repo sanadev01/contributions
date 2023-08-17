@@ -53,7 +53,7 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->is_total_express) {
                 return $this->totalExpressLabel();
             }
-            if ($this->order->shippingService->is_hd_express) {
+            if ($this->order->shippingService->isHDExpressService()) {
                 return $this->hdExpressLabel();
             }
             // if ($this->order->shippingService->is_milli_express) {
