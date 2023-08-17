@@ -194,7 +194,10 @@ class ShippingService extends Model
 
     public function isHDExpressService()
     {
-        return $this->service_sub_class == ShippingService::HD_Express;
+        if($this->service_sub_class == ShippingService::HD_Express){
+            return true;
+        }
+        return false;
     }
 
     public function isInboundDomesticService()
