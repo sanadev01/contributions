@@ -7,20 +7,47 @@ use App\Services\Converters\UnitsConverter;
 class ShippingOrder { 
 
    protected $chargableWeight;
+   protected $isChileCanadaColombiaOrMexico = false;
+   protected $taxModility = "DDU";
+   protected $serviceCode = '';
+   public function init($order){
 
+      if($order->recipient->country->code == 'CA' || $order->recipient->country->code == 'CO'||$order->recipient->country->code == 'CL'|| $order->recipient->country->code == 'MX')
+      {
+         $this->isChileCanadaColombiaOrMexico = true;
+      }
+
+      // tax modility
+      $this->taxModility = strtoupper($order->tax_modality)??"DDU";
+      if($order->recipient->country->code == 'CL')
+         $this->taxModility = 'DDU';
+
+      // service code
+         if($order->shippingService->service_sub_class == ShippingService::Prime5) {
+            $this->serviceCode = 'DIRECT.LINK.US.L3';
+         } elseif($order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
+            // dump(3);
+            // dump($this->isChileCanadaColombiaOrMexico);
+            if($this->isChileCanadaColombiaOrMexico){
+               if($this->taxModility=="DDP")
+                $this->serviceCode = 'DLUS.DDP.NJ03';
+               else
+                  $this->serviceCode = 'DIRECT.LINK.ST.CONS.NJ';   
+            }
+            else{
+               $this->serviceCode = 'DIRECT.LINK.US.L3P';
+            }
+         }
+   }
    public function getRequestBody($order) {
-      
+      $this->init($order);
+
       $batteryType = ""; 
       $batteryPacking = "";
       $refNo = $order->customer_reference;
       if($order->measurement_unit == "lbs/in") { $uom = "LB"; } else { $uom = "KG"; }
       if($order->hasBattery()) {
          $batteryType = "Lithium Ion Polymer"; $batteryPacking = "Inside Equipment";
-      }
-      if($order->shippingService->service_sub_class == ShippingService::Prime5) {
-         $serviceCode = 'DIRECT.LINK.US.L3';
-      } elseif($order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
-         $serviceCode = 'DIRECT.LINK.US.L3P';
       }
      
      $packet = 
@@ -32,8 +59,8 @@ class ShippingOrder {
                   //Parcel Information
                   'referenceNo' => ($refNo ? $refNo : $order->tracking_id).' HD-'.$order->id,
                   'trackingNo' => "",
-                  'serviceCode' => $serviceCode,
-                  'incoterm' => "DDU",
+                  'serviceCode' => $this->serviceCode,
+                  'incoterm' => $this->taxModility,
                   'weight'=> $order->weight,
                   'weightUnit' => $uom,
                   'length' => $order->length,
@@ -78,6 +105,13 @@ class ShippingOrder {
                ],
             ],
          ];
+         if($this->isChileCanadaColombiaOrMexico){
+            $packet['extendData'] = [
+               "originPort"=> "JFK",
+               "vendorid"=> ""
+            ];
+         }  
+         // dd($packet);
       return $packet;
    }
 
@@ -100,6 +134,10 @@ class ShippingOrder {
                     'unitValue' => $item->value,
                     'itemCount' => (int)$item->quantity,
                 ];
+                if($this->isChileCanadaColombiaOrMexico){
+                  $itemToPush['weight'] = round($this->calulateItemWeight($order), 2) - 0.05;
+                  $itemToPush['sku'] = $item->sh_code.'-'.$order->id;
+                }
                array_push($items, $itemToPush);
             }
         }
