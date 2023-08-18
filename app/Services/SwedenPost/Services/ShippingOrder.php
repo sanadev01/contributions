@@ -4,12 +4,16 @@ namespace App\Services\SwedenPost\Services;
 use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
  
-class ShippingOrder { 
+class ShippingOrder {
 
    protected $chargableWeight;
+   protected $isCanadaColombiaOrMixico = false;
 
    public function getRequestBody($order) {
-      
+      if($order->recipient->country->code == 'CA'|| $order->recipient->country->code == 'CO'|| $order->recipient->country->code == 'MX')
+      {
+         $this->isCanadaColombiaOrMixico = true;
+      }
       $batteryType = ""; 
       $batteryPacking = "";
       $refNo = $order->customer_reference;
@@ -20,11 +24,16 @@ class ShippingOrder {
       if($order->shippingService->service_sub_class == ShippingService::Prime5) {
          $serviceCode = 'DIRECT.LINK.US.L3';
       } elseif($order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
-         $serviceCode = 'DIRECT.LINK.US.L3P';
+         if($order->recipient->country->code == 'CA'|| $order->recipient->country->code == 'CO'|| $order->recipient->country->code == 'MX'){
+            $serviceCode = 'DLUS.DDP.NJ03';
+
+         }
+         else
+            $serviceCode = 'DIRECT.LINK.US.L3P';
       }
      
      $packet = 
-         [ 
+         [
             'labelFormat' => "PDF",
             'labelType' => 1,
             'orders' => [
@@ -78,6 +87,12 @@ class ShippingOrder {
                ],
             ],
          ];
+         if($this->isCanadaColombiaOrMixico){
+            $packet['extendData'] = [
+               "originPort"=> "JFK",
+               "vendorid"=> ""
+            ];
+         }
       return $packet;
    }
 
@@ -94,16 +109,16 @@ class ShippingOrder {
                     'hsCode' => $item->sh_code,
                     'originCountry' => $originCountryCode ? $originCountryCode: 'US',
                     'description' => $item->description,
-                  //   'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
-                    'itemNo' => "000".++$key,
-                  //   'sku' => $item->sh_code.'-'.$order->id,
                     'unitValue' => $item->value,
                     'itemCount' => (int)$item->quantity,
                 ];
+                if($this->isCanadaColombiaOrMixico){
+                  $itemToPush['weight'] = round($this->calulateItemWeight($order), 2) - 0.05;
+                  $itemToPush['sku'] = $item->sh_code.'-'.$order->id;
+                }
                array_push($items, $itemToPush);
             }
         }
-
         return $items;
    }
 

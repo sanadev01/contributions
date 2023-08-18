@@ -30,6 +30,11 @@ class HandleCorreiosLabelsRepository
     }
     public function handle()
     {
+        if ($this->order->recipient->country_id == Order::BRAZIL || $order->recipient->country->code == 'CA'|| $order->recipient->country->code == 'CO'|| $order->recipient->country->code == 'MX') {    
+            if ($this->order->shippingService->isSwedenPostService()) {
+                return $this->swedenPostLabel();
+            }
+        } 
         if ($this->order->recipient->country_id == Order::BRAZIL) {
 
             if ($this->order->shippingService->isGePSService()) {
@@ -37,10 +42,6 @@ class HandleCorreiosLabelsRepository
                 return $this->gepsLabel();
             }
 
-            if ($this->order->shippingService->isSwedenPostService()) {
-                
-                return $this->swedenPostLabel();
-            }
             if ($this->order->shippingService->isCorreiosService()) {
                 return $this->corriesBrazilLabel();
             }

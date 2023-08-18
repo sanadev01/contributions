@@ -60,6 +60,7 @@ class Client{
     public function createPackage($order)
     {   
         $shippingRequest = (new ShippingOrder())->getRequestBody($order);
+        
         try {
             $path = 'services/shipper/orderLabels';
             $shipmentClose = 'services/shipper/closeShipments';

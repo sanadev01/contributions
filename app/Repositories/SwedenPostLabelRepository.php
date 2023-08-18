@@ -14,7 +14,7 @@ class SwedenPostLabelRepository
 
     public function run(Order $order,$update)
     {
-            return $this->get($order);
+        return $this->get($order);
     }
 
     public function get(Order $order)
@@ -41,7 +41,12 @@ class SwedenPostLabelRepository
             $response = json_decode($order->api_response);
             $base64Pdf = $response->data[0]->labelContent;
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64Pdf));
-           return (new UpdateCN23Label($order))->run(); 
+            if($order->recipient->country->code == 'CA'|| $order->recipient->country->code == 'CO'|| $order->recipient->country->code == 'MX')
+                return true; 
+            else
+            return true;
+                // return (new UpdateCN23Label($order))->run();
+            
         }
     }
 
