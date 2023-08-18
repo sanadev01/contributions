@@ -24,7 +24,7 @@ class ShippingOrder {
       if($order->shippingService->service_sub_class == ShippingService::Prime5) {
          $serviceCode = 'DIRECT.LINK.US.L3';
       } elseif($order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
-         if($this->thisisCanadaColombiaOrMexico){
+         if($this->isCanadaColombiaOrMexico){
             $serviceCode = 'DLUS.DDP.NJ03';
 
          }
