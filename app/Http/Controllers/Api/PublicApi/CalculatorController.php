@@ -23,7 +23,7 @@ class CalculatorController extends Controller
             if($order->measurement_unit == 'kg/cm'){
                 $weight="$chargableWeight Kg ( $weightInOtherUnit lbs )";
             }else{
-                $weight="$chargableWeight lbs ( $weightInOtherUnit kg";
+                $weight="$chargableWeight lbs ( $weightInOtherUnit kg )";
             }
             $rate = $shippingService->getRateFor($order,true,true);
             array_push($data,['name'=>$name, 'weight'=>$weight, 'cost' => $rate]);
