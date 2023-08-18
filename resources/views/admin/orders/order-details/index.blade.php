@@ -70,12 +70,13 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
+                {{-- @dd($order->tax_modality ) --}}
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
                         <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" readonly required placeholder="@lang('orders.order-details.Tax Modality')">
-                            <option value="ddu" selected >DDU</option>
-                            {{-- <option value="ddp" {{ 'ddp' == $order->tax_modality ? 'selected' : '' }}>DDP</option> --}}
+                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }} >DDU</option>
+                            <option value="ddp" {{ 'ddp' == $order->tax_modality ? 'selected' : '' }}>DDP</option>
                         </select>
                         <div class="help-block"></div>
                     </div>

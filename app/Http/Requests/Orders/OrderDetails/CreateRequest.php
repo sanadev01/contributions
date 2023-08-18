@@ -29,7 +29,7 @@ class CreateRequest extends FormRequest
             'customer_reference' => ($this->order->recipient->country_id == \App\Models\Order::CHILE) ? 'required' : 'nullable',
             'shipping_service_id' => 'required|exists:shipping_services,id',
             'items' => 'required|array|min:1',
-            'tax_modality' => 'required|in:ddu',
+            'tax_modality' => 'required|in:ddu,ddp',
             'items.*.sh_code' => ($this->order->products->isNotEmpty()) ? 'sometimes' : [
                 'required',
                 'numeric',

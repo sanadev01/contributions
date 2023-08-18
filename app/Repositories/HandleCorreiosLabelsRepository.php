@@ -30,7 +30,7 @@ class HandleCorreiosLabelsRepository
     }
     public function handle()
     {
-        if ($this->order->recipient->country_id == Order::BRAZIL || $order->recipient->country->code == 'CA'|| $order->recipient->country->code == 'CO'|| $order->recipient->country->code == 'MX') {    
+        if ($this->order->recipient->country_id == Order::BRAZIL || $this->order->recipient->country->code == 'CA'|| $this->order->recipient->country->code == 'CL'|| $this->order->recipient->country->code == 'CO'|| $this->order->recipient->country->code == 'MX') {    
             if ($this->order->shippingService->isSwedenPostService()) {
                 return $this->swedenPostLabel();
             }
