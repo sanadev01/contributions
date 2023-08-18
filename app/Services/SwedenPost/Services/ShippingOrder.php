@@ -7,12 +7,12 @@ use App\Services\Converters\UnitsConverter;
 class ShippingOrder {
 
    protected $chargableWeight;
-   protected $isCanadaColombiaOrMixico = false;
+   protected $isCanadaColombiaOrMexico = false;
 
    public function getRequestBody($order) {
       if($order->recipient->country->code == 'CA'|| $order->recipient->country->code == 'CO'|| $order->recipient->country->code == 'MX')
       {
-         $this->isCanadaColombiaOrMixico = true;
+         $this->isCanadaColombiaOrMexico = true;
       }
       $batteryType = ""; 
       $batteryPacking = "";
@@ -24,7 +24,7 @@ class ShippingOrder {
       if($order->shippingService->service_sub_class == ShippingService::Prime5) {
          $serviceCode = 'DIRECT.LINK.US.L3';
       } elseif($order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
-         if($order->recipient->country->code == 'CA'|| $order->recipient->country->code == 'CO'|| $order->recipient->country->code == 'MX'){
+         if($this->thisisCanadaColombiaOrMexico){
             $serviceCode = 'DLUS.DDP.NJ03';
 
          }
@@ -87,7 +87,7 @@ class ShippingOrder {
                ],
             ],
          ];
-         if($this->isCanadaColombiaOrMixico){
+         if($this->isCanadaColombiaOrMexico){
             $packet['extendData'] = [
                "originPort"=> "JFK",
                "vendorid"=> ""
@@ -112,7 +112,7 @@ class ShippingOrder {
                     'unitValue' => $item->value,
                     'itemCount' => (int)$item->quantity,
                 ];
-                if($this->isCanadaColombiaOrMixico){
+                if($this->isCanadaColombiaOrMexico){
                   $itemToPush['weight'] = round($this->calulateItemWeight($order), 2) - 0.05;
                   $itemToPush['sku'] = $item->sh_code.'-'.$order->id;
                 }
