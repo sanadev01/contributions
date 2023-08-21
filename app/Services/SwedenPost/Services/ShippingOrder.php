@@ -7,40 +7,25 @@ use App\Services\Converters\UnitsConverter;
 class ShippingOrder {
 
    protected $chargableWeight;
-   protected $isChileCanadaColombiaOrMexico = false;
+   protected $isDestinationCountries = false;
    protected $taxModility = "DDU";
    protected $serviceCode = '';
-   public function init($order){
+   protected $order = null;
 
-      if($order->recipient->country->code == 'CA' || $order->recipient->country->code == 'CO'||$order->recipient->country->code == 'CL'|| $order->recipient->country->code == 'MX')
+   public function init(){
+      if($this->order->recipient->country->code == 'CA' || $this->order->recipient->country->code == 'CO'||$this->order->recipient->country->code == 'CL'|| $this->order->recipient->country->code == 'MX')
       {
-         $this->isChileCanadaColombiaOrMexico = true;
+         $this->isDestinationCountries = true;
       }
+      $this->initTaxModility();
+      $this->initServiceCode();
+      $this->initFacility();
 
-      // tax modility
-      $this->taxModility = strtoupper($order->tax_modality)??"DDU";
-      if($order->recipient->country->code == 'CL')
-         $this->taxModility = 'DDU';
-
-      // service code
-         if($order->shippingService->service_sub_class == ShippingService::Prime5) {
-            $this->serviceCode = 'DIRECT.LINK.US.L3';
-         } elseif($order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
-            // dump(3);
-            // dump($this->isChileCanadaColombiaOrMexico);
-            if($this->isChileCanadaColombiaOrMexico){
-               if($this->taxModility=="DDP")
-                $this->serviceCode = 'DLUS.DDP.NJ03';
-               else
-                  $this->serviceCode = 'DIRECT.LINK.ST.CONS.NJ';   
-            }
-            else{
-               $this->serviceCode = 'DIRECT.LINK.US.L3P';
-            }
-         }
    }
+
    public function getRequestBody($order) {
-      $this->init($order);
+      $this->order = $order;
+      $this->init();
 
       $batteryType = ""; 
       $batteryPacking = "";
@@ -106,7 +91,7 @@ class ShippingOrder {
                ],
             ],
          ];
-         if($this->isChileCanadaColombiaOrMexico){
+         if($this->isDestinationCountries){
             $packet['extendData'] = [
                "originPort"=> "JFK",
                "vendorid"=> ""
@@ -132,7 +117,7 @@ class ShippingOrder {
                     'unitValue' => $item->value,
                     'itemCount' => (int)$item->quantity,
                 ];
-                if($this->isChileCanadaColombiaOrMexico){
+                if($this->isDestinationCountries){
                   $itemToPush['weight'] = round($this->calulateItemWeight($order), 2) - 0.05;
                   $itemToPush['sku'] = $item->sh_code.'-'.$order->id;
                 }
@@ -142,6 +127,44 @@ class ShippingOrder {
         return $items;
    }
 
+   function initTaxModility() {
+      $this->taxModility = "DDU";
+      if($this->order->recipient->country->code == 'MX')
+         $this->taxModility = strtoupper($order->tax_modality)??"DDU";
+   }
+
+   function initServiceCode() {
+         // service code
+         if($this->order->shippingService->service_sub_class == ShippingService::Prime5) {
+            $this->serviceCode = 'DIRECT.LINK.US.L3';
+         }elseif($this->order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
+            if($this->isDestinationCountries){
+               if($this->taxModility == "DDP"){
+                  $this->serviceCode = 'DLUS.DDP.NJ03';
+               }
+               else{
+                  $this->serviceCode = 'DIRECT.LINK.ST.CONS.NJ';
+               }
+            }
+            else{
+               $this->serviceCode = 'DIRECT.LINK.US.L3P';
+            }
+         }
+   }
+
+   function initFacility(){
+      // DDU Chile ex-EWR-Newark
+      // DDU Australia,Canada, Colombia via EWR and Mexico DDP via LRD-Laredo
+      $this->facility = 'EWR';
+      if($this->order->recipient->country->code == 'CL'){
+         $this->facility = 'ex-EWR-Newark';
+      }
+      if($this->order->recipient->country->code == 'MX' && $this->taxModility== "DDP"){
+         $this->facility = "LRD-Laredo";
+      }
+   }
+
+   
    private function calulateItemWeight($order)
    {
         $orderTotalWeight = ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight;
@@ -152,5 +175,4 @@ class ShippingOrder {
         }
         return $orderTotalWeight;
    }
-
 }
