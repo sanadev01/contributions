@@ -456,8 +456,10 @@
         $('#country').on('change', function() {
             window.validate_us_address();
 
-            if($('#country').val() == '250' || $('#country').val() == '46'){
+            if($('#country').val() == '250' || $('#country').val() == '46' || $('#country').val() == '94'){
+                if($('#country').val() != '94')
                 $('#div_street_number').css('display', 'none')
+
                 $('#cpf').css('display', 'none')
             }else{
                 $('#div_street_number').css('display', 'block')
@@ -466,7 +468,8 @@
         });
 
         $('#country').ready(function() {
-            if($('#country').val() == '250' || $('#country').val() == '46'){
+            if($('#country').val() == '250' || $('#country').val() == '46' || $('#country').val() == '94'){
+                if($('#country').val() != '94')
                 $('#div_street_number').css('display', 'none')
                 $('#cpf').css('display', 'none')
             }else{
