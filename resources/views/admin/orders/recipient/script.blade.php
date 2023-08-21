@@ -346,7 +346,7 @@
 
     function activeGuatmalaFields(){
         console.log('active guatmala fields'); 
-        $('#cpf').css('display', 'none'); 
+        $('#cpf').addClass('d-none');
         $('#div_hd_state').css('display', 'none')
         $('#state_dev').css('display', 'none')
         $('#div_city').css('display', 'block')
@@ -355,8 +355,6 @@
         $('#div_communes').css('display', 'none') 
         $('#commune').prop('disabled', false);
         $('#label_address').css('display', 'inline-block')
-
-        $('#cpf_dev').css('display', 'none')
         $('#state_div').css('display', 'none')
         $('#label_chile_address').css('display', 'none')
 
