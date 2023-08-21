@@ -96,6 +96,12 @@
         $('#country').ready(function() {
             $('#regions_response').css('display', 'none');
             let val = $('#country').val();
+            if(val == '94')
+            {
+                window.inactiveChileFields();
+                window.activeGuatmalaFields();
+                return;
+            }
             const old_region = $('#region').data('value');
 
             if(val == '46'){
@@ -155,6 +161,13 @@
                 window.activeChileFields();
                 window.getHDChileRegions();
                 $('#country_message').empty();
+                return;
+            }
+            if(val == '94')
+            {
+
+                window.inactiveChileFields();
+                window.activeGuatmalaFields();
                 return;
             }
 
@@ -365,6 +378,29 @@
             }
         });
     })
+
+    activeGuatmalaFields = function(){
+        console.log('active chile fields'); 
+        $('#cpf').css('display', 'none'); 
+        $('#div_state').css('display', 'none')
+        $('#state_dev').css('display', 'none')
+        $('#div_city').css('display', 'block')
+        $('#div_street_number').css('display', 'block')
+
+        $('#div_region').css('display', 'none')
+        $('#div_communes').css('display', 'none') 
+        $('#commune').prop('disabled', false);
+        $('#label_address').css('display', 'inline-block')
+
+        $('#cpf_dev').css('display', 'none')
+        $('#region_state').css('display', 'none')
+        $('#label_chile_address').css('display', 'none')
+
+        $('#state').prop('disabled', true); 
+
+        $('#region').prop('disabled', false); 
+        $('#commune').attr('disabled', false);
+    }
 
     activeChileFields = function(){
         console.log('active chile fields');

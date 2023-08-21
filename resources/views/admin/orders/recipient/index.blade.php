@@ -106,7 +106,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Phone') <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="phone" value="{{old('phone',optional($order->recipient)->phone)}}" required placeholder="+55123456789">
+                        <input type="text" class="form-control" name="phone" value="{{old('phone',optional($order->recipient)->phone)}}" placeholder="+55123456789">
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -139,7 +139,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-4" id="region_state">
                     <div class="controls" id="div_state">
                         <label>@lang('address.State') <span class="text-danger">*</span></label>
                         <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
@@ -168,7 +168,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls" id="div_city">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
-                        <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control"  required placeholder="City"/>
+                        <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control" placeholder="City"/>
                         <div class="help-block"></div>
                     </div>
                     {{-- Chile Communes --}}
@@ -194,13 +194,13 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Zip Code') <span class="text-danger">*</span></label>
-                        <input type="text" name="zipcode"  id="zipcode" value="{{ cleanString(old('zipcode',optional($order->recipient)->zipcode)) }}" required class="form-control" placeholder="Zip Code"/>
+                        <input type="text" name="zipcode"  id="zipcode" value="{{ cleanString(old('zipcode',optional($order->recipient)->zipcode)) }}" class="form-control" placeholder="Zip Code"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
 
                 <div class="form-group col-12 col-sm-6 col-md-4" id="cpf">
-                    <div class="controls">
+                    <div class="controls" id="cpf_dev">
                             <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
                             <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
                         <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id',optional($order->recipient)->tax_id)}}" class="form-control" placeholder="CNPJ"/>
