@@ -38,7 +38,7 @@ class OrderTrackingRepository
     public function searchOrder()
     {
         $trackingNumbers = explode(',', preg_replace('/\s+/', '', $this->trackingNumber));
-        $orders = Order::whereIn('corrios_tracking_code', $trackingNumbers)->orWhere('tracking_id',$trackingNumbers)->get();
+        $orders = Order::whereIn('corrios_tracking_code', $trackingNumbers)->orWhereIn('tracking_id',$trackingNumbers)->get();
 
         $getTrackings = collect();
         if($orders){
