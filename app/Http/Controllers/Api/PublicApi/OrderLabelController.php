@@ -32,6 +32,12 @@ class OrderLabelController extends Controller
         if(Auth::id() != $order->user_id){
             return apiResponse(false,'Order not found');
         }
+        // dd(12/3);
+        \Log::info('current balance');
+        \Log::info(getBalance());
+        \Log::info('order price');
+        \Log::info($order->gross_total);
+
         $this->authorize('canPrintLableViaApi', $order);
         DB::beginTransaction();
         $isPayingFlag = false;
