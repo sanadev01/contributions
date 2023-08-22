@@ -16,8 +16,8 @@ class ShippingOrder {
 
    public function __construct($order)
    {
-      $this->order = $order;
-      if(isDirectLinkCountries($this->order) && $this->order->recipient->country->code == 'BR'){
+      $this->order = $order; 
+      if(isSwedenPostCountry($this->order) && $this->order->recipient->country->code != 'BR'){
          //true if recipient country is canada , australia,chile ,colombia or mexico.
          $this->isDestinationCountries = true;
       }
@@ -93,6 +93,7 @@ class ShippingOrder {
                "vendorid"=> ""
             ];
          }
+         dd($packet);
       return $packet;
    }
 
@@ -133,6 +134,7 @@ class ShippingOrder {
          if($this->order->shippingService->service_sub_class == ShippingService::Prime5) {
             $this->serviceCode = 'DIRECT.LINK.US.L3';
          }elseif($this->order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
+            dump($this->isDestinationCountries);
             if($this->isDestinationCountries){
                if($this->taxModility == "DDP"){
                   $this->serviceCode = 'DLUS.DDP.NJ03';
