@@ -4,10 +4,10 @@ namespace App\Services\SwedenPost\Services;
 use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
  
-class ShippingOrder { 
+class ShippingOrder {
 
    protected $chargableWeight;
-   protected $isChileCanadaColombiaOrMexico = false;
+   protected $isDestinationCountries = false;
    protected $taxModility = "DDU";
    protected $serviceCode = '';
    protected $order = null;
@@ -25,6 +25,9 @@ class ShippingOrder {
          //true if recipient country is canada , australia,chile ,colombia or mexico.
          $this->isDestinationCountries = true;
       }
+      $this->initTaxModility();
+      $this->initServiceCode();
+      $this->initFacility();
 
       if($this->order->hasBattery()){
          $this->batteryType = "Lithium Ion Polymer"; 
@@ -34,7 +37,7 @@ class ShippingOrder {
 
    public function getRequestBody(){
      $packet = 
-         [ 
+         [
             'labelFormat' => "PDF",
             'labelType' => 1,
             'orders' => [
@@ -88,7 +91,7 @@ class ShippingOrder {
                ],
             ],
          ];
-         if($this->isChileCanadaColombiaOrMexico){
+         if($this->isDestinationCountries){
             $packet['extendData'] = [
                "originPort"=> "JFK",
                "vendorid"=> ""
@@ -110,9 +113,6 @@ class ShippingOrder {
                     'hsCode' => $item->sh_code,
                     'originCountry' => $originCountryCode ?? 'US',
                     'description' => $item->description,
-                  //   'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
-                    'itemNo' => "000".++$key,
-                  //   'sku' => $item->sh_code.'-'.$order->id,
                     'unitValue' => $item->value,
                     'itemCount' => (int)$item->quantity,
                 ];
@@ -123,7 +123,6 @@ class ShippingOrder {
                array_push($items, $itemToPush);
             }
         }
-
         return $items;
    }
 
@@ -175,5 +174,4 @@ class ShippingOrder {
         }
         return $this->orderTotalWeight;
    }
-
 }
