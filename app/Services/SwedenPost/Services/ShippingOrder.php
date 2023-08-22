@@ -17,11 +17,7 @@ class ShippingOrder {
    public function __construct($order)
    {
       $this->order = $order;
-      if($this->order->recipient->country->code == 'CA' 
-      ||$this->order->recipient->country->code == 'AU' 
-      || $this->order->recipient->country->code == 'CO'
-      ||$this->order->recipient->country->code == 'CL'
-      || $this->order->recipient->country->code == 'MX'){
+      if(isDirectLinkCountries($this->order) && $this->order->recipient->country->code == 'BR'){
          //true if recipient country is canada , australia,chile ,colombia or mexico.
          $this->isDestinationCountries = true;
       }
