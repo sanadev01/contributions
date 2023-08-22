@@ -92,8 +92,7 @@ class ShippingOrder {
                "originPort"=> "JFK",
                "vendorid"=> ""
             ];
-         }
-         dd($packet);
+         } 
       return $packet;
    }
 
@@ -134,7 +133,6 @@ class ShippingOrder {
          if($this->order->shippingService->service_sub_class == ShippingService::Prime5) {
             $this->serviceCode = 'DIRECT.LINK.US.L3';
          }elseif($this->order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
-            dump($this->isDestinationCountries);
             if($this->isDestinationCountries){
                if($this->taxModility == "DDP"){
                   $this->serviceCode = 'DLUS.DDP.NJ03';
