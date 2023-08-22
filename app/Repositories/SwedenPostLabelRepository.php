@@ -41,7 +41,7 @@ class SwedenPostLabelRepository
             $response = json_decode($order->api_response);
             $base64Pdf = $response->data[0]->labelContent;
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64Pdf));
-           return (new UpdateCN23Label($order))->run(); 
+            return true; 
         }
     }
 
