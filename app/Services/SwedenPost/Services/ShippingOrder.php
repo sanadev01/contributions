@@ -10,46 +10,29 @@ class ShippingOrder {
    protected $isChileCanadaColombiaOrMexico = false;
    protected $taxModility = "DDU";
    protected $serviceCode = '';
-   public function init($order){
+   protected $order = null;
+   protected $batteryType = ""; 
+   protected $batteryPacking = "";
 
-      if($order->recipient->country->code == 'CA' || $order->recipient->country->code == 'CO'||$order->recipient->country->code == 'CL'|| $order->recipient->country->code == 'MX')
-      {
-         $this->isChileCanadaColombiaOrMexico = true;
+   public function __construct($order)
+   {
+      $this->order = $order;
+      if($this->order->recipient->country->code == 'CA' 
+      ||$this->order->recipient->country->code == 'AU' 
+      || $this->order->recipient->country->code == 'CO'
+      ||$this->order->recipient->country->code == 'CL'
+      || $this->order->recipient->country->code == 'MX'){
+         //true if recipient country is canada , australia,chile ,colombia or mexico.
+         $this->isDestinationCountries = true;
       }
 
-      // tax modility
-      $this->taxModility = strtoupper($order->tax_modality)??"DDU";
-      if($order->recipient->country->code == 'CL')
-         $this->taxModility = 'DDU';
-
-      // service code
-         if($order->shippingService->service_sub_class == ShippingService::Prime5) {
-            $this->serviceCode = 'DIRECT.LINK.US.L3';
-         } elseif($order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
-            // dump(3);
-            // dump($this->isChileCanadaColombiaOrMexico);
-            if($this->isChileCanadaColombiaOrMexico){
-               if($this->taxModility=="DDP")
-                $this->serviceCode = 'DLUS.DDP.NJ03';
-               else
-                  $this->serviceCode = 'DIRECT.LINK.ST.CONS.NJ';   
-            }
-            else{
-               $this->serviceCode = 'DIRECT.LINK.US.L3P';
-            }
-         }
+      if($this->order->hasBattery()){
+         $this->batteryType = "Lithium Ion Polymer"; 
+         $this->batteryPacking = "Inside Equipment";
+      }
    }
-   public function getRequestBody($order) {
-      $this->init($order);
 
-      $batteryType = ""; 
-      $batteryPacking = "";
-      $refNo = $order->customer_reference;
-      if($order->measurement_unit == "lbs/in") { $uom = "LB"; } else { $uom = "KG"; }
-      if($order->hasBattery()) {
-         $batteryType = "Lithium Ion Polymer"; $batteryPacking = "Inside Equipment";
-      }
-     
+   public function getRequestBody(){
      $packet = 
          [ 
             'labelFormat' => "PDF",
@@ -57,42 +40,42 @@ class ShippingOrder {
             'orders' => [
                [
                   //Parcel Information
-                  'referenceNo' => ($refNo ? $refNo : $order->tracking_id).' HD-'.$order->id,
+                  'referenceNo' => ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id).' HD-'.$this->order->id,
                   'trackingNo' => "",
                   'serviceCode' => $this->serviceCode,
                   'incoterm' => $this->taxModility,
-                  'weight'=> $order->weight,
-                  'weightUnit' => $uom,
-                  'length' => $order->length,
-                  'width' => $order->width,
-                  'height' => $order->height,
-                  'invoiceValue' => $order->getOrderValue(),
+                  'weight'=> $this->order->weight,
+                  'weightUnit' => $this->order->measurement_unit == "lbs/in" ? "LB":"KG",
+                  'length' => $this->order->length,
+                  'width' => $this->order->width,
+                  'height' => $this->order->height,
+                  'invoiceValue' => $this->order->getOrderValue(),
                   'invoiceCurrency' => "USD",
-                  'batteryType' => $batteryType,
-                  'batteryPacking' => $batteryPacking,
+                  'batteryType' => $this->batteryType,
+                  'batteryPacking' => $this->batteryPacking,
                   'facility'=> "EWR",
                   //Recipient Information
-                  'recipientName' => $order->recipient->getFullName(),
-                  'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',
-                  'email' => ($order->recipient->email) ? $order->recipient->email: '',
-                  'addressLine1' => $order->recipient->address.' '.$order->recipient->street_no,
-                  'addressLine2' => optional($order->recipient)->address2,
-                  'city' => $order->recipient->city,
-                  'state' => $order->recipient->state->code,
-                  'postcode' => cleanString($order->recipient->zipcode),
-                  'country' => $order->recipient->country->code,
-                  'recipientTaxId'=>optional($order->recipient)->tax_id,
+                  'recipientName' => $this->order->recipient->getFullName(),
+                  'phone' => $this->order->recipient->phone ?? '',
+                  'email' => $this->order->recipient->email ?? '',
+                  'addressLine1' => $this->order->recipient->address.' '.$this->order->recipient->street_no,
+                  'addressLine2' => optional($this->order->recipient)->address2,
+                  'city' => $this->order->recipient->city,
+                  'state' => $this->order->recipient->state->code,
+                  'postcode' => cleanString($this->order->recipient->zipcode),
+                  'country' => $this->order->recipient->country->code,
+                  'recipientTaxId'=>optional($this->order->recipient)->tax_id,
                   //Shipper Information
-                  'shipperName' => $order->getSenderFullName(),
-                  'shipperPhone' => ($order->sender_phone) ? $order->sender_phone : '+13058885191',
-                  'shipperAddressLine1' => ($order->sender_address) ? $order->sender_address : "2200 NW 129TH AVE",
-                  'shipperCity' => ($order->sender_city) ? $order->sender_city : "Miami",
-                  'shipperState' => (optional($order->senderState())->code) ? optional($order->senderState())->code : "FL",
-                  'shipperPostcode' => ($order->sender_zipcode) ? $order->sender_zipcode : "33182",
-                  'shipperCountry' => (optional($order->senderCountry())->code) ? optional($order->senderCountry())->code : "US",
+                  'shipperName' => $this->order->getSenderFullName(),
+                  'shipperPhone' => $this->order->sender_phone ?? '+13058885191',
+                  'shipperAddressLine1' => $this->order->sender_address ?? "2200 NW 129TH AVE",
+                  'shipperCity' => $this->order->sender_city ?? "Miami",
+                  'shipperState' => optional($this->order->senderState())->code ?? "FL",
+                  'shipperPostcode' => $this->order->sender_zipcode ?? "33182",
+                  'shipperCountry' => optional($this->order->senderCountry())->code ?? "US",
                   //Parcel Return Information
                   "returnOption" =>"",
-                  "returnName" => $order->getSenderFullName(),
+                  "returnName" => $this->order->getSenderFullName(),
                   "returnAddressLine1" =>"2200 NW 129TH AVE",
                   "returnAddressLine2" =>"",
                   "returnAddressLine3" =>"",
@@ -101,7 +84,7 @@ class ShippingOrder {
                   "returnPostcode" =>"33182",
                   "returnCountry" =>"US",
                   //Parcel Items Information
-                  'orderItems' => $this->setItemsDetails($order)
+                  'orderItems' => $this->setItemsDetails()
                ],
             ],
          ];
@@ -110,23 +93,22 @@ class ShippingOrder {
                "originPort"=> "JFK",
                "vendorid"=> ""
             ];
-         }  
-         // dd($packet);
+         }
       return $packet;
    }
 
-   private function setItemsDetails($order)
+   private function setItemsDetails()
    {
         $items = [];
-        $singleItemWeight = UnitsConverter::kgToGrams($this->calulateItemWeight($order));
+        $singleItemWeight = UnitsConverter::kgToGrams($this->calulateItemWeight());
         
-        if (count($order->items) >= 1) {
-            foreach ($order->items as $key => $item) {
+        if (count($this->order->items) >= 1) {
+            foreach ($this->order->items as $key => $item) {
                 $itemToPush = [];
-                $originCountryCode = optional($order->senderCountry)->code;
+                $originCountryCode = optional($this->order->senderCountry)->code;
                 $itemToPush = [
                     'hsCode' => $item->sh_code,
-                    'originCountry' => $originCountryCode ? $originCountryCode: 'US',
+                    'originCountry' => $originCountryCode ?? 'US',
                     'description' => $item->description,
                   //   'weight' => round($this->calulateItemWeight($order), 2) - 0.05,
                     'itemNo' => "000".++$key,
@@ -134,9 +116,9 @@ class ShippingOrder {
                     'unitValue' => $item->value,
                     'itemCount' => (int)$item->quantity,
                 ];
-                if($this->isChileCanadaColombiaOrMexico){
-                  $itemToPush['weight'] = round($this->calulateItemWeight($order), 2) - 0.05;
-                  $itemToPush['sku'] = $item->sh_code.'-'.$order->id;
+                if($this->isDestinationCountries){
+                  $itemToPush['weight'] = round($this->calulateItemWeight(), 2) - 0.05;
+                  $itemToPush['sku'] = $item->sh_code.'-'.$this->order->id;
                 }
                array_push($items, $itemToPush);
             }
@@ -145,15 +127,53 @@ class ShippingOrder {
         return $items;
    }
 
-   private function calulateItemWeight($order)
+   function initTaxModility() {
+      $this->taxModility = "DDU";
+      if($this->order->recipient->country->code == 'MX')
+         $this->taxModility = strtoupper($this->order->tax_modality)??"DDU";
+   }
+
+   function initServiceCode() {
+         // service code
+         if($this->order->shippingService->service_sub_class == ShippingService::Prime5) {
+            $this->serviceCode = 'DIRECT.LINK.US.L3';
+         }elseif($this->order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
+            if($this->isDestinationCountries){
+               if($this->taxModility == "DDP"){
+                  $this->serviceCode = 'DLUS.DDP.NJ03';
+               }
+               else{
+                  $this->serviceCode = 'DIRECT.LINK.ST.CONS.NJ';
+               }
+            }
+            else{
+               $this->serviceCode = 'DIRECT.LINK.US.L3P';
+            }
+         }
+   }
+
+   function initFacility(){
+      // DDU Chile ex-EWR-Newark
+      // DDU Australia,Canada, Colombia via EWR and Mexico DDP via LRD-Laredo
+      $this->facility = 'EWR';
+      if($this->order->recipient->country->code == 'CL'){
+         $this->facility = 'ex-EWR-Newark';
+      }
+      if($this->order->recipient->country->code == 'MX' && $this->taxModility== "DDP"){
+         $this->facility = "LRD-Laredo";
+      }
+   }
+
+   
+   private function calulateItemWeight()
    {
-        $orderTotalWeight = ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$order->weight;
+        $this->orderTotalWeight = ($this->chargableWeight != null) ? (float)$this->chargableWeight : (float)$this->order->weight;
         $itemWeight = 0;
-        if (count($order->items) > 1) {
-            $itemWeight = $orderTotalWeight / count($order->items);
+        if (count($this->order->items) > 1) {
+            $itemWeight = $this->orderTotalWeight / count($this->order->items);
             return $itemWeight;
         }
-        return $orderTotalWeight;
+        return $this->orderTotalWeight;
    }
 
 }
