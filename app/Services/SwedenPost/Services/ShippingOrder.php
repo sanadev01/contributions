@@ -16,7 +16,7 @@ class ShippingOrder {
 
    public function __construct($order)
    {
-      $this->order = $order;
+      $this->order = $order; 
       if(isSwedenPostCountry($this->order) && $this->order->recipient->country->code != 'BR'){
          //true if recipient country is canada , australia,chile ,colombia or mexico.
          $this->isDestinationCountries = true;
@@ -92,7 +92,7 @@ class ShippingOrder {
                "originPort"=> "JFK",
                "vendorid"=> ""
             ];
-         }
+         } 
       return $packet;
    }
 
@@ -123,8 +123,6 @@ class ShippingOrder {
    }
 
    function initTaxModility() {
-      $this->taxModility = "DDU";
-      if($this->order->recipient->country->code == 'MX')
          $this->taxModility = strtoupper($this->order->tax_modality)??"DDU";
    }
 
@@ -136,8 +134,11 @@ class ShippingOrder {
             if($this->isDestinationCountries){
                if($this->taxModility == "DDP"){
                   $this->serviceCode = 'DLUS.DDP.NJ03';
+                  if($this->order->recipient->country->code == 'MX')
+                  $this->serviceCode = 'DLUS.TX.DDP';
                }
                else{
+
                   $this->serviceCode = 'DIRECT.LINK.ST.CONS.NJ';
                }
             }
@@ -151,11 +152,8 @@ class ShippingOrder {
       // DDU Chile ex-EWR-Newark
       // DDU Australia,Canada, Colombia via EWR and Mexico DDP via LRD-Laredo
       $this->facility = 'EWR';
-      if($this->order->recipient->country->code == 'CL'){
-         $this->facility = 'ex-EWR-Newark';
-      }
       if($this->order->recipient->country->code == 'MX' && $this->taxModility== "DDP"){
-         $this->facility = "LRD-Laredo";
+         $this->facility = "LRD";
       }
    }
 
