@@ -215,7 +215,7 @@ function getGDEProfit($rates, $service)
     return $profit = $userProfit ? $userProfit : $adminProfit;
 }
 
-function isDirectLinkCountries($order) {
+function isSwedenPostCountry($order) {
     $code = optional(optional($order->recipient)->country)->code;
     return $order->recipient->country_id == Order::BRAZIL || $code == 'CA'|| $code == 'AU'|| $code == 'CL'|| $code == 'CO'|| $code == 'MX';
 }
