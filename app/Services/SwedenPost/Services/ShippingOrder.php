@@ -59,8 +59,8 @@ class ShippingOrder {
                   'email' => $this->order->recipient->email ?? '',
                   'addressLine1' => $this->order->recipient->address.' '.$this->order->recipient->street_no,
                   'addressLine2' => optional($this->order->recipient)->address2,
-                  'city' => $this->order->recipient->city,
-                  'state' => $this->order->recipient->state->code,
+                  'city' => optional($this->order->recipient)->city,
+                  'state' => optional($this->order->recipient->state)->code,
                   'postcode' => cleanString($this->order->recipient->zipcode),
                   'country' => $this->order->recipient->country->code,
                   'recipientTaxId'=>optional($this->order->recipient)->tax_id,
@@ -123,7 +123,10 @@ class ShippingOrder {
    }
 
    function initTaxModility() {
-         $this->taxModility = strtoupper($this->order->tax_modality)??"DDU";
+         
+      $this->taxModility = "DDU";
+      if($this->order->recipient->country->code == 'MX'||$this->order->recipient->country->code == 'AU'||$this->order->recipient->country->code == 'CA'||$this->order->recipient->country->code == 'CO')
+      $this->taxModility = strtoupper($this->order->tax_modality)??"DDU";
    }
 
    function initServiceCode() {
