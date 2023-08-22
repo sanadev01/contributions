@@ -159,7 +159,7 @@
                     @endif
                 </th>
                 <td>
-                    {{ $deposit->balance }}
+                    {{ number_format($deposit->balance, 2) }}
                 </td>
                 <td>
                     {{ optional($deposit->created_at)->format('m/d/Y') }}
