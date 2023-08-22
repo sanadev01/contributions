@@ -28,7 +28,7 @@ class Deposit extends Model
             return 0;
         }
 
-        return $lastTransaction->balance;
+        return number_format($lastTransaction->balance, 2);
     }
 
     public function orders()
