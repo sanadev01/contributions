@@ -59,7 +59,7 @@ class Client{
 
     public function createPackage($order)
     {   
-        $shippingRequest = (new ShippingOrder())->getRequestBody($order);
+        $shippingRequest = (new ShippingOrder($order))->getRequestBody();
         
         try {
             $path = 'services/shipper/orderLabels';
