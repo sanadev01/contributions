@@ -4,7 +4,7 @@
             <strong>Statement From: </strong> {{ $dateFrom }} - {{ $dateTo }} <br>
             {{-- <strong>Total Deposit:</strong> {{ 0 }} <br>
             <strong>Total Debit: </strong>  {{ 0 }} <br> --}}
-            <strong>Balance: <span style="font-size: 16px;">{{ getBalance() }} USD </span></strong>
+            <strong>Balance: <span style="font-size: 16px;">{{ number_format( getBalance(), 2 ) }} USD </span></strong>
         </div>
     </div>
     <div class="row justify-content-end mb-1">
