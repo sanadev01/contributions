@@ -124,12 +124,12 @@
                                                             </form>
                                                         @endif
                                                         @if( $container->isRegistered() )
-                                                        <a href="{{ route('warehouse.totalexpress_container.download',$container) }}" class="dropdown-item w-100">
+                                                        <a href="{{ optional(optional(json_decode($container->unit_response_list))->data)->pdf_label_url }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> Get CN35
                                                         </a>
-                                                        <a href="{{ route('warehouse.totalexpress_container.download',['container'=>$container,'type'=>'hd']) }}" class="dropdown-item w-100">
+                                                        {{-- <a href="{{ route('warehouse.totalexpress_container.download',['container'=>$container,'type'=>'hd']) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> HD CN35
-                                                        </a>
+                                                        </a> --}}
                                                         @endif
                                                     </div>
                                                 </div>

@@ -114,6 +114,8 @@
                                                     <span class="badge badge-secondary">GDE</span>
                                                 @elseif($deliveryBill->isGSS())
                                                 <span class="badge badge-secondary text-black">GSS</span>
+                                                @elseif($deliveryBill->isTotalExpress())
+                                                <span class="badge badge-warning text-black">T</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif
@@ -183,6 +185,12 @@
                                                             </a>
                                                         @endif
 
+                                                        @if (!$deliveryBill->isRegistered() && $deliveryBill->isTotalExpress()) 
+                                                           <a href="javascript:void(0)" id="flightInfo" type="button" class=" btn dropdown-item w-100">
+                                                                <i class="fa fa-plane"></i>   Add Flight Details
+                                                            </a>
+                                                        @endif
+
                                                         @if( !$deliveryBill->isRegistered() )
                                                             <a href="{{ route('warehouse.delivery_bill.edit',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
@@ -219,6 +227,86 @@
             </div>
         </div>
     </section>
+    <!--Total Express Flight Information Modal-->
+    <div class="modal fade" id="flightModal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b>Add Flight Information for Total Express Manifest</b></h5>
+                </div>
+                <form class="form" action="" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="container-fluid"> 
+                            <div class="row justify-content-center">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="departure_date">Departure Date</label>
+                                        <input type="date" class="form-control" name="departure_date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="departure_time">Departure Time</label>
+                                        <input type="time" class="form-control" name="departure_time">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="airline">Airline</label>
+                                        <input type="text" class="form-control" name="airline">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="departure_airport">Departure Airport</label>
+                                        <input type="text" class="form-control" name="departure_airport">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="mawb_file_format">MAWB File Format</label>
+                                        <input type="text" class="form-control" name="mawb_file_format">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="mawb_file">MAWB File</label>
+                                        <input type="file" class="form-control-file" name="mawb_file">
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="arrival_date">Arrival Date</label>
+                                        <input type="date" class="form-control" name="arrival_date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="arrival_time">Arrival Time</label>
+                                        <input type="time" class="form-control" name="arrival_time">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="flight_number">Flight Number</label>
+                                        <input type="text" class="form-control" name="flight_number">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="arrival_airport">Arrival Airport</label>
+                                        <input type="text" class="form-control" name="arrival_airport">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="mawb_number">MAWB Number</label>
+                                        <input type="text" class="form-control" name="mawb_number">
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
 @endsection
 @push('js')
 <script>
@@ -244,6 +332,12 @@
         if (totalChecked == 0) {
             $('#btn_combine').addClass('d-none');
         }
+    });
+    $(document).ready(function(){
+        $("#flightInfo").click(function(){
+            $("#flightModal").modal('show');
+        });
+        
     });
 </script>
 @endpush
