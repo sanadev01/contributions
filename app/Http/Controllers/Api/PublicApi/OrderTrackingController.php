@@ -20,16 +20,14 @@ class OrderTrackingController extends Controller
                 if($response['service'] == 'Correios_Chile')
                 {
                     $this->trackings = $this->getChileTrackings($response['chile_trackings'], $response['trackings']);
-    
-                    $this->trackings = $this->trackings->toArray();
+     
                     
                     return apiResponse(true,'Order found', ['hdTrackings'=> $this->trackings, 'apiTrackings' => null ]);
                 }
                 if($response['service'] == 'USPS')
                 {
                     $this->trackings = $this->getUSPSTrackings($response['usps_trackings'], $response['trackings']);
-    
-                    $this->trackings = $this->trackings->toArray();
+     
                     
                     return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings, 'apiTrackings' => null ]);
                 }
