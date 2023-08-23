@@ -34,13 +34,13 @@ class CreateRequest extends FormRequest
             'address2' => 'nullable|max:50',
             'street_no' => 'sometimes',
             'country_id' => 'required|exists:countries,id',
-            'city' => 'required_if:service,==,postal_service',
+            'city' => ($this->country_id == Country::Chile) ? 'nullable':'required_if:service,==,postal_service',
             'commune_id' => 'required_if:service,==,courier_express',
             'phone' => [
                 'required','max:15','min:11', new PhoneNumberValidator($this->country_id)
             ],
             'state_id' => 'sometimes|required|exists:states,id',
-            'region' => 'sometimes|required',
+            'region' => ($this->country_id == Country::Chile) ? 'nullable':'sometimes|required',
             'zipcode' => [
                 'required'
                 // 'required',  new CorreosAddresstValidator($this->country_id,$this->address), new ZipCodeValidator($this->country_id,$this->state_id)
