@@ -186,10 +186,17 @@
                                                         @endif
 
                                                         @if (!$deliveryBill->isRegistered() && $deliveryBill->isTotalExpress()) 
-                                                           <a href="javascript:void(0)" id="flightInfo" type="button" class=" btn dropdown-item w-100">
+                                                           <a href="javascript:void(0)" id="flightInfo" data-id="{{ $deliveryBill->id }}" type="button" class=" btn dropdown-item w-100">
                                                                 <i class="fa fa-plane"></i>   Add Flight Details
                                                             </a>
                                                         @endif
+
+                                                        @if ($deliveryBill->isRegistered() && $deliveryBill->isTotalExpress()) 
+                                                           <a href="#"  type="button" class=" btn dropdown-item w-100">
+                                                                <i class="fa fa-plane"></i>   Close Manifest
+                                                            </a>
+                                                        @endif
+                                                        
 
                                                         @if( !$deliveryBill->isRegistered() )
                                                             <a href="{{ route('warehouse.delivery_bill.edit',$deliveryBill) }}" class="dropdown-item w-100">
@@ -234,8 +241,9 @@
                 <div class="modal-header">
                     <h5 class="modal-title"><b>Add Flight Information for Total Express Manifest</b></h5>
                 </div>
-                <form class="form" action="" method="POST" enctype="multipart/form-data">
+                <form class="form" action="{{ route('warehouse.totalexpress_manifest.addFlight') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="id" value="">
                     <div class="modal-body">
                         <div class="container-fluid"> 
                             <div class="row justify-content-center">
@@ -246,27 +254,25 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="departure_time">Departure Time</label>
-                                        <input type="time" class="form-control" name="departure_time">
+                                        <input type="time" class="form-control" name="departure_time" required>
                                     </div>
                                     
                                     <div class="form-group">
                                         <label for="airline">Airline</label>
-                                        <input type="text" class="form-control" name="airline">
+                                        <input type="text" class="form-control" name="airline" required>
                                     </div>
                                     
                                     <div class="form-group">
                                         <label for="departure_airport">Departure Airport</label>
-                                        <input type="text" class="form-control" name="departure_airport">
+                                        <input type="text" class="form-control" name="departure_airport" required>
                                     </div>
-
                                     <div class="form-group">
-                                        <label for="mawb_file_format">MAWB File Format</label>
-                                        <input type="text" class="form-control" name="mawb_file_format">
+                                        <label for="mawb_number">MAWB Number</label>
+                                        <input type="text" class="form-control" name="mawb_number" required>
                                     </div>
-
                                     <div class="form-group">
-                                        <label for="mawb_file">MAWB File</label>
-                                        <input type="file" class="form-control-file" name="mawb_file">
+                                        <label for="flight_freight">Flight Freight Value</label>
+                                        <input type="text" class="form-control" name="flight_freight" required>
                                     </div>
                                 </div>
                                 <div class="col-md-5">
@@ -276,24 +282,20 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="arrival_time">Arrival Time</label>
-                                        <input type="time" class="form-control" name="arrival_time">
+                                        <input type="time" class="form-control" name="arrival_time" required>
                                     </div>
-
                                     <div class="form-group">
                                         <label for="flight_number">Flight Number</label>
-                                        <input type="text" class="form-control" name="flight_number">
+                                        <input type="text" class="form-control" name="flight_number" required>
                                     </div>
-                                    
                                     <div class="form-group">
                                         <label for="arrival_airport">Arrival Airport</label>
-                                        <input type="text" class="form-control" name="arrival_airport">
+                                        <input type="text" class="form-control" name="arrival_airport" required>
                                     </div>
-
                                     <div class="form-group">
-                                        <label for="mawb_number">MAWB Number</label>
-                                        <input type="text" class="form-control" name="mawb_number">
+                                        <label for="mawb_file">MAWB File</label>
+                                        <input type="file" class="form-control-file" name="mawb_file" accept=".pdf" required>
                                     </div>
-                                    
                                 </div>
                             </div>
                         </div>
@@ -336,6 +338,8 @@
     $(document).ready(function(){
         $("#flightInfo").click(function(){
             $("#flightModal").modal('show');
+            var deliveryBillId = $(this).data('id');
+            $("#flightModal input[name='id']").val(deliveryBillId);
         });
         
     });

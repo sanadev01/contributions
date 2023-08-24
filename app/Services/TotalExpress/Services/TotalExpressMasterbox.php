@@ -5,7 +5,10 @@ namespace App\Services\TotalExpress\Services;
 use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Http;
+use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
+use App\Services\TotalExpress\HandleError;
+use App\Services\Correios\Models\PackageError;
 
 
 class TotalExpressMasterBox
@@ -91,24 +94,39 @@ class TotalExpressMasterBox
         }
     }
 
-    public function createFlight($request)
+    public function createFlight($deliveryBill, $request)
     {
-        $boxNumbers = implode(",", array_merge(...$request->boxNumbers));
+        $boxNumbers = [];
+        $formRequest = $request;
+        foreach ($deliveryBill->containers as $key => $container) {
+            array_push($boxNumbers, $container->unit_code);
+        }
+
         $url = $this->baseURL . '/v1/flights';
         $body = ["box_numbers" => $boxNumbers];
-
+        
         $request = Http::withHeaders($this->getHeaders())->post($url, $body);
         $response= json_decode($request);
  
         if ($response->status == "SUCCESS" && $response->data->flight_id) {
-            return $this->updateFlightInformation($response->data->flight_id, $request);
+            $deliveryBill->update([
+                'request_id' => $response->data->flight_id,
+            ]);
+            return $this->updateFlightInformation($response->data->flight_id, $formRequest);
         } else {
-            return $this->responseUnprocessable($data->message);
+            return $this->responseUnprocessable($response->messages[0]);
         } 
     }
 
     public function updateFlightInformation($id, $request)
     {
+        if ($request->hasFile('mawb_file')) {
+            $file = $request->file('mawb_file');
+            $binaryContent = file_get_contents($file->getPathname());
+            $base64Code = base64_encode($binaryContent);
+        
+        }
+
         $url = $this->baseURL . "/v1/flights/$id";
         $body = [
             "departure_date" => $request->departure_date,
@@ -120,15 +138,25 @@ class TotalExpressMasterBox
             "arrival_airport" => $request->arrival_airport,
             "flight_number" => $request->flight_number,
             "mawb_number" => $request->mawb_number,
-            "mawb_file_format" => $request->mawb_file_format,
-            "mawb_file" => $request->mawb_file,
+            "mawb_file_format" => "binary",
+            "mawb_file" => $base64Code,
+            "freight_value" => $request->flight_freight
         ];
-        $request = Http::withHeaders($this->getHeaders())->put($url, $body); 
-        $response= json_decode($request);
+
+        $apiRequest = Http::withHeaders($this->getHeaders())->put($url, $body); 
+        $response= json_decode($apiRequest);
+
         if ($response->status == "SUCCESS") {
-            return $this->responseSuccessful('',  'Flight information successfully saved'); 
-        } else {
-            return $this->responseUnprocessable($response->messages[0]);
+            return [
+                'type'=>'alert-success',
+                'message'=>$response->messages[0]
+            ];
+        }
+        else{ 
+            return [ 
+                'type'=>'alert-danger',
+                'message'=> ''.new HandleError($apiRequest)
+            ]; 
         }
     }
 
