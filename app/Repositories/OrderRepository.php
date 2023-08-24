@@ -604,9 +604,6 @@ class OrderRepository
                     }
                 }
             }
-            // if (optional($order->recipient)->country_id == Order::COLOMBIA){
-            //     return ShippingService::find(ShippingService::Prime5RIO);
-            // } 
 
             if ($shippingServices->isEmpty() && $this->shippingServiceError == null) {
                 $this->shippingServiceError = ($order->recipient->commune_id != null) ? 'Shipping Service not Available for the Region you have selected' : 'Shipping Service not Available for the Country you have selected';
