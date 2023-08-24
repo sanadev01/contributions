@@ -454,7 +454,7 @@
 
     function activeColombiaFields() {
         $('#cpf').addClass('d-none');
-        $('#state_div').addClass('d-none');
+        // $('#state_div').addClass('d-none');
         $('#city_div').addClass('d-none');
         $('#div_street_number').addClass('d-none');
         $('#div_zipcode').addClass('d-block');
@@ -464,7 +464,7 @@
         $('#div_co_dept').removeClass('d-none');
 
         //$('#div_regions').removeClass('d-none');
-        $('#state').prop('disabled', true);
+        // $('#state').prop('disabled', true);
         $('#city').attr('disabled', true);
 
         $('#region').prop('disabled', false);
