@@ -273,7 +273,7 @@ class OrderRepository
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'city' => $request->city??$request->cocity,
+                'city' => $request->country_id == Country::COLOMBIA ? $request->cocity :( $request->city??$request->cocity) ,
                 'commune_id' => ($request->service == 'courier_express') ? $request->commune_id : null,
                 'street_no' => ($request->country_id == Country::COLOMBIA)? $request->codept : $request->street_no,
                 'address' => $request->address,
