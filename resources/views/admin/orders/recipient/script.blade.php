@@ -78,6 +78,13 @@
                 activeChileFields(serviceType);
                 return  ;
             }
+            if(country == 94)
+            {
+                window.inactiveChileFields();
+                window.activeGuatmalaFields();
+                return;
+            }
+
             if (country == Chile && this.selectedService == CourierExpress) {
                 activeChileFields(this.selectedService);
                 return getChileRegionsFromDB(oldRegion, oldCommune);
@@ -158,6 +165,13 @@
 
             if (serviceType == undefined) {
                 serviceType = PostalService;
+            }
+            if(country == 94)
+            {
+
+                window.inactiveChileFields();
+                window.activeGuatmalaFields();
+                return;
             }
 
             inactiveChileFields(serviceType);
@@ -339,6 +353,26 @@
         $('#region').prop('disabled', false);
         $('#commune').attr('disabled', false);
         $('#commune').prop('disabled', false);
+    }
+
+    function activeGuatmalaFields(){
+        console.log('active guatmala fields'); 
+        $('#cpf').addClass('d-none');
+        $('#div_hd_state').css('display', 'none')
+        $('#state_dev').css('display', 'none')
+        $('#div_city').css('display', 'block')
+        $('#div_street_number').css('display', 'block')
+        $('#div_region').css('display', 'none')
+        $('#div_communes').css('display', 'none') 
+        $('#commune').prop('disabled', false);
+        $('#label_address').css('display', 'inline-block')
+        $('#state_div').css('display', 'none')
+        $('#label_chile_address').css('display', 'none')
+
+        $('#state').prop('disabled', true); 
+
+        $('#region').prop('disabled', false); 
+        $('#commune').attr('disabled', false);
     }
 
     function inactiveChileFields(selectedService) {

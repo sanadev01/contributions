@@ -6,7 +6,6 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\OrderTracking;
-use App\Models\OrderTracking;
 
 class TrackingController extends Controller
 {
