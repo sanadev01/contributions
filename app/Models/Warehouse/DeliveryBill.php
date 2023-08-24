@@ -161,4 +161,12 @@ class DeliveryBill extends Model
     {
        return $this->containers->first()->services_subclass_code == $subService;
     }
+
+    public function isTotalExpress()
+    {
+        if($this->containers->first()->services_subclass_code == ShippingService::TOTAL_EXPRESS){
+            return true;
+        }
+        return false;
+    }
 }
