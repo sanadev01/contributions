@@ -40,6 +40,7 @@ class OrderItemsController extends Controller
         }
 
         $shippingServices = $this->orderRepository->getShippingServices($order);
+        // dd($ shippingServices);
         $error = $this->orderRepository->getShippingServicesError();
 
         if ($error) {

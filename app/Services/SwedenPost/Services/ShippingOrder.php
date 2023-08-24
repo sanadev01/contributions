@@ -59,7 +59,7 @@ class ShippingOrder {
                   'email' => $this->order->recipient->email ?? '',
                   'addressLine1' => $this->order->recipient->address.' '.$this->order->recipient->street_no,
                   'addressLine2' => optional($this->order->recipient)->address2,
-                  'city' => optional($this->order->recipient)->city,
+                  'city' => optional($this->order->recipient)->city??optional($this->order->recipient)->region,
                   'state' => optional($this->order->recipient->state)->code,
                   'postcode' => cleanString($this->order->recipient->zipcode),
                   'country' => $this->order->recipient->country->code,

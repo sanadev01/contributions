@@ -268,16 +268,12 @@ class OrderRepository
         ]);
         
         if ( $order->recipient ){
-            if($request->service == 'postal_service' && $request->country_id == Country::COLOMBIA) {
-                $city = $request->cocity;
-            }
-            $city = $request->city;
             $order->recipient()->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'city' => $city,
+                'city' => $request->country_id == Country::COLOMBIA ? $request->cocity :( $request->city??$request->cocity) ,
                 'commune_id' => ($request->service == 'courier_express') ? $request->commune_id : null,
                 'street_no' => ($request->country_id == Country::COLOMBIA)? $request->codept : $request->street_no,
                 'address' => $request->address,
@@ -608,6 +604,9 @@ class OrderRepository
                     }
                 }
             }
+            // if (optional($order->recipient)->country_id == Order::COLOMBIA){
+            //     return ShippingService::find(ShippingService::Prime5RIO);
+            // } 
 
             if ($shippingServices->isEmpty() && $this->shippingServiceError == null) {
                 $this->shippingServiceError = ($order->recipient->commune_id != null) ? 'Shipping Service not Available for the Region you have selected' : 'Shipping Service not Available for the Country you have selected';
@@ -767,7 +766,7 @@ class OrderRepository
 
             if($service) {
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) use($service) {
-                    return $shippingService->service_sub_class == $service;
+                    return $shippingService->service_sub_class == $service || $shippingService->service_sub_class  == ShippingService::Prime5RIO;
                 });
             } else {
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
