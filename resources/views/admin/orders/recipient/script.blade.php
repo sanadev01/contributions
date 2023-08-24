@@ -66,7 +66,18 @@
             let country = $('#country').val();
             let oldRegion = $('#region').data('value');
             let oldCommune = $('#commune').data('commune');
+            if (country == Chile) {
+                let serviceType = $('input[name="service"]:checked').val();
+                if(serviceType !== '' || serviceType !== undefined)
+                {
+                    this.selectedService = serviceType;
+                }else{
+                    this.selectedService = PostalService;
+                }
 
+                activeChileFields(serviceType);
+                return  ;
+            }
             if (country == Chile && this.selectedService == CourierExpress) {
                 activeChileFields(this.selectedService);
                 return getChileRegionsFromDB(oldRegion, oldCommune);
