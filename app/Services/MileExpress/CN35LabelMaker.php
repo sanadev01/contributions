@@ -133,17 +133,17 @@ class CN35LabelMaker implements HasLableExport
 
     public function render()
     {
-        return view('labels.milli-express.cn35.index',$this->getViewData());
+        return view('labels.hd-express.cn35.index',$this->getViewData());
     }
 
     public function download()
     {
-        return \PDF::loadView('labels.milli-express.cn35.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.hd-express.cn35.index',$this->getViewData())->stream();
     }
 
     public function saveAs($path)
     {
-        return \PDF::loadView('labels.milli-express.cn35.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.hd-express.cn35.index',$this->getViewData())->save($path);
     }
 
     private function getViewData()
