@@ -342,9 +342,7 @@
         $('#div_communes').removeClass('d-none');
         $('#label_chile_address').removeClass('d-none');
 
-        // $('#label_address').addClass('d-none');
-        $('#city_div').addClass('d-none');
-
+        $('#label_address').addClass('d-none');
 
         $('#div_co_city').addClass('d-none');
         $('#div_co_dept').addClass('d-none');
@@ -394,7 +392,6 @@
 
         $('#state').prop('disabled', false);
         $('#city').attr('disabled', false);
-        $('#city_div').addClass('block');
 
         $('#region').prop('disabled', true);
         $('#commune').attr('disabled', true);

@@ -156,19 +156,20 @@
                         <div class="help-block d-none" id="regions_response"></div>
                     </div>
                 </div>
-                {{-- <div  id="city_div"> --}}
-                    <div class="controls form-group col-12 col-sm-6 col-md-4" id="div_city">
+                <div class="form-group col-12 col-sm-6 col-md-4" id="city_div">
+                    <div class="controls" id="div_city">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
                         <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control"  placeholder="City"/>
                         <div class="help-block"></div>
                     </div>
                     {{-- Chile Communes --}}
-                    <div class="controls d-none form-group col-12 col-sm-6 col-md-4" id="div_communes">
+                    <div class="controls d-none" id="div_communes">
                         <label>Communes <span class="text-danger">*</span></label>
                         <select name="city" id="commune" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('city', optional($order->recipient)->city) }}" data-commune="{{ old('commune_id', optional($order->recipient)->commune_id) }}">
                             <option value="">Select Commune</option>
                         </select>
                         <div class="help-block d-none" id="communes_response"></div>
+                    </div>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4 d-none" id="div_co_city">
                     <div class="controls">
@@ -258,7 +259,6 @@
 
 @section('js')
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
-@include('layouts.states-ajax')
 
 @include('admin.orders.recipient.script')
 
