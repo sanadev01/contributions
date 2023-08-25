@@ -396,11 +396,11 @@
     </div>
     <div class="address">
         <div class="destination">
-            <h4><strong>DESTINATARIO:</strong></h4>
+            <h4><strong>DESTINATARIO:</strong></h4> 
             {{ $recipient->first_name }} {{ $recipient->last_name }} <br>
             {{ $recipient->address }}, @if ($recipient->street_no != 0 ) {{ $recipient->street_no }}, @endif {{ $recipient->address2 }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
-            {{ $recipient->state->name }}
-            {{ $recipient->country->name }}
+            {{ optional($recipient->state)->name }}
+            {{ optional($recipient->country)->name }}
         </div>
     </div>
     @if($order->hasBattery())
