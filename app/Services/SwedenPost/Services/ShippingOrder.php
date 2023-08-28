@@ -93,6 +93,7 @@ class ShippingOrder {
                "vendorid"=> ""
             ];
          } 
+      \Log::info('direct link request',$packet);
       return $packet;
    }
 

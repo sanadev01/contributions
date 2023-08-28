@@ -27,7 +27,6 @@ class CreateRequest extends FormRequest
      */
     public function rules()
     {
-        // dd($this->all());
         $rules = [ 
             'first_name' => ($this->country_id == Country::Chile) ? 'required|max:28' : 'required|max:50',
             'address' => 'required',
