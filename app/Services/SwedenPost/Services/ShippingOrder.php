@@ -52,7 +52,7 @@ class ShippingOrder {
                   'invoiceCurrency' => "USD",
                   'batteryType' => $this->batteryType,
                   'batteryPacking' => $this->batteryPacking,
-                  'facility'=> "EWR",
+                  'facility'=> $this->facility,
                   //Recipient Information
                   'recipientName' => $this->order->recipient->getFullName(),
                   'phone' => $this->order->recipient->phone ?? '',
@@ -92,7 +92,8 @@ class ShippingOrder {
                "originPort"=> "JFK",
                "vendorid"=> ""
             ];
-         } 
+         }  
+      
       return $packet;
    }
 
@@ -155,7 +156,7 @@ class ShippingOrder {
       // DDU Chile ex-EWR-Newark
       // DDU Australia,Canada, Colombia via EWR and Mexico DDP via LRD-Laredo
       $this->facility = 'EWR';
-      if($this->order->recipient->country->code == 'MX' && $this->taxModility== "DDP"){
+      if($this->order->recipient->country->code == 'MX' && $this->taxModility == "DDP"){
          $this->facility = "LRD";
       }
    }
