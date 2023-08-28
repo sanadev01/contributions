@@ -175,7 +175,8 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('totalexpress_container/{container}/register', TotalExpressUnitRegisterController::class)->name('totalexpress_container.register');
     Route::get('totalexpress_container/{container}/download', TotalExpressCN35DownloadController::class)->name('totalexpress_container.download');
-    Route::post('/totalexpress/flightdetails', [TotalExpressManifestController::class, 'addFlightDetails'])->name('totalexpress_manifest.addFlight');;
+    Route::post('/totalexpress/flightdetails', [TotalExpressManifestController::class, 'addFlightDetails'])->name('totalexpress_manifest.addFlight');
+    Route::get('totalexpress/{id}/closemanifest', [TotalExpressManifestController::class, 'closeManifest'])->name('totalexpress_manifest.close');
 
     // Routes for HD Express container
     Route::resource('hd-express-containers', HDExpressContainerController::class);

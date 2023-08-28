@@ -192,7 +192,7 @@
                                                         @endif
 
                                                         @if ($deliveryBill->isRegistered() && $deliveryBill->isTotalExpress()) 
-                                                           <a href="#"  type="button" class=" btn dropdown-item w-100">
+                                                           <a href="{{ route('warehouse.totalexpress_manifest.close',$deliveryBill) }}"  type="button" class=" btn dropdown-item w-100">
                                                                 <i class="fa fa-plane"></i>   Close Manifest
                                                             </a>
                                                         @endif

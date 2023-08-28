@@ -147,10 +147,10 @@ class TotalExpressMasterBox
         $response= json_decode($apiRequest);
 
         if ($response->status == "SUCCESS") {
-            return [
+           return [
                 'type'=>'alert-success',
                 'message'=>$response->messages[0]
-            ];
+            ]; 
         }
         else{ 
             return [ 
@@ -160,20 +160,39 @@ class TotalExpressMasterBox
         }
     }
 
-    public function getLabel()
+    public function closeManifest($deliveryBill)
     {
-        $url = $this->baseURL . 'bagscan?op=getReceptacleLabel';
-        $body = [
-            "receptacleNo" => $this->container->unit_code,
-        ];
+        $url = $this->baseURL . "/v1/flights/$deliveryBill->request_id/close_manifest";
+        $apiRequest = Http::withHeaders($this->getHeaders())->put($url); 
+        $response= json_decode($apiRequest);
 
-        $response = $this->http->post($url, $body);
-        $data= json_decode($response);
+        if ($response->status == "SUCCESS") {
 
-        if ($response->successful() && $data->status == 0) {
-            return $this->responseSuccessful($data->pdfReceptacleLable,$data->message);
-        } else {
-            return $this->responseUnprocessable($data->message);
+            return $this->consultCloseManifest($response->data->request_id, $deliveryBill);
+        }
+        else{ 
+            return [ 
+                'type'=>'alert-danger',
+                'message'=> ''.new HandleError($apiRequest)
+            ]; 
+        }
+    }
+
+    public function consultCloseManifest($id, $deliveryBill)
+    {
+        $url = $this->baseURL . "/v1/request_status/close_manifest/$id";
+        $apiRequest = Http::withHeaders($this->getHeaders())->get($url); 
+        $response= json_decode($apiRequest);
+
+        if ($response->status == "SUCCESS") {
+
+            // $deliveryBill->update([
+            //     'cnd38_code' => $response->data->flight_id,
+            // ]);
+            return $this->responseSuccessful($response, 'Manifest Closed Sucessfully');
+        }
+        else{ 
+            return $this->responseUnprocessable($response->messages[0][0]);
         }
     }
 
