@@ -104,7 +104,7 @@ class OrderLabelController extends Controller
                 }
                 return $this->rollback($error);
             }
-            // For Correios,  Global eParcel Brazil and Sweden Post(Prime5)
+            // For Correios,  Global eParcel Brazil and Sweden Post(Prime5) 
             if ($order->recipient->country_id == Order::BRAZIL) {
                 if ($isPayingFlag) {
                     $orders->push($order);
@@ -143,14 +143,7 @@ class OrderLabelController extends Controller
                         return $this->rollback($error);
                     }
                 }
-                if ($order->shippingService->is_milli_express) { 
-                    $mileExpressLabelRepository = new MileExpressLabelRepository();
-                    $mileExpressLabelRepository->run($order, true);
-                    $error = $mileExpressLabelRepository->getError();
-                    if ($error){
-                        return $this->rollback($error);
-                    }
-                }
+
                 if ($order->shippingService->isAnjunService() ||  $order->shippingService->isCorreiosService()){
                     $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
                     $labelData = $corrieosBrazilLabelRepository->run($order, $request->update_label === 'true' ? true : false);
@@ -176,7 +169,17 @@ class OrderLabelController extends Controller
                     }
                 }
             }
+            if ($order->shippingService->is_milli_express) { 
+                $mileExpressLabelRepository = new MileExpressLabelRepository();
+                $mileExpressLabelRepository->run($order, true);
+                $error = $mileExpressLabelRepository->getError();
+                
+                if ($error){
+                    return $this->rollback($error);
+                }
+            }
             return $this->commit($order);
+            
         } catch (Exception $e) {
             return $this->rollback($e->getMessage());
         }
