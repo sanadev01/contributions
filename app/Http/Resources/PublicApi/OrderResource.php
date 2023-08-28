@@ -44,7 +44,11 @@ class OrderResource extends JsonResource
             "discount" => $this->discount,
             "gross_total" => $this->gross_total,
             "recipient" => OrderRecipientResource::make($this->recipient),
-            "products" => OrderItemResource::collection($this->items)
+            "products" => OrderItemResource::collection($this->items),            
+            'label'=>[
+                'url' => route('order.label.download',$this->encrypted_id),
+                'tracking_code' => $this->us_api_tracking_code
+            ]
         ];
     }
 
