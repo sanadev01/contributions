@@ -30,8 +30,20 @@ class TotalExpressManifestController extends Controller
  
     }
 
-    public function closeManifest(DeliveryBill $deliveryBill, Request $request) {
-        //
+    public function closeManifest(Request $request) {
+        
+        $deliveryBill = DeliveryBill::find($request->id);
+        $container = $deliveryBill->containers->first();
+        $apiRequest = (new TotalExpressMasterBox($container))->closemanifest($deliveryBill);
+        $response = $apiRequest->getData();
+        if ($response->isSuccess){
+            session()->flash('alert-success', $response->message);
+            return back();
+              
+        } else {
+            session()->flash('alert-danger',$response->message);
+            return back();
+        }
     }
 
     public function downloadManifest (DeliveryBill $deliveryBill) {
