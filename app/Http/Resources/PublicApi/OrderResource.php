@@ -20,6 +20,7 @@ class OrderResource extends JsonResource
             "merchant" => $this->merchant,
             "carrier" => $this->carrier,
             "tracking_id" => $this->tracking_id,
+            "tracking_code" => $this->corrios_tracking_code,
             "customer_reference" => $this->customer_reference,
             "measurement_unit" => $this->measurement_unit,
             "weight" => $this->weight,
