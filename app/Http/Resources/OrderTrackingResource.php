@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Resources;
-use App\Http\Resources\Warehouse\OrderResource;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -29,11 +28,6 @@ class OrderTrackingResource extends JsonResource
             "created_at"=> $this->created_at,
             "updated_at"=> $this->updated_at, 
             'tracking_id' => $this->order->tracking_id,
-            'order' => new OrderResource($this->order),
-            'label'=>[
-                'url' => route('order.label.download',$this->encrypted_id),
-                'tracking_code' => $this->us_api_tracking_code
-            ]
         ];
     }
 }
