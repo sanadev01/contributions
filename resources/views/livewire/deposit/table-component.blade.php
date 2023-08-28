@@ -4,7 +4,7 @@
             <strong>Statement From: </strong> {{ $dateFrom }} - {{ $dateTo }} <br>
             {{-- <strong>Total Deposit:</strong> {{ 0 }} <br>
             <strong>Total Debit: </strong>  {{ 0 }} <br> --}}
-            <strong>Balance: <span style="font-size: 16px;">{{ getBalance() }} USD </span></strong>
+            <strong>Balance: <span style="font-size: 16px;">{{ number_format( getBalance(), 2 ) }} USD </span></strong>
         </div>
     </div>
     <div class="row justify-content-end mb-1">
@@ -118,11 +118,11 @@
                 </td>
                 <td>
                     @if($deposit->order_id)
-                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
-                            {{ optional($deposit->getOrder($deposit->order_id))->warehouse_number }}
-                        </a>
-                    @else
-                        @if($deposit->order_id)
+                        @if(optional($deposit->order)->warehouse_number)
+                            <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
+                                {{ optional($deposit->order)->warehouse_number }}
+                            </a>
+                        @else
                             {{  "$deposit->order_id  Order Deleted "}}
                         @endif
                     @endif
