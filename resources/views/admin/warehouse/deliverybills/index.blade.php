@@ -191,7 +191,7 @@
                                                             </a>
                                                         @endif
 
-                                                        @if ($deliveryBill->isRegistered() && $deliveryBill->isTotalExpress()) 
+                                                        @if ($deliveryBill->isReady() && $deliveryBill->isTotalExpress()) 
                                                            <a href="{{ route('warehouse.totalexpress_manifest.close',$deliveryBill) }}"  type="button" class=" btn dropdown-item w-100">
                                                                 <i class="fa fa-plane"></i>   Close Manifest
                                                             </a>
@@ -285,8 +285,8 @@
                                         <input type="time" class="form-control" name="arrival_time" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="flight_number">Flight Number</label>
-                                        <input type="text" class="form-control" name="flight_number" required>
+                                        <label for="flight_number">Flight Number (Min 4 Digits)</label>
+                                        <input type="text" class="form-control" name="flight_number" minlength="4" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="arrival_airport">Arrival Airport</label>
