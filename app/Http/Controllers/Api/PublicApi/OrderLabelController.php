@@ -169,8 +169,7 @@ class OrderLabelController extends Controller
             if ($error){
                 return $this->rollback($error);
             }
-            else
-                return $this->commit($order);
+               return $this->commit($order);
 
         }
     } 
