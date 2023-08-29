@@ -56,6 +56,12 @@ class OrderLabelController extends Controller
                 }
             }
             $labelData = null;
+
+            //sweden post
+            if (isSwedenPostCountry($order) && $order->shippingService->isSwedenPostService()) {
+                return $this->swedenPostLabel($order);
+            }
+
             //For USPS International services
             if ($order->shippingService->is_usps_priority_international || $order->shippingService->is_usps_firstclass_international) {
                 $uspsLabelRepository = new USPSLabelRepository();
@@ -118,14 +124,7 @@ class OrderLabelController extends Controller
                         return $this->rollback($error);
                     }
                 }
-                if ($order->shippingService->isSwedenPostService()) {
-                    $swedenPostLabelRepository = new SwedenPostLabelRepository();
-                    $swedenPostLabelRepository->get($order);
-                    $error = $swedenPostLabelRepository->getError();
-                    if ($error){
-                        return $this->rollback($error);
-                    }
-                }
+
                 if ($order->shippingService->isPostPlusService()) {
                     $postPlusLabelRepository = new PostPlusLabelRepository();
                     $postPlusLabelRepository->get($order);
@@ -185,6 +184,18 @@ class OrderLabelController extends Controller
         }
     }
 
+    function swedenPostLabel($order){
+        if ($order->shippingService->isSwedenPostService()) {
+            $swedenPostLabelRepository = new SwedenPostLabelRepository();
+            $swedenPostLabelRepository->get($order);
+            $error = $swedenPostLabelRepository->getError();
+            if ($error){
+                return $this->rollback($error);
+            }
+                return $this->commit($order);
+
+        }
+    }
     private function commit($order)
     {
         DB::commit();
