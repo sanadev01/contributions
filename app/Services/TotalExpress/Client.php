@@ -176,37 +176,67 @@ class Client
         }
             
     }
+
     function overpackLabel($container) {
           
         try{
-            $response = json_decode($container->unit_response_list);
-            $data =  $response->data;
-            $request = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/overpacks/$data->id/label");
-            $response = json_decode($request);
-            \Log::info('over pack label');
-            \Log::info([$response]);
-            if($response->status=="SUCCESS"){
-            return [
-                'type'=>'alert-success',
-                'message'=>'label'
-            ];
+                $response = json_decode($container->unit_response_list);
+                $data =  $response->data;
+                $request = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/overpacks/$data->id/label");
+                $response = json_decode($request);
+                \Log::info('over pack label');
+                \Log::info([$response]);
+                if($response->status=="SUCCESS"){
+                return [
+                    'type'=>'alert-success',
+                    'message'=>'label'
+                ];
 
-        }
-        else{ 
-            return [ 
-                'type'=>'alert-danger',
-                'message'=> ''.new HandleError($request)
-            ]; 
-        }
+            }
+            else{ 
+                return [ 
+                    'type'=>'alert-danger',
+                    'message'=> ''.new HandleError($request)
+                ]; 
+            }
 
        
-    }catch(\Throwable $e){
-        
-        return [
-            'type'=>'alert-danger',
-            'message'=>$e->getMessage()
-        ];
+        }catch(\Throwable $e){
+            
+            return [
+                'type'=>'alert-danger',
+                'message'=>$e->getMessage()
+            ];
+        }
     }
+
+    public function dispatchShipment($orderId)
+    {
+        try{
+
+            $request = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/orders/$orderId/dispatch");
+            $response = json_decode($request);
+
+            if($response->status=="SUCCESS"){
+                return [
+                    'success'=>true,
+                    'message'=>'Order Added in the Container Successfully'
+                ];
+            }
+            else{ 
+                return [ 
+                    'success'=>false,
+                    'message'=> ''.new HandleError($request)
+                ]; 
+            }
+
+        }catch(\Throwable $e){
+            
+            return [
+                'type'=>'alert-danger',
+                'message'=>$e->getMessage()
+            ];
+        }
     }
 
 }
