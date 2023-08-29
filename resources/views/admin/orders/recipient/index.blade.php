@@ -138,9 +138,8 @@
                             <div class="help-block" id="country_message"></div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group col-12 col-sm-6 col-md-4" id="region_state">
-                    <div class="controls" id="div_state">
+                </div> 
+                    <div class="controls form-group col-12 col-sm-6 col-md-4" id="div_state">
                         <label>@lang('address.State') <span class="text-danger">*</span></label>
                         <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
                             <option value="">Select @lang('address.State')</option>
@@ -151,14 +150,13 @@
                         <div class="help-block"></div>
                     </div>
                     {{-- Chile Regions --}}
-                    <div class="controls" id="div_region" style="display: none">
+                    <div class="controls form-group col-12 col-sm-6 col-md-4" id="div_region" style="display: none">
                         <label>Regions <span class="text-danger">*</span></label>
                         <select name="region" id="region" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('region', optional($order->recipient)->region) }}">
                             <option value="">Select Region</option>
                         </select>
                         <div class="help-block"></div>
-                    </div>
-                </div>
+                    </div> 
                 {{-- <div class="form-group col-12 offset-4">
                     <div class="controls">
                         <div class="help-block" id="regions_response">

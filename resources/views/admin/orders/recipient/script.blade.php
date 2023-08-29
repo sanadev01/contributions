@@ -393,7 +393,6 @@
         $('#label_address').css('display', 'inline-block')
 
         $('#cpf_dev').css('display', 'none')
-        $('#region_state').css('display', 'none')
         $('#label_chile_address').css('display', 'none')
 
         $('#state').prop('disabled', true); 
