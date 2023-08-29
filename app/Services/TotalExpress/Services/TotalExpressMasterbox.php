@@ -171,10 +171,7 @@ class TotalExpressMasterBox
             return $this->consultCloseManifest($response->data->request_id, $deliveryBill);
         }
         else{ 
-            return [ 
-                'type'=>'alert-danger',
-                'message'=> ''.new HandleError($apiRequest)
-            ]; 
+            return $this->responseUnprocessable($response->messages[0]);
         }
     }
 
