@@ -218,7 +218,7 @@
                                                             </a>
                                                         @endif
 
-                                                        @if (!$deliveryBill->isRegistered() && $deliveryBill->isTotalExpress()) 
+                                                        @if (!$deliveryBill->isReady() && $deliveryBill->isTotalExpress()) 
                                                            <a href="javascript:void(0)" id="flightInfo" data-id="{{ $deliveryBill->id }}" type="button" class=" btn dropdown-item w-100">
                                                                 <i class="fa fa-plane"></i>   Add Flight Details
                                                             </a>
