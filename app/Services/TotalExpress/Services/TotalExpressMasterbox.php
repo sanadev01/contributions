@@ -110,7 +110,7 @@ class TotalExpressMasterBox
  
         if ($response->status == "SUCCESS" && $response->data->flight_id) {
             $deliveryBill->update([
-                'request_id' => $response->data->flight_id,
+                'cnd38_code' => $response->data->flight_id,
             ]);
             return $this->updateFlightInformation($response->data->flight_id, $formRequest);
         } else {
@@ -162,7 +162,7 @@ class TotalExpressMasterBox
 
     public function closeManifest($deliveryBill)
     {
-        $url = $this->baseURL . "/v1/flights/$deliveryBill->request_id/close_manifest";
+        $url = $this->baseURL . "/v1/flights/$deliveryBill->cnd38_code/close_manifest";
         $apiRequest = Http::withHeaders($this->getHeaders())->put($url); 
         $response= json_decode($apiRequest);
 
@@ -186,10 +186,10 @@ class TotalExpressMasterBox
 
         if ($response->status == "SUCCESS") {
 
-            // $deliveryBill->update([
-            //     'cnd38_code' => $response->data->flight_id,
-            // ]);
-            return $this->responseSuccessful($response, 'Manifest Closed Sucessfully');
+            $deliveryBill->update([
+                'request_id' => $id,
+            ]);
+            return $this->responseSuccessful($response, $response->messages[0]);
         }
         else{ 
             return $this->responseUnprocessable($response->messages[0][0]);
