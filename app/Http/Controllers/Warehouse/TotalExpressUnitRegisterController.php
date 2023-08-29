@@ -31,5 +31,6 @@ class TotalExpressUnitRegisterController extends Controller
             session()->flash('alert-danger',$response->message);
             return back();
         } 
+        
     }
 }
