@@ -98,7 +98,6 @@
             let val = $('#country').val();
             if(val == '94')
             {
-                window.inactiveChileFields();
                 window.activeGuatmalaFields();
                 return;
             }
@@ -155,6 +154,7 @@
             $('#regions_response').css('display', 'none');
             let val = $(this).val();
             const old_region = $('#region').data('value');
+            window.inActiveGuatmalaFields();
 
             if(val == '46' && window.service == 'courier_express')
             {
@@ -380,7 +380,7 @@
     })
 
     activeGuatmalaFields = function(){
-        console.log('active chile fields'); 
+        console.log('active Gutaemala fields'); 
         $('#cpf').css('display', 'none'); 
         $('#div_state').css('display', 'none')
         $('#state_dev').css('display', 'none')
@@ -389,7 +389,7 @@
 
         $('#div_region').css('display', 'none')
         $('#div_communes').css('display', 'none') 
-        $('#commune').prop('disabled', false);
+        $('#commune').prop('disabled', true);
         $('#label_address').css('display', 'inline-block')
 
         $('#cpf_dev').css('display', 'none')
@@ -397,8 +397,17 @@
 
         $('#state').prop('disabled', true); 
 
-        $('#region').prop('disabled', false); 
-        $('#commune').attr('disabled', false);
+        $('#region').prop('disabled', true);
+    }
+    inActiveGuatmalaFields = function(){
+
+        console.log('in active guatemala fields');  
+        
+        $('#commune').prop('disabled', false); 
+
+        $('#state').prop('disabled', false); 
+
+        $('#region').prop('disabled', false);
     }
 
     activeChileFields = function(){
@@ -454,7 +463,6 @@
 
         $('#country').on('change', function() {
             window.validate_us_address();
-
             if($('#country').val() == '250' || $('#country').val() == '46' || $('#country').val() == '94'){
                 if($('#country').val() != '94')
                 $('#div_street_number').css('display', 'none')
