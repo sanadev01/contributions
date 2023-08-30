@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use Carbon\Carbon;
 use App\Models\Order;
-use App\Http\Controllers\Controller;
-use App\Models\Warehouse\Container;
 use Illuminate\Http\Request;
 use App\Models\OrderTracking;
-use Carbon\Carbon;
+use App\Models\Warehouse\Container;
+use App\Http\Controllers\Controller;
 use App\Services\TotalExpress\Services\TotalExpressMasterBox;
 
 class TotalExpressUnitRegisterController extends Controller
@@ -31,6 +31,5 @@ class TotalExpressUnitRegisterController extends Controller
             session()->flash('alert-danger',$response->message);
             return back();
         } 
-        
     }
 }
