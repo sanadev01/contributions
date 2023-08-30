@@ -389,7 +389,7 @@
 
         $('#div_region').css('display', 'none')
         $('#div_communes').css('display', 'none') 
-        $('#commune').prop('disabled', false);
+        $('#commune').prop('disabled', true);
         $('#label_address').css('display', 'inline-block')
 
         $('#cpf_dev').css('display', 'none')
@@ -397,8 +397,7 @@
 
         $('#state').prop('disabled', true); 
 
-        $('#region').prop('disabled', false); 
-        $('#commune').attr('disabled', false);
+        $('#region').prop('disabled', true);
     }
 
     activeChileFields = function(){
