@@ -189,7 +189,7 @@ class TotalExpressMasterBox
             return $this->responseSuccessful($response, $response->messages[0]);
         }
         else{ 
-            return $this->responseUnprocessable($response);
+            return $this->responseUnprocessable($response->messages[0][0]);
         }
     }
 
