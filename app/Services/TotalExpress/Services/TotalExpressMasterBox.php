@@ -54,11 +54,11 @@ class TotalExpressMasterBox
         ];
     }
 
-    public function requestMasterBox()
+    public function requestMasterBox($container)
     {
         $codes = [];
 
-        foreach ($this->container->orders as $key => $item) {
+        foreach ($container->orders as $key => $item) {
             array_push($codes, $item->corrios_tracking_code);
         }
 
@@ -69,21 +69,24 @@ class TotalExpressMasterBox
         $response = json_decode($request);
         
         if ($response->status == "SUCCESS" && !is_null($response->data)) {
-            return $this->consultCreateMasterBox($response->data->request_id);
+            $container->update([
+                'unit_response_list' => $response->data->request_id
+            ]); 
+            return $this->responseSuccessful($response, $response->messages[0]);
         } else {
             return $this->responseUnprocessable($response->messages[0]);
         }
     }
 
-    public function consultCreateMasterBox($id)
+    public function consultCreateMasterBox($container)
     {
-        $url = $this->baseURL . "/v1/request_status/create_masterbox/$id";
+        $url = $this->baseURL . "/v1/request_status/create_masterbox/$container->unit_response_list";
 
         $request = Http::withHeaders($this->getHeaders())->get($url);
         $response= json_decode($request);
 
-        if ($response->status == "SUCCESS" && optional($response)->data) {
-            $this->container->update([
+        if ($response->status == "SUCCESS") {
+            $container->update([
                 'unit_response_list' => json_encode($response),
                 'unit_code' => $response->data->reference,
                 'response' => 1
@@ -94,10 +97,10 @@ class TotalExpressMasterBox
         }
     }
 
-    public function createFlight($deliveryBill, $request)
+    public function createFlight($deliveryBill)
     {
         $boxNumbers = [];
-        $formRequest = $request;
+
         foreach ($deliveryBill->containers as $key => $container) {
             array_push($boxNumbers, $container->unit_code);
         }
@@ -112,7 +115,8 @@ class TotalExpressMasterBox
             $deliveryBill->update([
                 'cnd38_code' => $response->data->flight_id,
             ]);
-            return $this->updateFlightInformation($response->data->flight_id, $formRequest);
+            return $this->responseSuccessful($response, $response->messages[0]);
+
         } else {
             return $this->responseUnprocessable($response->messages[0]);
         } 
@@ -167,15 +171,17 @@ class TotalExpressMasterBox
         $response= json_decode($apiRequest);
 
         if ($response->status == "SUCCESS") {
-
-            return $this->consultCloseManifest($response->data->request_id, $deliveryBill);
+            $deliveryBill->update([
+                'request_id' => $response->data->request_id,
+            ]);
+            return $this->responseSuccessful($response, $response->messages[0]);
         }
         else{ 
             return $this->responseUnprocessable($response->messages[0]);
         }
     }
 
-    public function consultCloseManifest($id, $deliveryBill)
+    public function consultCloseManifest($id)
     {
         $url = $this->baseURL . "/v1/request_status/close_manifest/$id";
         $apiRequest = Http::withHeaders($this->getHeaders())->get($url); 
@@ -183,13 +189,10 @@ class TotalExpressMasterBox
 
         if ($response->status == "SUCCESS") {
 
-            $deliveryBill->update([
-                'request_id' => $id,
-            ]);
-            return $this->responseSuccessful($response, $response->messages[0]);
+            return $this->responseSuccessful($response, $response->messages[0][0]);
         }
         else{ 
-            return $this->responseUnprocessable($response->messages[0][0]);
+            return $this->responseUnprocessable($response->messages[0]);
         }
     }
 

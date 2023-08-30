@@ -217,16 +217,28 @@
                                                                 <i class="fa fa-refresh"></i> Update Status
                                                             </a>
                                                         @endif
-
+                                                        
                                                         @if (!$deliveryBill->isReady() && $deliveryBill->isTotalExpress()) 
+                                                           <a href="{{ route('warehouse.totalexpress_manifest.createFlight',$deliveryBill) }}" type="button" class=" btn dropdown-item w-100">
+                                                                <i class="fa fa-plane"></i>   Create Flight
+                                                            </a>
+                                                        @endif
+
+                                                        @if (!$deliveryBill->isRegistered() && $deliveryBill->isTotalExpress()) 
                                                            <a href="javascript:void(0)" id="flightInfo" data-id="{{ $deliveryBill->id }}" type="button" class=" btn dropdown-item w-100">
-                                                                <i class="fa fa-plane"></i>   Add Flight Details
+                                                                <i class="fa fa-plane"></i>   Update Flight Details
                                                             </a>
                                                         @endif
 
                                                         @if ($deliveryBill->isReady() && $deliveryBill->isTotalExpress()) 
-                                                            <a href="{{ route('warehouse.totalexpress_manifest.close',$deliveryBill) }}"  type="button" class=" btn dropdown-item w-100">
+                                                            <a href="{{ route('warehouse.totalexpress_manifest.closeManifest',$deliveryBill) }}"  type="button" class=" btn dropdown-item w-100">
                                                                 <i class="fa fa-plane"></i>   Close Manifest
+                                                            </a>
+                                                        @endif
+
+                                                        @if ($deliveryBill->isRegistered() && $deliveryBill->isTotalExpress()) 
+                                                            <a href="{{ route('warehouse.totalexpress_manifest.closeFlight',$deliveryBill) }}"  type="button" class=" btn dropdown-item w-100">
+                                                                <i class="fa fa-plane"></i>   Close Flight
                                                             </a>
                                                         @endif
 
