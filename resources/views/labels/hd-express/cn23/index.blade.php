@@ -400,7 +400,7 @@
             {{ $recipient->first_name }} {{ $recipient->last_name }} <br>
             {{ $recipient->address }}, @if ($recipient->street_no != 0 ) {{ $recipient->street_no }}, @endif {{ $recipient->address2 }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
             {{ optional($recipient->state)->name }}
-            {{ $recipient->country->name }}
+            {{ optional($recipient->country)->name }}
         </div>
     </div>
     @if($order->hasBattery())
