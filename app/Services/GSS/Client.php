@@ -74,7 +74,7 @@ class Client{
                 $label = $this->makePDFLabel($response);
                 $order->update([
                     'corrios_tracking_code' => $response->trackingNumber,
-                    'api_response' => json_encode($label),
+                    'api_response' => $label,
                     'cn23' => [
                         "tracking_code" => $response->trackingNumber,
                         "stamp_url" => route('warehouse.cn23.download',$order->id),
