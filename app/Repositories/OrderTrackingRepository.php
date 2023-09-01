@@ -9,7 +9,7 @@ use App\Facades\USPSTrackingFacade;
 use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
 use App\Services\SwedenPost\DirectLinkTrackingService;
-
+use App\Http\Resources\TrackingUserResource;
 class OrderTrackingRepository
 {
 
@@ -199,18 +199,10 @@ class OrderTrackingRepository
     public function getTrackings($request) {
         $users = Setting::where('key', 'MARKETPLACE')->where('value', 'AMAZON')->pluck('user_id')->toArray();
         $trackingCodes = Order::whereIn('user_id', $users)
+        ->with("user")
         ->where('status', Order::STATUS_SHIPPED)
         ->whereBetween('order_date', [$request->start_date, $request->end_date])
-        ->pluck('corrios_tracking_code')
-        ->toArray();
-        return $trackingCodes;
-    }
-    public function getOrderTrackings($request) {
-        $users = Setting::where('key', 'MARKETPLACE')->where('value', 'AMAZON')->pluck('user_id')->toArray();
-        $trackingCodes = Order::whereIn('user_id', $users)
-        ->where('status', Order::STATUS_SHIPPED)
-        ->whereBetween('order_date', [$request->start_date, $request->end_date])
-        ->select([\DB::raw("CONCAT(sender_first_name,' ',sender_last_name) as name"),'corrios_tracking_code'])->get();
-        return $trackingCodes;
+        ->get();
+        return TrackingUserResource::collection($trackingCodes);
     }
 }
