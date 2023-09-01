@@ -190,9 +190,10 @@
                                                             </a>
                                                         @endif 
                                                         @if($deliveryBill->isRegistered() && $deliveryBill->isGSS())
+                                                        @dd(json_decode($deliveryBill->containers[0]->unit_response_list))
                                                             @foreach (json_decode($deliveryBill->containers[0]->unit_response_list)->manifest->reports as $report)
                                                                 <a href="{{ route('warehouse.gss_container.reports.download',[explode(',', $report)[0], json_decode($deliveryBill->containers[0]->unit_response_list)->dispatchID]) }}" class="dropdown-item w-100">
-                                                                    <i class="fa fa-cloud-download"></i> {{ explode(',', $report)[0] }}
+                                                                    <i class="fa fa-cloud-download"></i> {{ explode(',', $report)[1] }}
                                                                 </a>
                                                             @endforeach
                                                         @endif

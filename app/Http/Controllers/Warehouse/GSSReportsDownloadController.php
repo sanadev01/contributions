@@ -17,10 +17,16 @@ class GSSReportsDownloadController extends Controller
     {
         $client = new Client();
         $response =  $client->generateDispatchReport($report, $dispatchID);
-        $data = $response->getData();
-        $pdfReport = base64_decode($data->output->report);
-        $path = storage_path("{$report}.pdf");
-        file_put_contents($path, $pdfReport); //Temp File
-        return response()->download($path)->deleteFileAfterSend(true); //Delete File
+        $data = $response->getData(); 
+        if($data->isSuccess){
+            $pdfReport = base64_decode($data->output->report);
+            $path = storage_path("{$report}.pdf");
+            file_put_contents($path, $pdfReport); //Temp File
+            return response()->download($path)->deleteFileAfterSend(true); //Delete File
+        } 
+        else{
+            session()->flash('alert-danger', $data->message);
+            return back();
+        }
     }
 }
