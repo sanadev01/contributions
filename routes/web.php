@@ -321,7 +321,7 @@ Route::get('test-label/{id?}',function($id = null){
     $query = AffiliateSale::has('user')->with('order')->has('order')->whereIn('order_id',$orders)->update([
         'is_paid' => false
     ]);
-
+    dd($orders);
     // // $profitPacket = ProfitPackage::find($id);
     // // dd($profitPacket);
 
