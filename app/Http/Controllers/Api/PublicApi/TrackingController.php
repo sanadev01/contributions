@@ -14,9 +14,8 @@ class TrackingController extends Controller
     public function __invoke(Request $request)
     {
         $orderTrackingRepository = new OrderTrackingRepository($search = null);
-        $this->trackings = $orderTrackingRepository->getTrackings($request);
-
-            if(!empty($this->trackings))
+        $this->trackings = $orderTrackingRepository->getOrderTrackings($request);
+            if(count($this->trackings))
             {
                 return apiResponse(true,'Trackings Found',['hdTrackings'=> $this->trackings]); 
             }
