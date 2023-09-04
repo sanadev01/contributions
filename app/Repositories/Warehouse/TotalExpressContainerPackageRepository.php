@@ -4,6 +4,7 @@ namespace App\Repositories\Warehouse;
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Services\TotalExpress\Client;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Session;
 
@@ -28,16 +29,30 @@ class TotalExpressContainerPackageRepository {
             $error = 'Order does not belong to this container. Please Check Packet Service';
         }
         if(!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
-            $container->orders()->attach($order->id);
-            $this->addOrderTracking($order);
+
+            $apiOrderId = json_decode($order->api_response)->orderResponse->data->id;
+            $totalClient = new Client();   
+            $response = $totalClient->dispatchShipment($apiOrderId);
+            // dd($response);
+            if ($response['success']) {
+                // dd("here");
                 Session::flash('alert-class', 'alert-success');
-                $message = 'Order Added in the Container Successfully';
+                $message = $response['message'];
+                $container->orders()->attach($order->id);
+                $this->addOrderTracking($order);
+            }else{
+                Session::flash('alert-class', 'alert-danger');
+                $message = $response['message'];
+            }
+
+            Session::flash('message', $message);
             return [
-                'success' => true,
-                'message' => $message
+                'success' => $response['success'],
+                'message' => $message,
             ];
         }
         Session::flash('alert-class', 'alert-danger');
+        Session::flash('message', $error);
         return [
             'success' => false,
             'message' => $error,
