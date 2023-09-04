@@ -80,11 +80,7 @@
                 </div>
                 <div class="modal-body" style="font-size: 15px;">
                     <p>
-<<<<<<< HEAD
                         @lang('consolidation.Authorization')
-=======
-                        @lang('consolidation.Authorization') <span class="result"></span>
->>>>>>> d2a2e2489b2c922ec41bfc8a9d1e0cd99287b8ec
                     </p>
                     <p>
                         @lang('consolidation.description')

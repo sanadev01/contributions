@@ -21,6 +21,7 @@ use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\PostPlusLabelRepository;
 use App\Repositories\GSSLabelRepository;
 use App\Repositories\HDExpressLabelRepository;
+use App\Services\TotalExpress\TotalExpressLabelRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +33,7 @@ class OrderLabelController extends Controller
         if(Auth::id() != $order->user_id){
             return apiResponse(false,'Order not found');
         }
+        
         $this->authorize('canPrintLableViaApi', $order);
         DB::beginTransaction();
         $isPayingFlag = false;
@@ -104,7 +106,7 @@ class OrderLabelController extends Controller
                 }
                 return $this->rollback($error);
             }
-            // For Correios,  Global eParcel Brazil and Sweden Post(Prime5)
+            // For Correios,  Global eParcel Brazil and Sweden Post(Prime5) 
             if ($order->recipient->country_id == Order::BRAZIL) {
                 if ($isPayingFlag) {
                     $orders->push($order);
@@ -135,12 +137,12 @@ class OrderLabelController extends Controller
                         return $this->rollback($error);
                     }
                 }
-                if ($order->shippingService->isHDExpressService()) {
-                    $hdExpressLabelRepository = new HDExpressLabelRepository();
-                    $hdExpressLabelRepository->run($order, false);
-                    $error = $hdExpressLabelRepository->getError();
+                if ($order->shippingService->is_total_express) {
+                    $totalExpressLabelRepository = new TotalExpressLabelRepository();
+                    $totalExpressLabelRepository->get($order);
+                    $error = $totalExpressLabelRepository->getError();
                     if ($error){
-                        return $this->rollback($error);
+                        return $this->rollback((string)$error);
                     }
                 }
                 if ($order->shippingService->isAnjunService() ||  $order->shippingService->isCorreiosService()){
@@ -155,7 +157,17 @@ class OrderLabelController extends Controller
                     }
                 }
             }
+            
+            if ($order->shippingService->isHDExpressService()) {
+                $hdExpressLabelRepository = new HDExpressLabelRepository();
+                $hdExpressLabelRepository->run($order, false);
+                $error = $hdExpressLabelRepository->getError();
+                if ($error){
+                    return $this->rollback($error);
+                }
+            }
             return $this->commit($order);
+            
         } catch (Exception $e) {
             return $this->rollback($e->getMessage());
         }
@@ -177,7 +189,7 @@ class OrderLabelController extends Controller
     {
         DB::commit();
         return apiResponse(true, "Lable Generated successfully.", [
-            'url' => route('order.label.download',  encrypt($order->id)),
+            'url' => $order->cn23_label_url?? route('order.label.download',  encrypt($order->id)),
             'tracking_code' => $order->corrios_tracking_code
         ]);
     }

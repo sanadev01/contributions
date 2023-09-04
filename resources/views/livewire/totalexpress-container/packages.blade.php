@@ -49,12 +49,10 @@
             </tr>
             @endforeach
             <tr>
-                <td colspan="8">
-                    @if($error)
-                    <div class="alert {{ Session::get('alert-class', 'alert-danger') }}" role="alert">
-                        {{ $error }}
-                    </div>
-                    @endif
+                <td colspan="8"> 
+                    <div class="alert {{ Session::get('alert-class')}}" role="alert">
+                        {{  Session::get('message') }}
+                    </div> 
                 </td>
             </tr>
             <tr>

@@ -152,7 +152,7 @@ class RatesCalculator
             }
         }else{
             $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
-            $rate = $rate['leve'];
+            $rate = optional($rate)['leve'];
         }
 
         

@@ -135,9 +135,8 @@
                             <div class="help-block" id="country_message"></div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group col-12 col-sm-6 col-md-4" id="state_div">
-                    <div class="controls" id="div_hd_state">
+                </div> 
+                    <div class="controls form-group col-12 col-sm-6 col-md-4" id="div_state">
                         <label>@lang('address.State') <span class="text-danger">*</span></label>
                         <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
                             <option value="">Select @lang('address.State')</option>
@@ -148,18 +147,23 @@
                         <div class="help-block"></div>
                     </div>
                     {{-- Chile Regions --}}
-                    <div class="controls d-none" id="div_regions">
+                    <div class="controls form-group col-12 col-sm-6 col-md-4" id="div_region" style="display: none">
                         <label>Regions <span class="text-danger">*</span></label>
                         <select name="region" id="region" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('region', optional($order->recipient)->region) }}">
                             <option value="">Select Region</option>
                         </select>
-                        <div class="help-block d-none" id="regions_response"></div>
+                        <div class="help-block"></div>
+                    </div> 
+                {{-- <div class="form-group col-12 offset-4">
+                    <div class="controls">
+                        <div class="help-block" id="regions_response">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group col-12 col-sm-6 col-md-4" id="city_div">
+                </div> --}}
+                <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls" id="div_city">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
-                        <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control"  placeholder="City"/>
+                        <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control" placeholder="City"/>
                         <div class="help-block"></div>
                     </div>
                     {{-- Chile Communes --}}
@@ -210,10 +214,11 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-4" id="cpf">
-                    <div class="controls" >
-                        <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
-                        <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
+
+                <div class="form-group col-12 col-sm-6 col-md-4" id="cpf" style="display: none">
+                    <div class="controls">
+                            <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
+                            <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
                         <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id',optional($order->recipient)->tax_id)}}" class="form-control" placeholder="CNPJ"/>
                         <div class="help-block"></div>
                     </div>

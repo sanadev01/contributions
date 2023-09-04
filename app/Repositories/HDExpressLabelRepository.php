@@ -47,13 +47,12 @@ class HDExpressLabelRepository
 
     private function getPrimaryLabel()
     {
-            if(!$this->order->corrios_tracking_code){
+            if(!$this->order->corrios_tracking_code){ 
                 $this->order->update([
                     'api_response' => null,
                     'corrios_tracking_code' => 'HD'.date('d').date('m').substr(date('s'), 1, 1).$this->order->id.'BR',
                 ]);
             }
-            $this->addOrderTracking();
             $this->printCN23();
             return true; 
     }
@@ -76,6 +75,8 @@ class HDExpressLabelRepository
 
     private function printCN23()
     {
+        $this->addOrderTracking();
+
         $labelPrinter = new CN23LabelMaker();
         $labelPrinter->setOrder($this->order);
         $labelPrinter->setService($this->order->getService());

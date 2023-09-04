@@ -84,6 +84,7 @@ Route::prefix('v1')->group(function(){
             Route::get('profile', ProfileController::class);
             Route::post('us/label',DomesticLabelController::class);
             Route::get('us/calculator',DomesticLabelRateController::class);
+            Route::get('calculator', [App\Http\Controllers\Api\PublicApi\CalculatorController::class,'index']);
             Route::get('status/{order}', StatusController::class);
             Route::get('cancel/{order}', CancelOrderController::class);
             Route::get('get/tracking', TrackingController::class);

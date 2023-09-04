@@ -191,22 +191,51 @@ class Client
                 'message'=>'label'
             ];
 
-        }
-        else{ 
-            return [ 
-                'type'=>'alert-danger',
-                'message'=> ''.new HandleError($request)
-            ]; 
-        }
+            }
+            else{ 
+                return [ 
+                    'type'=>'alert-danger',
+                    'message'=> ''.new HandleError($request)
+                ]; 
+            }
 
        
-    }catch(\Throwable $e){
-        
-        return [
-            'type'=>'alert-danger',
-            'message'=>$e->getMessage()
-        ];
+        }catch(\Throwable $e){
+            
+            return [
+                'type'=>'alert-danger',
+                'message'=>$e->getMessage()
+            ];
+        }
     }
+
+    public function dispatchShipment($orderId)
+    {
+        try{
+
+            $request = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/orders/$orderId/dispatch");
+            $response = json_decode($request);
+
+            if($response->status=="SUCCESS"){
+                return [
+                    'success'=>true,
+                    'message'=>'Order Added in the Container Successfully'
+                ];
+            }
+            else{ 
+                return [ 
+                    'success'=>false,
+                    'message'=> ''.new HandleError($request)
+                ]; 
+            }
+
+        }catch(\Throwable $e){
+            
+            return [
+                'type'=>'alert-danger',
+                'message'=>$e->getMessage()
+            ];
+        }
     }
 
 }

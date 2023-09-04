@@ -34,7 +34,7 @@ class HandleCorreiosLabelsRepository
                 return $this->swedenPostLabel();
         }
         if ($this->order->recipient->country_id == Order::BRAZIL) {
-
+            
             if ($this->order->shippingService->isGePSService()) {
 
                 return $this->gepsLabel();
@@ -52,12 +52,13 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->is_total_express) {
                 return $this->totalExpressLabel();
             }
-            if ($this->order->shippingService->is_hd_express) {
-                return $this->hdExpressLabel();
-            }
+            
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
             // }
+        }
+        if ($this->order->shippingService->isHDExpressService()) {
+            return $this->hdExpressLabel();
         }
         if ($this->order->recipient->country_id == Order::CHILE) {
 

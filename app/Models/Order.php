@@ -64,6 +64,7 @@ class Order extends Model implements Package
 
     const BRAZIL = 30;
     const CHILE = 46;
+    const Guatemala = 94;
     const US = 250;
 
     public $user_profit = 0;
@@ -875,6 +876,13 @@ class Order extends Model implements Package
         }
         $decode = json_decode($this->api_response);
         return $decode->labelResponse->data->download_url;
+    }
+    function getCn23LabelUrlAttribute() {
+        if($this->shippingService->is_total_express)
+        {
+            return $this->totalExpressLabelUrl();
+        }
+        return null;
     }
 
 }
