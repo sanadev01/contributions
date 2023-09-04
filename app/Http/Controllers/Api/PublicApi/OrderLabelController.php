@@ -28,6 +28,7 @@ use App\Repositories\SwedenPostLabelRepository;
 use App\Repositories\MileExpressLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Services\TotalExpress\TotalExpressLabelRepository;
 
 
 class OrderLabelController extends Controller
@@ -143,6 +144,15 @@ class OrderLabelController extends Controller
                     }
                 }
 
+                if ($order->shippingService->is_total_express) {
+                    $totalExpressLabelRepository = new TotalExpressLabelRepository();
+                    $totalExpressLabelRepository->get($order);
+                    $error = $totalExpressLabelRepository->getError();
+                    if ($error){
+                        return $this->rollback((string)$error);
+                    }
+                }
+
                 if ($order->shippingService->isAnjunService() ||  $order->shippingService->isCorreiosService()){
                     $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
                     $labelData = $corrieosBrazilLabelRepository->run($order, $request->update_label === 'true' ? true : false);
@@ -200,7 +210,7 @@ class OrderLabelController extends Controller
     {
         DB::commit();
         return apiResponse(true, "Lable Generated successfully.", [
-            'url' => route('order.label.download',  encrypt($order->id)),
+            'url' => $order->cn23_label_url?? route('order.label.download',  encrypt($order->id)),
             'tracking_code' => $order->corrios_tracking_code
         ]);
     }

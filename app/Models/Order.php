@@ -971,6 +971,7 @@ class Order extends Model implements Package
     {
         return encrypt($this->id);
     }
+    
     public function totalExpressLabelUrl()
     {
         if (!$this->api_response) {
@@ -978,6 +979,14 @@ class Order extends Model implements Package
         }
         $decode = json_decode($this->api_response);
         return $decode->labelResponse->data->download_url;
+    }
+
+    function getCn23LabelUrlAttribute() {
+        if($this->shippingService->is_total_express)
+        {
+            return $this->totalExpressLabelUrl();
+        }
+        return null;
     }
 
 }
