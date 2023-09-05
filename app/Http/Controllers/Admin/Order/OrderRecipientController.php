@@ -19,7 +19,6 @@ class OrderRecipientController extends Controller
     {
         $this->authorize('editReceipient',$order);
         return view('admin.orders.recipient.index',compact('order'));
-    
     }
 
     /**
