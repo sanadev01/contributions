@@ -33,13 +33,13 @@ class CreateRequest extends FormRequest
             'address2' => 'nullable|max:50',
             'street_no' => 'sometimes',
             'country_id' => 'required|exists:countries,id',
-            'city' => ($this->country_id == \App\Models\Order::Guatemala || $this->country_id == Country::Chile) ?'nullable': 'required_if:service,==,postal_service',
+            'city' => ($this->country_id == \App\Models\Order::Guatemala)?'nullable': 'required_if:service,==,postal_service',
             'commune_id' => 'required_if:service,==,courier_express',
             'phone' => [
                 (($this->country_id == \App\Models\Order::Guatemala)?'nullable':'required'),'max:15','min:11', new PhoneNumberValidator($this->country_id)
             ],
             'state_id' => 'sometimes|required|exists:states,id',
-            'region' => ['sometimes', ($this->country_id == \App\Models\Order::Guatemala || $this->country_id == Country::Chile)?'nullable':'required'],
+            'region' => ['sometimes', ($this->country_id == \App\Models\Order::Guatemala)?'nullable':'required'],
             'zipcode' => [
                 ($this->country_id == \App\Models\Order::Guatemala)?'nullable': 'required'
                 // 'required',  new CorreosAddresstValidator($this->country_id,$this->address), new ZipCodeValidator($this->country_id,$this->state_id)

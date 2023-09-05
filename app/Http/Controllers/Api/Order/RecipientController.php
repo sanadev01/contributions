@@ -12,7 +12,6 @@ use App\Models\Commune;
 use Illuminate\Http\Request;
 use FlyingLuscas\Correios\Client;
 use App\Http\Controllers\Controller;
-use App\Services\Colombia\ColombiaPostalCodes;
 
 class RecipientController extends Controller
 {
@@ -107,15 +106,6 @@ class RecipientController extends Controller
     public function validate_USAddress(Request $request)
     {
         return USPSFacade::validateAddress($request);
-    }
-    
-    public function colombiaZipcode(Request $request)
-    {
-        //$zipcode = Region::query()->where("country_id",$request->country_id)->where('name', 'LIKE', "%{$request->city}%")->value('code');
-        $colombiaPostalCodeService = new ColombiaPostalCodes();
-        $zipCode = $colombiaPostalCodeService->getZipCodes($request->city);
-        $data = ['zipCode' => $zipCode];
-        return response()->json($data);
     }
 
     // get chile regions from db

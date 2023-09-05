@@ -25,8 +25,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('orders/recipient/update', [App\Http\Controllers\Api\Order\RecipientController::class, 'update'])->name('api.orders.recipient.update');
 Route::get('orders/recipient/zipcode', [App\Http\Controllers\Api\Order\RecipientController::class, 'zipcode'])->name('api.orders.recipient.zipcode');
-Route::post('orders/recipient/colombiaZipcode', [App\Http\Controllers\Api\Order\RecipientController::class, 'colombiaZipcode'])->name('api.orders.recipient.colombiaZipcode');
-
 // Route for getting chile regions from correios chile api
 Route::get('orders/recipient/chile_regions', [App\Http\Controllers\Api\Order\RecipientController::class, 'chileRegions'])->name('api.orders.recipient.chile_regions');
 Route::get('orders/recipient/chile_communes', [App\Http\Controllers\Api\Order\RecipientController::class, 'chileCommunes'])->name('api.orders.recipient.chile_comunes');
@@ -96,12 +94,7 @@ Route::prefix('v1')->group(function(){
         Route::get('country/{country}/states', StateController::class);
         Route::get('shipping-services/{country_code?}', ServicesController::class);
         Route::get('shcodes/{search?}', ShCodeController::class);
-        Route::get('hd-regions/{countryId}', RegionController::class)->name('api.hd-regions');
-        Route::get('hd-chile-communes', CommunesController::class)->name('api.hd-chile-communes');
-        Route::get('correios-chile-regions', CorreiosChleRegionController::class)->name('api.correios-chile-regions');
-        Route::get('correios-chile-communes', CorreiosChileCommuneController::class)->name('api.correios-chile-communes');
-        Route::get('correios-chile-normalize-address', CorreiosChileNormalizeAddressController::class)->name('api.correios-chile-normalize-address');
-    });
+     });
     Route::get('refund-tracking-orders', function (Request $request) {
     $orders = Order::whereIn('corrios_tracking_code', $request->trackings)->where('is_paid', true)->where('status', 70)->get();
         $countRefunded = 0;
