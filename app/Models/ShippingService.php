@@ -44,6 +44,10 @@ class ShippingService extends Model
     const Post_Plus_Prime = 777;
     const Post_Plus_Premium = 778;
     const Prime5RIO = 357;
+    const DirectLinkCanada = 358; 
+    const DirectLinkMexico = 360;
+    const DirectLinkChile = 362;
+    const DirectLinkAustralia = 363;
     const GDE_PRIORITY_MAIL = 4387;
     const GDE_FIRST_CLASS = 4388;
     const GSS_PMI = 477;

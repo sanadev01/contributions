@@ -66,7 +66,7 @@
                                             {{ $container->getDestinationAriport() }}
                                         </td>
                                         <td>
-                                            {{ $container->getContainerType() }}
+                                            {{ $container->getContainerType()}}
                                         </td>
                                         <td>
                                             {{ $container->getServiceSubClass() }}
