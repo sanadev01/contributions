@@ -17,7 +17,7 @@ class SwedenPostContainerRepository
     {
         $query = Container::query();
         return $query->where(function ($query) {
-            $query->whereIn('services_subclass_code', [ShippingService::Prime5,ShippingService::Prime5RIO]);
+            $query->whereIn('services_subclass_code',[ShippingService::Prime5,ShippingService::Prime5RIO,ShippingService::DirectLinkAustralia,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile]);
         })->latest()->paginate(50);
     }
 
@@ -26,6 +26,7 @@ class SwedenPostContainerRepository
 
         DB::beginTransaction();
         try { 
+
             $container =  Container::create([
                 'user_id' => Auth::id(),
                 'dispatch_number' => 0,
@@ -37,6 +38,12 @@ class SwedenPostContainerRepository
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
+            if(!$container->is_sweden_post_service)
+            {
+                DB::commit();
+                return $container;
+            }
+            dd(3);
             $response =  (new DirectLinkReceptacle($container))->create($request->services_subclass_code);
             $data = $response->getData();
             if ($data->isSuccess) {
@@ -50,7 +57,7 @@ class SwedenPostContainerRepository
                 DB::rollback();
                 $this->error = $data->message;
                 return null;
-            }
+            } 
         } catch (\Exception $ex) {
             DB::rollback();
             $this->error = $ex->getMessage();
