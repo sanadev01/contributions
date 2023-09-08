@@ -70,7 +70,7 @@ Route::prefix('v1')->group(function(){
             Route::resource('parcels', 'ParcelController')->only('store','show','destroy','update');
             Route::get('parcel/{order}/cn23',OrderLabelController::class);
             Route::put('parcel/items/{parcel}',[App\Http\Controllers\Api\PublicApi\ParcelController::class, 'updateItems']);
-            Route::get('order/tracking/{search}', OrderTrackingController::class);
+            Route::get('order/tracking/{search}/{format?}', OrderTrackingController::class);
             Route::get('services-rates', GetRateController::class);
             Route::resource('products', 'ProductController')->only('index', 'show', 'store');
             Route::get('api/token', AmazonApiTokenController::class);
