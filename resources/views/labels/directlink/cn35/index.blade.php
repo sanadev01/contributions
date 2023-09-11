@@ -56,15 +56,18 @@
             <tr style="height: 1cm !important;position: relative;">
                 <td class="column1" style="text-align: center;font-size:28px;font-weight:bold;">{!! $companyName !!}</td>
                 <td rowspan="2" colspan="2">
-                    <img class="corrioes-lable" src="{{\public_path('images/correios-1.png')}}" style="display:block;width:30mm;height:30mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:0px;left:444px;" alt="">
-                    <!-- @if ($service == 1 || $service == 9 )
-                        <img class="corrioes-lable" src="{{\public_path('images/express-package.png')}}" style="display:block;width:20mm;height:20mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:12px;left:370px;" alt="">
-                    @else
-                        <div style="display:block;width:20mm;height:20mm;border-radius: 1cm;background:black;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:15px;left:370px;"></div>
-                    @endif    
-                    <div style="display:block;width:400px;font-weight:bold;font-size:35px;text-align:center;vertical-align:middle;position:absolute;top:30px;left:440px;">
-                        {{ $packetType }}
-                    </div> -->
+                    {{-- <img class="corrioes-lable" src="{{\public_path('images/correios-1.png')}}" style="display:block;width:30mm;height:30mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:0px;left:444px;" alt=""> --}}
+                       <img class="corrioes-lable"
+                       src="{{public_path('images/hd-1cm.png')}}" 
+                       {{-- style="height:1cm;display:block;position:absolute:top:0;left:0;" --}}
+                        style="display:block;height:1.5cm;font-weight:bold;font-size:25px;text-align:center;vertical-align:start;position:absolute;top:18px;left:250px;" 
+                        alt="">
+                   
+                    
+                     <div style="display:block;width:400px;font-weight:bold;font-size:35px;text-align:center;vertical-align:middle;position:absolute;top:30px;left:440px;">
+                     
+                    {{ $packetType }}
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -87,25 +90,25 @@
                 <td colspan="2" style="text-align: center;font-size:12px;">
                     {!! $officeAddress !!}
 
-                    <!-- <div style="position: absolute;top:105px;left:700px;font-size:25px;font-weight:bold;">
+                    <div style="position: absolute;top:105px;left:700px;font-size:25px;font-weight:bold;">
                         CJA01
                     </div>
                     @if ($OrderWeight > 3)         
                         <div style="position: relative;left:215px !important; margin-top:-40px !important;">
-                            <p style="margin-left:60px !important; font-size:20px;font-weight:bold;">G</p>
+                            <p style="margin-left:70px !important; font-size:20px;font-weight:bold;">G</p>
                             <div style="width: 15px; height: 15px; border: 3px solid rgb(0, 0, 0);margin-left:316.5px !important;margin-top:-40px !important;"></div>
                             <p style="margin-left:140px !important; font-size:10px;">Over 3 kg</p>
                         </div>
                     @endif
                     @if ($OrderWeight <= 3)         
                         <div style="position: relative;left:215px !important; margin-top:-40px !important;">
-                            <p style="margin-left:60px !important; font-size:20px;font-weight:bold;">P</p>
+                            <p style="margin-left:70px !important; font-size:20px;font-weight:bold;">P</p>
                             <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:316.5px !important;margin-top:-40px !important;"></div>
                             <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:325px !important;margin-top:0px !important;"></div>
                             <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:308px !important;margin-top:-15px !important;"></div>
                             <p style="margin-left:140px !important; font-size:9px;">Up to 3 kg</p>
                         </div>
-                    @endif -->
+                    @endif
                 </td>
             </tr>
             <tr>
