@@ -179,6 +179,12 @@ class ShippingService extends Model
         }
         return false;
     }
+    function getIsDirectlinkCountryAttribute(){
+        return $this->service_sub_class == self::DirectLinkCanada||
+        $this->service_sub_class == self::DirectLinkMexico ||
+        $this->service_sub_class == self::DirectLinkChile||
+        $this->service_sub_class == self::DirectLinkAustralia;
+    }
 
     public function isPostPlusService()
     {

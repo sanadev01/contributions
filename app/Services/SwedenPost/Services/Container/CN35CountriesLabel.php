@@ -6,9 +6,8 @@ use App\Services\Correios\Contracts\HasLableExport;
 
 class CN35CountriesLabel implements HasLableExport
 {
-
     private $companyName;
-    private $packetType;
+    public $packetType;
     private $dispatchNumber;
     private $officeAddress;
     private $serialNumber;
@@ -25,10 +24,8 @@ class CN35CountriesLabel implements HasLableExport
     public function __construct()
     {
         $this->companyName = '<img src="'.public_path('images/hd-1cm.png').'" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
-        $this->packetType = 'DirectLink';
+        $this->packetType = 'Direct Link';
         $this->officeAddress = '';
-        $this->service = 'service';
-        $this->OrderWeight = '1234';
         $this->serialNumber = 1;
         $this->flightNumber = '';
         $this->dispatchDate = '';
@@ -37,15 +34,6 @@ class CN35CountriesLabel implements HasLableExport
     public function setCompanyName($companyName)
     {
         $this->companyName = $companyName;
-        return $this;
-    }
-
-    public function setService(int $service)
-    {
-        $this->service = $service;
- 
-        $this->packetType = 'Direct Link'; 
-
         return $this;
     }
 
@@ -88,17 +76,14 @@ class CN35CountriesLabel implements HasLableExport
     public function setType(string $weight)
     {
         $this->OrderWeight = $weight; 
-        $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/>
-                                Centro Internacional de Curitiba –SE/PR <br/>
-                                Rua Salgado Filho, 476 Jardim Amélia <br/>
-                                83.330-972  Pinhais/PR <br/>
-                                CNPJ 34.028.316/0031-29';
+        $this->officeAddress = '<br><br><br><br><br>';
 
         return $this;
     }
     public function setDestinationAirport(string $airport)
     {
         $this->destinationAirport = $airport;
+
         return $this;
     }
 
@@ -122,18 +107,17 @@ class CN35CountriesLabel implements HasLableExport
 
     public function render()
     {
-        return view('labels.brazil.cn35.index',$this->getViewData());
+        return view('labels.directlink.cn35.index',$this->getViewData());
     }
 
     public function download()
     {
-        // dd($this->getViewData());
-        return \PDF::loadView('labels.brazil.cn35.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.directlink.cn35.index',$this->getViewData())->stream();
     }
 
     public function saveAs($path)
     {
-        return \PDF::loadView('labels.brazil.cn35.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.directlink.cn35.index',$this->getViewData())->save($path);
     }
 
     private function getViewData()

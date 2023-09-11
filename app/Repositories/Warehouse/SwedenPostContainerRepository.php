@@ -43,7 +43,6 @@ class SwedenPostContainerRepository
                 DB::commit();
                 return $container;
             }
-            dd(3);
             $response =  (new DirectLinkReceptacle($container))->create($request->services_subclass_code);
             $data = $response->getData();
             if ($data->isSuccess) {

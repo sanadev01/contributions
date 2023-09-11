@@ -106,8 +106,6 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Priority Mail Express International (Nationwide)';
         }elseif($this->services_subclass_code == ShippingService::TOTAL_EXPRESS){
             return 'Total Express';
-        }elseif($this->services_subclass_code == ShippingService::HD_Express){
-            return 'HD Express';
         }elseif($this->services_subclass_code == ShippingService::DirectLinkAustralia){
             return 'DirectLink Australia';
         }elseif($this->services_subclass_code == ShippingService::DirectLinkCanada){

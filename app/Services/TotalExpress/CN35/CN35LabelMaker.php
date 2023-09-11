@@ -7,7 +7,7 @@ use App\Services\Correios\Contracts\HasLableExport;
 class CN35LabelMaker implements HasLableExport
 {
     private $companyName;
-    private $packetType;
+    public $packetType;
     private $dispatchNumber;
     private $officeAddress;
     private $serialNumber;
@@ -144,7 +144,7 @@ class CN35LabelMaker implements HasLableExport
     {
         return [
             'companyName' => $this->companyName,
-            'packetType' => 'Total Express',
+            'packetType' => $this->packetType,
             'dispatchNumber' => $this->dispatchNumber,
             'officeAddress' => $this->officeAddress,
             'serialNumber' => $this->serialNumber,
