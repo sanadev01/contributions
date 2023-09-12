@@ -399,8 +399,8 @@
             <h4><strong>DESTINATARIO:</strong></h4>
             {{ $recipient->first_name }} {{ $recipient->last_name }} <br>
             {{ $recipient->address }}, @if ($recipient->street_no != 0 ) {{ $recipient->street_no }}, @endif {{ $recipient->address2 }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
-            {{ optional($recipient->state)->name }}
-            {{ optional($recipient->country)->name }}
+            {{ optional(optional($recipient)->state)->name }}
+            {{ optional(optional($recipient)->country)->name }}
         </div>
     </div>
     @if($order->hasBattery())
@@ -418,7 +418,7 @@
             <div class="return-address">
                 <span class="return-box"> <i class="return-box-text">X</i> </span> &nbsp; Retorno a origem  <span class="return-box">   </span> Tratar como abandono<br>
                 <span class="site-text" >Dúvidas e reclamações: homedeliverybr.com</span><br><br>
-                <strong>DEVOLUCÃO:</strong> <br>
+                <strong> </strong> <br>
                 {!! $returnAddress !!}
             </div>
             @if($order->getOriginalWeight('kg') > 3)

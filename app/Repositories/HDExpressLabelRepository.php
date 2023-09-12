@@ -32,9 +32,10 @@ class HDExpressLabelRepository
 
     public function updateLabel()
     {
+        $code = optional(optional(optional($this->order)->recipient)->country)->code ?? 'BR';
         $this->order->update([
             'api_response' => null,
-            'corrios_tracking_code' => 'HD'.date('d').date('m').substr(date('s'), 1, 1).$this->order->id.'BR',
+            'corrios_tracking_code' => 'HD'.date('d').date('m').substr(date('s'), 1, 1).$this->order->id.$code,
         ]); 
         $this->printCN23();        
         return true; 
@@ -48,9 +49,10 @@ class HDExpressLabelRepository
     private function getPrimaryLabel()
     {
             if(!$this->order->corrios_tracking_code){ 
+                $code = optional(optional(optional($this->order)->recipient)->country)->code ?? 'BR';
                 $this->order->update([
                     'api_response' => null,
-                    'corrios_tracking_code' => 'HD'.date('d').date('m').substr(date('s'), 1, 1).$this->order->id.'BR',
+                    'corrios_tracking_code' => 'HD'.date('d').date('m').substr(date('s'), 1, 1).$this->order->id.$code,
                 ]);
             }
             $this->printCN23();
