@@ -36,9 +36,7 @@ class CN23LabelMaker implements HasLableExport
         $this->packetType = 'Packet Standard';
         $this->contractNumber = 'Contrato:  9912501576';
         $this->service = 2;
-        $this->returnAddress = 'Homedeliverybr <br>
-        Rua Acaçá 47- Ipiranga <br>
-        Sao Paulo CEP 04201-020';
+        $this->returnAddress = '<br> <br> ';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
     }
 
