@@ -4,10 +4,11 @@ use App\Models\Order;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
 use Illuminate\Support\Facades\Artisan;
+use App\Services\HDExpress\CN23LabelMaker;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
+// use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Deposit\DepositController;
-use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 
 /*
@@ -263,26 +264,15 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id?}',function($id = null){
-
+    $order = Order::where('corrios_tracking_code',$id)->get();
+    dd($order);
+    $labelPrinter = new CN23LabelMaker();
+    $order = Order::find($id);
+    // dd($order->recipient->country->code);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
     
-    $orders = Order::where('corrios_tracking_code',$id)->get();
-    dd($orders);
-    $query = AffiliateSale::has('user')->with('order')->has('order')->whereIn('order_id',$orders)->update([
-        'is_paid' => false
-    ]);
-    dd($orders);
-    // // $profitPacket = ProfitPackage::find($id);
-    // // dd($profitPacket);
-
-    // $labelPrinter = new CN23LabelMaker();
-    // $order = Order::find($id);
-    // // $order->status = 70;
-    // // $order->save();
-    // // dd($order);
-    // $labelPrinter->setOrder($order);
-    // $labelPrinter->setService(2);
-    
-    // return $labelPrinter->download();
+    return $labelPrinter->download();
 });
 
 Route::get('permission',function($id = null){
