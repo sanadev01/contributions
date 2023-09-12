@@ -264,60 +264,9 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}',function($id = null){
 
-    $tracking = [
-        'IX030089797BR',
-        'NB630101450BR',
-        'IX030089806BR',
-        'NB630106514BR',
-        'IX030003221BR',
-        'NB629719744BR',
-        'NB629733542BR',
-        'NB629751400BR',
-        'NB629772872BR',
-        'NB629775953BR',
-        'NB629695257BR',
-        'NB629650777BR',
-        'NB629686224BR',
-        'IX030089845BR',
-        'IX030089854BR',
-        'IX030089837BR',
-        'IX030089823BR',
-        'IX030003235BR',
-        'IX030089810BR',
-        'NB633419701BR',
-        'NB633420435BR',
-        'NB633426319BR',
-        'NB633426755BR',
-        'NB633427230BR',
-        'NB633427416BR',
-        'NB633618631BR',
-        'NB633609970BR',
-        'NB633617993BR',
-        'NB633617619BR',
-        'NB633438440BR',
-        'NB633608886BR',
-        'NB634325926BR',
-        'NB640763594BR',
-        'NB640767812BR',
-        'NB640766176BR',
-        'NB641617125BR',
-        'NB640481324BR',
-        'NB640762885BR',
-        'NB641633803BR',
-        'NB641619832BR',
-        'NB640488818BR',
-        'NB640468331BR',
-        'NB640468040BR',
-        'NB640467680BR',
-        'NB646153004BR',
-        'NB644900018BR',
-        'NB644885267BR',
-        'NB644897251BR',
-        'NB646030169BR',
-        'NB646068751BR'
-
-    ];
-    $orders = Order::whereIn('corrios_tracking_code',$tracking)->get('id')->toArray();
+    
+    $orders = Order::where('corrios_tracking_code',$id)->get();
+    dd($orders);
     $query = AffiliateSale::has('user')->with('order')->has('order')->whereIn('order_id',$orders)->update([
         'is_paid' => false
     ]);
