@@ -54,7 +54,7 @@ class ExportMexicoManfestService extends AbstractCsvExportService
             'PARCEL Weight',
             'Weight UNIT',
             'PRODUCT DESCRIPTION',
-            'TOTAL QTY OF ITEMS IN PARCELc',
+            'TOTAL QTY OF ITEMS IN PARCEL',
             'CURRENCY',
             'TOTAL DECLARED VALUE'
         ];
@@ -91,7 +91,7 @@ class ExportMexicoManfestService extends AbstractCsvExportService
                 $package->weight,
                 $package->measurement_unit,
                 '',
-                '', 
+                count($package->items), 
                 'USD',
                 $package->gross_total,
             ];
@@ -102,17 +102,16 @@ class ExportMexicoManfestService extends AbstractCsvExportService
                     $this->csvData[$this->row] = array_fill(0,20,'');
                 }
                 $this->csvData[$this->row][17] = $item->description;
-                $this->csvData[$this->row][18] = $item->quantity * $item->items;
                 $this->row++;
                 $i++;
             }
-
+            
             $this->row++;
 
             $this->totalCustomerPaid +=  $package->gross_total;
             $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package)['airport'];
             $this->totalPieces++;
-            $this->totalWeight += $package->getOriginalWeight('kg');
+            $this->totalWeight += $package->getWeight('kg');
             $this->totalCommission += optional($package->affiliateSale)->commission;
             $this->totalAnjunCommission += $this->getValuePaidToCorrieos($container,$package)['commission'];
         }
@@ -122,23 +121,28 @@ class ExportMexicoManfestService extends AbstractCsvExportService
             '',
             '',
             '',
+            '',
+            // $this->totalPieces,
+            // $this->totalWeight,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            // $this->totalPaidToCorreios,
+            // $this->totalAnjunCommission,
+            // $this->totalCommission,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
             'Total',
-            $this->totalPieces,
-            $this->totalWeight,
-            '',
-            '',
-            '',
-            '',
-            '',
             $this->totalCustomerPaid,
-            '',
-            $this->totalPaidToCorreios,
-            $this->totalAnjunCommission,
-            $this->totalCommission,
-            '',
-            '',
-            '',
-            ''
         ];
 
     } 
