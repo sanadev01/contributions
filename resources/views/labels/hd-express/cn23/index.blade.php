@@ -419,7 +419,8 @@
                 <span class="return-box"> <i class="return-box-text">X</i> </span> &nbsp; Retorno a origem  <span class="return-box">   </span> Tratar como abandono<br>
                 <span class="site-text" >Dúvidas e reclamações: homedeliverybr.com</span><br><br>
                 <strong>DEVOLUCÃO:</strong> <br>
-                {!! $returnAddress !!}
+                <h2>GUATEMALA</h2>
+                {{-- {!! $returnAddress !!} --}}
             </div>
             @if($order->getOriginalWeight('kg') > 3)
                 <div class="bottom-block">
