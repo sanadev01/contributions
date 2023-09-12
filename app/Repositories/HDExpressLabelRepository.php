@@ -33,7 +33,6 @@ class HDExpressLabelRepository
     public function updateLabel()
     {
         $code = optional(optional(optional($this->order)->recipient)->country)->code ?? 'BR';
-        dd($code);
         $this->order->update([
             'api_response' => null,
             'corrios_tracking_code' => 'HD'.date('d').date('m').substr(date('s'), 1, 1).$this->order->id.$code,
