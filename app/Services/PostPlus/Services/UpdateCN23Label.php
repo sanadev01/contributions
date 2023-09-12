@@ -131,10 +131,17 @@ class UpdateCN23Label
             $this->pdfi->SetFont("Arial", "B", 6.5);
             $this->pdfi->RotatedText(56, 19.3, $this->order->sender_phone? $this->order->sender_phone : '' , 00);
 
-
             //FOR RECEIVER EMAIL
             $this->pdfi->SetFont("Arial", "B", 6.5);
             $this->pdfi->RotatedText(71, 48.5, $this->order->recipient->email, 00);
+            
+            //FOR CPF No.
+            $this->pdfi->SetFont("Arial", "", 7);
+            if(count($this->order->items) > 5) {
+                $this->pdfi->RotatedText(11.6, 247.5, 'CPF '.optional($this->order->recipient)->tax_id, 0);
+            } else {
+                $this->pdfi->RotatedText(11.6, 110.5, 'CPF '.optional($this->order->recipient)->tax_id, 0);
+            }
 
             $this->pdfi->Output($this->pdf_file, 'F');
             
