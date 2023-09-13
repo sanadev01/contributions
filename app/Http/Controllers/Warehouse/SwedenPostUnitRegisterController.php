@@ -20,7 +20,7 @@ class SwedenPostUnitRegisterController extends Controller
         }
         
 
-        if($container->is_directlink_coutry){ 
+        if($container->is_directlink_country){ 
                 if ($container->unit_code == null) {
                     $code = optional(optional($container->orders->first()->recipient)->country)->code;
                      
