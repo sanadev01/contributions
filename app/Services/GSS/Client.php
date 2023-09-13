@@ -126,15 +126,17 @@ class Client{
             $rateType = 'EPMI';
             $foreignOECode = "RIO";
         } elseif($container->services_subclass_code == ShippingService::GSS_FCM) {
-            $rateType = 'FCM';
+            $rateType = 'EFCM';
             $foreignOECode = "CWB";
         }elseif($container->services_subclass_code == ShippingService::GSS_EMS) {
             $rateType = 'EMS';
             $foreignOECode = "CWB";
         }
         // if($containers[0]->awb) {
-            $weight+= UnitsConverter::kgToPound($container->getWeight());
-            $piecesCount = $container->getPiecesCount();
+        //     foreach($containers as $package) {
+                $weight = UnitsConverter::kgToPound($container->getWeight());
+                $piecesCount = $container->getPiecesCount();
+            // }
             $body = [
                 "rateType" => $rateType,
                 "dutiable" => true,
@@ -145,6 +147,7 @@ class Client{
                 "pieceCount" => $piecesCount,
                 "weightInLbs" => $weight,
             ];
+            // dd($body);
             $response = Http::withHeaders($this->getHeaders())->post($url, $body);
             $data= json_decode($response);
     
@@ -164,12 +167,14 @@ class Client{
     public function addPackagesToReceptacle($id, $container)
     {
         $codes = [];
-        foreach ($container->orders as $key => $item) {
-            $codesToPush = [
-                $item->corrios_tracking_code,
-            ];
-            array_push($codes, $codesToPush);
-        }
+        // foreach ($containers as $key => $container) {
+            foreach ($container->orders as $key => $item) {
+                $codesToPush = [
+                    $item->corrios_tracking_code,
+                ];
+                array_push($codes, $codesToPush);
+            }
+        // }
         $parcels = implode(",", array_merge(...$codes));
         $url = $this->baseUrl . '/Package/AddPackagesToReceptacle';
         $body = [
@@ -239,19 +244,24 @@ class Client{
 
     public function generateDispatchReport($report, $dispatchID) {
 
+        $permitNumber = '';
+        if (strpos($report, '_') !== false) {
+            $reportID = substr($report, 0, strpos($report, '_'));
+            $permitNumber = '4680';
+        } else {
+            $reportID = $report;
+        }
+
         $url = $this->baseUrl . '/Dispatch/GenerateDispatchReport';
         $body = [
             "dispatchID" => $dispatchID,
-            "reportID" => $report,
-            "permitNumber" => '',
+            "reportID" => $reportID,
+            "permitNumber" => $permitNumber,
+            "testMode" => true
         ];
+
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        $data= json_decode($response);
-        if ($response->successful() && $data->success == true) {
-            return $this->responseSuccessful($data, 'File Exists');
-        } else {
-            return $this->responseUnprocessable($data->message);
-        }
+        return $response;
     }
 
     
