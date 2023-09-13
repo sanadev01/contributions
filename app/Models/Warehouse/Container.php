@@ -238,7 +238,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         return $this->services_subclass_code == ShippingService::Prime5 || $this->services_subclass_code == ShippingService::Prime5RIO;
     }
-    function getIsDirectlinkCoutryAttribute(){
+    function getIsDirectlinkCountryAttribute(){
         return $this->services_subclass_code == ShippingService::DirectLinkMexico || $this->services_subclass_code == ShippingService::DirectLinkChile|| $this->services_subclass_code == ShippingService::DirectLinkAustralia || $this->services_subclass_code == ShippingService::DirectLinkCanada;
     }
 
