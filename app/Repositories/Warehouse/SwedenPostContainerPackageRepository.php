@@ -28,7 +28,7 @@ class SwedenPostContainerPackageRepository
             ];
         }
 
-        if(isSwedenPostCountry($order) && $container->is_directlink_coutry &&  $this->countryCotainerMatched(optional(optional($order->recipient)->country)->code,$container) ){
+        if(isSwedenPostCountry($order) && $container->is_directlink_country &&  $this->countryCotainerMatched(optional(optional($order->recipient)->country)->code,$container) ){
             $container->orders()->attach($order->id);
             $this->addOrderTracking($order);
             return [
@@ -72,7 +72,7 @@ class SwedenPostContainerPackageRepository
         DB::beginTransaction(); 
         try {
             $order = Order::find($id); 
-            if(isSwedenPostCountry($order) && $container->is_directlink_coutry){
+            if(isSwedenPostCountry($order) && $container->is_directlink_country){
                 return $this->detachOrder($id,$container);
             }
             $response =  (new DirectLinkReceptacle($container))->removeItem($order->corrios_tracking_code);
