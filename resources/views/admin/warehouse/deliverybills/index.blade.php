@@ -176,6 +176,12 @@
                                                                 </a>
                                                             @endif -->
                                                         @endif
+                                                        @if(optional(optional(optional($deliveryBill->containers->first()->orders->first())->recipient)->country)->code=="MX" 
+                                                        && optional($deliveryBill->containers->first()->orders->first())->shippingService->isSwedenPostService())
+                                                        <a href="{{ route('warehouse.delivery_bill.manifest', [$deliveryBill, 'service'=> 'sweden_mexico']) }}"
+                                                            class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Maxico Manifest 
+                                                        </a>
+                                                        @endif                                                        
                                                         @if($deliveryBill->isPostNL())
                                                             <a href="{{ $deliveryBill->request_id }}" target="_blank" class="dropdown-item w-100">
                                                         @else

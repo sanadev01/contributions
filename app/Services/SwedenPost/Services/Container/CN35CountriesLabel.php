@@ -1,10 +1,10 @@
 <?php 
 
-namespace App\Services\TotalExpress\CN35;
+namespace App\Services\SwedenPost\Services\Container;
 
 use App\Services\Correios\Contracts\HasLableExport;
 
-class CN35LabelMaker implements HasLableExport
+class CN35CountriesLabel implements HasLableExport
 {
     private $companyName;
     public $packetType;
@@ -20,10 +20,11 @@ class CN35LabelMaker implements HasLableExport
     private $service;
     private $unitCode;
     private $OrderWeight;
+
     public function __construct()
     {
         $this->companyName = '<img src="'.public_path('images/hd-1cm.png').'" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
-        $this->packetType = 'PACKET STANDARD';
+        $this->packetType = 'Direct Link';
         $this->officeAddress = '';
         $this->serialNumber = 1;
         $this->flightNumber = '';
@@ -74,36 +75,15 @@ class CN35LabelMaker implements HasLableExport
 
     public function setType(string $weight)
     {
-        $this->OrderWeight = $weight;
-        if($weight > 3){
-            if($this->packetType == 'PACKET EXPRESS'){
-                $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/>
-                                        Centro Internacional de São Paulo – SE/SPM <br/>
-                                        Rua Mergenthaler, 592 – Bloco III, 5 Mezanino <br/>
-                                        05311-900  Vila Leopoldina - São Paulo/SP <br/>
-                                        CNPJ 34.028.316/7105-85';
-                return $this;
-            }
-            if($this->packetType == 'PACKET STANDARD'){
-                $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/> 
-                                        Centro Internacional do Rio de Janeiro –SE/RJ <br/>
-                                        Ponta do Galeão, s/n 2 andar TECA Correios Galeão, <br/>
-                                        21941-9740 Ilha do Governador, Rio de Janeiro/RJ <br/>
-                                        CNPJ: 34.028.316/7189-93';
-                return $this;
-            }
-        }
-        $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/>
-                                Centro Internacional de Curitiba –SE/PR <br/>
-                                Rua Salgado Filho, 476 Jardim Amélia <br/>
-                                83.330-972  Pinhais/PR <br/>
-                                CNPJ 34.028.316/0031-29';
+        $this->OrderWeight = $weight; 
+        $this->officeAddress = '<br><br><br><br><br>';
 
         return $this;
     }
     public function setDestinationAirport(string $airport)
     {
         $this->destinationAirport = $airport;
+
         return $this;
     }
 
@@ -127,17 +107,17 @@ class CN35LabelMaker implements HasLableExport
 
     public function render()
     {
-        return view('labels.total_express.cn35.index',$this->getViewData());
+        return view('labels.directlink.cn35.index',$this->getViewData());
     }
 
     public function download()
     {
-        return \PDF::loadView('labels.total_express.cn35.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.directlink.cn35.index',$this->getViewData())->stream();
     }
 
     public function saveAs($path)
     {
-        return \PDF::loadView('labels.total_express.cn35.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.directlink.cn35.index',$this->getViewData())->save($path);
     }
 
     private function getViewData()

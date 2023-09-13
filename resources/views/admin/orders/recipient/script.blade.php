@@ -358,7 +358,6 @@
         $('#cpf').addClass('d-none');
         $('#div_hd_state').css('display', 'none')
         $('#state_dev').css('display', 'none')
-        $('#div_city').css('display', 'block')
         $('#div_street_number').css('display', 'block')
         $('#div_region').css('display', 'none')
         $('#div_communes').css('display', 'none') 
@@ -366,11 +365,15 @@
         $('#label_address').css('display', 'inline-block')
         $('#state_div').css('display', 'none')
         $('#label_chile_address').css('display', 'none')
+        $('#div_co_city').addClass('d-none');
+        $('#div_co_dept').addClass('d-none');
+        $('#div_city').removeClass('d-none');
+        $('#city_div').removeClass('d-none');
 
         $('#state').prop('disabled', true); 
 
-        $('#region').prop('disabled', false); 
-        $('#commune').attr('disabled', false);
+        $('#region').prop('disabled', true); 
+        $('#commune').attr('disabled', true);
     }
 
     function inactiveChileFields(selectedService) {

@@ -130,6 +130,14 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif($this->services_subclass_code == ShippingService::TOTAL_EXPRESS){
             return 'Total Express';
+        }elseif($this->services_subclass_code == ShippingService::DirectLinkAustralia){
+            return 'DirectLink Australia';
+        }elseif($this->services_subclass_code == ShippingService::DirectLinkCanada){
+            return 'DirectLink Canada';
+        }elseif($this->services_subclass_code == ShippingService::DirectLinkMexico){
+            return 'DirectLink Mexico';
+        }elseif($this->services_subclass_code == ShippingService::DirectLinkChile){
+            return 'DirectLink Chile';
         }else {
             return 'FirstClass';
         }
@@ -285,6 +293,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasSwedenPostService()
     {
         return $this->services_subclass_code == ShippingService::Prime5 || $this->services_subclass_code == ShippingService::Prime5RIO;
+    }
+    function getIsDirectlinkCoutryAttribute(){
+        return $this->services_subclass_code == ShippingService::DirectLinkMexico || $this->services_subclass_code == ShippingService::DirectLinkChile|| $this->services_subclass_code == ShippingService::DirectLinkAustralia || $this->services_subclass_code == ShippingService::DirectLinkCanada;
     }
 
     public function hasPostPlusService()
