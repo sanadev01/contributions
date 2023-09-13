@@ -239,19 +239,24 @@ class Client{
 
     public function generateDispatchReport($report, $dispatchID) {
 
+        $permitNumber = '';
+        if (strpos($report, '_') !== false) {
+            $reportID = substr($report, 0, strpos($report, '_'));
+            $permitNumber = '4680';
+        } else {
+            $reportID = $report;
+        }
+
         $url = $this->baseUrl . '/Dispatch/GenerateDispatchReport';
         $body = [
             "dispatchID" => $dispatchID,
-            "reportID" => $report,
-            "permitNumber" => '',
+            "reportID" => $reportID,
+            "permitNumber" => $permitNumber,
+            "testMode" => true
         ];
+
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        $data= json_decode($response);
-        if ($response->successful() && $data->success == true) {
-            return $this->responseSuccessful($data, 'File Exists');
-        } else {
-            return $this->responseUnprocessable($data->message);
-        }
+        return $response;
     }
 
     
