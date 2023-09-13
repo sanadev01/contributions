@@ -116,7 +116,7 @@ class DeliveryBill extends Model
 
     public function isSwedenPost()
     {
-        if($this->containers->first()->is_directlink_coutry ||$this->containers->first()->services_subclass_code == ShippingService::Prime5 || $this->containers->first()->services_subclass_code == ShippingService::Prime5RIO){
+        if($this->containers->first()->is_directlink_country ||$this->containers->first()->services_subclass_code == ShippingService::Prime5 || $this->containers->first()->services_subclass_code == ShippingService::Prime5RIO){
             return true;
         }
         return false;
