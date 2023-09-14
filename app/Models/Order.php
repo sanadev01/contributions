@@ -391,7 +391,7 @@ class Order extends Model implements Package
                 return 'HD Express';
 
             }
-            return 'Correios Brazil.';
+            return 'Correios Brazil';
         }
 
         return null;

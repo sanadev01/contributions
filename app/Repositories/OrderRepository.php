@@ -646,10 +646,6 @@ class OrderRepository
                     return $shippingService->service_sub_class != ShippingService::GSS_PMI;
                 });
             }
- 
-            //     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-            //         return $shippingService->service_sub_class == ShippingService::DirectLinkCanada;
-            // });
 
             if($shippingServices->isNotEmpty()){
                 $this->shippingServiceError = null;
