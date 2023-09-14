@@ -35,6 +35,8 @@ class TotalExpressCN35DownloadController extends Controller
                          ->setUnitCode($container->getUnitCode()); 
             // if($container->hasAnjunService()){
               $cn23Maker->setCompanyName('TotalExpress'); 
+              $cn23Maker->packetType = 'Total Express';
+
             // }
             return $cn23Maker->download();
         }

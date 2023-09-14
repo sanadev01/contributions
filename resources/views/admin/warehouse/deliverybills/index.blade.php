@@ -145,9 +145,16 @@
                                                                 </a>
                                                             @endif -->
                                                         @endif
-                                                        <a href="{{ route('warehouse.delivery_bill.manifest', $deliveryBill) }}"
-                                                            class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Manifest
+                                                        @if(optional(optional(optional($deliveryBill->containers->first()->orders->first())->recipient)->country)->code=="MX" 
+                                                        && optional($deliveryBill->containers->first()->orders->first())->shippingService->isSwedenPostService())
+                                                        <a href="{{ route('warehouse.delivery_bill.manifest', [$deliveryBill, 'service'=> 'sweden_mexico']) }}"
+                                                            class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Maxico Manifest 
                                                         </a>
+                                                        @endif
+                                                        <a href="{{ route('warehouse.delivery_bill.manifest', $deliveryBill) }}"
+                                                        {{-- @dd(optional($deliveryBill->containers->first()->orders->first())->shippingService->service_sub_class) --}}
+                                                        class="dropdown-item w-100"><i class="fa fa-cloud-download"></i>Download Manifest
+                                                       </a>
                                                         <!-- @if($deliveryBill->isRegistered() && $deliveryBill->isPostPlus())
                                                             <a href="{{ route('warehouse.postplus.manifest.download',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> Download PostPlus Manifest
