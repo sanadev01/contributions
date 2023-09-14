@@ -115,6 +115,9 @@ class PrintLabelController extends Controller
         }
         $labelData = null;
         if($order->is_paid){
+            if(!$order->corrios_tracking_code){
+                (new HandleCorreiosLabelsRepository($request,$order))->handle();
+            }
             return redirect()->route('order.label.download',[encrypt($order->id),'time'=>md5(microtime())]);
         }
 
