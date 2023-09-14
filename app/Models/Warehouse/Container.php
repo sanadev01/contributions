@@ -292,10 +292,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasSwedenPostService()
     {
-        return $this->services_subclass_code == ShippingService::Prime5 || $this->services_subclass_code == ShippingService::Prime5RIO;
+        return in_array($this->services_subclass_code,[ShippingService::Prime5,ShippingService::Prime5RIO,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia]);
     }
     function getIsDirectlinkCountryAttribute(){
-        return $this->services_subclass_code == ShippingService::DirectLinkMexico || $this->services_subclass_code == ShippingService::DirectLinkChile|| $this->services_subclass_code == ShippingService::DirectLinkAustralia || $this->services_subclass_code == ShippingService::DirectLinkCanada;
+        return in_array($this->services_subclass_code,[ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia]);
     }
 
     public function hasPostPlusService()

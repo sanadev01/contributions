@@ -130,6 +130,10 @@ class OrderRepository
                 $service = [
                     ShippingService::Prime5,
                     ShippingService::Prime5RIO, 
+                    ShippingService::DirectLinkAustralia, 
+                    ShippingService::DirectLinkCanada, 
+                    ShippingService::DirectLinkChile, 
+                    ShippingService::DirectLinkMexico, 
                 ];
             }
             if($request->carrier == 'Post Plus'){
@@ -573,11 +577,12 @@ class OrderRepository
             foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService)
             {
                 if ($shippingService->isAvailableFor($order)) {
+
                     $shippingServices->push($shippingService);
                 }elseif($shippingService->getCalculator($order)->getErrors() != null && $shippingServices->isEmpty()){
                     $this->shippingServiceError = 'Shipping Service not Available Error: {'.$shippingService->getCalculator($order)->getErrors().'}';
                 }
-            }
+            } 
             // USPS Intenrational Services
             if (optional($order->recipient)->country_id != Order::US && setting('usps', null, User::ROLE_ADMIN))
             {
