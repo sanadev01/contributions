@@ -30,7 +30,7 @@ class HandleCorreiosLabelsRepository
     }
     public function handle()
     {
-        if (isSwedenPostCountry($this->order) && $this->order->shippingService->isSwedenPostService()) {
+        if ($this->order->shippingService->isSwedenPostService()) {
                 return $this->swedenPostLabel();
         }
         if ($this->order->recipient->country_id == Order::BRAZIL) {
