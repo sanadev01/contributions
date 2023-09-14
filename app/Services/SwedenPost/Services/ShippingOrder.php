@@ -7,7 +7,7 @@ use App\Services\Converters\UnitsConverter;
 class ShippingOrder {
 
    protected $chargableWeight;
-   protected $isDestinationCountries = false;
+   protected $isDirectlinkCountry = false;
    protected $taxModility = "DDU";
    protected $serviceCode = '';
    protected $order = null;
@@ -17,10 +17,7 @@ class ShippingOrder {
    public function __construct($order)
    {
       $this->order = $order; 
-      if(isSwedenPostCountry($this->order) && $this->order->recipient->country->code != 'BR'){
-         //true if recipient country is canada , australia,chile ,colombia or mexico.
-         $this->isDestinationCountries = true;
-      }
+      $this->isDirectlinkCountry = $this->order->shippingService->is_directlink_country;
       $this->initTaxModility();
       $this->initServiceCode();
       $this->initFacility();
@@ -87,7 +84,7 @@ class ShippingOrder {
                ],
             ],
          ];
-         if($this->isDestinationCountries){
+         if($this->isDirectlinkCountry){
             $packet['extendData'] = [
                "originPort"=> "JFK",
                "vendorid"=> ""
@@ -113,7 +110,7 @@ class ShippingOrder {
                     'unitValue' => $item->value,
                     'itemCount' => (int)$item->quantity,
                 ];
-                if($this->isDestinationCountries){
+                if($this->isDirectlinkCountry){
                   $itemToPush['weight'] = round($this->calulateItemWeight(), 2) - 0.05;
                   $itemToPush['sku'] = $item->sh_code.'-'.$this->order->id;
                 }
@@ -134,8 +131,8 @@ class ShippingOrder {
          // service code
          if($this->order->shippingService->service_sub_class == ShippingService::Prime5) {
             $this->serviceCode = 'DIRECT.LINK.US.L3';
-         }elseif($this->order->shippingService->service_sub_class == ShippingService::Prime5RIO) {
-            if($this->isDestinationCountries){
+         }elseif($this->order->shippingService->isSwedenPostService()) {
+            if($this->isDirectlinkCountry){
                if($this->taxModility == "DDP"){
                   $this->serviceCode = 'DLUS.DDP.NJ03';
                   if($this->order->recipient->country->code == 'MX')

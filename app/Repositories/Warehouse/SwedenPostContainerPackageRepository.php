@@ -27,8 +27,7 @@ class SwedenPostContainerPackageRepository
                 'message' => 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid'
             ];
         }
-
-        if(isSwedenPostCountry($order) && $container->is_directlink_country &&  $this->countryCotainerMatched(optional(optional($order->recipient)->country)->code,$container) ){
+        if($container->is_directlink_country && $order->shippingService->is_directlink_country && $this->countryCotainerMatched(optional(optional($order->recipient)->country)->code,$container)){
             $container->orders()->attach($order->id);
             $this->addOrderTracking($order);
             return [
@@ -36,7 +35,7 @@ class SwedenPostContainerPackageRepository
                 'message' => 'Added Successfully',
             ];
         }
-        if ((!$container->hasSwedenPostService() || !$order->shippingService->isSwedenPostService()) ){
+        if ((!$container->hasSwedenPostService() || !$order->shippingService->isSwedenPostService()) || $order->shippingService->is_directlink_country){
             return [
                 'success' => false,
                 'message' =>'Order does not belong to this container. Please Check Packet Service',
@@ -72,7 +71,7 @@ class SwedenPostContainerPackageRepository
         DB::beginTransaction(); 
         try {
             $order = Order::find($id); 
-            if(isSwedenPostCountry($order) && $container->is_directlink_country){
+            if($container->is_directlink_country){
                 return $this->detachOrder($id,$container);
             }
             $response =  (new DirectLinkReceptacle($container))->removeItem($order->corrios_tracking_code);

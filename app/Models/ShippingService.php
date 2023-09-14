@@ -52,10 +52,10 @@ class ShippingService extends Model
     const Post_Plus_Prime = 777;
     const Post_Plus_Premium = 778;
     const Prime5RIO = 357;
-    const DirectLinkCanada = 358; 
-    const DirectLinkMexico = 360;
-    const DirectLinkChile = 362;
-    const DirectLinkAustralia = 363;
+    const DirectLinkCanada = 779; 
+    const DirectLinkMexico = 780;
+    const DirectLinkChile = 781;
+    const DirectLinkAustralia = 782;
     const GDE_PRIORITY_MAIL = 4387;
     const GDE_FIRST_CLASS = 4388;
     const GSS_PMI = 477;
@@ -164,16 +164,10 @@ class ShippingService extends Model
     }
     public function isSwedenPostService()
     {
-        if($this->service_sub_class == self::Prime5 || $this->service_sub_class == self::Prime5RIO){
-            return true;
-        }
-        return false;
+        return in_array($this->service_sub_class,[self::Prime5,self::Prime5RIO,self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);
     }
     function getIsDirectlinkCountryAttribute(){
-        return $this->service_sub_class == self::DirectLinkCanada||
-        $this->service_sub_class == self::DirectLinkMexico ||
-        $this->service_sub_class == self::DirectLinkChile||
-        $this->service_sub_class == self::DirectLinkAustralia;
+        return in_array($this->service_sub_class,[self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);
     }
 
     public function isPostPlusService()
