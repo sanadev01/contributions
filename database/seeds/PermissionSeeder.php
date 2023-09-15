@@ -558,7 +558,32 @@ class PermissionSeeder extends Seeder
                 'slug' => 'view_api_docs',
                 'group' => 'API',
                 'description' => 'User can view api documentations'
-            ]
+            ],
+            [
+                'slug' => 'view_gssRates',
+                'group' => 'Gss Rates',
+                'description' => 'View All Gss Rates',
+            ],
+            [
+                'slug' => 'show_gssRate',
+                'group' => 'Gss Rates',
+                'description' => 'Show Single Gss Rate',
+            ],
+            [
+                'slug' => 'create_gssRate',
+                'group' => 'Gss Rates',
+                'description' => 'Create New Gss Rate',
+            ],
+            [
+                'slug' => 'edit_gssRate',
+                'group' => 'Gss Rates',
+                'description' => 'Edit Gss Rate',
+            ],
+            [
+                'slug' => 'delete_gssRate',
+                'group' => 'Gss Rates',
+                'description' => 'Delete Gss Rate',
+            ],
         ];
     }
 }

@@ -10,6 +10,7 @@ use App\Models\Connect;
 use App\Models\Country;
 use App\Models\Document;
 use App\Models\HandlingService;
+use App\Models\GSSRate;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderOrder;
@@ -41,6 +42,7 @@ use App\Policies\ConnectPolicy;
 use App\Policies\CountryPolicy;
 use App\Policies\DocumentPolicy;
 use App\Policies\HandlingServicePolicy;
+use App\Policies\GssRatePolicy;
 use App\Policies\OrderItemPolicy;
 use App\Policies\OrderOrderPolicy;
 use App\Policies\OrderPolicy;
@@ -80,6 +82,7 @@ class AuthServiceProvider extends ServiceProvider
         Country::class => CountryPolicy::class,
         Document::class => DocumentPolicy::class,
         HandlingService::class => HandlingServicePolicy::class,
+        GSSRate::class => GSSRatePolicy::class,
         OrderItem::class => OrderItemPolicy::class,
         OrderOrder::class => OrderOrderPolicy::class,
         PaymentInvoice::class => PaymentInvoicePolicy::class,

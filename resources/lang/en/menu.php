@@ -31,6 +31,7 @@ return [
     'Shipping Services' => 'Shipping Services',
     'Shipping Rates' => 'Shipping Rates (Cost) Upload',
     'Homedeliverybr Cost' => 'Homedeliverybr Cost',
+    'GSS Rates' => 'GSS Rates',
     'Users' => 'Users',
     'Roles' => 'Roles',
     'Billing Informations' => 'Billing Informations',
