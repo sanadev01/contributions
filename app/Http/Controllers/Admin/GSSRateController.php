@@ -16,6 +16,9 @@ class GSSRateController extends Controller
 {
     public function __construct()
     {  
+        $this->authorizeResource(GSSRate::class,null,[
+            'except' => [ 'edit', 'update','destroy' ],
+            ]);
     }
 
     /**
@@ -25,7 +28,6 @@ class GSSRateController extends Controller
      */
     public function index(GSSRateRepository $repository)
     {
-        $this->authorizeResource(GSSRate::class);
         $gssRates = $repository->get();
         return view('admin.gss_rates.index', compact('gssRates'));
     }
@@ -37,8 +39,6 @@ class GSSRateController extends Controller
      */
     public function create()
     {
-        $this->authorizeResource(GSSRate::class);
-
         $countries = Country::all();
         $shippingServices  = ShippingService::all();
         return view('admin.gss_rates.create',compact(['countries','shippingServices']));
@@ -53,7 +53,6 @@ class GSSRateController extends Controller
      */
     public function store(GSSRateRequest $request, GSSRateRepository $repository)
     {
-        $this->authorizeResource(GSSRate::class);
         
         if ( $repository->store($request) ){
             session()->flash('alert-success', 'GSS Rate Created');
@@ -83,8 +82,7 @@ class GSSRateController extends Controller
      */
     public function edit(GSSRate $gssRate)
     {
-        
-        $this->authorizeResource(GSSRate::class);
+        $this->authorize($gssRate);
         $countries = Country::all();
         $shippingServices  = ShippingService::all();
     
@@ -100,7 +98,7 @@ class GSSRateController extends Controller
      */
     public function update(GSSRateRequest $request, GSSRate $gssRate, GSSRateRepository $repository)
     {
-        $this->authorizeResource(GSSRate::class);
+        $this->authorize($gssRate);
 
         if ( $repository->update($request, $gssRate) ){
             session()->flash('alert-success', 'GSS Rate Updated');
@@ -117,8 +115,8 @@ class GSSRateController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(GSSRate $gssRate, GSSRateRepository $repository)
-    {   
-        $this->authorizeResource(GSSRate::class);
+    {
+        $this->authorize($gssRate);
          if ($repository->delete($gssRate) ){
             session()->flash('alert-success', 'GSS Rate Deleted');
             return  redirect()->route('admin.gss-rates.index');
