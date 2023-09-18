@@ -42,7 +42,7 @@ use App\Policies\ConnectPolicy;
 use App\Policies\CountryPolicy;
 use App\Policies\DocumentPolicy;
 use App\Policies\HandlingServicePolicy;
-use App\Policies\GssRatePolicy;
+use App\Policies\GSSRatePolicy;
 use App\Policies\OrderItemPolicy;
 use App\Policies\OrderOrderPolicy;
 use App\Policies\OrderPolicy;

@@ -561,28 +561,28 @@ class PermissionSeeder extends Seeder
             ],
             [
                 'slug' => 'view_gssRates',
-                'group' => 'Gss Rates',
-                'description' => 'View All Gss Rates',
+                'group' => 'GSS Rates',
+                'description' => 'View All GSS Rates',
             ],
             [
                 'slug' => 'show_gssRate',
-                'group' => 'Gss Rates',
-                'description' => 'Show Single Gss Rate',
+                'group' => 'GSS Rates',
+                'description' => 'Show Single GSS Rate',
             ],
             [
                 'slug' => 'create_gssRate',
-                'group' => 'Gss Rates',
-                'description' => 'Create New Gss Rate',
+                'group' => 'GSS Rates',
+                'description' => 'Create New GSS Rate',
             ],
             [
                 'slug' => 'edit_gssRate',
-                'group' => 'Gss Rates',
-                'description' => 'Edit Gss Rate',
+                'group' => 'GSS Rates',
+                'description' => 'Edit GSS Rate',
             ],
             [
                 'slug' => 'delete_gssRate',
-                'group' => 'Gss Rates',
-                'description' => 'Delete Gss Rate',
+                'group' => 'GSS Rates',
+                'description' => 'Delete GSS Rate',
             ],
         ];
     }

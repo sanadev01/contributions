@@ -8,7 +8,7 @@ use App\Models\GSSRate;
 use App\Models\User;
 use Exception;
 use App\Http\Requests\GSSRateRequest;
-class GssRatesRepository
+class GSSRateRepository
 {
     public function get()
     {   
