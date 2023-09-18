@@ -65,7 +65,7 @@
                                 <div class="controls row mb-1 align-items-center mt-3">
                                     <label class="col-md-3 text-md-right">@lang('gssRate.Api Discount')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="number"  min="1" class="form-control" name="api_discount" value="{{ old('api_discount') }}" placeholder="@lang('gssRate.Api Discount')">
+                                        <input type="number"  min="1" step="0.01" class="form-control" name="api_discount" value="{{ old('api_discount') }}" placeholder="@lang('gssRate.Api Discount')">
                                         @error('api_discount')
                                         <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
@@ -74,7 +74,7 @@
                                 <div class="controls row mb-1 align-items-center mt-3">
                                     <label class="col-md-3 text-md-right">@lang('gssRate.User Discount')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="number" min="1"  class="form-control" name="user_discount" value="{{ old('user_discount') }}" placeholder="@lang('gssRate.User Discount')">
+                                        <input type="number" min="1"  step="0.01" class="form-control" name="user_discount" value="{{ old('user_discount') }}" placeholder="@lang('gssRate.User Discount')">
                                         @error('user_discount')
                                         <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
