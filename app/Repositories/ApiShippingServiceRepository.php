@@ -173,7 +173,7 @@ class ApiShippingServiceRepository
             $request = new Request();
             $request->merge(['order_id' => $order->id, 'service' => $order->shippingService->service_sub_class]);
             $orderItemController = new OrderItemsController(new OrderRepository());
-            $response = $orderItemController->GSSRates($request);
+            $response = $orderItemController->GSSRates($request,true);
 
             if($response['success'])
             {
