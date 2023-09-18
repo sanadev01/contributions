@@ -265,8 +265,22 @@ class Client{
     }
 
     
-    public function getServiceRates($order, $rateType) {
+    public function getServiceRates($request) {
         
+        $service = $request->service;
+        $order = Order::find($request->order_id);
+        if($service == ShippingService::GSS_PMI) {
+            $rateType = 'PMI';
+        } elseif($service == ShippingService::GSS_EPMEI) {
+            $rateType = 'EPMEI';
+        } elseif($service == ShippingService::GSS_EPMI) {
+            $rateType = 'EPMI';
+        } elseif($service == ShippingService::GSS_FCM) {
+            $rateType = 'FCM';
+        } elseif($service == ShippingService::GSS_EMS) {
+            $rateType = 'EMS';
+        }
+
         $url = $this->baseUrl . '/Utility/CalculatePostage';
         $body = [
             "countryCode" => "BR",
@@ -288,7 +302,7 @@ class Client{
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
         $data= json_decode($response);
         if ($response->successful() && $data->success == true) {
-            return $this->responseSuccessful($data, 'Rate Calculation Successful');
+            return $this->responseSuccessful($data->calculatedPostage, 'Rate Calculation Successful');
         } else {
             return $this->responseUnprocessable($data->message);
         }
