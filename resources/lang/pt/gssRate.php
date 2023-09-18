@@ -2,6 +2,7 @@
 
 return [
     'Manage GSS Rates' => 'Gerenciar Taxas GSS',
+    'Edit Service' => 'Edit Service',
     'Name' => 'Nome',
     'Cost' => 'Custo',
     'Price' => 'Preço',

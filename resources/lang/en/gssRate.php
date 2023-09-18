@@ -2,6 +2,7 @@
 
 return [ 
     'Manage GSS Rates' => 'Manage GSS Rates',
+    'Edit Service' => 'Edit Service',
     'Name' => 'Name',
     'Cost' => 'Cost',
     'Price' => 'Price',
