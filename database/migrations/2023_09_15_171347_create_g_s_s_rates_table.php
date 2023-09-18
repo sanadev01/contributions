@@ -18,8 +18,8 @@ class CreateGSSRatesTable extends Migration
             $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('country_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('shipping_service_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->string('api_discount');
-            $table->string('user_discount');
+            $table->float('api_discount');
+            $table->float('user_discount');
             $table->timestamps();
         });
     }
