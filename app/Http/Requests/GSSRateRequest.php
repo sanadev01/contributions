@@ -26,8 +26,8 @@ class GSSRateRequest extends FormRequest
         return [
             'country_id'=>'required|exists:countries,id',
             'shipping_service_id'=>'required|exists:shipping_services,id',
-            'api_discount'=>'required|min:0.01|max:100',
-            'user_discount'=>'required|gt:api_discount|min:0.01|max:100', 
+            'api_discount'=>'required|gt:user_discount|min:0.01|max:100',
+            'user_discount'=>'required|min:0.01|max:100', 
             'user_id'=>'required|exists:users,id',
         ];
     }
