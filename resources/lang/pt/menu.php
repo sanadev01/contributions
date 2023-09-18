@@ -31,6 +31,7 @@ return [
     'Shipping Services' => 'Serviços de Frete',
     'Shipping Rates' => 'Upload de taxas de frete (custo)',
     'Homedeliverybr Cost' => 'Homedeliverybr Custo',
+    'GSS Rates' => 'GSS tarifas',
     'Users' => 'Comercial',
     'Roles' => 'Funções',
     'Billing Informations' => 'Informações de pagamento',

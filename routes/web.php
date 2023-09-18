@@ -59,6 +59,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         // Route::resource('import-excel', ImportExcelController::class)->only(['index','store']);
 
         Route::resource('handling-services', HandlingServiceController::class)->except('show');
+        Route::resource('gss-rates', GSSRateController::class);
         Route::resource('addresses', AddressController::class);
         Route::get('addresses-export', [\App\Http\Controllers\Admin\AddressController::class, 'exportAddresses'])->name('export.addresses');
         Route::resource('shipping-services', ShippingServiceController::class);

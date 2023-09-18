@@ -321,4 +321,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Deposit::class);
     }
+    public function gSSRates() {
+        return $this->hasMany(GSSRate::class);
+    }
 }
