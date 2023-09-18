@@ -244,7 +244,7 @@
                             @can('viewAny', App\Models\GSSRate::class)
                             <li class="{{ $isActive(['admin.gss-rates.index','admin.gss-rates.edit','admin.gss-rates.create']) }}">
                                 <a href="{{ route('admin.gss-rates.index') }}">
-                                    <i class="icon_adjst feather icon-circle"></i>
+                                    <i class="feather icon-circle"></i>
                                     <span class="menu-title">@lang('menu.GSS Rates')</span>
                                 </a>
                             </li>
