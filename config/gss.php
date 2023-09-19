@@ -12,6 +12,6 @@ return [
         'password' => 'MFLA#831gss',
         'locationId' => 'MIAMIFLOHERCOFRGTUSM',
         'workStationId' => 'HERCOFRGTUSM',
-        'baseUrl' => 'https://gss.usps.com/usps-cpas/gssapiv2',
+        'baseUrl' => 'https://gss.usps.com/usps-cpas/gssapiv2/api',
         ]
     ];
