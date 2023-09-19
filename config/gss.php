@@ -10,8 +10,8 @@ return [
     'production' => [
         'userId' => 'HERFuser',
         'password' => 'MFLA#831gss',
-        'locationId' => 'HERCOFRGTUSM',
-        'workStationId' => 'MIAMIFLOHERCOFRGTUSM',
+        'locationId' => 'MIAMIFLOHERCOFRGTUSM',
+        'workStationId' => 'HERCOFRGTUSM',
         'baseUrl' => 'https://gss.usps.com/usps-cpas/gssapiv2',
         ]
     ];
