@@ -137,26 +137,31 @@ class Client{
                 $weight = UnitsConverter::kgToPound($container->getWeight());
                 $piecesCount = $container->getPiecesCount();
             // }
-            $body = [
-                "rateType" => $rateType,
-                "dutiable" => true,
-                "receptacleType" => "E",
-                "foreignOECode" => $foreignOECode,
-                "countryCode" => "BR",
-                "dateOfMailing" => Carbon::now(),
-                "pieceCount" => $piecesCount,
-                "weightInLbs" => $weight,
-            ];
-            // dd($body);
-            $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-            $data= json_decode($response);
-    
-            if ($response->successful() && $data->success == true) { 
-                
-                return $this->addPackagesToReceptacle($data->receptacleID, $container);
 
-            } else {
-                return $this->responseUnprocessable($data->message);
+            if($weight >= 50) {
+                $body = [
+                    "rateType" => $rateType,
+                    "dutiable" => true,
+                    "receptacleType" => "E",
+                    "foreignOECode" => $foreignOECode,
+                    "countryCode" => "BR",
+                    "dateOfMailing" => Carbon::now(),
+                    "pieceCount" => $piecesCount,
+                    "weightInLbs" => $weight,
+                ];
+                $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+                $data= json_decode($response);
+        
+                if ($response->successful() && $data->success == true) { 
+                    
+                    return $this->addPackagesToReceptacle($data->receptacleID, $container);
+
+                } else {
+                    return $this->responseUnprocessable($data->message);
+                }
+            }
+            else {
+                return $this->responseUnprocessable("Container given weight $weight Lb is less than the minimum required weight i.e. 50 Lb");
             }
         // }
         // else {
