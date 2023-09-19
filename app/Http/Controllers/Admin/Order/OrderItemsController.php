@@ -247,7 +247,7 @@ class OrderItemsController extends Controller
         ];
     }
 
-    public function GSSRates(Request $request,$api=false)
+    public function GSSRates(Request $request)
     {
         $client = new Client();
         $response =  $client->getServiceRates($request);
@@ -256,7 +256,7 @@ class OrderItemsController extends Controller
         if ($data->isSuccess && $data->output > 0){
             return (array)[
                 'success' => true,
-                'total_amount' => number_format($this->applyGSSDiscount($order ,$data->output,$request->service,$api),2),
+                'total_amount' => number_format($this->applyGSSDiscount($order ,$data->output,$request->service),2),
             ];
         } else {
             return (array)[
@@ -267,21 +267,13 @@ class OrderItemsController extends Controller
 
         
     }
-    function applyGSSDiscount($order,$rate ,$service,$api=false) {
+    function applyGSSDiscount($order,$rate ,$service) {
         $user = $order->user;
         $discount = $user->gSSRates()->whereHas('shipping_service',function($query) use ($service){
             return $query->where('service_sub_class',$service);
         })->where('country_id',$order->recipient->country_id)
         ->first();
+        return $discount ? $rate  - ($rate /100 * $discount->user_discount):$rate;
 
-        if(!$discount){
-            return $rate;
-        }
-        if($api){
-                return $rate - ($rate /100 * $discount->api_discount);
-        }else{
-            return $rate  - ($rate /100 * $discount->user_discount);
-
-        }
     }
 }
