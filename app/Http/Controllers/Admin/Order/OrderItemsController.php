@@ -256,7 +256,8 @@ class OrderItemsController extends Controller
         if ($data->isSuccess && $data->output > 0){
             return (array)[
                 'success' => true,
-                'total_amount' => number_format($this->applyGSSDiscount($order ,$data->output,$request->service),2),
+                'total_amount' => number_format($data->output, 2),
+                // 'total_amount' => number_format($this->applyGSSDiscount($order ,$data->output,$request->service),2),
             ];
         } else {
             return (array)[
