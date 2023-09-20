@@ -372,8 +372,7 @@ class Order extends Model implements Package
                 return 'Global eParcel';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Prime5 || optional($this->shippingService)->service_sub_class == ShippingService::Prime5RIO){
-
+            elseif(in_array(optional($this->shippingService)->service_sub_class,[ShippingService::Prime5,ShippingService::Prime5RIO,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia])){
                 return 'Prime5';
 
             }
@@ -392,7 +391,6 @@ class Order extends Model implements Package
                 return 'HD Express';
 
             }
-            
             return 'Correios Brazil';
         }
 
