@@ -55,7 +55,7 @@ class OrderLabelController extends Controller
             $labelData = null;
 
             //sweden post
-            if (isSwedenPostCountry($order) && $order->shippingService->isSwedenPostService()) {
+            if ($order->shippingService->isSwedenPostService()) {
                 return $this->swedenPostLabel($order);
             }
 
