@@ -77,12 +77,7 @@ class SettingController extends Controller
         ($request->usps_profit != null ) ? saveSetting('usps_profit', $request->usps_profit, $this->adminId) : saveSetting('usps_profit', 0, $this->adminId);
         ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $this->adminId) : saveSetting('ups_profit', 0, $this->adminId);
         ($request->fedex_profit != null ) ? saveSetting('fedex_profit', $request->fedex_profit, $this->adminId) : saveSetting('fedex_profit', 0, $this->adminId);
-        ($request->gss_api_discount != null ) ? saveSetting('gss_api_discount', $request->gss_api_discount, $this->adminId) : saveSetting('gss_api_discount', 0, $this->adminId);
-        if($request->gss_user_discount != null && $request->gss_api_discount < $request->gss_user_discount) {
-            session()->flash('alert-danger', 'GSS User Discount Value Cannot be Greater than its API Discount !!');
-            return back();
-        }
-        ($request->gss_user_discount != null ) ? saveSetting('gss_user_discount', $request->gss_user_discount, $this->adminId) : saveSetting('gss_user_discount', 0, $this->adminId);
+        ($request->gss_profit != null ) ? saveSetting('gss_profit', $request->gss_profit, $this->adminId) : saveSetting('gss_profit', 0, $this->adminId);
         ($request->gde_pm_profit != null ) ? saveSetting('gde_pm_profit', $request->gde_pm_profit, $this->adminId) : saveSetting('gde_pm_profit', 0, $this->adminId);
         ($request->gde_fc_profit != null ) ? saveSetting('gde_fc_profit', $request->gde_fc_profit, $this->adminId) : saveSetting('gde_fc_profit', 0, $this->adminId);
 
