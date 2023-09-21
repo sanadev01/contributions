@@ -38,7 +38,7 @@
                     
                 @endphp
                 <td>
-                    <input type="text" class="form-control shipping" name="shipping" value="{{$slab['leve']}}" id="shipping_{{$key}}" data-key="{{$key}}">
+                    <input type="text" class="form-control shipping" name="shipping" value="@if($weight){{ $cost }}@endif" id="shipping_{{$key}}" data-key="{{$key}}">
                 </td>
 
                 <td>

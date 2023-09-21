@@ -91,8 +91,8 @@ class TaxController extends Controller
             session()->flash('alert-success', 'Tax Transaction Updated');
             return redirect()->route('admin.tax.index');
         }
-        session()->flash('alert-danger', 'Error While Update Tax! Check Your Account Balance');        session()->flash('alert-danger', 'Error While Update Tax! Check Your Account Balance');
-        return back()->withInput()->withInput();
+        session()->flash('alert-danger', 'Error While Update Tax! Check Your Account Balance');
+        return back()->withInput();
     }
 
     public function refund(Request $request)
@@ -109,7 +109,6 @@ class TaxController extends Controller
             $deposit = Deposit::create([
                 'uuid' => PaymentInvoice::generateUUID('DP-'),
                 'amount' =>  $tax->selling_usd,
-                'order_id' => $tax->order_id,
                 'user_id' => $tax->user_id,
                 'order_id' => $tax->order_id,
                  'balance' => $balance +  $tax->selling_usd,

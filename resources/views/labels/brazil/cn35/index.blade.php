@@ -54,25 +54,17 @@
     <div class="page">
         <table border="2">
             <tr style="height: 1cm !important;position: relative;">
-                @if ($service == 15)
-                    <td class="column1" style="text-align: center;font-size:25px;">{!! $companyName !!}</td>
-                @else    
-                    <td class="column1" style="text-align: center;font-size:28px;font-weight:bold;">{!! $companyName !!}</td>
-                @endif
+                <td class="column1" style="text-align: center;font-size:28px;font-weight:bold;">{!! $companyName !!}</td>
                 <td rowspan="2" colspan="2">
-                    @if ($service == 15)
-                        <img src={{ public_path('images/hd-1cm.png') }} style="height:18mm;display:block;position:absolute:top:-10;left:0;"/>
+                    <img class="corrioes-lable" src="{{\public_path('images/correios-1.png')}}" style="display:block;width:30mm;height:30mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:0px;left:220px;" alt="">
+                    @if ($service == 1 || $service == 9 )
+                        <img class="corrioes-lable" src="{{\public_path('images/express-package.png')}}" style="display:block;width:20mm;height:20mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:12px;left:370px;" alt="">
                     @else
-                        <img class="corrioes-lable" src="{{\public_path('images/correios-1.png')}}" style="display:block;width:30mm;height:30mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:0px;left:220px;" alt="">
-                        @if ($service == 1 || $service == 9 )
-                            <img class="corrioes-lable" src="{{\public_path('images/express-package.png')}}" style="display:block;width:20mm;height:20mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:12px;left:370px;" alt="">
-                        @else
-                            <div style="display:block;width:20mm;height:20mm;border-radius: 1cm;background:black;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:15px;left:370px;"></div>
-                        @endif    
-                        <div style="display:block;width:400px;font-weight:bold;font-size:35px;text-align:center;vertical-align:middle;position:absolute;top:30px;left:440px;">
-                            {{ $packetType }}
-                        </div>
-                    @endif
+                        <div style="display:block;width:20mm;height:20mm;border-radius: 1cm;background:black;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:15px;left:370px;"></div>
+                    @endif    
+                    <div style="display:block;width:400px;font-weight:bold;font-size:35px;text-align:center;vertical-align:middle;position:absolute;top:30px;left:440px;">
+                        {{ $packetType }}
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -94,26 +86,25 @@
                 </td>
                 <td colspan="2" style="text-align: center;font-size:12px;">
                     {!! $officeAddress !!}
-                    @if ($service != 15)
-                        <div style="position: absolute;top:105px;left:700px;font-size:25px;font-weight:bold;">
-                            CJA01
+
+                    <div style="position: absolute;top:105px;left:700px;font-size:25px;font-weight:bold;">
+                        CJA01
+                    </div>
+                    @if ($OrderWeight > 3)         
+                        <div style="position: relative;left:215px !important; margin-top:-40px !important;">
+                            <p style="margin-left:70px !important; font-size:20px;font-weight:bold;">G</p>
+                            <div style="width: 15px; height: 15px; border: 3px solid rgb(0, 0, 0);margin-left:316.5px !important;margin-top:-40px !important;"></div>
+                            <p style="margin-left:140px !important; font-size:10px;">Over 3 kg</p>
                         </div>
-                        @if ($OrderWeight > 3)         
-                            <div style="position: relative;left:215px !important; margin-top:-40px !important;">
-                                <p style="margin-left:70px !important; font-size:20px;font-weight:bold;">G</p>
-                                <div style="width: 15px; height: 15px; border: 3px solid rgb(0, 0, 0);margin-left:316.5px !important;margin-top:-40px !important;"></div>
-                                <p style="margin-left:140px !important; font-size:10px;">Over 3 kg</p>
-                            </div>
-                        @endif
-                        @if ($OrderWeight <= 3)         
-                            <div style="position: relative;left:215px !important; margin-top:-40px !important;">
-                                <p style="margin-left:70px !important; font-size:20px;font-weight:bold;">P</p>
-                                <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:316.5px !important;margin-top:-40px !important;"></div>
-                                <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:325px !important;margin-top:0px !important;"></div>
-                                <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:308px !important;margin-top:-15px !important;"></div>
-                                <p style="margin-left:140px !important; font-size:9px;">Up to 3 kg</p>
-                            </div>
-                        @endif
+                    @endif
+                    @if ($OrderWeight <= 3)         
+                        <div style="position: relative;left:215px !important; margin-top:-40px !important;">
+                            <p style="margin-left:70px !important; font-size:20px;font-weight:bold;">P</p>
+                            <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:316.5px !important;margin-top:-40px !important;"></div>
+                            <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:325px !important;margin-top:0px !important;"></div>
+                            <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:308px !important;margin-top:-15px !important;"></div>
+                            <p style="margin-left:140px !important; font-size:9px;">Up to 3 kg</p>
+                        </div>
                     @endif
                 </td>
             </tr>
@@ -127,7 +118,7 @@
                 <td colspan="2">
                     <div class="text-align:center;">
                         Nº VÔO <small><i>(Flight Number)</i></small> <br>
-                        &nbsp;<br/> &nbsp;<br/>
+                        . <br/>.
                     </div>
                 </td>
             </tr>
@@ -164,11 +155,11 @@
                 </td>
                 <td rowspan="2" colspan="2">
                     <div style="text-align:center; @if($OrderWeight <= 3) margin-top: 2% !important; @endif">
-                        <img style="width: @if(!empty($colombiaContainer)) 7cm @else 14cm @endif; height:1.5cm;display:block;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($unitCode, 'C128',1,100,[0,0,0])}}" alt="barcode"   />
+                        <img style="width: 14cm; height:1.5cm;display:block;" src="data:image/png;base64,{{DNS1D::getBarcodePNG($unitCode, 'C128',1,100,[0,0,0])}}" alt="barcode"   />
                         <div class="unit-code" style="width: 100%;display:block;">
                             {{$unitCode}}
                         </div>
-                        &nbsp;<br/>
+                        .
                     </div>
                 </td>
             </tr>

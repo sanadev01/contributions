@@ -76,6 +76,7 @@ class CreateRequest extends FormRequest
 
             "products.*.sh_code" => [
                 "required",
+                new NcmValidator()
             ],
             "products.*.description" => "required",
             "products.*.quantity" => "required|min:1",
@@ -117,10 +118,6 @@ class CreateRequest extends FormRequest
             $rules['sender.sender_phone'] = 'sometimes|string|max:100';
             $rules['sender.sender_zipcode'] = 'required';
             $rules['recipient.phone'] = 'required|string|max:12';
-        }
-
-        if ($shippingService && $shippingService->isPostNLService()) {
-            $rules['products.*.description'] = 'required|max:45';
         }
 
         return $rules;

@@ -9,15 +9,13 @@ class AuthorizeCard extends Component
 {   
 
     public $billingInformationId;
-    public $withRequiredInput;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($billingInformationId,$withRequiredInput=true)
+    public function __construct($billingInformationId)
     {
-        $this->withRequiredInput = $withRequiredInput;
         $this->billingInformationId = $billingInformationId;
     }
 

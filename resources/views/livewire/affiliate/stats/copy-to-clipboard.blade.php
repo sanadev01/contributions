@@ -8,7 +8,7 @@
     <div class="row mb-1 justify-content-center">
         <div class="col-md-6">
             <div class="d-flex">
-                <input type="text" class="form-control w-75 hd-search" id="link" name="link" value="{{ route('register',['ref'=>$reffer_code] ) }}" readonly>
+                <input type="text" class="form-control w-75" id="link" name="link" value="{{ route('register',['ref'=>$reffer_code] ) }}" readonly>
                 <button onclick="copyToClipboard()" class="btn btn-primary w-25">
                     Copy
                 </button>

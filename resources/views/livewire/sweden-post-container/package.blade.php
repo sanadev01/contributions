@@ -12,7 +12,7 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody>            
             @foreach ($orders as $key => $order)
             <tr id="{{ $key }}">
                 <td>

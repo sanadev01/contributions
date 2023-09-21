@@ -38,7 +38,6 @@ class NotifyTransaction extends Mailable
             $this->order = $order;
             $this->newStatus = $order->status_name;
         }
-        
         if(setting('auto_charge', null, $order->user_id) && getBalance($order->user) < 200 ){
             $charge = 200 - getBalance($order->user);
             try {
@@ -47,7 +46,7 @@ class NotifyTransaction extends Mailable
                 \Log::info('Notify Autocharge email send error: '.$ex->getMessage());
             }
         }
-        
+
     }
 
     /**
@@ -63,7 +62,10 @@ class NotifyTransaction extends Mailable
             $subject = "Transaction Notification";        
         }
         return $this->markdown('email.admin.notify-transaction')
-        ->to('mnaveedsaim@gmail.com')
+        ->to(
+            config('hd.email.admin_email'),
+            config('hd.email.admin_name'),
+        )->cc('mnaveedsaim@gmail.com')
         ->subject($subject);
     }
 }

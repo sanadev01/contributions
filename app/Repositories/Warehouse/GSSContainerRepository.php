@@ -27,14 +27,6 @@ class GSSContainerRepository {
 
     public function store($request)
     {
-        if($request->services_subclass_code == ShippingService::GSS_FCM) {
-            $destinationCity = "CWB";
-        } elseif($request->services_subclass_code == ShippingService::GSS_EPMEI) {
-            $destinationCity = 'SAO';
-        } elseif($request->services_subclass_code == ShippingService::GSS_EPMI) {
-            $destinationCity = 'RIO';
-        }
-
         try {
             $container =  Container::create([
                 'user_id' => Auth::id(),
@@ -43,7 +35,7 @@ class GSSContainerRepository {
                 'seal_no' => $request->seal_no,
                 'origin_operator_name' => 'HERC',
                 'postal_category_code' => 'A',
-                'destination_operator_name' => $destinationCity,
+                'destination_operator_name' => $request->destination_operator_name,
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
@@ -65,7 +57,8 @@ class GSSContainerRepository {
         try {
             return  $container->update([
                 'seal_no' => $request->seal_no,
-                'unit_type' => $request->unit_type
+                'unit_type' => $request->unit_type,
+                'destination_operator_name' => $request->destination_operator_name,
             ]);
 
         } catch (\Exception $ex) {

@@ -148,21 +148,6 @@ class Orders extends Component
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
-        if($this->search)
-        {   
-            $search = $this->search;
-            // dd($search);
-            $orders->where('order_date', 'LIKE', "%{$this->search}%")
-            ->orWhere('warehouse_number', 'LIKE', "%{$this->search}%")
-            ->orWhere('merchant', 'LIKE', "%{$this->search}%")
-            ->orWhere('carrier', 'LIKE', "%{$this->search}%")
-            ->orWhere('measurement_unit',"{$this->search}")
-            ->orWhere('weight',"{$this->search}")
-            ->orWhereHas('user', function ($query) use ($search){
-                $query->where('name', 'like', '%'.$search.'%');
-            }) 
-            ->orWhere('corrios_tracking_code', 'LIKE', "%{$this->search}%");
-        }
         
         return $orders;
     }

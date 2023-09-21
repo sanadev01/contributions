@@ -43,9 +43,7 @@ body.vertical-layout.vertical-menu-modern .main-menu {
 
 body.vertical-layout.vertical-menu-modern.menu-expanded .navbar .navbar-header {
   float: left;
-  width: 260px; 
-  padding-left: 5px;
-}
+  width: 260px; }
 
 body.vertical-layout.vertical-menu-modern.menu-expanded .navbar .navbar-brand .brand-text {
   animation: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) 0s normal forwards 1 fadein; }
@@ -170,8 +168,7 @@ body.vertical-layout.vertical-menu-modern.menu-collapsed .main-menu {
       display: inline-block;
       position: absolute;
       right: 25px;
-      top: 14px;
-      font-size: 0.7rem !important;
+      top: 10px;
       transform: rotate(0deg);
       transition: -webkit-transform 0.2s ease-in-out; }
     body.vertical-layout.vertical-menu-modern.menu-collapsed .main-menu.expanded .navigation li.open > a:not(.mm-next):after {

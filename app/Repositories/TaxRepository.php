@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories;
+
 use App\Events\AutoChargeAmountEvent;
 use App\Http\Requests\Tax\TaxRequest;
 use App\Http\Requests\Tax\TaxUpdateRequest;
@@ -60,15 +61,15 @@ class TaxRepository
 
     public function store(TaxRequest $request)
     {
-        $insufficientBalanceMessages=[];
-        $depositedMessages=[];
-        $user = null; 
-            foreach ($request->order_id as $orderId){
-                    DB::beginTransaction();
-                    try{
-                        $order = Order::find($orderId); 
-                        $user = $order->user;
-                        $balance = Deposit::getCurrentBalance($user);
+        $insufficientBalanceMessages = [];
+        $depositedMessages = [];
+        $user = null;
+        foreach ($request->order_id as $orderId) {
+            DB::beginTransaction();
+            try {
+                $order = Order::find($orderId);
+                $user = $order->user;
+                $balance = Deposit::getCurrentBalance($user);
 
                 $sellingUSD =   round($request->tax_payment[$order->id] / $request->selling_br, 2);
                 $buyingUSD  =  round($request->tax_payment[$order->id] / $request->buying_br, 2);

@@ -8,8 +8,7 @@
                     <div class="card-header">
                         <div class="">
                             <h4 class="mb-0 mr-3">
-                            @section('title', __('shipping-rates.shipping-rates') . 'For' .
-                                optional($shipping_rate->shippingService)->name)
+                                @lang('shipping-rates.shipping-rates') For {{ optional($shipping_rate->shippingService)->name }}
                             </h4>
                             <hr>
                         </div>
@@ -34,25 +33,25 @@
                             </thead>
                             <tbody>
                                 @forelse ($shipping_rate->data??[] as $rate)
-                                    <tr>
-                                        <th>
-                                            {{ isset($rate['weight']) ? $rate['weight'] : 0 }} g
-                                        </th>
-                                        <th>
-                                            {{ isset($rate['leve']) ? $rate['leve'] : 0 }}
-                                        </th>
-                                    </tr>
+                                <tr>
+                                    <th>
+                                        {{ isset($rate['weight'])?$rate['weight']:0 }} g
+                                    </th>
+                                    <th>
+                                        {{ isset($rate['leve'])?$rate['leve']:0 }}
+                                    </th>
+                                </tr>
                                 @empty
-                                    <tr>
-                                        <td colspan="2">
-                                            No data found
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        No data found
+                                    </td>
+                                </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
-                </div>
             </div>
+        </div>
     </section>
 @endsection

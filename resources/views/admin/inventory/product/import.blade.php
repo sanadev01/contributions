@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('page')
+@section('page') 
     <div class="card">
         <div class="card-header">
             <h4 class="card-title" id="basic-layout-form"></h4>
@@ -14,12 +14,12 @@
                 </ul>
             </div>
         </div>
-
+    
         <div class="card-body">
-            @if ($errors->count())
+            @if( $errors->count() )
                 <div class="alert alert-danger">
                     <ul>
-                        @foreach ($errors->all() as $error)
+                        @foreach($errors->all() as $error)
                             <li>
                                 {{ $error }}
                             </li>
@@ -27,8 +27,7 @@
                     </ul>
                 </div>
             @endif
-            <form class="form" action="{{ route('admin.inventory.product-import.store') }}" method="POST"
-                enctype="multipart/form-data">
+            <form class="form" action="{{ route('admin.inventory.product-import.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-body">
                     <div class="row justify-content-center">
@@ -37,46 +36,24 @@
                         </div>
                     </div>
                     @admin
-                        <div class="row justify-content-center">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
-                                    <livewire:components.search-user />
-                                    @error('pobox_number')
-                                        <div class="help-block text-danger"> {{ $message }} </div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                    @endadmin
-                    <div class="row justify-content-center mb-5">
-                        <div class="controls mt-3 col-6">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Upload</span>
-                                </div>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" name="excel_file"
-                                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/xml"
-                                        required>
-                                    <label class="custom-file-label" for="inputGroupFile01">@lang('orders.import-excel.Select Excel File to Upload')<span
-                                            class="text-danger">*</span></label>
-                                    @error('excel_file')
-                                        <div class="text-danger">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>@lang('parcel.User POBOX Number') <span class="text-danger">*</span></label>
+                                <livewire:components.search-user />
+                                @error('pobox_number')
+                                <div class="help-block text-danger"> {{ $message }} </div>
+                                @enderror
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="row justify-content-center">
+                    @endadmin
+                    
+                    <div class="row justify-content-center">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="projectinput1">@lang('orders.import-excel.Select Excel File to Upload')</label>
-                                <input type="file" class="form-control" name="excel_file"
-                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/xml"
-                                    required>
+                                <input type="file" class="form-control" name="excel_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/xml" required>
                                 @error('excel_file')
                                     <div class="text-danger">
                                         {{ $message }}
@@ -84,7 +61,7 @@
                                 @enderror
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                     <div class="row justify-content-center">
                         <div class="col-md-10">
                             <div class="alert" style="background: #ffcaca !important;">
@@ -131,46 +108,45 @@
             </form>
         </div>
     </div>
-    <div class="modal fade bd-example-modal-lg" id="homedeliveryModal" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="homedeliveryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Homedelivery Sheet Instructions</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <strong>sh_code (Required)</strong> @lang('orders.import-excel.Use to add Harmonized Code')
-                        <br><strong>name (Required)</strong> @lang('orders.import-excel.Use to add Product Name')
-                        <br><strong>order (Required)</strong> @lang('orders.import-excel.Use to add Order Number')
-                        <br><strong>price (Required)</strong> @lang('orders.import-excel.Use to add Price Per Item')
-                        <br><strong>category (Required)</strong> @lang('orders.import-excel.Use to add Category')
-                        <br><strong>sku (Required)</strong> @lang('orders.import-excel.Use to add SKU')
-                        <br><strong>status (Required)</strong> @lang('orders.import-excel.Use to add Status')
-                        <br><strong>description (Required)</strong> @lang('orders.import-excel.Use to add Description')
-                        <br><strong>quantity (Required)</strong> @lang('orders.import-excel.Use to add Quantity')
-                        <br><strong>brand (Required)</strong> @lang('orders.import-excel.Use to add Brand')
-                        <br><strong>manufacturer (Required)</strong> @lang('orders.import-excel.Use to add Manufacturer')
-                        <br><strong>barcode (Required)</strong> @lang('orders.import-excel.Use to add BarCode')
-                        <br><strong>item (Required)</strong> @lang('orders.import-excel.Use to add Item Number')
-                        <br><strong>lot (Required)</strong> @lang('orders.import-excel.Use to add lot Number')
-                        <br><strong>unit (Required)</strong>@lang('orders.import-excel.Use to add Unit')
-                        <br><strong>case (Required)</strong> @lang('orders.import-excel.Use to add Case')
-                        {{-- <br><strong>inventory_value (Required)</strong> @lang('orders.import-excel.Use to add Inventory Value') --}}
-                        <br><strong>min_quantity (Required)</strong> @lang('orders.import-excel.Use to add Minimum Quantity')
-                        <br><strong>max_quantity (Required)</strong> @lang('orders.import-excel.Use to add Maximum Quantity')
-                        <br><strong>discontinued (Required)</strong> @lang('orders.import-excel.Use to add Items Discontinued')
-                        <br><strong>store_day (Required)</strong> @lang('orders.import-excel.Use to add Store Days')
-                        <br><strong>location (Optional)</strong> @lang('orders.import-excel.Use to add Warehouse Location')
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Homedelivery Sheet Instructions</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
+            <div class="modal-body">
+                <div class="container">
+                    <strong>sh_code (Required)</strong> @lang('orders.import-excel.Use to add Harmonized Code')
+                    <br><strong>name (Required)</strong> @lang('orders.import-excel.Use to add Product Name')
+                    <br><strong>order (Required)</strong> @lang('orders.import-excel.Use to add Order Number')
+                    <br><strong>price (Required)</strong> @lang('orders.import-excel.Use to add Price Per Item')
+                    <br><strong>category (Required)</strong> @lang('orders.import-excel.Use to add Category')
+                    <br><strong>sku (Required)</strong> @lang('orders.import-excel.Use to add SKU')
+                    <br><strong>status (Required)</strong> @lang('orders.import-excel.Use to add Status')
+                    <br><strong>description (Required)</strong> @lang('orders.import-excel.Use to add Description')
+                    <br><strong>quantity (Required)</strong> @lang('orders.import-excel.Use to add Quantity')
+                    <br><strong>brand (Required)</strong> @lang('orders.import-excel.Use to add Brand')
+                    <br><strong>manufacturer (Required)</strong> @lang('orders.import-excel.Use to add Manufacturer')
+                    <br><strong>barcode (Required)</strong> @lang('orders.import-excel.Use to add BarCode')
+                    <br><strong>item (Required)</strong> @lang('orders.import-excel.Use to add Item Number')
+                    <br><strong>lot (Required)</strong> @lang('orders.import-excel.Use to add lot Number')
+                    <br><strong>unit (Required)</strong>@lang('orders.import-excel.Use to add Unit')
+                    <br><strong>case (Required)</strong> @lang('orders.import-excel.Use to add Case')
+                    {{-- <br><strong>inventory_value (Required)</strong> @lang('orders.import-excel.Use to add Inventory Value') --}}
+                    <br><strong>min_quantity (Required)</strong> @lang('orders.import-excel.Use to add Minimum Quantity')
+                    <br><strong>max_quantity (Required)</strong> @lang('orders.import-excel.Use to add Maximum Quantity')
+                    <br><strong>discontinued (Required)</strong> @lang('orders.import-excel.Use to add Items Discontinued')
+                    <br><strong>store_day (Required)</strong> @lang('orders.import-excel.Use to add Store Days')
+                    <br><strong>location (Optional)</strong> @lang('orders.import-excel.Use to add Warehouse Location')
+                </div>    
+            </div> 				
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
         </div>
     </div>
 @endsection

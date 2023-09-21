@@ -63,7 +63,6 @@ class CommissionShow extends Component
             'weight' => $this->weight,
             'saleType' => $this->saleType,
             'commission' => $this->commission,
-            'search' => $this->search,
         ]),true,$this->pageSize);
     }
 

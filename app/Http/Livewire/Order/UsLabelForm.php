@@ -43,8 +43,6 @@ class UsLabelForm extends Component
     public $zipCodeResponse;
     public $zipCodeResponseMessage;
     public $zipCodeClass;
-    public $usGDERates = [];
-
 
     protected $listeners = [
         'searchedAddress' => 'searchAddress',
@@ -78,7 +76,6 @@ class UsLabelForm extends Component
             $this->senderPhone = $this->order->user->phone;
             $this->userId = $this->order->user_id;
         }
-        $this->getGDERates();
     }
 
     public function render()
@@ -278,66 +275,5 @@ class UsLabelForm extends Component
         }
 
         return;
-    }
-
-    private function createGDERequest()
-    {
-        request()->merge([
-            'first_name' => $this->order->recipient->first_name,
-            'last_name' => $this->order->recipient->last_name,
-            'sender_state' => $this->order->recipient->state->code,
-            'sender_address' => $this->order->recipient->address,
-            'sender_city' => $this->order->recipient->city,
-            'sender_zipcode' => $this->order->recipient->zipcode,
-            'sender_phone' => $this->order->recipient->phone,
-            'order_id' => $this->order->id,
-        ]);
-    }
-
-    private function getCostOfGDESelectedService()
-    {
-        Arr::where($this->usGDERates, function ($value, $key) {
-            if($value['service_code'] == $this->selectedService)
-            {
-                return $this->selectedServiceCost = $value['cost'];
-            }
-        });
-    }
-
-    public function getGDERates()
-    {
-        $this->usGDERates = [];
-
-        if ($this->order->shippingService->isGDEService())
-        {
-            $domesticLabelRepostory = new DomesticLabelRepository();
-            $domesticLabelRepostory->handle();
-            $this->createGDERequest();
-            $this->usGDERates = $domesticLabelRepostory->getGDEDomesticRates($this->usShippingServices);
-            $this->uspsError = $domesticLabelRepostory->getError();
-            $this->excludeShippingServices();
-        }
-    }
-
-    public function getGDELabel(DomesticLabelRepository $domesticLabelRepostory)
-    {
-        if (!$this->selectedService) {
-            return $this->addError('selectedService', 'select service please.');
-        }
-
-        $this->getCostOfGDESelectedService();
-        $this->createGDERequest();
-        request()->merge([
-            'service' => $this->selectedService,
-            'total_price' => $this->selectedServiceCost,
-        ]);
-
-        $domesticLabelRepostory->handle();
-        if($domesticLabelRepostory->getDomesticLabel( $this->order))
-        {
-            return redirect()->route('admin.order.us-label.index', $this->order->id);
-        }
-
-        $this->uspsError = $domesticLabelRepostory->getError();
     }
 }

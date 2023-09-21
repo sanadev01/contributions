@@ -2,35 +2,30 @@
 
 namespace App\Http\Controllers\Api\PublicApi;
 
-use Exception;
 use App\Models\Order;
 use App\Events\OrderPaid;
 use Illuminate\Http\Request;
 // use App\Repositories\LabelRepository;
 use App\Services\GePS\Client;
 use App\Models\ShippingService;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Events\AutoChargeAmountEvent;
 use Illuminate\Support\Facades\Storage;
-use App\Repositories\GSSLabelRepository;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
-use App\Repositories\AnjunLabelRepository;
 use App\Repositories\FedExLabelRepository;
-use App\Repositories\POSTNLLabelRepository;
-use Illuminate\Database\Eloquent\Collection;
-use App\Repositories\ColombiaLabelRepository;
-use App\Repositories\PostPlusLabelRepository;
 use App\Repositories\SwedenPostLabelRepository;
-use App\Repositories\MileExpressLabelRepository;
+use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Repositories\PostPlusLabelRepository;
+use App\Repositories\GSSLabelRepository;
+use App\Repositories\HDExpressLabelRepository;
 use App\Services\TotalExpress\TotalExpressLabelRepository;
-
-
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Events\AutoChargeAmountEvent;
 class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order)
@@ -38,6 +33,7 @@ class OrderLabelController extends Controller
         if(Auth::id() != $order->user_id){
             return apiResponse(false,'Order not found');
         }
+        
         $this->authorize('canPrintLableViaApi', $order);
         DB::beginTransaction();
         $isPayingFlag = false;
@@ -67,7 +63,6 @@ class OrderLabelController extends Controller
             if ($order->shippingService->is_usps_priority_international || $order->shippingService->is_usps_firstclass_international) {
                 $uspsLabelRepository = new USPSLabelRepository();
                 $uspsLabelRepository->handle($order);
-
                 $error = $uspsLabelRepository->getUSPSErrors();
                 if (!$error) {
                     return $this->commit($order);
@@ -134,7 +129,6 @@ class OrderLabelController extends Controller
                         return $this->rollback($error);
                     }
                 }
-                
                 if ($order->shippingService->isGSSService()) {
                     $gssLabelRepository = new GSSLabelRepository();
                     $gssLabelRepository->get($order);
@@ -143,7 +137,6 @@ class OrderLabelController extends Controller
                         return $this->rollback($error);
                     }
                 }
-
                 if ($order->shippingService->is_total_express) {
                     $totalExpressLabelRepository = new TotalExpressLabelRepository();
                     $totalExpressLabelRepository->get($order);
@@ -152,7 +145,6 @@ class OrderLabelController extends Controller
                         return $this->rollback((string)$error);
                     }
                 }
-
                 if ($order->shippingService->isAnjunService() ||  $order->shippingService->isCorreiosService()){
                     $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
                     $labelData = $corrieosBrazilLabelRepository->run($order, $request->update_label === 'true' ? true : false);
@@ -164,25 +156,12 @@ class OrderLabelController extends Controller
                         return $this->rollback($corrieosBrazilLabelRepository->getError());
                     }
                 }
-                
-                if ($order->shippingService->is_anjun_china){
-                    $anjunLabelRepository = new AnjunLabelRepository();
-                    $anjunLabelRepository->run($order, $request->update_label === 'true' ? true : false); 
-
-                    $order->refresh();
-                    if ($labelData) {
-                        Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-                    }
-                    if ($anjunLabelRepository->getError()) {
-                        return $this->rollback($anjunLabelRepository->getError());
-                    }
-                }
             }
-            if ($order->shippingService->is_milli_express) { 
-                $mileExpressLabelRepository = new MileExpressLabelRepository();
-                $mileExpressLabelRepository->run($order, true);
-                $error = $mileExpressLabelRepository->getError();
-                
+            
+            if ($order->shippingService->isHDExpressService()) {
+                $hdExpressLabelRepository = new HDExpressLabelRepository();
+                $hdExpressLabelRepository->run($order, false);
+                $error = $hdExpressLabelRepository->getError();
                 if ($error){
                     return $this->rollback($error);
                 }
@@ -202,10 +181,10 @@ class OrderLabelController extends Controller
             if ($error){
                 return $this->rollback($error);
             }
-                return $this->commit($order);
+               return $this->commit($order);
 
         }
-    }
+    } 
     private function commit($order)
     {
         DB::commit();

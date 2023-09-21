@@ -5,63 +5,57 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header pr-1">
-                    @section('title', __('ShCodes'))
-                    <div class="col-12 d-flex justify-content-end">
-                        <a href="{{ route('admin.shcode-export.create') }}"
-                            class="pull-right btn btn-secondary mr-1">@lang('shcode.Import Sh Code')</a>
-                        <a href="{{ route('admin.shcode-export.index') }}"
-                            class="pull-right btn btn-success mr-1">@lang('shcode.Download')</a>
-                        <a href="{{ route('admin.shcode.create') }}"
-                            class="pull-right btn btn-primary">@lang('shcode.Create Sh Code')</a>
+                    <div class="card-header">
+                        <h4 class="mb-0">ShCodes</h4>
+                        <div>
+                            <a href="{{ route('admin.shcode-export.create') }}" class="pull-right btn btn-secondary">@lang('shcode.Import Sh Code')</a>
+                            <a href="{{ route('admin.shcode-export.index') }}" class="pull-right btn btn-success mr-2">@lang('shcode.Download')</a>
+                            <a href="{{ route('admin.shcode.create') }}" class="pull-right btn btn-primary mr-2">@lang('shcode.Create Sh Code')</a>
+                        </div>
                     </div>
-                </div>
-                <div class="card-content">
-                    <div class="card-body">
+                    <div class="card-content">
                         <div class="mt-1">
-                            <table class="table mb-0  table-bordered">
+                            <table class="table mb-0">
                                 <thead>
-                                    <tr>
-                                        <th>
-                                            Code
-                                        </th>
-                                        <th>
-                                            English
-                                        </th>
-                                        <th>
-                                            Portuguese
-                                        </th>
-                                        <th>
-                                            Spanish
-                                        </th>
-                                        <th>
-                                            @lang('role.Action')
-                                        </th>
-                                    </tr>
+                                <tr>
+                                    <th>
+                                        Code
+                                    </th>
+                                    <th>
+                                        English
+                                    </th>
+                                    <th>
+                                        Portuguese
+                                    </th>
+                                    <th>
+                                        Spanish
+                                    </th>
+                                    <th>
+                                        @lang('role.Action')
+                                    </th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($shCodes as $shCode)
+                                    @foreach($shCodes as $shCode)
                                         <tr>
                                             <td>
                                                 {{ $shCode->code }}
                                             </td>
                                             <td>
-                                                {{ optional(explode('-------', $shCode->description))[0] }}
+                                                {{ optional(explode('-------',$shCode->description))[0] }}
                                             </td>
                                             <td>
-                                                {{ optional(explode('-------', $shCode->description))[1] }}
+                                                {{ optional(explode('-------',$shCode->description))[1] }}
                                             </td>
                                             <td>
-                                                {{ optional(explode('-------', $shCode->description))[2] }}
+                                                {{ optional(explode('-------',$shCode->description))[2] }}
                                             </td>
                                             <td class="d-flex">
-                                                <a href="{{ route('admin.shcode.edit', $shCode) }}"
-                                                    class="btn btn-primary mr-2" title="Edit Shcode">
+                                                <a href="{{ route('admin.shcode.edit',$shCode) }}" class="btn btn-primary mr-2" title="Edit Shcode">
                                                     <i class="feather icon-edit"></i>
                                                 </a>
-
-                                                <form action="{{ route('admin.shcode.destroy', $shCode) }}"
-                                                    method="post" onsubmit="return confirmDelete()">
+                                                
+                                                <form action="{{ route('admin.shcode.destroy',$shCode) }}" method="post" onsubmit="return confirmDelete()">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="btn btn-danger" title="Delete Shcode">
@@ -78,6 +72,5 @@
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 @endsection

@@ -93,36 +93,31 @@
                                 </p>
                                 <table>
                                     <tr>
-                                        <td>Billing Address: </td>
-                                        <td> 
-                                            <u>&nbsp; **** **** **** {{ substr(optional($this->selected_card)->card_no ?? '****', -4) }} &nbsp;</u>
+                                        <td>Billing Address </td>
+                                        <td> <u> &nbsp; **** **** **** {{ substr(optional($this->selected_card)->card_no ?? '****', -4) }} &nbsp;</u>
                                         </td>
                                         <td>Phone# </td>
-                                        <td>
-                                            <u>&nbsp;{{ auth()->user()->phone }} &nbsp;</u> 
-                                        </td>
-                                        <td>Email: </td>
-                                        <td>
-                                            <u>&nbsp;{{ auth()->user()->email }} &nbsp;</u> 
-                                        </td>
-                                        
+                                        <td><u> &nbsp; {{ auth()->user()->phone }} &nbsp;</u> </td>
+
                                     </tr>
                                     <tr>
-                                        <td>Country: </td>
-                                        <td >
-                                            <u>&nbsp;{{ optional($this->selected_card)->country }} &nbsp;</u>
-                                        </td>
-                                        <td>State: </td>
-                                        <td>
-                                            <u>&nbsp;{{ optional($this->selected_card)->state }} &nbsp;</u> 
-                                        </td>
-                                        <td>Zip: </td>
-                                        <td class="mt-2">
-                                            <u>&nbsp;{{ optional($this->selected_card)->zipcode }} &nbsp;</u>
-                                        </td>
+                                        <td>Country, State, Zip </td>
+                                        <td><u>  &nbsp;{{ optional($this->selected_card)->country }},
+                                                {{ optional($this->selected_card)->state }},
+                                                {{ optional($this->selected_card)->zipcode }}
+                                             </u>
+                                             </td>
+                                        <td>Email# </td>
+                                        <td><u> &nbsp; {{ auth()->user()->email }} &nbsp;</u> </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"> </td>
+                                        <td>Date# </td>
+                                        <td><u> &nbsp; {{ date('Y-m-d') }} &nbsp;</u> </td>
+
                                     </tr>
                                 </table>
-                                <p class="mt-3">
+                                <p>
                                     I understand that this authorization will remain in effect until I cancel it in
                                     writing or disable the function on my HERCO FREIGHT DBA Home DeliveryBR account.
 
@@ -152,8 +147,6 @@
                                     transactions with my bank or credit card company; so long as the transactions
                                     correspond to the terms indicated in this authorization form.
                                 </p>
-                                <hr>
-                                <p>Date: <u>&nbsp;{{ date('Y-m-d') }} &nbsp;</u> </p>
 
                             </div>
                             <div class="modal-footer">                                   

@@ -10,8 +10,7 @@
                             Search @lang('warehouse.containers.Packages Inside Container')
                         </h4>
                         <div>
-                            <a href="{{ route('warehouse.search_package.index') }}" class="btn btn-primary"> <i
-                                    class="fa fa-search"></i> @lang('Search Packages') </a>
+                            <a href="{{ route('warehouse.search_package.index') }}" class="btn btn-primary"> <i class="fa fa-search"></i> @lang('Search Packages') </a>
                         </div>
                     </div>
                     <div class="card-content card-body">
@@ -32,7 +31,7 @@
                                     </tr>
                                     <tr>
                                         <th> Weight </th>
-                                        <td> {{ $order->getWeight('kg') . ' kg (' . $order->getWeight('lbs') }} lbs) </td>
+                                        <td> {{ $order->getWeight('kg') .' kg ('. $order->getWeight('lbs') }} lbs) </td>
                                     </tr>
                                     <tr>
                                         <th> Reference# </th>
@@ -40,8 +39,7 @@
                                     </tr>
                                     <tr>
                                         <th> Recpient </th>
-                                        <td> {{ $order->recipient->first_name . ' ' . $order->recipient->last_name }}
-                                        </td>
+                                        <td> {{ $order->recipient->first_name.' '.$order->recipient->last_name }} </td>
                                     </tr>
                                     <tr>
                                         <th colspan="2">
@@ -62,8 +60,7 @@
                                     </tr>
                                     <tr>
                                         <th>Destination Airport</th>
-                                        <td>{{ optional(optional($order->containers)[0])->destination_operator_name }}
-                                        </td>
+                                        <td>{{ optional(optional($order->containers)[0])->destination_operator_name }}</td>
                                     </tr>
                                     <tr>
                                         <th>AWB#</th>

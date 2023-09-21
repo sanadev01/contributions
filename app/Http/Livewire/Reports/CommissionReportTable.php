@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Reports;
 
-use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Repositories\Reports\CommissionReportsRepository;
@@ -19,7 +18,6 @@ class CommissionReportTable extends Component
     public $email;
     public $start_date;
     public $end_date;
-    public $search;
 
     public $sortBy = 'commission';
     public $sortAsc = false;
@@ -65,8 +63,7 @@ class CommissionReportTable extends Component
             'email' => $this->email,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
-            'sort_by' => $this->sortBy,
-            'search' => $this->search, 
+            'sort_by' => $this->sortBy, 
             'sort_order' => $this->sortAsc ? 'asc' : 'desc',
             'year' => $this->year,
         ]);    

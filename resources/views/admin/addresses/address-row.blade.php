@@ -20,16 +20,16 @@
             {{ $address->tax_id }}
         @endif
     </td>
-    <td id="colCnjp">
+    <td>
         @if ( $address->account_type == 'business' )
             {{ $address->tax_id }}
         @endif
     </td>
     
-    <td id="colPhone">
+    <td>
         {{ $address->phone }}
     </td>
-    <td id="colActions" class="d-flex">
+    <td class="d-flex">
         @can('update', $address)
             <a href="{{ route('admin.addresses.edit',$address->id) }}" class="btn btn-primary mr-2" title="@lang('address.Edit Address')">
                 <i class="feather icon-edit"></i>

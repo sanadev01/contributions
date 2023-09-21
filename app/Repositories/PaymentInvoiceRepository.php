@@ -12,7 +12,11 @@ class PaymentInvoiceRepository
 {
     public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
     {
-        $query = PaymentInvoice::query();
+        $query = PaymentInvoice::query()->when($request->orderID,function($query,$orderID){
+                            return $query->whereHas('orders',function($query) use ($orderID){
+                                return $query->where('warehouse_number', 'like', '%'.$orderID.'%')->orWhere('id',$orderID);
+                        });
+                    });
 
         if ( !Auth::user()->isAdmin() ){
             $query->where('paid_by',Auth::id());
@@ -41,17 +45,6 @@ class PaymentInvoiceRepository
 
         if ( $request->last_four_digits ){
             $query->where('last_four_digits','LIKE',"%{$request->last_four_digits}%");
-        }
-
-        if ( $request->search ){
-            $query->where('last_four_digits','LIKE',"%{$request->search}%")
-            ->orWhere('uuid','LIKE',"%{$request->search}%")
-             ->orWhereHas('orders',function($query) use ($request){
-                return $query->where('warehouse_number','LIKE',"%{$request->search}%")->orWhere('id',$request->search);
-              })
-            ->orWhereHas('user',function($query) use($request) {
-                return $query->Where('name','LIKE',"%{$request->search}%");
-            });
         }
 
         $query->orderBy($orderBy,$orderType);

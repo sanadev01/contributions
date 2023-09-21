@@ -23,6 +23,7 @@
             background: linear-gradient(45deg, #FF5370, #ff869a);
         }
 
+
         .card_block {
             border-radius: 5px;
             -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
@@ -60,9 +61,5 @@
         @endif
             <livewire:dashboard.stats-filter/>         
     </section>
-    @section('modal')
-        <x-modal/>
-    @endsection
-    @include('layouts.charts')
     <!-- Dashboard Analytics end -->
 @endsection

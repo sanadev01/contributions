@@ -1,14 +1,12 @@
 <div>
     <div class="border p-2 position-relative">
         <h3 class="bg-white shadow-sm p-2" data-toggle="collapse" data-target="#senderCollapse">@lang('orders.order-details.Sender')</h3>
-        <fieldset id="senderCollapse" class="collapse show" aria-expanded="false" role="tabpanel"
-            aria-labelledby="steps-uid-0-h-0" aria-hidden="false">
+        <fieldset  id="senderCollapse" class="collapse show" aria-expanded="false" role="tabpanel" aria-labelledby="steps-uid-0-h-0" aria-hidden="false">
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="firstName1">@lang('orders.sender.First Name') </label>
-                        <input type="text" class="form-control" name="first_name" required
-                            wire:model.defer="sender_first_name" id="firstName1">
+                    <label for="firstName1">@lang('orders.sender.First Name') </label>
+                        <input type="text" class="form-control" name="first_name" required wire:model.defer="sender_first_name" id="firstName1">
                         @error('sender_first_name')
                             <div class="text-danger">
                                 {{ $message }}
@@ -16,7 +14,7 @@
                         @enderror
                     </div>
                 </div>
-
+    
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="lastName1">@lang('orders.sender.Last Name')</label>
@@ -28,7 +26,7 @@
                         @enderror
                     </div>
                 </div>
-
+    
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Email')</label>
@@ -66,11 +64,10 @@
             <div class="row">
                 <div class="row col-12 text-right">
                     <div class="col-11 text-right">
-                        @if (!$edit)
-                            @if (!$order->error)
+                        @if(!$edit)
+                            @if(!$order->error)
                                 <div class="text-right">
-                                    <a href="{{ route('admin.import.import-excel.show', $order->import_id) }}"
-                                        class="btn btn-success">
+                                    <a href="{{ route('admin.import.import-excel.show', $order->import_id) }}" class="btn btn-success">
                                         Error Fixed
                                     </a>
                                 </div>
@@ -86,8 +83,7 @@
             </div>
         </fieldset>
         <div wire:loading>
-            <div class="position-absolute bg-white d-flex justify-content-center align-items-center w-100 h-100"
-                style="top: 0; right:0;">
+            <div class="position-absolute bg-white d-flex justify-content-center align-items-center w-100 h-100" style="top: 0; right:0;">
                 <i class="fa fa-spinner fa-spin"></i>
             </div>
         </div>

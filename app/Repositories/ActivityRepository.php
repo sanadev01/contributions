@@ -47,19 +47,6 @@ class ActivityRepository
             });
         }
 
-        if ( $request->search ){
-            // dd($request->search);
-            $query->where(function($query) use($request){
-                return $query->where('properties', 'LIKE', "%{$request->search}%");
-            })->orWhere(function($query) use($request){
-                return $query->where('subject_type', 'LIKE', "%{$request->search}%");
-            })->orWhereHasMorph('causer', User::class ,function($query) use($request) {
-                return $query->where('name', 'LIKE', "%{$request->search}%");
-            })->orWhere(function($query) use($request){
-                return $query->where('created_at', 'LIKE', "%{$request->search}%");
-            });
-        }
-
         $activities = $query
         ->orderBy($orderBy,$orderType);
 

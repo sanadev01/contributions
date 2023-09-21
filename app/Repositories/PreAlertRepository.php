@@ -78,7 +78,7 @@ class PreAlertRepository
 
         if ( !Auth::user()->isAdmin() && Auth::user()->can('addShipmentDetails',Order::class) ){
             $order->update([
-                'warehouse_number' => $order->getTempWhrNumber(false)
+                'warehouse_number' => $order->getTempWhrNumber()
             ]);
         }
 
