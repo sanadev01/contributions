@@ -141,7 +141,6 @@ class OrderStatusController extends Controller
         } catch (\Exception $ex) {
             \Log::info('Order notification email send error: ' . $ex->getMessage());
         }
-        # code...
     }
     private function sendTransactionMail($deposit, $preStatus, $user)
     {

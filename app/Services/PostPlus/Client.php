@@ -15,7 +15,7 @@ use App\Services\Correios\Models\PackageError;
 class Client{
 
     protected $host;
-    protected $baseUrl;
+    protected $baseUri;
     protected $client;
 
     protected $apiKey;

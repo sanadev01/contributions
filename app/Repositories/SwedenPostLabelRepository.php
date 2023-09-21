@@ -14,7 +14,7 @@ class SwedenPostLabelRepository
 
     public function run(Order $order,$update)
     {
-            return $this->get($order);
+        return $this->get($order);
     }
 
     public function get(Order $order)

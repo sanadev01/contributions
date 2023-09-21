@@ -30,6 +30,11 @@ class UserSettingController extends Controller
             'user_email' => 'required|unique:users,email,'.$user->id,
             'password' => 'nullable|min:8',
         ]);
+
+        if($request->gss_user_discount != null && $request->gss_api_discount < $request->gss_user_discount) {
+            session()->flash('alert-danger', 'GSS User Discount Value Cannot be Greater than its API Discount !!');
+            return back();
+        }
         
         if($request->gss_user_discount != null && $request->gss_api_discount < $request->gss_user_discount) {
             session()->flash('alert-danger', 'GSS User Discount Value Cannot be Greater than its API Discount !!');
