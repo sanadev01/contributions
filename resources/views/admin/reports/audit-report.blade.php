@@ -1,0 +1,20 @@
+@extends('layouts.master')
+
+@section('page')
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">@lang('Audit Report')</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <livewire:reports.audit-report />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+@endsection

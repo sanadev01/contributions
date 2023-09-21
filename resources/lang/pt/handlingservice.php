@@ -1,0 +1,26 @@
+<?php
+
+return [ 
+    'Manage Services' => 'Gerenciar Serviços',
+    'Name' => 'Nome',
+    'Cost' => 'Custo',
+    'Price' => 'Preço',
+    'Profit' => 'Lucro',
+    'Action' => 'Açao',
+    'USD' => 'usd',
+    'Create Service' => 'Criar serviço',
+    'Edit Service' => 'Editar serviço',
+    'Back to List' => 'De volta à lista',
+    'Cost (USD)' => 'Custo (USD)',
+    'Price (USD)' => 'Preço (USD)',
+    'Name of Service' => 'Nome do Serviço',
+    'Cost of Service' => 'Custo do Serviço',
+    'Price of Service' => 'Preço do serviço',
+    'Save Changes' => 'Salvar alterações',
+    'Reset' => 'Redefinir',
+    'Edit Service' => 'Editar serviço',
+    'Delete Service' => 'Excluir serviço',
+    'Created' => 'Serviço criado com sucesso',
+    'Updated' => 'Serviço atualizado com sucesso',
+    'Deleted' => 'Serviço excluído com sucesso',
+];
