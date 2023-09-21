@@ -14,6 +14,8 @@ class GetLabelController extends Controller
         try{
             $order = Order::find(decrypt($id));
             
+            \Log::info(['storage path',storage_path("app/labels/{$order->corrios_tracking_code}.pdf")]);
+            \Log::info(['storage name',"{$order->corrios_tracking_code} - {$order->warehouse_number}.pdf"]);
             if($order->corrios_tracking_code){  
                 if ( $order->sinerlog_url_label != '' ) {
                     return redirect($order->sinerlog_url_label);
