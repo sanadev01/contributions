@@ -56,15 +56,7 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code" disabled>
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-<<<<<<<< HEAD:resources/views/admin/warehouse/totalExpressContainers/edit.blade.php
                                             <option value="{{App\Models\ShippingService::TOTAL_EXPRESS}}" {{ old('services_subclass_code',$container->services_subclass_code) == App\Models\ShippingService::TOTAL_EXPRESS ? 'selected': '' }}>Total Express</option>
-========
-                                            <option value="{{App\Models\ShippingService::GSS_PMI}}" {{ old('services_subclass_code', $container->services_subclass_code) == '477' ? 'selected' : '' }}>Priority Mail International</option>
-                                            <option value="{{App\Models\ShippingService::GSS_EPMEI}}" {{ old('services_subclass_code', $container->services_subclass_code) == '37634' ? 'selected' : '' }}>Priority Mail Express International (Pre-Sort)</option>
-                                            <option value="{{App\Models\ShippingService::GSS_EPMI}}" {{ old('services_subclass_code', $container->services_subclass_code) == '3674' ? 'selected' : '' }}>Priority Mail International (Pre-Sort)</option>
-                                            <option value="{{App\Models\ShippingService::GSS_FCM}}" {{ old('services_subclass_code', $container->services_subclass_code) == '3326' ? 'selected' : '' }}>First Class Package International</option>
-                                            <option value="{{App\Models\ShippingService::GSS_EMS}}" {{ old('services_subclass_code', $container->services_subclass_code) == '4367' ? 'selected' : '' }}>Priority Mail Express International (Nationwide)</option>
->>>>>>>> 148a108bb953eb768579be0a29bd022d7e94a8a6:resources/views/admin/warehouse/gssContainers/edit.blade.php
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>

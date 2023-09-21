@@ -9,53 +9,21 @@ use App\Models\ShippingService;
 
 class GDEContainerRepository {
 
-<<<<<<<< HEAD:app/Repositories/Warehouse/GDEContainerRepository.php
     protected $error;
 
     public function get()
-========
-    public function get(Request $request, $paginate)
->>>>>>>> 148a108bb953eb768579be0a29bd022d7e94a8a6:app/Repositories/Warehouse/ContainerRepository.php
     {
         $query = Container::query();
 
         if ( !Auth::user()->isAdmin() ){
             $query->where('user_id',Auth::id());
         }
-<<<<<<<< HEAD:app/Repositories/Warehouse/GDEContainerRepository.php
 
         return $query->where(function($query) {
             $query->whereIn('services_subclass_code', [ShippingService::GDE_PRIORITY_MAIL, ShippingService::GDE_FIRST_CLASS]);
         })->latest()->paginate();
 
     }
-========
-        if($request->filled('dispatchNumber')){
-           $query->where('dispatch_number', 'LIKE', '%' . $request->dispatchNumber . '%');
-        } 
-        if($request->filled('sealNo')){
-          $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
-        } 
-        if($request->filled('packetType')){
-            $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
-        }
-        if($request->filled('unitCode')){
-            $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
-        } 
-        if($request->filled('startDate')||$request->filled('endDate')){ 
-            $query->whereBetween('created_at', [$request->startDate??date('2020-01-01'), $request->endDate??date('Y-m-d')]);
-        } 
-        $services = ['NX','IX', 'XP','AJ-NX','AJ-IX'];
-        if($request->filled('service')){
-             $services = json_decode($request->service);
-        }
-        $query->whereIn('services_subclass_code', $services)->latest();
-        
-        $query = $paginate ? $query->paginate(50) : $query->where('unit_code', '!=', null )->get();
-
-        return $query;
-     }
->>>>>>>> 148a108bb953eb768579be0a29bd022d7e94a8a6:app/Repositories/Warehouse/ContainerRepository.php
 
     public function store($request)
     {

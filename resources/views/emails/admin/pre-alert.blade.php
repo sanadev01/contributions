@@ -13,3 +13,4 @@ Dashboard
 @lang('email.contactUs') <br>
 @lang('email.Home DeliveryBR Team')
 @endcomponent
+

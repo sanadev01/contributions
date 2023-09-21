@@ -9,9 +9,6 @@ class Region extends Model
 {
     protected $guarded = [];
 
-    const COLOMBIA_SENDER_CODE = '11001000';
-    const REGION_SANTIAGO = '214';
-
     public function communes()
     {
         return $this->hasMany(Commune::class);

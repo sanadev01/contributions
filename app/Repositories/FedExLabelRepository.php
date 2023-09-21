@@ -12,7 +12,6 @@ use App\Errors\SecondaryLabelError;
 use Illuminate\Support\Facades\Log;
 use App\Services\FedEx\FedExLabelMaker;
 use App\Services\FedEx\FedExShippingService;
-use Illuminate\Support\Facades\Storage;
 
 class FedExLabelRepository
 {
@@ -67,9 +66,6 @@ class FedExLabelRepository
            return $this->getPrimaryLabel($order);
         }
 
-        if ($order->api_response) {
-            $this->printLabel($order->api_response, $order->corrios_tracking_code);
-        }
         return true;
     }
 
@@ -197,10 +193,6 @@ class FedExLabelRepository
 
     private function printLabel($apiResponse, $trackingCode)
     {
-        if (Storage::disk('local')->exists('labels/'.$trackingCode.'.pdf')) {
-            return true;
-        }
-        
         $labelMaker = new FedExLabelMaker($apiResponse, $trackingCode);
         if($labelMaker->convertLabelToPdf()){
             $labelMaker->saveLabel();

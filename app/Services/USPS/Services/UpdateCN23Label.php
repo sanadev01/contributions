@@ -51,26 +51,8 @@ class UpdateCN23Label
         // $userDeclaredFreight = $this->order->user_declared_freight <= 0.01 ? 0 : $this->order->user_declared_freight;
         // $this->pdfi->RotatedText(140, 41.1, ' ', 0);
        
-        $this->updateGDELabel();
 
         $this->pdfi->Output($this->pdf_file, 'F');
         return true;
-    }
-    public function updateGDELabel()
-    {
-        if($this->order->shippingService->isGDEService()){
-            
-            
-            $this->pdfi->SetFillColor(255,255, 255);
-            $this->pdfi->Rect(8,72, 45, 13, "F");
-            $this->pdfi->SetFont("Arial", "", 7);
-            $this->pdfi->RotatedText(10, 75 ,'2200 NW, 129th Ave – Suite # 100', 0); 
-            $this->pdfi->RotatedText(10, 78 ,'Miami, FL, 33182', 0); 
-            $this->pdfi->RotatedText(10, 81 ,'United States', 0);
-            $this->pdfi->SetFillColor(255, 255,255);
-            $this->pdfi->Rect(40, 68.5, 21, 4, "F");
-            $this->pdfi->RotatedText(40, 71 ,'+13058885191', 0);
-        }
-        
     }
 }

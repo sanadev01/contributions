@@ -19,7 +19,8 @@ class UserShipmentReportTable extends Component
     public $start_date;
     public $end_date;
     public $years;
-    public $search;
+    public $currentYear;
+
     public $sortBy = 'spent';
     public $sortAsc = false;
     
@@ -27,6 +28,7 @@ class UserShipmentReportTable extends Component
     {
         $startYear = 2020;
         $latestYear = date('Y'); 
+        $this->currentYear = $latestYear;
         $this->years = range( $latestYear, $startYear );
         return view('livewire.reports.user-shipment-report-table',[
             'users' => $this->getReportData(),
@@ -59,7 +61,6 @@ class UserShipmentReportTable extends Component
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'sort_by' => $this->sortBy, 
-            'search' => $this->search,
             'sort_order' => $this->sortAsc ? 'asc' : 'desc'
         ]);    
     }

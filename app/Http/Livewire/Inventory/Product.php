@@ -14,7 +14,7 @@ class Product extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $search;
-    public $custom;
+
     public $pageSize = 50;
 
     private $query;
@@ -59,7 +59,6 @@ class Product extends Component
     }
     public function getProduct()
     {
-        // dd($this->custom);
         return (new ProductRepository)->get(request()->merge([
             'date' => $this->date,
             'user' => $this->user,
@@ -73,9 +72,7 @@ class Product extends Component
             'description' => $this->description,
             'expdate' => $this->expdate,
             'quantity' => $this->quantity,
-            'search' => $this->search,
-        ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
-    
+        ]));
     }
     
     public function getSumOfProduct()

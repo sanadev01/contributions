@@ -5,55 +5,12 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-<<<<<<<< HEAD:resources/views/admin/warehouse/totalExpressContainers/index.blade.php
                     <div class="card-header">
                         <h4 class="mb-0">
                             @lang('warehouse.containers.Containers')
                         </h4>
                         <a href="{{ route('warehouse.totalexpress_containers.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
                     </div>
-========
-                    <div class="row mt-4 ">
-                        <div class="col-md-1">
-                            <div class="card-header">
-                                <h4 class="mb-0">
-                                    @lang('warehouse.containers.Containers')
-                                </h4>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                        </div>
-                        <div class="col-md-2">
-                            <label>Start Date</label>
-                            <input type="date" class="form-control mb-2 mr-sm-2" wire:model="startDate">
-                        </div>
-                        <div class="col-md-2">
-                            <label>End Date</label>
-                            <input type="date" class="form-control" wire:model="endDate">
-                        </div>
-                        <div class="col-md-2">
-                            <label>Service</label>
-                            <select class="form-control mb-2 mr-sm-2" wire:model="service">
-                                <option value="">All</option>
-                                <option value="{{ json_encode(['NX', 'IX']) }}">Correios Brazil</option>
-                                <option value="{{ json_encode(['AJ-IX', 'AJ-NX']) }}">Anjun </option>
-                            </select>
-                        </div>
-                        <div class="col-md-1 d-flex mt-2">
-                            <div class="mt-4">
-                                <button wire:click="download" class="btn btn-success waves-effect waves-light"
-                                    type="submit">Download</button>
-                            </div>
-                        </div>
-                        <div class="col-md-2 d-flex mt-2 justify-content-center ">
-                            <div class="mt-4">
-                                <a href="{{ route('warehouse.containers.create') }}" class="pull-right btn btn-primary">
-                                    @lang('warehouse.containers.Create Container') </a>
-
-                            </div>
-                        </div>
-                    </div> 
->>>>>>>> 148a108bb953eb768579be0a29bd022d7e94a8a6:resources/views/livewire/container/container.blade.php
                     <div class="card-content card-body" style="min-height: 100vh;">
                         <div class="mt-1">
                             <table class="table mb-0">

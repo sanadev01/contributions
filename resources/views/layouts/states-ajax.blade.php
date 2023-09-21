@@ -25,7 +25,7 @@
  
       function getChileRegions()
       {    
-           $.get('{{ route("api.correios-chile-regions") }}')
+           $.get('{{ route("api.orders.recipient.chile_regions") }}')
            .then(function(response){
                 if(response.success == true)
                 {

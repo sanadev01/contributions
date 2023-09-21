@@ -48,7 +48,7 @@
                                                 </span>
                                             </div>
                                             <span class="mt-2">
-                                                <label class="h3 text-black" for="from_herco">From HERCO</label>
+                                                <label class="h3 text-primary" for="from_herco">From HERCO</label>
                                             </span>
                                         </div>
                                     </div>
@@ -63,7 +63,7 @@
                                                 </span>
                                             </div>
                                             <span class="mt-2">
-                                                <label class="h3 text-black" for="to_herco">To HERCO</label>
+                                                <label class="h3 text-primary" for="to_herco">To HERCO</label>
                                             </span>
                                         </div>
                                     </div>
@@ -78,7 +78,7 @@
                                                 </span>
                                             </div>
                                             <span class="mt-2">
-                                                <label class="h3 text-black" for="to_international">To International</label>
+                                                <label class="h3 text-primary" for="to_international">To International</label>
                                             </span>
                                         </div>
                                     </div>

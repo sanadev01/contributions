@@ -17,7 +17,6 @@ class Table extends Component
     public $service;
     public $commission;
     public $chileService = false;
-    public $search;
     public $anjunService = false;
     
     public function mount($shippingService)

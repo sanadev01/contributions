@@ -27,9 +27,9 @@ class CorreosChileService
         $this->clienteRemitente = $clienteRemitente;
     }
 
-    public function validateAddress($coummne, $address)
+    public function validateAddress($request)
     {
-       return $this->apiCallForAddressValidation($coummne, $address);
+       return $this->apiCallForAddressValidation($request->coummne, $request->address);
     }
 
     private function apiCallForAddressValidation($commune, $address)
@@ -98,12 +98,12 @@ class CorreosChileService
         }
     }
 
-    public function getchileCommunes($regionCode)
+    public function getchileCommunes($request)
     {
-        return $this->apiCallTogetChileCommunesByRegion($regionCode);
+        return $this->apiCallTogetChileCommunesByRegion($request->region_code);
     }
 
-    private function apiCallTogetChileCommunesByRegion($regionCode)
+    private function apiCallTogetChileCommunesByRegion($region_code)
     {
         try 
         {
@@ -112,7 +112,7 @@ class CorreosChileService
                 'listarComunasSegunRegion' => array(
                     'usuario' => $this->usuario,
                     'contrasena' => $this->contrasena,
-                    'codigoRegion' => $regionCode
+                    'codigoRegion' => $region_code
             )), null, null);
             return (Array)[
                 'success' => true,

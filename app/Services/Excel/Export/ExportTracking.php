@@ -28,7 +28,7 @@ class ExportTracking extends AbstractExportService
         $row = $this->currentRow;
 
         foreach($this->trackingData as $data){
-
+            
             if ($data['service'] == 'HD') {
                 $trackingDescription = last($data['trackings'])['description'];
             }elseif ($data['service'] == 'Correios_Brazil') {
@@ -37,19 +37,6 @@ class ExportTracking extends AbstractExportService
                 $trackingDescription = $data['api_trackings']['Estado'];
             }elseif ($data['service'] == 'UPS') {
                 $trackingDescription = $data['api_trackings']['status']['description'];
-            }elseif ($data['service'] == 'PostNL') {
-
-                if($data['api_trackings']['status'] == '1233' || $data['api_trackings']['status'] == '3') {
-                    $trackingDescription = "The item is received";
-                }elseif($data['api_trackings']['status'] == '38'){
-                    $trackingDescription = "The item is released by customs";
-                }elseif($data['api_trackings']['status'] == '1239' || $data['api_trackings']['status'] == '1240'){
-                    $trackingDescription = "The item is in transit";
-                }elseif($data['api_trackings']['status'] == '74'){
-                    $trackingDescription = "The item is out for delivery";
-                } else{
-                    $trackingDescription = "Item Delivered";
-                }
             }
             elseif ($data['service'] == 'Prime5') {
                 foreach($data['api_trackings'] as $track) {

@@ -35,25 +35,6 @@ class AddressRepository
             });
         }
 
-        if ( $request->search ){
-            $query->where(function($query) use($request){
-                return $query->whereRaw("CONCAT( first_name, ' ', last_name ) LIKE '%{$request->search}%'")
-                ->orWhere('first_name','LIKE',"%{$request->search}%" )
-                ->orWhere('last_name','LIKE',"%{$request->search}%" );
-            })->orWhereHas('user',function($query) use($request) {
-                return $query->where('pobox_number',"%{$request->search}%")
-                            ->orWhere('name','LIKE',"%{$request->search}%")
-                            ->orWhere('last_name','LIKE',"%{$request->search}%")
-                            ->orWhere('email','LIKE',"%{$request->search}%");
-            })
-            ->orWhere('address','LIKE',"%{$request->search}%")
-            ->orWhere('address2','LIKE',"%{$request->search}%")
-            ->orWhere('city','LIKE',"%{$request->search}%")
-            ->orWhere('street_no','LIKE',"%{$request->search}%")
-            ->orWhere('phone','LIKE',"%{$request->search}%")
-            ->orWhere('state_id',"{$request->search}");
-        }
-
         if ( $request->address ){
             $query->where(function($query) use($request){
                 return $query->where('address','LIKE',"%{$request->address}%")

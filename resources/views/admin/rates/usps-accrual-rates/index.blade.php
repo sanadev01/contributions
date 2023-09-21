@@ -1,16 +1,11 @@
 @extends('layouts.master')
 @section('page')
-    <section id="prealerts">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                @section('title', __('shipping-rates.USPS Rates'))
-                <div class="card-header pr-0">
-                    <div class="col-12 d-flex justify-content-end">
-                        <button type="btn" onclick="toggleDateSearch()" id="customSwitch8"
-                            class="btn btn-primary mr-1 waves-effect waves-light"><i
-                                class="feather icon-filter"></i></button>
-                    </div>
+<section id="prealerts">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">@lang('shipping-rates.USPS Rates')</h4>
                 </div>
                 <div class="card-content collapse show">
                     <div class="card-body">

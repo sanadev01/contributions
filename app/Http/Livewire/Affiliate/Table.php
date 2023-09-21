@@ -34,7 +34,6 @@ class Table extends Component
     public $value;
     public $saleType;
     public $commission;
-    public $customSearch;
 
     public function render()
     {
@@ -61,7 +60,6 @@ class Table extends Component
             'weight' => $this->weight,
             'saleType' => $this->saleType,
             'commission' => $this->commission,
-            'search' => $this->search,
         ]),true,$this->pageSize);
     }
     

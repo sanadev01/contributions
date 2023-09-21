@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Deposit;
 use Illuminate\Http\Request;
 use App\Models\ProfitPackage;
+use App\Models\PaymentInvoice;
+use App\Models\CommissionSetting;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserSettingRepository;
 
@@ -36,10 +39,6 @@ class UserSettingController extends Controller
             return back();
         }
         
-        if($request->gss_user_discount != null && $request->gss_api_discount < $request->gss_user_discount) {
-            session()->flash('alert-danger', 'GSS User Discount Value Cannot be Greater than its API Discount !!');
-            return back();
-        }
         $userSettingRepository->store($request, $user);
         session()->flash('alert-success','user.User Setting Updated Successfully');
         return back();
