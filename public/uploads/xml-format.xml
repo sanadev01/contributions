@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+
+<Structure>
+<Orders>
+    <Item>
+        <Merchant>new xml</Merchant>
+        <Carrier>fedex</Carrier>
+        <TrackingId>29873928</TrackingId>
+        <CustomerRefrence>123</CustomerRefrence>
+        <Weight>1</Weight>
+        <Length>12</Length>
+        <Width>12</Width>
+        <Height>23</Height>
+        <MeasurmentUnit>kg/cm</MeasurmentUnit>
+
+        <SenderFirstName>Muhammad</SenderFirstName>
+        <SenderLastName>Naveed</SenderLastName>
+        <SenderPhone> +5518981424963</SenderPhone>
+        <SenderEmail>mnaveedsaim@gmail.com</SenderEmail>
+
+        <RecipientFirstName>DANILO JOSE</RecipientFirstName>
+        <RecipientLastName>CARVALHO MONTEIRO</RecipientLastName>
+        <RecipientEmail>marcio.feitas@gmail.com</RecipientEmail>
+        <RecipientPhone> +5518981424963</RecipientPhone>
+        <RecipientAddress>R SEBASTIAO DEONOSIO, 234</RecipientAddress>
+        <RecipientAddress2>R SEBASTIAO DEONOSIO, 234</RecipientAddress2>
+        <RecipientHouseNo>28937</RecipientHouseNo>
+        <RecipientZipcode>87272</RecipientZipcode>
+        <RecipientCity>abc</RecipientCity>
+        <RecipientStateAbbrivation>SP</RecipientStateAbbrivation>
+        <RecipientCountryCodeIso>BR</RecipientCountryCodeIso>
+        <RecipientTaxId>CPF</RecipientTaxId>
+        <FreightToCustom>5</FreightToCustom>
+        <OrderItem>
+            <ProductQuantity>2</ProductQuantity>
+            <ProductValue>5</ProductValue>
+            <ProductDescription>CYCLE BICYCLE COMPUTER</ProductDescription>
+            <NCM>233847</NCM>
+            <Perfume>yes</Perfume>
+            <Battery>yes</Battery>
+        </OrderItem>
+        <OrderItem>
+            <ProductQuantity>2</ProductQuantity>
+            <ProductValue>3</ProductValue>
+            <ProductDescription>CYCLE BICYCLE COMPUTER</ProductDescription>
+            <NCM>233848</NCM>
+            <Perfume>yes</Perfume>
+            <Battery>yes</Battery>
+        </OrderItem>
+    </Item>
+    <Item>
+        <Merchant>homedelivery</Merchant>
+        <Carrier>fedex</Carrier>
+        <TrackingId>29873928</TrackingId>
+        <CustomerRefrence>123</CustomerRefrence>
+        <Weight>1</Weight>
+        <Length>12</Length>
+        <Width>12</Width>
+        <Height>23</Height>
+        <MeasurmentUnit>kg/cm</MeasurmentUnit>
+
+        <SenderFirstName>Muhammad</SenderFirstName>
+        <SenderLastName>Naveed</SenderLastName>
+        <SenderPhone> +5518981424963</SenderPhone>
+        <SenderEmail>mnaveedsaim@gmail.com</SenderEmail>
+
+        <RecipientFirstName>DANILO JOSE</RecipientFirstName>
+        <RecipientLastName>CARVALHO MONTEIRO</RecipientLastName>
+        <RecipientEmail>marcio.feitas@gmail.com</RecipientEmail>
+        <RecipientPhone> +5518981424963</RecipientPhone>
+        <RecipientAddress>R SEBASTIAO DEONOSIO, 234</RecipientAddress>
+        <RecipientAddress2>R SEBASTIAO DEONOSIO, 234</RecipientAddress2>
+        <RecipientHouseNo>28937</RecipientHouseNo>
+        <RecipientZipcode>87272</RecipientZipcode>
+        <RecipientCity>abc</RecipientCity>
+        <RecipientStateAbbrivation>SP</RecipientStateAbbrivation>
+        <RecipientCountryCodeIso>BR</RecipientCountryCodeIso>
+        <RecipientTaxId>CPF</RecipientTaxId>
+        <FreightToCustom>5</FreightToCustom>
+        <OrderItem>
+            <ProductQuantity>2</ProductQuantity>
+            <ProductValue>5</ProductValue>
+            <ProductDescription>CYCLE BICYCLE COMPUTER</ProductDescription>
+            <NCM>233847</NCM>
+            <Perfume>yes</Perfume>
+            <Battery>yes</Battery>
+        </OrderItem>
+        <OrderItem>
+            <ProductQuantity>2</ProductQuantity>
+            <ProductValue>3</ProductValue>
+            <ProductDescription>CYCLE BICYCLE COMPUTER</ProductDescription>
+            <NCM>233848</NCM>
+            <Perfume>yes</Perfume>
+            <Battery>yes</Battery>
+        </OrderItem>
+    </Item>
+</Orders>
+</Structure>

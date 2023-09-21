@@ -1,0 +1,37 @@
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test and deploy using manual and parallel steps
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: atlassian/default-image:2
+
+pipelines:
+  branches:
+    development:
+      - step:
+          name: 'Deployment to Staging'
+          deployment: staging
+          script:
+            - pipe: atlassian/ssh-run:0.3.0
+              variables:
+                  SSH_USER: 'homeqdba'
+                  SERVER: '162.0.229.211'
+                  MODE: 'script' # Optional
+                  PORT: '21098' # Optional
+                  COMMAND: 'deploy-staging.sh'
+    master:
+      - step:
+          name: 'Deployment to Production'
+          deployment: production
+          script:
+            - pipe: atlassian/ssh-run:0.3.0
+              variables:
+                  SSH_USER: 'homeqdba'
+                  SERVER: '199.192.30.181'
+                  MODE: 'script' # Optional
+                  COMMAND: 'deploy-production.sh'
+            - pipe: atlassian/ssh-run:0.3.0
+              variables:
+                  SSH_USER: 'homeqdba'
+                  SERVER: '164.90.255.76'
+                  MODE: 'script' # Optional
+                  COMMAND: 'deploy-production.sh'
