@@ -3,6 +3,7 @@
 namespace App\Services\GSS;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderTracking;
 use App\Models\ShippingService;
@@ -24,6 +25,7 @@ class Client{
     protected $workStationId;
     protected $baseUrl;
     protected $token;
+    protected $gssProfit;
 
     public function __construct()
     {   
@@ -53,6 +55,8 @@ class Client{
         if($data->accessToken) {
             $this->token = $data->accessToken;
         }
+
+        $this->gssProfit = '';
 
     } 
 
@@ -307,7 +311,21 @@ class Client{
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
         $data= json_decode($response);
         if ($response->successful() && $data->success == true) {
-            return $this->responseSuccessful($data->calculatedPostage, 'Rate Calculation Successful');
+            
+            //CHECK IF USER HAS GSS PROFIT SETTING
+            $this->gssProfit = setting('gss_profit', null,  $order->user_id);
+            //APPLY ADMIN SIDE GSS PROFIT SETTING
+            if($this->gssProfit == null || $this->gssProfit == 0) { 
+                $this->gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
+            }
+            
+            $profit = $data->calculatedPostage * ($this->gssProfit / 100);
+            $price = round($data->calculatedPostage + $profit, 2);
+
+            if($price > 0) {
+                return $this->responseSuccessful($price, 'Rate Calculation Successful');
+            } 
+            
         } else {
             return $this->responseUnprocessable($data->message);
         }

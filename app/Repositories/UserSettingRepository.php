@@ -41,6 +41,7 @@ class UserSettingRepository {
             'fedex_profit'=> setting('fedex_profit', null, $user->id)? setting('fedex_profit', null, $user->id): 0,
             'gde_pm_profit'=> setting('gde_pm_profit', null, $user->id)? setting('gde_pm_profit', null, $user->id): 0,
             'gde_fc_profit'=> setting('gde_fc_profit', null, $user->id)? setting('gde_fc_profit', null, $user->id): 0,
+            'gss_profit'=> setting('gss_profit', null, $user->id) ? setting('gss_profit', null, $user->id): 0,
             'weight'=> setting('weight', null, $user->id),
             'length'=> setting('length', null, $user->id),
             'width'=> setting('width', null, $user->id),
@@ -76,8 +77,7 @@ class UserSettingRepository {
         ($request->discount_percentage != null ) ? saveSetting('discount_percentage', $request->discount_percentage, $user->id) : saveSetting('discount_percentage', 0, $user->id);
         ($request->marketplace != null ) ? saveSetting('marketplace', $request->marketplace, $user->id) : saveSetting('marketplace', 0, $user->id);
         ($request->fedex_profit != null ) ? saveSetting('fedex_profit', $request->fedex_profit, $user->id) : saveSetting('fedex_profit', 0, $user->id);
-        ($request->gss_api_discount != null ) ? saveSetting('gss_api_discount', $request->gss_api_discount, $user->id) : saveSetting('gss_api_discount', 0, $user->id);
-        ($request->gss_user_discount != null ) ? saveSetting('gss_user_discount', $request->gss_user_discount, $user->id) : saveSetting('gss_user_discount', 0, $user->id);
+        ($request->gss_profit != null ) ? saveSetting('gss_profit', $request->gss_profit, $user->id) : saveSetting('gss_profit', 0, $user->id);
         ($request->gde_pm_profit != null ) ? saveSetting('gde_pm_profit', $request->gde_pm_profit,$user->id) : saveSetting('gde_pm_profit', 0,$user->id);
         ($request->gde_fc_profit != null ) ? saveSetting('gde_fc_profit', $request->gde_fc_profit,$user->id) : saveSetting('gde_fc_profit', 0,$user->id);
         
