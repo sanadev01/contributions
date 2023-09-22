@@ -379,5 +379,22 @@ class ShippingService extends Model
         }
         return 0;
     }
-    
+    function getUspsServiceSubClassAttribute() {
+        return in_array($this->service_sub_class,[self::USPS_PRIORITY ,self::USPS_FIRSTCLASS,self::USPS_PRIORITY_INTERNATIONAL,self::USPS_FIRSTCLASS_INTERNATIONAL,self::USPS_GROUND,self::GDE_PRIORITY_MAIL,self::GDE_FIRST_CLASS]);
+    }
+    function getUpsServiceSubClassAttribute() {
+        return $this->service_sub_class == self::UPS_GROUND;        
+    }
+    function getFedexServiceSubClassAttribute() {
+        return $this->service_sub_class == self::FEDEX_GROUND;
+    }
+    function getGepsServiceSubClassAttribute() {
+       return $this->service_sub_class == self::GePS;
+    }
+    function getGssServiceSubClassAttribute() {
+        return $this->service_sub_class == self::GSS_PMI;
+    }
+    function getSwedenPostServiceSubClassAttribute() {
+        return in_array($this->service_sub_class,[self::Prime5,self::Prime5RIO,self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);        
+    }
 }

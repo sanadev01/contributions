@@ -31,7 +31,9 @@ class ImportExcelController extends Controller
     public function create()
     {
         $this->authorize('importExcel',Order::class);
-        return view('admin.import-excel.create');
+        $user = Auth::user();
+        $profitPackages = $user->profitSettings()->with('shippingService')->get(); 
+        return view('admin.import-excel.create',['profitPackages'=>$profitPackages,'user'=>$user]);
     }
 
     /**
