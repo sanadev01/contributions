@@ -214,3 +214,18 @@ function getGDEProfit($rates, $service)
     $adminProfit = setting($type, null, User::ROLE_ADMIN);
     return $profit = $userProfit ? $userProfit : $adminProfit;
 }
+function isActiveService($user,$shippingService){
+    if($shippingService->usps_service_sub_class)
+      return setting('usps', null, $user->id)? true:false;
+    if($shippingService->ups_service_sub_class) 
+      return setting('ups', null, $user->id)?true:false;
+    if($shippingService->fedex_service_sub_class) 
+      return setting('fedex', null, $user->id) ?true:false; 
+    if($shippingService->gss_service_sub_class)
+      return setting('gss', null, $user->id)?true:false; 
+    if($shippingService->geps_service_sub_class)
+      return setting('geps_service', null, $user->id)?true:false;
+    if($shippingService->sweden_post_service_sub_class) 
+       return setting('sweden_post', null, $user->id)?true:false; 
+    return true; 
+}
