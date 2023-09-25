@@ -484,10 +484,27 @@ class Order extends Model implements Package
             'sinerlog_url_label' => $url
         ]);
     }
-
-    public function getTempWhrNumber()
+    public function getTempWhrNumber($api=false)
     {
-        return "HD-{$this->change_id}";
+        $tempWhr =  $this->change_id;        
+        switch(strlen($tempWhr)){
+            case(5):
+                $tempWhr = (str_pad($tempWhr, 10, '32023', STR_PAD_LEFT));
+                break;
+                case(6):
+                    $tempWhr = (str_pad($tempWhr, 10, '2023', STR_PAD_LEFT));
+                    break;
+                    case(7):
+                        $tempWhr = (str_pad($tempWhr, 10, '023', STR_PAD_LEFT));
+                        break;
+                        case(8):
+                                $tempWhr = (str_pad($tempWhr, 10, '23', STR_PAD_LEFT)); 
+                            break;
+                            case(9):
+                                $tempWhr = (str_pad($tempWhr, 10, '3', STR_PAD_LEFT));
+                                break;
+        }
+        return ($api?'TM':'HD')."{$tempWhr}".(optional($this->recipient)->country->code??"BR");
     }
 
     public function doCalculations($onVolumetricWeight=true)

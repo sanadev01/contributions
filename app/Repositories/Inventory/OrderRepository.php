@@ -149,7 +149,7 @@ class OrderRepository
                 'order_date' => now(),
             ]);
             $order->update([
-                'warehouse_number' => $order->getTempWhrNumber(),
+                'warehouse_number' => $order->getTempWhrNumber(false),
             ]);
 
             foreach ($request->order_items as $item) {
