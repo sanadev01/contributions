@@ -42,12 +42,12 @@ class GSSLabelRepository
     {
         if($order->api_response)
         {
-            \Log::info('order api respone ',[$order->api_response]);
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($order->api_response));
+            // Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($order->api_response));
             return true;
             // return (new UpdateCN23Label($order))->run(); 
         }
     }
+
 
     protected function generateLabel(Order $order)
     {
