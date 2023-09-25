@@ -42,12 +42,33 @@ class GSSLabelRepository
     {
         if($order->api_response)
         {
-            \Log::info('order api respone ',[$order->api_response]);
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($order->api_response));
+            // Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($order->api_response));
             return true;
             // return (new UpdateCN23Label($order))->run(); 
         }
     }
+
+    
+    private function makePDFLabel($response) {
+        $pdf = PDFMerger::init();
+        $label = "app/labels/{$response->trackingNumber}";
+        foreach ($response->labels as $index => $labelBase64) {
+            $labelContent = base64_decode($labelBase64);
+            $pagePath = storage_path("{$label}_{$index}.pdf");
+            file_put_contents($pagePath, $labelContent);
+            $pdf->addPDF($pagePath);
+        }
+        $pdf->merge();
+        
+        // Remove individual pages
+        foreach ($response->labels as $index => $labelBase64) {
+            $pagePath = storage_path("{$label}_{$index}.pdf");
+            unlink($pagePath);
+        }
+        $mergedPdf = $pdf->output();
+        return base64_encode($mergedPdf);
+    }
+
 
     protected function generateLabel(Order $order)
     {
