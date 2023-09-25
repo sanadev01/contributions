@@ -42,8 +42,7 @@ class GSSLabelRepository
     {
         if($order->api_response)
         {
-            $response = json_decode($order->api_response);
-            $label = $this->makePDFLabel($response);
+            $label = $this->makePDFLabel($order);
 
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($label));
             return true;
@@ -68,9 +67,11 @@ class GSSLabelRepository
         return $this->error;
     }
 
-    private function makePDFLabel($response) {
+    private function makePDFLabel($order) {
+        $response = json_decode($order->api_response);
+
         $pdf = PDFMerger::init();
-        $label = "app/labels/{$response->trackingNumber}";
+        $label = "app/labels/{$order->corrios_tracking_code}";
         foreach ($response->labels as $index => $labelBase64) {
             $labelContent = base64_decode($labelBase64);
             $pagePath = storage_path("{$label}_{$index}.pdf");
