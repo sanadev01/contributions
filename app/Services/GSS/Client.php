@@ -75,6 +75,7 @@ class Client{
             $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
             $response = json_decode($request);
             if($response->success) {
+                \Log::info('label response',[$response]);
                 $label = $this->makePDFLabel($response);
                 $order->update([
                     'corrios_tracking_code' => $response->trackingNumber,
