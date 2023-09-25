@@ -126,6 +126,7 @@ class GetRateController extends Controller
                 $shippingService->cacheCalculator = false;
                 if ( $shippingService->isAvailableFor($order) ){
                     $getRate->push([
+                        'id'  => $shippingService->id,
                         'shippingServices'  => $shippingService->name,
                         // 'weightInOtherUnit'  => $weightInOtherUnit,
                         'Weight'  => $chargableWeight,

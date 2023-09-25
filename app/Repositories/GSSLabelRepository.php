@@ -51,6 +51,7 @@ class GSSLabelRepository
         }
     }
 
+
     protected function generateLabel(Order $order)
     {
         $client = new Client();
