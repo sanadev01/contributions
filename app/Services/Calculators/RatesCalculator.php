@@ -226,7 +226,7 @@ class RatesCalculator
                 return false;
             }
             $profitSetting = $this->order->user->profitSettings->where('service_id',$this->shippingService->id)->first(); 
-            if($profitSetting==null && $this->order->shippingService->is_directlink_country){
+            if($profitSetting==null && optional($this->order->shippingService)->is_directlink_country){
                 return false;
             }
             if(!$profitSetting && !auth()->user()->isAdmin()){
