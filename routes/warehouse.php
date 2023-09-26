@@ -48,10 +48,35 @@ use App\Http\Controllers\Warehouse\SwedenPostCN35DownloadController;
 use App\Http\Controllers\Warehouse\SwedenPostManifestDownloadController;
 use App\Http\Controllers\Warehouse\PostPlusContainerController;
 use App\Http\Controllers\Warehouse\PostPlusContainerPackageController;
+use App\Http\Controllers\Warehouse\PostPlusUnitPrepareController;
 use App\Http\Controllers\Warehouse\PostPlusUnitRegisterController;
 use App\Http\Controllers\Warehouse\PostPlusCN35DownloadController;
+use App\Http\Controllers\Warehouse\PostPlusCN38DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusManifestDownloadController;
-
+use App\Http\Controllers\Warehouse\GSSContainerController;
+use App\Http\Controllers\Warehouse\GSSContainerPackageController;
+use App\Http\Controllers\Warehouse\GSSUnitRegisterController;
+use App\Http\Controllers\Warehouse\GSSCN35DownloadController;
+use App\Http\Controllers\Warehouse\GSSCN38DownloadController;
+use App\Http\Controllers\Warehouse\GSSManifestDownloadController;
+use App\Http\Controllers\Warehouse\GSSReportsDownloadController;
+use App\Http\Controllers\Warehouse\GDEContainerController;
+use App\Http\Controllers\Warehouse\GDEContainerPackageController;
+use App\Http\Controllers\Warehouse\GDEUnitRegisterController;
+use App\Http\Controllers\Warehouse\GDECN35DownloadController;
+use App\Http\Controllers\Warehouse\GDEManifestDownloadController;
+use App\Http\Controllers\Warehouse\TotalExpressContainerController;
+use App\Http\Controllers\Warehouse\TotalExpressContainerPackageController;
+use App\Http\Controllers\Warehouse\TotalExpressUnitRegisterController;
+use App\Http\Controllers\Warehouse\TotalExpressCN35DownloadController;
+use App\Http\Controllers\Warehouse\TotalExpressManifestController;
+use App\Http\Controllers\Warehouse\HDExpressContainerController;
+use App\Http\Controllers\Warehouse\HDExpressUnitRegisterController;
+use App\Http\Controllers\Warehouse\HDExpressCN35DownloadController;
+use App\Http\Controllers\Warehouse\HDExpressContainerPackageController;
+use App\Models\Warehouse\Container;
+use App\Services\Excel\Export\OrderExportTemp;
+use Illuminate\Support\Facades\Auth;
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
 
@@ -71,14 +96,15 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('anjun/container/{container}/download', AnjunCN35DownloadController::class)->name('anjun.container.download');
 
 
-    Route::get('container/{container}/register', UnitRegisterController::class)->name('container.register');
+     Route::get('container/{container}/register', UnitRegisterController::class)->name('container.register');
     Route::get('container/{container}/cancel', UnitCancelContoller::class)->name('container.cancel');
     Route::get('container/{container}/download', CN35DownloadController::class)->name('container.download');
-
+    
     Route::resource('delivery_bill', DeliveryBillController::class);
     Route::get('delivery_bill/{delivery_bill}/register', DeliveryBillRegisterController::class)->name('delivery_bill.register');
     Route::get('delivery_bill/{delivery_bill}/status/refresh', DeliveryBillStatusUpdateController::class)->name('delivery_bill.status.refresh');
-    Route::get('delivery_bill/{delivery_bill}/download', DeliveryBillDownloadController::class)->name('delivery_bill.download');
+    Route::resource('delivery_bill/download', DeliveryBillDownloadController::class)->only('show', 'create');
+    // Route::get('delivery_bill/{delivery_bill}/download', DeliveryBillDownloadController::class)->name('delivery_bill.download');
     Route::get('delivery_bill/{delivery_bill}/manifest', ManifestDownloadController::class)->name('delivery_bill.manifest');
     Route::post('combine-delivery-bill/manifest/download', CombineManifestDownloadController::class)->name('combine_delivery_bill.manifest.download');
     
@@ -129,12 +155,53 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     // Routes for Post Plus Container
     Route::resource('postplus_containers', PostPlusContainerController::class);
     Route::resource('postplus_container.packages', PostPlusContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('postplus_container/{container}/prepare', PostPlusUnitPrepareController::class)->name('postplus_container.prepare');
     Route::get('postplus_container/{container}/register', PostPlusUnitRegisterController::class)->name('postplus_container.register');
-    Route::get('postplus_container/{container}/download', PostPlusCN35DownloadController::class)->name('postplus_container.download');
+    Route::get('postplus_container/{container}/download/', PostPlusCN35DownloadController::class)->name('postplus_container.download');
+    Route::get('postplus/{delivery_bill}/cn38', PostPlusCN38DownloadController::class)->name('postplus.cn38.download');
     Route::get('postplus/{delivery_bill}/manifest', PostPlusManifestDownloadController::class)->name('postplus.manifest.download');
+
+    // Routes for GSS Container
+    Route::resource('gss_containers', GSSContainerController::class);
+    Route::resource('gss_container.packages', GSSContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('gss_container/{container}/register', GSSUnitRegisterController::class)->name('gss_container.register');
+    Route::get('gss_container/{container}/download/', GSSCN35DownloadController::class)->name('gss_container.download');
+    Route::get('gss/{delivery_bill}/cn38', GSSCN38DownloadController::class)->name('gss_container.cn38.download');
+    Route::get('gss/{delivery_bill}/manifest', GSSManifestDownloadController::class)->name('gss_container.manifest.download');
+    Route::get('gss/{reports}/manifest/{dispatch}', GSSReportsDownloadController::class)->name('gss_container.reports.download');
+
+    // Routes for GDE Container
+    Route::resource('gde_containers', GDEContainerController::class);
+    Route::resource('gde_container.packages', GDEContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('gde_container/{container}/register', GDEUnitRegisterController::class)->name('gde_container.register');
+    Route::get('gde_container/{container}/download', GDECN35DownloadController::class)->name('gde_container.download');
+    Route::get('gde/{delivery_bill}/manifest', GDEManifestDownloadController::class)->name('gde.manifest.download');
+
+    // Routes for Total Express Container
+    Route::resource('totalexpress_containers', TotalExpressContainerController::class);
+    Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('totalexpress_container/{id}/create', [TotalExpressUnitRegisterController::class, 'createMasterBox'])->name('totalexpress_container.createRequest');
+    Route::get('totalexpress_container/{id}/register', [TotalExpressUnitRegisterController::class, 'consultMasterBox'])->name('totalexpress_container.registerBox');
+    Route::get('totalexpress_container/{container}/download', TotalExpressCN35DownloadController::class)->name('totalexpress_container.download');
+    Route::get('/totalexpress/{id}/flightcreate', [TotalExpressManifestController::class, 'createFlight'])->name('totalexpress_manifest.createFlight');
+    Route::post('/totalexpress/flightdetails', [TotalExpressManifestController::class, 'addFlightDetails'])->name('totalexpress_manifest.addFlight');
+    Route::get('totalexpress/{id}/closemanifest', [TotalExpressManifestController::class, 'closeManifest'])->name('totalexpress_manifest.closeManifest');
+    Route::get('totalexpress/{id}/closeflight', [TotalExpressManifestController::class, 'closeFlight'])->name('totalexpress_manifest.closeFlight');
+
+    // Routes for HD Express container
+    Route::resource('hd-express-containers', HDExpressContainerController::class);
+    Route::resource('hd-express-container.packages', HDExpressContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('hd-express-container/{container}/register', HDExpressUnitRegisterController::class)->name('hd-express-container.register');
+    Route::get('hd-express-container/{container}/download', HDExpressCN35DownloadController::class)->name('hd-express-container.download');
 });
 
 
+Route::get('temp_manifest/{container}/download', function(Container $container){
+    $orders = $container->orders;        
+    $exportService = new OrderExportTemp($orders,Auth::id());
+    $exportService->handle(); 
+    return $exportService->download(); 
+})->name('temp_manifest.download');
 Route::get('test', function () {
 
     // $labelPrinter = new CN35LabelMaker;

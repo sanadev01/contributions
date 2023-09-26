@@ -29,8 +29,22 @@ class ExportTax extends AbstractExportService
         $this->setExcelHeaderRow();
 
         $row = $this->currentRow;
+        $taxPayment = 0;
+        $buyingUSD = 0;
+        $sellingUSD = 0;
+        $sellingBR = 0;
+        $buyingBR = 0;
 
         foreach ($this->taxes as $tax) {
+            if($tax->is_tax)
+            {
+                $taxPayment += $tax->tax_payment;
+                $buyingUSD +=  $tax->buying_usd;
+                $sellingUSD += $tax->selling_usd;
+                $sellingBR += $tax->selling_br;
+                $buyingBR +=  $tax->buying_br;
+            }
+            
             $user = $tax->user;
             $order = $tax->order;
             $this->setCellValue('A'.$row, $user->name);
@@ -42,22 +56,24 @@ class ExportTax extends AbstractExportService
             $this->setCellValue('G'.$row, $tax->buying_usd);
             $this->setCellValue('H'.$row, $tax->selling_usd);
             $this->setCellValue('I'.$row, round($tax->selling_usd - $tax->buying_usd,2));
+            
             $this->setCellValue('J'.$row, $tax->adjustment);
             $this->setCellValue('K'.$row, $tax->created_at);
+            $this->setCellValue('L'.$row,  optional($tax->deposit)->description);
             $row++;
         }
 
         $this->currentRow = $row;
 
-        $this->setCellValue('D'.$row, "=SUM(D1:D{$row})");
-        $this->setCellValue('E'.$row, "=SUM(E1:E{$row})");
-        $this->setCellValue('F'.$row, "=SUM(F1:F{$row})");
-        $this->setCellValue('G'.$row, "=SUM(G1:G{$row})");
-        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
-        $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
+        $this->setCellValue('D'.$row, $taxPayment);
+        $this->setCellValue('E'.$row, $buyingBR);
+        $this->setCellValue('F'.$row, $sellingBR);
+        $this->setCellValue('G'.$row, $buyingUSD);
+        $this->setCellValue('H'.$row, $sellingUSD);
+        $this->setCellValue('I'.$row,  $sellingUSD - $buyingUSD);
         $this->setCellValue('J'.$row, "=SUM(J1:J{$row})"); 
         
-        $this->setBackgroundColor("A{$row}:K{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:L{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()
@@ -92,11 +108,17 @@ class ExportTax extends AbstractExportService
         $this->setColumnWidth('J', 20);
         $this->setCellValue('J1', 'Adjustment');
 
+        
+
         $this->setColumnWidth('K', 20);
         $this->setCellValue('K1', 'Date');
 
-        $this->setBackgroundColor('A1:K1', '2b5cab');
-        $this->setColor('A1:K1', 'FFFFFF');
+        $this->setColumnWidth('L', 30);
+        $this->setCellValue('L1', 'Reason');
+
+        $this->setBackgroundColor('A1:L1', '2b5cab');
+        $this->setColor('A1:L1', 'FFFFFF');
+
 
         $this->currentRow++;
     }

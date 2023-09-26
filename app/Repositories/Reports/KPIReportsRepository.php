@@ -24,7 +24,8 @@ class KPIReportsRepository
 
     public function get(Request $request)
     {
-        $orders = Order::with('user')->where('corrios_tracking_code','!=',null)->where('status', '>=', Order::STATUS_SHIPPED)
+        $orders = Order::with('user')
+        ->where('corrios_tracking_code','!=',null)->where('status', '>=', Order::STATUS_SHIPPED)
         ->whereHas('shippingService',function($orders) {
                 return $orders->whereIn('service_sub_class', [
                     ShippingService::Packet_Standard, 
@@ -32,9 +33,18 @@ class KPIReportsRepository
                     ShippingService::AJ_Packet_Standard, 
                     ShippingService::AJ_Packet_Express, 
                     ShippingService::Prime5, 
-                    ShippingService::GePS]);
+                    ShippingService::GePS,
+                    ShippingService::Post_Plus_Registered,
+                    ShippingService::Post_Plus_EMS,
+                    ShippingService::Post_Plus_Prime,
+                    ShippingService::Post_Plus_Premium,
+                    ShippingService::Prime5RIO,
+                ]);
             });
 
+        if ($request->user_id) {
+            $orders->where('user_id', $request->user_id);
+        }
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
@@ -53,14 +63,20 @@ class KPIReportsRepository
             $orders->whereIn('corrios_tracking_code',$splitNos);
         }
 
-        $orders = ($orders->get()); 
-        $codesUsers =  [];
+        $orders = ($orders->get());  
+        $codesUsersName =  [];
+        $orderDate =  [];
         foreach($orders as $order) {
-            $codesUsers[$order->corrios_tracking_code] = $order->user;
+            $codesUsersName[$order->corrios_tracking_code] = $order->user->name;
+            $orderDate[$order->corrios_tracking_code] = $order->order_date->format('m/d/Y');
         }
         $codes = $orders->pluck('corrios_tracking_code')->toArray();
         if(empty($codes)) {
-         return ['trackings'=>[],'trackingCodeUser'=>[]];
+         return [
+            'trackings'=>[],
+            'trackingCodeUsersName'=>[],
+             'orderDates' => []
+         ];
         }
         $client = new SoapClient($this->wsdlUrl, array('trace'=>1));
         $request_param = array(
@@ -78,8 +94,12 @@ class KPIReportsRepository
         $trackings = json_decode(json_encode($result), true); ## convert the object to array (you have to)
         if($trackings['return']['qtd'] == "1") {
             $trackings['return']['objeto'] = array($trackings['return']['objeto']); ## if you send only one tracking you need to add an array before the content to follow the pattern
-        }  
-        return ['trackings'=>$trackings,'trackingCodeUser'=>$codesUsers];
+        } 
+        return [
+            'trackings'=>$trackings,
+            'trackingCodeUsersName'=> $codesUsersName,
+             'orderDates'=>$orderDate
+        ];
     }
 
 }

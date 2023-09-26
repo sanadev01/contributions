@@ -16,7 +16,9 @@ class PreAlertMailController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $orderIds = json_decode($request->get('data'),true);
+        $orderIds = array_map(function($id){
+            return decrypt($id);  
+          },json_decode($request->get('data'),true));
 
         if (!$orderIds) {
             session()->flash('alert-danger', 'orders must be selected');

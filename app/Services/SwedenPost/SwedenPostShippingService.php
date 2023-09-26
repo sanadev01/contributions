@@ -27,7 +27,7 @@ class SwedenPostShippingService
 
     public function isAvailableFor($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::Prime5) && $this->weight <= $shippingService->max_weight_allowed)
+        if(in_array($shippingService->service_sub_class ,[ShippingService::DirectLinkAustralia,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico , ShippingService::DirectLinkChile, ShippingService::Prime5 ,ShippingService::Prime5RIO]) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }
@@ -35,7 +35,7 @@ class SwedenPostShippingService
 
     public function isAvailableForInternational($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::Prime5) && $this->weight <= $shippingService->max_weight_allowed)
+        if(in_array($shippingService->service_sub_class ,[ShippingService::DirectLinkAustralia,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico , ShippingService::DirectLinkChile, ShippingService::Prime5 ,ShippingService::Prime5RIO]) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }

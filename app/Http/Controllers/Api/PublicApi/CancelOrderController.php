@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\PublicApi;
-
-use DB;
+ 
 use Exception;
 use App\Models\Order;
 use App\Models\Deposit;
@@ -12,7 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Admin\NotifyTransaction;
-
+use Illuminate\Support\Facades\DB;
 class CancelOrderController extends Controller
 {
     public function __invoke(Order $order)
@@ -22,16 +21,19 @@ class CancelOrderController extends Controller
         if(Auth::id() != $user->id){
             return apiResponse(false,'No order found');
         }
-        $preStatus = $order->status_name;  
-        
+        $preStatus = $order->status_name;
         if ( $order ){
             if($order->isShipped())
             {
-                $message = 'Order already shipped';
+              return apiResponse(false,"Order already shipped");
+            }
+            if(count($order->containers))
+            {
+              return apiResponse(false,"Order already in a container");
             }
             else if ($order->isRefund())
             {
-                $message = "Order already refunded";
+              return apiResponse(false,"Order already refunded");
             }
             else if($order->isPaid()){
 
@@ -49,28 +51,28 @@ class CancelOrderController extends Controller
                     if($order){
                         $order->deposits()->sync($deposit->id);
                         $order->update([
-                                'status' => Order::STATUS_REFUND,
-                                'is_paid' =>  false
-                            ]);
+                            'status' => Order::STATUS_REFUND,
+                            'is_paid' =>  false
+                        ]);
+                        optional($order->affiliateSale)->delete();
                     }
-                            try {          
-                                //SendMailNotification
-                                Mail::send(new NotifyTransaction($deposit, $preStatus, Auth::user()->name));
-                            } catch (Exception $ex) { 
-                                Log::info('Notify Transaction email send error: '.$ex->getMessage());
-                            }
-                DB::commit();
+                    try {          
+                        //SendMailNotification
+                        Mail::send(new NotifyTransaction($deposit, $preStatus, Auth::user()->name));
+                    } catch (Exception $ex) {
+                        Log::info('Cancel Order Notify Transaction email send error: '.$ex->getMessage());
+                    }
+                    DB::commit();
                 }catch(Exception $e){
                     DB::rollBack(); 
                     return response()->json(['message'=>$ex->getMessage(),'line'=>$ex->getLine()],422); 
- 
                 }
                 $message = "Order Refund & Cancelled";
             }else{
                 $order->update([
                     'status' => Order::STATUS_CANCEL,
                     'is_paid' =>  false
-                ]);  
+                ]);
                 $message = "Order Cancelled";
             }
             return apiResponse(true,$message); 

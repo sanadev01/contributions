@@ -54,8 +54,14 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code">
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            <option value="773" {{ old('services_subclass_code') == App\Models\ShippingService::Prime5 ? 'selected': '' }}>Prime5</option>
-                                        </select>
+                                            <option value="{{App\Models\ShippingService::Prime5}}" {{ old('services_subclass_code') == App\Models\ShippingService::Prime5 ? 'selected': '' }}>Prime5</option>
+                                            <option value="{{App\Models\ShippingService::Prime5RIO}}" {{ old('services_subclass_code') == App\Models\ShippingService::Prime5RIO ? 'selected': '' }}>Prime5RIO</option>
+                                            <option value="{{App\Models\ShippingService::DirectLinkAustralia}}" {{ old('services_subclass_code') == App\Models\ShippingService::DirectLinkAustralia ? 'selected': '' }}>DirectLink Australia</option>
+                                            <option value="{{App\Models\ShippingService::DirectLinkCanada}}" {{ old('services_subclass_code') == App\Models\ShippingService::DirectLinkCanada ? 'selected': '' }}>DirectLink Canada </option>
+                                            {{-- <option value="{{App\Models\ShippingService::DirectLinkColombia}}" {{ old('services_subclass_code') == App\Models\ShippingService::DirectLinkColombia ? 'selected': '' }}>DirectLink Colombia </option> --}}
+                                            <option value="{{App\Models\ShippingService::DirectLinkMexico}}" {{ old('services_subclass_code') == App\Models\ShippingService::DirectLinkMexico ? 'selected': '' }}>DirectLink Mexico </option>
+                                            <option value="{{App\Models\ShippingService::DirectLinkChile}}" {{ old('services_subclass_code') == App\Models\ShippingService::DirectLinkChile ? 'selected': '' }}>DirectLink Chile </option>
+                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror

@@ -54,9 +54,9 @@ class TaxRepository
         $request->validate([
             'user_id' => 'required',
         ]);
-        $trackingNumber = explode(',', preg_replace('/\s+/', '', $request->trackingNumbers));
-
-        return Order::where('user_id', $request->user_id)->whereIn('corrios_tracking_code', $trackingNumber)->get();
+          $splitNos = str_split(str_replace(',', '', preg_replace('/\s+/', '', $request->trackingNumbers)),13);
+          return  Order::where('user_id', $request->user_id)->whereIn('corrios_tracking_code', $splitNos)->get();
+ 
     }
 
     public function store(TaxRequest $request)
@@ -71,8 +71,8 @@ class TaxRepository
                 $user = $order->user;
                 $balance = Deposit::getCurrentBalance($user);
 
-                $sellingUSD =   round($request->tax_payment[$order->id] / $request->selling_br[$order->id], 2);
-                $buyingUSD  =  round($request->tax_payment[$order->id] / $request->buying_br[$order->id], 2);
+                $sellingUSD =   round($request->tax_payment[$order->id] / $request->selling_br, 2);
+                $buyingUSD  =  round($request->tax_payment[$order->id] / $request->buying_br, 2);
 
                 if ($balance >= $sellingUSD) {
                     if ($order->tax) {
@@ -84,8 +84,8 @@ class TaxRepository
                         'user_id' => $order->user_id,
                         'order_id' => $order->id,
                         'tax_payment' => $request->tax_payment[$order->id],
-                        'buying_br' => $request->buying_br[$order->id],
-                        'selling_br' => $request->selling_br[$order->id],
+                        'buying_br' => $request->buying_br,
+                        'selling_br' => $request->selling_br,
                         'selling_usd' => $sellingUSD,
                         'buying_usd' => $buyingUSD,
                     ]);

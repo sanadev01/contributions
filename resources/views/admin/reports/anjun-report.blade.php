@@ -37,7 +37,8 @@
                                     </form>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <form action="{{ route('admin.reports.anjun.create') }}" method="GET" target="_blank">
+                                    <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
+                                        <input type="hidden" name="type" value="Anjun">
                                         @csrf
                                         <div class="row">
                                             <div class="offset-1 col-md-5">
@@ -79,6 +80,7 @@
                                         <th>@lang('orders.Amount Customers Paid')</th>
                                         <th>@lang('orders.Correios Anjun')</th>
                                         <th>@lang('Anjun Commission')</th>
+                                        <th>@lang('orders.status')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -88,7 +90,7 @@
                                             <td>
                                                 <span>
                                                     <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$order->id) }}">
-                                                        WRH#: {{ $order->warehouse_number }}
+                                                          {{ $order->warehouse_number }}
                                                     </a>
                                                 </span>
                                             </td>
@@ -97,6 +99,7 @@
                                             <td>{{ $order->gross_total }}</td>
                                             <td><livewire:reports.anjun-report :order="$order" :isCommission="false"/></td>
                                             <td><livewire:reports.anjun-report :order="$order" :isCommission="true"/></td>
+                                            <td>{{ $order->status_name }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

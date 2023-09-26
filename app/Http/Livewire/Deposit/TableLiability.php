@@ -1,21 +1,16 @@
 <?php
 
 namespace App\Http\Livewire\Deposit;
-
-use Carbon\Carbon;
-use App\Models\Deposit;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Repositories\DepositRepository;
-
+use App\Services\Excel\Export\ExportLiabilityReport;
 class TableLiability extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-
-    public $pageSize = 50;
-    
-    public $user;
+    public $pageSize = 50;    
+    public $userName;
     public $poboxNumber;
     public $dateFrom;
     public $dateTo;
@@ -23,6 +18,7 @@ class TableLiability extends Component
     public $sortAsc = false;
     public $balance;
     public $userId; 
+    // public $deposits; 
     
     protected $listeners = [
         'user:updated' => 'updateUser',
@@ -36,17 +32,16 @@ class TableLiability extends Component
     }
 
     public function render()
-    {                     
-        $users = $this->getUserLiability();
+    {
         return view('livewire.deposit.table-liability',[
-            'users' => $users,
-            'totalBalance' => $this->getUserLiabilityBalance($users),
-            'downloadLink' => route('admin.liability.index',http_build_query(
-                $this->getRequestData()->all()
-            )).'&dl=1'
+            'deposits' => $this->getUserLiability()
         ]);
     }
-
+    public function download()
+    {
+            $liabilityReport = new ExportLiabilityReport($this->getUserLiability());
+            return $liabilityReport->handle();        
+    }
     public function sortBy($name)
     {
         if ($name == $this->sortBy) {
@@ -58,24 +53,23 @@ class TableLiability extends Component
 
     public function getUserLiability()
     {
-
         return (new DepositRepository)->getUserLiability($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 
     public function updateUser($userId)
     {
-        $this->user = $userId;
+       $this->poboxNumber = $userId;
     }
 
     public function clearSearch()
     {
-        $this->user = null;
+       $this->poboxNumber = null;
     }
 
     public function getRequestData()
     {
         return request()->merge([
-            'user' => $this->user,            
+            'user' => $this->userName,            
             'poboxNumber' => $this->poboxNumber,            
             'dateFrom' => $this->dateFrom,
             'dateTo' => $this->dateTo,
@@ -88,19 +82,5 @@ class TableLiability extends Component
     public function updating()
     {
         $this->resetPage();
-    }
-
-    public function getUserLiabilityBalance($users)
-    {
-         $sum = 0;
-         foreach($users as $user){
-            $sum += getBalance($user);
-         }
-         return $sum;
-         
-    }
-    
-    public function searchByBalance($query)
-    { 
     }
 }

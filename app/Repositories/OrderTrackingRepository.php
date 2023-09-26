@@ -2,12 +2,14 @@
 
 namespace App\Repositories;
 use App\Models\Order;
+use App\Models\Setting;
 use App\Facades\UPSFacade;
 use App\Models\ShippingService;
 use App\Facades\USPSTrackingFacade;
 use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
 use App\Services\SwedenPost\DirectLinkTrackingService;
+use App\Http\Resources\TrackingUserResource;
 class OrderTrackingRepository
 {
 
@@ -29,7 +31,7 @@ class OrderTrackingRepository
     {
         $trackingNumbers = explode(',', preg_replace('/\s+/', '', $this->trackingNumber));
 
-        $orders = Order::whereIn('corrios_tracking_code', $trackingNumbers)->get();
+        $orders = Order::whereIn('corrios_tracking_code', $trackingNumbers)->orWhereIn('tracking_id',$trackingNumbers)->get();
 
         $getTrackings = collect();
         if ($orders) {
@@ -192,5 +194,15 @@ class OrderTrackingRepository
         $response = array_reverse($response);
 
         return $response;
+    }
+
+    public function getTrackings($request) {
+        $users = Setting::where('key', 'MARKETPLACE')->where('value', 'AMAZON')->pluck('user_id')->toArray();
+        $trackingCodes = Order::whereIn('user_id', $users)
+        ->with("user")
+        ->where('status', Order::STATUS_SHIPPED)
+        ->whereBetween('order_date', [$request->start_date, $request->end_date])
+        ->get();
+        return TrackingUserResource::collection($trackingCodes);
     }
 }

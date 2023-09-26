@@ -9,22 +9,29 @@ use Illuminate\Support\Facades\Auth;
 class AffiliateSaleRepository
 {
     public function get(Request $request,$paginate = true,$pageSize=50){
+        
         $query = AffiliateSale::has('user')->with('order')->has('order');
 
         if (Auth::user()->isUser()) {
-            if(\Route::currentRouteName() == 'admin.reports.commission.show'){
-                $query->where('user_id', Auth::id())->where('referrer_id', $request->user_id);
-                return $paginate ? $query->paginate($pageSize) : $query->get();
-            }else{
-                $query->where('user_id', Auth::id());
-                return $paginate ? $query->paginate($pageSize) : $query->get();
+            $query->where('user_id', Auth::id());
+            if($request->user_id){
+                $query->where('referrer_id', $request->user_id);
             }
         }
-        
-        if ($request->user_id) {
+        if ($request->orderIds) {
+              $query->whereIn('id', json_decode($request->orderIds));
+        }
+        if(Auth::user()->isAdmin() && $request->user_id){
             $query->where('user_id', $request->user_id);
         }
-
+        if ( $request->status == 'paid' ){
+            $query->where('is_paid', true);
+        }
+        
+        if ( $request->status == 'unpaid' ){
+            $query->where('is_paid',false);
+        }
+        
         if ( $request->start ){
             $startDate = $request->start . ' 00:00:00';
             $query->where(function($query) use($startDate){
@@ -38,6 +45,10 @@ class AffiliateSaleRepository
                 return $query->where('created_at','<=', $endDate);
             });
         }
+        
+        if($request->status == 'downlaod'){
+            return $query->get()->sortByDesc('order.user_id');
+        }
 
         if ( $request->name ){
             $query->whereHas('user',function($query) use($request) {
@@ -45,11 +56,9 @@ class AffiliateSaleRepository
             });
         }
         if ( $request->user ){
-            $query->whereHas('order',function($query) use($request) {
-                return $query->whereHas('user',function($query) use($request) {
+             $query->whereHas('user',function($query) use($request) {
                    return $query->where('name', 'LIKE', "%{$request->user}%");
                });
-           });
         }
 
         if ( $request->order ){
@@ -116,9 +125,9 @@ class AffiliateSaleRepository
             $query->where('user_id', Auth::id());
         }
         
-        if ($request->user_id) {
-            $query->where('user_id', $request->user_id);
-        }
+        // if ($request->user_id) {
+        //     $query->where('user_id', $request->user_id);
+        // }
 
         $startDate = $request->start_date . ' 00:00:00';
         $endDate = $request->end_date.' 23:59:59';

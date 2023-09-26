@@ -152,7 +152,7 @@ class RatesCalculator
             }
         }else{
             $rate = collect($this->rates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
-            $rate = $rate['leve'];
+            $rate = optional($rate)['leve'];
         }
 
         
@@ -225,7 +225,10 @@ class RatesCalculator
                 // self::$errors .= "Service not available for this Country <br>";
                 return false;
             }
-            $profitSetting = $this->order->user->profitSettings->where('service_id',$this->shippingService->id)->first();
+            $profitSetting = $this->order->user->profitSettings->where('service_id',$this->shippingService->id)->first(); 
+            if($profitSetting==null && optional($this->order->shippingService)->is_directlink_country){
+                return false;
+            }
             if(!$profitSetting && !auth()->user()->isAdmin()){
                 return false;
             }

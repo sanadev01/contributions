@@ -16,6 +16,6 @@ class DuplicatePreAlertController extends Controller
         $parcel = $duplicateOrderRepository->makeDuplicatePreAlert($order);
 
         session()->flash('alert-success','Parcels Duplicate');
-        return redirect()->route('admin.parcels.edit',$parcel);
+        return redirect()->route('admin.parcels.edit',$parcel->encrypted_id);
     }
 }

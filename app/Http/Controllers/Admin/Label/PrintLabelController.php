@@ -32,7 +32,7 @@ class PrintLabelController extends Controller
      */
     public function create(Order $order)
     {
-        $this->authorize('labelPrint',$order);
+        $this->authorize('printBulkLabel',$order);
         return view('admin.print-label.create');
     }
 
@@ -66,19 +66,19 @@ class PrintLabelController extends Controller
             if(file_exists($tempFileUri)){
                 unlink($tempFileUri);
             }
-
             if ($zip->open($tempFileUri, ZipArchive::CREATE) === TRUE) {
+                // dd(132);
 
                 foreach($request->order as $orderId){
                     $order = Order::find($orderId);
                     if($order->is_paid){
                         $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
                         if(!file_exists($relativeNameInZipFile)){
-                            $labelData = $labelRepository->get($order);
-                            
-                            if ( $labelData ){
-                                Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-                            }
+                            // $labelData = $labelRepository->get($order);
+                            (new HandleCorreiosLabelsRepository($request,$order))->handle();
+                            // if ( $labelData ){
+                            //     Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                            // }
                             $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
                         }
                         
@@ -90,11 +90,11 @@ class PrintLabelController extends Controller
                 }
 
                 $zip->close();
+                return response()->download($tempFileUri);
             } else {
-                echo 'Could not open ZIP file.';
+                return 'Could not open ZIP file.';
             }
             
-            return response()->download($tempFileUri);
             
         }
         return back();
@@ -107,7 +107,7 @@ class PrintLabelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Order $scan, CorrieosBrazilLabelRepository $labelRepository)
+    public function show(Request $request, Order $scan)
     {
         $order = $scan;
         if($request->search){
@@ -115,6 +115,9 @@ class PrintLabelController extends Controller
         }
         $labelData = null;
         if($order->is_paid){
+            if(!$order->corrios_tracking_code){
+                (new HandleCorreiosLabelsRepository($request,$order))->handle();
+            }
             return redirect()->route('order.label.download',[encrypt($order->id),'time'=>md5(microtime())]);
         }
 

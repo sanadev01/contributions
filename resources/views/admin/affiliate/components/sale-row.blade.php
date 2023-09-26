@@ -24,12 +24,14 @@
     <td>
         {{ optional($sale->order->user)->name }}
     </td>
-    <td>
-        <a href="#" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$sale->order) }}" title="@lang('sales-commission.Show Order Details')">
-            @lang('sales-commission.view-order')
-        </a>
-        
-    </td>
+    @admin
+        <td>
+            <a href="#" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$sale->order) }}" title="@lang('sales-commission.Show Order Details')">
+                @lang('sales-commission.view-order')
+            </a>
+            
+        </td>
+    @endadmin
     <td>
         {{ $sale->order->warehouse_number }}
     </td>

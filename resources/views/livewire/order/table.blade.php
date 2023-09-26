@@ -36,6 +36,12 @@
         <div class="row col-11  d-flex justify-content-end pr-0">
             <form class="row col-8  d-flex justify-content-end " action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                 @csrf
+                @if (request()->route()->getName() != 'admin.trash-orders.index')
+                    <input type="hidden" name="is_trashed" value="0">
+                @else
+                    <input type="hidden" name="is_trashed" value="1">
+                @endif
+
                 <label>Start Date</label>
                 <input type="date" name="start_date" class="form-control col-2">
 
@@ -46,6 +52,14 @@
                 <select class="form-control col-2 mr-2" name="type">
                     <option value="">All</option>
                     <option value="domestic">Domestic</option>
+                    <option value="{{ App\Models\Order::STATUS_ORDER }}">ORDER</option>
+                    <option value="{{ App\Models\Order::STATUS_CANCEL }}">CANCELLED</option>
+                    <option value="{{ App\Models\Order::STATUS_REJECTED }}">REJECTED</option>
+                    <option value="{{ App\Models\Order::STATUS_RELEASE }}">RELEASED</option>
+                    <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}">PAYMENT_PENDING</option>
+                    <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}">PAYMENT_DONE</option>
+                    <option value="{{ App\Models\Order::STATUS_SHIPPED }}">SHIPPED</option>
+                    <option value="{{ App\Models\Order::STATUS_REFUND }}">REFUND / CANCELLED</option>
                 </select>
 
                 <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
@@ -58,13 +72,13 @@
         <table class="table mb-0 table-responsive-md" id="order-table">
             <thead>
                 <tr>
-                    @if (\Request::route()->getName() != 'admin.trash-orders.index')
+                    @if (\Request::route()->getName() != 'admin.trash-orders.index' && $isTrashed)
                         <th>
                             @lang('orders.Bulk Print')
                         </th>
                     @endif
                     <th>
-                        @if (\Request::route()->getName() != 'admin.trash-orders.index')
+                        @if (\Request::route()->getName() != 'admin.trash-orders.index'  && $isTrashed)
                             <span class="mr-4"> @lang('Edit Order')</span>
                         @endif
                         <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
@@ -90,7 +104,7 @@
                     <th class="no-print">@lang('orders.actions.actions')</th>
                 </tr>
                 <tr class="no-print">
-                    @if (\Request::route()->getName() != 'admin.trash-orders.index')
+                    @if (\Request::route()->getName() != 'admin.trash-orders.index' && $isTrashed)
                         <th style="min-width: 100px;">
                             <select name="" id="bulk-actions" class="form-control">
                                 <option value="clear">Clear All</option>
@@ -136,6 +150,8 @@
                             <option value="Post Plus">Post Plus</option>
                             <option value="Anjun">Anjun</option>
                             <option value="Anjun China">Anjun China</option>
+                            <option value="Total Express">Total Express</option>
+                            <option value="HD Express">HD Express</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin
@@ -155,6 +171,7 @@
                             <option value="{{ App\Models\Order::STATUS_PAYMENT_PENDING }}">PAYMENT_PENDING</option>
                             <option value="{{ App\Models\Order::STATUS_PAYMENT_DONE }}">PAYMENT_DONE</option>
                             <option value="{{ App\Models\Order::STATUS_SHIPPED }}">SHIPPED</option>
+                            <option value="{{ App\Models\Order::STATUS_REFUND }}">REFUND / CANCELLED</option>
                         </select>
                     </th>
                     <th >

@@ -70,6 +70,30 @@ class IndexTable extends Component
             'name' => 'Parcel Post',
             'value' => Package::SERVICE_CLASS_Parcel_Post,
         ];
+        $this->services[13] = [
+            'name' => 'Post Plus Prime',
+            'value' => Package::SERVICE_CLASS_Post_Plus_Prime,
+        ];
+        $this->services[14] = [
+            'name' => 'PrimeRIO',
+            'value' => Package::SERVICE_CLASS_Post_Plus_Premium,
+        ];
+        $this->services[15] = [
+            'name' => 'Prime5RIO',
+            'value' => Package::SERVICE_CLASS_Prime5RIO,
+        ];
+        $this->services[16] = [
+            'name' => 'GDE Priority Mail',
+            'value' => Package::SERVICE_CLASS_GDE_PRIORITY,
+        ];
+        $this->services[17] = [
+            'name' => 'GDE First Class',
+            'value' => Package::SERVICE_CLASS_GDE_FIRSTCLASS,
+        ];
+        $this->services[18] = [
+            'name' => 'Total Express',
+            'value' => Package::SERVICE_CLASS_TOTAL_EXPRESS,
+        ];
         return $this->services;
     }
 }

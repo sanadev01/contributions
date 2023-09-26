@@ -85,9 +85,9 @@ class Client{
             $serviceSubClassCode = 33227;
         }
         if($order->isWeightInKg()) {
-            $weight = UnitsConverter::kgToGrams($order->getWeight('kg'));
+            $weight = UnitsConverter::kgToGrams($order->getOriginalWeight('kg'));
         }else{
-            $kg = UnitsConverter::poundToKg($order->getWeight('lbs'));
+            $kg = UnitsConverter::poundToKg($order->getOriginalWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
         }
         \Log::info('serviceSubClassCode: '. $serviceSubClassCode);
@@ -103,7 +103,7 @@ class Client{
         $packet->recipientAddressNumber = $order->recipient->street_no;
         $packet->recipientZipCode = cleanString($order->recipient->zipcode);
         $packet->recipientState = $order->recipient->state->code;
-//    $packet->recipientPhoneNumber = $order->recipient->phone;
+        $packet->recipientPhoneNumber = preg_replace('/^\+55/', '', $order->recipient->phone);;
         $packet->recipientEmail = $order->recipient->email;
         $packet->distributionModality = $serviceSubClassCode;
         $packet->taxPaymentMethod = $order->getService() == 1 ? 'DDP' : 'DDU';
@@ -171,7 +171,20 @@ class Client{
             }
             return null;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
-            return new PackageError($e->getResponse()->getBody()->getContents());
+            
+            $responseError = $e->getResponse()->getBody()->getContents();
+            $errorCopy = new PackageError($responseError);
+            $errorMessage = $errorCopy->getErrors();
+            if($errorMessage=="GTW-006: Token inválido." || $errorMessage=="GTW-007: Token expirado."){
+                \Log::info('Token refresh automatically'); 
+                Cache::forget('anjun_token');
+                Cache::forget('token');
+            return $this->createPackage($order);
+            }
+
+            $error = new PackageError($responseError);
+            return $error;
+
         }
         catch (\Exception $exception){
             return new PackageError($exception->getMessage());

@@ -25,6 +25,8 @@ class CN23LabelMaker implements HasLableExport
     private $items;
     private $sumplementryItems;
     private $hasSuplimentary;
+    private $activeAddress;
+    private $isReturn;
 
     public function __construct()
     {
@@ -35,10 +37,11 @@ class CN23LabelMaker implements HasLableExport
         $this->packetType = 'Packet Standard';
         $this->contractNumber = 'Contrato:  9912501576';
         $this->service = 2;
-        $this->returnAddress = 'Blue Line Ag. De Cargas Ltda. <br>
-        Rua Barao Do Triunfo, 520 - CJ 152 - Brooklin Paulista
-        CEP 04602-001 - São Paulo - SP- Brasil';
+        $this->returnAddress = 'Homedeliverybr <br>
+        Rua Acaçá 47- Ipiranga <br>
+        Sao Paulo CEP 04201-020';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
+        $this->activeAddress = '';
     }
 
     public function setOrder(Order $order)
@@ -47,6 +50,8 @@ class CN23LabelMaker implements HasLableExport
         $this->recipient = $order->recipient;
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
+        $this->getActiveAddress($this->order);
+        $this->checkReturn($this->order);
 
         if ($this->order->shippingService->isAnjunService()) {
             $this->contractNumber = 'Contrato:  9912501700';
@@ -108,18 +113,34 @@ class CN23LabelMaker implements HasLableExport
 
     private function setItems()
     {
-        $this->items = $this->order->items->take(4);
+        $this->items = $this->order->items->take($this->suplimentryAt());
         return $this;
     }
 
     private function setSuplimentryItems()
     {
-        if ( $this->order->items->count() > 4 ){
+        $suplimentryAt = $this->suplimentryAt();
+        if ( $this->order->items->count() > $suplimentryAt){
             $this->hasSuplimentary = true;
-            $this->sumplementryItems = $this->order->items->skip(4)->chunk(30);
+            $this->sumplementryItems = $this->order->items->skip($suplimentryAt)->chunk(30);
         }
-
         return $this;
+    }
+    private function suplimentryAt(){ 
+        foreach ( $this->order->items as  $key=>$item){
+            if(strlen($item->description) >65  ){
+                try{
+                    
+                if(strlen($this->order->items[$key+1]->description) <=70  && $key<2)
+                    return $key==0?2:$key+1;
+                }catch(Exception $e){
+                    return $key==0?1:$key;
+
+                } 
+                 return $key==0?1:$key;
+            }
+        }
+        return 4;
     }
 
     public function render()
@@ -162,6 +183,36 @@ class CN23LabelMaker implements HasLableExport
             'suplimentaryItems' => $this->sumplementryItems,
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
+            'activeAddress' => $this->activeAddress,
+            'isReturn' => $this->isReturn,
         ];
+    }
+
+    private function getActiveAddress(Order $order)
+    {
+        if(setting('default_address', null, $order->user_id) == 3) {
+            $user = $order->user;
+            $this->activeAddress = $user->address.', '.$user->state->code.', '.$user->zipcode.', '.$user->country()->first()->code;
+        }else{
+            $this->activeAddress = "2200 NW 129th Ave - Suite # 100, Miami, FL 33182 US";
+        }
+        return $this;
+    }
+
+    private function checkReturn(Order $order)
+    {
+        if($order->sinerlog_tran_id) {
+            $this->isReturn = false;
+            if($order->sinerlog_tran_id == 1  || $order->sinerlog_tran_id == 3) {
+                $this->isReturn = true;
+            }
+        }else {
+            // $id = auth()->user()->id;
+            $this->isReturn = true;
+            // if(setting('return_origin', null, $id) || setting('individual_parcel', null, $id)) {
+            //     $this->isReturn = true;
+            // }
+        }
+        return $this;    
     }
 }

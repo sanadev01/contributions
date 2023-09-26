@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\User;
+use App\Models\Region;
 use App\Models\ProfitPackage;
 use Illuminate\Database\Eloquent\Model;
 use LaravelJsonColumn\Traits\JsonColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Services\Calculators\RatesCalculator;
-
+use App\Services\Calculators\WeightCalculator; 
 class ShippingService extends Model
 {
     use JsonColumn;
@@ -42,7 +44,22 @@ class ShippingService extends Model
     const Post_Plus_Registered = 734;
     const Post_Plus_EMS = 367;
     const Parcel_Post = 541;
-
+    const Post_Plus_Prime = 777;
+    const Post_Plus_Premium = 778;
+    const Prime5RIO = 357;
+    const DirectLinkCanada = 779; 
+    const DirectLinkMexico = 780;
+    const DirectLinkChile = 781;
+    const DirectLinkAustralia = 782;
+    const GDE_PRIORITY_MAIL = 4387;
+    const GDE_FIRST_CLASS = 4388;
+    const GSS_PMI = 477;
+    const GSS_EPMEI = 37634;
+    const GSS_EPMI = 3674;
+    const GSS_FCM = 3326;
+    const GSS_EMS = 4367;
+    const TOTAL_EXPRESS = 283;
+    const HD_Express = 33173;
 
     protected $guarded = [];
 
@@ -51,7 +68,7 @@ class ShippingService extends Model
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
 
-    public $cacheCalculator = false;
+    public $cacheCalculator = false; 
 
 
     protected static $calculator;
@@ -73,6 +90,9 @@ class ShippingService extends Model
 
     public function getRateFor(Order $order,$withProfit=true, $calculateOnVolumeMetricWeight = true)
     {
+        if($this->isGDEService() && $order){
+            return $this->getGDERate($order);
+        }
         $rate = round($this->getCalculator($order, $calculateOnVolumeMetricWeight)->getRate($withProfit),2);
         return $rate;
     }
@@ -163,17 +183,45 @@ class ShippingService extends Model
 
         return false;
     }
+    public function getIsTotalExpressAttribute()
+    {
+        return $this->service_sub_class == self::TOTAL_EXPRESS;
+    }
     public function isSwedenPostService()
     {
-        if($this->service_sub_class == self::Prime5){
+        return in_array($this->service_sub_class,[self::Prime5,self::Prime5RIO,self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);
+    }
+    function getIsDirectlinkCountryAttribute(){
+        return in_array($this->service_sub_class,[self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);
+    }
+
+    public function isPostPlusService()
+    {
+        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime || $this->service_sub_class == self::Post_Plus_Premium){
             return true;
         }
         return false;
     }
 
-    public function isPostPlusService()
+    public function isGDEService()
     {
-        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS){
+        if(in_array($this->service_sub_class, [self::GDE_PRIORITY_MAIL, self::GDE_FIRST_CLASS])){
+            return true;
+        }
+        return false;
+    }
+
+    public function isHDExpressService()
+    {
+        if($this->service_sub_class == ShippingService::HD_Express){
+            return true;
+        }
+        return false;
+    }
+
+    public function isInboundDomesticService()
+    {
+        if (collect($this->inboundDomesticShippingServices())->contains($this->service_sub_class)) {
             return true;
         }
         return false;
@@ -185,6 +233,14 @@ class ShippingService extends Model
             return true;
         }
 
+        return false;
+    }
+
+    public function isGSSService()
+    {
+        if($this->service_sub_class == self::GSS_PMI || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_FCM || $this->service_sub_class == self::GSS_EMS){
+            return true;
+        }
         return false;
     }
 
@@ -245,9 +301,18 @@ class ShippingService extends Model
             self::Parcel_Post,
         ];
     }
+
+    private function inboundDomesticShippingServices()
+    {
+        return [
+            self::GDE_PRIORITY_MAIL,
+            self::GDE_FIRST_CLASS,
+        ];
+    }
+
     public function getIsMilliExpressAttribute()
     { 
-        return $this->service_sub_class == ShippingService::Mile_Express;
+        return $this->service_sub_class == ShippingService::HD_Express;
     }
     public function getIsUspsPriorityAttribute()
     { 
@@ -284,7 +349,7 @@ class ShippingService extends Model
     }
     public function getIsSwedenPostAttribute()
     {
-        if($this->service_sub_class == self::Prime5){
+        if($this->service_sub_class == self::Prime5 || $this->service_sub_class == self::Prime5RIO){
             return true;
         }
         return false;
@@ -297,5 +362,58 @@ class ShippingService extends Model
     {
         return in_array($this->service_sub_class,[self::AJ_Standard_CN,self::AJ_Express_CN]);
     }
-    
+    public function getIsGdePriorityAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::GDE_PRIORITY_MAIL;
+    }
+    public function getIsGdeFirstClassAttribute()
+    { 
+        return $this->service_sub_class == ShippingService::GDE_FIRST_CLASS;
+    }
+    function getIsBrazilRedispatchAttribute() {
+        return $this->service_sub_class == ShippingService::Brazil_Redispatch;
+    }
+
+    public function getGDERate($order){
+        $zone = getUSAZone($order->recipient->state->code);
+        $region = Region::where('country_id', $order->recipient->country_id)->where('code', $zone)->first();
+        $weight = ceil(WeightCalculator::kgToGrams($order->weight));
+        if ( $weight<100 ){
+            $weight = 100;
+        }
+        $serviceRates = $region->rates()->first();
+        if($serviceRates){
+            $rate = collect($serviceRates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
+            if(($rate)['leve'] && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, $order->user_id)){
+                $type = 'gde_fc_profit';
+                if($this->service_sub_class == self::GDE_PRIORITY_MAIL){
+                    $type = 'gde_pm_profit';
+                }
+                $userProfit = setting($type, null, $order->user_id);
+                $adminProfit = setting($type, null, User::ROLE_ADMIN);
+                $profit = $userProfit ? $userProfit : $adminProfit; 
+                $rate = ($profit / 100) * $rate['leve'] + $rate['leve'];
+                return number_format($rate,2);
+            }
+        }
+        return 0;
+    }
+    function getUspsServiceSubClassAttribute() {
+        return in_array($this->service_sub_class,[self::USPS_PRIORITY ,self::USPS_FIRSTCLASS,self::USPS_PRIORITY_INTERNATIONAL,self::USPS_FIRSTCLASS_INTERNATIONAL,self::USPS_GROUND,self::GDE_PRIORITY_MAIL,self::GDE_FIRST_CLASS]);
+    }
+    function getUpsServiceSubClassAttribute() {
+        return $this->service_sub_class == self::UPS_GROUND;        
+    }
+    function getFedexServiceSubClassAttribute() {
+        return $this->service_sub_class == self::FEDEX_GROUND;
+    }
+    function getGepsServiceSubClassAttribute() {
+       return $this->service_sub_class == self::GePS;
+    }
+    function getGssServiceSubClassAttribute() {
+        return $this->service_sub_class == self::GSS_PMI;
+    }
+    function getSwedenPostServiceSubClassAttribute() {
+        return in_array($this->service_sub_class,[self::Prime5,self::Prime5RIO,self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);        
+    }
 }

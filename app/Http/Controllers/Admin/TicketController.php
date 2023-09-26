@@ -73,7 +73,7 @@ class TicketController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Update $request, Ticket $ticket, TicketRepository $repository)
-    {   
+    {
         $this->authorize('update',$ticket);
 
         if($repository->update($request, $ticket)){
@@ -91,6 +91,7 @@ class TicketController extends Controller
      */
     public function markClose(Ticket $ticket, TicketRepository $repository)
     {
+        $this->authorize('close',$ticket);
         if($repository->markcLose($ticket)){
             session()->flash('alert-success', 'tickets.Closed');
         }

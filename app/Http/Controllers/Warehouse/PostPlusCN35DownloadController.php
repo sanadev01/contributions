@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Response;
 use App\Services\PostPlus\CN35LabelMaker;
-use Carbon\Carbon;
+use App\Services\PostPlus\CN35LabelHandler;
 
 class PostPlusCN35DownloadController extends Controller
 {
@@ -35,6 +37,8 @@ class PostPlusCN35DownloadController extends Controller
                      ->setUnitCode($container->getUnitCode());
 
         return $cn35Maker->download();
-        
+
+        // return CN35LabelHandler::handle($container, $id);
     }
+
 }

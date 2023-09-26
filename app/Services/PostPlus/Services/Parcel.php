@@ -12,8 +12,12 @@ class Parcel {
 
       if($order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered) {
          $type = 'Registered';
-      } else {
+      } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_EMS) {
          $type = 'EMS';
+      } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime) {
+         $type = 'Prime';
+      } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
+         $type = 'ParcelUPU';
       }
       $refNo = $order->customer_reference;
       $packet = [
@@ -41,6 +45,7 @@ class Parcel {
                   'address' => $order->recipient->address.' '.optional($order->recipient)->address2.' '.$order->recipient->street_no,
                   'zipCode' => cleanString($order->recipient->zipcode),
                   'city' => $order->recipient->city,
+                  'state' => $order->recipient->State->code,
                   'countryCode' => $order->recipient->country->code,
                ],
                //Sender Information
@@ -48,10 +53,11 @@ class Parcel {
                   'name' => $order->getSenderFullName(),
                   'phone' => ($order->sender_phone) ? $order->sender_phone: '',
                   'email' => ($order->sender_email) ? $order->sender_email: '',
-                  'address' => "2200 NW 129TH AVE",
-                  'zipCode' => "33182",
-                  'city' => "FL",
-                  'countryCode' => "US",
+                  'address' => ($order->sender_address) ? $order->sender_address: '2200 NW 129TH AVE',
+                  'zipCode' => ($order->sender_zipcode) ? $order->sender_zipcode: '33182',
+                  'city' => ($order->sender_city) ? $order->sender_city: 'Miami',
+                  'state' => ($order->sender_state_id) ? $order->senderState->code: 'FL',
+                  'countryCode' => 'US',
                ],
             ];
       return $packet;
@@ -71,7 +77,7 @@ class Parcel {
                      'quantity' => (int)$item->quantity,
                      'hsCode' => $item->sh_code,
                      'valuePerItem' => $item->value,
-                     'weightPerItem' => round($order->weight / $totalQuantity, 2) - 0.05,
+                     'weightPerItem' => round($order->weight / $totalQuantity, 2) - 0.02,
                 ];
                array_push($items, $itemToPush);
             }

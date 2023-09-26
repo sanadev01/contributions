@@ -67,6 +67,28 @@ class AccrualRate extends Model
         if ( $this->service == Package::SERVICE_CLASS_Parcel_Post ){
             return "Parcel Post";
         }
+
+        if ( $this->service == Package::SERVICE_CLASS_Post_Plus_Prime ){
+            return "Post Plus Prime";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_Post_Plus_Premium){
+            return "PrimeRIO";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_Prime5RIO ){
+            return "Prime5RIO";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_GDE_PRIORITY ){
+            return "GDE Priority Mail";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_GDE_FIRSTCLASS ){
+            return "GDE First Class";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_TOTAL_EXPRESS ){
+            return "Total Express";
+        }
         return '';
     }
 

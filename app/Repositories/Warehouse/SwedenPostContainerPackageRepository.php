@@ -3,6 +3,7 @@
 namespace App\Repositories\Warehouse;
 
 use App\Models\Order;
+use App\Models\ShippingService;
 use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Import\TrackingsImportService;
@@ -13,13 +14,32 @@ class SwedenPostContainerPackageRepository
 {
     public function addOrderToPackageContainer($container, $order)
     {
-        $error = null;
-
-        if (!$order->containers->isEmpty()) {
-            $error = "Order is already present in Container";
+        $error = null; 
+        if (count($order->containers)){
+            return [
+                    'success' => false,
+                    'message' =>  "Order is already present in Container"
+            ];
         }
         if ($order->status != Order::STATUS_PAYMENT_DONE) {
-            $error = 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid';
+            return [
+                'success' => false,
+                'message' => 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid'
+            ];
+        }
+        if($container->is_directlink_country && $order->shippingService->is_directlink_country && $this->countryCotainerMatched(optional(optional($order->recipient)->country)->code,$container)){
+            $container->orders()->attach($order->id);
+            $this->addOrderTracking($order);
+            return [
+                'success' => true,
+                'message' => 'Added Successfully',
+            ];
+        }
+        if ((!$container->hasSwedenPostService() || !$order->shippingService->isSwedenPostService()) || $order->shippingService->is_directlink_country){
+            return [
+                'success' => false,
+                'message' =>'Order does not belong to this container. Please Check Packet Service',
+            ];
         }
 
         if ((!$container->hasSwedenPostService() || !$order->shippingService->isSwedenPostService())){
@@ -53,21 +73,14 @@ class SwedenPostContainerPackageRepository
     {
         DB::beginTransaction(); 
         try {
-            $order = Order::find($id);
-
+            $order = Order::find($id); 
+            if($container->is_directlink_country){
+                return $this->detachOrder($id,$container);
+            }
             $response =  (new DirectLinkReceptacle($container))->removeItem($order->corrios_tracking_code);
-           
             $data = $response->getData();
-            if ($data->isSuccess) { 
-                $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
-
-                if ($order_tracking) {
-                    $order_tracking->delete();
-                }
-                $container->orders()->detach($id);
-
-                DB::commit();
-                return true;
+            if ($data->isSuccess) {  
+                return $this->detachOrder($id,$container);
             } else {
                 DB::rollback();
                 return false;
@@ -75,6 +88,19 @@ class SwedenPostContainerPackageRepository
         } catch (\Exception $ex) {
             return false;
         }
+    }
+    function countryCotainerMatched($countryCode,$container) {
+    if($countryCode =='MX' ){
+        return $container->services_subclass_code == ShippingService::DirectLinkMexico;
+    } if($countryCode =='CL' ){
+        return  $container->services_subclass_code == ShippingService::DirectLinkChile;
+    } if($countryCode =='AU' ){
+        return   $container->services_subclass_code == ShippingService::DirectLinkAustralia;
+    } if($countryCode =='CA' ){
+        return $container->services_subclass_code == ShippingService::DirectLinkCanada;
+    }
+    return false;
+        
     }
 
     public function addOrderTracking($order)
@@ -89,5 +115,17 @@ class SwedenPostContainerPackageRepository
         ]);
 
         return true;
+    }
+    
+    public function detachOrder($orderId,$container) {
+        $order_tracking = OrderTracking::where('order_id', $orderId)->latest()->first();
+        if ($order_tracking) {
+            $order_tracking->delete();
+        }
+        $container->orders()->detach($orderId);
+
+        DB::commit();
+        return true;
+        
     }
 }

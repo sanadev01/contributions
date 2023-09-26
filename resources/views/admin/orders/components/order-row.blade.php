@@ -3,7 +3,7 @@
         <td>
             
             <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-                <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$order->id}}">
+                <input type="checkbox" name="orders[]" class="bulk-orders" value="{{$order->encrypted_id}}">
                 <span class="vs-checkbox vs-checkbox-lg">
                     <span class="vs-checkbox--check">
                         <i class="vs-icon feather icon-check"></i>
@@ -15,7 +15,7 @@
     @endif
     <td class="d-flex justify-content-between align-items-center">
         @if(\Request::route()->getName() != 'admin.reports.order.index'  && !$order->isTrashed())
-            <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->id}})" title="@lang('Edit Order')">
+            <div class="vs-radio-con" wire:click="$emit('edit-order',{{$order->encrypted_id}})" title="@lang('Edit Order')">
                 <input type="radio" name="edit_order" class="edit-order" value="false">
                 <span class="vs-radio vs-radio-lg">
                     <span class="vs-radio--border"></span>
@@ -31,8 +31,8 @@
         @endif
         @if( $order->warehouse_number)
             <span>
-                <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$order) }}">
-                    WRH#: {{ $order->warehouse_number }}
+                <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$order->encrypted_id) }}">
+                     {{ $order->warehouse_number }}
                 </a>
             </span>
         @endif
@@ -41,7 +41,7 @@
         @endif
         <span title="Consolidation Requested For Following Shipments">
             @foreach( $order->subOrders as $subOrder)
-                <a href="#" class="mb-1 d-block" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$subOrder) }}">
+                <a href="#" class="mb-1 d-block" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$subOrder->encrypted_id) }}">
                     WHR#: {{ $subOrder->warehouse_number }}
                 </a>
             @endforeach
@@ -80,7 +80,7 @@
         ${{ number_format($order->gross_total,2) }}
     </td>
     <td>
-        <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>
+        <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin() && !$order->isTrashed())  wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled"  @endif>
             <option class="bg-info" value="{{ App\Models\Order::STATUS_ORDER }}" {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected': '' }}>ORDER</option>
             {{-- <option class="bg-warning" value="{{ App\Models\Order::STATUS_NEEDS_PROCESSING }}" {{ $order->status == App\Models\Order::STATUS_NEEDS_PROCESSING ? 'selected': '' }}>NEEDS PROCESSING</option> --}}
             <option class="btn-cancelled" value="{{ App\Models\Order::STATUS_CANCEL }}" {{ $order->status == App\Models\Order::STATUS_CANCEL ? 'selected': '' }}>CANCELLED</option>
@@ -130,14 +130,14 @@
                                     <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
                                 </a>
                             @else
-                                <a @if(Auth::user()->isActive()) href="{{ route('admin.payment-invoices.orders.index',['order'=>$order]) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif  class="dropdown-item" title="Pay Order">
+                                <a @if(Auth::user()->isActive()) href="{{ route('admin.payment-invoices.orders.index',['order'=>$order->encrypted_id]) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif  class="dropdown-item" title="Pay Order">
                                     <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
                                 </a>
                             @endif
                             
                         @endif
                     @enduser
-                        <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$order) }}" class="dropdown-item" title="Show Order Details">
+                        <button data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$order->encrypted_id) }}" class="dropdown-item" title="Show Order Details">
                             <i class="feather icon-list"></i> @lang('orders.actions.view-order')
                         </button>
                     @if( $order->corrios_tracking_code)
@@ -146,48 +146,55 @@
                         </button>
                     @endif
                     @can('update',  $order)
-                        <a @if(Auth::user()->isActive()) href="{{ route('admin.parcels.edit',$order) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif  class="dropdown-item" title="@lang('parcel.Edit Parcel')">
+                        <a @if(Auth::user()->isActive()) href="{{ route('admin.parcels.edit',$order->encrypted_id) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif  class="dropdown-item" title="@lang('parcel.Edit Parcel')">
                             <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
                         </a>
                     @endcan
 
                     @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order) && !$order->isRefund() && $order->is_paid && Auth::user()->isActive() && !$order->isTrashed())
-                        <a href="{{ route('admin.orders.label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                        <a href="{{ route('admin.orders.label.index', $order->encrypted_id) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                             <i class="feather icon-printer"></i>@lang('orders.actions.label')
                         </a>
                         @if($order->carrierService() == "Global eParcel" && !$order->isRefund() && !$order->isShipped())
-                            <a href="{{ route('admin.order.label.cancel',$order) }}" class="dropdown-item" title="@lang('orders.actions.cancel')">
+                            <a href="{{ route('admin.order.label.cancel',$order->encrypted_id) }}" class="dropdown-item" title="@lang('orders.actions.cancel')">
                                 <i class="feather icon-x-square"></i>@lang('orders.actions.cancel')
                             </a>
                         @endif
-                        @if( $order->corrios_tracking_code && $order->recipient->country_id != \App\Models\Order::US && !$order->hasSecondLabel())
-                            <a href="{{ route('admin.order.us-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                        @if( $order->corrios_tracking_code && $order->recipient->country_id != \App\Models\Order::US && !$order->hasSecondLabel() && !$order->isRefund())
+                            <a href="{{ route('admin.order.us-label.index', $order->encrypted_id) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                                 <i class="feather icon-printer"></i>@lang('orders.actions.buy-us-label')
                             </a>
                         @endif
                         @if($order->hasSecondLabel() && !$order->isTrashed())
-                            <a href="{{ route('admin.order.us-label.index',$order) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                            <a href="{{ route('admin.order.us-label.index', $order->encrypted_id) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                                 <i class="feather icon-printer"></i>@if($order->usLabelService() == \App\Models\ShippingService::UPS_GROUND)@lang('orders.actions.print-ups-label') @elseif($order->usLabelService() == \App\Models\ShippingService::FEDEX_GROUND) @lang('orders.actions.print-fedex-label') @else @lang('orders.actions.print-usps-label') @endif
                             </a>
                             @if ($order->apiPickupResponse() != null)
-                                <a href="{{ route('admin.order.ups-label.cancel.pickup', $order->id) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                                <a href="{{ route('admin.order.ups-label.cancel.pickup', $order->encrypted_id) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                                     <i class="feather icon-trash"></i>@lang('orders.actions.cancel-ups-pickup')
                                 </a>
                             @endif
                         @endif        
                     @endif
                    @can('updateOrder', $order)
-                        <a  @if(Auth::user()->isActive()) href="{{ route('admin.orders.sender.index',$order) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item" title="@lang('orders.actions.update')">
+                        <a  @if(Auth::user()->isActive()) href="{{ route('admin.orders.sender.index', $order->encrypted_id) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item" title="@lang('orders.actions.update')">
                             <i class="feather icon-edit"></i>@lang('orders.actions.update')
                         </a>
                    @endcan
                    @can('copyOrder', $order)
-                        <a @if(Auth::user()->isActive())  @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}"  @endif href="{{ route('admin.orders.duplicate',$order) }}" class="dropdown-item" title="@lang('orders.actions.duplicate-order')">
+                        <a @if(Auth::user()->isActive())  @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}"  @endif href="{{ route('admin.orders.duplicate',$order->encrypted_id) }}" class="dropdown-item" title="@lang('orders.actions.duplicate-order')">
                             <i class="feather icon-copy"></i>@lang('orders.actions.duplicate-order')
                         </a>
                    @endcan
+
+                   @if(optional($order->shippingService)->isGDEService()) 
+                        <a href="{{ route('admin.gde.invoice.download', $order->id) }}" class="dropdown-item w-100"> 
+                            <i class="fa fa-cloud-download"></i>GDE Invoice 
+                        </a> 
+                    @endif
+
                     @if( Auth::user()->isActive() && !$order->isTrashed() && Auth::user()->isAdmin() || !$order->isPaid())
-                    <form action="{{ route('admin.orders.destroy',$order->id) }}" method="post" onsubmit="return confirmDelete()">
+                    <form action="{{ route('admin.orders.destroy',$order->encrypted_id) }}" method="post" onsubmit="return confirmDelete()">
                         @csrf
                         @method('DELETE')
                         <button class="dropdown-item text-danger" title="Delete Record">

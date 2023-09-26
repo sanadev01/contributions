@@ -14,6 +14,8 @@ use App\Repositories\SwedenPostLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\AnjunLabelRepository;
+use App\Services\TotalExpress\TotalExpressLabelRepository;
+
 class HandleCorreiosLabelsRepository
 {
     public $order;
@@ -30,7 +32,11 @@ class HandleCorreiosLabelsRepository
     }
     public function handle()
     {
+        if ($this->order->shippingService->isSwedenPostService()) {
+                return $this->swedenPostLabel();
+        }
         if ($this->order->recipient->country_id == Order::BRAZIL) {
+            
             if ($this->order->shippingService->isGePSService()) {
 
                 return $this->gepsLabel();
@@ -46,9 +52,19 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->isPostPlusService()) {
                 return $this->postPlusLabel();
             }
+            if ($this->order->shippingService->isGSSService()) {
+                return $this->uspsGSSLabel();
+            }
+            if ($this->order->shippingService->is_total_express) {
+                return $this->totalExpressLabel();
+            }
+            
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
             // }
+        }
+        if ($this->order->shippingService->isHDExpressService()) {
+            return $this->hdExpressLabel();
         }
         if ($this->order->recipient->country_id == Order::CHILE) {
 
@@ -61,7 +77,7 @@ class HandleCorreiosLabelsRepository
 
 
         if ($this->order->recipient->country_id == Order::US) {
-            if ($this->order->shippingService->is_usps_priority || $this->order->shippingService->is_usps_firstclass || $this->order->shippingService->is_usps_ground) {
+            if ($this->order->shippingService->is_usps_priority || $this->order->shippingService->is_usps_firstclass || $this->order->shippingService->is_usps_ground || $this->order->shippingService->is_gde_priority || $this->order->shippingService->is_gde_first_class) {
                 return $this->uspsLabel();
             }
 
@@ -94,12 +110,12 @@ class HandleCorreiosLabelsRepository
     //     return $this->renderLabel($this->request, $this->order, $colombiaLabelRepository->getError());
     // }
 
-    // public function mileExpressLabel()
-    // {
-    //     $mileExpressLabelRepository = new MileExpressLabelRepository();
-    //     $mileExpressLabelRepository->run($this->order,$this->update); 
-    //     return $this->renderLabel($this->request, $this->order, $mileExpressLabelRepository->getError());
-    // }
+    public function hdExpressLabel()
+    {
+        $hdExpressLabelRepository = new HDExpressLabelRepository();
+        $hdExpressLabelRepository->run($this->order,$this->update); 
+        return $this->renderLabel($this->request, $this->order, $hdExpressLabelRepository->getError());
+    }
 
     // public function postNLLabel()
     // {
@@ -108,6 +124,12 @@ class HandleCorreiosLabelsRepository
     //     return $this->renderLabel($this->request, $this->order, $postNLLabelRepository->getError());
     // }
 
+    public function totalExpressLabel()
+    {
+        $totalExpress = new TotalExpressLabelRepository(); ///by default consider false
+        $totalExpress->run($this->order,$this->update);
+        return $this->renderLabel($this->request, $this->order, $totalExpress->getError());
+    }
     public function gepsLabel()
     {
         $gepsLabelRepository = new GePSLabelRepository(); ///by default consider false
@@ -176,6 +198,13 @@ class HandleCorreiosLabelsRepository
         $postPlusLabelRepository = new PostPlusLabelRepository(); 
         $postPlusLabelRepository->run($this->order,$this->update); //by default consider false
         return $this->renderLabel($this->request, $this->order, $postPlusLabelRepository->getError());
+    }
+
+    public function uspsGSSLabel()
+    {
+        $gssLabelRepository = new GSSLabelRepository(); 
+        $gssLabelRepository->run($this->order,$this->update); //by default consider false
+        return $this->renderLabel($this->request, $this->order, $gssLabelRepository->getError());
     }
 
     public function renderLabel($request, $order, $error)

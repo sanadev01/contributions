@@ -42,6 +42,7 @@ return [
         'Tracking Report' => 'Relatório de Rastreamento',
         'Orders Report' => 'Relatório de pedidos',
         'Commission Report' => 'Relatório de Comissão',
+        'Tax Report Scan' => 'Verificação de relatório fiscal',
         'Audit Report' => 'Relatório de Auditoria',
     ],
     'Warehouse' => [
@@ -53,6 +54,7 @@ return [
         'USPS' => 'USPS',
         'GePS' => 'GePS',
         'Prime5' => 'Prime5',
+        'HD Express' => 'HD Express',
         // 'Sinerlog' => 'Sinerlog',
     ],
     'Affiliate' => [

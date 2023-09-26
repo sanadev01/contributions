@@ -146,17 +146,17 @@ class CN35LabelMaker implements HasLableExport
 
     public function render()
     {
-        return view('labels.postplus.cn35.index',$this->getViewData());
+        return view('labels.geps.cn35.index',$this->getViewData());
     }
 
     public function download()
     {
-        return \PDF::loadView('labels.postplus.cn35.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.geps.cn35.index',$this->getViewData())->stream();
     }
 
     public function saveAs($path)
     {
-        return \PDF::loadView('labels.postplus.cn35.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.geps.cn35.index',$this->getViewData())->save($path);
     }
 
     private function getViewData()

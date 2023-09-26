@@ -4,7 +4,7 @@
             <strong>Statement From: </strong> {{ $dateFrom }} - {{ $dateTo }} <br>
             {{-- <strong>Total Deposit:</strong> {{ 0 }} <br>
             <strong>Total Debit: </strong>  {{ 0 }} <br> --}}
-            <strong>Balance: <span style="font-size: 16px;">{{  number_format($totalBalance, 2) }} USD </span></strong>
+            <strong>Balance: <span style="font-size: 16px;">{{  number_format($deposits->sum('balance'), 2) }} USD </span></strong>
         </div>
     </div>
     <div class="row justify-content-end mb-4">
@@ -41,37 +41,64 @@
             </div>
         </div>
         <div class="col-md-1 text-right mt-4">
-            <a href="{{$downloadLink}}" class="btn btn-primary">Download</a>
+            <button wire:click="download" class="btn btn-primary">Download</button>  
         </div>
     </div>
     
     <table class="table table-hover-animation mb-0">
         <thead>
         <tr>
-            <th><a href="#" wire:click.prevent="sortBy('name')">User</a></th>
-            <th><a href="#" wire:click.prevent="sortBy('pobox_number')">WHR#</a> </th>
-            <th><a href="#" wire:click.prevent="sortBy('balance')">Balance</a></th>
+            <th><a href="#" wire:click.prevent="sortBy('name')"> User 
+            @if ( $sortBy == 'name' && $sortAsc )
+                <i class="fa fa-arrow-down ml-2"></i>
+            @elseif( $sortBy =='name' && !$sortAsc )
+                <i class="fa fa-arrow-up ml-2"></i>
+            @endif
+            </a></th>
+            <th><a href="#" wire:click.prevent="sortBy('user_id')"> POBox No# 
+                @if ( $sortBy == 'user_id' && $sortAsc )
+                <i class="fa fa-arrow-down ml-2"></i>
+                @elseif( $sortBy =='user_id' && !$sortAsc )
+                    <i class="fa fa-arrow-up ml-2"></i>
+                @endif
+            </a></th>
+            <th><a href="#" wire:click.prevent="sortBy('balance')">Balance
+                @if ( $sortBy == 'balance' && $sortAsc )
+                <i class="fa fa-arrow-down ml-2"></i>
+                @elseif( $sortBy =='balance' && !$sortAsc )
+                    <i class="fa fa-arrow-up ml-2"></i>
+                @endif    
+            </a></th>
+            <th> 
+                <a href="#" wire:click.prevent="sortBy('created_at')">Date
+                    @if ( $sortBy == 'created_at' && $sortAsc )
+                    <i class="fa fa-arrow-down ml-2"></i>
+                    @elseif( $sortBy =='created_at' && !$sortAsc )
+                        <i class="fa fa-arrow-up ml-2"></i>
+                    @endif    
+                </a> 
+            </th>
         </tr>
         <tr>
             <th>
-                <input type="search" wire:model.debounce.500ms="user" class="form-control">
+                <input type="search" wire:model.debounce.500ms="userName" class="form-control">
             </th>
            
             <th>
                 <input type="search" wire:model.debounce.500ms="poboxNumber" class="form-control">
             </th>
            
-            <th>
-                <input type="search" wire:model.debounce.500ms="balance" class="form-control">
-            </th>
+            <th>   <input type="search" wire:model.debounce.500ms="balance" class="form-control"></th>
+            <th>   </th>
         </tr>
         </thead>
         <tbody>
-            @foreach($users as $user)
+            @foreach($deposits as $deposit)
             <tr>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->pobox_number }}</td>
-                <td>{{ getBalance($user) }}</td>
+                <td>{{ $deposit->user->name }}</td>
+                <td>{{ $deposit->user->pobox_number }}</td>
+                <td>{{ number_format($deposit->balance,2) }}</td>
+                <td>{{ optional($deposit->created_at)->format('m/d/Y') }}</td>
             </tr>
             @endforeach
         </tbody>

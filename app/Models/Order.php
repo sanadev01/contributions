@@ -16,7 +16,8 @@ use App\Services\Correios\Contracts\Package;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\Package as ModelsPackage;
-
+use Exception;
+use Illuminate\Support\Facades\Crypt;
 class Order extends Model implements Package
 {
 
@@ -63,10 +64,10 @@ class Order extends Model implements Package
 
     const BRAZIL = 30;
     const CHILE = 46;
+    const Guatemala = 94;
     const US = 250;
 
     public $user_profit = 0;
-
     public function scopeParcelReady(Builder $query)
     {
         return $query->where(function($query){
@@ -257,7 +258,7 @@ class Order extends Model implements Package
         }
 
         if ( $unit == 'lbs' && !$this->isWeightInKg() ){
-            return round($weight);
+            return round($weight,2);
         }
 
         if ( $unit == 'lbs' && $this->isWeightInKg() ){
@@ -343,7 +344,14 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND) {
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GDE_PRIORITY_MAIL ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GDE_FIRST_CLASS ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_PMI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS) {
 
                 return 'USPS';
 
@@ -364,12 +372,11 @@ class Order extends Model implements Package
                 return 'Global eParcel';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Prime5){
-
+            elseif(in_array(optional($this->shippingService)->service_sub_class,[ShippingService::Prime5,ShippingService::Prime5RIO,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia])){
                 return 'Prime5';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium){
 
                 return 'PostPlus';
 
@@ -405,7 +412,16 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post) {
+                optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Prime5RIO ||
+                optional($this->shippingService)->service_sub_class == ShippingService::HD_Express ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_PMI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ) {
 
                 return $this->user_declared_freight;
             }
@@ -471,7 +487,7 @@ class Order extends Model implements Package
 
     public function getTempWhrNumber()
     {
-        return "HD-{$this->id}";
+        return "HD-{$this->change_id}";
     }
 
     public function doCalculations($onVolumetricWeight=true)
@@ -482,12 +498,14 @@ class Order extends Model implements Package
         if ($shippingService && in_array($shippingService->service_sub_class, $this->usShippingServicesSubClasses())) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
+        }elseif ($shippingService && $shippingService->isGSSService()) {
+            $shippingCost = $this->user_declared_freight;
         }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
 
-        $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
-        $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
+        $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() ? 1 : 0 );
+        $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() ? 1 : 0 );
 
         // $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
         
@@ -808,6 +826,66 @@ class Order extends Model implements Package
         elseif($this->status == Order::STATUS_SHIPPED) {
             return "SHIPPED";
         }
+    }
+
+    public function getChangeIdAttribute()
+    { 
+        $id = $this->id;
+        $date = explode(":",$this->created_at);
+        $minute = $date[1];
+        $sec = $date[2];
+        $changed='';
+        switch(true){
+            case (strlen($id)<=3):{
+                $changed = substr($id,0,3). $minute. $sec;
+                break;
+            }
+            case (strlen($id)<=6):{
+                $changed = substr($id,0,3) . $minute. substr($id,3,3). $sec;
+                break;
+             }
+             case (strlen($id)<=9):{
+                $changed = substr($id,0,3) . $minute .substr($id,3,3). $sec .substr($id,6,3);
+                break;
+             }
+             case(strlen($id)>=10):{
+                $changed = substr($id,0,3) . $minute .substr($id,3,6). $sec .substr($id,9);
+                break;
+            }
+        }
+        return $changed;
+    }
+    public function resolveRouteBinding($encryptedId, $field = null)
+    {
+        try{
+            return $this->withTrashed()->findOrFail(decrypt($encryptedId));
+        }
+        catch(Exception $e){
+            return $this->withTrashed()->findOrFail($encryptedId);
+            
+        }
+        
+    }
+
+    public function getEncryptedIdAttribute()
+    {
+        return encrypt($this->id);
+    }
+
+    public function totalExpressLabelUrl()
+    {
+        if (!$this->api_response) {
+            return null;
+        }
+        $decode = json_decode($this->api_response);
+        return $decode->labelResponse->data->download_url;
+    }
+    function getCn23LabelUrlAttribute() {
+        if($this->shippingService->is_total_express)
+        {
+            return $this->totalExpressLabelUrl();
+        }
+        return null;
     }
 
 }

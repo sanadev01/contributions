@@ -19,10 +19,13 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\PostPlusLabelRepository;
+use App\Repositories\GSSLabelRepository;
+use App\Repositories\HDExpressLabelRepository;
+use App\Services\TotalExpress\TotalExpressLabelRepository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use App\Events\AutoChargeAmountEvent;
 class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order)
@@ -30,6 +33,7 @@ class OrderLabelController extends Controller
         if(Auth::id() != $order->user_id){
             return apiResponse(false,'Order not found');
         }
+        
         $this->authorize('canPrintLableViaApi', $order);
         DB::beginTransaction();
         $isPayingFlag = false;
@@ -44,10 +48,17 @@ class OrderLabelController extends Controller
                         'status' => Order::STATUS_PAYMENT_DONE
                     ]);
                     chargeAmount($order->gross_total, $order);
+                    AutoChargeAmountEvent::dispatch($order->user);
                     $isPayingFlag = true;
                 }
             }
             $labelData = null;
+
+            //sweden post
+            if ($order->shippingService->isSwedenPostService()) {
+                return $this->swedenPostLabel($order);
+            }
+
             //For USPS International services
             if ($order->shippingService->is_usps_priority_international || $order->shippingService->is_usps_firstclass_international) {
                 $uspsLabelRepository = new USPSLabelRepository();
@@ -72,7 +83,7 @@ class OrderLabelController extends Controller
 
             if ($order->recipient->country_id == Order::US) {
                 // For USPS
-                if ($order->shippingService->service_sub_class == ShippingService::USPS_PRIORITY || $order->shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS || $order->shippingService->service_sub_class == ShippingService::USPS_GROUND) {
+                if (in_array($order->shippingService->service_sub_class, [ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS, ShippingService::USPS_GROUND, ShippingService::GDE_PRIORITY_MAIL, ShippingService::GDE_FIRST_CLASS])) {
                     $uspsLabelRepository = new USPSLabelRepository();
                     $uspsLabelRepository->handle($order);
 
@@ -95,9 +106,10 @@ class OrderLabelController extends Controller
                 }
                 return $this->rollback($error);
             }
-            // For Correios,  Global eParcel Brazil and Sweden Post(Prime5)
+            // For Correios,  Global eParcel Brazil and Sweden Post(Prime5) 
             if ($order->recipient->country_id == Order::BRAZIL) {
                 if ($isPayingFlag) {
+                    $orders->push($order);
                     event(new OrderPaid($orders, true));
                 }
                 if ($order->shippingService->isGePSService()){
@@ -108,20 +120,29 @@ class OrderLabelController extends Controller
                         return $this->rollback($error);
                     }
                 }
-                if ($order->shippingService->isSwedenPostService()) {
-                    $swedenPostLabelRepository = new SwedenPostLabelRepository();
-                    $swedenPostLabelRepository->get($order);
-                    $error = $swedenPostLabelRepository->getError();
-                    if ($error){
-                        return $this->rollback($error);
-                    }
-                }
+
                 if ($order->shippingService->isPostPlusService()) {
                     $postPlusLabelRepository = new PostPlusLabelRepository();
                     $postPlusLabelRepository->get($order);
                     $error = $postPlusLabelRepository->getError();
                     if ($error){
                         return $this->rollback($error);
+                    }
+                }
+                if ($order->shippingService->isGSSService()) {
+                    $gssLabelRepository = new GSSLabelRepository();
+                    $gssLabelRepository->get($order);
+                    $error = $gssLabelRepository->getError();
+                    if ($error){
+                        return $this->rollback($error);
+                    }
+                }
+                if ($order->shippingService->is_total_express) {
+                    $totalExpressLabelRepository = new TotalExpressLabelRepository();
+                    $totalExpressLabelRepository->get($order);
+                    $error = $totalExpressLabelRepository->getError();
+                    if ($error){
+                        return $this->rollback((string)$error);
                     }
                 }
                 if ($order->shippingService->isAnjunService() ||  $order->shippingService->isCorreiosService()){
@@ -136,17 +157,39 @@ class OrderLabelController extends Controller
                     }
                 }
             }
+            
+            if ($order->shippingService->isHDExpressService()) {
+                $hdExpressLabelRepository = new HDExpressLabelRepository();
+                $hdExpressLabelRepository->run($order, false);
+                $error = $hdExpressLabelRepository->getError();
+                if ($error){
+                    return $this->rollback($error);
+                }
+            }
             return $this->commit($order);
+            
         } catch (Exception $e) {
             return $this->rollback($e->getMessage());
         }
     }
 
+    function swedenPostLabel($order){
+        if ($order->shippingService->isSwedenPostService()) {
+            $swedenPostLabelRepository = new SwedenPostLabelRepository();
+            $swedenPostLabelRepository->get($order);
+            $error = $swedenPostLabelRepository->getError();
+            if ($error){
+                return $this->rollback($error);
+            }
+               return $this->commit($order);
+
+        }
+    } 
     private function commit($order)
     {
         DB::commit();
         return apiResponse(true, "Lable Generated successfully.", [
-            'url' => route('order.label.download',  encrypt($order->id)),
+            'url' => $order->cn23_label_url?? route('order.label.download',  encrypt($order->id)),
             'tracking_code' => $order->corrios_tracking_code
         ]);
     }

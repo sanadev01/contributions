@@ -54,7 +54,32 @@
                                 enctype="multipart/form-data">
                                 @csrf
                                 @if ($orders)
-                                  
+                                    @foreach ($orders as $key => $order)
+
+                                    @if($loop->first)
+                                    <div>
+                                        <div class="row m-1 mb-2">
+                                            <div class="col-md-3">
+                                                <label><b> Herco (Buying) (R$)</b></label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label><b> Herco (Selling) (R$)</b></label>
+                                            </div>
+                                        </div>
+                                        <div class="row m-1 mb-4 orders">
+                                            <div class="col-md-3">
+                                                <input type="number" class="form-control buyingBRRate" id="buyingBRRate"
+                                                    min="0" name="buying_br" value="{{ old('buying_br') }}"
+                                                    step="0.01" required>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="number" class="form-control sellingBRRate" id="sellingBRRate"
+                                                    min="0" name="selling_br" value="{{ old('selling_br') }}"
+                                                    step="0.01" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="row m-1 mb-2">
                                         <div class="col-md-1">
                                             <label><b>@lang('tax.Warehouse No.')</b></label>
@@ -65,23 +90,17 @@
                                         <div class="col-md-2">
                                             <label><b>@lang('tax.Tracking Code')</b></label>
                                         </div>
-                                        <div class="col-md-1">
+                                        <div class="col-md-2">
                                             <label><b>@lang('tax.Tax Payment')</b></label>
-                                        </div> 
-                                        <div class="col-md-1">
-                                            <label><b> Herco (Buying) (R$)</b></label>
-                                          </div>
-                                          <div class="col-md-1">
-                                              <label><b> Herco (Selling)  (R$)</b></label>
-                                          </div>
+                                        </div>
 
-                                          
-                                        <div class="col-md-1">
+
+                                        <div class="col-md-2">
                                             <label><b> Herco (Buying) (R$)</b></label>
-                                          </div>
-                                          <div class="col-md-1">
-                                              <label><b> Herco (Selling)  (R$)</b></label>
-                                          </div> 
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label><b> Herco (Selling) (R$)</b></label>
+                                        </div>
                                         <div class="col-md-1">
                                             <label><b>@lang('tax.Profit') USD</b></label>
                                         </div>
@@ -89,7 +108,8 @@
                                             <label><b>@lang('Attachment')</b></label>
                                         </div>
                                     </div>
-                                    @foreach ($orders as $key=>$order)
+                                    @endif
+
                                         @if ($order->tax)
                                             <div class="row m-1 mt-3 orders">
                                                 <div class="col-md-1">
@@ -114,13 +134,12 @@
                                                 </div>
                                             </div>
                                             @error('deposit' . $order->id)
-                                                <div
-                                                    class="row  mb-3 text-success ">
+                                                <div class="row  mb-3 text-success ">
                                                     @lang('tax.Balance deposit')
                                                 </div>
-                                           @enderror
+                                            @enderror
                                         @else
-                                            <div  class="row m-1 mt-3 orders">
+                                            <div class="row m-1 mt-3 orders">
                                                 <div class="col-md-1">
                                                     <input type="hidden" class="form-control" name="user_id"
                                                         value="{{ $order->user_id }}">
@@ -133,64 +152,78 @@
                                                     <input type="text"
                                                         class="form-control
                                                         name="user_name[{{ $order->id }}]"
-                                                        value="{{ $order->user->name }}" required>
+                                                        
+                                                        value="{{ $order->user->name }}" readonly required>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input type="text"
-                                                        class="form-control"
+                                                    <input type="text" class="form-control"
                                                         name="tracking_code[{{ $order->id }}]"
                                                         value="{{ $order->corrios_tracking_code }}" readonly required>
                                                 </div>
-                                               <div class="col-md-1">
-                                                    <input type="number" class="form-control  taxPayment"  min="1"  name="tax_payment[{{ $order->id }}]"
-                                                        value="{{ old('tax_payment.' . $order->id) }}" step="0.01"  required>
-                                              </div> 
-
-
-                                                <div class="col-md-1">
-                                                    <input type="number"  class="form-control buyingBRRate"  min="0"  name="buying_br[{{ $order->id }}]"
-                                                     value="{{ old('buying_br.' . $order->id) }}" step="0.01" required>
+                                                <div class="col-md-2">
+                                                    <input type="number" class="form-control  taxPayment" min="1"
+                                                        name="tax_payment[{{ $order->id }}]"
+                                                        value="{{ old('tax_payment.' . $order->id) }}" step="0.01"
+                                                        required>
                                                 </div>
-
-                                                <div class="col-md-1">
-                                                    <input type="number"
-                                                        class="form-control sellingBRRate" min="0" name="selling_br[{{ $order->id }}]"
-                                                        value="{{ old('selling_br.' . $order->id) }}" step="0.01"  required>
-                                                         
+                                                <div class="col-md-2">
+                                                    <input class="form-control buyingUSD"
+                                                        name="buying_usd[{{ $order->id }}]"
+                                                        value="{{ old('buying_usd.' . $order->id) }}" step="0.01"
+                                                        readonly required>
                                                 </div>
-
-                                                <div class="col-md-1">
-                                                    <input  
-                                                        class="form-control buyingUSD"   name="buying_usd[{{ $order->id }}]"
-                                                         value="{{ old('buying_usd.' . $order->id) }}" step="0.01" readonly required>
+                                                <div class="col-md-2">
+                                                    <input class="form-control sellingUSD"
+                                                        name="selling_usd[{{ $order->id }}]"
+                                                        value="{{ old('selling_usd.' . $order->id) }}" step="0.01"
+                                                        readonly required>
                                                 </div>
-
                                                 <div class="col-md-1">
-                                                    <input class="form-control sellingUSD" name="selling_usd[{{ $order->id }}]" 
-                                                        value="{{ old('selling_usd.' . $order->id) }}" step="0.01"  readonly required>
-                                                </div>
-
-                                                <div class="col-md-1">
-                                                    <input type="text" class="form-control profit" name="profit[{{ $order->id }}]"
+                                                    <input type="text" class="form-control profit"
+                                                        name="profit[{{ $order->id }}]"
                                                         value="{{ old('profit.' . $order->id) }}" readonly required>
                                                 </div>
                                                 <div class="col-md-1">
                                                     <a class="btn pr-0" href='javascript:void(0)'>
                                                         <button class="btn btn-success btn-md" type="button"><i
                                                                 class="fa fa-upload"></i></button>
-                                                        <input multiple type="file" name="attachment[{{ $order->id }}][]"
-                                                        style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
-                                                          size="40"
+                                                        <input multiple type="file"
+                                                            name="attachment[{{ $order->id }}][]"
+                                                            style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
+                                                            size="40"
                                                             onchange='$("#upload-file-info-{{ $order->id }}").html($(this).value());'>
                                                     </a>
                                                 </div>
                                             </div>
-                                          <div class="row m-1 mt-3 orders">  
-                                            <div class="col-md-6">
-                                                 <span class='float-right mr-5  label label-info' id="upload-file-info-{{ $order->id }}"></span>
+                                            <div class="row m-1 mt-3 orders">
+                                                <div class="col-md-6">
+                                                    <span class='float-right mr-5  label label-info'
+                                                        id="upload-file-info-{{ $order->id }}"></span>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if($loop->last) 
+                                        <div class="row m-1 mt-3 orders h4"">
+                                            <div class="col-md-3"> 
                                             </div> 
-                                          </div>
-                                             
+                                            <div class="col-md-1 h4"> 
+                                                Total
+                                            </div> 
+                                            <div class="col-md-2" >
+                                               R$<span id="taxPaymentTotal">0</span>
+                                            </div>
+                                            <div class="col-md-2">
+                                               US$ <span id="buyingUSDTotal">0</span> 
+                                            </div>
+                                            <div class="col-md-2">
+                                              US$ <span id="sellingUSDTotal">0</span> 
+                                            </div>
+                                            <div class="col-md-1">
+                                              <span id="profitTotal">0</span> 
+                                            </div>
+                                            <div class="col-md-1"> 
+                                            </div>
+                                        </div>
                                         @endif
                                     @endforeach
                                     <div class="row mt-4 mb-4">
@@ -213,31 +246,74 @@
     </section>
 @endsection
 @section('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            $('body').on('change', '.orders input.taxPayment ,input.buyingBRRate, input.sellingBRRate', function() {
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
 
-                let buyingBRRate = $(this).closest('.orders').find('.buyingBRRate').val();
-                let sellingBRRate = $(this).closest('.orders').find('.sellingBRRate').val(); 
-                let taxPayment = $(this).closest('.orders').find('.taxPayment').val(); 
-                console.log('buyingBRRate')
-                console.log(buyingBRRate)
-                let buyingUSD = parseFloat(taxPayment) / parseFloat(buyingBRRate); 
+        $('body').on('change', '.orders input.taxPayment ', function() {
+            let buyingBRRate = $('#buyingBRRate').val();
+            let sellingBRRate = $('#sellingBRRate').val();
+            let taxPayment = $(this).closest('.orders').find('.taxPayment').val(); 
+            let buyingUSD = parseFloat(taxPayment) / parseFloat(buyingBRRate);
+            let sellingUSD = parseFloat(taxPayment) / parseFloat(sellingBRRate); 
+            let profit = parseFloat(sellingUSD) - parseFloat(buyingUSD);
+
+            $(this).closest('.orders').find('.profit').val(
+                isNaN(profit) ? 0 : (profit).toFixed(2)
+            );
+            $(this).closest('.orders').find('.sellingUSD').val(
+                isNaN(sellingUSD) || !isFinite(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
+            );
+            $(this).closest('.orders').find('.buyingUSD').val(
+                isNaN(buyingUSD) || !isFinite(buyingUSD) ? 0 : (buyingUSD).toFixed(2)
+            );
+            calculateTotal()
+        });
+
+        $('body').on('change', 'input.buyingBRRate, input.sellingBRRate ', function() {
+            let buyingBRRate = $('#buyingBRRate').val();
+            let sellingBRRate = $('#sellingBRRate').val();
+            var data = {!! json_encode($orders, JSON_HEX_TAG) !!};
+            data.forEach(element => {
+                let taxPayment = $(`input[name="tax_payment[${element.id}]"]`).val();
+
+                let buyingUSD = parseFloat(taxPayment) / parseFloat(buyingBRRate);
                 let sellingUSD = parseFloat(taxPayment) / parseFloat(sellingBRRate);
-                console.log('buyingUSD')
-                console.log(buyingUSD)
                 let profit = parseFloat(sellingUSD) - parseFloat(buyingUSD);
 
-                $(this).closest('.orders').find('.profit').val(
-                    isNaN(profit) ? 0 : (profit).toFixed(2)
-                );
-                $(this).closest('.orders').find('.sellingUSD').val(
-                    isNaN(sellingUSD)|| !isFinite(sellingUSD) ? 0 : (sellingUSD).toFixed(2)
-                );
-                $(this).closest('.orders').find('.buyingUSD').val(
-                    isNaN(buyingUSD) || !isFinite(buyingUSD)? 0 : (buyingUSD).toFixed(2) 
-                );
+                $(`input[name="selling_usd[${element.id}]"]`).val(parseFloat(sellingUSD).toFixed(2));
+                $(`input[name="buying_usd[${element.id}]"]`).val(parseFloat(buyingUSD).toFixed(2));
+                $(`input[name="profit[${element.id}]"]`).val(parseFloat(profit).toFixed(2));
             });
-        })
-    </script>
+            calculateTotal()
+        });
+
+      function calculateTotal(){
+            let buyingBRRate = $('#buyingBRRate').val();
+            let sellingBRRate = $('#sellingBRRate').val();
+
+            let taxPaymentTotal=0;
+            let buyingUSDTotal=0;
+            let sellingUSDTotal=0;
+            var data = {!! json_encode($orders, JSON_HEX_TAG) !!};
+            data.forEach(element => {
+                let taxPayment = parseFloat($(`input[name="tax_payment[${element.id}]"]`).val());
+                 taxPaymentTotal = parseFloat(taxPaymentTotal) + taxPayment;
+
+                  buyingUSDTotal = parseFloat(buyingUSDTotal) +  taxPayment / parseFloat(buyingBRRate);
+                  sellingUSDTotal = parseFloat(sellingUSDTotal) + taxPayment / parseFloat(sellingBRRate);
+
+            });
+             let  profitTotal = parseFloat(sellingUSDTotal) - parseFloat(buyingUSDTotal);
+            if(!isNaN(taxPaymentTotal))
+                $("#taxPaymentTotal").text(parseFloat(taxPaymentTotal).toFixed(2));
+            if(!isNaN(buyingUSDTotal)) 
+                $("#buyingUSDTotal").text(parseFloat(buyingUSDTotal).toFixed(2));
+            if(!isNaN(sellingUSDTotal))
+                $("#sellingUSDTotal").text(parseFloat(sellingUSDTotal).toFixed(2)); 
+            if(!isNaN(profitTotal))
+            $("#profitTotal").text(parseFloat(profitTotal).toFixed(2));
+        }
+    });
+</script>
 @endsection
+

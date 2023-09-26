@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Models\Deposit;
 use App\Models\Setting;
 use App\Models\ShippingService;
+use App\Models\User;
 use App\Services\Calculators\AbstractRateCalculator;
 
 function countries()
@@ -176,4 +177,70 @@ function responseSuccessful($output, $message)
         'output' => $output,
         'message' =>  $message,
     ]);
+}
+function getAutoChargeData(User $user)
+{
+    return[
+        'status' => old('charge') ?? setting('charge', null, $user->id)?'Active':'Inactive',
+        'card'  => "**** **** **** ". substr(optional($user->billingInformations->where('id',setting('charge_biling_information', null,auth()->id()))->first())->card_no??"****" ,-4),
+        'amount' =>  setting('charge_amount', null, $user->id),
+        'limit' => setting('charge_limit', null, $user->id),
+    ];
+}
+
+function getUSAZone($state)
+{
+    if($state == 'FL') {
+        return 'Z3';
+    }elseif(in_array($state, ['AL', 'GA', 'SC'])) {
+        return 'Z4';
+    }elseif(in_array($state, ['LA','AR', 'MS', 'TN', 'NC', 'KY', 'VA', 'DE', 'MD', 'OH', 'NJ', 'PA'])) {
+        return 'Z5';
+    }elseif(in_array($state, ['TX', 'OK', 'KS', 'NE', 'MO', 'IA', 'IL', 'WI', 'NY', 'CT', 'RI', 'VT', 'NH', 'ME', 'MA', 'MI'])) {
+        return 'Z6';
+    }elseif(in_array($state, ['NM', 'CO', 'SD', 'ND', 'MN'])) {
+        return 'Z7';
+    }elseif(in_array($state, ['AZ', 'UT', 'WY', 'MT', 'ID', 'NV', 'OR', 'WA', 'CA', 'AK', 'HI'])) {
+        return 'Z8';
+    }
+}
+
+function getJsonData($rates, $profit)
+{
+    $ratesArray = [];
+    foreach ($rates as $rate) {
+        $ratesArray[] = [
+            'weight' => optional($rate)['weight'],
+            'leve' => number_format(($profit / 100) * $rate['leve'] + $rate['leve'], 2),
+        ];
+    }
+    return json_encode($ratesArray);
+}
+
+function getGDEProfit($rates, $service)
+{
+    if($service == ShippingService::GDE_PRIORITY_MAIL){
+        $type = 'gde_pm_profit';
+    }
+    if($service == ShippingService::GDE_FIRST_CLASS){
+        $type = 'gde_fc_profit';
+    }
+    $userProfit = setting($type, null, auth()->user()->id);
+    $adminProfit = setting($type, null, User::ROLE_ADMIN);
+    return $profit = $userProfit ? $userProfit : $adminProfit;
+}
+function isActiveService($user,$shippingService){
+    if($shippingService->usps_service_sub_class)
+      return setting('usps', null, $user->id)? true:false;
+    if($shippingService->ups_service_sub_class) 
+      return setting('ups', null, $user->id)?true:false;
+    if($shippingService->fedex_service_sub_class) 
+      return setting('fedex', null, $user->id) ?true:false; 
+    if($shippingService->gss_service_sub_class)
+      return setting('gss', null, $user->id)?true:false; 
+    if($shippingService->geps_service_sub_class)
+      return setting('geps_service', null, $user->id)?true:false;
+    if($shippingService->sweden_post_service_sub_class) 
+       return setting('sweden_post', null, $user->id)?true:false; 
+    return true; 
 }
