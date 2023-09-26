@@ -142,7 +142,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 6;
         }elseif($this->services_subclass_code == 'FirstClass'){
             return 7;
-        }elseif($this->services_subclass_code == 'AJC-NX') {
+        }elseif($this->services_subclass_code == 'AJ-NX') {
             return 8;
         }elseif($this->services_subclass_code == 'AJ-IX'){
             return 9;
@@ -218,11 +218,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getSubClassCode()
     {
-        if ($this->services_subclass_code == 'AJ-NX' ||$this->services_subclass_code == 'AJC-NX'){
+        if ($this->services_subclass_code == 'AJ-NX' ||$this->hasAnjunChinaStandardService()){
             return 'NX';
         }
 
-        if ($this->services_subclass_code == 'AJ-IX') {
+        if ($this->services_subclass_code == 'AJ-IX' || $this->hasAnjunChinaExpressService()) {
             return 'IX';
         }
 
