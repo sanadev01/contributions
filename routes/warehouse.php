@@ -16,6 +16,8 @@ use App\Http\Controllers\Warehouse\DeliveryBillController;
 use App\Http\Controllers\Warehouse\UnitRegisterController;
 use App\Http\Controllers\Warehouse\SearchPackageController;
 use App\Http\Controllers\Warehouse\USPSContainerController;
+use App\Http\Controllers\Warehouse\Anjun\AnjunUnitRegisterController;
+use App\Http\Controllers\Warehouse\Anjun\AnjunCN35DownloadController;
 use App\Http\Controllers\Warehouse\ChileContainerController;
 use App\Http\Controllers\Warehouse\ContainerPackageController;
 use App\Http\Controllers\Warehouse\ManifestDownloadController;

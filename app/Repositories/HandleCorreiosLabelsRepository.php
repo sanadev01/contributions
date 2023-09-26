@@ -14,7 +14,7 @@ use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\AnjunLabelRepository;
 use App\Services\TotalExpress\TotalExpressLabelRepository;
-
+use App\Models\User;
 class HandleCorreiosLabelsRepository
 {
     public $order;
