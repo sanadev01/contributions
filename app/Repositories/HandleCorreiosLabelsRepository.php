@@ -31,7 +31,6 @@ class HandleCorreiosLabelsRepository
     public function handle()
     {
         if ($this->order->recipient->country_id == Order::BRAZIL) {
-
             if ($this->order->shippingService->isGePSService()) {
 
                 return $this->gepsLabel();
@@ -41,11 +40,7 @@ class HandleCorreiosLabelsRepository
                 
                 return $this->swedenPostLabel();
             }
-        //     if($this->order->shippingService->isAnjunChinaService()){
-        //         return $this->anjunChinaLabel();
-
-        //    }
-            if ($this->order->shippingService->isCorreiosService()) {
+            if ($this->order->shippingService->isCorreiosService() || $this->order->shippingService->is_anjun_china_service_sub_class || $this->order->shippingService->isAnjunService()) {
                 return $this->correiosOrAnjun($this->order);
             }
             if ($this->order->shippingService->isPostPlusService()) {
@@ -137,7 +132,7 @@ class HandleCorreiosLabelsRepository
 
     public function correiosOrAnjun($order)
     {
-        if(setting('china_anjun_api', null, User::ROLE_ADMIN) && $order->shippingService->isAnjunService()){
+        if(setting('china_anjun_api', null, User::ROLE_ADMIN) || $order->shippingService->is_anjun_china_service_sub_class){
             return $this->anjunChinaLabel();
         }
         return $this->corriesBrazilLabel();

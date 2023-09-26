@@ -129,9 +129,17 @@ class OrderRepository
                     ShippingService::Post_Plus_EMS,
                 ];
             }
-            if($request->carrier == 'AJ_Standard_CN'){
+            if($request->carrier == 'Anjun China'){
                 $service = [
                     ShippingService::AJ_Standard_CN, 
+                    ShippingService::AJ_Express_CN, 
+                ];
+            }
+            if($request->carrier == 'Anjun'){
+                $service = [
+                    ShippingService::AJ_Packet_Standard,  
+                    ShippingService::AJ_Packet_Express,  
+                    
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {

@@ -134,6 +134,8 @@
                             <option value="Global eParcel">Global eParcel</option>
                             <option value="Prime5">Prime5</option>
                             <option value="Post Plus">Post Plus</option>
+                            <option value="Anjun">Anjun</option>
+                            <option value="Anjun China">Anjun China</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin
