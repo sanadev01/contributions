@@ -45,7 +45,6 @@ class AnjunClient
     {
         $username = $this->username;
         $password = $this->password;
-
         $orderBody = [
             'username'   => $username,
             'password'   => $password,

@@ -222,7 +222,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'NX';
         }
 
-        if ($this->services_subclass_code == 'AJ-IX' ||$this->services_subclass_code == 'AJC-IX'){
+        if ($this->services_subclass_code == 'AJ-IX') {
             return 'IX';
         }
 
@@ -230,7 +230,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     }
 
     public function hasAnjunService()
-    {  
+    {
         return $this->services_subclass_code == 'AJ-NX' || $this->services_subclass_code == 'AJ-IX';
     } 
     public function hasAnjunChinaService()

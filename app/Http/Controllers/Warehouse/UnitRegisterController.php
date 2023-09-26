@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Warehouse\Container;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\Client;
+use Illuminate\Http\Request;
 
 class UnitRegisterController extends Controller
 {

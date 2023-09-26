@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Order;
-use App\Models\User;
 use Illuminate\Http\Request;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
@@ -99,7 +98,7 @@ class HandleCorreiosLabelsRepository
         // if($this->order->shippingService->isPostNLService()){
         //     return $this->postNLLabel();
         // }
-        return $this->correiosOrAnjun($this->order);
+        return $this->corriesBrazilLabel();
 
     }
 
@@ -165,11 +164,6 @@ class HandleCorreiosLabelsRepository
         $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository(); 
         $corrieosBrazilLabelRepository->run($this->order,$this->update); 
         return $this->renderLabel($this->request, $this->order,$corrieosBrazilLabelRepository->getError());
-    }
-    
-    public function anjunChinaLabel()
-    {
-        return (new AnjunLabelRepository($this->request,$this->order))->run(); 
     }
 
     public function uspsLabel()

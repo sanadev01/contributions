@@ -42,7 +42,7 @@
                                         <select class="form-control" name="destination_operator_name">
                                             <option value="">@lang('warehouse.containers.Destination Airport')</option>
                                             <option value="SAOD" {{ old('destination_operator_name') == 'SAOD' ? 'selected' : '' }}>GRU</option>
-                                            <option value="CRBA" {{ old('destination_operator_name') == 'CRBA' ? 'selected' : '' }}>CWB</option>
+                                            <option value="CRBA" {{ old('destination_operator_name') == 'CRBA' ? 'selecte' : '' }}>CWB</option>
                                         </select>
                                         @error('destination_operator_name')
                                             <div class="help-block text-danger"> {{ $message }} </div>
@@ -61,7 +61,6 @@
                                                 <option value="NX" {{ old('services_subclass_code') == 'NX' ? 'selected': '' }}>Packet Standard service</option>
                                                 <option value="IX" {{ old('services_subclass_code') == 'IX' ? 'selected': '' }}>Packet Express service</option>
                                                 <option value="XP" {{ old('services_subclass_code') == 'XP' ? 'selected': '' }}>Packet Mini service</option>
-
                                             @else
                                                 <option value="AJ-NX" {{ old('services_subclass_code') == 'AJ-NX' ? 'selected': '' }}>Anjun Standard service</option>
                                                 <option value="AJ-IX" {{ old('services_subclass_code') == 'AJ-IX' ? 'selected': '' }}>Anjun Express service</option>
