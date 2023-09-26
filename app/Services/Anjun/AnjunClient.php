@@ -49,7 +49,6 @@ class AnjunClient
         $orderBody = [
             'username'   => $username,
             'password'   => $password,
-            "fuwu"       => '1905 ',     //line code
             'dp'         => '',        // store id
         ] + (new Package($order))->convertToChinese();
         try {
