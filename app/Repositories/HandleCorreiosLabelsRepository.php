@@ -165,6 +165,13 @@ class HandleCorreiosLabelsRepository
         $corrieosBrazilLabelRepository->run($this->order,$this->update); 
         return $this->renderLabel($this->request, $this->order,$corrieosBrazilLabelRepository->getError());
     }
+        public function anjunChinaLabel()
+    {
+ 
+        $anjunLabelRepository = new AnjunLabelRepository();
+        $anjunLabelRepository->run($this->order,$this->update); 
+        return $this->renderLabel($this->request, $this->order,$anjunLabelRepository->getError());
+    }
 
     public function uspsLabel()
     {

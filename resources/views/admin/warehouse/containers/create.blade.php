@@ -54,10 +54,10 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code">
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>                                            
-                                            @if(setting('china_anjun_api', null, User::ROLE_ADMIN))
+                                            @if(setting('china_anjun_api', null, \App\Models\User::ROLE_ADMIN))
                                                 <option value="AJC-NX" {{ old('services_subclass_code') == 'AJC-NX' ? 'selected': '' }}>Anjun China Standard</option> 
                                                 <option value="AJC-IX" {{ old('services_subclass_code') == 'AJC-IX' ? 'selected': '' }}>Anjun China Express</option> 
-                                            @elseif(!setting('anjun_api', null,User::ROLE_ADMIN))
+                                            @elseif(!setting('anjun_api', null,\App\Models\User::ROLE_ADMIN))
                                                 <option value="NX" {{ old('services_subclass_code') == 'NX' ? 'selected': '' }}>Packet Standard service</option>
                                                 <option value="IX" {{ old('services_subclass_code') == 'IX' ? 'selected': '' }}>Packet Express service</option>
                                                 <option value="XP" {{ old('services_subclass_code') == 'XP' ? 'selected': '' }}>Packet Mini service</option>
