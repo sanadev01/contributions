@@ -18,7 +18,7 @@ class Product
 
     function __construct(OrderItem $orderItem)
     {
-        $this->chineseName       =   '.';
+        $this->chineseName       =   '虚拟名称';
         $this->englishName       =   $orderItem->description;
         $this->SKU               =   $orderItem->id;
         $this->productQuantity   =   $orderItem->quantity;

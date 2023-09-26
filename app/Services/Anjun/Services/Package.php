@@ -6,6 +6,7 @@ namespace App\Services\Anjun\Services;
 use App\Services\Anjun\Services\Recipient as AnjunRecipient;
 use App\Services\Anjun\Services\Product as AnjunProduct;
 use App\Models\Order as OrignalOrder;
+use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
 
 class Package
@@ -20,6 +21,7 @@ class Package
     public $packingRemarks;
     public $recipientInformation;
     public $products = [];
+    public $lineCode="1906";
 
     public function __construct(OrignalOrder $order)
     {
@@ -30,7 +32,9 @@ class Package
             $weight = UnitsConverter::kgToGrams($kg);
         }
 
+
         $this->orderId                        =   $order->id;
+        $this->lineCode                       =   $order->shippingService->service_sub_class == ShippingService::AJ_Express_CN ? '1905':'1906';
         $this->totalWeightKG                  =   $weight;
         $this->totalPriceUSD                  =   $order->order_value;
         $this->prepaymentMethod               =   "2";           //default 2 
@@ -53,6 +57,7 @@ class Package
             $productsInChinses[] = $product->convertToChinese();
         }
         return [
+            "fuwu"              => $this->lineCode,
             "danhao"            => (string) $this->orderId,
             'zzhong'            => (string) $this->totalWeightKG,
             'zprice'            => (string) $this->totalPriceUSD,

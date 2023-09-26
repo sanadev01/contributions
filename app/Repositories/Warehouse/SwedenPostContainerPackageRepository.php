@@ -42,6 +42,9 @@ class SwedenPostContainerPackageRepository
             ];
         }
 
+        if ((!$container->hasSwedenPostService() || !$order->shippingService->isSwedenPostService())){
+            $error = 'Order does not belong to this container. Please Check Packet Service';
+        }
         if (!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
 
             $response =  (new DirectLinkReceptacle($container))->scanItem($order->corrios_tracking_code);
