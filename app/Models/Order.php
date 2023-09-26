@@ -390,6 +390,11 @@ class Order extends Model implements Package
                 return 'Total Express';
 
             }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::HD_Express){
+
+                return 'HD Express';
+
+            }
             elseif(optional($this->shippingService)->isAnjunService()){
 
                 return 'Anjun';
