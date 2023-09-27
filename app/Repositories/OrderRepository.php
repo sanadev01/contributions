@@ -158,13 +158,6 @@ class OrderRepository
                     ShippingService::AJ_Express_CN, 
                 ];
             }
-            if($request->carrier == 'Anjun'){
-                $service = [
-                    ShippingService::AJ_Packet_Standard,  
-                    ShippingService::AJ_Packet_Express,  
-                    
-                ];
-            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });

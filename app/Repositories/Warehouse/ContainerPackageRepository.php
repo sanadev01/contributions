@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Repositories\Warehouse;
 
@@ -11,8 +11,7 @@ use App\Repositories\AbstractRepository;
 use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Resources\Warehouse\Container\PackageResource;
 
-class ContainerPackageRepository extends AbstractRepository
-{
+class ContainerPackageRepository extends AbstractRepository{
 
     public function store(Request $request)
     {

@@ -40,11 +40,6 @@ class HandleCorreiosLabelsRepository
 
                 return $this->gepsLabel();
             }
-
-            if ($this->order->shippingService->isSwedenPostService()) {
-                
-                return $this->swedenPostLabel();
-            }
             if ($this->order->shippingService->isCorreiosService() || $this->order->shippingService->is_anjun_china_service_sub_class || $this->order->shippingService->isAnjunService()) {
                 return $this->correiosOrAnjun($this->order);
             }

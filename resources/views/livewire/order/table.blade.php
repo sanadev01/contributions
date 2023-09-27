@@ -148,7 +148,6 @@
                             <option value="Global eParcel">Global eParcel</option>
                             <option value="Prime5">Prime5</option>
                             <option value="Post Plus">Post Plus</option>
-                            <option value="Anjun">Anjun</option>
                             <option value="Anjun China">Anjun China</option>
                             <option value="Total Express">Total Express</option>
                             <option value="HD Express">HD Express</option>
