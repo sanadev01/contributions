@@ -18,7 +18,22 @@ class GePSCN35DownloadController extends Controller
      */
     public function __invoke(Container $container)
     {
-        $cn35Maker = new CN35LabelMaker($container);
+        $order = $container->orders->first();
+        if($order){
+            $orderWeight = $order->getOriginalWeight('kg');
+        }
+        $cn35Maker = new CN35LabelMaker();
+        $cn35Maker->setDispatchNumber($container->dispatch_number)
+                     ->setService($container->getServiceCode())
+                     ->setDispatchDate(Carbon::now()->format('Y-m-d'))
+                     ->setSerialNumber(1)
+                     ->setOriginAirport('MIA')
+                     ->setType($orderWeight)
+                     ->setDestinationAirport($container->getDestinationAriport())
+                     ->setWeight($container->getWeight())
+                     ->setItemsCount($container->getPiecesCount())
+                     ->setUnitCode($container->getUnitCode());
+                     
         return $cn35Maker->download();
         
     }
