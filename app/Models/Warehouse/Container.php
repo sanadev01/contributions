@@ -238,7 +238,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     } 
     public function hasAnjunChinaService()
     {  
-        return $this->services_subclass_code == 'AJC-NX' || $this->services_subclass_code == 'AJC-IX';
+        return in_array($this->services_subclass_code ,['AJC-NX','AJC-IX']);
     } 
     public function hasAnjunChinaStandardService()
     {  
