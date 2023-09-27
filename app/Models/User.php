@@ -3,17 +3,19 @@
 namespace App\Models;
 
 use App\Models\Order;
+use Milon\Barcode\DNS2D;
 use Illuminate\Support\Str;
 use App\Models\AffiliateSale;
 use App\Models\CommissionSetting;
+use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Milon\Barcode\DNS2D;
 
 
 class User extends Authenticatable
@@ -320,5 +322,13 @@ class User extends Authenticatable
     public function deposits()
     {
         return $this->hasMany(Deposit::class);
+    }
+    public function containers()
+    {
+        return $this->hasMany(Container::class);
+    }
+    public function deliveryBills()
+    {
+        return $this->hasMany(DeliveryBill::class);
     }
 }

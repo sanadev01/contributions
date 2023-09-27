@@ -122,7 +122,7 @@
                                                         <i class="vs-icon feather icon-check"></i>
                                                     </span>
                                                 </span>
-                                                <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                                <h6><span class="h3 mx-2 text-primary my-0 py-0">@admin @if(optional($container->user)->isUser()) <span class="badge badge-danger">GoBox</span> @endif @endadmin</span></h6>
                                             </div>
                                         </td>
                                         <td>{{ $container->dispatch_number }}</td>

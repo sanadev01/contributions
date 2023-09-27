@@ -5,6 +5,7 @@ use DateTime;
 use App\Models\Order;
 use Livewire\Component;
 use App\Models\OrderTracking;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\LabelRepository;
 use Illuminate\Support\Facades\Storage;
 
@@ -96,9 +97,13 @@ class ScanLabel extends Component
     {
         if($this->tracking){
             
-            $order = Order::where('corrios_tracking_code', $this->tracking)->Orwhere('tracking_id',$this->tracking)->first();
+            $query = Order::query();
             
-
+            if ( !Auth::user()->isAdmin() ){
+                $query->where('user_id',Auth::id());
+            }
+            $order = $query->where('corrios_tracking_code', $this->tracking)->Orwhere('tracking_id',$this->tracking)->first();
+            
             // if($order->shippingService->service_sub_class == ShippingService::GePS || $order->shippingService->service_sub_class == ShippingService::GePS_EFormat){
             //     $gepsClient = new Client();   
             //     $response = $gepsClient->confirmShipment($order->corrios_tracking_code);
@@ -176,9 +181,9 @@ class ScanLabel extends Component
                         ]);
                     }
                 }
-                
-                $this->tracking = '';
+                return $this->tracking = '';
             }
+            $this->dispatchBrowserEvent('get-error', ['type'=>'danger','message' => "Order doesn't exist"]);
         }
         $this->tracking = '';
     }
@@ -216,7 +221,13 @@ class ScanLabel extends Component
         $this->end_date   = $data['end_date'];
         $this->user_id    = $data['user_id'];
 
-        $query = Order::whereBetween('arrived_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC');
+        $query = Order::query();
+
+        if ( !Auth::user()->isAdmin() ){
+            $query->where('user_id',Auth::id());
+        }
+
+        $query->whereBetween('arrived_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC');
         if($this->user_id != null){
             $query->where('user_id', $this->user_id);
         }
