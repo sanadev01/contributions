@@ -57,6 +57,7 @@ class ShippingService extends Model
     const GSS_EMS = 4367;
     const TOTAL_EXPRESS = 283;
     const HD_Express = 33173;
+    const LT_PRIME = 776;
 
     protected $guarded = [];
 
@@ -182,7 +183,7 @@ class ShippingService extends Model
 
     public function isPostPlusService()
     {
-        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime || $this->service_sub_class == self::Post_Plus_Premium){
+        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime || $this->service_sub_class == self::Post_Plus_Premium || $this->service_sub_class == self::LT_PRIME){
             return true;
         }
         return false;

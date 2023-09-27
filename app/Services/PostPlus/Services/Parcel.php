@@ -14,12 +14,13 @@ class Parcel {
          $type = 'Registered';
       } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_EMS) {
          $type = 'EMS';
-      } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime) {
+      } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime || $order->shippingService->service_sub_class == ShippingService::LT_PRIME) {
          $type = 'Prime';
       } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
          $type = 'ParcelUPU';
       }
       $refNo = $order->customer_reference;
+
       $packet = [
                //Reference Information
                'identifiers' => [
@@ -35,7 +36,7 @@ class Parcel {
                   'items' => $this->setItemsDetails($order),
                ],
                'additionalInfo' => [
-                  'serviceCode' => "UZPO",
+                  'serviceCode' => $order->shippingService->service_sub_class == ShippingService::LT_PRIME ? "LTPO" : "UZPO",
                   'taxIdentification' => ($order->recipient->tax_id) ? $order->recipient->tax_id: '',
                ],
                //Recipient Information

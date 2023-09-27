@@ -146,7 +146,42 @@ class UpdateCN23Label
             $this->pdfi->Output($this->pdf_file, 'F');
             
             return true;
+        } elseif($this->order->shippingService->service_sub_class == ShippingService::LT_PRIME) {
+            // initiate FPDI
+            $this->pdfi = new PDFRotate('L', 'mm', array(152, 104));
+            // $this->pdfi->setPrintHeader(false);
+            $this->pdfi->AddPage();
+            $this->pdfi->SetMargins(0, 0, 0);
+            // set the source file 
+            $this->pdfi->setSourceFile($this->pdf_file);
+            // import page 1
+            $tplId = $this->pdfi->importPage(1);
+            // use the imported page and place it at point 0,0
+            $this->pdfi->useTemplate($tplId, 0, 0);
+            $this->pdfi->SetFillColor(255, 255, 255);
+            $this->pdfi->SetFont("Arial", "", 7);
+            // FOR RETURN ADDRESS
+            $paddingLeft = 57.8;
+            $font = 4.5;
+            $this->printReturnAddress($paddingLeft, 6.0, 35, 11.4, 5.5, 8, 10.5, 13, $font, 'B');
+            //FOR SHIPPING
+            $this->pdfi->SetFont("Arial", "B", 5);
+            $this->pdfi->RotatedText(4, 47.5, 'Shipping:', 00);
+            //FOR SHIPPING COST
+            $this->pdfi->SetFont("Arial", "B", 5);
+            $userDeclaredFreight = $this->order->user_declared_freight <= 0.01 ? 0 : $this->order->user_declared_freight;
+            $this->pdfi->RotatedText(44, 47.5, number_format($userDeclaredFreight, 2, '.', ','), 0);
+            //FOR TOTAL ORDER VALUE
+            $this->pdfi->SetFillColor(255, 255, 255);
+            $this->pdfi->Rect(65, 99, 7, 9, "F");
+            $this->pdfi->SetFont("Arial", "B", 5);
+            $this->pdfi->RotatedText(44, 64, number_format($userDeclaredFreight + $this->order->order_value, 2, '.', ','), 0);
+            
+            $this->pdfi->Output($this->pdf_file, 'F');
+            return true;
+
         }
+        
     }
     
     public function printShippingOrderValues($sw, $sh, $cw, $ch, $fw, $fh, $rw, $rh, $bw, $bh, $sbw, $sbh, $tvw, $tvh) {
