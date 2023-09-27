@@ -646,10 +646,10 @@ class OrderRepository
                 });
             }
 
-            if (!setting('gss', null, User::ROLE_ADMIN) && !setting('gss', null, auth()->user()->id)) {
+            if (!setting('gss', null, User::ROLE_ADMIN) || !setting('gss', null, auth()->user()->id)) {
                 $this->shippingServiceError = 'GSS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                    return $shippingService->service_sub_class != ShippingService::GSS_PMI;
+                    return !$shippingService->isGSSService();
                 });
             }
 
