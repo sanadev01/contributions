@@ -19,7 +19,7 @@ class AnjunCN35DownloadController extends Controller
             ->setDestinationAirport($response->cdes)
             ->setOriginAirport($response->cfrom)
             ->setPacketType($packetType)
-            ->setCompanyName('ANJUNLOG');
+            ->setDispatchDate(Carbon::now()->format('Y-m-d'));
 
         return $cn23Maker->download();
     }
