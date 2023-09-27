@@ -68,6 +68,11 @@ class CN35LabelMaker implements HasLableExport
 
         return $this;
     }
+    public function setPacketType($packetType)
+    {
+        $this->packetType = $packetType;
+        return $this;
+    }
 
     public function setDispatchNumber(string $dispatchNumber)
     {

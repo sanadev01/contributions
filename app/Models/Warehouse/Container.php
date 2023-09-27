@@ -172,6 +172,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         elseif( $this->services_subclass_code == 'AJC-IX') {
             return 18;
         }
+        elseif( $this->services_subclass_code == 'AJC-NX') {
+            return 19;
+        }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
 
