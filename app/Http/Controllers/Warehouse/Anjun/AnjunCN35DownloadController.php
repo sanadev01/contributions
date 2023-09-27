@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse\Anjun;
 
-use App\Http\Controllers\Controller;    
+use App\Http\Controllers\Controller;
 use App\Models\Warehouse\Container;
 use App\Services\Correios\Services\Brazil\CN35LabelMaker;
 use Carbon\Carbon;
@@ -19,7 +19,7 @@ class AnjunCN35DownloadController extends Controller
             ->setDestinationAirport($response->cdes)
             ->setOriginAirport($response->cfrom)
             ->setPacketType($packetType)
-            ->setCompanyName('ANJUNLOG');
+            ->setDispatchDate(Carbon::now()->format('Y-m-d'));
 
         return $cn23Maker->download();
     }
