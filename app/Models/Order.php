@@ -395,11 +395,6 @@ class Order extends Model implements Package
                 return 'HD Express';
 
             }
-            elseif(optional($this->shippingService)->isAnjunService()){
-
-                return 'Anjun';
-
-            }
             return 'Correios Brazil';
         }
 
