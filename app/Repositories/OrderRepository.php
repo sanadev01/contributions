@@ -659,6 +659,9 @@ class OrderRepository
                     return !$shippingService->isGSSService();
                 });
             }
+            $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                return ($shippingService->isGSSService() && $shippingService->active) || !$shippingService->isGSSService();
+            });
 
             if($shippingServices->isNotEmpty()){
                 $this->shippingServiceError = null;
