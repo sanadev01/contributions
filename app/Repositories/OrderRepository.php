@@ -152,13 +152,13 @@ class OrderRepository
                     ShippingService::HD_Express
                 ];
             }
-            if($request->carrier == 'Brazil AJ'){
+            if($request->carrier == 'Correios AJ'){
                 $service = [
                     ShippingService::AJ_Standard_CN, 
                     ShippingService::AJ_Express_CN, 
                 ];
             }
-            if($request->carrier == 'Brazil A'){
+            if($request->carrier == 'Correios A'){
                 $service = [
                     ShippingService::AJ_Packet_Standard, 
                     ShippingService::AJ_Packet_Express, 
