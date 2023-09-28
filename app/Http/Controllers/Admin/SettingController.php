@@ -62,9 +62,12 @@ class SettingController extends Controller
         Setting::saveByKey('PAYMENT_GATEWAY', $request->PAYMENT_GATEWAY,null,true);
         Setting::saveByKey('TYPE', $request->TYPE,null,true);
         Setting::saveByKey('VALUE', $request->VALUE,null,true);
-
-        ($request->correios_setting == 'anjun_api') ? saveSetting('anjun_api', true, $this->adminId) : saveSetting('anjun_api', false, $this->adminId);
-        ($request->correios_setting == 'china_anjun_api') ? saveSetting('china_anjun_api', true, $this->adminId) : saveSetting('china_anjun_api', false, $this->adminId);
+        
+        //switch 3 api for correies/anjun standerd/express api.
+        saveSetting('china_anjun_api', false, $this->adminId);
+        saveSetting('correios_api', false, $this->adminId);
+        saveSetting('anjun_api', false, $this->adminId);
+        saveSetting($request->correios_setting, true, $this->adminId);
         
         $request->has('usps') ? saveSetting('usps', true, $this->adminId) : saveSetting('usps', false, $this->adminId);
         $request->has('ups') ? saveSetting('ups', true, $this->adminId) : saveSetting('ups', false, $this->adminId);

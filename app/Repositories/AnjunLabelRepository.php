@@ -7,74 +7,63 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Services\Anjun\AnjunClient;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
+use App\Traits\PrintOrderLabel;
+use Illuminate\Http\Request;
+
+
 class AnjunLabelRepository
 {
+use PrintOrderLabel;
 
+    public $order;
     public $error;
-    public function __construct()
+    public $request;
+    public function __construct(Request $request,Order $order)
     {
+        $this->order = $order;
         $this->error = null;
+        $this->request = $request;
     }
 
-    public function run(Order $order,$update)
+    public function run()
     {
-        if($update){
-            return $this->update($order);
+        $response = $this->get($this->order);  
+        $this->order->refresh(); 
+        $data = $response->getData();
+        if(!$data->success){ 
+             $this->error = $data->message; 
         }
-        else {
-            return $this->get($order);
-        }
+        return $this->renderLabel($this->request, $this->order, $this->error); 
     }
 
     public function get(Order $order)
     {
-        if ( $order->getCN23() ){
-            $this->printLabel($order);
-            return null;
+        if ($order->getCN23()) {
+            return $this->printLabel($order);
+        }else {
+            return $this->update($order);
         }
-        return $this->update($order);
-        
     }
 
     public function update(Order $order)
     {
-        $cn3 = $this->generateLabel($order);
-        if ( $cn3 ){
-            $this->printLabel($order);
+        $anjunClient = new AnjunClient();
+        $response = $anjunClient->createPackage($order);
+        $data = $response->getData();
+        if ($data->success) {
+            return $this->printLabel($order);
+        } else {
+            return $response;
         }
-        return null;
     }
 
     public function printLabel(Order $order)
-    { 
+    {
         $labelPrinter = new CN23LabelMaker();
         $labelPrinter->setOrder($order);
         $labelPrinter->setService($order->getService());
         $labelPrinter->setPacketType($order->getDistributionModality());
         $labelPrinter->saveAs(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"));
-        
-    }
-
-    protected function generateLabel(Order $order)
-    {
-        $anjunClient = new AnjunClient();
-        $response = $anjunClient->createPackage($order);
-        $data = $response->getData();
-        if(!$data->success){ 
-            $this->error = $data->message; 
-            return null;
-       }
-       
-        if ($data->success) {
-             $this->printLabel($order);
-             return null;
-        }
-
-        return $data;
-    }
-
-    public function getError()
-    {
-        return $this->error;
+        return responseSuccessful(null, 'Label Printer Success');
     }
 }

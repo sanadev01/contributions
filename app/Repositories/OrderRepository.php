@@ -153,10 +153,16 @@ class OrderRepository
                     ShippingService::HD_Express
                 ];
             }
-            if($request->carrier == 'Anjun China'){
+            if($request->carrier == 'Correios AJ'){
                 $service = [
                     ShippingService::AJ_Standard_CN, 
                     ShippingService::AJ_Express_CN, 
+                ];
+            }
+            if($request->carrier == 'Correios A'){
+                $service = [
+                    ShippingService::AJ_Packet_Standard, 
+                    ShippingService::AJ_Packet_Express, 
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
@@ -580,7 +586,7 @@ class OrderRepository
                 $this->shippingServiceError = ($order->recipient->commune_id != null) ? 'Shipping Service not Available for the Region you have selected' : 'Shipping Service not Available for the Country you have selected';
             }
         }
-
+        
         if ($shippingServices->isNotEmpty()) {
            $shippingServices = $this->filterShippingServices($shippingServices, $order);
         }
@@ -662,13 +668,12 @@ class OrderRepository
         if($order->recipient->country_id == Order::BRAZIL)
         {
             // If sinerlog is enabled for the user, then remove the Correios services
-            if(setting('sinerlog', null, $order->user->id))
+            if(setting('sinerlog', null, $order->user->id) || !setting('correios_api', null, User::ROLE_ADMIN))
             {
                 $shippingServices = $shippingServices->filter(function ($item, $key)  {
-                    return $item->service_sub_class != '33162' && $item->service_sub_class != '33170' && $item->service_sub_class != '33197';
+                    return !$item->isCorreiosService();
                 });
             }
-
             // If sinerlog is not enabled for the user then remove Sinerlog services from shipping service
             if(!setting('sinerlog', null, $order->user->id))
             {
@@ -676,27 +681,22 @@ class OrderRepository
                     return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';
                 });
             }
-
-            if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+            if(!setting('anjun_api', null, User::ROLE_ADMIN)){
                     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                        return $shippingService->service_sub_class != ShippingService::Packet_Standard 
-                            && $shippingService->service_sub_class != ShippingService::Packet_Express
-                            && $shippingService->service_sub_class != ShippingService::Packet_Mini;
+                        return !$shippingService->isAnjunService();
                     });
             }
-
-            if(!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
-                    $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                        return $shippingService->service_sub_class != ShippingService::AJ_Packet_Standard 
-                            && $shippingService->service_sub_class != ShippingService::AJ_Packet_Express;
-                    });
+            if(!setting('china_anjun_api', null,User::ROLE_ADMIN)){
+                // $this->shippingServiceError = 'Anjun China is disabled.';
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return !$shippingService->isAnjunChinaService();
+                });
             }
             
             if($shippingServices->isEmpty()){
                 $this->shippingServiceError = 'Please check your parcel dimensions';
             }
         }
-
         return $shippingServices;
     }
 
