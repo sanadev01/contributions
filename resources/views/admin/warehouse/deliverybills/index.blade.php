@@ -100,7 +100,7 @@
                                             <input type="checkbox" name="deliveryBills[]" class="form-control container" value="{{$deliveryBill->id}}">
                                         </td>
                                         <td>
-                                            {{ $deliveryBill->name   }}
+                                            {{ $deliveryBill->name }}
                                             @if ($deliveryBill->Containers->count() > 0)
                                                 @if(optional($deliveryBill->Containers->first()->orders->first())->shippingService && $deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
                                                     <span class="badge badge-success">A</span>
@@ -120,6 +120,7 @@
                                                     <span class="badge badge-primary">H</span>
                                                 @endif
                                             @endif
+                                            @admin @if(optional($deliveryBill->user)->isUser()) <span class="badge badge-danger">GoBox</span> @endif @endadmin
                                         </td>
                                         <td>
                                             {{ $deliveryBill->request_id }}

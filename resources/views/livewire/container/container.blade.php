@@ -101,6 +101,8 @@
                                             <option value="XP">Packet Mini</option>
                                             <option value="AJ-NX">Anjun Packet Standard</option>
                                             <option value="AJ-IX">Anjun Packet Express</option>
+                                            <option value="AJC-NX">Packat Standard AJ</option>
+                                            <option value="AJC-IX">Packet Express AJ</option>
                                         </select>
                                     </th>
                                     
@@ -120,12 +122,12 @@
                                                         <i class="vs-icon feather icon-check"></i>
                                                     </span>
                                                 </span>
-                                                <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                                <h6><span class="h3 mx-2 text-primary my-0 py-0">@admin @if(optional($container->user)->isUser()) <span class="badge badge-danger">GoBox</span> @endif @endadmin</span></h6>
                                             </div>
                                         </td>
                                         <td>{{ $container->dispatch_number }}</td>
                                         <td>{{ $container->seal_no }}</td>
-                                        <td>
+                                        <td> 
                                             {{ $container->getWeight() }} KG
                                         </td>
                                         <td>
@@ -182,7 +184,7 @@
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
                                                             @if( !$container->isRegistered() && $container->hasOrders())
-                                                                <a href="{{ route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
+                                                                <a href="{{  $container->hasAnjunChinaService()?route('warehouse.anjun.container.register',$container):route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Register Unit
                                                                 </a>
                                                             @endif
@@ -200,9 +202,9 @@
                                                             </form>
                                                         @endif
                                                         @if( $container->isRegistered() )
-                                                            <a href="{{ route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> Get CN35
-                                                            </a>
+                                                        <a href="{{$container->hasAnjunChinaService()?route('warehouse.anjun.container.download',$container):route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
+                                                            <i class="feather icon-box"></i> Get CN35
+                                                        </a>
                                                         @endif
                                                     </div>
                                                 </div>

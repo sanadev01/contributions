@@ -382,6 +382,14 @@ class Order extends Model implements Package
                 return 'PostPlus';
 
             }
+            elseif(optional($this->shippingService)->is_anjun_china_service_sub_class){
+
+                return 'Correios AJ';
+            }
+            elseif(optional($this->shippingService)->isAnjunService()){
+
+                return 'Correios A';
+            }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS ){
 
                 return 'Total Express';
@@ -417,12 +425,7 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Prime5RIO ||
-                optional($this->shippingService)->service_sub_class == ShippingService::HD_Express ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_PMI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ) {
+                optional($this->shippingService)->service_sub_class == ShippingService::HD_Express) {
 
                 return $this->user_declared_freight;
             }
@@ -485,10 +488,27 @@ class Order extends Model implements Package
             'sinerlog_url_label' => $url
         ]);
     }
-
-    public function getTempWhrNumber()
+    public function getTempWhrNumber($api=false)
     {
-        return "HD-{$this->change_id}";
+        $tempWhr =  $this->change_id;        
+        switch(strlen($tempWhr)){
+            case(5):
+                $tempWhr = (str_pad($tempWhr, 10, '32023', STR_PAD_LEFT));
+                break;
+                case(6):
+                    $tempWhr = (str_pad($tempWhr, 10, '2023', STR_PAD_LEFT));
+                    break;
+                    case(7):
+                        $tempWhr = (str_pad($tempWhr, 10, '023', STR_PAD_LEFT));
+                        break;
+                        case(8):
+                                $tempWhr = (str_pad($tempWhr, 10, '23', STR_PAD_LEFT)); 
+                            break;
+                            case(9):
+                                $tempWhr = (str_pad($tempWhr, 10, '3', STR_PAD_LEFT));
+                                break;
+        }
+        return ($api?'TM':'HD')."{$tempWhr}".(optional($this->recipient)->country->code??"BR");
     }
 
     public function doCalculations($onVolumetricWeight=true)

@@ -31,7 +31,7 @@ class ContainerRepository extends AbstractRepository{
         if($request->filled('startDate')||$request->filled('endDate')){ 
             $query->whereBetween('created_at', [$request->startDate??date('2020-01-01'), $request->endDate??date('Y-m-d')]);
         } 
-        $services = ['NX','IX', 'XP','AJ-NX','AJ-IX'];
+        $services = ['NX','IX', 'XP','AJ-NX','AJ-IX','AJC-NX','AJC-IX'];
         if($request->filled('service')){
              $services = json_decode($request->service);
         }
@@ -44,12 +44,13 @@ class ContainerRepository extends AbstractRepository{
 
     public function store(Request $request)
     {
-        try {
-
-            if (in_array($request->services_subclass_code, [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX]) ) {
+        try { 
+            if (in_array($request->services_subclass_code, [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX,Container::CONTAINER_ANJUNC_NX,Container::CONTAINER_ANJUNC_IX]) ) {
                 
                 $latestAnujnContainer = Container::where('services_subclass_code', Container::CONTAINER_ANJUN_NX)
                                                     ->orWhere('services_subclass_code', Container::CONTAINER_ANJUN_IX)
+                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_NX)
+                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_IX)
                                                     ->latest()->first();
 
                 $anjunDispatchNumber = ($latestAnujnContainer->dispatch_number ) ? $latestAnujnContainer->dispatch_number + 1 : 295000;

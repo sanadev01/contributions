@@ -3,6 +3,7 @@
 namespace App\Models\Warehouse;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -85,6 +86,10 @@ class DeliveryBill extends Model
             return true;
         }
     }
+    public function isAnjunChina()
+    {
+        return $this->containers->first()->hasAnjunChinaService();
+    }
 
     public function isGDE()
     {
@@ -121,6 +126,9 @@ class DeliveryBill extends Model
         }
         return false;
     }
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }

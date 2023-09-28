@@ -558,7 +558,7 @@ class PermissionSeeder extends Seeder
                 'slug' => 'view_api_docs',
                 'group' => 'API',
                 'description' => 'User can view api documentations'
-            ]
+            ],
         ];
     }
 }
