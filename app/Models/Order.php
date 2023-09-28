@@ -425,7 +425,12 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium ||
                 optional($this->shippingService)->service_sub_class == ShippingService::Prime5RIO ||
-                optional($this->shippingService)->service_sub_class == ShippingService::HD_Express) {
+                optional($this->shippingService)->service_sub_class == ShippingService::HD_Express ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_PMI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ) {
 
                 return $this->user_declared_freight;
             }
