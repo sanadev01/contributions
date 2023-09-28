@@ -18,7 +18,7 @@ class BigPackage
     public  $trackingNumbers = [];
     public function __construct(Container $container)
     {
-        $this->bigBagId      = "AJ00000" . $container->id;
+        $this->bigBagId      = "AJ200000" . $container->id;
         $this->serviceType   = ($container->services_subclass_code == WarehouseContainer::CONTAINER_ANJUNC_IX) ? "EXPRESS" : "STANDARD";
         foreach ($container->orders as $order) {
             $this->trackingNumbers[] = $order->corrios_tracking_code;

@@ -141,6 +141,8 @@
                         <select class="form-control" wire:model.debounce.1000ms="carrier">
                             <option value="">All</option>
                             <option value="Brazil">Correios Brazil</option>
+                            <option value="Brazil AJ">Correios AJ</option>
+                            <option value="Brazil A">Correios A</option>
                             <option value="USPS">USPS</option>
                             <option value="UPS">UPS</option>
                             <option value="FEDEX">FEDEX</option>
@@ -148,7 +150,6 @@
                             <option value="Global eParcel">Global eParcel</option>
                             <option value="Prime5">Prime5</option>
                             <option value="Post Plus">Post Plus</option>
-                            <option value="Anjun China">Anjun China</option>
                             <option value="Total Express">Total Express</option>
                             <option value="HD Express">HD Express</option>
                         </select>

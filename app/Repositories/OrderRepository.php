@@ -152,10 +152,16 @@ class OrderRepository
                     ShippingService::HD_Express
                 ];
             }
-            if($request->carrier == 'Anjun China'){
+            if($request->carrier == 'Brazil AJ'){
                 $service = [
                     ShippingService::AJ_Standard_CN, 
                     ShippingService::AJ_Express_CN, 
+                ];
+            }
+            if($request->carrier == 'Brazil A'){
+                $service = [
+                    ShippingService::AJ_Packet_Standard, 
+                    ShippingService::AJ_Packet_Express, 
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
