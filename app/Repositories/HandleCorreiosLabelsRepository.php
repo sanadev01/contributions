@@ -15,6 +15,8 @@ use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\AnjunLabelRepository;
 use App\Services\TotalExpress\TotalExpressLabelRepository;
 use App\Models\User;
+use App\Models\ShippingService;
+
 class HandleCorreiosLabelsRepository
 {
     public $order;
@@ -148,8 +150,55 @@ class HandleCorreiosLabelsRepository
 
     public function correiosOrAnjun($order)
     {
-        if(setting('china_anjun_api', null, User::ROLE_ADMIN) || $order->shippingService->is_anjun_china_service_sub_class){
+        // || $order->shippingService->is_anjun_china_service_sub_class
+        if(setting('china_anjun_api', null, User::ROLE_ADMIN) ){
+            $service_sub_class = $order->shippingService->service_sub_class;
+            if(in_array($service_sub_class,[ShippingService::Packet_Standard,ShippingService::AJ_Packet_Standard])){
+
+                $service_sub_class = ShippingService::AJ_Standard_CN;
+            }
+            else if(in_array($service_sub_class,[ShippingService::Packet_Express,ShippingService::AJ_Packet_Express])){
+                $service_sub_class = ShippingService::AJ_Express_CN;
+
+            }
+            if(in_array($service_sub_class,[ShippingService::Packet_Mini])){
+                return $this->corriesBrazilLabel();
+            }
+            $order->update([
+                'shipping_service_id' => (ShippingService::where('service_sub_class',$service_sub_class)->first())->id,
+            ]);
+
             return $this->anjunChinaLabel();
+        }
+        else if(setting('correios_api', null, User::ROLE_ADMIN) ){
+            $service_sub_class = $order->shippingService->service_sub_class;
+
+            if(in_array($service_sub_class,[ShippingService::AJ_Standard_CN,ShippingService::AJ_Packet_Standard])){
+                $service_sub_class = ShippingService::Packet_Standard;
+            }
+            else if(in_array($service_sub_class,[ShippingService::AJ_Express_CN,ShippingService::AJ_Packet_Express])){
+                $service_sub_class = ShippingService::Packet_Express;
+            }
+            $order->update([
+                'shipping_service_id' => (ShippingService::where('service_sub_class',$service_sub_class)->first())->id,
+            ]);
+
+            return $this->corriesBrazilLabel();
+        }
+        else if(setting('anjun_api', null, User::ROLE_ADMIN) ){
+            $service_sub_class = $order->shippingService->service_sub_class;
+
+            if(in_array($service_sub_class,[ShippingService::Packet_Standard,ShippingService::AJ_Standard_CN])){
+                $service_sub_class = ShippingService::AJ_Packet_Standard;
+            }
+            else if(in_array($service_sub_class,[ShippingService::Packet_Express,ShippingService::AJ_Express_CN])){
+                $service_sub_class = ShippingService::AJ_Packet_Express;
+            }
+            $order->update([
+                'shipping_service_id' => (ShippingService::where('service_sub_class',$service_sub_class)->first())->id,
+            ]);
+
+            return $this->corriesBrazilLabel();
         }
         return $this->corriesBrazilLabel();
     }
