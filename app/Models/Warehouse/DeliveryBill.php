@@ -3,6 +3,7 @@
 namespace App\Models\Warehouse;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -121,6 +122,9 @@ class DeliveryBill extends Model
         }
         return false;
     }
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }
