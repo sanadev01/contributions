@@ -99,9 +99,9 @@ class ScanLabel extends Component
             
             $query = Order::query();
             
-            if ( !Auth::user()->isAdmin() ){
-                $query->where('user_id',Auth::id());
-            }
+            // if ( !Auth::user()->isAdmin() ){
+            //     $query->where('user_id',Auth::id());
+            // }
             $order = $query->where('corrios_tracking_code', $this->tracking)->Orwhere('tracking_id',$this->tracking)->first();
             
             // if($order->shippingService->service_sub_class == ShippingService::GePS || $order->shippingService->service_sub_class == ShippingService::GePS_EFormat){
@@ -223,9 +223,9 @@ class ScanLabel extends Component
 
         $query = Order::query();
 
-        if ( !Auth::user()->isAdmin() ){
-            $query->where('user_id',Auth::id());
-        }
+        // if ( !Auth::user()->isAdmin() ){
+        //     $query->where('user_id',Auth::id());
+        // }
 
         $query->whereBetween('arrived_date',[$this->start_date.' 00:00:00', $this->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC');
         if($this->user_id != null){
