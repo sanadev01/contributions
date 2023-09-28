@@ -74,13 +74,13 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }elseif($this->services_subclass_code == 'SL-XP'){
             return 'SL Small Parcels';
         }elseif ($this->services_subclass_code == 'AJ-NX') {
-            return 'AJ Packet Standard service';
+            return 'AJ Packet Standard Service';
         }elseif ($this->services_subclass_code == 'AJC-NX') {
-            return 'China AJ Packet Standard service';
+            return 'AJC Packet Standard Service';
         }elseif ($this->services_subclass_code == 'AJC-IX') {
-            return 'China AJ Packet Express service';
+            return 'AJC Packet Express Service';
         }elseif ($this->services_subclass_code == 'AJ-IX') {
-            return 'AJ Packet Express service';
+            return 'AJ Packet Express Service';
         }elseif($this->services_subclass_code == 'SRM'){
             return 'SRM service';
         }elseif($this->services_subclass_code == 'SRP'){
