@@ -316,10 +316,8 @@ class Client{
             if($this->gssProfit == null || $this->gssProfit == 0) { 
                 $this->gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
             }
-            
-            $profit = $data->calculatedPostage * ($this->gssProfit / 100);
+            $profit = round($data->calculatedPostage * ($this->gssProfit / 100), 2 );
             $price = round($data->calculatedPostage + $profit, 2);
-
             if($price > 0) {
                 return $this->responseSuccessful($price, 'Rate Calculation Successful');
             } 
@@ -345,6 +343,68 @@ class Client{
         ]);
     }
 
+    private function makePDFLabel($response) {
+        $pdf = PDFMerger::init();
+        $label = "app/labels/{$response->trackingNumber}";
+        foreach ($response->labels as $index => $labelBase64) {
+            $labelContent = base64_decode($labelBase64);
+            $pagePath = storage_path("{$label}_{$index}.pdf");
+            file_put_contents($pagePath, $labelContent);
+            $pdf->addPDF($pagePath);
+        }
+        $pdf->merge();
+        
+        // Remove individual pages
+        foreach ($response->labels as $index => $labelBase64) {
+            $pagePath = storage_path("{$label}_{$index}.pdf");
+            unlink($pagePath);
+        }
+        $mergedPdf = $pdf->output();
+        return base64_encode($mergedPdf);
+    }
 
+    public function getCostRates($order, $service) {
+        
+        if($service->service_sub_class == ShippingService::GSS_PMI) {
+            $rateType = 'PMI';
+        } elseif($service->service_sub_class == ShippingService::GSS_EPMEI) {
+            $rateType = 'EPMEI';
+        } elseif($service->service_sub_class == ShippingService::GSS_EPMI) {
+            $rateType = 'EPMI';
+        } elseif($service->service_sub_class == ShippingService::GSS_FCM) {
+            $rateType = 'FCM';
+        } elseif($service->service_sub_class == ShippingService::GSS_EMS) {
+            $rateType = 'EMS';
+        }
+
+        $url = $this->baseUrl . '/Utility/CalculatePostage';
+        $body = [
+            "countryCode" => "BR",
+            "postalCode" => $order->recipient->zipcode,
+            "rateType" => $rateType,
+            "serviceType" => "LBL",
+            "packageWeight" => $order->weight,
+            "unitOfWeight" => $order->measurement_unit == "lbs/in" ? 'LB' : 'KG',
+            "packageLength" => $order->length,
+            "packageWidth" => $order->width,
+            "packageHeight" => $order->height,
+            "unitOfMeasurement" => $order->measurement_unit == "lbs/in" ? 'IN' : 'CM',
+            "rateAdjustmentCode" => "NORMAL RATE",
+            "nonRectangular" => "0",
+            "extraServiceCode" => "",
+            "entryFacilityZip" => "",
+            "customerReferenceID" => ""
+        ];
+        $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+        $data= json_decode($response);
+        if ($response->successful() && $data->success == true) {
+            if($data->calculatedPostage > 0) {
+                return $this->responseSuccessful($data->calculatedPostage, 'Rate Calculation Successful');
+            } 
+            
+        } else {
+            return $this->responseUnprocessable($data->message);
+        }
+    }
     
 }

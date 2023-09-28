@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\State;
+use App\Services\GSS\Client;
 use App\Models\OrderTracking;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -376,7 +377,7 @@ class Order extends Model implements Package
                 return 'Prime5';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium || optional($this->shippingService)->service_sub_class == ShippingService::LT_PRIME){
 
                 return 'PostPlus';
 
@@ -520,6 +521,7 @@ class Order extends Model implements Package
             $this->calculateProfit($shippingCost, $shippingService);
         }elseif ($shippingService && $shippingService->isGSSService()) {
             $shippingCost = $this->user_declared_freight;
+            $this->calculateGSSProfit($shippingCost, $shippingService);
         }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
@@ -906,6 +908,24 @@ class Order extends Model implements Package
             return $this->totalExpressLabelUrl();
         }
         return null;
+    }
+
+    public function calculateGSSProfit($shippingCost, $shippingService)
+    {
+        $gssProfit = setting('gss_profit', null,  $this->user->id);
+        if($gssProfit == null || $gssProfit == 0) { 
+            $gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
+        }
+        $profit = round($gssProfit / 100, 2);
+        $client = new Client();
+        $response = $client->getCostRates($this, $shippingService);
+        $data = $response->getData();
+        if ($data->isSuccess && $data->output > 0){
+            $gssCost = $data->output;
+        }
+        $addedProfit = round($gssCost * $profit, 2);
+        $this->user_declared_freight = $this->user_declared_freight - $addedProfit;
+        return true;
     }
 
 }
