@@ -44,6 +44,7 @@ return [
             4388 => 'GDE First Class',
             283 => 'Total Express',
             33173 => 'HD Express',
+            776 => 'LT Prime',
         ]
     ]
 ];

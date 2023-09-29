@@ -94,6 +94,10 @@ class IndexTable extends Component
             'name' => 'Total Express',
             'value' => Package::SERVICE_CLASS_TOTAL_EXPRESS,
         ];
+        $this->services[19] = [
+            'name' => 'Prime LT',
+            'value' => Package::SERVICE_CLASS_LT_PRIME,
+        ];
         return $this->services;
     }
 }

@@ -29,6 +29,7 @@ class Package implements \App\Services\Correios\Contracts\Package
     const SERVICE_CLASS_GDE_FIRSTCLASS = 4388;
     const SERVICE_CLASS_TOTAL_EXPRESS = ShippingService::TOTAL_EXPRESS;
     const SERVICE_CLASS_HD_Express = 33173;
+    const SERVICE_CLASS_LT_PRIME = ShippingService::LT_PRIME;
 
     public $customerControlCode = "";
     public $senderName = "HERCO";
