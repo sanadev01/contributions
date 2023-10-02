@@ -512,7 +512,7 @@ class OrderRepository
             $upsShippingService = new UPSShippingService($order);
             $fedExShippingService = new FedExShippingService($order);
             
-            foreach (ShippingService::query()->active()->get() as $shippingService) 
+            foreach (ShippingService::where('active',true)->get() as $shippingService) 
             {
                 if ($uspsShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
@@ -529,13 +529,13 @@ class OrderRepository
         } else
         {
             $gssShippingService = new GSSShippingService($order);
-            foreach (ShippingService::whereIn('service_sub_class', [ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS])->get() as $shippingService) 
+            foreach (ShippingService::whereIn('service_sub_class', [ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS])->where('active',true)->get() as $shippingService) 
             {
                 if ($gssShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
                 }
             } 
-            foreach (ShippingService::query()->has('rates')->active()->get() as $shippingService) 
+            foreach (ShippingService::where('active',true)->has('rates')->get() as $shippingService) 
             {
                 if ($shippingService->isAvailableFor($order)) {
 
@@ -549,7 +549,7 @@ class OrderRepository
             {
                 $uspsShippingService = new USPSShippingService($order);
 
-                foreach (ShippingService::query()->active()->get() as $shippingService)
+                foreach (ShippingService::where('active',true)->get() as $shippingService)
                 {
                     if ($uspsShippingService->isAvailableForInternational($shippingService)) {
                         $shippingServices->push($shippingService);
