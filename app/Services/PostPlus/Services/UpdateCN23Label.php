@@ -37,10 +37,16 @@ class UpdateCN23Label
             $paddingLeft = 60.6;
             $font = 5;
             $this->printReturnAddress($paddingLeft, 6.0, 35, 11.8, 5.5, 8, 10.5, 13, $font, 'B');
-            //FOR SENDER ADDRESS
-            $this->printSender($this->order, $paddingLeft, 13.5, 35, 11.8, 16.5, 18.5, 20.5, 22.5, 23, $font, '');
-            //FOR REFERENCE
-            $this->printReference($this->order, 90.0, 51.0);
+
+            if(!app()->isProduction()){
+                //FOR SENDER ADDRESS
+                $this->printSender($this->order, $paddingLeft, 13.5, 35, 11.8, 16.5, 18.5, 20.5, 22.5, 23, $font, '');
+                //FOR REFERENCE
+                $this->printReference($this->order, 90.0, 51.0);
+            }
+
+            //FOR TOTAL WEIGHT
+            $this->printWeight($this->order, 31.0, 64.0);
             //FOR SHIPPING
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(4, 47.5, 'Shipping:', 00);
@@ -53,8 +59,6 @@ class UpdateCN23Label
             $this->pdfi->Rect(65, 99, 7, 9, "F");
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(44, 64, number_format($userDeclaredFreight + $this->order->order_value, 2, '.', ','), 0);
-            //FOR TOTAL WEIGHT
-            $this->printWeight($this->order, 31.0, 64.0);
             //FOR SH CODES PRINT
             $this->printNCM($this->order, 5.0, 62.0, 11.0);
 
@@ -79,10 +83,16 @@ class UpdateCN23Label
             $paddingLeft = 57.8;
             $font = 4.5;
             $this->printReturnAddress($paddingLeft, 6.0, 35, 11.8, 5.5, 8, 10.5, 13, $font, 'B');
-            //FOR SENDER ADDRESS
-            $this->printSender($this->order, $paddingLeft, 13.5, 35, 11.8, 16.5, 18.5, 20.5, 22.5, 23, $font, '');
-            //FOR REFERENCE
-            $this->printReference($this->order, 90.0, 51.0);
+            
+            if(!app()->isProduction()){
+                //FOR SENDER ADDRESS
+                $this->printSender($this->order, $paddingLeft, 13.5, 35, 11.8, 16.5, 18.5, 20.5, 22.5, 23, $font, '');
+                //FOR REFERENCE
+                $this->printReference($this->order, 90.0, 51.0);
+            }
+
+            //FOR TOTAL WEIGHT
+            $this->printWeight($this->order, 31.0, 64.0);
             //FOR SHIPPING
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(4, 47.5, 'Shipping:', 00);
@@ -95,8 +105,6 @@ class UpdateCN23Label
             $this->pdfi->Rect(65, 99, 7, 9, "F");
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(44, 64, number_format($userDeclaredFreight + $this->order->order_value, 2, '.', ','), 0);
-            //FOR TOTAL WEIGHT
-            $this->printWeight($this->order, 31.0, 64.0);
             //FOR SH CODES PRINT
             $this->printNCM($this->order, 5.0, 62.0, 11.0);
 
@@ -208,11 +216,19 @@ class UpdateCN23Label
             // FOR RETURN ADDRESS
             $paddingLeft = 57.8;
             $font = 4.5;
-            $this->printReturnAddress($paddingLeft, 6.0, 35, 11.4, 5.5, 8, 10.5, 13, $font, 'B');
+            $this->printReturnAddress($paddingLeft, 6.0, 38.8, 11.5, 7.5, 9.0, 10.5, 12.0, $font, 'B');
+
             //FOR SENDER ADDRESS
             $this->printSender($this->order, $paddingLeft, 13.5, 35, 11.8, 16.5, 18.5, 20.5, 22.5, 23, $font, '');
-            //FOR REFERENCE
-            $this->printReference($this->order, 90.0, 51.0);
+
+            //FOR CPF
+            $this->printCPF($this->order, 121, 50.0, 108, 46.0, 37, 4.5);
+
+            //FOR SENDER REF
+            $this->printSenderRef($this->order, 110, 56.0, 93, 53.0, 52, 5.0);
+            
+            //FOR SH CODES PRINT
+            $this->printNCM($this->order, 5.0, 62.0, 11.0);
             //FOR SHIPPING
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(4, 47.5, 'Shipping:', 00);
@@ -227,8 +243,6 @@ class UpdateCN23Label
             $this->pdfi->RotatedText(44, 64, number_format($userDeclaredFreight + $this->order->order_value, 2, '.', ','), 0);
             //FOR TOTAL WEIGHT
             $this->printWeight($this->order, 31.0, 64.0);
-            //FOR SH CODES PRINT
-            $this->printNCM($this->order, 5.0, 62.0, 11.0);
             
             $this->pdfi->Output($this->pdf_file, 'F');
             return true;
@@ -317,5 +331,19 @@ class UpdateCN23Label
             $this->pdfi->RotatedText($lM2, $tH+($key*2.3), ' USA', 0);
         }
         return true;
+    }
+
+    public function printCPF($order, $lM, $tH, $rectLM, $rectLT, $rectH, $rectW) {
+        $this->pdfi->SetFillColor(255, 255, 255);
+        $this->pdfi->Rect($rectLM, $rectLT, $rectH, $rectW, "F");
+        $this->pdfi->SetFont("Arial", 'B', 7.5);
+        $this->pdfi->RotatedText($lM, $tH, 'CPF: '.optional($this->order->recipient)->tax_id, 0);
+    }
+
+    public function printSenderRef($order, $lM, $tH, $rectLM, $rectLT, $rectH, $rectW) {
+        $this->pdfi->SetFillColor(255, 255, 255);
+        $this->pdfi->Rect($rectLM, $rectLT, $rectH, $rectW, "F");
+        $this->pdfi->SetFont("Arial", 'B', 7.5);
+        $this->pdfi->RotatedText($lM, $tH, 'Sender ref: '.optional($order)->warehouse_number, 0);
     }
 }
