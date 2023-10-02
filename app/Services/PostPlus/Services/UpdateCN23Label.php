@@ -37,10 +37,16 @@ class UpdateCN23Label
             $paddingLeft = 60.6;
             $font = 5;
             $this->printReturnAddress($paddingLeft, 6.0, 35, 11.8, 5.5, 8, 10.5, 13, $font, 'B');
-            //FOR SENDER ADDRESS
-            $this->printSender($this->order, $paddingLeft, 13.5, 35, 11.8, 16.5, 18.5, 20.5, 22.5, 23, $font, '');
-            //FOR REFERENCE
-            $this->printReference($this->order, 90.0, 51.0);
+
+            if(!app()->isProduction()){
+                //FOR SENDER ADDRESS
+                $this->printSender($this->order, $paddingLeft, 13.5, 35, 11.8, 16.5, 18.5, 20.5, 22.5, 23, $font, '');
+                //FOR REFERENCE
+                $this->printReference($this->order, 90.0, 51.0);
+                //FOR TOTAL WEIGHT
+                $this->printWeight($this->order, 31.0, 64.0);
+            }
+            
             //FOR SHIPPING
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(4, 47.5, 'Shipping:', 00);
@@ -53,8 +59,6 @@ class UpdateCN23Label
             $this->pdfi->Rect(65, 99, 7, 9, "F");
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(44, 64, number_format($userDeclaredFreight + $this->order->order_value, 2, '.', ','), 0);
-            //FOR TOTAL WEIGHT
-            $this->printWeight($this->order, 31.0, 64.0);
             //FOR SH CODES PRINT
             $this->printNCM($this->order, 5.0, 62.0, 11.0);
 
@@ -79,10 +83,16 @@ class UpdateCN23Label
             $paddingLeft = 57.8;
             $font = 4.5;
             $this->printReturnAddress($paddingLeft, 6.0, 35, 11.8, 5.5, 8, 10.5, 13, $font, 'B');
-            //FOR SENDER ADDRESS
-            $this->printSender($this->order, $paddingLeft, 13.5, 35, 11.8, 16.5, 18.5, 20.5, 22.5, 23, $font, '');
-            //FOR REFERENCE
-            $this->printReference($this->order, 90.0, 51.0);
+            
+            if(!app()->isProduction()){
+                //FOR SENDER ADDRESS
+                $this->printSender($this->order, $paddingLeft, 13.5, 35, 11.8, 16.5, 18.5, 20.5, 22.5, 23, $font, '');
+                //FOR REFERENCE
+                $this->printReference($this->order, 90.0, 51.0);
+                //FOR TOTAL WEIGHT
+                $this->printWeight($this->order, 31.0, 64.0);
+            }
+            
             //FOR SHIPPING
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(4, 47.5, 'Shipping:', 00);
@@ -95,8 +105,6 @@ class UpdateCN23Label
             $this->pdfi->Rect(65, 99, 7, 9, "F");
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(44, 64, number_format($userDeclaredFreight + $this->order->order_value, 2, '.', ','), 0);
-            //FOR TOTAL WEIGHT
-            $this->printWeight($this->order, 31.0, 64.0);
             //FOR SH CODES PRINT
             $this->printNCM($this->order, 5.0, 62.0, 11.0);
 
@@ -209,10 +217,16 @@ class UpdateCN23Label
             $paddingLeft = 57.8;
             $font = 4.5;
             $this->printReturnAddress($paddingLeft, 6.0, 35, 11.4, 5.5, 8, 10.5, 13, $font, 'B');
-            //FOR SENDER ADDRESS
-            $this->printSender($this->order, $paddingLeft, 13.5, 35, 11.8, 16.5, 18.5, 20.5, 22.5, 23, $font, '');
-            //FOR REFERENCE
-            $this->printReference($this->order, 90.0, 51.0);
+            
+            if(!app()->isProduction()){
+                //FOR SENDER ADDRESS
+                $this->printSender($this->order, $paddingLeft, 13.5, 35, 11.8, 16.5, 18.5, 20.5, 22.5, 23, $font, '');
+                //FOR REFERENCE
+                $this->printReference($this->order, 90.0, 51.0);
+                //FOR SH CODES PRINT
+                $this->printNCM($this->order, 5.0, 62.0, 11.0);
+            }
+           
             //FOR SHIPPING
             $this->pdfi->SetFont("Arial", "B", 5);
             $this->pdfi->RotatedText(4, 47.5, 'Shipping:', 00);
@@ -227,8 +241,6 @@ class UpdateCN23Label
             $this->pdfi->RotatedText(44, 64, number_format($userDeclaredFreight + $this->order->order_value, 2, '.', ','), 0);
             //FOR TOTAL WEIGHT
             $this->printWeight($this->order, 31.0, 64.0);
-            //FOR SH CODES PRINT
-            $this->printNCM($this->order, 5.0, 62.0, 11.0);
             
             $this->pdfi->Output($this->pdf_file, 'F');
             return true;
