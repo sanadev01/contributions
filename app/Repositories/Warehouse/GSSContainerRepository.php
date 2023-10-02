@@ -20,7 +20,7 @@ class GSSContainerRepository {
         }
 
         return $query->where(function($query) {
-            $query->whereIn('services_subclass_code', [ShippingService::GSS_IPA, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_EFCM] );
+            $query->whereIn('services_subclass_code', [ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS] );
         })->latest()->paginate();
 
     }
@@ -57,7 +57,8 @@ class GSSContainerRepository {
         try {
             return  $container->update([
                 'seal_no' => $request->seal_no,
-                'unit_type' => $request->unit_type
+                'unit_type' => $request->unit_type,
+                'destination_operator_name' => $request->destination_operator_name,
             ]);
 
         } catch (\Exception $ex) {

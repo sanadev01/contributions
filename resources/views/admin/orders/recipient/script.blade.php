@@ -96,6 +96,11 @@
         $('#country').ready(function() {
             $('#regions_response').css('display', 'none');
             let val = $('#country').val();
+            if(val == '94')
+            {
+                window.activeGuatmalaFields();
+                return;
+            }
             const old_region = $('#region').data('value');
 
             if(val == '46'){
@@ -149,12 +154,20 @@
             $('#regions_response').css('display', 'none');
             let val = $(this).val();
             const old_region = $('#region').data('value');
+            window.inActiveGuatmalaFields();
 
             if(val == '46' && window.service == 'courier_express')
             {
                 window.activeChileFields();
                 window.getHDChileRegions();
                 $('#country_message').empty();
+                return;
+            }
+            if(val == '94')
+            {
+
+                window.inactiveChileFields();
+                window.activeGuatmalaFields();
                 return;
             }
 
@@ -366,6 +379,37 @@
         });
     })
 
+    activeGuatmalaFields = function(){
+        console.log('active Gutaemala fields'); 
+        $('#cpf').css('display', 'none'); 
+        $('#div_state').css('display', 'none')
+        $('#state_dev').css('display', 'none')
+        $('#div_city').css('display', 'block')
+        $('#div_street_number').css('display', 'block')
+
+        $('#div_region').css('display', 'none')
+        $('#div_communes').css('display', 'none') 
+        $('#commune').prop('disabled', true);
+        $('#label_address').css('display', 'inline-block')
+
+        $('#cpf_dev').css('display', 'none')
+        $('#label_chile_address').css('display', 'none')
+
+        $('#state').prop('disabled', true); 
+
+        $('#region').prop('disabled', true);
+    }
+    inActiveGuatmalaFields = function(){
+
+        console.log('in active guatemala fields');  
+        
+        $('#commune').prop('disabled', false); 
+
+        $('#state').prop('disabled', false); 
+
+        $('#region').prop('disabled', false);
+    }
+
     activeChileFields = function(){
         console.log('active chile fields');
         if(window.service != 'courier_express')
@@ -419,9 +463,10 @@
 
         $('#country').on('change', function() {
             window.validate_us_address();
-
-            if($('#country').val() == '250' || $('#country').val() == '46'){
+            if($('#country').val() == '250' || $('#country').val() == '46' || $('#country').val() == '94'){
+                if($('#country').val() != '94')
                 $('#div_street_number').css('display', 'none')
+
                 $('#cpf').css('display', 'none')
             }else{
                 $('#div_street_number').css('display', 'block')
@@ -430,7 +475,8 @@
         });
 
         $('#country').ready(function() {
-            if($('#country').val() == '250' || $('#country').val() == '46'){
+            if($('#country').val() == '250' || $('#country').val() == '46' || $('#country').val() == '94'){
+                if($('#country').val() != '94')
                 $('#div_street_number').css('display', 'none')
                 $('#cpf').css('display', 'none')
             }else{

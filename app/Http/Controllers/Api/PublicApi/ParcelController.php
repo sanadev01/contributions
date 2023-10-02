@@ -7,20 +7,21 @@ use App\Models\State;
 use App\Models\ApiLog;
 use App\Models\Country;
 use Illuminate\Http\Request;
+use App\Models\ProfitSetting;
 use App\Models\ShippingService;
+use FlyingLuscas\Correios\Client;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
+use Illuminate\Support\Facades\Validator;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Requests\Api\Parcel\UpdateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
 use App\Repositories\ApiShippingServiceRepository;
-use Illuminate\Support\Facades\Validator;
-use FlyingLuscas\Correios\Client;
-use Illuminate\Support\Facades\Log;
 
 class ParcelController extends Controller
 {
@@ -58,24 +59,26 @@ class ParcelController extends Controller
             return apiResponse(false,'Selected shipping service is currently not available.');
         }
 
+        
+        
         if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->isAnjunService()) {
             return apiResponse(false,$shippingService->name.' is currently not available.');
         }
-
+        
         if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
             if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
                 return apiResponse(false,$shippingService->name.' is currently not available.');
             }
-
+            
             if ($shippingService->service_sub_class == ShippingService::Packet_Standard) {
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Standard)->first();
             }
-
+            
             if ($shippingService->service_sub_class == ShippingService::Packet_Express) {
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Express)->first();
             }
         }
-
+        
         if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
@@ -85,7 +88,7 @@ class ParcelController extends Controller
             }
 
         }else{
-            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');;
+            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
             
             if($shippingService->isCorreiosService() && $volumeWeight > 65.15){
@@ -144,6 +147,9 @@ class ParcelController extends Controller
             return apiResponse(false, 'this service is not availaible for US address');
         }
         
+        if (!$this->serviceActive($shippingService)) {
+            return apiResponse(false,'Selected shipping service is not active against your account!!.');
+        }
         DB::beginTransaction();
 
         try {
@@ -165,6 +171,7 @@ class ParcelController extends Controller
                 "is_shipment_added" => true,
                 'status' => Order::STATUS_ORDER,
                 'user_declared_freight' => optional($request->parcel)['shipment_value']??0,
+                'sinerlog_tran_id' => optional($request->parcel)['is_disposal']??1,
 
                 "sender_first_name" => optional($request->sender)['sender_first_name'],
                 "sender_last_name" => optional($request->sender)['sender_last_name'],
@@ -235,7 +242,7 @@ class ParcelController extends Controller
                 'shipping_service_name' => $order->shippingService->name
             ]);
 
-            if($recipientCountryId == Order::US && !$order->shippingService->isDomesticService()){
+            if($recipientCountryId == Order::US && !(!$order->shippingService->isDomesticService() || !$order->shippingService->isInboundDomesticService())){
                 DB::rollback();
 
                 return apiResponse(false, 'this service can not be use against US address');
@@ -243,6 +250,14 @@ class ParcelController extends Controller
             
             if ($order->shippingService->isDomesticService() || $order->shippingService->isInternationalService()) {
                 if(!$this->usShippingService->getUSShippingServiceRate($order))
+                {
+                    DB::rollback();
+                    return apiResponse(false, $this->usShippingService->getError());
+                }
+            }
+
+            if ($order->shippingService->isGSSService()) {
+                if(!$this->usShippingService->getGSSRates($order))
                 {
                     DB::rollback();
                     return apiResponse(false, $this->usShippingService->getError());
@@ -611,6 +626,34 @@ class ParcelController extends Controller
             DB::rollback();
            return apiResponse(false,$ex->getMessage());
         }
+    }
+
+    public function serviceActive($shippingService)
+    {
+        if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Standard) {
+            $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
+        }
+        if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Express) {
+            $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
+        }
+        
+        $profitSetting = ProfitSetting::where('user_id', Auth::id())
+            ->where('service_id',$shippingService->id)
+            ->where('package_id', '!=', null)
+            ->first();
+        if($profitSetting){
+            return true;
+        }
+        if( $shippingService->isOfUnitedStates() ||
+            $shippingService->isDomesticService() ||
+            $shippingService->isInternationalService() ||
+            $shippingService->isInboundDomesticService() ||
+            $shippingService->isGSSService() ||
+            $shippingService->isGDEService() )
+        {
+            return true;
+        }
+        return false;
     }
 
 }

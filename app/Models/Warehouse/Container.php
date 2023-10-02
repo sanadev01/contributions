@@ -94,14 +94,26 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'GDE Priority Mail';
         }elseif($this->services_subclass_code == ShippingService::GDE_FIRST_CLASS){
             return 'GDE First Class';
-        }elseif($this->services_subclass_code == ShippingService::GSS_IPA){
-            return 'International Priority Airmail';
+        }elseif($this->services_subclass_code == ShippingService::GSS_PMI){
+            return 'Priority Mail International';
         }elseif($this->services_subclass_code == ShippingService::GSS_EPMEI){
-            return 'Pre-Sort Drop Shipment';
+            return 'Priority Mail Express International (Pre-Sort)';
         }elseif($this->services_subclass_code == ShippingService::GSS_EPMI){
-            return 'Pre-Sort Priority Mail International';
-        }elseif($this->services_subclass_code == ShippingService::GSS_EFCM){
-            return 'Pre-Sort First Class International';
+            return 'Priority Mail International (Pre-Sort)';
+        }elseif($this->services_subclass_code == ShippingService::GSS_FCM){
+            return 'First Class Package International';
+        }elseif($this->services_subclass_code == ShippingService::GSS_EMS){
+            return 'Priority Mail Express International (Nationwide)';
+        }elseif($this->services_subclass_code == ShippingService::TOTAL_EXPRESS){
+            return 'Total Express';
+        }elseif($this->services_subclass_code == ShippingService::DirectLinkAustralia){
+            return 'DirectLink Australia';
+        }elseif($this->services_subclass_code == ShippingService::DirectLinkCanada){
+            return 'DirectLink Canada';
+        }elseif($this->services_subclass_code == ShippingService::DirectLinkMexico){
+            return 'DirectLink Mexico';
+        }elseif($this->services_subclass_code == ShippingService::DirectLinkChile){
+            return 'DirectLink Chile';
         }else {
             return 'FirstClass';
         }
@@ -144,6 +156,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif( $this->services_subclass_code == ShippingService::GDE_FIRST_CLASS) {
             return 15;
+        }elseif( $this->services_subclass_code == ShippingService::TOTAL_EXPRESS) {
+            return 16;
+        }
+        elseif($this->services_subclass_code == ShippingService::HD_Express){
+            return 17;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -219,7 +236,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasSwedenPostService()
     {
-        return $this->services_subclass_code == ShippingService::Prime5 || $this->services_subclass_code == ShippingService::Prime5RIO;
+        return in_array($this->services_subclass_code,[ShippingService::Prime5,ShippingService::Prime5RIO,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia]);
+    }
+    function getIsDirectlinkCountryAttribute(){
+        return in_array($this->services_subclass_code,[ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia]);
     }
 
     public function hasPostPlusService()
@@ -234,6 +254,16 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasGSSService()
     {
-        return $this->services_subclass_code == ShippingService::GSS_IPA || $this->services_subclass_code == ShippingService::GSS_EPMEI || $this->services_subclass_code == ShippingService::GSS_EPMI || $this->services_subclass_code == ShippingService::GSS_EFCM;
+        return $this->services_subclass_code == ShippingService::GSS_PMI || $this->services_subclass_code == ShippingService::GSS_EPMEI || $this->services_subclass_code == ShippingService::GSS_EPMI || $this->services_subclass_code == ShippingService::GSS_FCM || $this->services_subclass_code == ShippingService::GSS_EMS;
+    }
+
+    public function getHasTotalExpressServiceAttribute()
+    {
+        return $this->services_subclass_code == ShippingService::TOTAL_EXPRESS;
+    }
+
+    public function hasHDExpressService()
+    {
+        return $this->services_subclass_code == ShippingService::HD_Express;
     }
 }

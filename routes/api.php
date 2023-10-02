@@ -47,6 +47,9 @@ Route::get('order-ups-sender-rates', [App\Http\Controllers\Admin\Order\OrderUPSL
 // Rates for FedEx
 Route::get('order-fedex-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'fedExRates'])->name('api.fedExRates');
 
+//Route for GSS
+Route::get('order-gss-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'GSSRates'])->name('api.gssRates');
+
 Route::post('update/inventory-order', Api\InventoryOrderUpdateController::class)->name('api.inventory.order.update');
 
 Route::prefix('v1')->middleware('auth:api')->group(function(){
@@ -73,15 +76,17 @@ Route::prefix('v1')->group(function(){
             Route::resource('parcels', 'ParcelController')->only('store','show','destroy','update');
             Route::get('parcel/{order}/cn23',OrderLabelController::class);
             Route::put('parcel/items/{parcel}',[App\Http\Controllers\Api\PublicApi\ParcelController::class, 'updateItems']);
-            Route::get('order/tracking/{search}', OrderTrackingController::class);
+            Route::get('order/tracking/{search}/{format?}', OrderTrackingController::class);
             Route::get('services-rates', GetRateController::class);
             Route::resource('products', 'ProductController')->only('index', 'show', 'store');
             Route::get('api/token', AmazonApiTokenController::class);
             Route::get('profile', ProfileController::class);
             Route::post('us/label',DomesticLabelController::class);
             Route::get('us/calculator',DomesticLabelRateController::class);
+            Route::get('calculator', [App\Http\Controllers\Api\PublicApi\CalculatorController::class,'index']);
             Route::get('status/{order}', StatusController::class);
             Route::get('cancel/{order}', CancelOrderController::class);
+            Route::get('get/tracking', TrackingController::class);
            //Cancel Lable Route for GePS
             Route::get('cancel-label/{order}', [App\Http\Controllers\Api\PublicApi\OrderLabelController::class, 'cancelGePSLabel']);
         });

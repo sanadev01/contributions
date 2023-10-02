@@ -55,7 +55,7 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
                  $this->setCellValue('M'.$row, $container->created_at->addDays(1));   
                  $this->setCellValue('N'.$row, '');  
                  $this->setCellValue('O'.$row, count($this->deliveryBill->containers));
-                 $this->setCellValue('P'.$row, $this->deliveryBill->getWeight());  
+                 $this->setCellValue('P'.$row, $package->getWeight('kg'));  
                  $this->setCellValue('Q'.$row, ($package->measurement_unit == "lbs/in") ? 'LB' : 'KG');
                  $this->setCellValue('R'.$row, '');
                  $this->setCellValue('S'.$row, '');
@@ -76,7 +76,7 @@ class ExportUsCustomerLabelManifest extends AbstractExportService
                  $this->setCellValue('AH'.$row, $package->recipient->zipcode);
                  $this->setCellValue('AI'.$row, $package->recipient->country->code);
                  $this->setCellValue('AJ'.$row, count($package->items));
-                 $this->setCellValue('AK'.$row, $this->deliveryBill->getWeight());
+                 $this->setCellValue('AK'.$row, $package->getWeight('kg'));
                  $this->setCellValue('AL'.$row, ($package->measurement_unit == "lbs/in") ? 'LB' : 'KG');
                  $this->setCellValue('AM'.$row, ($package->recipient->phone) ? $package->recipient->phone: '',);
                  $this->setCellValue('AN'.$row, '');

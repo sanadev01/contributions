@@ -12,6 +12,7 @@ use App\Repositories\PostPlusLabelRepository;
 use App\Repositories\SwedenPostLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Services\TotalExpress\TotalExpressLabelRepository;
 
 class HandleCorreiosLabelsRepository
 {
@@ -29,17 +30,16 @@ class HandleCorreiosLabelsRepository
     }
     public function handle()
     {
+        if ($this->order->shippingService->isSwedenPostService()) {
+                return $this->swedenPostLabel();
+        }
         if ($this->order->recipient->country_id == Order::BRAZIL) {
-
+            
             if ($this->order->shippingService->isGePSService()) {
 
                 return $this->gepsLabel();
             }
 
-            if ($this->order->shippingService->isSwedenPostService()) {
-                
-                return $this->swedenPostLabel();
-            }
             if ($this->order->shippingService->isCorreiosService()) {
                 return $this->corriesBrazilLabel();
             }
@@ -49,9 +49,16 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->isGSSService()) {
                 return $this->uspsGSSLabel();
             }
+            if ($this->order->shippingService->is_total_express) {
+                return $this->totalExpressLabel();
+            }
+            
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
             // }
+        }
+        if ($this->order->shippingService->isHDExpressService()) {
+            return $this->hdExpressLabel();
         }
         if ($this->order->recipient->country_id == Order::CHILE) {
 
@@ -97,12 +104,12 @@ class HandleCorreiosLabelsRepository
     //     return $this->renderLabel($this->request, $this->order, $colombiaLabelRepository->getError());
     // }
 
-    // public function mileExpressLabel()
-    // {
-    //     $mileExpressLabelRepository = new MileExpressLabelRepository();
-    //     $mileExpressLabelRepository->run($this->order,$this->update); 
-    //     return $this->renderLabel($this->request, $this->order, $mileExpressLabelRepository->getError());
-    // }
+    public function hdExpressLabel()
+    {
+        $hdExpressLabelRepository = new HDExpressLabelRepository();
+        $hdExpressLabelRepository->run($this->order,$this->update); 
+        return $this->renderLabel($this->request, $this->order, $hdExpressLabelRepository->getError());
+    }
 
     // public function postNLLabel()
     // {
@@ -111,6 +118,12 @@ class HandleCorreiosLabelsRepository
     //     return $this->renderLabel($this->request, $this->order, $postNLLabelRepository->getError());
     // }
 
+    public function totalExpressLabel()
+    {
+        $totalExpress = new TotalExpressLabelRepository(); ///by default consider false
+        $totalExpress->run($this->order,$this->update);
+        return $this->renderLabel($this->request, $this->order, $totalExpress->getError());
+    }
     public function gepsLabel()
     {
         $gepsLabelRepository = new GePSLabelRepository(); ///by default consider false

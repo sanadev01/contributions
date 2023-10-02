@@ -63,6 +63,15 @@ use App\Http\Controllers\Warehouse\GDEContainerPackageController;
 use App\Http\Controllers\Warehouse\GDEUnitRegisterController;
 use App\Http\Controllers\Warehouse\GDECN35DownloadController;
 use App\Http\Controllers\Warehouse\GDEManifestDownloadController;
+use App\Http\Controllers\Warehouse\TotalExpressContainerController;
+use App\Http\Controllers\Warehouse\TotalExpressContainerPackageController;
+use App\Http\Controllers\Warehouse\TotalExpressUnitRegisterController;
+use App\Http\Controllers\Warehouse\TotalExpressCN35DownloadController;
+use App\Http\Controllers\Warehouse\TotalExpressManifestController;
+use App\Http\Controllers\Warehouse\HDExpressContainerController;
+use App\Http\Controllers\Warehouse\HDExpressUnitRegisterController;
+use App\Http\Controllers\Warehouse\HDExpressCN35DownloadController;
+use App\Http\Controllers\Warehouse\HDExpressContainerPackageController;
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Export\OrderExportTemp;
 use Illuminate\Support\Facades\Auth;
@@ -160,6 +169,23 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('gde_container/{container}/register', GDEUnitRegisterController::class)->name('gde_container.register');
     Route::get('gde_container/{container}/download', GDECN35DownloadController::class)->name('gde_container.download');
     Route::get('gde/{delivery_bill}/manifest', GDEManifestDownloadController::class)->name('gde.manifest.download');
+
+    // Routes for Total Express Container
+    Route::resource('totalexpress_containers', TotalExpressContainerController::class);
+    Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('totalexpress_container/{id}/create', [TotalExpressUnitRegisterController::class, 'createMasterBox'])->name('totalexpress_container.createRequest');
+    Route::get('totalexpress_container/{id}/register', [TotalExpressUnitRegisterController::class, 'consultMasterBox'])->name('totalexpress_container.registerBox');
+    Route::get('totalexpress_container/{container}/download', TotalExpressCN35DownloadController::class)->name('totalexpress_container.download');
+    Route::get('/totalexpress/{id}/flightcreate', [TotalExpressManifestController::class, 'createFlight'])->name('totalexpress_manifest.createFlight');
+    Route::post('/totalexpress/flightdetails', [TotalExpressManifestController::class, 'addFlightDetails'])->name('totalexpress_manifest.addFlight');
+    Route::get('totalexpress/{id}/closemanifest', [TotalExpressManifestController::class, 'closeManifest'])->name('totalexpress_manifest.closeManifest');
+    Route::get('totalexpress/{id}/closeflight', [TotalExpressManifestController::class, 'closeFlight'])->name('totalexpress_manifest.closeFlight');
+
+    // Routes for HD Express container
+    Route::resource('hd-express-containers', HDExpressContainerController::class);
+    Route::resource('hd-express-container.packages', HDExpressContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('hd-express-container/{container}/register', HDExpressUnitRegisterController::class)->name('hd-express-container.register');
+    Route::get('hd-express-container/{container}/download', HDExpressCN35DownloadController::class)->name('hd-express-container.download');
 });
 
 

@@ -30,13 +30,21 @@ return [
             541 => 'Parcel Post',
             777 => 'Post Plus Prime',
             778 => 'PrimeRIO',
+            779 => 'DirectLink Australia',
+            780 => 'DirectLink Canada',
+            781 => 'DirectLink Chile',
+            782 => 'DirectLink Mexico',
             357 => 'Prime5RIO',
-            477 => 'GSS IPA',
+            477 => 'GSS PMI',
             37634 => 'GSS EPMEI',
             3674 => 'GSS EPMI',
-            3326 => 'GSS EFCM',
+            3326 => 'GSS FCM',
+            4367 => 'GSS EMS',
             4387 => 'GDE Priority Mail',
             4388 => 'GDE First Class',
+            283 => 'Total Express',
+            33173 => 'HD Express',
+            776 => 'LT Prime',
         ]
     ]
 ];

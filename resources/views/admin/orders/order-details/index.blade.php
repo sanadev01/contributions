@@ -70,18 +70,94 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
+                {{-- @dd($order->tax_modality ) --}}
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
                         <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" readonly required placeholder="@lang('orders.order-details.Tax Modality')">
-                            <option value="ddu" selected >DDU</option>
-                            {{-- <option value="ddp" {{ 'ddp' == $order->tax_modality ? 'selected' : '' }}>DDP</option> --}}
+                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }} >DDU</option>
+                            <option value="ddp" {{ 'ddp' == $order->tax_modality ? 'selected' : '' }}>DDP</option>
                         </select>
                         <div class="help-block"></div>
                     </div>
                 </div>
             </div>
             <hr>
+            <div class="col-md-8">
+                @if($order->sinerlog_tran_id)
+                    <div class="controls row mb-1">
+                        <div class="form-check form-check-inline mr-5">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
+                                <input type="checkbox" name="return_origin" id="returnParcel" @if($order->sinerlog_tran_id == 1) checked @endif>
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
+                        </div>
+                        <div class="form-check form-check-inline mr-5">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
+                                <input type="checkbox" name="dispose_all" id="disposeAll" @if($order->sinerlog_tran_id == 2) checked @endif>
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
+                        </div>
+                        <div class="form-check form-check-inline mr-5">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
+                                <input type="checkbox" name="individual_parcel" id="returnIndividual" @if($order->sinerlog_tran_id == 3) checked @endif>
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
+                        </div>
+                    </div>
+                @else
+                    <div class="controls row mb-1">
+                        <div class="form-check form-check-inline mr-5">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
+                                <input type="checkbox" name="return_origin" id="returnParcel" @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
+                        </div>
+                        <div class="form-check form-check-inline mr-5">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
+                                <input type="checkbox" name="dispose_all" id="disposeAll" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
+                        </div>
+                        <div class="form-check form-check-inline mr-5">
+                            <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
+                                <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
+                                <span class="vs-checkbox vs-checkbox-lg">
+                                    <span class="vs-checkbox--check">
+                                        <i class="vs-icon feather icon-check"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
+                        </div>
+                    </div>
+                @endif
+            </div>
             <div class="row col-12" id="itemLimit"><h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5></div>
             <livewire:order.order-details.order-items :order-id="$order->id"/>
             <hr>
@@ -132,6 +208,7 @@
 <script>
     $("#rateBtn").hide();
     $("#itemLimit").hide();
+    getGSSRates();
     $('#shipping_service_id').on('change',function(){
         $('#user_declared_freight').val(
             parseFloat($('option:selected', this).attr("data-cost"))
@@ -140,6 +217,8 @@
         if(service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
+        }else if(service == 477  || service == 3674 || service == 37634 || service == 3326 || service == 4367) {
+            return getGSSRates();
         }else if(service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
             $("#rateBtn").hide();
@@ -330,5 +409,46 @@
                 $('#loading').fadeOut();
         })
     }
+
+    function getGSSRates(){
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        var order_id = $('#order_id').val();
+
+        $('#loading').fadeIn();
+        $.get('{{ route("api.gssRates") }}',{
+                service: service,
+                order_id: order_id,
+            }).then(function(response){
+                if(response.success == true){
+                    $('#user_declared_freight').val(response.total_amount);
+                    $('#user_declared_freight').prop('readonly', true);
+                }
+                $('#loading').fadeOut();
+
+            }).catch(function(error){
+                console.log(error);
+                $('#loading').fadeOut();
+        })
+
+    }
+    
+    $('#returnParcel').change(function() {
+         if($(this).is(":checked")){
+         $('#disposeAll').prop('checked', false);
+         $('#returnIndividual').prop('checked', false);
+         }    
+     });
+     $('#disposeAll').change(function() {
+         if($(this).is(":checked")){
+         $('#returnParcel').prop('checked', false);
+         $('#returnIndividual').prop('checked', false);
+         }    
+     });
+     $('#returnIndividual').change(function() {
+         if($(this).is(":checked")){
+         $('#returnParcel').prop('checked', false);
+         $('#disposeAll').prop('checked', false);
+         }    
+     });
 </script>
 @endsection

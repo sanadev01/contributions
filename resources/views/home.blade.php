@@ -195,8 +195,7 @@
     </div>
 
     <!-- Dashboard Analytics Start -->
-    <section id="dashboard-analytics">
-        {{-- <x-stat-cards.all-stats/> --}}
+    <section id="dashboard-analytics"> 
         @if (!Auth::user()->isAdmin())
             <div class="row">
                 <div class="col-12">

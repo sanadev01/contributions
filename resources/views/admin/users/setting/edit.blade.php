@@ -255,6 +255,23 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">GSS<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="GSS">
+                                                <input type="checkbox" name="gss" id="gss" @if(setting('gss', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="gss_profit" step="0.01" min=0 class="form-control col-2" id="gss_profit" value="{{ setting('gss_profit', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">SinerLog<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
@@ -310,23 +327,6 @@
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="Post Plus">
                                                 <input type="checkbox" name="post_plus" id="post_plus" @if(setting('post_plus', null, $user->id)) checked @endif>
-                                                <span class="vs-checkbox vs-checkbox-lg">
-                                                    <span class="vs-checkbox--check">
-                                                        <i class="vs-icon feather icon-check"></i>
-                                                    </span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endif
-                                @if(setting('GSS_IPA', null, \App\Models\User::ROLE_ADMIN))
-                                <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">GSS<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <div class="input-group">
-                                            <div class="vs-checkbox-con vs-checkbox-primary" title="GSS IPA">
-                                                <input type="checkbox" name="GSS_IPA" id="GSS_IPA" @if(setting('GSS_IPA', null, $user->id)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">
                                                         <i class="vs-icon feather icon-check"></i>
@@ -430,6 +430,26 @@
                                                 </span>
                                             </div>
                                          </div>    
+                                    </div>
+                                </div>
+
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">GDE<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="GDE">
+                                                <input type="checkbox" name="gde" id="gde" @if(setting('gde', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Priority Mail (%) :</span>
+                                            <input type="number" name="gde_pm_profit" step="0.01" min=0 class="form-control col-2" id="gde_pm_profit" value="{{ setting('gde_pm_profit', null, $user->id) }}">
+                                            <span class="ml-3 mr-2 mt-2">First Class (%) :</span>
+                                            <input type="number" name="gde_fc_profit" step="0.01" min=0 class="form-control col-2" id="gde_fc_profit" value="{{ setting('gde_fc_profit', null, $user->id) }}">
+                                        </div>
                                     </div>
                                 </div>
                                 

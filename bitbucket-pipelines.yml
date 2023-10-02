@@ -26,12 +26,6 @@ pipelines:
             - pipe: atlassian/ssh-run:0.3.0
               variables:
                   SSH_USER: 'homeqdba'
-                  SERVER: '199.192.30.181'
-                  MODE: 'script' # Optional
-                  COMMAND: 'deploy-production.sh'
-            - pipe: atlassian/ssh-run:0.3.0
-              variables:
-                  SSH_USER: 'homeqdba'
                   SERVER: '164.90.255.76'
                   MODE: 'script' # Optional
                   COMMAND: 'deploy-production.sh'

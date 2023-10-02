@@ -25,7 +25,7 @@ class UpdateContainerRequest extends FormRequest
     {
         return [
             'unit_type' => 'required|integer|in:1,2',
-            'seal_no' => 'required|unique:containers,seal_no,',
+            'seal_no' => 'required|integer',
         ];
     }
 

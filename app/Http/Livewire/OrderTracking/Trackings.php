@@ -71,7 +71,7 @@ class Trackings extends Component
 
             $difference = Carbon::parse($todayDate)->diffInDays(Carbon::parse($lastTrackingDate));
             
-            if ($difference > 2) {
+            if ($difference > 2 && optional($tracking)['cidade']) {
                 return 140;
             }
 

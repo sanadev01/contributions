@@ -100,7 +100,7 @@
                                             <input type="checkbox" name="deliveryBills[]" class="form-control container" value="{{$deliveryBill->id}}">
                                         </td>
                                         <td>
-                                            {{ $deliveryBill->name   }}
+                                            {{ $deliveryBill->name }}
                                             @if ($deliveryBill->Containers->count() > 0)
                                                 @if(optional($deliveryBill->Containers->first()->orders->first())->shippingService && $deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
                                                     <span class="badge badge-success">A</span>
@@ -114,10 +114,13 @@
                                                     <span class="badge badge-secondary">GDE</span>
                                                 @elseif($deliveryBill->isGSS())
                                                 <span class="badge badge-secondary text-black">GSS</span>
+                                                @elseif($deliveryBill->isTotalExpress())
+                                                <span class="badge badge-warning text-black">T</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif
                                             @endif
+                                            @admin @if(optional($deliveryBill->user)->isUser()) <span class="badge badge-danger">GoBox</span> @endif @endadmin
                                         </td>
                                         <td>
                                             {{ $deliveryBill->request_id }}
@@ -143,9 +146,16 @@
                                                                 </a>
                                                             @endif -->
                                                         @endif
-                                                        <a href="{{ route('warehouse.delivery_bill.manifest', $deliveryBill) }}"
-                                                            class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Manifest
+                                                        @if(optional(optional(optional($deliveryBill->containers->first()->orders->first())->recipient)->country)->code=="MX" 
+                                                        && optional($deliveryBill->containers->first()->orders->first())->shippingService->isSwedenPostService())
+                                                        <a href="{{ route('warehouse.delivery_bill.manifest', [$deliveryBill, 'service'=> 'sweden_mexico']) }}"
+                                                            class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Maxico Manifest 
                                                         </a>
+                                                        @endif
+                                                        <a href="{{ route('warehouse.delivery_bill.manifest', $deliveryBill) }}"
+                                                        {{-- @dd(optional($deliveryBill->containers->first()->orders->first())->shippingService->service_sub_class) --}}
+                                                        class="dropdown-item w-100"><i class="fa fa-cloud-download"></i>Download Manifest
+                                                       </a>
                                                         <!-- @if($deliveryBill->isRegistered() && $deliveryBill->isPostPlus())
                                                             <a href="{{ route('warehouse.postplus.manifest.download',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> Download PostPlus Manifest
@@ -183,6 +193,31 @@
                                                             </a>
                                                         @endif
 
+                                                        @if (!$deliveryBill->isReady() && $deliveryBill->isTotalExpress()) 
+                                                           <a href="{{ route('warehouse.totalexpress_manifest.createFlight',$deliveryBill) }}" type="button" class=" btn dropdown-item w-100">
+                                                                <i class="fa fa-plane"></i>   Create Flight
+                                                            </a>
+                                                        @endif
+
+                                                        @if (!$deliveryBill->isRegistered() && $deliveryBill->isTotalExpress()) 
+                                                           <a href="javascript:void(0)" id="flightInfo" data-id="{{ $deliveryBill->id }}" type="button" class=" btn dropdown-item w-100">
+                                                                <i class="fa fa-plane"></i>   Update Flight Details
+                                                            </a>
+                                                        @endif
+
+                                                        @if ($deliveryBill->isReady() && $deliveryBill->isTotalExpress()) 
+                                                            <a href="{{ route('warehouse.totalexpress_manifest.closeManifest',$deliveryBill) }}"  type="button" class=" btn dropdown-item w-100">
+                                                                <i class="fa fa-plane"></i>   Close Manifest
+                                                            </a>
+                                                        @endif
+
+                                                        @if ($deliveryBill->isRegistered() && $deliveryBill->isTotalExpress()) 
+                                                            <a href="{{ route('warehouse.totalexpress_manifest.closeFlight',$deliveryBill) }}"  type="button" class=" btn dropdown-item w-100">
+                                                                <i class="fa fa-plane"></i>   Close Flight
+                                                            </a>
+                                                        @endif
+                                                        
+
                                                         @if( !$deliveryBill->isRegistered() )
                                                             <a href="{{ route('warehouse.delivery_bill.edit',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
@@ -219,6 +254,81 @@
             </div>
         </div>
     </section>
+    <!--Total Express Flight Information Modal-->
+    <div class="modal fade" id="flightModal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b>Add Flight Information for Total Express Manifest</b></h5>
+                </div>
+                <form class="form" action="{{ route('warehouse.totalexpress_manifest.addFlight') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="id" value="">
+                    <div class="modal-body">
+                        <div class="container-fluid"> 
+                            <div class="row justify-content-center">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="departure_date">Departure Date</label>
+                                        <input type="date" class="form-control" name="departure_date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="departure_time">Departure Time</label>
+                                        <input type="time" class="form-control" name="departure_time" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="airline">Airline</label>
+                                        <input type="text" class="form-control" name="airline" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="departure_airport">Departure Airport</label>
+                                        <input type="text" class="form-control" name="departure_airport" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mawb_number">MAWB Number</label>
+                                        <input type="text" class="form-control" name="mawb_number" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="flight_freight">Flight Freight Value</label>
+                                        <input type="text" class="form-control" name="flight_freight" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="arrival_date">Arrival Date</label>
+                                        <input type="date" class="form-control" name="arrival_date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="arrival_time">Arrival Time</label>
+                                        <input type="time" class="form-control" name="arrival_time" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="flight_number">Flight Number (Min 4 Digits)</label>
+                                        <input type="text" class="form-control" name="flight_number" minlength="4" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="arrival_airport">Arrival Airport</label>
+                                        <input type="text" class="form-control" name="arrival_airport" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mawb_file">MAWB File</label>
+                                        <input type="file" class="form-control-file" name="mawb_file" accept=".pdf" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
 @endsection
 @push('js')
 <script>
@@ -244,6 +354,14 @@
         if (totalChecked == 0) {
             $('#btn_combine').addClass('d-none');
         }
+    });
+    $(document).ready(function(){
+        $("#flightInfo").click(function(){
+            $("#flightModal").modal('show');
+            var deliveryBillId = $(this).data('id');
+            $("#flightModal input[name='id']").val(deliveryBillId);
+        });
+        
     });
 </script>
 @endpush
