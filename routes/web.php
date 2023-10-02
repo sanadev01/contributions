@@ -264,9 +264,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id?}',function($id = null){
-    
-    $order = Order::where('corrios_tracking_code', $id)->get();
-    dd($order);
+
     $labelPrinter = new CN23LabelMaker();
     $order = Order::find($id);
     // dd($order->recipient->country->code);
