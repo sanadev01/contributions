@@ -86,8 +86,8 @@ class DashboardRepository
         $oldValue = Order::whereBetween('created_at', [Carbon::now()->subMonths(24), $lastTwelveMonths])->count();
         $percentIncreaseThisYear = number_format(((($newValue - $oldValue) / $oldValue) * 100), 2);
 
-        $newValue = $totalOrderCount[11];
-        $oldValue = $totalOrderCount[10];
+        $newValue = $totalOrderCount[count($totalOrderCount)-1];
+        $oldValue = $totalOrderCount[count($totalOrderCount)-2];
         $percentIncreaseThisMonth = number_format(((($newValue - $oldValue) / $oldValue) * 100), 2);
 
         // chart
