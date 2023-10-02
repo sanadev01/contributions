@@ -225,7 +225,7 @@ class UpdateCN23Label
             $this->printCPF($this->order, 121, 50.0, 108, 46.0, 37, 4.5);
 
             //FOR SENDER REF
-            $this->printSenderRef($this->order, 93, 56.0, 93, 53.0, 52, 5.0);
+            $this->printSenderRef($this->order, 110, 56.0, 93, 53.0, 52, 5.0);
             
             //FOR SH CODES PRINT
             $this->printNCM($this->order, 5.0, 62.0, 11.0);
@@ -344,6 +344,6 @@ class UpdateCN23Label
         $this->pdfi->SetFillColor(255, 255, 255);
         $this->pdfi->Rect($rectLM, $rectLT, $rectH, $rectW, "F");
         $this->pdfi->SetFont("Arial", 'B', 7.5);
-        $this->pdfi->RotatedText($lM, $tH, 'Sender ref: '.optional($order)->customer_reference. ' ' . optional($order)->warehouse_number, 0);
+        $this->pdfi->RotatedText($lM, $tH, 'Sender ref: '.optional($order)->warehouse_number, 0);
     }
 }
