@@ -19,10 +19,9 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(DashboardRepository $dashboard)
+    public function __invoke()
     {
-        $orders = $dashboard->getDashboardStats();
-        return view('home',compact('orders'));   
+        return view('home');   
     }
     
 }
