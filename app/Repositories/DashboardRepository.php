@@ -55,11 +55,11 @@ class DashboardRepository
         $lastDayOfCurrentMonth = Carbon::parse(Carbon::now())->endOfMonth();
         $lastTwelveMonths = Carbon::parse(Carbon::now())->endOfMonth()->subMonths(12);
 
-        $totalOrderByMonth = Order::whereBetween('created_at', [$lastTwelveMonths, $lastDayOfCurrentMonth])->orderBy('created_at', 'asc')->get()
+        $totalOrderByMonth = Order::with('shippingService')->whereBetween('created_at', [$lastTwelveMonths, $lastDayOfCurrentMonth])->orderBy('created_at', 'asc')->get()
             ->groupBy(function ($val) {
                 return Carbon::parse($val->created_at)->format('Y-M');
             });
-        $totalShippedOrder = Order::where('status', Order::STATUS_SHIPPED)->whereBetween('created_at', [$lastTwelveMonths, Carbon::now()])->get()
+        $totalShippedOrder = Order::with('shippingService')->where('status', Order::STATUS_SHIPPED)->whereBetween('created_at', [$lastTwelveMonths, Carbon::now()])->get()
             ->groupBy(function ($val) {
                 return Carbon::parse($val->created_at)->format('Y-M');
             });
@@ -83,7 +83,7 @@ class DashboardRepository
 
         // doughnut chart started
         $newValue = $currentYearTotal;
-        $oldValue = Order::whereBetween('created_at', [Carbon::now()->subMonths(24), $lastTwelveMonths])->count();
+        $oldValue = Order::with('shippingService')->whereBetween('created_at', [Carbon::now()->subMonths(24), $lastTwelveMonths])->count();
         $percentIncreaseThisYear = number_format(((($newValue - $oldValue) / $oldValue) * 100), 2);
 
         $newValue = $totalOrderCount[count($totalOrderCount)-1];
