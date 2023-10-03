@@ -25,18 +25,6 @@ class DashboardRepository
         $currentMonthorders = Order::query();
         $CurentDay          = Order::query();
         $totalOrderQuery    = Order::query();
-        if ($startDate && $endDate) {
-            $date = [ $startDate . ' 00:00:00', $endDate . ' 23:59:59'];
-        }
-        else{
-            $date = [$carbon->firstOfMonth().'', ($carbon->lastOfMonth()->addDays(1)).''];
-        } 
-            
-            $currentYearsorders = $currentYearsorders->whereBetween('order_date', $date);
-            $currentMonthorders = $currentMonthorders->whereBetween('order_date', $date);
-            $CurentDay          = $CurentDay->whereBetween('order_date', $date);
-            $totalOrderQuery    = $totalOrderQuery->whereBetween('order_date', $date);
-
 
         if ($startDate && $endDate) {
             $date = [$startDate . ' 00:00:00', $endDate . ' 23:59:59'];
@@ -104,28 +92,12 @@ class DashboardRepository
 
         // chart
 
-        $statusCounts = Order::selectRaw('status, COUNT(*) as count')
-        ->whereIn('status', [
-            Order::STATUS_SHIPPED,
-            Order::STATUS_PAYMENT_DONE,
-            Order::STATUS_PAYMENT_PENDING,
-            Order::STATUS_RELEASE,
-            Order::STATUS_CANCEL,
-            Order::STATUS_REFUND
-        ])
-        ->groupBy('status')
-        ->get();
-
-        $statusCounts = $statusCounts->pluck('count', 'status');
-
-        // Now you can access the counts for each status like this:
-        $shippedOrderCount = $statusCounts[Order::STATUS_SHIPPED] ?? 0;
-        $doneOrderCount = $statusCounts[Order::STATUS_PAYMENT_DONE] ?? 0;
-        $pendingOrderCount = $statusCounts[Order::STATUS_PAYMENT_PENDING] ?? 0;
-        $releaseOrderCount = $statusCounts[Order::STATUS_RELEASE] ?? 0;
-        $cancelledOrderCount = $statusCounts[Order::STATUS_CANCEL] ?? 0;
-        $refundOrderCount = $statusCounts[Order::STATUS_REFUND] ?? 0;
-
+        $shippedOrderCount = Order::where('status', Order::STATUS_SHIPPED)->count();
+        $doneOrderCount = Order::where('status', Order::STATUS_PAYMENT_DONE)->count();
+        $pendingOrderCount = Order::where('status', Order::STATUS_PAYMENT_PENDING)->count();
+        $releaseOrderCount = Order::where('status', Order::STATUS_RELEASE)->count();
+        $cancelledOrderCount = Order::where('status', Order::STATUS_CANCEL)->count();
+        $refundOrderCount = Order::where('status', Order::STATUS_REFUND)->count();
 
         //doughnut chart end
         return  $order[] = [
