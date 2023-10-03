@@ -59,7 +59,7 @@ class OrderRepository
             ]);
 
             $order->update([
-                'warehouse_number' => "HD-{$order->id}",
+                'warehouse_number' => $order->getTempWhrNumber()."-C",
                 'merchant' => $order->user->name
             ]);
             $weight = 0;
@@ -149,7 +149,7 @@ class OrderRepository
                 'order_date' => now(),
             ]);
             $order->update([
-                'warehouse_number' => $order->getTempWhrNumber(),
+                'warehouse_number' => $order->getTempWhrNumber(false),
             ]);
 
             foreach ($request->order_items as $item) {

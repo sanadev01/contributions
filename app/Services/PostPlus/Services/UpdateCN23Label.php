@@ -286,7 +286,7 @@ class UpdateCN23Label
         $this->pdfi->SetFillColor(255, 255, 255);
         $this->pdfi->Rect($rectLM, $rectLT, $rectH, $rectW, "F");
         $this->pdfi->SetFont("Arial", 'B', $fontSize);
-        $this->pdfi->RotatedText($rectLM, $textLine1H, "DEVOLUCAO", 0);
+        $this->pdfi->RotatedText($rectLM, $textLine1H, "Post+Vilniaus Logistikos Centras LITHIANIA", 0);
         $this->pdfi->SetFont("Arial", $fontWeight, $fontSize);
         $this->pdfi->RotatedText($rectLM, $textLine2H, "Homedeliverybr", 0);
         if($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
