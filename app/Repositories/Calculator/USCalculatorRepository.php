@@ -315,7 +315,7 @@ class USCalculatorRepository
     {
         $order = $this->order->refresh();
         $order->update([
-            'warehouse_number' => $order->getTempWhrNumber()
+            'warehouse_number' => $order->getTempWhrNumber(false)
         ]);
 
         DB::transaction(function () use ($order) {

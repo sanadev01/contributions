@@ -217,7 +217,7 @@ class ImportOrderRepository
         $order->doCalculations();
         
         $order->update([
-            'warehouse_number' => "HD-{$order->id}",
+            'warehouse_number' => $order->getTempWhrNumber(),
             'user_declared_freight' => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:"0.01",
         ]);
         

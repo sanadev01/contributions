@@ -78,7 +78,7 @@ class PreAlertRepository
 
         if ( !Auth::user()->isAdmin() && Auth::user()->can('addShipmentDetails',Order::class) ){
             $order->update([
-                'warehouse_number' => $order->getTempWhrNumber()
+                'warehouse_number' => $order->getTempWhrNumber(false)
             ]);
         }
 
@@ -299,7 +299,7 @@ class PreAlertRepository
             $order->subOrders()->sync($request->parcels);
 
             $order->update([
-                'warehouse_number' => "HD-{$order->id}-C"
+                'warehouse_number' => $order->getTempWhrNumber()."-C"
             ]);
             
             DB::commit();
