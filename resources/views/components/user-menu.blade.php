@@ -1,15 +1,15 @@
 <!-- BEGIN: Main Menu-->
 <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow menu-collapsed" data-scroll-to-active="true" style="touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-    {!! $header !!}  
+    {!! $header !!}
     <div class="shadow-bottom"></div>
     <div class="main-menu-content ps ps--active-y">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" style="color: #454f5b; font-family: 'Karla-Regular', Helvetica, Arial, sans-serif;">
             @if (auth()->user()->hasRole('scanner') || auth()->user()->hasRole('driver'))
-                  <li class="nav-item {{ $isActive(['admin.home']) }}">
-                    <a class="nav-link" href="{{ route('admin.home') }}"> 
+                <li class="nav-item {{ $isActive('home') }}">
+                    <a class="nav-link" href="{{ route('admin.home') }}">
+                        {{-- <i class="icon_adjst feather icon-home"></i> --}}
                         <img src="{{ asset('images/icon/dashboard.svg') }}" alt="dashboard">
-                        
-                    <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
+                        <span data-i18n="Dashboard"> @lang('menu.dashboard') </span>
                     </a>
                 </li>
                 @if (auth()->user()->hasRole('driver'))
@@ -42,7 +42,7 @@
                     </a>
                 </li>
             @else
-            <li class="nav-item {{ $isActive('admin.home') }}">
+            <li class="nav-item {{ $isActive('home') }}">
                 <a class="nav-link" href="{{ route('admin.home') }}">
                     <img src="{{ asset('images/icon/dashboard.svg') }}" alt="dashboard">
                     {{-- <i class="icon_adjst feather icon-home"></i> --}}
@@ -61,7 +61,7 @@
             @can('viewAny', App\Models\Order::class)
                 <li class="nav-item {{ $isActive(['admin.orders.index','admin.orders.edit','admin.orders.show']) }}">
                     <a href="{{ route('admin.orders.index') }}">
-                        <img src="{{ asset('images/icon/orders.svg') }}" alt="Orders">
+                        <img src="{{ asset('images/icon/order.svg') }}" alt="Orders">
                         {{-- <i class="icon_adjst feather icon-truck"></i> --}}
                         <span class="menu-title">@lang('menu.orders')</span>
                     </a>
@@ -71,7 +71,7 @@
             @can('view',App\Models\OrderTracking::class)
                 <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
                     <a href="{{ route('admin.tracking.index') }}" target="_blank">
-                        <img  src="{{ asset('images/icon/tracking.svg') }}" alt="Tracking">
+                        <img src="{{ asset('images/icon/tracking.svg') }}" alt="Tracking">
                         <span class="menu-title">@lang('menu.trackings')</span>
                     </a>
                 </li>
@@ -80,7 +80,7 @@
             @if (auth()->user()->isAdmin())
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
-                    <img style="--fill: #000;" src="{{ asset('images/icon/scan.svg') }}"> 
+                    <i class="icon_adjst fab fa-searchengin" style="color: #3CB64B;"></i>
                     <span class="menu-title" data-i18n="Dashboard">Scan</span>
                 </a>
                 <ul class="menu-content">
@@ -101,15 +101,15 @@
             @endif
 
             @can('importExcel', App\Models\Order::class)
-                <li class="nav-item {{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
+                <li class="{{ $isActive(['admin.import.import-excel.index','admin.import.import-excel.show','admin.import.import-excel.create']) }}">
                     <a href="{{ route('admin.import.import-excel.index') }}">
-                        <img src="{{ asset('images/icon/uploadfile.svg') }}" alt="Upload files">
+                        <img src="{{ asset('images/icon/upload.svg') }}" alt="Upload files">
                         <span class="menu-title">@lang('menu.import-excel-order.excel')</span>
                     </a>
                 </li>
             @endcan
             @can('printBulkLabel', App\Models\Order::class)
-                <li class="nav-item {{ $isActive(['admin.label.scan.create']) }}">
+                <li class="{{ $isActive(['admin.label.scan.create']) }}">
                     <a href="{{ route('admin.label.scan.create') }}">
                         <img src="{{ asset('images/icon/print.svg') }}" alt="Printer">
                         <span class="menu-title">@lang('menu.Print Label')</span>
@@ -118,8 +118,7 @@
             @endcan
             <li class="nav-item has-sub sidebar-group">
                 <a href="#"> 
-                    <img src="{{ asset('images/icon/accounting.svg') }}" alt="Printer">
-                    
+                    <i class="icon_adjst fas fa-file-invoice" style="color: #3CB64B;"></i>
                     <span class="menu-title" data-i18n="Dashboard">Accounting</span>
                 </a>
                 <ul class="menu-content"> 
@@ -169,7 +168,7 @@
             @can('viewAny', App\Models\Connect::class)
                 <li class="nav-item {{ $isActive(['admin.connect.index']) }}">
                     <a class="nav-link" href="{{ route('admin.connect.index') }}">
-                        <img src="{{ asset('images/icon/connect.svg') }}" alt="Connect">
+                        <i class="icon_adjst fa fa-plug" style="color: #3db64c;"></i>
                         <span data-i18n="Apps">@lang('menu.connect')</span>
                     </a>
                 </li>
@@ -184,7 +183,7 @@
 
             <li class="nav-item has-sub sidebar-group">
                 <a href="#">
-                    <img src="{{ asset('images/icon/rates.svg') }}" width="19px">
+                    <img src="{{ asset('images/icon/dollar.png') }}" alt="Rates" width="19px">
                     <span class="menu-title" data-i18n="Dashboard">@lang('menu.Rates')</span>
                 </a>
                 <ul class="menu-content">
@@ -268,7 +267,7 @@
             @can('viewAny', App\Models\Address::class)
                 <li class="nav-item {{ $isActive(['admin.addresses.index','admin.addresses.edit','admin.addresses.create']) }}">
                     <a class="nav-link" href="{{ route('admin.addresses.index') }}">
-                        <img src="{{ asset('images/icon/addresses.svg') }}" alt="Address">
+                        <img src="{{ asset('images/icon/address.svg') }}" alt="Address">
                         <span data-i18n="Apps">@lang('menu.addresses')</span>
                     </a>
                 </li>
@@ -381,8 +380,7 @@
             {{-- @can('viewAny', App\Models\Product::class) --}}
                 <li class="nav-item has-sub sidebar-group">
                     <a href="#">
-                        <img  color="red" src="{{ asset('images/icon/inventory.svg') }}">
-
+                        <i class="icon_adjst feather icon-shopping-cart" style="color: #3db64c;"></i>
                         <span class="menu-title">@lang('inventory.Inventory Management')</span>
                     </a>
                     <ul class="menu-content">
@@ -447,7 +445,7 @@
             @can('viewAny', App\Models\Role::class)
             <li class="nav-item {{ $isActive(['admin.roles.index']) }}">
                 <a href="{{ route('admin.roles.index') }}">
-                    <img src="{{ asset('images/icon/roles.svg') }}" alt="Role" width="19px">
+                    <img src="{{ asset('images/icon/key.png') }}" alt="Role" width="19px">
                     <span class="menu-title">@lang('menu.Roles')</span>
                 </a>
             </li>
@@ -455,8 +453,8 @@
 
             @admin
             <li class="nav-item {{ $isActive(['admin.shcode.index','admin.shcode.create','admin.shcode.edit']) }}">
-                <a href="{{ route('admin.shcode.index') }}">                    
-                    <img src="{{ asset('images/icon/activity.svg') }}">
+                <a href="{{ route('admin.shcode.index') }}">
+                    <i class="icon_adjst fa fa-codepen" style="color: #3db64c;"></i>
                     <span class="menu-title">SH Codes</span>
                 </a>
             </li>
@@ -465,7 +463,7 @@
             @can('show_ticket', App\Models\Ticket::class)
             <li class="nav-item {{ $isActive(['admin.tickets.index','admin.tickets.show']) }}">
                 <a class="nav-link" href="{{ route('admin.tickets.index') }}">
-                    <img src="{{ asset('images/icon/support-ticket.svg') }}">
+                    <i class="icon_adjst feather icon-message-circle" style="color: #3db64c;"></i>
                     <span data-i18n="Apps">@lang('menu.support tickets')</span>
                     <livewire:components.support-ticket/>
                 </a>
@@ -475,7 +473,7 @@
             @can('viewAny', Spatie\Activitylog\Models\Activity::class)
             <li class="nav-item {{ $isActive(['admin.activity.log.index']) }}">
                 <a href="{{ route('admin.activity.log.index') }}">
-                    <img src="{{ asset('images/icon/activity.svg') }}">                    
+                    <i class="icon_adjst feather icon-activity" style="color: #3db64c;"></i>
                     <span class="menu-title">@lang('menu.activity')</span>
                 </a>
             </li>
@@ -484,7 +482,7 @@
                 @can('viewAny', App\Models\Setting::class)
                     <li class="nav-item {{ $isActive(['admin.settings.index']) }}">
                         <a href="{{ route('admin.settings.index') }}">
-                            <img src="{{ asset('images/icon/setting.svg') }}">
+                            <img src="{{ asset('images/icon/setting.svg') }}" alt="settings">
                             <span class="menu-title">@lang('menu.Settings')</span>
                         </a>
                     </li>
@@ -493,7 +491,7 @@
             @can('viewTrashedOrder',App\Models\Order::class)
             <li class="nav-item {{ $isActive(['admin.trash-orders.index']) }}">
                 <a href="{{ route('admin.trash-orders.index') }}">
-                    <img src="{{ asset('images/icon/trashed.svg') }}" alt="settings">
+                    <i class="icon_adjst feather icon-trash" style="color: #ff5a5a;"></i>
                     <span class="menu-title">@lang('menu.Trashed Orders')</span>
                 </a>
             </li>

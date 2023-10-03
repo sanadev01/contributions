@@ -20,8 +20,7 @@
 @can('view_box_control')
 <li class="nav-item">
     <a class="nav-link" target="__blank" href="https://app.ideainfo.com.br/index.php?app=boxcontrol">
-        <img src="{{ asset('images/icon/box-control.svg') }}">
-
+        <i class="fa fa-bold" style="color: #f4d03e;"></i>
         <span data-i18n="Apps"> Box Control </span>
     </a>
 </li>
@@ -30,7 +29,7 @@
 @can('view_label_post',)
 <li class="nav-item">
     <a class="nav-link" target="__blank" href="https://labelposteasy.com/entre.php?tk={{ hash_hmac("sha256",Auth()->user()->email.Auth()->user()->pobox_number.date("YmdH" ,strtotime("now + 60 minutes")),'6a3db6e59e693493f3518d1b39e39dbb26730d2ce0ee1185a2e90ef025d1a5c7') }}&id={{ Auth()->user()->pobox_number }}">
-      <img src="{{ asset('images/icon/label.svg') }}">
+        <i class="fa fa-file-powerpoint-o" style="color: #28c76f;"></i>
         <span data-i18n="Apps">Label Post</span>
     </a>
 </li>
@@ -38,7 +37,7 @@
 @can('view_api_docs')
 <li class="nav-item">
     <a class="nav-link" target="__blank" href="https://documenter.getpostman.com/view/16057364/TzeXmSxT">
-        <img src="{{ asset('images/icon/api-docs.svg') }}">
+        <i class="fa fa-list-alt" style="color: #28c76f;"></i>
         <span data-i18n="Apps"> @lang('menu.API Documents') </span>
     </a>
 </li>
