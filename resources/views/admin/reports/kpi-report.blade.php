@@ -10,10 +10,10 @@
         <div class="col-12 mx-2">
             <div>
                 <div class="ml-3">
-                        <dl>
-                            <dt class="font-weight-bold dt">Welcome back, {{ Auth::user()->name }} 👋</dt>
-                            <dd class="display-5 my-3 font-weight-light pb-2 mb-5">Your current kpi report is here</dd>
-                        </dl>
+                    <dl>
+                        <dt class="font-weight-bold dt">Welcome back, {{ Auth::user()->name }} 👋</dt>
+                        <dd class="display-5 my-3 font-weight-light pb-2 mb-5">Your current kpi report is here</dd>
+                    </dl>
                 </div>
                 <div class="container-fluid">
                     <div class="row">

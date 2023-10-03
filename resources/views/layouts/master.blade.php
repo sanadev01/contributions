@@ -38,7 +38,7 @@
         <x-user-menu></x-user-menu>
     
         <!-- BEGIN: Content-->
-        <div class="app-content content light-color">
+        <div class="app-content content">
             <div class="content-overlay"></div>
             <div class="header-navbar-shadow"></div>
             <div class="content-wrapper">
