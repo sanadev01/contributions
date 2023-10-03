@@ -514,7 +514,6 @@ class ParcelController extends Controller
             });
 
             $parcel->update([
-                // 'warehouse_number' => "TEMPWHR-{$parcel->id}",
                 "order_value" => $orderValue,
                 'shipping_service_name' => $parcel->shippingService->name
             ]);
