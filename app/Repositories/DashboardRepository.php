@@ -40,7 +40,7 @@ class DashboardRepository
         ->groupBy('is_paid')
         ->get(); 
         try{ 
-            $totalOrder = optional($totalReport[0])->count??0;
+            $totalOrder = $totalReport[0]->count??0;
         }catch(\Exception $e){
             $totalOrder = 0;
         }
@@ -49,6 +49,7 @@ class DashboardRepository
         }catch(\Exception $e){
             $totalCompleteOrders = 0;
         }
+        $totalOrder+=$totalCompleteOrders;
         //currentDayReport
         $currentDayReport = Order::whereDate('order_date', $today)
         ->whereBetween('order_date', $date)
@@ -68,6 +69,7 @@ class DashboardRepository
         }catch(\Exception $e){
             $currentDayConfirm = 0;
         }
+        $currentDayTotal+=$currentDayConfirm;
         //currentMonthReport
         $currentMonthReport = Order::whereMonth('order_date', $currentMonth)
         ->whereYear('order_date', $currentYear)
@@ -84,10 +86,11 @@ class DashboardRepository
             $currentMonthTotal = 0;
         }
         try{
-            $currentMonthConfirm = optional($currentMonthReport[1])->count??0;
+            $currentMonthConfirm = $currentMonthReport[1]->count;
         }catch(\Exception $e){
             $currentMonthConfirm = 0;
         }
+        $currentMonthTotal+=$currentMonthConfirm;
         //currentYearReport
         $currentYearReport = Order::whereYear('order_date', $currentYear)
         ->whereBetween('order_date', $date)
@@ -98,7 +101,7 @@ class DashboardRepository
         ->groupBy('is_paid')
         ->get(); 
         try{ 
-            $currentYearTotal = optional($currentYearReport[0])->count??0;
+            $currentYearTotal = $currentYearReport[0]->count??0;
         }catch(\Exception $e){
             $currentYearTotal = 0;
         }
@@ -107,6 +110,7 @@ class DashboardRepository
         }catch(\Exception $e){
             $currentYearConfirm = 0;
         }
+        $currentYearTotal+=  $currentYearConfirm;
 
 
 
