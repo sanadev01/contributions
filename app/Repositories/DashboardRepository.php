@@ -114,8 +114,12 @@ class DashboardRepository
         $lastDayOfCurrentMonth = Carbon::parse(Carbon::now())->endOfMonth();
         $lastTwelveMonths = Carbon::parse(Carbon::now())->endOfMonth()->subMonths(12);
 
-        $totalOrderByMonth = Order::whereBetween('created_at', [$lastTwelveMonths, $lastDayOfCurrentMonth])->orderBy('created_at', 'asc')->selectRaw('id,created_at')
-        ->get()
+        $totalOrderByMonth = Order::
+        when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })->whereBetween('created_at', [$lastTwelveMonths, Carbon::now()])->orderBy('created_at', 'asc')->selectRaw('id,created_at')
+        ->get()  
+         
         ->groupBy(function ($val) {
             return Carbon::parse($val->created_at)->format('Y-M');
         })->map(function ($groupedItems) {
@@ -123,7 +127,9 @@ class DashboardRepository
         });
 
 
-        $totalShippedOrder = Order::where('status', Order::STATUS_SHIPPED)->whereBetween('created_at', [$lastTwelveMonths, Carbon::now()])->selectRaw('id,created_at')
+        $totalShippedOrder = Order::when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })->where('status', Order::STATUS_SHIPPED)->whereBetween('created_at', [$lastTwelveMonths, Carbon::now()])->orderBy('created_at', 'asc')->selectRaw('id,created_at')
         ->get() 
         ->groupBy(function ($val) {
             return Carbon::parse($val->created_at)->format('Y-M');
@@ -140,7 +146,9 @@ class DashboardRepository
 
         // doughnut chart started
         $newValue = $currentYearTotal;
-        $oldValue= Order::whereBetween('created_at', [Carbon::now()->subMonths(24), $lastTwelveMonths])
+        $oldValue= Order::when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })->whereBetween('created_at', [Carbon::now()->subMonths(24), $lastTwelveMonths])
         ->when($isUser,function($query)  {
             return $query->where('user_id',Auth::id());
         })
@@ -165,7 +173,10 @@ class DashboardRepository
         }
    
         // chart 
-        $statusCounts = Order::selectRaw('status, COUNT(*) as count')
+        $statusCounts = Order::
+        when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })->selectRaw('status, COUNT(*) as count')
         ->whereIn('status', [
             Order::STATUS_SHIPPED,
             Order::STATUS_PAYMENT_DONE, 
