@@ -8,11 +8,12 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\HandlingService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardRepository
 {
-    
-    public function getDashboardStats($startDate=NULL, $endDate=NULL)
+
+    public function getDashboardStats($startDate = NULL, $endDate = NULL)
     {
         $carbon       = Carbon::now();
         $monthName    = $carbon->format('F');
@@ -31,8 +32,8 @@ class DashboardRepository
 
 
         //total order
-        $totalReport = Order::when($isUser,function($query) use($isUser) {
-            return $query->where('user_id',$userId);
+        $totalReport = Order::when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
         })
         ->selectRaw('is_paid, COUNT(*) as count')
         ->groupBy('is_paid')
@@ -51,8 +52,8 @@ class DashboardRepository
         //currentDayReport
         $currentDayReport = Order::whereDate('order_date', $today)
         ->whereBetween('order_date', $date)
-        ->when($isUser,function($query) use($isUser) {
-            return $query->where('user_id',$userId);
+        ->when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
         })
         ->selectRaw('is_paid, COUNT(*) as count')
         ->groupBy('is_paid')
@@ -70,8 +71,8 @@ class DashboardRepository
         $currentDayTotal+=$currentDayConfirm; 
         $currentMonthReport = Order::whereMonth('order_date', $currentMonth)
         ->whereYear('order_date', $currentYear) 
-        ->when($isUser,function($query) use($isUser) {
-            return $query->where('user_id',$userId);
+        ->when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
         })
         ->selectRaw('is_paid, COUNT(*) as count')
         ->groupBy('is_paid')
@@ -89,8 +90,8 @@ class DashboardRepository
         $currentMonthTotal+=$currentMonthConfirm;
         //currentYearReport
         $currentYearReport = Order::whereYear('order_date', $currentYear) 
-        ->when($isUser,function($query) use($isUser) {
-            return $query->where('user_id',$userId);
+        ->when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
         })
         ->selectRaw('is_paid, COUNT(*) as count')
         ->groupBy('is_paid')
@@ -140,8 +141,8 @@ class DashboardRepository
         // doughnut chart started
         $newValue = $currentYearTotal;
         $oldValue= Order::whereBetween('created_at', [Carbon::now()->subMonths(24), $lastTwelveMonths])
-        ->when($isUser,function($query) use($isUser) {
-            return $query->where('user_id',$userId);
+        ->when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
         })
         ->selectRaw('id') 
         ->count(); 
@@ -199,5 +200,4 @@ class DashboardRepository
 
         ]);
     }
-
 }
