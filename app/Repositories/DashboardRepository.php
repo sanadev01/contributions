@@ -146,13 +146,24 @@ class DashboardRepository
         })
         ->selectRaw('id') 
         ->count(); 
-        $percentIncreaseThisYear = number_format(((($newValue - $oldValue) / $oldValue) * 100), 2);
- 
-        
-        $newValue = end($totalOrderCount); // Get the last element
-        $oldValue = prev($totalOrderCount); // Get the second-to-last element 
-        $percentIncreaseThisMonth = number_format(((($newValue - $oldValue) / $oldValue) * 100), 2);
+         try{
+            $percentIncreaseThisYear = number_format(((($newValue - $oldValue) / $oldValue) * 100), 2);
 
+        }catch(\Exception $e){
+            $percentIncreaseThisYear = 0;
+        }
+        
+        try{
+            $newValue = end($totalOrderCount); // Get the last element
+            $oldValue = prev($totalOrderCount); // Get the second-to-last element 
+            $percentIncreaseThisMonth = number_format(((($newValue - $oldValue) / $oldValue) * 100), 2);
+
+        }catch(\Exception $e){
+            $newValue = 0;
+            $oldValue = 0;
+            $percentIncreaseThisMonth = 0;
+        }
+   
         // chart 
         $statusCounts = Order::selectRaw('status, COUNT(*) as count')
         ->whereIn('status', [
