@@ -47,9 +47,9 @@
                             <img src="{{ asset('images/icon/tickmark.svg') }}">
                         </div>
                     </div>
-                    <h2 class="pb-4"><span class="white">{{ $orders['currentmonthTotal'] }}</span></h2>
+                    <h2 class="pb-4"><span class="white">{{ $orders['currentMonthTotal'] }}</span></h2>
                     <h6 class="white">@lang('dashboard.Completed Orders')
-                        <span class="f-right white">{{ $orders['currentmonthConfirm'] }}</span>
+                        <span class="f-right white">{{ $orders['currentMonthConfirm'] }}</span>
                     </h6>
                 </div>
             </div>
@@ -100,7 +100,7 @@
         <div class="d-flex my-xl-2 my-lg-2 justify-content-around">
             <div class="mx-xl-5 mx-lg-2">
                 <h6 class='font-weight-light  '>Total Monthly Order</h6>
-                <h2 class='font-weight-bold  md-font-size'> {{ $orders['currentmonthTotal'] }} </h2>
+                <h2 class='font-weight-bold  md-font-size'> {{ $orders['currentMonthTotal'] }} </h2>
                 <div class="d-flex mt-xl-3 mt-lg-1 align-items-center">
                     <img class="mb-lg-2 mb-sm-1"
                         src="{{ asset('images/icon/' . ($orders['percentIncreaseThisMonth'] > 0 ? 'increase' : 'decrease') . '.svg') }}">
