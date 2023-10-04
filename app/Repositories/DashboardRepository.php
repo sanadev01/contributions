@@ -32,8 +32,7 @@ class DashboardRepository
 
 
         //total order
-        $totalReport = Order::whereBetween('order_date', $date)
-        ->when($isUser,function($query) use($isUser) {
+        $totalReport = Order::when($isUser,function($query) use($isUser) {
             return $query->where('user_id',$userId);
         })
         ->selectRaw('is_paid, COUNT(*) as count')
@@ -69,11 +68,9 @@ class DashboardRepository
         }catch(\Exception $e){
             $currentDayConfirm = 0;
         }
-        $currentDayTotal+=$currentDayConfirm;
-        //currentMonthReport
+        $currentDayTotal+=$currentDayConfirm; 
         $currentMonthReport = Order::whereMonth('order_date', $currentMonth)
-        ->whereYear('order_date', $currentYear)
-        ->whereBetween('order_date', $date)
+        ->whereYear('order_date', $currentYear) 
         ->when($isUser,function($query) use($isUser) {
             return $query->where('user_id',$userId);
         })
@@ -92,8 +89,7 @@ class DashboardRepository
         }
         $currentMonthTotal+=$currentMonthConfirm;
         //currentYearReport
-        $currentYearReport = Order::whereYear('order_date', $currentYear)
-        ->whereBetween('order_date', $date)
+        $currentYearReport = Order::whereYear('order_date', $currentYear) 
         ->when($isUser,function($query) use($isUser) {
             return $query->where('user_id',$userId);
         })
