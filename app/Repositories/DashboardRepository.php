@@ -114,8 +114,12 @@ class DashboardRepository
         $lastDayOfCurrentMonth = Carbon::parse(Carbon::now())->endOfMonth();
         $lastTwelveMonths = Carbon::parse(Carbon::now())->endOfMonth()->subMonths(12);
 
-        $totalOrderByMonth = Order::whereBetween('created_at', [$lastTwelveMonths, $lastDayOfCurrentMonth])->orderBy('created_at', 'asc')->selectRaw('id,created_at')
-        ->get()
+        $totalOrderByMonth = Order::
+        when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })->whereBetween('created_at', [$lastTwelveMonths, Carbon::now()])->orderBy('created_at', 'asc')->selectRaw('id,created_at')
+        ->get()  
+         
         ->groupBy(function ($val) {
             return Carbon::parse($val->created_at)->format('Y-M');
         })->map(function ($groupedItems) {
@@ -125,7 +129,7 @@ class DashboardRepository
 
         $totalShippedOrder = Order::when($isUser,function($query)  {
             return $query->where('user_id',Auth::id());
-        })->where('status', Order::STATUS_SHIPPED)->whereBetween('created_at', [$lastTwelveMonths, Carbon::now()])->selectRaw('id,created_at')
+        })->where('status', Order::STATUS_SHIPPED)->whereBetween('created_at', [$lastTwelveMonths, Carbon::now()])->orderBy('created_at', 'asc')->selectRaw('id,created_at')
         ->get() 
         ->groupBy(function ($val) {
             return Carbon::parse($val->created_at)->format('Y-M');
