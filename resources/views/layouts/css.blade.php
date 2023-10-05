@@ -32,83 +32,98 @@
 
 <link rel="stylesheet" href="{{ asset('app-assets/css/pages/invoice.css') }}">
 <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+<link rel="stylesheet" href="{{ asset('css/customization.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/pickadate/pickadate.css') }}">
 
 <style>
-    .border-0{
+    .border-0 {
         border-width: 0px !important;
     }
-    .border-1{
+
+    .border-1 {
         border-width: 2px !important;
     }
-    .border-2{
+
+    .border-2 {
         border-width: 4px !important;
     }
-    .border-3{
+
+    .border-3 {
         border-width: 8px !important;
     }
-    .border-4{
+
+    .border-4 {
         border-width: 16px !important;
     }
-    .border-5{
+
+    .border-5 {
         border-width: 32px !important;
     }
-    .modal{
-            background-color: #2e2e2e9e;
+
+    .modal {
+        background-color: #2e2e2e9e;
     }
-    .picker__holder{
+
+    .picker__holder {
         bottom: 100% !important;
     }
+
     .alert-warning {
         background: rgba(231, 0, 0, 0.44) !important;
         color: #000000 !important;
     }
-    .modal-backdrop{
+
+    .modal-backdrop {
         zoom: 1.4;
     }
+
     .modal-backdrop {
-        opacity : 0 !important;
+        opacity: 0 !important;
     }
-    @media print
-    {    
-        .no-print, .no-print *
-        {
+
+    @media print {
+
+        .no-print,
+        .no-print * {
             display: none !important;
         }
-        *{
+
+        * {
             -webkit-print-color-adjust: exact;
-        },
-        .print{
+        }
+
+        ,
+        .print {
             display: block !important;
         }
     }
-
-    ::-webkit-scrollbar-track
-    {
-        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+      .apexcharts-legend{
+        right:-26px
+    }
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
         border-radius: 10px;
         background-color: #F5F5F5;
     }
 
-    ::-webkit-scrollbar
-    {
+    ::-webkit-scrollbar {
         height: 5px;
         width: 6px;
         background-color: #F5F5F5;
     }
 
-    ::-webkit-scrollbar-thumb
-    {
+    ::-webkit-scrollbar-thumb {
         border-radius: 7px;
-        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
         background-color: #555;
     }
-    .min-vh-100{
+
+    .min-vh-100 {
         min-height: 100vh !important
     }
-    
+
     /* Extra small devices (phones, 600px and down) */
     @media only screen and (max-width: 600px) {
         #main-menu-navigation {
@@ -116,7 +131,7 @@
         }
     }
 
-   /* Small devices (portrait tablets and large phones, 600px and up) */
+    /* Small devices (portrait tablets and large phones, 600px and up) */
     @media only screen and (min-width: 600px) {
         #main-menu-navigation {
             overflow-y: scroll;
@@ -138,30 +153,34 @@
     }
 
     @media only screen and (max-width: 768px) {
-    .modal{
+        .modal {
             padding-right: 153px;
         }
+
         .modal-content {
             width: min-content;
         }
-    }    
+    }
+
     .dropdown-menu.overlap-menu {
         z-index: 10;
         right: 0px;
         left: unset !important;
     }
 
-    .table-responsive-md{
+    .table-responsive-md {
         min-height: 265px;
     }
+
     .table-responsive.order-table {
         padding-bottom: 3rem;
     }
 
-    .big-checkbox{
-        height: 25px; 
+    .big-checkbox {
+        height: 25px;
         width: 25px;
     }
+
     .big-label {
         font-size: 15px;
     }
@@ -179,25 +198,32 @@
     }
 
     .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst {
-        margin-right:3px;
+        margin-right: 3px;
     }
-    .main-menu.menu-light .navigation#main-menu-navigation li a img{
+
+    .main-menu.menu-light .navigation#main-menu-navigation li a img {
         width: 16px;
     }
-    .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst:before{
-        font-size:1.28rem;
+
+    .main-menu.menu-light .navigation#main-menu-navigation li a .icon_adjst:before {
+        font-size: 1.28rem;
     }
-    .green{
-        color:#3CB64B;
+
+    .green {
+        color: #3CB64B;
     }
-    .red{
-        color:#ff5a5a
+
+    .red {
+        color: #ff5a5a
     }
-    .font-sans{
+
+    .font-sans {
         font-family: sans-serif;
     }
-    .search-header{
+
+    .search-header {
         display: table-header-group;
     }
+
 </style>
 @yield('custom-css')
