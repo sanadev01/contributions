@@ -667,17 +667,10 @@ class OrderRepository
         if($order->recipient->country_id == Order::BRAZIL)
         {
             // If sinerlog is enabled for the user, then remove the Correios services
-            if(setting('sinerlog', null, $order->user->id) || !setting('correios_api', null, User::ROLE_ADMIN))
+            if(!setting('correios_api', null, User::ROLE_ADMIN))
             {
                 $shippingServices = $shippingServices->filter(function ($item, $key)  {
                     return !$item->isCorreiosService();
-                });
-            }
-            // If sinerlog is not enabled for the user then remove Sinerlog services from shipping service
-            if(!setting('sinerlog', null, $order->user->id))
-            {
-                $shippingServices = $shippingServices->filter(function ($item, $key)  {
-                    return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';
                 });
             }
             if(!setting('anjun_api', null, User::ROLE_ADMIN)){
@@ -686,10 +679,15 @@ class OrderRepository
                     });
             }
             if(!setting('china_anjun_api', null,User::ROLE_ADMIN)){
-            // $this->shippingServiceError = 'Anjun China is disabled.';
-            $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                return !$shippingService->isAnjunChinaService();
-            });
+                // $this->shippingServiceError = 'Anjun China is disabled.';
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return !$shippingService->isAnjunChinaService();
+                });
+            }
+            
+            if($shippingServices->isEmpty()){
+                $this->shippingServiceError = 'Please check your parcel dimensions';
+            }
         }
             
             if($shippingServices->isEmpty()){
