@@ -175,9 +175,9 @@
             <div class="light-green-color welcome-admin height-100">
                 <div class="ml-3">
                     <dl>
-                        <div class="font-weight-bold large-heading-text pt-3 ">Welcome back, {{ Auth::user()->name }} 👋
+                        <div class="font-weight-bold large-heading-text pt-3 ">Welcome to the Dashboard 👋
                         </div>
-                        <dd class="font-weight-light pb-2 mb-4">Your current kpi report is here</dd>
+                        <dd class="font-weight-light pb-2 mb-4">Your one-stop destination for tracking and analyzing order data.</dd>
                     </dl>
                 </div>
             </div>
