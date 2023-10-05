@@ -48,7 +48,7 @@ class SettingController extends Controller
             'fedex_profit'=> setting('fedex_profit', null, $this->adminId)? setting('fedex_profit', null, $this->adminId): 0,
             'AUTHORIZE_ID'=> setting('AUTHORIZE_ID'),
             'AUTHORIZE_KEY'=> setting('AUTHORIZE_KEY'),
-            'correios_setting'=> setting('anjun_api', null, $this->adminId) ? 'Anjun API' : 'Correios API',
+            'correios_setting'=> setting('anjun_api', null, $this->adminId) ? 'Correios Anjun API' : (setting('china_anjun_api', null, $this->adminId)?'China Anjun':'Correios API'),
         ];
         try {
             \Mail::send(new SettingUpdate($user, $request, $userData, true));
@@ -62,8 +62,12 @@ class SettingController extends Controller
         Setting::saveByKey('PAYMENT_GATEWAY', $request->PAYMENT_GATEWAY,null,true);
         Setting::saveByKey('TYPE', $request->TYPE,null,true);
         Setting::saveByKey('VALUE', $request->VALUE,null,true);
-
-        ($request->correios_setting == 'anjun_api') ? saveSetting('anjun_api', true, $this->adminId) : saveSetting('anjun_api', false, $this->adminId);
+        
+        //switch 3 api for correies/anjun standerd/express api.
+        saveSetting('china_anjun_api', false, $this->adminId);
+        saveSetting('correios_api', false, $this->adminId);
+        saveSetting('anjun_api', false, $this->adminId);
+        saveSetting($request->correios_setting, true, $this->adminId);
         
         $request->has('usps') ? saveSetting('usps', true, $this->adminId) : saveSetting('usps', false, $this->adminId);
         $request->has('ups') ? saveSetting('ups', true, $this->adminId) : saveSetting('ups', false, $this->adminId);
