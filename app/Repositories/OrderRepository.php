@@ -684,6 +684,9 @@ class OrderRepository
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return !$shippingService->isAnjunChinaService();
                 });
+            }else if(!Auth::user()->isAdmin()){
+                foreach(ShippingService::whereIn('service_sub_class',[ShippingService::AJ_Standard_CN,ShippingService::AJ_Express_CN])->get() as $anjun)
+                $shippingServices->push($anjun);
             }
             
             if($shippingServices->isEmpty()){
