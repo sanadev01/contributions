@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use App\Models\Order;
 use App\Models\ImportOrder;
 use Illuminate\Http\Request;
@@ -161,7 +162,7 @@ class ImportOrderRepository
     {
         
         $shippingService = ShippingService::find($importedOrder->shipping_service_id);
-        $user = Auth::user();
+        $user = User::find($importedOrder->user_id);
         $order = Order::create([
             'user_id' => $importedOrder->user_id,
             'shipping_service_id' => $importedOrder->shipping_service_id,
