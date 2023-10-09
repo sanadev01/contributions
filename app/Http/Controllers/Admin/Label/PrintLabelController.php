@@ -68,12 +68,17 @@ class PrintLabelController extends Controller
                 unlink($tempFileUri);
             }
             if ($zip->open($tempFileUri, ZipArchive::CREATE) === TRUE) {
-                // dd(132);
 
                 foreach($request->order as $orderId){
                     $order = Order::find($orderId);
                     if($order->is_paid){
                         $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
+
+                        if($order->shippingService->is_total_express) {
+                            $pdfFile = file_get_contents($order->totalExpressLabelUrl());
+                            file_put_contents($relativeNameInZipFile, $pdfFile);
+                        }
+
                         if(!file_exists($relativeNameInZipFile)){
                             // $labelData = $labelRepository->get($order);
                             (new HandleCorreiosLabelsRepository($request,$order))->handle();
