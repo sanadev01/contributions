@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Order;
+use App\Models\Warehouse\Container;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
 use Illuminate\Support\Facades\Artisan;
@@ -264,7 +265,13 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label/{id?}',function($id = null){
+Route::get('test-label/{id?}/{number?}',function($id = null, $number = null){
+
+    $container = Container::find($id);
+    if($container && $number) {
+        $container->update(['dispatch_number' => $number]);
+        return "Dispatch Number Updated";
+    }
 
     $labelPrinter = new CN23LabelMaker();
     $order = Order::find($id);
