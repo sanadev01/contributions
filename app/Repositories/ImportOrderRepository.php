@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use App\Models\Order;
 use App\Models\ImportOrder;
 use Illuminate\Http\Request;
@@ -161,7 +162,7 @@ class ImportOrderRepository
     {
         
         $shippingService = ShippingService::find($importedOrder->shipping_service_id);
-        
+        $user = $importedOrder->user;
         $order = Order::create([
             'user_id' => $importedOrder->user_id,
             'shipping_service_id' => $importedOrder->shipping_service_id,
@@ -181,10 +182,10 @@ class ImportOrderRepository
             'status' => $importedOrder->status,
             'order_date' => $importedOrder->order_date, 
 
-            "sender_first_name" => $importedOrder->sender_first_name,
-            "sender_last_name" => $importedOrder->sender_last_name,
-            "sender_email" => $importedOrder->sender_email,
-            "sender_phone" => $importedOrder->sender_phone,
+            "sender_first_name" => $importedOrder->sender_first_name ? $importedOrder->sender_first_name : optional($user)->name,
+            "sender_last_name" => $importedOrder->sender_last_name ? $importedOrder->sender_last_name : optional($user)->last_name,
+            "sender_email" => $importedOrder->sender_email ? $importedOrder->sender_email : optional($user)->email ,
+            "sender_phone" => $importedOrder->sender_phone ? $importedOrder->sender_phone : optional($user)->phone,
             "user_declared_freight" => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:"0.01",
 
         ]);
