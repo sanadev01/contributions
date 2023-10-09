@@ -162,7 +162,7 @@ class ImportOrderRepository
     {
         
         $shippingService = ShippingService::find($importedOrder->shipping_service_id);
-        $user = User::find($importedOrder->user_id);
+        $user = $importedOrder->user;
         $order = Order::create([
             'user_id' => $importedOrder->user_id,
             'shipping_service_id' => $importedOrder->shipping_service_id,
