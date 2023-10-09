@@ -49,7 +49,9 @@ class OrderExportTemp extends AbstractExportService
             $type = 'Prime';
          } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
             $type = 'ParcelUPU';
-         } 
+         } elseif($order->shippingService->service_sub_class == ShippingService::LT_PRIME) {
+            $type = 'Priority';
+         }  
             $user = $order->user; 
             $this->setCellValue('A'.$row, $order->containers->first()->awb);
             $this->setCellValue('B'.$row, $order->containers->first()->seal_no );
@@ -79,9 +81,9 @@ class OrderExportTemp extends AbstractExportService
             $this->setCellValue('Z'.$row, '');   
             $this->setCellValue('AA'.$row,'');
             $this->setCellValue('AB'.$row,'B2C');
-            $this->setCellValue('AC'.$row, 'UZPO');
+            $this->setCellValue('AC'.$row, $type == 'Priority' ? 'LTPO' : 'UZPO');
             $this->setCellValue('AD'.$row, $order->carrierService());
-            $this->setCellValue('AE'.$row, 'UZPO-'.$type);
+            $this->setCellValue('AE'.$row, $type == 'Priority' ? 'LTPO '.$type : 'UZPO '.$type);
             $this->setCellValue('AF'.$row,'');
             $this->setCellValue('AG'.$row,'');
             $this->setCellValue('AH'.$row,'');
