@@ -52,7 +52,7 @@ class AccrualReport extends AbstractExportService
 
 
         $this->currentRow = $row;
-        $this->setBackgroundColor("A{$row}:K{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:F{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()
