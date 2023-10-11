@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Admin\Reports;
 
 use App\Models\Reports;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use App\Services\Excel\Export\KPIReport;
+use App\Services\Excel\Export\AccrualReport;
 use App\Repositories\Reports\KPIReportsRepository;
 use Exception;
-
+use App\Repositories\OrderRepository;
 class KPIReportController extends Controller
 {
     /**
@@ -20,6 +22,9 @@ class KPIReportController extends Controller
     public function index(Request $request, KPIReportsRepository $kpiReportsRepository)
     { 
         $this->authorize('viewKPIReport',Reports::class);
+        if($request->type == 'accrual')
+            return view('admin.reports.report-accrual');
+        
         $trackings = [];
         $trackingCodeUsersName = [];
         $orderDates = [];
@@ -38,9 +43,26 @@ class KPIReportController extends Controller
         return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates'));
     }
     public function store(Request $request)
-    {
+    { 
+        if($request->type == 'accrual'){
+            if($request->start_date != null && $request->end_date != null)
+                {
+                    $start_date = $request->start_date.' 00:00:00';
+                    $end_date = $request->end_date.' 23:59:59';
+                    $orders = Order::whereBetween('order_date', [$start_date, $end_date])->get();
+                }else{ 
+                    $orders =  Order::all();
+                }
+                if(count($orders)<1){ 
+                    session()->flash('alert-danger', 'No order found!');
+                    return back(); 
+                }
+                 
+            $exportService = new AccrualReport($orders);
+            return $exportService->handle();
+        }
+
         if($request->order){
-            
             $trackings = json_decode($request->order, true);
             $trackingCodeUsersName =json_decode($request->trackingCodeUsersName, true);
             $orderDates =json_decode($request->orderDates, true);
@@ -48,6 +70,6 @@ class KPIReportController extends Controller
             $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, $request->type == 'scan' ?'Aguardando pagamento':null);
             return $exportService->handle();
         }
-    } 
+    }  
    
 }
