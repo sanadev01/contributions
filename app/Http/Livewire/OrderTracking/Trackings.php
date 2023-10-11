@@ -140,4 +140,29 @@ class Trackings extends Component
         }
     }
 
+    public function toggleTotalExpressStatus($tracking)
+    {
+        $lastTrack = last($tracking);
+        $status = $lastTrack['code'];
+        if ($status == 100) {
+            return 80;
+        }
+
+        if ($status == 110) {
+            return 90;
+        }
+
+        if ($status == 120) {
+            return 100;
+        }
+
+        if ($status == 130) {
+            return 110;
+        }
+
+        if ($status == 140) {
+            return 120;
+        }
+    }
+
 }

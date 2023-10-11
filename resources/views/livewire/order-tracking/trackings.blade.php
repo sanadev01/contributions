@@ -361,6 +361,47 @@
                                                                 </div>
                                                             </div>
                                                         </li>
+                                                        @elseif( $tracking['service'] == 'Total Express' )
+                                                        <li class="@if( $this->toggleTotalExpressStatus($tracking['api_trackings']) >= 80 ) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/total-express-logo.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Received <br>by Total Express</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->toggleTotalExpressStatus($tracking['api_trackings']) >= 90) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/custom-finished.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Customs<br>clearance finalized</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if($this->toggleTotalExpressStatus($tracking['api_trackings']) >= 100 ) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Parcel in<br> Transit</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->toggleTotalExpressStatus($tracking['api_trackings']) >= 110) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Out for  <br> Delivery</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->toggleTotalExpressStatus($tracking['api_trackings']) >= 120) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/delivered.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Parcels Delivered </p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
                                                     @endif
                                                 @endif
 
@@ -448,6 +489,18 @@
                                                         </tr>
                                                     @endforeach
                                                     
+                                                @endif
+                                                @if(optional($tracking)['service'] == 'Total Express')
+                                                    <tr>
+                                                        <td>
+                                                            {{ date('y-m-d', strtotime($tracking['api_trackings']['createdAt'])) }} {{ date('H:i:s', strtotime($tracking['api_trackings']['createdAt'])) }}
+                                                        </td>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                            {{ $tracking['api_trackings']['description'] }} - Status: {{ $tracking['api_trackings']['title'] }}
+                                                        </td>
+                                                    </tr>
                                                 @endif
                                             </tbody>
                                         </table>
