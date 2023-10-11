@@ -238,4 +238,46 @@ class Client
         }
     }
 
+    public function getPacketTracking($trackingNumbers)
+    {
+        $trackings = [];
+        foreach ($trackingNumbers as $code) {
+            $orderId = json_decode(Order::where('corrios_tracking_code', $code)->value('api_response'))->orderResponse->data->id;
+            try {
+                $request = Http::withHeaders($this->getHeaders())->get("$this->baseUrl/v1/orders/$orderId/status");
+                $response = json_decode($request);
+
+                if ($response->status == "SUCCESS") {
+                    $eventData = [
+                        'createdAt' => $response->data->status->created_at,
+                        'description' => $response->data->status->macro_status->description,
+                        'title' => $response->data->status->macro_status->title,
+                        'code' => $response->data->status->macro_status->tracking_code
+                    ];
+
+                    $trackingInfo = [
+                        'trackingNumber' => $code,
+                        'Events' => $eventData
+                    ];
+
+                    array_push($trackings, $trackingInfo);
+                } else {
+                    return [
+                        'success' => false,
+                        'message' => (new HandleError($request))->getMessage()
+                    ];
+                }
+            } catch (\Throwable $e) {
+                return [
+                    'type' => 'alert-danger',
+                    'message' => $e->getMessage()
+                ];
+            }
+        }
+        return [
+            'success' => true,
+            'data' => $trackings,
+        ];
+    }
+
 }
