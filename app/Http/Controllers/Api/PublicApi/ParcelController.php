@@ -43,7 +43,7 @@ class ParcelController extends Controller
     {
         Log::info('request Data');
         Log::info($request);
-        
+
         $weight = optional($request->parcel)['weight']??0;
         $length = optional($request->parcel)['length']??0;
         $width = optional($request->parcel)['width']??0;
