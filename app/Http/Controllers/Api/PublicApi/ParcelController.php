@@ -167,6 +167,7 @@ class ParcelController extends Controller
                 "width" =>   round(optional($request->parcel)['width'],2),
                 "height" =>  round(optional($request->parcel)['height'],2),
                 "is_invoice_created" => true,
+                "tax_modality" => optional($request->parcel)['tax_modality']??'ddu',
                 "order_date" => now(),
                 "is_shipment_added" => true,
                 'status' => Order::STATUS_ORDER,
