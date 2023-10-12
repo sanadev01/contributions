@@ -1,6 +1,6 @@
 <tr @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) class="bg-danger text-white" @endif>
  
-    <td class="d-flex justify-content-between align-items-center">
+    <td>
         
         {{ optional($order->order_date)->format('m/d/Y') }}
     </td>
