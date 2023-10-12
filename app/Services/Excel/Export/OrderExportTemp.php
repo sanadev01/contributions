@@ -59,13 +59,13 @@ class OrderExportTemp extends AbstractExportService
             $this->setCellValue('D'.$row, optional($order)->customer_reference);
             $this->setCellValue('E'.$row, optional($order->recipient)->getFullName());
             $this->setCellValue('F'.$row, optional($order->recipient)->zipcode);
-            $this->setCellValue('G'.$row, optional($order->recipient)->state->name);
+            $this->setCellValue('G'.$row, optional(optional($order->recipient)->state)->name);
             $this->setCellValue('H'.$row, optional($order->recipient)->city);
             $this->setCellValue('I'.$row, optional($order->recipient)->address.' '.optional($order->recipient)->street_no);
             $this->setCellValue('J'.$row, optional($order->recipient)->phone.' ');
             $this->setCellValue('K'.$row, optional($order->recipient)->phone.' ');
             $this->setCellValue('L'.$row, optional($order->recipient)->email);
-            $this->setCellValue('M'.$row, optional($order->recipient)->country->code);
+            $this->setCellValue('M'.$row, optional(optional($order->recipient)->country)->code);
             $this->setCellValue('N'.$row, '');
             $this->setCellValue('O'.$row, $order->items->first()->description);
             $this->setCellValue('P'.$row, $order->items->first()->sh_code);
