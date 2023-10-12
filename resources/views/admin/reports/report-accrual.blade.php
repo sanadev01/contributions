@@ -5,66 +5,61 @@
 @endsection
 @section('page')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<section>
-    <div class="row mt-4">
-        <div class="col-12 mx-2">
-            <div>
-                <div class="ml-3">
-                    <dl>
-                        <dt class="font-weight-bold dt">Welcome back, {{ Auth::user()->name }} 👋</dt>
-                        <dd class="display-5 my-3 font-weight-light pb-2 mb-5">Your tax & Duty report is here</dd>
-                    </dl>
-                </div>
-                <div class="container-fluid">
-                    <div class="row">
-                        {{-- Report Report --}}
-                        <div class=" col-sm-12 d-flex flex-column justify-content-center ">
-                            <div class="filter-card " id="filter-card">
-                                <h4 class="text-center m-4 font-weight-bold font-black">  Report Generator </h4>
-                                
-                                <form   action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
-                                     <div class="row">
-                                          @csrf 
-
-                                        <div class="col-4">
-                                             <label for="end-date" class="mt-4 mb-2 font-black"><strong>Start Date</strong></label><br>
-                                            <div class="input-group">
-                                                <input name="start_date" id="startDate" class="form-control py-2 mr-1 p-3" type="date">
-                                            </div>
-                                        </div> 
-                                        <div class="col-4">
-                                             <label for="end-date" class="mt-4 mb-2 font-black"><strong>End Date</strong></label><br>
-                                            <div class="input-group">
-                                                <input name="end_date" id="endDate" class="form-control py-2 mr-1 p-3" type="date">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-4">
-                                            <div class="mt-4 mb-2 font-black"> 
-                                                <input type="hidden" name="type" value="accrual">  
-                                                <button type="submit" class="btn btn-success waves-effect waves-light p-3 mt-4" 
-                                                    {{ true ? '' : 'disabled' }}> <i class="fa fa-download"></i>  Download 
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
+<section id="dashboard-analytics">
+    <div class='row no-gutters d-flex align-items-center light-green-color'>
+            <div class="col-xl-4 col-lg-12 light-green-color">
+                <div class="light-green-color welcome-admin height-100">
+                    <div class="ml-3">
+                        <dl>
+                            <div class="font-weight-bold large-heading-text pt-3 "> Generator Report
                             </div>
-                        </div>
+                            <dd class="font-weight-light pb-2 mb-4">Your tax & Duty report is here.</dd>
+                        </dl>
                     </div>
                 </div>
-                {{-- Report Generato end --}}
             </div>
-            {{-- table of kpi --}}
-            <div>
+            <div class="col-xl-8 col-lg-12 light-green-color  border-radius-15 p-2">
+                <div class="row mt-0 ">
+                    <div class="col-12 pb-xl-2 pb-1 h-25">
+                    <div class="filter-card " id="filter-card"> 
+                                    <form   action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
+                                        <div class="row">
+                                            @csrf 
+
+                                            <div class="col-5">
+                                                <label for="end-date" class="mt-4 mb-2 font-black"><strong>Start Date</strong></label><br>
+                                                <div class="input-group">
+                                                    <input name="start_date" id="startDate" class="form-control py-2 mr-1 p-3" type="date">
+                                                </div>
+                                            </div> 
+                                            <div class="col-5">
+                                                <label for="end-date" class="mt-4 mb-2 font-black"><strong>End Date</strong></label><br>
+                                                <div class="input-group">
+                                                    <input name="end_date" id="endDate" class="form-control py-2 mr-1 p-3" type="date">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-2">
+                                                <div class="mt-4 mb-2 font-black align-center float-center"> 
+                                                    <input type="hidden" name="type" value="accrual">  
+                                                    <button type="submit" class="btn btn-success waves-effect waves-light p-3 mt-4" 
+                                                        {{ true ? '' : 'disabled' }}> <i class="fa fa-download"></i>  Download 
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+
+    
             <livewire:order.accrual-table />
                 @include('layouts.livewire.loading')
-            </div>
-
-        </div>
-    </div>
-    </div>
-    </div>
+          
 </section>
 @endsection
 @section('modal')

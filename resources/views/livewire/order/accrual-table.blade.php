@@ -12,10 +12,11 @@
             </select>
         </div> 
     </div>
-    <div class="table-responsive order-table">
-        <table class="table mb-0 table-responsive-md" id="order-table">
-            <thead>
-                <tr> 
+    <div class=" ">
+        
+    <table class="table  table-borderless p-0 table-responsive-md table-striped" id="kpi-report">
+                    <thead>
+                        <tr id="kpiHead"> 
                     <th> 
                         <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                     </th>
@@ -33,10 +34,12 @@
                     <th>@lang('orders.payment-status')</th>
                     <!-- <th class="no-print">@lang('orders.actions.actions')</th> -->
                 </tr>
-                <tr class="no-print"> 
+                
+                <tfoot class="search-header">
+                 <tr id="kpiHeadSearch"> 
                     <th>
                         
-                        <input type="search" class="form-control col-md-9 ml-5" wire:model.debounce.1000ms="date">
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="date">
                     </th>
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="whr_number">
@@ -63,9 +66,12 @@
                     </th> 
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="amount">
-                    </th>   
-                    <th></th>
+                    </th>    
+                    <th></th> 
+                    <td></td>
+                    <td></td>
                 </tr>
+            </tfoot>
             </thead>
             <tbody>
                 @forelse ($orders as $order) 
@@ -77,7 +83,7 @@
         </table>
         <livewire:order.bulk-edit.modal/>
     </div>
-    <div class="d-flex justify-content-end my-2 pb-4 mx-2">
+    <div class="d-flex justify-content-end my-2 py-4 mx-2">
         {{ $orders->links() }}
     </div>
     @include('layouts.livewire.loading')
