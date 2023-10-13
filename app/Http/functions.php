@@ -229,3 +229,12 @@ function isActiveService($user,$shippingService){
        return setting('sweden_post', null, $user->id)?true:false; 
     return true; 
 }
+function getVolumetricDiscountPercentage(Order $order){
+    $user_id    = $order->user->id;
+    $percentage = setting('discount_percentage', null, $user_id);
+    if(optional($order->shippingService)->is_total_express)
+        $percentage= setting('postal_discount_percentage', null, $user_id);
+    elseif(optional($order->shippingService)->isHDExpressService())
+        $percentage= setting('hd_express_discount_percentage', null, $user_id);
+    return $percentage??setting('discount_percentage', null, $user_id);
+}
