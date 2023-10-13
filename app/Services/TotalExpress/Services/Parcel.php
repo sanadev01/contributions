@@ -38,7 +38,7 @@ class Parcel
          "estimated_delivery_date" => ((new DateTime())->modify('+3 days'))->format('Y-m-d'),
 
          'customer_full_name' => $this->order->recipient->getFullName(),
-         'customer_document_type' => "CPF",
+         'customer_document_type' => $this->order->recipient->account_type == "business"? "CNPJ":"CPF",
          'customer_address' => $this->order->recipient->address,
          'customer_address_complement' => optional($this->order->recipient)->address2,
          'customer_address_number' => optional($this->order->recipient)->stree_no,
@@ -94,8 +94,8 @@ class Parcel
                "description" =>  $item->description,
                "value" => $item->value,
                'weight' => round($this->order->weight / $totalQuantity, 2) - 0.02,
-               "hs_code" => $item->sh_code,
-               "sku" => $item->sh_code,
+               "hs_code" => substr($item->sh_code, 0, 6),
+               "sku" => substr($item->sh_code, 0, 6),
                "origin_country" => 'US',
                "quantity" => (int)$item->quantity,
 
