@@ -67,6 +67,7 @@ class OrderTrackingController extends Controller
         $trackingEventHistory = $packageTrackingInfo->addChild('TrackingEventHistory');
 
         // HomeDelivery Tracking Events
+        $iteration = 0;
         foreach (array_reverse($data->trackings) as $event) {
             $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
             $trackingEventDetail->addChild('EventStatus', $event->status_code);
@@ -77,8 +78,66 @@ class OrderTrackingController extends Controller
             $eventLocation->addChild('StateProvince', 'FL');
             $eventLocation->addChild('PostalCode', '33182');
             $eventLocation->addChild('CountryCode', $event->country);
-            $trackingEventDetail->addChild('SignedForByName', optional(optional($event->order)->recipient)->first_name.' '.optional(optional($event->order)->recipient)->last_name); 
+
+            if ($iteration === 0) {
+                $trackingEventDetail->addChild('AdditionalLocationInfo', '');  
+                $trackingEventDetail->addChild('SignedForByName', optional(optional($event->order)->recipient)->first_name.' '.optional(optional($event->order)->recipient)->last_name);
+            } else {
+                $trackingEventDetail->addChild('EstimatedDeliveryDate', $orderDate->format('Y-m-d'));  
+            }
+            
+            $iteration++;
         }
+
+        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
+        $trackingEventDetail->addChild('EventStatus', '');
+        $trackingEventDetail->addChild('EventReason', '');
+        $trackingEventDetail->addChild('EventDateTime', '');
+        $eventLocation = $trackingEventDetail->addChild('EventLocation');
+        $eventLocation->addChild('City', '');
+        $eventLocation->addChild('StateProvince', '');
+        $eventLocation->addChild('PostalCode', '');
+        $eventLocation->addChild('CountryCode', '');
+        
+        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
+        $trackingEventDetail->addChild('EventStatus', '');
+        $trackingEventDetail->addChild('EventReason', '');
+        $trackingEventDetail->addChild('EventDateTime', '');
+        $eventLocation = $trackingEventDetail->addChild('EventLocation');
+        $eventLocation->addChild('City', '');
+        $eventLocation->addChild('StateProvince', '');
+        $eventLocation->addChild('PostalCode', '');
+        $eventLocation->addChild('CountryCode', '');
+
+        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
+        $trackingEventDetail->addChild('EventStatus', '');
+        $trackingEventDetail->addChild('EventReason', '');
+        $trackingEventDetail->addChild('EventDateTime', '');
+        $eventLocation = $trackingEventDetail->addChild('EventLocation');
+        $eventLocation->addChild('City', '');
+        $eventLocation->addChild('StateProvince', '');
+        $eventLocation->addChild('PostalCode', '');
+        $eventLocation->addChild('CountryCode', '');
+
+        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
+        $trackingEventDetail->addChild('EventStatus', '');
+        $trackingEventDetail->addChild('EventReason', '');
+        $trackingEventDetail->addChild('EventDateTime', '');
+        $eventLocation = $trackingEventDetail->addChild('EventLocation');
+        $eventLocation->addChild('City', '');
+        $eventLocation->addChild('StateProvince', '');
+        $eventLocation->addChild('PostalCode', '');
+        $eventLocation->addChild('CountryCode', '');
+
+        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
+        $trackingEventDetail->addChild('EventStatus', '');
+        $trackingEventDetail->addChild('EventReason', '');
+        $trackingEventDetail->addChild('EventDateTime', '');
+        $eventLocation = $trackingEventDetail->addChild('EventLocation');
+        $eventLocation->addChild('City', '');
+        $eventLocation->addChild('StateProvince', '');
+        $eventLocation->addChild('PostalCode', '');
+        $eventLocation->addChild('CountryCode', '');
         
         // API Tracking Events
 
