@@ -41,10 +41,9 @@ class OrderTrackingRepository
 
                 $apiResponse = [];
                 if ($order->trackings->isNotEmpty()) {
-                    // if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
+                    if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
 
                     if ($order->recipient->country_id == Order::CHILE) {
-                        dd("here2");
                         $response = CorreiosChileTrackingFacade::trackOrder($order->corrios_tracking_code);
                         if ($response->status == true && ($response->data != null || $response->data != [])) {
                             $apiResponse = [
@@ -89,7 +88,7 @@ class OrderTrackingRepository
                             array_push($this->totalExpressTrackingCodes, $order->corrios_tracking_code);
                         }
 
-                        if ($order->carrier == 'Correios Brazil' || $order->carrier == 'Global eParcel' || $order->carrier == 'Prime5') {
+                        if ($order->carrier == 'Correios AJ' || $order->carrier == 'Correios A' || $order->carrier == 'Correios Brazil' || $order->carrier == 'Global eParcel' || $order->carrier == 'Prime5') {
                             array_push($this->brazilTrackingCodes, $order->corrios_tracking_code);
                         }
 
@@ -120,7 +119,7 @@ class OrderTrackingRepository
                         ];
                         $getTrackings->push($apiResponse);
                     }
-                // }
+                }
             }
         } else {
             $apiResponse = [
@@ -135,9 +134,9 @@ class OrderTrackingRepository
 
         if (count($this->brazilTrackingCodes) > 0) {
             $response = CorreiosBrazilTrackingFacade::trackOrder(implode('', $this->brazilTrackingCodes));
-
+            // dd($response);
             if ($response->success == true) {
-
+                // dd($response);
                 $getTrackings = $getTrackings->map(function ($item, $key) use ($response) {
                     if (count($this->brazilTrackingCodes) > 1) {
                         foreach ($response->data as $data) {
