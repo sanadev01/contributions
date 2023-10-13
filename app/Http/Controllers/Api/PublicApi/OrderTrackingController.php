@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\publicApi;
 
+use Carbon\Carbon;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -16,7 +17,7 @@ class OrderTrackingController extends Controller
     {
         $order_tracking_repository = new OrderTrackingRepository($search);
         $responses = $order_tracking_repository->handle();
-
+        // dd($responses);
         if ($format === 'xml') {
             $xmlResponse = $this->generateXmlResponse($responses);
             return response($xmlResponse, 200)->header('Content-Type', 'application/xml');
@@ -35,8 +36,11 @@ class OrderTrackingController extends Controller
             $errorXml->addChild('ErrorMessage', 'Order not found');
             return $errorXml->asXML();
         }
-    
-        $data = $jsonResponse->getData()->data;
+        // dd($jsonResponse->getData());
+        $response = json_decode($responses);
+        $data = array_shift($response);
+        $orderDate = Carbon::parse($data->trackings[0]->order->order_date)->addDays(15);
+        // dd($data);
     
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <AmazonTrackingResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="AmazonTrackingResponse.xsd"></AmazonTrackingResponse>');
@@ -45,36 +49,97 @@ class OrderTrackingController extends Controller
     
         $packageTrackingInfo = $xml->addChild('PackageTrackingInfo');
     
-        $packageTrackingInfo->addChild('TrackingNumber', $data->hdTrackings[0]->tracking_code);
+        $packageTrackingInfo->addChild('TrackingNumber', $data->trackings[0]->order->corrios_tracking_code);
 
         // // Add PackageDestinationLocation element
         $packageDestinationLocation = $packageTrackingInfo->addChild('PackageDestinationLocation');
-        $packageDestinationLocation->addChild('City', $data->hdTrackings[0]->city);
-        $packageDestinationLocation->addChild('StateProvince', $data->hdTrackings[0]->state);
-        $packageDestinationLocation->addChild('PostalCode', $data->hdTrackings[0]->zipcode);
-        $packageDestinationLocation->addChild('CountryCode', $data->hdTrackings[0]->country);
+        $packageDestinationLocation->addChild('City', optional(optional($data->trackings[0]->order)->recipient)->city);
+        $packageDestinationLocation->addChild('StateProvince', optional(optional(optional($data->trackings[0]->order)->recipient)->state)->code);
+        $packageDestinationLocation->addChild('PostalCode', optional(optional($data->trackings[0]->order)->recipient)->zipcode);
+        $packageDestinationLocation->addChild('CountryCode', optional(optional(optional($data->trackings[0]->order)->recipient)->country)->code);
 
         // Add PackageDeliveryDate element
         $packageDeliveryDate = $packageTrackingInfo->addChild('PackageDeliveryDate');
-        $packageDeliveryDate->addChild('ScheduledDeliveryDate', ''); 
-        $packageDeliveryDate->addChild('ReScheduledDeliveryDate', ''); 
+        $packageDeliveryDate->addChild('ScheduledDeliveryDate', $orderDate->format('Y-m-d')); 
+        $packageDeliveryDate->addChild('ReScheduledDeliveryDate', $orderDate->addDays(2)->format('Y-m-d')); 
 
         // Add TrackingEventHistory element
         $trackingEventHistory = $packageTrackingInfo->addChild('TrackingEventHistory');
 
-        // Loop through your JSON data and add TrackingEventDetail elements
-        // foreach ($data['trackingEvents'] as $event) {
+        // HomeDelivery Tracking Events
+        $iteration = 0;
+        foreach (array_reverse($data->trackings) as $event) {
             $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
-            $trackingEventDetail->addChild('EventStatus', '');
-            $trackingEventDetail->addChild('EventReason', '');
-            $trackingEventDetail->addChild('EventDateTime', '');
+            $trackingEventDetail->addChild('EventStatus', $event->status_code);
+            $trackingEventDetail->addChild('EventReason', $event->description);
+            $trackingEventDetail->addChild('EventDateTime', Carbon::parse($event->created_at)->setTimezone('Asia/Tokyo')->format('c'));
             $eventLocation = $trackingEventDetail->addChild('EventLocation');
-            $eventLocation->addChild('City', '');
-            $eventLocation->addChild('StateProvince', '');
-            $eventLocation->addChild('PostalCode', '');
-            $eventLocation->addChild('CountryCode', '');
-            $trackingEventDetail->addChild('SignedForByName', ''); 
-        // }
+            $eventLocation->addChild('City', $event->city);
+            $eventLocation->addChild('StateProvince', 'FL');
+            $eventLocation->addChild('PostalCode', '33182');
+            $eventLocation->addChild('CountryCode', $event->country);
+
+            if ($iteration === 0) {
+                $trackingEventDetail->addChild('AdditionalLocationInfo', '');  
+                $trackingEventDetail->addChild('SignedForByName', optional(optional($event->order)->recipient)->first_name.' '.optional(optional($event->order)->recipient)->last_name);
+            } else {
+                $trackingEventDetail->addChild('EstimatedDeliveryDate', $orderDate->format('Y-m-d'));  
+            }
+            
+            $iteration++;
+        }
+
+        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
+        $trackingEventDetail->addChild('EventStatus', '');
+        $trackingEventDetail->addChild('EventReason', '');
+        $trackingEventDetail->addChild('EventDateTime', '');
+        $eventLocation = $trackingEventDetail->addChild('EventLocation');
+        $eventLocation->addChild('City', '');
+        $eventLocation->addChild('StateProvince', '');
+        $eventLocation->addChild('PostalCode', '');
+        $eventLocation->addChild('CountryCode', '');
+        
+        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
+        $trackingEventDetail->addChild('EventStatus', '');
+        $trackingEventDetail->addChild('EventReason', '');
+        $trackingEventDetail->addChild('EventDateTime', '');
+        $eventLocation = $trackingEventDetail->addChild('EventLocation');
+        $eventLocation->addChild('City', '');
+        $eventLocation->addChild('StateProvince', '');
+        $eventLocation->addChild('PostalCode', '');
+        $eventLocation->addChild('CountryCode', '');
+
+        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
+        $trackingEventDetail->addChild('EventStatus', '');
+        $trackingEventDetail->addChild('EventReason', '');
+        $trackingEventDetail->addChild('EventDateTime', '');
+        $eventLocation = $trackingEventDetail->addChild('EventLocation');
+        $eventLocation->addChild('City', '');
+        $eventLocation->addChild('StateProvince', '');
+        $eventLocation->addChild('PostalCode', '');
+        $eventLocation->addChild('CountryCode', '');
+
+        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
+        $trackingEventDetail->addChild('EventStatus', '');
+        $trackingEventDetail->addChild('EventReason', '');
+        $trackingEventDetail->addChild('EventDateTime', '');
+        $eventLocation = $trackingEventDetail->addChild('EventLocation');
+        $eventLocation->addChild('City', '');
+        $eventLocation->addChild('StateProvince', '');
+        $eventLocation->addChild('PostalCode', '');
+        $eventLocation->addChild('CountryCode', '');
+
+        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
+        $trackingEventDetail->addChild('EventStatus', '');
+        $trackingEventDetail->addChild('EventReason', '');
+        $trackingEventDetail->addChild('EventDateTime', '');
+        $eventLocation = $trackingEventDetail->addChild('EventLocation');
+        $eventLocation->addChild('City', '');
+        $eventLocation->addChild('StateProvince', '');
+        $eventLocation->addChild('PostalCode', '');
+        $eventLocation->addChild('CountryCode', '');
+        
+        // API Tracking Events
 
         $xmlString = $xml->asXML();
 
