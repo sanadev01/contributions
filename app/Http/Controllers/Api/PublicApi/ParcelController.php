@@ -432,9 +432,8 @@ class ParcelController extends Controller
 
             //CHECK VOL WEIGHT OF PARCEL AND SET DISCOUNT
             $totalDiscountPercentage = 0;
-            $volumetricDiscount = setting('volumetric_discount', null, $parcel->user->id);
-            $discountPercentage = setting('discount_percentage', null, $parcel->user->id);
-            
+            $volumetricDiscount = setting('volumetric_discount', null, $parcel->user->id); 
+            $discountPercentage = getVolumetricDiscountPercentage($parcel);            
             if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
                 return false;
             }
