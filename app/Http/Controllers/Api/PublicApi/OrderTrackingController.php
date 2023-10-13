@@ -49,7 +49,7 @@ class OrderTrackingController extends Controller
     
         $packageTrackingInfo = $xml->addChild('PackageTrackingInfo');
     
-        $packageTrackingInfo->addChild('TrackingNumber', $data->trackings[0]->order->corrios_tracking_code);
+        $packageTrackingInfo->addChild('TrackingNumber', $data->trackings[0]->order->warehouse_number);
 
         // // Add PackageDestinationLocation element
         $packageDestinationLocation = $packageTrackingInfo->addChild('PackageDestinationLocation');
