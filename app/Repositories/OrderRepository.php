@@ -353,9 +353,8 @@ class OrderRepository
                 $order->items()->delete();
                 
                 foreach ($request->get('items',[]) as $item) {
-                    
                     $order->items()->create([
-                        'sh_code' => optional($item)['sh_code'],
+                        'sh_code' => substr(optional($item)['sh_code'], 0, 6),
                         'description' => optional($item)['description'],
                         'quantity' => optional($item)['quantity'],
                         'value' => optional($item)['value'],
