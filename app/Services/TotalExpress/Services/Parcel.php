@@ -64,7 +64,7 @@ class Parcel
          "seller_tax_number" =>"12345678-998A",
          'customerReferenceID' => ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id) . ' HD-' . $this->order->id,
          "seller_address_number" => "605",
-         "seller_address_complement" => "Apartment 99B",
+         "seller_address_complement" => " ",
          "seller_website" => "www.seller.com",
 
          "volumes_attributes" => [
