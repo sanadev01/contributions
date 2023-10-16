@@ -77,7 +77,7 @@ class OrderTrackingController extends Controller
             $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
             $trackingEventDetail->addChild('EventStatus', $event->status_code);
             $trackingEventDetail->addChild('EventReason', $event->description);
-            $trackingEventDetail->addChild('EventDateTime', Carbon::parse($event->created_at)->setTimezone('Asia/Tokyo')->format('c'));
+            $trackingEventDetail->addChild('EventDateTime', substr($event->created_at, 0, -8));
             $eventLocation = $trackingEventDetail->addChild('EventLocation');
             $eventLocation->addChild('City', $event->city);
             $eventLocation->addChild('StateProvince', 'FL');
