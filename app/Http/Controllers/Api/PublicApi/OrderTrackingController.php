@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderTrackingRepository;
 use App\Http\Resources\OrderTrackingResource;
+use App\Services\Correios\Services\Brazil\CorreiosTrackingService;
 
 class OrderTrackingController extends Controller
 {
@@ -17,17 +18,21 @@ class OrderTrackingController extends Controller
     {
         $order_tracking_repository = new OrderTrackingRepository($search);
         $responses = $order_tracking_repository->handle();
-        // dd($responses);
+
         if ($format === 'xml') {
-            $xmlResponse = $this->generateXmlResponse($responses);
+            $code = Order::where('warehouse_number', $search)->value('corrios_tracking_code');
+            $orderTrackingService = new CorreiosTrackingService();
+            $apiResponse = $orderTrackingService->getTracking($code);
+            $xmlResponse = $this->generateXmlResponse($responses, $search, $apiResponse);
             return response($xmlResponse, 200)->header('Content-Type', 'application/xml');
         } else {
             return $this->generateJsonResponse($responses);
         }
     }
 
-    private function generateXmlResponse($responses)
+    private function generateXmlResponse($responses, $search, $apiResponse)
     {
+        // dd($apiResponse);
         $jsonResponse = $this->generateJsonResponse($responses);
         if ($jsonResponse === null || !$jsonResponse->getData()->success) {
             $errorXml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
@@ -88,62 +93,61 @@ class OrderTrackingController extends Controller
             
             $iteration++;
         }
-
-        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
-        $trackingEventDetail->addChild('EventStatus', '');
-        $trackingEventDetail->addChild('EventReason', '');
-        $trackingEventDetail->addChild('EventDateTime', '');
-        $eventLocation = $trackingEventDetail->addChild('EventLocation');
-        $eventLocation->addChild('City', '');
-        $eventLocation->addChild('StateProvince', '');
-        $eventLocation->addChild('PostalCode', '');
-        $eventLocation->addChild('CountryCode', '');
-        
-        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
-        $trackingEventDetail->addChild('EventStatus', '');
-        $trackingEventDetail->addChild('EventReason', '');
-        $trackingEventDetail->addChild('EventDateTime', '');
-        $eventLocation = $trackingEventDetail->addChild('EventLocation');
-        $eventLocation->addChild('City', '');
-        $eventLocation->addChild('StateProvince', '');
-        $eventLocation->addChild('PostalCode', '');
-        $eventLocation->addChild('CountryCode', '');
-
-        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
-        $trackingEventDetail->addChild('EventStatus', '');
-        $trackingEventDetail->addChild('EventReason', '');
-        $trackingEventDetail->addChild('EventDateTime', '');
-        $eventLocation = $trackingEventDetail->addChild('EventLocation');
-        $eventLocation->addChild('City', '');
-        $eventLocation->addChild('StateProvince', '');
-        $eventLocation->addChild('PostalCode', '');
-        $eventLocation->addChild('CountryCode', '');
-
-        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
-        $trackingEventDetail->addChild('EventStatus', '');
-        $trackingEventDetail->addChild('EventReason', '');
-        $trackingEventDetail->addChild('EventDateTime', '');
-        $eventLocation = $trackingEventDetail->addChild('EventLocation');
-        $eventLocation->addChild('City', '');
-        $eventLocation->addChild('StateProvince', '');
-        $eventLocation->addChild('PostalCode', '');
-        $eventLocation->addChild('CountryCode', '');
-
-        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
-        $trackingEventDetail->addChild('EventStatus', '');
-        $trackingEventDetail->addChild('EventReason', '');
-        $trackingEventDetail->addChild('EventDateTime', '');
-        $eventLocation = $trackingEventDetail->addChild('EventLocation');
-        $eventLocation->addChild('City', '');
-        $eventLocation->addChild('StateProvince', '');
-        $eventLocation->addChild('PostalCode', '');
-        $eventLocation->addChild('CountryCode', '');
         
         // API Tracking Events
+        if (isset($apiResponse->objetos) && is_array($apiResponse->objetos) && count($apiResponse->objetos) > 0) {
+            // dd($apiResponse);
+            foreach ($apiResponse->objetos as $trackingObject) {
+                if(isset($trackingObject->eventos) && is_array($trackingObject->eventos) && count($trackingObject->eventos) > 0) {
+                    foreach($trackingObject->eventos as $evento) {
+                        
+                        $detalhe = optional($evento)->detalhe;
+                        $parts = explode('&#13;', $detalhe);
+                        $detalheCleaned = trim($parts[0]);
+
+                        $eventStatus = $this->translateDescricaoToEnglish(optional($evento)->descricao);
+                        $eventReason = $this->translateDetalheToEnglish($detalheCleaned);
+                        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
+                        $trackingEventDetail->addChild('EventStatus', $eventStatus);
+                        $trackingEventDetail->addChild('EventReason', $eventReason);
+                        $trackingEventDetail->addChild('EventDateTime', optional($evento)->dtHrCriado);
+                        $eventLocation = $trackingEventDetail->addChild('EventLocation');
+                        $eventLocation->addChild('City', optional(optional(optional($evento)->unidade)->endereco)->cidade);
+                        $eventLocation->addChild('StateProvince', optional(optional(optional($evento)->unidade)->endereco)->uf);
+                        $eventLocation->addChild('PostalCode', optional(optional($data->trackings[0]->order)->recipient)->zipcode);
+                        $eventLocation->addChild('CountryCode', "BR");
+                    }
+                }
+            }       
+        }
 
         $xmlString = $xml->asXML();
 
         return $xmlString;
+    }
+
+    public function translateDescricaoToEnglish($descricao) {
+        $translations = [
+            'Objeto entregue ao destinatário' => 'Object delivered to recipient',
+            'Objeto saiu para entrega ao destinatário' => 'Object out for delivery to recipient',
+            'Objeto em trânsito - por favor aguarde' => 'Object in transit - please wait',
+            'Pagamento confirmado' => 'Payment confirmed',
+            'Fiscalização aduaneira concluída - aguardando pagamento' => 'Customs inspection completed - awaiting payment',
+            'Encaminhado para fiscalização aduaneira' => 'Forwarded to customs inspection',
+            'Objeto recebido pelos Correios do Brasil' => 'Object received by the Brazilian Post Office',
+            'Objeto postado' => 'Object Posted',
+        ];
+    
+        return $translations[$descricao] ?? $descricao;
+    }
+
+    public function translateDetalheToEnglish($detalhe) {
+        $translations = [
+            'Aguardando envio para o cliente' => 'Awaiting shipment to customer',
+            'Fiscalização aduaneira concluída - aguardando pagamento' => 'Customs inspection completed - awaiting payment',
+        ];
+    
+        return $translations[$detalhe] ?? $detalhe;
     }
 
 
