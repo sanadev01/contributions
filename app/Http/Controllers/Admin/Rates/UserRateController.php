@@ -74,7 +74,7 @@ class UserRateController extends Controller
 
         $activeService = [];
         if(setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
-            if(setting('gde_fc_profit', null, User::ROLE_ADMIN) || $setting('gde_fc_profit', null, auth()->user()->id)) {
+            if(setting('gde_fc_profit', null, User::ROLE_ADMIN) || setting('gde_fc_profit', null, auth()->user()->id)) {
                 array_push($activeService, ShippingService::GDE_FIRST_CLASS);
             }
             if(setting('gde_pm_profit', null, User::ROLE_ADMIN) || setting('gde_pm_profit', null, auth()->user()->id)) {
