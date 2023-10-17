@@ -55,7 +55,7 @@ class OrderCreatedController extends Controller
             ]);
     
             $order->update([
-                'warehouse_number' => $order->getTempWhrNumber()
+                'warehouse_number' => $order->getTempWhrNumber(false)
             ]);
     
             $senderCountry = Country::where('code',optional($request->shipping_address)['country_code'])->first();

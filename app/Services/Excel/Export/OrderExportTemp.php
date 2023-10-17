@@ -49,21 +49,23 @@ class OrderExportTemp extends AbstractExportService
             $type = 'Prime';
          } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
             $type = 'ParcelUPU';
-         } 
+         } elseif($order->shippingService->service_sub_class == ShippingService::LT_PRIME) {
+            $type = 'Priority';
+         }  
             $user = $order->user; 
             $this->setCellValue('A'.$row, $order->containers->first()->awb);
             $this->setCellValue('B'.$row, $order->containers->first()->seal_no );
             $this->setCellValue('C'.$row, (string)$this->getOrderTrackingCodes($order));
-            $this->setCellValue('D'.$row, $order->customer_reference);
-            $this->setCellValue('E'.$row, $order->recipient->getFullName());
-            $this->setCellValue('F'.$row, $order->recipient->zipcode);
-            $this->setCellValue('G'.$row, $order->recipient->state->name);
-            $this->setCellValue('H'.$row, $order->recipient->city);
-            $this->setCellValue('I'.$row, $order->recipient->address.' '.$order->recipient->street_no);
-            $this->setCellValue('J'.$row, $order->recipient->phone.' ');
-            $this->setCellValue('K'.$row, $order->recipient->phone.' ');
-            $this->setCellValue('L'.$row, $order->recipient->email);
-            $this->setCellValue('M'.$row, $order->recipient->country->code);
+            $this->setCellValue('D'.$row, optional($order)->customer_reference);
+            $this->setCellValue('E'.$row, optional($order->recipient)->getFullName());
+            $this->setCellValue('F'.$row, optional($order->recipient)->zipcode);
+            $this->setCellValue('G'.$row, optional(optional($order->recipient)->state)->name);
+            $this->setCellValue('H'.$row, optional($order->recipient)->city);
+            $this->setCellValue('I'.$row, optional($order->recipient)->address.' '.optional($order->recipient)->street_no);
+            $this->setCellValue('J'.$row, optional($order->recipient)->phone.' ');
+            $this->setCellValue('K'.$row, optional($order->recipient)->phone.' ');
+            $this->setCellValue('L'.$row, optional($order->recipient)->email);
+            $this->setCellValue('M'.$row, optional(optional($order->recipient)->country)->code);
             $this->setCellValue('N'.$row, '');
             $this->setCellValue('O'.$row, $order->items->first()->description);
             $this->setCellValue('P'.$row, $order->items->first()->sh_code);
@@ -79,9 +81,9 @@ class OrderExportTemp extends AbstractExportService
             $this->setCellValue('Z'.$row, '');   
             $this->setCellValue('AA'.$row,'');
             $this->setCellValue('AB'.$row,'B2C');
-            $this->setCellValue('AC'.$row, 'UZPO');
+            $this->setCellValue('AC'.$row, $type == 'Priority' ? 'LTPO' : 'UZPO');
             $this->setCellValue('AD'.$row, $order->carrierService());
-            $this->setCellValue('AE'.$row, 'UZPO-'.$type);
+            $this->setCellValue('AE'.$row, $type == 'Priority' ? 'LTPO '.$type : 'UZPO '.$type);
             $this->setCellValue('AF'.$row,'');
             $this->setCellValue('AG'.$row,'');
             $this->setCellValue('AH'.$row,'');

@@ -18,6 +18,10 @@ class DeliveryBillRepository extends AbstractRepository
     public function get(Request $request, $isPaginate)
     {
         $query = DeliveryBill::query();
+        
+        if ( !Auth::user()->isAdmin() ){
+            $query->where('user_id',Auth::id());
+        }
         if ($request->type){
             $query->whereHas('containers', function ($query) use ($request) {
                 return $query->whereIn('services_subclass_code', json_decode($request->type));
@@ -68,6 +72,7 @@ class DeliveryBillRepository extends AbstractRepository
 
             $deliveryBill = DeliveryBill::create([
                 'name' => 'Delivery BillL: '.Carbon::now()->format('m-d-Y'),
+                'user_id' => Auth::id()
             ]);
 
             $deliveryBill->containers()->sync($request->get('container',[]));

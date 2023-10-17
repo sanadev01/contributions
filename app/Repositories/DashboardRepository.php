@@ -8,59 +8,218 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\HandlingService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardRepository
 {
-    
-    public function getDashboardStats($startDate=NULL, $endDate=NULL)
+
+    public function getDashboardStats($startDate = NULL, $endDate = NULL)
     {
         $carbon       = Carbon::now();
         $monthName    = $carbon->format('F');
         $currentYear  = $carbon->year;
-        $currentmonth = $carbon->month;
+        $currentMonth = $carbon->month;
         $today        = $carbon->format('Y-m-d');
-        
-        $currentYearsorders = Order::query();
-        $currentMonthorders = Order::query();
-        $CurentDay          = Order::query();
-        $totalOrderQuery    = Order::query();
-
-        if($startDate && $endDate){
-            $date = [$startDate .' 00:00:00',$endDate.' 23:59:59'];
-            $currentYearsorders = $currentYearsorders->whereBetween('order_date', $date);
-            $currentMonthorders = $currentMonthorders->whereBetween('order_date', $date);
-            $CurentDay          = $CurentDay->whereBetween('order_date', $date);
-            $totalOrderQuery    = $totalOrderQuery->whereBetween('order_date', $date);
+        $isUser = Auth::user()->isUser();
+ 
+        if ($startDate && $endDate) {
+            $date = [ $startDate . ' 00:00:00', $endDate . ' 23:59:59'];
         }
-        if(Auth::user()->isUser()){
-            $authUser = Auth::id();
-            $currentYearsorders->where('user_id', $authUser);
-            $currentMonthorders->where('user_id', $authUser);
-            $CurentDay->where('user_id', $authUser);
-            $totalOrderQuery->where('user_id', $authUser);
+        else{
+            $date = [$carbon->firstOfMonth().'', ($carbon->lastOfMonth()->addDays(1)).''];
+        }  
+              
+
+
+        //total order
+        $totalReport = Order::when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })
+        ->selectRaw('is_paid, COUNT(*) as count')
+        ->groupBy('is_paid')
+        ->get(); 
+        try{ 
+            $totalOrder = $totalReport[0]->count??0;
+        }catch(\Exception $e){
+            $totalOrder = 0;
+        }
+        try{
+            $totalCompleteOrders = optional($totalReport[1])->count??0;
+        }catch(\Exception $e){
+            $totalCompleteOrders = 0;
+        }
+        $totalOrder+=$totalCompleteOrders;
+        //currentDayReport
+        $currentDayReport = Order::whereDate('order_date', $today)
+        ->whereBetween('order_date', $date)
+        ->when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })
+        ->selectRaw('is_paid, COUNT(*) as count')
+        ->groupBy('is_paid')
+        ->get(); 
+        try{ 
+            $currentDayTotal = optional($currentDayReport[0])->count??0;
+        }catch(\Exception $e){
+            $currentDayTotal = 0;
+        }
+        try{
+            $currentDayConfirm = optional($currentDayReport[1])->count??0;
+        }catch(\Exception $e){
+            $currentDayConfirm = 0;
+        }
+        $currentDayTotal+=$currentDayConfirm; 
+        $currentMonthReport = Order::whereMonth('order_date', $currentMonth)
+        ->whereYear('order_date', $currentYear) 
+        ->when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })
+        ->selectRaw('is_paid, COUNT(*) as count')
+        ->groupBy('is_paid')
+        ->get(); 
+        try{ 
+            $currentMonthTotal = $currentMonthReport[0]->count;
+        }catch(\Exception $e){
+            $currentMonthTotal = 0;
+        }
+        try{
+            $currentMonthConfirm = $currentMonthReport[1]->count;
+        }catch(\Exception $e){
+            $currentMonthConfirm = 0;
+        }
+        $currentMonthTotal+=$currentMonthConfirm;
+        //currentYearReport
+        $currentYearReport = Order::whereYear('order_date', $currentYear) 
+        ->when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })
+        ->selectRaw('is_paid, COUNT(*) as count')
+        ->groupBy('is_paid')
+        ->get(); 
+        try{ 
+            $currentYearTotal = $currentYearReport[0]->count??0;
+        }catch(\Exception $e){
+            $currentYearTotal = 0;
+        }
+        try{
+            $currentYearConfirm = optional($currentYearReport[1])->count??0;
+        }catch(\Exception $e){
+            $currentYearConfirm = 0;
+        }
+        $currentYearTotal+=  $currentYearConfirm;
+
+
+
+        //bar chart
+        $lastDayOfCurrentMonth = Carbon::parse(Carbon::now())->endOfMonth();
+        $lastTwelveMonths = Carbon::parse(Carbon::now())->endOfMonth()->subMonths(12);
+
+        $totalOrderByMonth = Order::
+        when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })->whereBetween('created_at', [$lastTwelveMonths, Carbon::now()])->orderBy('created_at', 'asc')->selectRaw('id,created_at')
+        ->get()  
+         
+        ->groupBy(function ($val) {
+            return Carbon::parse($val->created_at)->format('Y-M');
+        })->map(function ($groupedItems) {
+            return $groupedItems->count();
+        });
+
+
+        $totalShippedOrder = Order::when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })->where('status', Order::STATUS_SHIPPED)->whereBetween('created_at', [$lastTwelveMonths, Carbon::now()])->orderBy('created_at', 'asc')->selectRaw('id,created_at')
+        ->get() 
+        ->groupBy(function ($val) {
+            return Carbon::parse($val->created_at)->format('Y-M');
+        })->map(function ($groupedItems) {
+            return $groupedItems->count();
+        });
+        
+        $months = array_map(function ($key, $value) {
+            return $key ;
+        }, array_keys($totalOrderByMonth->toArray()), $totalOrderByMonth->toArray()); 
+        $totalOrderCount =    array_values($totalOrderByMonth->toArray()); 
+        $totalShippedCount =   array_values($totalShippedOrder->toArray());
+ 
+
+        // doughnut chart started
+        $newValue = $currentYearTotal;
+        $oldValue= Order::when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })->whereBetween('created_at', [Carbon::now()->subMonths(24), $lastTwelveMonths])
+        ->when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })
+        ->selectRaw('id') 
+        ->count(); 
+         try{
+            $percentIncreaseThisYear = number_format(((($newValue - $oldValue) / $oldValue) * 100), 2);
+
+        }catch(\Exception $e){
+            $percentIncreaseThisYear = 0;
         }
         
-        $paymentDone = Order::STATUS_PAYMENT_DONE;
-        $currentYearTotal    = $currentYearsorders->whereYear('order_date',$currentYear)->count();
-        $currentYearConfirm  = $currentYearsorders->where('status', '>=' ,$paymentDone)->count();
-        $currentmonthTotal   = $currentMonthorders->whereMonth('order_date',$currentmonth)->whereYear('order_date',$currentYear)->count();
-        $currentmonthConfirm = $currentMonthorders->where('status', '>=' ,$paymentDone)->count();
-        $currentDayTotal     = $CurentDay->whereDate('order_date',$today)->count();
-        $currentDayConfirm   = $CurentDay->where('status', '>=' ,$paymentDone)->count();
-        $totalOrder          = $totalOrderQuery->count();
-        $totalCompleteOrders = $totalOrderQuery->where('status', '>=' ,$paymentDone)->count();
+        try{
+            $newValue = end($totalOrderCount); // Get the last element
+            $oldValue = prev($totalOrderCount); // Get the second-to-last element 
+            $percentIncreaseThisMonth = number_format(((($newValue - $oldValue) / $oldValue) * 100), 2);
 
-        return  $order[] = [
+        }catch(\Exception $e){
+            $newValue = 0;
+            $oldValue = 0;
+            $percentIncreaseThisMonth = 0;
+        }
+   
+        // chart 
+        $statusCounts = Order::
+        when($isUser,function($query)  {
+            return $query->where('user_id',Auth::id());
+        })->selectRaw('status, COUNT(*) as count')
+        ->whereIn('status', [
+            Order::STATUS_SHIPPED,
+            Order::STATUS_PAYMENT_DONE, 
+            Order::STATUS_CANCEL,
+            Order::STATUS_REFUND
+        ])
+        ->groupBy('status')
+        ->get();
+
+        $statusCounts = $statusCounts->pluck('count', 'status');
+
+        // Now you can access the counts for each status like this:
+        $shippedOrderCount = $statusCounts[Order::STATUS_SHIPPED] ?? 0;
+        $doneOrderCount = $statusCounts[Order::STATUS_PAYMENT_DONE] ?? 0; 
+        $cancelledOrderCount = $statusCounts[Order::STATUS_CANCEL] ?? 0;
+        $refundOrderCount = $statusCounts[Order::STATUS_REFUND] ?? 0;
+
+
+        //doughnut chart end
+        return ([
             'totalOrders'         => $totalOrder,
             'totalCompleteOrders' => $totalCompleteOrders,
-            'currentmonthTotal'   => $currentmonthTotal,
-            'currentmonthConfirm' => $currentmonthConfirm,
+            'currentMonthTotal'   => $currentMonthTotal,
+            'currentMonthConfirm' => $currentMonthConfirm,
             'currentDayTotal'     => $currentDayTotal,
             'currentDayConfirm'   => $currentDayConfirm,
             'currentYearTotal'    => $currentYearTotal,
             'currentYearConfirm'  => $currentYearConfirm,
-            'monthName'           => $monthName
-        ];
-    }
+            'monthName'           => $monthName,
+            'totalShippedCount'   => $totalShippedCount,
+            'totalOrderCount'     => $totalOrderCount,
+            'months'              => $months,
+            'percentIncreaseThisMonth' => $percentIncreaseThisMonth,
+            'percentIncreaseThisYear'  => $percentIncreaseThisYear,
+            'doughnutData' =>
+            [
+                ['x'=> "Shipped", 'value'=> $shippedOrderCount],
+                ['x'=> "Done", 'value'=>  $doneOrderCount],
+                ['x'=> "Refund/Cancelled", 'value'=>    $cancelledOrderCount+$refundOrderCount]
+            
+ 
+            ]
 
+        ]);
+    }
 }
