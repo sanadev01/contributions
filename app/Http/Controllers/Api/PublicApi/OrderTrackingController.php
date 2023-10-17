@@ -14,8 +14,13 @@ class OrderTrackingController extends Controller
 {
     public $trackings;
 
-    public function __invoke(Request $request, $search, $format = 'json')
+    public function __invoke(Request $request, $search = null, $format = null)
     {
+        if ($request->isMethod('post')) {
+            $search = $request->input('search');
+            $format = $request->input('format');
+        }
+        
         $order_tracking_repository = new OrderTrackingRepository($search);
         $responses = $order_tracking_repository->handle();
 
@@ -31,8 +36,7 @@ class OrderTrackingController extends Controller
     }
 
     private function generateXmlResponse($responses, $search, $apiResponse)
-    {
-        // dd($apiResponse);
+    {;
         $jsonResponse = $this->generateJsonResponse($responses);
         if ($jsonResponse === null || !$jsonResponse->getData()->success) {
             $errorXml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
@@ -41,11 +45,9 @@ class OrderTrackingController extends Controller
             $errorXml->addChild('ErrorMessage', 'Order not found');
             return $errorXml->asXML();
         }
-        // dd($jsonResponse->getData());
         $response = json_decode($responses);
         $data = array_shift($response);
         $orderDate = Carbon::parse($data->trackings[0]->order->order_date)->addDays(15);
-        // dd($data);
     
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <AmazonTrackingResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="AmazonTrackingResponse.xsd"></AmazonTrackingResponse>');
@@ -71,12 +73,37 @@ class OrderTrackingController extends Controller
         // Add TrackingEventHistory element
         $trackingEventHistory = $packageTrackingInfo->addChild('TrackingEventHistory');
 
+        // API Tracking Events
+        if (isset($apiResponse->objetos) && is_array($apiResponse->objetos) && count($apiResponse->objetos) > 0) {
+            foreach ($apiResponse->objetos as $trackingObject) {
+                if(isset($trackingObject->eventos) && is_array($trackingObject->eventos) && count($trackingObject->eventos) > 0) {
+                    foreach($trackingObject->eventos as $evento) {
+                        $translations = $this->mapEvents(optional($evento)->descricao);
+                        $eventStatus = $translations['status'] ?? null;
+                        $eventReason = $translations['reason'] ?? null;
+                        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
+                        $trackingEventDetail->addChild('EventStatus', $eventStatus);
+                        $trackingEventDetail->addChild('EventReason', $eventReason);
+                        $trackingEventDetail->addChild('EventDateTime', optional($evento)->dtHrCriado);
+                        $eventLocation = $trackingEventDetail->addChild('EventLocation');
+                        $eventLocation->addChild('City', optional(optional(optional($evento)->unidade)->endereco)->cidade);
+                        $eventLocation->addChild('StateProvince', optional(optional(optional($evento)->unidade)->endereco)->uf);
+                        $eventLocation->addChild('PostalCode', optional(optional($data->trackings[0]->order)->recipient)->zipcode);
+                        $eventLocation->addChild('CountryCode', "BR");
+                    }
+                }
+            }       
+        }
+
         // HomeDelivery Tracking Events
         $iteration = 0;
         foreach (array_reverse($data->trackings) as $event) {
+            $translations = $this->mapEvents(optional($event)->description);
+            $eventStatus = $translations['status'] ?? null;
+            $eventReason = $translations['reason'] ?? null;
             $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
-            $trackingEventDetail->addChild('EventStatus', $event->status_code);
-            $trackingEventDetail->addChild('EventReason', $event->description);
+            $trackingEventDetail->addChild('EventStatus', $eventStatus);
+            $trackingEventDetail->addChild('EventReason', $eventReason);
             $trackingEventDetail->addChild('EventDateTime', substr($event->created_at, 0, -8));
             $eventLocation = $trackingEventDetail->addChild('EventLocation');
             $eventLocation->addChild('City', $event->city);
@@ -93,63 +120,34 @@ class OrderTrackingController extends Controller
             
             $iteration++;
         }
-        
-        // API Tracking Events
-        if (isset($apiResponse->objetos) && is_array($apiResponse->objetos) && count($apiResponse->objetos) > 0) {
-            // dd($apiResponse);
-            foreach ($apiResponse->objetos as $trackingObject) {
-                if(isset($trackingObject->eventos) && is_array($trackingObject->eventos) && count($trackingObject->eventos) > 0) {
-                    foreach($trackingObject->eventos as $evento) {
-                        
-                        $detalhe = optional($evento)->detalhe;
-                        $parts = explode('&#13;', $detalhe);
-                        $detalheCleaned = trim($parts[0]);
-
-                        $eventStatus = $this->translateDescricaoToEnglish(optional($evento)->descricao);
-                        $eventReason = $this->translateDetalheToEnglish($detalheCleaned);
-                        $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
-                        $trackingEventDetail->addChild('EventStatus', $eventStatus);
-                        $trackingEventDetail->addChild('EventReason', $eventReason);
-                        $trackingEventDetail->addChild('EventDateTime', optional($evento)->dtHrCriado);
-                        $eventLocation = $trackingEventDetail->addChild('EventLocation');
-                        $eventLocation->addChild('City', optional(optional(optional($evento)->unidade)->endereco)->cidade);
-                        $eventLocation->addChild('StateProvince', optional(optional(optional($evento)->unidade)->endereco)->uf);
-                        $eventLocation->addChild('PostalCode', optional(optional($data->trackings[0]->order)->recipient)->zipcode);
-                        $eventLocation->addChild('CountryCode', "BR");
-                    }
-                }
-            }       
-        }
 
         $xmlString = $xml->asXML();
 
         return $xmlString;
     }
 
-    public function translateDescricaoToEnglish($descricao) {
+    public function mapEvents($descricao) {
         $translations = [
-            'Objeto entregue ao destinatário' => 'Object delivered to recipient',
-            'Objeto saiu para entrega ao destinatário' => 'Object out for delivery to recipient',
-            'Objeto em trânsito - por favor aguarde' => 'Object in transit - please wait',
-            'Pagamento confirmado' => 'Payment confirmed',
-            'Fiscalização aduaneira concluída - aguardando pagamento' => 'Customs inspection completed - awaiting payment',
-            'Encaminhado para fiscalização aduaneira' => 'Forwarded to customs inspection',
-            'Objeto recebido pelos Correios do Brasil' => 'Object received by the Brazilian Post Office',
-            'Objeto postado' => 'Object Posted',
+
+            'Objeto entregue ao destinatário' => ['status' => 'D1', 'reason' => 'NS'],
+            'Objeto saiu para entrega ao destinatário' => ['status' => 'OD', 'reason' => 'NS'],
+            'Objeto em trânsito - por favor aguarde' => ['status' => 'X6', 'reason' => 'NS'],
+            'Pagamento confirmado' => ['status' => 'K1', 'reason' => 'BD'],
+            'Fiscalização aduaneira concluída - aguardando pagamento' => ['status' => 'K1', 'reason' => 'BD'],
+            'Encaminhado para fiscalização aduaneira' => ['status' => 'K1', 'reason' => 'CA'],
+            'Objeto recebido pelos Correios do Brasil' => ['status' => 'L1', 'reason' => 'NS'],
+            'Objeto postado' => ['status' => 'O1', 'reason' => 'NS'],
+
+            'Parcel transfered to airline' => ['status' => 'L1', 'reason' => 'NS'],
+            'Parcel inside Homedelivery Container' => ['status' => 'O1', 'reason' => 'NS'],
+            'Freight arrived at Homedeliver' => ['status' => 'AF', 'reason' => 'NS'],
+            'Order Placed' => ['status' => 'XB', 'reason' => 'NS'],
+
+
         ];
     
-        return $translations[$descricao] ?? $descricao;
+        return $translations[$descricao] ?? null;
     }
-
-    public function translateDetalheToEnglish($detalhe) {
-        $translations = [
-            'Aguardando envio para o cliente' => 'Awaiting shipment to customer',
-            'Fiscalização aduaneira concluída - aguardando pagamento' => 'Customs inspection completed - awaiting payment',
-        ];
-    
-        return $translations[$detalhe] ?? $detalhe;
-    }
-
 
     private function generateJsonResponse($responses)
     {
