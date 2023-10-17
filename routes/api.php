@@ -6,7 +6,6 @@ use App\Models\PaymentInvoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\publicApi\OrderTrackingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,7 +76,7 @@ Route::prefix('v1')->group(function(){
             Route::resource('parcels', 'ParcelController')->only('store','show','destroy','update');
             Route::get('parcel/{order}/cn23',OrderLabelController::class);
             Route::put('parcel/items/{parcel}',[App\Http\Controllers\Api\PublicApi\ParcelController::class, 'updateItems']);
-            Route::match(['get', 'post'], 'order/tracking/{search?}/{format?}', [OrderTrackingController::class, '__invoke']);
+            Route::match(['get', 'post'], 'order/tracking/{search?}/{format?}', [App\Http\Controllers\Api\PublicApi\OrderTrackingController::class, '__invoke']);
             Route::get('services-rates', GetRateController::class);
             Route::resource('products', 'ProductController')->only('index', 'show', 'store');
             Route::get('api/token', AmazonApiTokenController::class);

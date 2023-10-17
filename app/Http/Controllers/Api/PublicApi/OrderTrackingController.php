@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\publicApi;
+namespace App\Http\Controllers\Api\PublicApi;
 
 use Carbon\Carbon;
 use App\Models\Order;
