@@ -64,7 +64,7 @@ class Parcel
          "seller_tax_number" =>"12345678-998A",
          'customerReferenceID' => ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id) . ' HD-' . $this->order->id,
          "seller_address_number" => "605",
-         "seller_address_complement" => "Apartment 99B",
+         "seller_address_complement" => " ",
          "seller_website" => "www.seller.com",
 
          "volumes_attributes" => [
@@ -94,8 +94,8 @@ class Parcel
                "description" =>  $item->description,
                "value" => $item->value,
                'weight' => round($this->order->weight / $totalQuantity, 2) - 0.02,
-               "hs_code" => $item->sh_code,
-               "sku" => $item->sh_code,
+               "hs_code" => substr($item->sh_code, 0, 6),
+               "sku" => substr($item->sh_code, 0, 6),
                "origin_country" => 'US',
                "quantity" => (int)$item->quantity,
 

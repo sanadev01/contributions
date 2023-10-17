@@ -382,6 +382,14 @@ class Order extends Model implements Package
                 return 'PostPlus';
 
             }
+            elseif(optional($this->shippingService)->is_anjun_china_service_sub_class){
+
+                return 'Correios AJ';
+            }
+            elseif(optional($this->shippingService)->isAnjunService()){
+
+                return 'Correios A';
+            }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS ){
 
                 return 'Total Express';
@@ -923,6 +931,26 @@ class Order extends Model implements Package
         $addedProfit = round($gssCost * $profit, 2);
         $this->user_declared_freight = $this->user_declared_freight - $addedProfit;
         return true;
+    }
+    public function getTaxAndDutyAttribute(){
+        $taxAndDuty = 0;
+        if(strtolower($this->tax_modality) == "ddp"){
+            if($this->recipient->country->code =="MX" || $this->recipient->country->code =="CA"){
+                if($this->gross_total<=50)
+                    $taxAndDuty = 0;
+                else if($this->gross_total <= 117)
+                    $taxAndDuty = $this->gross_total * .17;
+                else
+                    $taxAndDuty = $this->gross_total * .19;
+            }
+            else if($this->recipient->country->code =="BR"){
+                if($this->gross_total<=50)
+                    $taxAndDuty = $this->gross_total * .17;
+                else
+                    $taxAndDuty = $this->gross_total * .60;
+            }
+        }
+        return number_format($taxAndDuty,2);
     }
 
 }

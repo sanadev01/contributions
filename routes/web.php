@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Order;
+use App\Models\Warehouse\Container;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
 use App\Models\Warehouse\DeliveryBill;

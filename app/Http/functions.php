@@ -163,6 +163,21 @@ function sortTrackingEvents($data, $report)
     ];
 }
 
+function responseUnprocessable($message)
+{
+    return response()->json([
+        'success' => false,
+        'message' => $message,
+    ], 422);
+}
+function responseSuccessful($output, $message)
+{
+    return response()->json([
+        'success' => true,
+        'output' => $output,
+        'message' =>  $message,
+    ]);
+}
 function getAutoChargeData(User $user)
 {
     return[
@@ -228,4 +243,13 @@ function isActiveService($user,$shippingService){
     if($shippingService->sweden_post_service_sub_class) 
        return setting('sweden_post', null, $user->id)?true:false; 
     return true; 
+}
+function getVolumetricDiscountPercentage(Order $order){
+    $user_id    = $order->user->id;
+    $percentage = setting('discount_percentage', null, $user_id);
+    if(optional($order->shippingService)->is_total_express)
+        $percentage= setting('postal_discount_percentage', null, $user_id);
+    elseif(optional($order->shippingService)->isHDExpressService())
+        $percentage= setting('hd_express_discount_percentage', null, $user_id);
+    return $percentage??setting('discount_percentage', null, $user_id);
 }

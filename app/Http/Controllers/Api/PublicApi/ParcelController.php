@@ -167,6 +167,7 @@ class ParcelController extends Controller
                 "width" =>   round(optional($request->parcel)['width'],2),
                 "height" =>  round(optional($request->parcel)['height'],2),
                 "is_invoice_created" => true,
+                "tax_modality" => optional($request->parcel)['tax_modality']??'ddu',
                 "order_date" => now(),
                 "is_shipment_added" => true,
                 'status' => Order::STATUS_ORDER,
@@ -219,7 +220,7 @@ class ParcelController extends Controller
                     $isPerfume = true;
                 }
                 $order->items()->create([
-                    "sh_code" => optional($product)['sh_code'],
+                    "sh_code" => substr(optional($product)['sh_code'], 0, 6),
                     "description" => optional($product)['description'],
                     "quantity" => optional($product)['quantity'],
                     "value" => optional($product)['value'],
@@ -431,9 +432,8 @@ class ParcelController extends Controller
 
             //CHECK VOL WEIGHT OF PARCEL AND SET DISCOUNT
             $totalDiscountPercentage = 0;
-            $volumetricDiscount = setting('volumetric_discount', null, $parcel->user->id);
-            $discountPercentage = setting('discount_percentage', null, $parcel->user->id);
-            
+            $volumetricDiscount = setting('volumetric_discount', null, $parcel->user->id); 
+            $discountPercentage = getVolumetricDiscountPercentage($parcel);            
             if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
                 return false;
             }
@@ -496,7 +496,7 @@ class ParcelController extends Controller
                     $isPerfume = true;
                 }
                 $parcel->items()->create([
-                    "sh_code" => optional($product)['sh_code'],
+                    "sh_code" => substr(optional($product)['sh_code'], 0, 6),
                     "description" => optional($product)['description'],
                     "quantity" => optional($product)['quantity'],
                     "value" => optional($product)['value'],
@@ -597,7 +597,7 @@ class ParcelController extends Controller
                     $isPerfume = true;
                 }
                 $parcel->items()->create([
-                    "sh_code" => optional($product)['sh_code'],
+                    "sh_code" => substr(optional($product)['sh_code'], 0, 6),
                     "description" => optional($product)['description'],
                     "quantity" => optional($product)['quantity'],
                     "value" => optional($product)['value'],
