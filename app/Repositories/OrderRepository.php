@@ -694,7 +694,6 @@ class OrderRepository
             if($shippingServices->isEmpty()){
                 $this->shippingServiceError = 'Please check your parcel dimensions';
             }
-        }
         return $shippingServices;
     }
 
