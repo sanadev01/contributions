@@ -170,7 +170,7 @@
         </ol>
     </nav>
     {{-- contact us --}}
-    <div class='row no-gutters d-flex align-items-center'>
+    <!-- <div class='row no-gutters d-flex align-items-center'>
         <div class="col-xl-4 col-lg-12">
             <div class="light-green-color welcome-admin height-100">
                 <div class="ml-3">
@@ -192,7 +192,7 @@
             </div>
         </div>
 
-    </div>
+    </div> -->
 
     <!-- Dashboard Analytics Start -->
     <section id="dashboard-analytics"> 
