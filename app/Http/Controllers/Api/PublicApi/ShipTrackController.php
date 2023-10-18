@@ -19,32 +19,29 @@ class ShipTrackController extends Controller
         $xmlContent = $request->getContent();
         $xml = simplexml_load_string($xmlContent);
         $trackingCode = (string)$xml->TrackingNumber;
-       
-        $order_tracking_repository = new OrderTrackingRepository($trackingCode);
-        $responses = $order_tracking_repository->handle();
-
-        if ($trackingCode) {
-            $code = Order::where('warehouse_number', $trackingCode)->value('corrios_tracking_code');
+        $order = Order::where('warehouse_number', $trackingCode)
+                ->with('trackings')
+                ->first();
+         
+        if ($order) {
             $orderTrackingService = new CorreiosTrackingService();
-            $apiResponse = $orderTrackingService->getTracking($code);
-            $xmlResponse = $this->generateXmlResponse($responses, $trackingCode, $apiResponse);
+            $apiResponse = $orderTrackingService->getTracking($order->corrios_tracking_code);
+            $xmlResponse = $this->generateXmlResponse($order,$apiResponse);
             return response($xmlResponse, 200)->header('Content-Type', 'application/xml');
         }
     }
 
-    private function generateXmlResponse($responses, $search, $apiResponse)
-    {;
-        $jsonResponse = $this->generateJsonResponse($responses);
-        if ($jsonResponse === null || !$jsonResponse->getData()->success) {
+    private function generateXmlResponse($order, $apiResponse)
+    {
+        if (count($order->trackings) < 0 ) {
             $errorXml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                 <AmazonTrackingResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="AmazonTrackingResponse.xsd"></AmazonTrackingResponse>');
             $errorXml->addChild('APIVersion', '4.0');
-            $errorXml->addChild('ErrorMessage', 'Order not found');
+            $errorXml->addChild('ErrorMessage', 'Order Tracking Not Found');
             return $errorXml->asXML();
         }
-        $response = json_decode($responses);
-        $data = array_shift($response);
-        $orderDate = Carbon::parse($data->trackings[0]->order->order_date)->addDays(15);
+
+        $orderDate = Carbon::parse($order->order_date)->addDays(15);
     
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <AmazonTrackingResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="AmazonTrackingResponse.xsd"></AmazonTrackingResponse>');
@@ -53,14 +50,14 @@ class ShipTrackController extends Controller
     
         $packageTrackingInfo = $xml->addChild('PackageTrackingInfo');
     
-        $packageTrackingInfo->addChild('TrackingNumber', $data->trackings[0]->order->warehouse_number);
+        $packageTrackingInfo->addChild('TrackingNumber', $order->warehouse_number);
 
         // // Add PackageDestinationLocation element
         $packageDestinationLocation = $packageTrackingInfo->addChild('PackageDestinationLocation');
-        $packageDestinationLocation->addChild('City', optional(optional($data->trackings[0]->order)->recipient)->city);
-        $packageDestinationLocation->addChild('StateProvince', optional(optional(optional($data->trackings[0]->order)->recipient)->state)->code);
-        $packageDestinationLocation->addChild('PostalCode', optional(optional($data->trackings[0]->order)->recipient)->zipcode);
-        $packageDestinationLocation->addChild('CountryCode', optional(optional(optional($data->trackings[0]->order)->recipient)->country)->code);
+        $packageDestinationLocation->addChild('City', optional(optional($order)->recipient)->city);
+        $packageDestinationLocation->addChild('StateProvince', optional(optional(optional($order)->recipient)->state)->code);
+        $packageDestinationLocation->addChild('PostalCode', optional(optional($order)->recipient)->zipcode);
+        $packageDestinationLocation->addChild('CountryCode', optional(optional(optional($order)->recipient)->country)->code);
 
         // Add PackageDeliveryDate element
         $packageDeliveryDate = $packageTrackingInfo->addChild('PackageDeliveryDate');
@@ -85,7 +82,7 @@ class ShipTrackController extends Controller
                         $eventLocation = $trackingEventDetail->addChild('EventLocation');
                         $eventLocation->addChild('City', optional(optional(optional($evento)->unidade)->endereco)->cidade);
                         $eventLocation->addChild('StateProvince', optional(optional(optional($evento)->unidade)->endereco)->uf);
-                        $eventLocation->addChild('PostalCode', optional(optional($data->trackings[0]->order)->recipient)->zipcode);
+                        $eventLocation->addChild('PostalCode', optional(optional($order)->recipient)->zipcode);
                         $eventLocation->addChild('CountryCode', "BR");
                     }
                 }
@@ -94,23 +91,24 @@ class ShipTrackController extends Controller
 
         // HomeDelivery Tracking Events
         $iteration = 0;
-        foreach (array_reverse($data->trackings) as $event) {
-            $translations = $this->mapEvents(optional($event)->description);
+        foreach (array_reverse($order->trackings->toArray()) as $event) {
+
+            $translations = $this->mapEvents(optional($event)['description']);
             $eventStatus = $translations['status'] ?? null;
             $eventReason = $translations['reason'] ?? null;
             $trackingEventDetail = $trackingEventHistory->addChild('TrackingEventDetail');
             $trackingEventDetail->addChild('EventStatus', $eventStatus);
             $trackingEventDetail->addChild('EventReason', $eventReason);
-            $trackingEventDetail->addChild('EventDateTime', substr($event->created_at, 0, -8));
+            $trackingEventDetail->addChild('EventDateTime', substr($event['created_at'], 0, -8));
             $eventLocation = $trackingEventDetail->addChild('EventLocation');
-            $eventLocation->addChild('City', $event->city);
+            $eventLocation->addChild('City', optional($event)['city']);
             $eventLocation->addChild('StateProvince', 'FL');
             $eventLocation->addChild('PostalCode', '33182');
-            $eventLocation->addChild('CountryCode', $event->country);
+            $eventLocation->addChild('CountryCode', optional($event)['country']);
 
             if ($iteration === 0) {
                 $trackingEventDetail->addChild('AdditionalLocationInfo', '');  
-                $trackingEventDetail->addChild('SignedForByName', optional(optional($event->order)->recipient)->first_name.' '.optional(optional($event->order)->recipient)->last_name);
+                $trackingEventDetail->addChild('SignedForByName', optional(optional($order)->recipient)->first_name.' '.optional(optional($order)->recipient)->last_name);
             } else {
                 $trackingEventDetail->addChild('EstimatedDeliveryDate', $orderDate->format('Y-m-d'));  
             }
@@ -146,61 +144,4 @@ class ShipTrackController extends Controller
         return $translations[$descricao] ?? null;
     }
 
-    private function generateJsonResponse($responses)
-    {
-        foreach($responses as $response){
-            if( $response['success'] == true ){
-                if($response['service'] == 'Correios_Chile')
-                {
-                    $this->trackings = $this->getChileTrackings($response['chile_trackings'], $response['trackings']);
-     
-                    
-                    return apiResponse(true,'Order found', ['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => null ]);
-                }
-                if($response['service'] == 'USPS')
-                {
-                    $this->trackings = $this->getUSPSTrackings($response['usps_trackings'], $response['trackings']);
-     
-                    
-                    return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => null ]);
-                }
-                if($response['service'] == 'Correios_Brazil')
-                {
-                    $this->trackings = $response['trackings'];
-                    $apiTracking = $response['api_trackings']; 
-                    return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => $apiTracking]); 
-                }
-                
-                $this->trackings = $response['trackings'];
-                return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => null]);
-            }
-        }
-        
-        return apiResponse(false,'Order not found', ['hdTrackings'=> $this->trackings, 'apiTrackings' => null ]);
-    }
-
-    private function getChileTrackings($response, $hd_trackings)
-    {
-        $response = array_reverse($response);
-        
-        foreach($response as $data)
-        {
-
-            $hd_trackings->push($data);
-        }
-
-        return $hd_trackings;
-    }
-
-    private function getUSPSTrackings($response, $hd_trackings)
-    {
-        $response = array_reverse($response);
-        
-        foreach($response as $data)
-        {
-            $hd_trackings->push($data);
-        }
-
-        return $hd_trackings;
-    }
 }
