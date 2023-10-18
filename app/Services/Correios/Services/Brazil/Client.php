@@ -40,6 +40,11 @@ class Client{
         $this->client = new GuzzleClient([
             'base_uri' => $this->baseUri
         ]);
+        if(setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){ 
+            $this->anjun_username = '37148594000192';
+            $this->anjun_password = '9wdkSYsvk2FkqNbojC1CLlUhN1RY3HqqmmADFBPa';
+            $this->anjun_numero = '9912520230';
+        }
     }
 
     public function getToken()
@@ -62,6 +67,17 @@ class Client{
 
     public function getAnjunToken()
     {
+        dd([
+            
+            'auth' => [
+                $this->anjun_username,
+                $this->anjun_password
+            ],
+            'json' => [
+                'numero' => $this->anjun_numero
+            ]
+        ]
+            );
         return Cache::remember('anjun_token',Carbon::now()->addHours(24),function (){
             $response = $this->client->post('/token/v1/autentica/cartaopostagem',[
                 'auth' => [
