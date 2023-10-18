@@ -392,7 +392,11 @@ class Order extends Model implements Package
                 return 'HD Express';
 
             }
-            return 'Correios Brazil';
+            elseif($this->shippingService->is_hound_express){
+
+                return 'Hound Express';
+            }
+            return 'Correios Brazi3e3l';
         }
 
         return null;

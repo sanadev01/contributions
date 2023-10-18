@@ -45,6 +45,7 @@ return [
             283 => 'Total Express',
             33173 => 'HD Express',
             776 => 'LT Prime',
+            887 => 'Hound Express',
         ]
     ]
 ];

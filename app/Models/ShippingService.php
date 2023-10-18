@@ -37,6 +37,7 @@ class ShippingService extends Model
     const GePS = 537;
     const GePS_EFormat = 540;
     const Prime5 = 773;
+    const HoundExpress = 887;
     const USPS_GROUND = 05;
     const Post_Plus_Registered = 734;
     const Post_Plus_EMS = 367;
@@ -177,6 +178,11 @@ class ShippingService extends Model
     {
         return in_array($this->service_sub_class,[self::Prime5,self::Prime5RIO,self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);
     }
+
+    function getIsHoundExpressAttribute(){
+        return in_array($this->service_sub_class,[self::HoundExpress]); 
+    }
+
     function getIsDirectlinkCountryAttribute(){
         return in_array($this->service_sub_class,[self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);
     }

@@ -31,7 +31,10 @@ class HandleCorreiosLabelsRepository
     public function handle()
     {
         if ($this->order->shippingService->isSwedenPostService()) {
-                return $this->swedenPostLabel();
+            return $this->swedenPostLabel();
+        }
+        if ($this->order->shippingService->is_hound_express) {
+        return $this->isHoundExpress();
         }
         if ($this->order->recipient->country_id == Order::BRAZIL) {
             
@@ -133,6 +136,11 @@ class HandleCorreiosLabelsRepository
 
     public function swedenPostLabel()
     {
+        $swedenpostLabelRepository = new SwedenpostLabelRepository(); 
+        $swedenpostLabelRepository->run($this->order,$this->update); //by default consider false
+        return $this->renderLabel($this->request, $this->order, $swedenpostLabelRepository->getError());
+    }
+    function isHoundExpress(){
         $swedenpostLabelRepository = new SwedenpostLabelRepository(); 
         $swedenpostLabelRepository->run($this->order,$this->update); //by default consider false
         return $this->renderLabel($this->request, $this->order, $swedenpostLabelRepository->getError());
