@@ -40,6 +40,11 @@ class Client{
         $this->client = new GuzzleClient([
             'base_uri' => $this->baseUri
         ]);
+        if(setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){ 
+            $this->anjun_username = '37148594000192';
+            $this->anjun_password = '9wdkSYsvk2FkqNbojC1CLlUhN1RY3HqqmmADFBPa';
+            $this->anjun_numero = '0076204456';
+        }
     }
 
     public function getToken()

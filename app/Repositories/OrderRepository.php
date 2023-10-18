@@ -683,6 +683,21 @@ class OrderRepository
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return !$shippingService->isAnjunChinaService();
                 });
+            }
+
+            if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) || setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
+                    $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                        return $shippingService->service_sub_class != ShippingService::Packet_Standard 
+                            && $shippingService->service_sub_class != ShippingService::Packet_Express
+                            && $shippingService->service_sub_class != ShippingService::Packet_Mini;
+                    });
+            }
+
+            if(!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && !setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
+                    $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                        return $shippingService->service_sub_class != ShippingService::AJ_Packet_Standard 
+                            && $shippingService->service_sub_class != ShippingService::AJ_Packet_Express;
+                    });
             }else if(!Auth::user()->isAdmin()){
                 foreach(ShippingService::whereIn('service_sub_class',[ShippingService::AJ_Standard_CN,ShippingService::AJ_Express_CN])->get() as $anjun)
                 $shippingServices->push($anjun);

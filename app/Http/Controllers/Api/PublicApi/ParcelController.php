@@ -61,11 +61,11 @@ class ParcelController extends Controller
 
         
         
-        if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->isAnjunService()) {
+        if ((!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) || !setting('bcn_api', null, \App\Models\User::ROLE_ADMIN) )&& $shippingService->isAnjunService()) {
             return apiResponse(false,$shippingService->name.' is currently not available.');
         }
         
-        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
+        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) || setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)) {
             if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
                 return apiResponse(false,$shippingService->name.' is currently not available.');
             }
@@ -318,11 +318,11 @@ class ParcelController extends Controller
             return apiResponse(false,'Shipping service not found.');
         }
 
-        if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->isAnjunService()) {
+        if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) || !setting('bcn_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->isAnjunService()) {
             return apiResponse(false,$shippingService->name.' is currently not available.');
         }
 
-        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
+        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) || setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)) {
             if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
                 return apiResponse(false,$shippingService->name.' is currently not available.');
             }
