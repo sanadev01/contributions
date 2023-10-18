@@ -48,7 +48,7 @@ class SettingController extends Controller
             'fedex_profit'=> setting('fedex_profit', null, $this->adminId)? setting('fedex_profit', null, $this->adminId): 0,
             'AUTHORIZE_ID'=> setting('AUTHORIZE_ID'),
             'AUTHORIZE_KEY'=> setting('AUTHORIZE_KEY'),
-            'correios_setting'=> setting('anjun_api', null, $this->adminId) ? 'Anjun API' : 'Correios API',
+            'correios_setting'=> setting('anjun_api', null, $this->adminId) ? 'Anjun API' : (setting('anjun_api', null, $this->adminId)?"bcn_api":'Correios API'),
         ];
         try {
             \Mail::send(new SettingUpdate($user, $request, $userData, true));
