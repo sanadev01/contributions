@@ -19,10 +19,8 @@ class ShipTrackController extends Controller
         $xmlContent = $request->getContent();
         $xml = simplexml_load_string($xmlContent);
         $trackingCode = (string)$xml->TrackingNumber;
-        $order = Order::where('warehouse_number', $trackingCode)
-                ->with('trackings')
-                ->first();
-         
+        $order = Order::where('warehouse_number', $trackingCode)->first();
+
         if ($order) {
             $orderTrackingService = new CorreiosTrackingService();
             $apiResponse = $orderTrackingService->getTracking($order->corrios_tracking_code);
