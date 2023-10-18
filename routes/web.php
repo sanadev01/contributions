@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 | contains the "web" middleware group. Now create something great!
 |
 */  
+
 Route::get('/', function (Shopify $shopifyClient) {
     $shop = "https://".request()->shop;
     if (request()->has('shop') ) {
