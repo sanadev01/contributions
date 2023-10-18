@@ -52,7 +52,6 @@ Auth::routes();
 
 Route::post('logout', [\App\Http\Controllers\Auth\LoginController::class,'logout'])->name('logout');
 
-
 Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function () {
 
         Route::get('dashboard', 'HomeController')->name('home');
