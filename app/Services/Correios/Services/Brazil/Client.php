@@ -67,17 +67,6 @@ class Client{
 
     public function getAnjunToken()
     {
-        dd([
-            
-            'auth' => [
-                $this->anjun_username,
-                $this->anjun_password
-            ],
-            'json' => [
-                'numero' => $this->anjun_numero
-            ]
-        ]
-            );
         return Cache::remember('anjun_token',Carbon::now()->addHours(24),function (){
             $response = $this->client->post('/token/v1/autentica/cartaopostagem',[
                 'auth' => [
