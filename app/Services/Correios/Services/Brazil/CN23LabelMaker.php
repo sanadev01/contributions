@@ -55,7 +55,7 @@ class CN23LabelMaker implements HasLableExport
         $this->checkReturn($this->order);
 
         if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->isAnjunChinaService()) {
-            if(setting('bcn_api', null, User::ROLE_ADMIN)){
+            if($this->order->shippingService->isAnjunService() && setting('bcn_api', null, User::ROLE_ADMIN)){
                 $this->contractNumber = 'Contrato: 0076204456';
             }else{
                 $this->contractNumber = 'Contrato: 9912501700';
