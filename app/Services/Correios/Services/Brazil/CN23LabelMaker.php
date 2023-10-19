@@ -7,7 +7,7 @@ use App\Models\Order;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use App\Services\Correios\Contracts\HasLableExport;
 use App\Services\Correios\Models\Package;
-
+use App\Models\User;
 class CN23LabelMaker implements HasLableExport
 {
 
@@ -53,8 +53,12 @@ class CN23LabelMaker implements HasLableExport
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
 
-        if ($this->order->shippingService->isAnjunService()) {
-            $this->contractNumber = 'Contrato:  9912501700';
+        if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->isAnjunChinaService()) {
+            if($this->order->shippingService->isAnjunService() && setting('bcn_api', null, User::ROLE_ADMIN)){
+                $this->contractNumber = 'Contrato: 0076204456';
+            }else{
+                $this->contractNumber = 'Contrato: 9912501700';
+            }
             $this->hasAnjunLabel = true;
         }
         return $this;
