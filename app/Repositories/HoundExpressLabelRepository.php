@@ -7,7 +7,7 @@ use App\Models\Order;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Correios\Models\PackageError;
 use App\Services\SwedenPost\Services\UpdateCN23Label;
-use App\Services\SwedenPost\Client;
+use App\Services\HoundExpress\Client;
 class HoundExpressLabelRepository
 {
     protected $error;

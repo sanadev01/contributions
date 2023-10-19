@@ -396,7 +396,7 @@ class Order extends Model implements Package
 
                 return 'Hound Express';
             }
-            return 'Correios Brazi3e3l';
+            return 'Correios Brazil';
         }
 
         return null;

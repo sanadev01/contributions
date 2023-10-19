@@ -13,7 +13,7 @@ use App\Repositories\SwedenPostLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Services\TotalExpress\TotalExpressLabelRepository;
-
+use App\Repositories\HoundExpressLabelRepository;
 class HandleCorreiosLabelsRepository
 {
     public $order;
@@ -33,8 +33,8 @@ class HandleCorreiosLabelsRepository
         if ($this->order->shippingService->isSwedenPostService()) {
             return $this->swedenPostLabel();
         }
-        if ($this->order->shippingService->is_hound_express) {
-        return $this->isHoundExpress();
+        if ($this->order->shippingService->is_hound_express) { 
+            return $this->isHoundExpress();
         }
         if ($this->order->recipient->country_id == Order::BRAZIL) {
             
@@ -141,7 +141,7 @@ class HandleCorreiosLabelsRepository
         return $this->renderLabel($this->request, $this->order, $swedenpostLabelRepository->getError());
     }
     function isHoundExpress(){
-        $swedenpostLabelRepository = new SwedenpostLabelRepository(); 
+        $swedenpostLabelRepository = new HoundExpressLabelRepository(); 
         $swedenpostLabelRepository->run($this->order,$this->update); //by default consider false
         return $this->renderLabel($this->request, $this->order, $swedenpostLabelRepository->getError());
     }

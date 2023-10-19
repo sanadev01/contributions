@@ -13,27 +13,24 @@ use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
-use App\Services\Correios\Models\PackageError;
-use App\Services\SwedenPost\Services\ShippingOrder;
-
+use App\Services\Correios\Models\PackageError; 
+use App\Services\HoundExpress\Services\CN23\HoundOrder;
 class Client{
 
-    //Sweden Post Parameters
-    protected $secret;
-    protected $token;
-    protected $host;
-    protected $baseUrl;
-    //Sweden Post Parameters End
-    protected $client;
+    //Sweden Post Parameters 
+    private $baseUrl;
+    private $partnerKey;
 
     public function __construct()
     {
         if(app()->isProduction()){
-            $this->partnerKey = config('prime5.production.partner_key'); 
+            $this->partnerKey = config('hound.production.partner_key'); 
+            $this->baseUrl = config('hound.production.base_url');
         }else{ 
-            $this->partnerKey = config('prime5.test.partner_key');
-        }
+            $this->partnerKey = config('hound.test.partner_key');
+            $this->baseUrl = config('hound.test.base_url'); 
 
+        }
         $this->client = new GuzzleClient();
 
     }
@@ -48,13 +45,12 @@ class Client{
     }
 
     public function createPackage($order)
-    {
-        dd(3);
-        $shippingRequest = (new ShippingOrder($order))->getRequestBody();
+    { 
+        $houndOrderRequest = (new HoundOrder($order))->getRequestBody();
+        dd($houndOrderRequest);
         try {
-            $path = 'services/shipper/orderLabels';
-            $shipmentClose = 'services/shipper/closeShipments';
-            $response = Http::withHeaders($this->getHeaders('POST', $path))->post($this->baseUrl.$path, $shippingRequest);
+            $path = '/Sabueso/ws/deliveryServices/createOrder'; 
+            $response = Http::withHeaders($this->getHeaders('POST', $path))->post($this->baseUrl.$path, $houndOrderRequest);
             $data = json_decode($response);
             if($data->status == "Success") {
                 $trackingNumber = $data->data[0]->trackingNo;
