@@ -931,7 +931,7 @@ class Order extends Model implements Package
                 $totalCost = $this->gross_total+$this->insurance_value+$this->carrierCost();
                 $duty = $totalCost * .6;
                 $totalCostOfTheProduct = $this->gross_total+$duty;
-                $icms = 17;
+                $icms = .17;
                 $totalIcms = $icms * $totalCostOfTheProduct;
                 $totalTaxAndDuty = $duty + $totalIcms;
                 $finalValue = $this->gross_total + $totalTaxAndDuty;
