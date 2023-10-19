@@ -11,21 +11,23 @@ class HoundReceiver{
        $this->order = $order;  
     }
     function getRequestBody() {
-        return [
+        return [ 
+            // 'addressLine1' => $this->order->recipient->address.' '.$this->order->recipient->street_no,
+            // 'recipientTaxId'=>optional($this->order->recipient)->tax_id,
                 "contact"=> [
                     "id"=> 0,
-                    "givenName"=> "Destinatario",
-                    "surname"=> "Prueba",
-                    "surname2"=> ""
+                    "givenName"=> $this->order->recipient->getFullName(),
+                    "surname"=> $this->order->recipient->getFullName(),
+                    "surname2"=> $this->order->recipient->getFullName()
                 ],
                 "apartmentNumber"=> "",
-                "city"=> "São Gonçalo",
-                "country"=> "BR",
-                "state"=> "Rio de Janeiro",
-                "email"=> "none@undefined.com",
-                "street"=> "Travessa Viana 951",
-                "streetNumber"=> "693",
-                "zip"=> "26000",
+                "city"=> optional($this->order->recipient)->city,
+                "country"=> $this->order->recipient->country->code,
+                "state"=> optional($this->order->recipient->state)->code,
+                "email"=>  $this->order->recipient->email ?? '',
+                "street"=> optional($this->order->recipient)->address2,
+                "streetNumber"=> $this->order->recipient->street_no,
+                "zip"=> cleanString($this->order->recipient->zipcode),
                 "status"=> 1,
                 "addressType"=> [
                     "id"=> 2
@@ -33,7 +35,7 @@ class HoundReceiver{
                 "phones"=> [
                     []
                 ],
-                "phone"=> "(81)83525516"
+                "phone"=> $this->order->recipient->phone ?? ""
         ];
     }
 

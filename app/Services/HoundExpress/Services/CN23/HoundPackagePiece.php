@@ -12,16 +12,16 @@ class HoundPackagePiece{
     }
     function getRequestBody() {
         return [
-            [
-                "height"=> 10,
-                "length"=> 10,
-                "width"=> 10,
-                "weight"=> 1.54,
+             [  
+                "height"=> $this->order->height,
+                "length"=>  $this->order->lenght,
+                "width"=>  $this->order->width,
+                "weight"=>  $this->order->widht,
                 "declaredValue"=> 1.0,
-                "piece"=> 1,
-                "description"=> "SOMEONTENT"
+                "piece"=> count($this->order->items),
+                "description"=> optional(optional($this->order->items)[0])->description
             ]
-         ];
+        ];
     }
 
 }
