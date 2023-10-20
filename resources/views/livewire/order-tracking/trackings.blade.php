@@ -436,17 +436,19 @@
                                                     </tr>
                                                 @endforeach
                                                 @if (optional($tracking)['service'] == 'Correios_Brazil')
-                                                    <tr>
-                                                        <td>
-                                                            {{ Carbon\Carbon::createFromFormat('d/m/Y', $tracking['api_trackings']['data'])->format('Y-m-d') }} {{ $tracking['api_trackings']['hora'] }}
-                                                        </td>
-                                                        <td>
-                                                            Brazil
-                                                        </td>
-                                                        <td>
-                                                            {{ $tracking['api_trackings']['descricao'] }}
-                                                        </td>
-                                                    </tr>
+                                                    @foreach($tracking['api_trackings']->reverse() as $event)
+                                                        <tr>
+                                                            <td>
+                                                                {{ str_replace('T', ' ', optional($event)->dtHrCriado) }}
+                                                            </td>
+                                                            <td>
+                                                                Brazil
+                                                            </td>
+                                                            <td>
+                                                                {{ optional($event)->descricao }}
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
                                                 @endif
                                                 @if (optional($tracking)['service'] == 'Correios_Chile')
                                                     <tr>
