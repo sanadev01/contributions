@@ -118,7 +118,7 @@ class OrderImportService extends AbstractImportService
                     "sender_phone" => $user->phone,//$this->getValue("M{$row}"),
                     'user_declared_freight' => $this->getValue("V{$row}"),
                     'error' => $orderError,
-
+                    "tax_modality" => in_array($this->getValue("AE{$row}"),['ddp','ddu',"DDP",'DDU'])?strtoupper($this->getValue("AE{$row}")):'DDU',
                     'recipient' => [
                         "first_name" =>$this->getValue("J{$row}"),
                         "last_name" => $this->getValue("K{$row}"),
@@ -363,7 +363,7 @@ class OrderImportService extends AbstractImportService
 
     private function correosShippingServices()
     {
-        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
+        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) || setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)) {
             
             if ($this->request->service_id == ShippingService::Packet_Standard) {
                 return ShippingService::AJ_Packet_Standard;
