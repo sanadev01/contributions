@@ -66,7 +66,7 @@ class CorreiosTrackingService{
         try {
             $request = Http::withHeaders($this->getHeaders())->get($apiUrl);
             $response = json_decode($request);
-            // dd($response);
+            
             if (isset($response->objetos) && is_array($response->objetos) && count($response->objetos) > 0) {
                 return $response;
             }
