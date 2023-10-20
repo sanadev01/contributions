@@ -30,7 +30,7 @@ class HoundOrder {
          ],
          "insuredValue"=> [
             "code"=> "USD",
-            "value"=> "23.4"
+            "value"=> $this->order->insurance_value
          ],
          "packagePieces"=>  (new HoundPackagePiece($this->order))->getRequestBody(),
          "isReturn"=>false

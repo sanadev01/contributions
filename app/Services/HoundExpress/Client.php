@@ -13,7 +13,8 @@ use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
-use App\Services\Correios\Models\PackageError; 
+use App\Services\Correios\Models\PackageError;
+use App\Services\HoundExpress\Services\CN23\HoundErrorHandler;
 use App\Services\HoundExpress\Services\CN23\HoundOrder;
 class Client{
 
@@ -35,23 +36,29 @@ class Client{
 
     }
 
-    private function getHeaders($type, $path) 
+    private function getHeaders() 
     {
         return [
             'partnerKey' => $this->partnerKey, 
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json'
         ];
     }
 
     public function createPackage($order)
     { 
-        $houndOrderRequest = (new HoundOrder($order))->getRequestBody();
-        dd($houndOrderRequest);
+        $houndOrderRequest = (new HoundOrder($order))->getRequestBody();   
         try {
-            $path = '/Sabueso/ws/deliveryServices/createOrder'; 
-            $response = Http::withHeaders($this->getHeaders('POST', $path))->post($this->baseUrl.$path, $houndOrderRequest);
-            $data = json_decode($response);
+            
+            $response = Http::withHeaders($this->getHeaders())->post($this->baseUrl.'/Sabueso/ws/deliveryServices/createOrder',$houndOrderRequest);
+            $response_body = json_decode($response->getBody());
+            $error = (new HoundErrorHandler($response_body))->getError();
+            if($error){
+                return new PackageError($error);
+               
+            }
+            else{
+                return new PackageError('no error');
+            }
+
             if($data->status == "Success") {
                 $trackingNumber = $data->data[0]->trackingNo;
                 if ($trackingNumber){

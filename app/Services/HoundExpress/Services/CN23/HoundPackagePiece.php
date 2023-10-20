@@ -14,10 +14,10 @@ class HoundPackagePiece{
         return [
              [  
                 "height"=> $this->order->height,
-                "length"=>  $this->order->lenght,
+                "length"=>  $this->order->length,
                 "width"=>  $this->order->width,
-                "weight"=>  $this->order->widht,
-                "declaredValue"=> 1.0,
+                "weight"=>  $this->order->weight,
+                "declaredValue"=> $this->order->gross_total,
                 "piece"=> count($this->order->items),
                 "description"=> optional(optional($this->order->items)[0])->description
             ]

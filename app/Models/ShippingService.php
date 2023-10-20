@@ -369,7 +369,7 @@ class ShippingService extends Model
         if ( $weight<100 ){
             $weight = 100;
         }
-        $serviceRates = $region->rates()->first();
+        $serviceRates = optional(optional($region)->rates())->first();
         if($serviceRates){
             $rate = collect($serviceRates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
             if(($rate)['leve'] && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, $order->user_id)){

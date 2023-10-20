@@ -12,13 +12,11 @@ class HoundReceiver{
     }
     function getRequestBody() {
         return [ 
-            // 'addressLine1' => $this->order->recipient->address.' '.$this->order->recipient->street_no,
-            // 'recipientTaxId'=>optional($this->order->recipient)->tax_id,
                 "contact"=> [
-                    "id"=> 0,
+                    "id"=> $this->order->recipient->id,
                     "givenName"=> $this->order->recipient->getFullName(),
-                    "surname"=> $this->order->recipient->getFullName(),
-                    "surname2"=> $this->order->recipient->getFullName()
+                    "surname"=> $this->order->recipient->first_name,
+                    "surname2"=> $this->order->recipient->last_name
                 ],
                 "apartmentNumber"=> "",
                 "city"=> optional($this->order->recipient)->city,
@@ -33,7 +31,7 @@ class HoundReceiver{
                     "id"=> 2
                 ],
                 "phones"=> [
-                    []
+                    [$this->order->recipient->phone]
                 ],
                 "phone"=> $this->order->recipient->phone ?? ""
         ];

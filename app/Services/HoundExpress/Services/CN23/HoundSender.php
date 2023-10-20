@@ -12,14 +12,14 @@ class HoundSender{
     }
     function getRequestBody() {
         return [  
-                "id"                => 1,
+                "id"                => $this->order->user_id,
                 "contact"           => [
                     "givenName"     =>  $this->order->getSenderFullName(),
                 ],
                 "city"              => $this->order->sender_city ??"Saginaw",
-                "country"           => optional($this->order->senderCountry())->code ?? "MEX",
-                "county"            => optional($this->order->senderCountry())->code ?? "MEX",
-                "state"             => optional($this->order->senderState())->code ?? "Michigan",
+                "country"           => optional($this->order->senderCountry)->code ,
+                "county"            => optional($this->order->senderCountry)->code ?? "MEX",
+                "state"             => optional($this->order->senderState)->code ?? "Michigan",
                 "email"             => $this->order->sender_email,
                 "street"            => $this->order->sender_address ?? "Calle 5",
                 "streetNumber"      => "46 y 48",
