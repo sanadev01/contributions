@@ -51,4 +51,29 @@ class CorreiosTrackingService{
         }
     }
 
+    public function getMultiTrackings($codes)
+    {
+        $baseUrl = "https://api.correios.com.br/srorastro/v1/objetos?";
+        $parameters = [];
+
+        foreach ($codes as $code) {
+            $parameters[] = "codigosObjetos=" . $code;
+        }
+
+        $parameters[] = "resultado=U";
+        $apiUrl = $baseUrl . implode("&", $parameters);
+
+        try {
+            $request = Http::withHeaders($this->getHeaders())->get($apiUrl);
+            $response = json_decode($request);
+            
+            if (isset($response->objetos) && is_array($response->objetos) && count($response->objetos) > 0) {
+                return $response;
+            }
+        
+        } catch (\Exception $exception) {
+            return new PackageError($exception->getMessage());
+        }
+    }
+
 }
