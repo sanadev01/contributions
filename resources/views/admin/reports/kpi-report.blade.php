@@ -148,6 +148,7 @@
                                         <input type="hidden" name="type" value="{{ request('type') }}">
                                         <input type="hidden" name="trackingCodeUsersName" value="{{ collect($trackingCodeUsersName) }}">
                                         <input type="hidden" name="orderDates" value="{{ collect($orderDates) }}">
+                                        <input type="hidden" name="firstEventDate" value="{{ collect($firstEventDate) }}">
                                     @endif
                                     <button type="submit" class="btn btn-success waves-effect waves-light p-3" 
                                          {{ !empty($trackings) ? '' : 'disabled' }}> <i class="fa fa-download"></i>  Download 
@@ -213,13 +214,22 @@
                                                     <p class="center-text"> <span>{{ optional(optional($data)->tipoPostal)->categoria }}</span> </p>
                                                 </td>
                                                 <td>
-                                                    <p class="center-text"> {{ substr($data->eventos[count($data->eventos)-1]->dtHrCriado, 0, 10) }} </p>
+                                                    <p class="center-text"> {{ $firstEventDate[optional($data)->codObjeto] }} </p>
                                                 </td>
                                                 <td>
-                                                    <p class="center-text"> {{ substr($data->eventos[0]->dtHrCriado, 0, 10) }} </p>
+                                                    <p class="center-text"> {{ sortTrackingEvents($data, null)['lastEvent'] }} </p>
                                                 </td>
                                                 <td>
-                                                    <p class="center-text"> {{ sortTrackingEvents($data, null)['diffDates'] }} </p>
+                                                    <p class="center-text">
+                                                        @php
+                                                            $dispatchDate = \Carbon\Carbon::createFromFormat('m/d/Y', $firstEventDate[optional($data)->codObjeto]);
+                                                        @endphp
+
+                                                        @php
+                                                            $differenceInDays = $dispatchDate->diffInDays(sortTrackingEvents($data, null)['lastEvent']);
+                                                        @endphp 
+                                                        {{ $differenceInDays }} days
+                                                    </p>
                                                 </td>
                                                 <td>
                                                     <p class="center-text"> {{ optional(optional(optional($data)->eventos)[0])->descricao }} </p>

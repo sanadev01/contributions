@@ -68,6 +68,8 @@ class KPIReportsRepository
         $codesUsersName =  [];
         $orderDate =  [];
         foreach($orders as $order) {
+            $created_at = array_reverse($order->trackings->toArray())[0]['created_at'];
+            $firstEventDate[$order->corrios_tracking_code] = date('m/d/Y', strtotime($created_at));
             $codesUsersName[$order->corrios_tracking_code] = $order->user->name;
             $orderDate[$order->corrios_tracking_code] = $order->order_date->format('m/d/Y');
         }
@@ -76,8 +78,9 @@ class KPIReportsRepository
         if(empty($codes)) {
          return [
             'trackings'=>[],
+            'firstEventDate'=>[],
             'trackingCodeUsersName'=>[],
-             'orderDates' => []
+            'orderDates' => []
          ];
         }
 
@@ -88,12 +91,14 @@ class KPIReportsRepository
         } elseif (count($codes) == 1) {
             $response = $serviceClient->getTracking($codes[0]);
         }
+
         if (isset($response->objetos) && is_array($response->objetos) && count($response->objetos) > 0) {
             
             return [
                 'trackings'=> optional($response)->objetos,
+                'firstEventDate'=> $firstEventDate,
                 'trackingCodeUsersName'=> $codesUsersName,
-                    'orderDates'=> $orderDate
+                'orderDates'=> $orderDate
             ];
 
             // foreach ($response->objetos as $data) {
