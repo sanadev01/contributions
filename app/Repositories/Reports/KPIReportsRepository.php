@@ -100,33 +100,7 @@ class KPIReportsRepository
                 'trackingCodeUsersName'=> $codesUsersName,
                 'orderDates'=> $orderDate
             ];
-
-            // foreach ($response->objetos as $data) {
-            //     return [
-            //         'trackings'=> optional($data)->eventos,
-            //         'trackingCodeUsersName'=> $codesUsersName,
-            //             'orderDates'=> $orderDate
-            //     ];
-            // }
         }
-
-        // $client = new SoapClient($this->wsdlUrl, array('trace'=>1));
-        // $request_param = array(
-        //     'usuario' => $this->user,
-        //     'senha' => $this->password,
-        //     'tipo' => 'L',
-        //     'resultado' => 'T',
-        //     'lingua' => 101,
-        //     'objetos' => $codes
-        // );
-        // $result = $client->buscaEventosLista($request_param);
-        // if(!$result->return->objeto) {
-        //     return false;
-        // }
-        // $trackings = json_decode(json_encode($result), true); ## convert the object to array (you have to)
-        // if($trackings['return']['qtd'] == "1") {
-        //     $trackings['return']['objeto'] = array($trackings['return']['objeto']); ## if you send only one tracking you need to add an array before the content to follow the pattern
-        // }
         
     }
 

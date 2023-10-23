@@ -138,20 +138,14 @@ function sortTrackingEvents($data, $report)
         }
     }
 
-    // $eventsQtd = count($response)-1;
-    // $startDate = date('d/m/Y');
     $endDate = date('d/m/Y');
+    
     if(optional(optional($response)[0])){
         $endDate    = $response[0]->dtHrCriado;
     }
-    // $firstEvent = Carbon::createFromFormat('Y-m-d H:i:s', str_replace("T", " ", $startDate));
+
     $endDate = Carbon::createFromFormat('Y-m-d H:i:s', str_replace("T", " ", $endDate));
     $lastEvent = $endDate->format('m/d/Y');
-    // if($firstEvent && $lastEvent){
-    //     $interval = $firstEvent->diffInDays($lastEvent).' days';
-    // }else {
-    //     $interval = "0 days";
-    // }
 
     return [
         'delivered' => $delivered,
