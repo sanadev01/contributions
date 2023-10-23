@@ -144,10 +144,11 @@
                                 <form class="row col-12 p-0 m-0" action="{{ route('admin.reports.kpi-report.store') }}" method="POST">
                                     @csrf
                                     @if ($trackings)
-                                        <input type="hidden" name="order" value="{{ collect($trackings['return']['objeto']) }}">
+                                        <input type="hidden" name="order" value="{{ collect($trackings) }}">
                                         <input type="hidden" name="type" value="{{ request('type') }}">
                                         <input type="hidden" name="trackingCodeUsersName" value="{{ collect($trackingCodeUsersName) }}">
                                         <input type="hidden" name="orderDates" value="{{ collect($orderDates) }}">
+                                        <input type="hidden" name="firstEventDate" value="{{ collect($firstEventDate) }}">
                                     @endif
                                     <button type="submit" class="btn btn-success waves-effect waves-light p-3" 
                                          {{ !empty($trackings) ? '' : 'disabled' }}> <i class="fa fa-download"></i>  Download 
@@ -192,37 +193,46 @@
                             <th>Returned</th>
                         </tr>
                         <tbody>
-                            @if ($trackings)
-                            @foreach ($trackings['return']['objeto'] as $data)
-                                @if (isset($data['evento']))
-                                        @if (request('type')=='scan' && optional(optional(optional($data)['evento'])[0])['descricao'] != 'Aguardando pagamento')
+                            @foreach ($trackings as $data)
+                                @if (count($data->eventos) > 0)
+                                        @if (request('type')=='scan' && $data->eventos[0]->descricao != 'Aguardando pagamento')
                                             @continue
                                         @endif
                                         <tr class="count">
-                                            @if (optional($data) && isset(optional($data)['numero']))
+                                            @if (optional($data) && isset(optional($data)->codObjeto))
+
                                                 <td>
-                                                    <p class="center-text"> {{ $orderDates[optional($data)['numero']] }} </p>
+                                                    <p class="center-text"> {{ $orderDates[optional($data)->codObjeto] }} </p>
                                                 </td>
                                                 <td>
-                                                    <p class="center-text"> {{ $trackingCodeUsersName[optional($data)['numero']] }} </p>
+                                                    <p class="center-text"> {{ $trackingCodeUsersName[optional($data)->codObjeto] }} </p>
                                                 </td>
                                                 <td>
-                                                    <p class="center-text">{{ optional($data)['numero'] }}</p>
+                                                    <p class="center-text">{{ optional($data)->codObjeto }}</p>
                                                 </td>
                                                 <td>
-                                                    <p class="center-text"> <span>{{ optional($data)['categoria'] }}</span> </p>
+                                                    <p class="center-text"> <span>{{ optional(optional($data)->tipoPostal)->categoria }}</span> </p>
                                                 </td>
                                                 <td>
-                                                    <p class="center-text"> {{ optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data'] }} </p>
+                                                    <p class="center-text"> {{ $firstEventDate[optional($data)->codObjeto] }} </p>
                                                 </td>
                                                 <td>
-                                                    <p class="center-text"> {{ optional(optional(optional($data)['evento'])[0])['data'] }} </p>
+                                                    <p class="center-text"> {{ sortTrackingEvents($data, null)['lastEvent'] }} </p>
                                                 </td>
                                                 <td>
-                                                    <p class="center-text"> {{ sortTrackingEvents($data, null)['diffDates'] }} </p>
+                                                    <p class="center-text">
+                                                        @php
+                                                            $dispatchDate = \Carbon\Carbon::createFromFormat('m/d/Y', $firstEventDate[optional($data)->codObjeto]);
+                                                        @endphp
+
+                                                        @php
+                                                            $differenceInDays = $dispatchDate->diffInDays(sortTrackingEvents($data, null)['lastEvent']);
+                                                        @endphp 
+                                                        {{ $differenceInDays }} days
+                                                    </p>
                                                 </td>
                                                 <td>
-                                                    <p class="center-text"> {{ optional(optional(optional($data)['evento'])[0])['descricao'] }} </p>
+                                                    <p class="center-text"> {{ optional(optional(optional($data)->eventos)[0])->descricao }} </p>
                                                 </td>
                                                 <td>
                                                     <p class="center-text"> {{ sortTrackingEvents($data, null)['taxed'] }}</p>
@@ -241,11 +251,6 @@
                                         </tr>
                                 @endif
                             @endforeach
-                            @else
-                            <tr>
-                                <td colspan="11" class="text-center">No Trackings Found</td>
-                            </tr>
-                            @endif
                         </tbody>
                 </table>
                 @include('layouts.livewire.loading')

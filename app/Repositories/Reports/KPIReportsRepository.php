@@ -7,6 +7,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Correios\Services\Brazil\CorreiosTrackingService;
 
 class KPIReportsRepository
 {
@@ -67,39 +68,40 @@ class KPIReportsRepository
         $codesUsersName =  [];
         $orderDate =  [];
         foreach($orders as $order) {
+            $created_at = array_reverse($order->trackings->toArray())[0]['created_at'];
+            $firstEventDate[$order->corrios_tracking_code] = date('m/d/Y', strtotime($created_at));
             $codesUsersName[$order->corrios_tracking_code] = $order->user->name;
             $orderDate[$order->corrios_tracking_code] = $order->order_date->format('m/d/Y');
         }
         $codes = $orders->pluck('corrios_tracking_code')->toArray();
+
         if(empty($codes)) {
          return [
             'trackings'=>[],
+            'firstEventDate'=>[],
             'trackingCodeUsersName'=>[],
-             'orderDates' => []
+            'orderDates' => []
          ];
         }
-        $client = new SoapClient($this->wsdlUrl, array('trace'=>1));
-        $request_param = array(
-            'usuario' => $this->user,
-            'senha' => $this->password,
-            'tipo' => 'L',
-            'resultado' => 'T',
-            'lingua' => 101,
-            'objetos' => $codes
-        );
-        $result = $client->buscaEventosLista($request_param);
-        if(!$result->return->objeto) {
-            return false;
+
+        $serviceClient = new CorreiosTrackingService();
+
+        if(count($codes) > 1) {
+            $response = $serviceClient->getMultiTrackings($codes);
+        } elseif (count($codes) == 1) {
+            $response = $serviceClient->getTracking($codes[0]);
         }
-        $trackings = json_decode(json_encode($result), true); ## convert the object to array (you have to)
-        if($trackings['return']['qtd'] == "1") {
-            $trackings['return']['objeto'] = array($trackings['return']['objeto']); ## if you send only one tracking you need to add an array before the content to follow the pattern
-        } 
-        return [
-            'trackings'=>$trackings,
-            'trackingCodeUsersName'=> $codesUsersName,
-             'orderDates'=>$orderDate
-        ];
+
+        if (isset($response->objetos) && is_array($response->objetos) && count($response->objetos) > 0) {
+            
+            return [
+                'trackings'=> optional($response)->objetos,
+                'firstEventDate'=> $firstEventDate,
+                'trackingCodeUsersName'=> $codesUsersName,
+                'orderDates'=> $orderDate
+            ];
+        }
+        
     }
 
 }

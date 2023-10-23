@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\Excel\Export;
+use Carbon\Carbon;
 class KPIReport extends AbstractExportService
 {
     private $trackings;
@@ -10,10 +11,11 @@ class KPIReport extends AbstractExportService
     private $trackingCodeUsersName;
     private $orderDates;
 
-    public function __construct($trackings,$trackingCodeUsersName, $orderDates, $isAwaiting)
+    public function __construct($trackings,$trackingCodeUsersName, $orderDates, $isAwaiting, $firstEventDate)
     {
         $this->isAwaiting = $isAwaiting;
         $this->trackings = $trackings;
+        $this->firstEventDate = $firstEventDate;
         $this->trackingCodeUsersName = $trackingCodeUsersName;
         $this->orderDates = $orderDates;
         parent::__construct();
@@ -35,21 +37,27 @@ class KPIReport extends AbstractExportService
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
         foreach ($this->trackings as $data) {
-            
-            if(isset($data['evento'])) {
-                if( $this->isAwaiting && optional(optional(optional($data)['evento'])[0])['descricao'] == $this->isAwaiting || !$this->isAwaiting){
-                    if(optional($data) && isset(optional($data)['numero'])) { 
-                        $this->setCellValue('A'.$row, $this->trackingCodeUsersName[optional($data)['numero']]);
-                        $this->setCellValue('B'.$row, optional($data)['numero']);
-                        $this->setCellValue('C'.$row, optional($data)['categoria']);
-                        $this->setCellValue('D'.$row, optional(optional(optional($data)['evento'])[count($data['evento'])-1])['data']);
-                        $this->setCellValue('E'.$row, optional(optional(optional($data)['evento'])[0])['data']);
-                        $this->setCellValue('F'.$row, sortTrackingEvents($data, null)['diffDates']);
-                        $this->setCellValue('G'.$row, optional(optional(optional($data)['evento'])[0])['descricao']);
+
+            $jsonString = json_encode($data);
+            $data = json_decode($jsonString);
+ 
+            $dispatchDate = Carbon::createFromFormat('m/d/Y', $this->firstEventDate[optional($data)->codObjeto]);
+            $differenceInDays = $dispatchDate->diffInDays(sortTrackingEvents($data, null)['lastEvent']);
+
+            if(count($data->eventos) > 0) {
+                if( $this->isAwaiting && $data->eventos[0]->descricao  == $this->isAwaiting || !$this->isAwaiting){
+                    if(optional($data) && isset(optional($data)->codObjeto)) { 
+                        $this->setCellValue('A'.$row, $this->trackingCodeUsersName[optional($data)->codObjeto]);
+                        $this->setCellValue('B'.$row, optional($data)->codObjeto);
+                        $this->setCellValue('C'.$row, optional(optional($data)->tipoPostal)->categoria);
+                        $this->setCellValue('D'.$row, $this->firstEventDate[optional($data)->codObjeto]);
+                        $this->setCellValue('E'.$row, sortTrackingEvents($data, null)['lastEvent']);
+                        $this->setCellValue('F'.$row, $differenceInDays.' '."days");
+                        $this->setCellValue('G'.$row, optional(optional(optional($data)->eventos)[0])->descricao);
                         $this->setCellValue('H'.$row, sortTrackingEvents($data, null)['taxed']);
                         $this->setCellValue('I'.$row, sortTrackingEvents($data, null)['delivered']);
                         $this->setCellValue('J'.$row, sortTrackingEvents($data, null)['returned']);
-                        $this->setCellValue('K'.$row, $this->orderDates[optional($data)['numero']]);
+                        $this->setCellValue('K'.$row, $this->orderDates[optional($data)->codObjeto]);
                         $row++;
                         if(sortTrackingEvents($data, null)['taxed']=='Yes'){
                             $taxed++;
