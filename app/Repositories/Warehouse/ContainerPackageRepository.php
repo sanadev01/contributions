@@ -5,6 +5,7 @@ namespace App\Repositories\Warehouse;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\OrderTracking;
+use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\AbstractRepository;
@@ -35,10 +36,7 @@ class ContainerPackageRepository extends AbstractRepository{
     
     public function addOrderToContainer(Container $container,string $barcode)
     {
-        $subString = strtolower(substr($barcode,0,2));
-        if(strtolower(substr($barcode,0,2)) == 'na' || strtolower(substr($barcode,0,2)) == 'xl'|| strtolower(substr($barcode,0,2)) == 'nb'){
-            $subString = 'nx';
-        }
+
         
         $containerOrder = $container->orders->first();
         if($containerOrder){
@@ -57,18 +55,7 @@ class ContainerPackageRepository extends AbstractRepository{
         }
 
         
-
-        if(strtolower($container->getSubClassCode())  != $subString){
-            return [
-                'order' => [
-                    'corrios_tracking_code' => $barcode,
-                    'error' => 'Order Not Found. Please Check Packet Service',
-                    'code' => 404
-                ],
-            ];
-        }
         $order          = Order::where('corrios_tracking_code',strtoupper($barcode))->first();
-
         if (!$order) {
             return [
                 'order' => [
@@ -78,6 +65,18 @@ class ContainerPackageRepository extends AbstractRepository{
                 ],
             ];
         }
+        
+
+        if(!$this->isValidContainerOrder($container,$order)) {
+            return [
+                'order' => [
+                    'corrios_tracking_code' => $barcode,
+                    'error' => 'Order Not Found. Please Check Packet Service',
+                    'code' => 404
+                ],
+            ];
+        } 
+
         
         if ($order->status < Order::STATUS_PAYMENT_DONE) {
             return [
@@ -94,6 +93,15 @@ class ContainerPackageRepository extends AbstractRepository{
                 'order' => [
                     'corrios_tracking_code' => $barcode,
                     'error' => 'Order does not belongs to Anjun Service. Please Check Packet Service',
+                    'code' => 404
+                ],
+            ];
+        }
+        if ($container->hasBCNService() && !$order->shippingService->is_bcn_service) {
+            return [
+                'order' => [
+                    'corrios_tracking_code' => $barcode,
+                    'error' => 'Order does not belongs to BCN Service. Please Check Packet Service',
                     'code' => 404
                 ],
             ];
@@ -179,6 +187,14 @@ class ContainerPackageRepository extends AbstractRepository{
         $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
 
        return $order_tracking->delete();
-
+    }
+    public function isValidContainerOrder($container,$order) { 
+        $barcode = $order->corrios_tracking_code;
+        $subString = strtolower(substr($barcode,0,2));
+        if(strtolower(substr($barcode,0,2)) == 'na' || strtolower(substr($barcode,0,2)) == 'xl'|| strtolower(substr($barcode,0,2)) == 'nb'){
+            $subString = 'nx';
+        }
+        return strtolower($container->getSubClassCode())  == $subString;
+          
     }
 }

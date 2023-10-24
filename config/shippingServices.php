@@ -45,6 +45,8 @@ return [
             283 => 'Total Express',
             33173 => 'HD Express',
             776 => 'LT Prime',
+            44164 => 'Packet Standard B',
+            44172 => 'Packet Express B',
         ]
     ]
 ];

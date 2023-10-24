@@ -671,18 +671,20 @@ class OrderRepository
                 });
             }
 
-            if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) || setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
+            if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
                     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                        return $shippingService->service_sub_class != ShippingService::Packet_Standard 
-                            && $shippingService->service_sub_class != ShippingService::Packet_Express
-                            && $shippingService->service_sub_class != ShippingService::Packet_Mini;
+                        return !$shippingService->isCorreiosService() && !$shippingService->is_bcn_service;
                     });
             }
 
-            if(!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && !setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
+            if(setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return !$shippingService->isAnjunService() && !$shippingService->isCorreiosService();
+                });
+            }
+            if(setting('correios_api', null, \App\Models\User::ROLE_ADMIN)){
                     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                        return $shippingService->service_sub_class != ShippingService::AJ_Packet_Standard 
-                            && $shippingService->service_sub_class != ShippingService::AJ_Packet_Express;
+                        return !$shippingService->is_bcn_service && !$shippingService->isAnjunService();
                     });
             }
             

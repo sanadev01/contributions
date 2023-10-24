@@ -54,13 +54,16 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code">
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            @if(!$anjunService)
+                                            @if($correioApi)
                                                 <option value="NX" {{ old('services_subclass_code') == 'NX' ? 'selected': '' }}>Packet Standard service</option>
                                                 <option value="IX" {{ old('services_subclass_code') == 'IX' ? 'selected': '' }}>Packet Express service</option>
                                                 <option value="XP" {{ old('services_subclass_code') == 'XP' ? 'selected': '' }}>Packet Mini service</option>
-                                            @else
-                                                <option value="AJ-NX" {{ old('services_subclass_code') == 'AJ-NX' ? 'selected': '' }}>Anjun Standard service</option>
-                                                <option value="AJ-IX" {{ old('services_subclass_code') == 'AJ-IX' ? 'selected': '' }}>Anjun Express service</option>
+                                            @elseif($bcnApi)
+                                                <option value="BCN-NX" {{ old('services_subclass_code') == 'BCN-NX' ? 'selected': '' }}>BCN standard service</option>
+                                                <option value="BCN-IX" {{ old('services_subclass_code') == 'BCN-IX' ? 'selected': '' }}>BCN express service</option>
+                                            @elseif($anjunApi)
+                                                <option value="AJ-NX" {{ old('services_subclass_code') == 'AJ-NX' ? 'selected': '' }}>Anjun standard service</option>
+                                                <option value="AJ-IX" {{ old('services_subclass_code') == 'AJ-IX' ? 'selected': '' }}>Anjun express service</option>
                                             @endif
                                         </select>
                                         @error('services_subclass_code')

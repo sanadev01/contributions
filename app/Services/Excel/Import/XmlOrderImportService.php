@@ -363,7 +363,7 @@ class XmlOrderImportService
 
     private function correosShippingServices()
     {
-        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) || setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)) {
+        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
             
             if ($this->request->service_id == ShippingService::Packet_Standard) {
                 return ShippingService::AJ_Packet_Standard;

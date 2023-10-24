@@ -8,6 +8,7 @@ use Picqer\Barcode\BarcodeGeneratorPNG;
 use App\Services\Correios\Contracts\HasLableExport;
 use App\Services\Correios\Models\Package;
 use App\Models\User;
+use App\Models\ShippingService;
 class CN23LabelMaker implements HasLableExport
 {
 
@@ -53,8 +54,8 @@ class CN23LabelMaker implements HasLableExport
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
 
-        if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->isAnjunChinaService()) {
-            if($this->order->shippingService->isAnjunService() && setting('bcn_api', null, User::ROLE_ADMIN)){
+        if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->is_bcn_service) {
+            if($this->order->shippingService->is_bcn_service){
                 $this->contractNumber = 'Contrato: 0076204456';
             }else{
                 $this->contractNumber = 'Contrato: 9912501700';
@@ -74,6 +75,10 @@ class CN23LabelMaker implements HasLableExport
     {
         switch($packetType):
             case Package::SERVICE_CLASS_EXPRESS:
+                $this->packetType = 'Packet Express';
+                $this->serviceLogo = public_path('images/express-package.png');
+            break;
+            case ShippingService::BCN_Packet_Express:
                 $this->packetType = 'Packet Express';
                 $this->serviceLogo = public_path('images/express-package.png');
             break;

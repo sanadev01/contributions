@@ -25,6 +25,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     const CONTAINER_ANJUN_NX = 'AJ-NX';
     const CONTAINER_ANJUN_IX = 'AJ-IX';
+    const CONTAINER_BCN_NX = 'BCN-NX';
+    const CONTAINER_BCN_IX = 'BCN-IX';
 
     public function user()
     {
@@ -74,6 +76,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'AJ Packet Standard service';
         }elseif ($this->services_subclass_code == 'AJ-IX') {
             return 'AJ Packet Express service';
+        }elseif ($this->services_subclass_code == 'BCN-NX') {
+            return 'BCN Standard service';
+        }elseif ($this->services_subclass_code == 'BCN-IX') {
+            return 'BCN Express service';
         }elseif($this->services_subclass_code == 'SRM'){
             return 'SRM service';
         }elseif($this->services_subclass_code == 'SRP'){
@@ -161,6 +167,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif($this->services_subclass_code == ShippingService::HD_Express){
             return 17;
+        }elseif( $this->services_subclass_code == 'BCN-NX') {
+            return 18;
+        }
+        elseif($this->services_subclass_code == 'BCN-IX'){
+            return 19;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -208,20 +219,22 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getSubClassCode()
     {
-        if ($this->services_subclass_code == 'AJ-NX') {
+        if(in_array($this->services_subclass_code, ['AJ-NX' , 'BCN-NX'])){
             return 'NX';
         }
-
-        if ($this->services_subclass_code == 'AJ-IX') {
+        if(in_array($this->services_subclass_code , ['AJ-IX', 'BCN-IX'])){
             return 'IX';
         }
-
         return $this->services_subclass_code;
     }
 
     public function hasAnjunService()
     {
-        return $this->services_subclass_code == 'AJ-NX' || $this->services_subclass_code == 'AJ-IX';
+        return in_array($this->services_subclass_code ,['AJ-NX', 'AJ-IX']);
+    }
+    public function hasBCNService()
+    {
+        return in_array($this->services_subclass_code ,['BCN-NX', 'BCN-IX']);
     }
 
     public function hasOrders()

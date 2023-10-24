@@ -33,6 +33,8 @@ class ShippingService extends Model
     const Packet_Mini = 33197;
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
+    const BCN_Packet_Standard = 44164;
+    const BCN_Packet_Express = 44172;
     const Brazil_Redispatch = 100;
     const GePS = 537;
     const GePS_EFormat = 540;
@@ -159,6 +161,12 @@ class ShippingService extends Model
         }
 
         return false;
+    }
+    function getIsBcnServiceAttribute() {
+        return in_array($this->service_sub_class,[
+            self::BCN_Packet_Standard, 
+            self::BCN_Packet_Express,
+        ]);
     }
 
     public function isGePSService()

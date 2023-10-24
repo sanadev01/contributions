@@ -163,7 +163,9 @@ class ExportDepositReport extends AbstractExportService
                         [ShippingService::Packet_Standard, 
                         ShippingService::Packet_Express, 
                         ShippingService::AJ_Packet_Standard, 
-                        ShippingService::AJ_Packet_Express])) 
+                        ShippingService::AJ_Packet_Express,
+                        ShippingService::BCN_Packet_Standard, 
+                        ShippingService::BCN_Packet_Express])) 
                         {
                         return 'Correios Brazil';
                     }
