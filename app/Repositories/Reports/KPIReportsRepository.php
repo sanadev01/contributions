@@ -34,12 +34,12 @@ class KPIReportsRepository
                     ShippingService::AJ_Packet_Standard, 
                     ShippingService::AJ_Packet_Express, 
                     ShippingService::Prime5, 
-                    ShippingService::GePS,
                     ShippingService::Post_Plus_Registered,
                     ShippingService::Post_Plus_EMS,
                     ShippingService::Post_Plus_Prime,
                     ShippingService::Post_Plus_Premium,
                     ShippingService::Prime5RIO,
+                    ShippingService::LT_PRIME,
                 ]);
             });
 
@@ -94,11 +94,15 @@ class KPIReportsRepository
 
         if (isset($response->objetos) && is_array($response->objetos) && count($response->objetos) > 0) {
             
+            $filteredObjetos = array_filter($response->objetos, function ($objeto) {
+                return !isset($objeto->mensagem) || strpos($objeto->mensagem, "SRO-020") !== 0;
+            });
+
             return [
-                'trackings'=> optional($response)->objetos,
-                'firstEventDate'=> $firstEventDate,
-                'trackingCodeUsersName'=> $codesUsersName,
-                'orderDates'=> $orderDate
+                'trackings' => $filteredObjetos,
+                'firstEventDate' => $firstEventDate,
+                'trackingCodeUsersName' => $codesUsersName,
+                'orderDates' => $orderDate
             ];
         }
         

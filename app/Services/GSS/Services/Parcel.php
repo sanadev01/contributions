@@ -45,9 +45,9 @@ class Parcel {
                'recipientAddress' => [
                   'firstName' => $order->recipient->first_name,
                   'lastName' => $order->recipient->last_name,
-                  'addressLine1' => $order->recipient->address,
+                  'addressLine1' => $order->recipient->address.' '.optional($order->recipient)->street_no,
                   'addressLine2' => optional($order->recipient)->address2,
-                  'addressLine3' => optional($order->recipient)->street_no,
+                  // 'addressLine3' => optional($order->recipient)->street_no,
                   // 'addressIsPOBox' => true,
                   'city' => $order->recipient->city,
                   'province' => $order->recipient->State->code,
