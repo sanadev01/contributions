@@ -61,6 +61,8 @@
                                             <option value="IX" {{ old('services_subclass_code',$container->services_subclass_code) == 'XP' ? 'selected': '' }}>Packet Mini service</option>
                                             <option value="AJ-NX" {{ old('services_subclass_code',$container->services_subclass_code) == 'AJ-NX' ? 'selected': '' }}>Anjun Packet Standard service</option>
                                             <option value="AJ-IX" {{ old('services_subclass_code',$container->services_subclass_code) == 'AJ-IX' ? 'selected': '' }}>Anjun Packet Express service</option>
+                                            <option value="BCN-NX" {{ old('services_subclass_code',$container->services_subclass_code) == 'BCN-NX' ? 'selected': '' }}>BCN Packet Standard service</option>
+                                            <option value="BCN-IX" {{ old('services_subclass_code',$container->services_subclass_code) == 'BCN-IX' ? 'selected': '' }}>BCN Packet Express service</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>

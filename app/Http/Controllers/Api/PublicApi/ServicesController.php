@@ -83,15 +83,21 @@ class ServicesController extends Controller
 
     private function correosShippingServices()
     {
-        if(!setting('anjun_api', null, $this->adminId) || !setting('bcn_api', null, $this->adminId)){
+        if(setting('correios_api', null, $this->adminId)){
             $correiosServices =  [
                 ShippingService::Packet_Standard, 
                 ShippingService::Packet_Express, 
                 ShippingService::Packet_Mini,
             ];
         }
+        if(setting('bcn_api', null, $this->adminId)){
+            $correiosServices =  [                
+                ShippingService::BCN_Packet_Standard, 
+                ShippingService::BCN_Packet_Express,
+            ];
+        }
 
-        if(setting('anjun_api', null, $this->adminId) || setting('bcn_api', null, $this->adminId)){
+        if(setting('anjun_api', null, $this->adminId)){
             $correiosServices =  [
                 ShippingService::AJ_Packet_Standard, 
                 ShippingService::AJ_Packet_Express,
@@ -105,7 +111,7 @@ class ServicesController extends Controller
 
     private function filterCorreiosServices($correiosServices)
     {        
-        if(setting('anjun_api', null, $this->adminId) || setting('bcn_api', null, $this->adminId)){
+        if(setting('anjun_api', null, $this->adminId)){
             $correiosServices = $correiosServices->filter(function ($shippingService, $key) {
                 return $shippingService['service_sub_class'] != ShippingService::Packet_Standard 
                     && $shippingService['service_sub_class'] != ShippingService::Packet_Express
@@ -113,10 +119,17 @@ class ServicesController extends Controller
             });
         }
 
-        if(!setting('anjun_api', null, $this->adminId) || !setting('bcn_api', null, $this->adminId)){
+        if(setting('correios_api', null, $this->adminId)){
             $correiosServices = $correiosServices->filter(function ($shippingService, $key) {
                 return $shippingService['service_sub_class'] != ShippingService::AJ_Packet_Standard 
                     && $shippingService['service_sub_class'] != ShippingService::AJ_Packet_Express;
+            });
+        }
+        
+        if(setting('bcn_api', null, $this->adminId)){
+            $correiosServices = $correiosServices->filter(function ($shippingService, $key) {
+                return $shippingService['service_sub_class'] != ShippingService::BCN_Packet_Standard 
+                    && $shippingService['service_sub_class'] != ShippingService::BCN_Packet_Express;
             });
         }
 
