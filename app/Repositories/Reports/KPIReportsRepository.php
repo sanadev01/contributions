@@ -83,6 +83,10 @@ class KPIReportsRepository
             'orderDates' => []
          ];
         }
+        
+        if (count($codes) > 50) {
+            $codes = array_slice($codes, 0, 50);
+        }
 
         $serviceClient = new CorreiosTrackingService();
 
