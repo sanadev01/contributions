@@ -209,7 +209,7 @@ class HandleCorreiosLabelsRepository
         $buttonsOnly = $this->request->has('buttons_only');
         return view('admin.orders.label.label', compact('order', 'error', 'buttonsOnly'));
     }
-    public function updateShippingServiceFromSetting($order) {
+    public function updateShippingServiceFromSetting($order) { 
         $service_sub_class = $order->shippingService->service_sub_class;
         if($order->corrios_tracking_code){
             return $order;
