@@ -9,6 +9,7 @@ use App\Services\Anjun\AnjunClient;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Traits\PrintOrderLabel;
 use Illuminate\Http\Request;
+use App\Repositories\AnjunLabelRepository;
 
 
 class AnjunLabelRepository
@@ -65,5 +66,9 @@ use PrintOrderLabel;
         $labelPrinter->setPacketType($order->getDistributionModality());
         $labelPrinter->saveAs(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"));
         return responseSuccessful(null, 'Label Printer Success');
+    }
+    public function getError()
+    {
+        return $this->error;
     }
 }
