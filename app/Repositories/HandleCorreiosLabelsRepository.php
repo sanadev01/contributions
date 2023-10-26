@@ -214,7 +214,7 @@ class HandleCorreiosLabelsRepository
         if($order->corrios_tracking_code){
             return $order;
         }
-        $standard = in_array($service_sub_class,[ShippingService::Packet_Standard,ShippingService::AJ_Packet_Standard,ShippingService::AJ_Standard_CN,AJ_ShippingService::BCN_Packet_Standard]);
+        $standard = in_array($service_sub_class,[ShippingService::Packet_Standard,ShippingService::AJ_Packet_Standard,ShippingService::AJ_Standard_CN,ShippingService::BCN_Packet_Standard]);
         
         if(setting('china_anjun_api', null, User::ROLE_ADMIN) ){
             if($standard){
