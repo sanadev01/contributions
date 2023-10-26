@@ -57,7 +57,7 @@
                                             @if($anjunChinaApi)
                                                 <option value="AJC-NX" {{ old('services_subclass_code') == 'AJC-NX' ? 'selected': '' }}>Packet Standard (AJ)</option> 
                                                 <option value="AJC-IX" {{ old('services_subclass_code') == 'AJC-IX' ? 'selected': '' }}>Packet Express (AJ)</option> 
-                                            @if($correioApi)
+                                            @elseif($correioApi)
                                                 <option value="NX" {{ old('services_subclass_code') == 'NX' ? 'selected': '' }}>Packet Standard service</option>
                                                 <option value="IX" {{ old('services_subclass_code') == 'IX' ? 'selected': '' }}>Packet Express service</option>
                                                 <option value="XP" {{ old('services_subclass_code') == 'XP' ? 'selected': '' }}>Packet Mini service</option>
