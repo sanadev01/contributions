@@ -214,7 +214,7 @@ class HandleCorreiosLabelsRepository
         if($order->corrios_tracking_code){
             return $order;
         }
-        $standard = in_array($service_sub_class,[ShippingService::Packet_Standard,ShippingService::AJ_Packet_Standard,ShippingService::AJ_Standard_CN]);
+        $standard = in_array($service_sub_class,[ShippingService::Packet_Standard,ShippingService::AJ_Packet_Standard,ShippingService::AJ_Standard_CN,ShippingService::BCN_Packet_Standard]);
         
         if(setting('china_anjun_api', null, User::ROLE_ADMIN) ){
             if($standard){
@@ -232,14 +232,14 @@ class HandleCorreiosLabelsRepository
                 $service_sub_class = ShippingService::Packet_Express;
             }
         }
-        // else if(setting('bcn_api', null, User::ROLE_ADMIN) ){
-        //     if($standard){
-        //         $service_sub_class = ShippingService::BCN_Packet_Standard;
-        //     }
-        //     else{
-        //         $service_sub_class = ShippingService::BCN_Packet_Express;
-        //     }
-        // }
+        else if(setting('bcn_api', null, User::ROLE_ADMIN) ){
+            if($standard){
+                $service_sub_class = ShippingService::BCN_Packet_Standard;
+            }
+            else{
+                $service_sub_class = ShippingService::BCN_Packet_Express;
+            }
+        }
         else if(setting('anjun_api', null, User::ROLE_ADMIN) ){
             if($standard){
                 $service_sub_class = ShippingService::AJ_Packet_Standard;
