@@ -148,23 +148,24 @@ class Trackings extends Component
     {
         $lastTrack = last($tracking);
         $status = $lastTrack['code'];
-        if ($status == 100) {
+
+        if (in_array($status, [100, 300, 600, 602, 603, 607, 616, 619, 620, 621, 1004])) {
             return 80;
         }
 
-        if ($status == 110) {
+        if (in_array($status, [2000, 2013, 2016, 2019, 2020, 2021, 2033, 2036, 2037, 2062, 2064, 2079])) {
             return 90;
         }
 
-        if ($status == 120) {
+        if ($status == 2201) {
             return 100;
         }
 
-        if ($status == 130) {
+        if ($status == 700) {
             return 110;
         }
 
-        if ($status == 140) {
+        if ($status == 900) {
             return 120;
         }
     }
