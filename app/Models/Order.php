@@ -937,24 +937,19 @@ class Order extends Model implements Package
         return true;
     }
     public function getTaxAndDutyAttribute(){
-        $taxAndDuty = 0;
+        $finalValue = 0;
         if(strtolower($this->tax_modality) == "ddp"){
-            if($this->recipient->country->code =="MX" || $this->recipient->country->code =="CA"){
-                if($this->gross_total<=50)
-                    $taxAndDuty = 0;
-                else if($this->gross_total <= 117)
-                    $taxAndDuty = $this->gross_total * .17;
-                else
-                    $taxAndDuty = $this->gross_total * .19;
-            }
-            else if($this->recipient->country->code =="BR"){
-                if($this->gross_total<=50)
-                    $taxAndDuty = $this->gross_total * .17;
-                else
-                    $taxAndDuty = $this->gross_total * .60;
+            if($this->recipient->country->code =="MX" || $this->recipient->country->code =="CA"|| $this->recipient->country->code =="BR"){
+                $totalCost = $this->gross_total+$this->insurance_value+$this->carrierCost();
+                $duty = $totalCost * .6;
+                $totalCostOfTheProduct = $this->gross_total+$duty;
+                $icms = .17;
+                $totalIcms = $icms * $totalCostOfTheProduct;
+                $totalTaxAndDuty = $duty + $totalIcms;
+                $finalValue = $this->gross_total + $totalTaxAndDuty;
             }
         }
-        return number_format($taxAndDuty,2);
+        return number_format($finalValue,2);
     }
 
 }

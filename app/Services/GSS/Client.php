@@ -273,7 +273,7 @@ class Client{
 
     
     public function getServiceRates($request) {
-        
+        $rateType = '';
         $service = $request->service;
         $order = Order::find($request->order_id);
         if($service == ShippingService::GSS_PMI) {
@@ -365,6 +365,7 @@ class Client{
 
     public function getCostRates($order, $service) {
         
+        $rateType = '';
         if($service->service_sub_class == ShippingService::GSS_PMI) {
             $rateType = 'PMI';
         } elseif($service->service_sub_class == ShippingService::GSS_EPMEI) {

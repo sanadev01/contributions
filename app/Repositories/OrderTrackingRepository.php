@@ -11,6 +11,8 @@ use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
 use App\Services\SwedenPost\DirectLinkTrackingService;
 use App\Http\Resources\TrackingUserResource;
+use App\Services\Correios\Services\Brazil\CorreiosTrackingService;
+
 class OrderTrackingRepository
 {
 
@@ -132,38 +134,30 @@ class OrderTrackingRepository
             $getTrackings->push($apiResponse);
         }
 
-        if (count($this->brazilTrackingCodes) > 0) {
-            $response = CorreiosBrazilTrackingFacade::trackOrder(implode('', $this->brazilTrackingCodes));
-            // dd($response);
-            if ($response->success == true) {
-                // dd($response);
+        $serviceClient = new CorreiosTrackingService();
+        if (!empty($this->brazilTrackingCodes)) {
+            // $response = CorreiosBrazilTrackingFacade::trackOrder(implode('', $this->brazilTrackingCodes));
+            if(count($this->brazilTrackingCodes) > 1) {
+                $response = $serviceClient->getMultiTrackings($this->brazilTrackingCodes);
+            } elseif (count($this->brazilTrackingCodes) == 1) {
+                $response = $serviceClient->getTracking($this->brazilTrackingCodes[0]);
+            }
+            if (isset($response->objetos) && is_array($response->objetos) && count($response->objetos) > 0) {
                 $getTrackings = $getTrackings->map(function ($item, $key) use ($response) {
-                    if (count($this->brazilTrackingCodes) > 1) {
-                        foreach ($response->data as $data) {
-                            if ($data->erro ?? false) {
-                                return $item;
-                            }
-                            if ($item['order']->corrios_tracking_code == $data->numero) {
-                                $item['api_trackings'] = collect($data->evento);
-                                $item['service'] = 'Correios_Brazil';
-                            }
-                        }
-                    } else {
-                        if ($response->data->erro ?? false) {
+                    foreach ($response->objetos as $data) {
+                        if (isset($data->erro)) {
                             return $item;
                         }
-
-                        if ($response->data->numero == $item['order']->corrios_tracking_code) {
-
-                            $item['api_trackings'] = collect($response->data->evento);
+                        if ($item['order']->corrios_tracking_code == optional($data)->codObjeto) {
+                            $item['api_trackings'] = collect(optional($data)->eventos);
                             $item['service'] = 'Correios_Brazil';
                         }
                     }
-
                     return $item;
                 });
             }
         }
+
         if (count($this->directLinkTrackingCodes) > 0) {
             $directLinkTrackingService = new DirectLinkTrackingService();
             $response = $directLinkTrackingService->trackOrders($this->directLinkTrackingCodes);

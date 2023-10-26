@@ -72,7 +72,12 @@ class ServicesController extends Controller
             ShippingService::USPS_PRIORITY, 
             ShippingService::USPS_FIRSTCLASS,
             ShippingService::UPS_GROUND, 
-            ShippingService::FEDEX_GROUND
+            ShippingService::FEDEX_GROUND,
+            ShippingService::GSS_PMI,
+            ShippingService::GSS_EPMEI,
+            ShippingService::GSS_EPMI,
+            ShippingService::GSS_FCM,
+            ShippingService::GSS_EMS,
         ];
     }
 
