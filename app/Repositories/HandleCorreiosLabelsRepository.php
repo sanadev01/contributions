@@ -149,6 +149,8 @@ class HandleCorreiosLabelsRepository
 
     public function correiosOrAnjun($order)
     {
+        
+        $order = $this->updateShippingServiceFromSetting($order);
         if($order->shippingService->is_anjun_china_service_sub_class){
             return $this->anjunChinaLabel();
         }
@@ -206,5 +208,49 @@ class HandleCorreiosLabelsRepository
     {
         $buttonsOnly = $this->request->has('buttons_only');
         return view('admin.orders.label.label', compact('order', 'error', 'buttonsOnly'));
+    }
+    public function updateShippingServiceFromSetting($order) {
+        $service_sub_class = $order->shippingService->service_sub_class;
+        if($order->corrios_tracking_code){
+            return $order;
+        }
+        $standard = in_array($service_sub_class,[ShippingService::Packet_Standard,ShippingService::AJ_Packet_Standard,ShippingService::AJ_Standard_CN,AJ_ShippingService::BCN_Packet_Standard]);
+        
+        if(setting('china_anjun_api', null, User::ROLE_ADMIN) ){
+            if($standard){
+                $service_sub_class = ShippingService::AJ_Standard_CN;
+            }
+            else{
+                $service_sub_class = ShippingService::AJ_Express_CN;
+            }
+        }
+        else if(setting('correios_api', null, User::ROLE_ADMIN) ){    
+            if($standard){
+                $service_sub_class = ShippingService::Packet_Standard;
+            }
+            else{
+                $service_sub_class = ShippingService::Packet_Express;
+            }
+        }
+        else if(setting('bcn_api', null, User::ROLE_ADMIN) ){
+            if($standard){
+                $service_sub_class = ShippingService::BCN_Packet_Standard;
+            }
+            else{
+                $service_sub_class = ShippingService::BCN_Packet_Express;
+            }
+        }
+        else if(setting('anjun_api', null, User::ROLE_ADMIN) ){
+            if($standard){
+                $service_sub_class = ShippingService::AJ_Packet_Standard;
+            }
+            else{
+                $service_sub_class = ShippingService::AJ_Packet_Express;
+            }
+        }
+        $order->update([
+            'shipping_service_id' => (ShippingService::where('service_sub_class',$service_sub_class)->first())->id,
+        ]);
+        return $order->fresh();
     }
 }
