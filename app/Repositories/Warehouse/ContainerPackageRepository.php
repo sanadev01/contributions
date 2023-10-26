@@ -5,7 +5,6 @@ namespace App\Repositories\Warehouse;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\OrderTracking;
-use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\AbstractRepository;
@@ -35,8 +34,17 @@ class ContainerPackageRepository extends AbstractRepository{
 
     public function addOrderToContainer(Container $container, string $barcode)
     {
+        if ($container->hasAnjunChinaService()) {
+            return $this->toAnjunChinaContainer($container, $barcode);
+        }
+        if ($container->hasBCNService()) {
+            return $this->toBCNContainer($container, $barcode);
+        }
+        $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
 
-        
+        if(!$this->isValidContainerOrder($container,$order)) {
+             return $this->validationError404($barcode, 'Order Not Found. Please Check Packet Service.');
+        }
         $containerOrder = $container->orders->first();
         if ($containerOrder) {
             $client = new Client();
@@ -48,26 +56,12 @@ class ContainerPackageRepository extends AbstractRepository{
             }
         }
  
-        $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
 
-        
-        $order          = Order::where('corrios_tracking_code',strtoupper($barcode))->first();
+
         if (!$order) {
             return $this->validationError404($barcode, 'Order Not Found.');
         }
-        
 
-        if(!$this->isValidContainerOrder($container,$order)) {
-            return [
-                'order' => [
-                    'corrios_tracking_code' => $barcode,
-                    'error' => 'Order Not Found. Please Check Packet Service',
-                    'code' => 404
-                ],
-            ];
-        } 
-
-        
         if ($order->status < Order::STATUS_PAYMENT_DONE) {
             return $this->validationError404($barcode, 'Please check the Order Status, either the order has been canceled, refunded or not yet paid');
         } 
@@ -105,14 +99,33 @@ class ContainerPackageRepository extends AbstractRepository{
 
             return $this->validationError404($barcode, 'Order does not belongs to this container express Service. Please Check Packet Service');
         }
-        if ($container->hasBCNService() && !$order->shippingService->is_bcn_service) {
-            return [
-                'order' => [
-                    'corrios_tracking_code' => $barcode,
-                    'error' => 'Order does not belongs to BCN Service. Please Check Packet Service',
-                    'code' => 404
-                ],
-            ];
+
+        return $this->updateContainer($container, $order, $barcode);
+    }
+    
+    public function toBCNContainer(Container $container, string $barcode)
+    {
+        $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
+
+        if (!$order) {
+            return $this->validationError404($barcode,  'Order Not Found.');
+        }
+
+        if ($order->status < Order::STATUS_PAYMENT_DONE) {
+            return $this->validationError404($barcode, 'Please check the Order Status, either the order has been canceled, refunded or not yet paid');
+        }
+        if (!$order->shippingService->is_bcn_service) {
+
+            return $this->validationError404($barcode, 'Order does not belongs to this container Service. Please Check Packet Service');
+        }
+
+        if ($container->hasBCNExpressService() && !$order->shippingService->is_bcn_express) {
+
+            return $this->validationError404($barcode, 'Order does not belongs to this standard container Service. Please Check Packet Service');
+        }
+        if ($container->hasBCNStandardService() && !$order->shippingService->is_bcn_standard) {
+
+            return $this->validationError404($barcode, 'Order does not belongs to this container express Service. Please Check Packet Service');
         }
 
         return $this->updateContainer($container, $order, $barcode);
@@ -172,9 +185,11 @@ class ContainerPackageRepository extends AbstractRepository{
 
         $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
 
-       return $order_tracking->delete();
+        return $order_tracking->delete();
     }
     public function isValidContainerOrder($container,$order) { 
+        if(!$order)
+            return false;
         $barcode = $order->corrios_tracking_code;
         $subString = strtolower(substr($barcode,0,2));
         if(strtolower(substr($barcode,0,2)) == 'na' || strtolower(substr($barcode,0,2)) == 'xl'|| strtolower(substr($barcode,0,2)) == 'nb'){

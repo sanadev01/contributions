@@ -262,6 +262,14 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         return in_array($this->services_subclass_code ,['BCN-NX', 'BCN-IX']);
     }
+    public function hasBCNStandardService()
+    {
+        return in_array($this->services_subclass_code ,['BCN-NX']);
+    }
+    public function hasBCNExpressService()
+    {
+        return in_array($this->services_subclass_code ,['BCN-IX']);
+    }
     public function hasOrders()
     {
         return $this->orders->isNotEmpty();
