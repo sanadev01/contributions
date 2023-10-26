@@ -162,10 +162,22 @@ class ShippingService extends Model
 
         return false;
     }
-    function getIsBcnServiceAttribute() {
+        function getIsBcnServiceAttribute() {
         return in_array($this->service_sub_class,[
             self::BCN_Packet_Standard, 
             self::BCN_Packet_Express,
+        ]);
+    }
+    
+    function getIsBcnExpressAttribute() {
+        return in_array($this->service_sub_class,[
+            self::BCN_Packet_Express,
+        ]);
+    }
+
+    function getIsBcnStandardAttribute() {
+        return in_array($this->service_sub_class,[
+            self::BCN_Packet_Standard,
         ]);
     }
 

@@ -173,7 +173,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         elseif($this->services_subclass_code == 'BCN-IX'){
             return 19;
         }
-        // return $this->services_subclass_code == 'NX' ? 2 : 1;
+                // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
 
     public function getDestinationAriport()
@@ -222,7 +222,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         if(in_array($this->services_subclass_code, ['AJ-NX' , 'BCN-NX'])){
             return 'NX';
         }
-        if(in_array($this->services_subclass_code , ['AJ-IX', 'BCN-IX'])){
+    if(in_array($this->services_subclass_code , ['AJ-IX', 'BCN-IX'])){
             return 'IX';
         }
         return $this->services_subclass_code;
@@ -231,12 +231,19 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasAnjunService()
     {
         return in_array($this->services_subclass_code ,['AJ-NX', 'AJ-IX']);
-    }
+    } 
     public function hasBCNService()
     {
         return in_array($this->services_subclass_code ,['BCN-NX', 'BCN-IX']);
     }
-
+    public function hasBCNStandardService()
+    {
+        return in_array($this->services_subclass_code ,['BCN-NX']);
+    }
+    public function hasBCNExpressService()
+    {
+        return in_array($this->services_subclass_code ,['BCN-IX']);
+    }
     public function hasOrders()
     {
         return $this->orders->isNotEmpty();
