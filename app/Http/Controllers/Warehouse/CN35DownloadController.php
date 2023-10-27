@@ -16,7 +16,7 @@ class CN35DownloadController extends Controller
         if($order){
             $orderWeight = $order->getOriginalWeight('kg');
         }
-        $cn23Maker = new CN35LabelMaker();
+        $cn23Maker = new CN35LabelMaker($container);
         $cn23Maker->setDispatchNumber($container->dispatch_number)
                      ->setService($container->getServiceCode())
                      ->setDispatchDate(Carbon::now()->format('Y-m-d'))

@@ -155,6 +155,21 @@ function sortTrackingEvents($data, $report)
     ];
 }
 
+function responseUnprocessable($message)
+{
+    return response()->json([
+        'success' => false,
+        'message' => $message,
+    ], 422);
+}
+function responseSuccessful($output, $message)
+{
+    return response()->json([
+        'success' => true,
+        'output' => $output,
+        'message' =>  $message,
+    ]);
+}
 function getAutoChargeData(User $user)
 {
     return[
