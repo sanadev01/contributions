@@ -97,13 +97,7 @@
                                     @endforeach   
                                     <hr>
                                     <tr class="border-top-light">
-                                        @if ( auth()->user()->isAdmin() && $invoice->isPrePaid() )
-                                            <td colspan="4"></td> 
-                                        @endif
-                                        @if ($invoice->differnceAmount())
-                                            <td colspan="2"> </td>
-                                        @endif
-                                        <td class="text-center h4" style="border-top: 1px solid !important;" colspan="5">@lang('orders.invoice.Total')</td>
+                                        <td class="text-center h4" style="border-top: 1px solid !important;" colspan=" {{ !$invoice->isPrePaid()? '5' : '9' }}">@lang('orders.invoice.Total')</td>
                                         <td class="h4" style="border-top: 1px solid !important;">{{ ($invoice->differnceAmount()) ? round($invoice->differnceAmount(), 2) : round($invoice->orders()->sum('gross_total'),2) }} USD</td>
                                     </tr>                            
                                 </tbody>

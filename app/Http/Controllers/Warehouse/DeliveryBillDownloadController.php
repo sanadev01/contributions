@@ -19,7 +19,7 @@ class DeliveryBillDownloadController extends Controller
             return redirect()->back()->with('error', 'please add a container to this delivery bill');
         }
 
-        $hasAnjunService = $deliveryBill->containers->first()->hasAnjunService() || $deliveryBill->containers->first()->hasAnjunChinaService();
+        $hasAnjunService = $deliveryBill->containers->first()->hasAnjunService();
         $contractNo = $hasAnjunService ? '9912501700' : '9912501576';
         
             $labelPrinter = new CN38LabelMaker();
