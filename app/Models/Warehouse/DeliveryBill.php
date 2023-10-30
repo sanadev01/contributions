@@ -86,10 +86,6 @@ class DeliveryBill extends Model
             return true;
         }
     }
-    public function isAnjunChina()
-    {
-        return $this->containers->first()->hasAnjunChinaService();
-    }
 
     public function isGDE()
     {

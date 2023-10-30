@@ -101,8 +101,6 @@
                                             <option value="XP">Packet Mini</option>
                                             <option value="AJ-NX">Anjun Packet Standard</option>
                                             <option value="AJ-IX">Anjun Packet Express</option>
-                                            <option value="AJC-NX">Packat Standard AJ</option>
-                                            <option value="AJC-IX">Packet Express AJ</option>
                                         </select>
                                     </th>
                                     
@@ -127,7 +125,7 @@
                                         </td>
                                         <td>{{ $container->dispatch_number }}</td>
                                         <td>{{ $container->seal_no }}</td>
-                                        <td> 
+                                        <td>
                                             {{ $container->getWeight() }} KG
                                         </td>
                                         <td>
@@ -184,7 +182,7 @@
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
                                                             @if( !$container->isRegistered() && $container->hasOrders())
-                                                                <a href="{{  $container->hasAnjunChinaService()?route('warehouse.anjun.container.register',$container):route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
+                                                                <a href="{{ route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Register Unit
                                                                 </a>
                                                             @endif
@@ -202,9 +200,9 @@
                                                             </form>
                                                         @endif
                                                         @if( $container->isRegistered() )
-                                                        <a href="{{$container->hasAnjunChinaService()?route('warehouse.anjun.container.download',$container):route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
-                                                            <i class="feather icon-box"></i> Get CN35
-                                                        </a>
+                                                            <a href="{{ route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
+                                                                <i class="feather icon-box"></i> Get CN35
+                                                            </a>
                                                         @endif
                                                     </div>
                                                 </div>
