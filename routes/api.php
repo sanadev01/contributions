@@ -52,21 +52,23 @@ Route::get('order-gss-rates', [App\Http\Controllers\Admin\Order\OrderItemsContro
 
 Route::post('update/inventory-order', Api\InventoryOrderUpdateController::class)->name('api.inventory.order.update');
 
-Route::prefix('v1')->middleware('auth:api')->group(function () {
-
+Route::prefix('v1')->middleware('auth:api')->group(function(){
+    
     Route::namespace('Api\Warehouse')->group(function () {
-
+    
         Route::resource('shipments', 'PackageConfirmationController')->only('store');
+    
     });
 
-    Route::post('files', 'Api\ImageUploaderController@store');
+    Route::post('files','Api\ImageUploaderController@store');
+
 });
 
 
 Route::prefix('v1')->group(function(){
-
+    
     Route::namespace('Api\PublicApi')->group(function () {
-
+    
         // Authenticated Routes
         Route::middleware(['auth:api','checkPermission'])->group(function (){
             Route::get('deposits',DepositController::class);
@@ -85,19 +87,19 @@ Route::prefix('v1')->group(function(){
             Route::get('status/{order}', StatusController::class);
             Route::get('cancel/{order}', CancelOrderController::class);
             Route::get('get/tracking', TrackingController::class);
-            //Cancel Lable Route for GePS
+           //Cancel Lable Route for GePS
             Route::get('cancel-label/{order}', [App\Http\Controllers\Api\PublicApi\OrderLabelController::class, 'cancelGePSLabel']);
             Route::post('ship/tracking', [App\Http\Controllers\Api\PublicApi\ShipTrackController::class, '__invoke']);
-            Route::get('user-shipping-services', [App\Http\Controllers\Api\PublicApi\UserServicesController::class, '__invoke']);
+Route::get('user-shipping-services', [App\Http\Controllers\Api\PublicApi\UserServicesController::class, '__invoke']);
         });
-
+    
         Route::get('countries', CountryController::class);
         Route::get('country/{country}/states', StateController::class);
         Route::get('shipping-services/{country_code?}', ServicesController::class);
         Route::get('shcodes/{search?}', ShCodeController::class);
     });
     Route::get('refund-tracking-orders', function (Request $request) {
-        $orders = Order::whereIn('corrios_tracking_code', $request->trackings)->where('is_paid', true)->where('status', 70)->get();
+    $orders = Order::whereIn('corrios_tracking_code', $request->trackings)->where('is_paid', true)->where('status', 70)->get();
         $countRefunded = 0;
         foreach ($orders as $order) {
             try {
@@ -111,7 +113,7 @@ Route::prefix('v1')->group(function(){
                     'balance' => Deposit::getCurrentBalance($order->user) + $order->gross_total,
                     'is_credit' => true,
                 ]);
-                $order->deposits()->sync($deposit->id);
+                 $order->deposits()->sync($deposit->id);
                 $order->update([
                     'status'  => Order::STATUS_REFUND,
                     'is_paid' => false
