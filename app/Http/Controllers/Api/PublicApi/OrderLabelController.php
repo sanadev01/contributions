@@ -150,6 +150,9 @@ class OrderLabelController extends Controller
                     if ($error) {
                         return $this->rollback((string)$error);
                     }
+                }  
+                if ($order->shippingService->isAnjunService() ||$order->shippingService->is_anjun_china_service_sub_class || $order->shippingService->is_bcn_service ||  $order->shippingService->isCorreiosService()){
+                  return $this->correiosOrAnjun($request,$order);
                 }
                 if ($order->shippingService->is_anjun_china_service_sub_class) {
                     $anjun = new AnjunLabelRepository($order,$request);

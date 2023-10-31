@@ -10,7 +10,6 @@ use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Traits\PrintOrderLabel;
 use Illuminate\Http\Request;
 
-
 class AnjunLabelRepository
 {
     use PrintOrderLabel;
@@ -59,7 +58,7 @@ class AnjunLabelRepository
             return $this->printLabel($order);
         } else {
             return $response;
-        } 
+        }
     }
 
 
