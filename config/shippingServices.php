@@ -45,6 +45,8 @@ return [
             283 => 'Total Express',
             33173 => 'HD Express',
             776 => 'LT Prime',
+            34166 => "AJ China Standard",
+            33174 => "AJ China Express",
         ]
     ]
 ];

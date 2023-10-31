@@ -31,8 +31,13 @@ class ShippingService extends Model
     const Packet_Standard = 33162;
     const Packet_Express = 33170;
     const Packet_Mini = 33197;
+    const AJ_Standard_CN = 34166;
+    const AJ_Express_CN = 33174;
+
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
+    const BCN_Packet_Standard = 44164;
+    const BCN_Packet_Express = 44172;
     const Brazil_Redispatch = 100;
     const GePS = 537;
     const GePS_EFormat = 540;
@@ -159,6 +164,36 @@ class ShippingService extends Model
         }
 
         return false;
+    }
+    public function isAnjunChinaService()
+    {
+        return in_array($this->service_sub_class,[self::AJ_Standard_CN,self::AJ_Express_CN]);
+    }
+    public function isAnjunChinaExpressService()
+    {
+        return self::AJ_Express_CN  == $this->service_sub_class;
+    }
+    public function isAnjunChinaStandardService()
+    {
+        return self::AJ_Standard_CN == $this->service_sub_class;
+    }
+    function getIsBcnServiceAttribute() {
+        return in_array($this->service_sub_class,[
+            self::BCN_Packet_Standard, 
+            self::BCN_Packet_Express,
+        ]);
+    }
+    
+    function getIsBcnExpressAttribute() {
+        return in_array($this->service_sub_class,[
+            self::BCN_Packet_Express,
+        ]);
+    }
+
+    function getIsBcnStandardAttribute() {
+        return in_array($this->service_sub_class,[
+            self::BCN_Packet_Standard,
+        ]);
     }
 
     public function isGePSService()
@@ -342,7 +377,11 @@ class ShippingService extends Model
     }
     public function getIsUspsGroundAttribute()
     { 
-        return $this->service_sub_class == ShippingService::USPS_GROUND;
+        return $this->service_sub_class == self::USPS_GROUND;
+    }
+    public function getIsAnjunChinaServiceSubClassAttribute()
+    {
+        return in_array($this->service_sub_class,[self::AJ_Standard_CN,self::AJ_Express_CN]);
     }
     public function getIsGdePriorityAttribute()
     { 
