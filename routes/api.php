@@ -90,6 +90,7 @@ Route::prefix('v1')->group(function(){
            //Cancel Lable Route for GePS
             Route::get('cancel-label/{order}', [App\Http\Controllers\Api\PublicApi\OrderLabelController::class, 'cancelGePSLabel']);
             Route::post('ship/tracking', [App\Http\Controllers\Api\PublicApi\ShipTrackController::class, '__invoke']);
+            Route::get('user-shipping-services', [App\Http\Controllers\Api\PublicApi\UserServicesController::class, '__invoke']);
         });
     
         Route::get('countries', CountryController::class);
