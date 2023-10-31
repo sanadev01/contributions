@@ -141,8 +141,6 @@
                         <select class="form-control" wire:model.debounce.1000ms="carrier">
                             <option value="">All</option>
                             <option value="Brazil">Correios Brazil</option>
-                            <option value="Correios AJ">Correios AJ</option>
-                            <option value="Correios A">Correios A</option>
                             <option value="USPS">USPS</option>
                             <option value="UPS">UPS</option>
                             <option value="FEDEX">FEDEX</option>

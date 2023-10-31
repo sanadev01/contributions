@@ -629,10 +629,10 @@ class ParcelController extends Controller
 
     public function serviceActive($shippingService)
     {
-        if (in_array($shippingService->service_sub_class,[ShippingService::Packet_Standard,ShippingService::AJ_Packet_Standard,ShippingService::AJ_Standard_CN,ShippingService::BCN_Packet_Standard])) {
+        if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Standard) {
             $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
         }
-        if (in_array($shippingService->service_sub_class,[ShippingService::Packet_Express,ShippingService::AJ_Packet_Express,ShippingService::AJ_Express_CN,ShippingService::BCN_Packet_Express])) {
+        if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Express) {
             $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
         }
         
