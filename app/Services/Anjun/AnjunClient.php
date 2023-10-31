@@ -66,7 +66,7 @@ class AnjunClient
                 if ($trackingNumber) {
                     $order->update([
                         'corrios_tracking_code' => $trackingNumber,
-                        'cn23'                  => [
+                        'cn23' => [
                             "tracking_code" => $trackingNumber,
                             "stamp_url"     => route('warehouse.cn23.download', $order->id),
                             'leve'          => false
