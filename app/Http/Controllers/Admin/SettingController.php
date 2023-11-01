@@ -65,6 +65,7 @@ class SettingController extends Controller
         Setting::saveByKey('VALUE', $request->VALUE,null,true); 
         
         //switch 3 api for correies/anjun standerd/express api.
+        saveSetting('bcn_api', false, $this->adminId);
         saveSetting('china_anjun_api', false, $this->adminId);
         saveSetting('correios_api', false, $this->adminId);
         saveSetting('anjun_api', false, $this->adminId);

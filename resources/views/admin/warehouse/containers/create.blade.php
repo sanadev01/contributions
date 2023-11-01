@@ -61,10 +61,13 @@
                                                 <option value="NX" {{ old('services_subclass_code') == 'NX' ? 'selected': '' }}>Packet Standard service</option>
                                                 <option value="IX" {{ old('services_subclass_code') == 'IX' ? 'selected': '' }}>Packet Express service</option>
                                                 <option value="XP" {{ old('services_subclass_code') == 'XP' ? 'selected': '' }}>Packet Mini service</option>
-
                                             @else
                                                 <option value="AJ-NX" {{ old('services_subclass_code') == 'AJ-NX' ? 'selected': '' }}>Anjun Standard service</option>
                                                 <option value="AJ-IX" {{ old('services_subclass_code') == 'AJ-IX' ? 'selected': '' }}>Anjun Express service</option>
+                                                @if(auth()->user()->isAdmin())
+                                                <option value="AJC-NX" {{ old('services_subclass_code') == 'AJC-NX' ? 'selected': '' }}>Packet Standard AnjunChina for Test User</option> 
+                                                <option value="AJC-IX" {{ old('services_subclass_code') == 'AJC-IX' ? 'selected': '' }}>Packet Express AnjunChina for Test User</option> 
+                                                @endif
                                             @endif
                                         </select>
                                         @error('services_subclass_code')

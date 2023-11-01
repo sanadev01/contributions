@@ -237,6 +237,7 @@ class OrderLabelController extends Controller
     public function updateShippingServiceFromSetting($order)
     {
         $service_sub_class = $order->shippingService->service_sub_class;
+
         if ($order->corrios_tracking_code) {
             return $order;
         }
@@ -267,6 +268,7 @@ class OrderLabelController extends Controller
                 $service_sub_class = ShippingService::AJ_Packet_Express;
             }
         }
+
         $order->update([
             'shipping_service_id' => (ShippingService::where('service_sub_class', $service_sub_class)->first())->id,
         ]);
