@@ -265,6 +265,8 @@ class ParcelController extends Controller
                 }
             }
 
+            $order->syncServices(optional($request->parcel)['services'] ?? []);
+
             $order->doCalculations();
 
             DB::commit();
