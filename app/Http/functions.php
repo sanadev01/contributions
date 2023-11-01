@@ -206,6 +206,7 @@ function getGDEProfit($rates, $service)
     $adminProfit = setting($type, null, User::ROLE_ADMIN);
     return $profit = $userProfit ? $userProfit : $adminProfit;
 }
+
 function isActiveService($user,$shippingService){
     if($shippingService->usps_service_sub_class)
       return setting('usps', null, $user->id)? true:false;
@@ -220,4 +221,21 @@ function isActiveService($user,$shippingService){
     if($shippingService->sweden_post_service_sub_class) 
        return setting('sweden_post', null, $user->id)?true:false; 
     return true; 
+}
+
+function responseUnprocessable($message)
+{
+    return response()->json([
+        'success' => false,
+        'message' => $message,
+    ], 422);
+}
+
+function responseSuccessful($output, $message)
+{
+    return response()->json([
+        'success' => true,
+        'output' => $output,
+        'message' =>  $message,
+    ]);
 }

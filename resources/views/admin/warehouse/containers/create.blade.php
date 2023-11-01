@@ -42,7 +42,7 @@
                                         <select class="form-control" name="destination_operator_name">
                                             <option value="">@lang('warehouse.containers.Destination Airport')</option>
                                             <option value="SAOD" {{ old('destination_operator_name') == 'SAOD' ? 'selected' : '' }}>GRU</option>
-                                            <option value="CRBA" {{ old('destination_operator_name') == 'CRBA' ? 'selecte' : '' }}>CWB</option>
+                                            <option value="CRBA" {{ old('destination_operator_name') == 'CRBA' ? 'selected' : '' }}>CWB</option>
                                         </select>
                                         @error('destination_operator_name')
                                             <div class="help-block text-danger"> {{ $message }} </div>
@@ -53,14 +53,21 @@
                                     <label class="col-md-3 text-md-right">@lang('warehouse.containers.Distribution Service Class')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code">
-                                            <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            @if(!$anjunService)
+                                            <option value="">@lang('warehouse.containers.Distribution Service Class')</option>                                            
+                                            @if(setting('china_anjun_api', null, \App\Models\User::ROLE_ADMIN))
+                                                <option value="AJC-NX" {{ old('services_subclass_code') == 'AJC-NX' ? 'selected': '' }}>Packet Standard (AJ)</option> 
+                                                <option value="AJC-IX" {{ old('services_subclass_code') == 'AJC-IX' ? 'selected': '' }}>Packet Express (AJ)</option> 
+                                            @elseif(!setting('anjun_api', null,\App\Models\User::ROLE_ADMIN))
                                                 <option value="NX" {{ old('services_subclass_code') == 'NX' ? 'selected': '' }}>Packet Standard service</option>
                                                 <option value="IX" {{ old('services_subclass_code') == 'IX' ? 'selected': '' }}>Packet Express service</option>
                                                 <option value="XP" {{ old('services_subclass_code') == 'XP' ? 'selected': '' }}>Packet Mini service</option>
                                             @else
                                                 <option value="AJ-NX" {{ old('services_subclass_code') == 'AJ-NX' ? 'selected': '' }}>Anjun Standard service</option>
                                                 <option value="AJ-IX" {{ old('services_subclass_code') == 'AJ-IX' ? 'selected': '' }}>Anjun Express service</option>
+                                                @if(auth()->user()->isAdmin())
+                                                <option value="AJC-NX" {{ old('services_subclass_code') == 'AJC-NX' ? 'selected': '' }}>Packet Standard AnjunChina for Test User</option> 
+                                                <option value="AJC-IX" {{ old('services_subclass_code') == 'AJC-IX' ? 'selected': '' }}>Packet Express AnjunChina for Test User</option> 
+                                                @endif
                                             @endif
                                         </select>
                                         @error('services_subclass_code')
