@@ -35,7 +35,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label class="h4">Freight <span class="text-danger"></span></label>
-                        <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight', $order->user_declared_freight) }}" placeholder="Freight" @if(optional($order)->sender_country_id == $usCountryId || optional($order->recipient)->country_id == $usCountryId) readonly @endif/>
+                        <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight', $order->user_declared_freight) }}" placeholder="Freight" />
                         {{-- <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight',__default($order->user_declared_freight,$order->gross_total)) }}" placeholder="Freight"/> --}}
                         <div class="help-block"></div>
                         <span class="text-danger">@error('user_declared_freight') {{ $message }} @enderror</span>
