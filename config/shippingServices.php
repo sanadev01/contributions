@@ -19,8 +19,6 @@ return [
             33171 => 'SL Express Modal',
             33198 => 'SL Small Parcels',
             33164 => 'AJ Packet Standard',
-            34166 => "AJ China Standard",
-            33174 => "AJ China Express",
             33172 => 'AJ Packet Express',
             100 => 'Brazil Redispatch',
             537 => 'Global eParcel Prime',
@@ -49,6 +47,8 @@ return [
             776 => 'LT Prime',
             44164 => 'Packet Standard B',
             44172 => 'Packet Express B',
+            34166 => "AJ China Standard",
+            33174 => "AJ China Express",
         ]
     ]
 ];

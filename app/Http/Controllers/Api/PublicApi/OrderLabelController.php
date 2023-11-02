@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Api\PublicApi;
 
 use App\Models\Order;
+use App\Models\User;
 use App\Events\OrderPaid;
 use Illuminate\Http\Request;
-// use App\Repositories\LabelRepository;
+use App\Repositories\AnjunLabelRepository;
 use App\Services\GePS\Client;
 use App\Models\ShippingService;
-use App\Models\User;
-use App\Repositories\AnjunLabelRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\UPSLabelRepository;
@@ -38,10 +37,13 @@ class OrderLabelController extends Controller
         }
 
         $this->authorize('canPrintLableViaApi', $order);
-        if ($order->shippingService->isAnjunService() || $order->shippingService->is_anjun_china_service_sub_class || $order->shippingService->is_bcn_service ||  $order->shippingService->isCorreiosService()) {
+        if ($order->shippingService->isAnjunService() || $order->shippingService->is_bcn_service ||  $order->shippingService->isCorreiosService()) {
             $order = $this->updateShippingServiceFromSetting($order);
         }
         DB::beginTransaction();
+        if ($order->shippingService->is_anjun_china_service_sub_class && Auth::id() != "1137") {
+            return $this->rollback("service not available for this user.");
+        }
         $isPayingFlag = false;
         try {
             $orders = new Collection;
@@ -151,7 +153,7 @@ class OrderLabelController extends Controller
                         return $this->rollback((string)$error);
                     }
                 }
-                if ($order->shippingService->is_anjun_china_service_sub_class) {
+                if ($order->shippingService->is_anjun_china_service_sub_class && Auth::id() == "1137") {
                     $anjun = new AnjunLabelRepository($order, $request);
                     $labelData = $anjun->run();
                     $order->refresh();
@@ -161,6 +163,9 @@ class OrderLabelController extends Controller
                     if ($anjun->getError()) {
                         return $this->rollback($anjun->getError());
                     }
+                } elseif ($order->shippingService->is_anjun_china_service_sub_class) {
+
+                    return $this->rollback('service not availble for this user.');
                 }
                 if ($order->shippingService->isAnjunService() ||  $order->shippingService->isCorreiosService() || $order->shippingService->is_bcn_service) {
                     $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
@@ -242,7 +247,6 @@ class OrderLabelController extends Controller
             return $order;
         }
         $standard = in_array($service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard]);
-
         if (setting('china_anjun_api', null, User::ROLE_ADMIN)) {
             if ($standard) {
                 $service_sub_class = ShippingService::AJ_Standard_CN;

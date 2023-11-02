@@ -1,9 +1,5 @@
 <?php
-
-
 namespace App\Repositories;
-
-
 use App\Models\Order;
 use App\Services\Anjun\AnjunClient;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
@@ -13,7 +9,6 @@ use Illuminate\Http\Request;
 class AnjunLabelRepository
 {
     use PrintOrderLabel;
-
     public $order;
     public $error;
     public $request;
@@ -23,7 +18,6 @@ class AnjunLabelRepository
         $this->error = null;
         $this->request = $request;
     }
-
     public function run()
     {
         return $this->get($this->order);
@@ -34,21 +28,16 @@ class AnjunLabelRepository
             $this->printLabel($order);
             return null;
         }
-
         return $this->update($order);
     }
-
     public function update(Order $order)
     {
         $cn23 = $this->generateLabel($order);
-
         if ($cn23) {
             $this->printLabel($order);
         }
-
         return null;
     }
-
     protected function generateLabel(Order $order)
     {
         $anjunClient = new AnjunClient();
@@ -60,8 +49,6 @@ class AnjunLabelRepository
             return $response;
         }
     }
-
-
     public function printLabel(Order $order)
     {
         $labelPrinter = new CN23LabelMaker();

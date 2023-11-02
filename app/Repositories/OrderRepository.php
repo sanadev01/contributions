@@ -667,16 +667,21 @@ class OrderRepository
         if($order->recipient->country_id == Order::BRAZIL)
         {
             // If sinerlog is enabled for the user, then remove the Correios services
-            if(!setting('china_anjun_api', null,User::ROLE_ADMIN)){
-                // $this->shippingServiceError = 'Anjun China is disabled.';
-                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                    return !$shippingService->isAnjunChinaService();
+            if(!setting('correios_api', null, User::ROLE_ADMIN))
+            {
+                $shippingServices = $shippingServices->filter(function ($item, $key)  {
+                    return !$item->isCorreiosService();
                 });
             }
-            if(!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
+            if(!setting('anjun_api', null, User::ROLE_ADMIN)){
                     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                         return !$shippingService->isAnjunService();
                     });
+            } 
+            if(!setting('china_anjun_api', null,User::ROLE_ADMIN) || Auth::id()!='1137'){
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return !$shippingService->isAnjunChinaService();
+                });
             }
 
             if(!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
@@ -684,16 +689,15 @@ class OrderRepository
                     return !$shippingService->is_bcn_service;
                 });
             }
-            if(!setting('correios_api', null, \App\Models\User::ROLE_ADMIN)){
-                    $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                        return !$shippingService->isCorreiosService();
-                    });
-            }
             
             if($shippingServices->isEmpty()){
                 $this->shippingServiceError = 'Please check your parcel dimensions';
             }
         }
+            
+            if($shippingServices->isEmpty()){
+                $this->shippingServiceError = 'Please check your parcel dimensions';
+            }
         return $shippingServices;
     }
 
