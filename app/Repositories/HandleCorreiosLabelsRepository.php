@@ -42,7 +42,7 @@ class HandleCorreiosLabelsRepository
 
                 return $this->gepsLabel();
             }
-            if ($this->order->shippingService->isCorreiosService() || $this->order->shippingService->is_bcn_service || $this->order->shippingService->is_anjun_china_service_sub_class || $this->order->shippingService->isAnjunService()) {
+            if ($this->order->shippingService->isCorreiosService() || $this->order->shippingService->is_bcn_service  || $this->order->shippingService->isAnjunService()) {
                 return $this->correiosOrAnjun($this->order);
             }
             if ($this->order->shippingService->isPostPlusService()) {
