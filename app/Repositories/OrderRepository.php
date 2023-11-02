@@ -305,7 +305,7 @@ class OrderRepository
     {
         $order->syncServices($request->get('services',[]));
 
-        $order->doCalculations();
+        $order->doCalculations(true,true);
         return true;
     }
 
