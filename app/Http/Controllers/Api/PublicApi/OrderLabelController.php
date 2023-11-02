@@ -9,8 +9,6 @@ use Illuminate\Http\Request;
 use App\Repositories\AnjunLabelRepository;
 use App\Services\GePS\Client;
 use App\Models\ShippingService;
-use App\Models\User;
-use App\Repositories\AnjunLabelRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\UPSLabelRepository;

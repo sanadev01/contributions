@@ -25,8 +25,6 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     const CONTAINER_ANJUN_NX = 'AJ-NX';
     const CONTAINER_ANJUN_IX = 'AJ-IX';
-    const CONTAINER_BCN_NX = 'BCN-NX';
-    const CONTAINER_BCN_IX = 'BCN-IX';
     const CONTAINER_ANJUNC_NX = 'AJC-NX';
     const CONTAINER_ANJUNC_IX = 'AJC-IX';
     const CONTAINER_BCN_NX = 'BCN-NX';
@@ -175,13 +173,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif($this->services_subclass_code == ShippingService::HD_Express){
             return 17;
-        }elseif( $this->services_subclass_code == 'BCN-NX') {
-            return 18;
         }
-        elseif($this->services_subclass_code == 'BCN-IX'){
-            return 19;
-        }
-                // return $this->services_subclass_code == 'NX' ? 2 : 1;
         elseif( $this->services_subclass_code == 'AJC-IX') {
             return 18;
         }
