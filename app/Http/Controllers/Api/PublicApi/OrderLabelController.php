@@ -37,7 +37,7 @@ class OrderLabelController extends Controller
         }
 
         $this->authorize('canPrintLableViaApi', $order);
-        if ($order->shippingService->isAnjunService() || $order->shippingService->is_anjun_china_service_sub_class || $order->shippingService->is_bcn_service ||  $order->shippingService->isCorreiosService()) {
+        if ($order->shippingService->isAnjunService() || $order->shippingService->is_bcn_service ||  $order->shippingService->isCorreiosService()) {
             $order = $this->updateShippingServiceFromSetting($order);
         }
         DB::beginTransaction();
