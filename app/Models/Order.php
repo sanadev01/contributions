@@ -514,17 +514,20 @@ class Order extends Model implements Package
         return ($api?'TM':'HD')."{$tempWhr}".(optional($this->recipient)->country->code??"BR");
     }
 
-    public function doCalculations($onVolumetricWeight=true)
+    public function doCalculations($onVolumetricWeight=true, $isServices = false)
     {
         $shippingService = $this->shippingService;
-
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
         if ($shippingService && in_array($shippingService->service_sub_class, $this->usShippingServicesSubClasses())) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
         }elseif ($shippingService && $shippingService->isGSSService()) {
             $shippingCost = $this->user_declared_freight;
-            $this->calculateGSSProfit($shippingCost, $shippingService);
+            if(!$isServices){
+                $this->calculateGSSProfit($shippingCost, $shippingService);
+            }else{
+                $shippingCost = $this->shipping_value;
+            }
         }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
