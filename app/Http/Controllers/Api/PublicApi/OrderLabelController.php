@@ -163,7 +163,7 @@ class OrderLabelController extends Controller
                     if ($anjun->getError()) {
                         return $this->rollback($anjun->getError());
                     }
-                } else {
+                }elseif ($order->shippingService->is_anjun_china_service_sub_class) {
 
                     return $this->rollback('service not availble for this user.');
                 }
