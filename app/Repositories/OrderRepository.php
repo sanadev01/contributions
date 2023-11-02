@@ -678,7 +678,7 @@ class OrderRepository
                         return !$shippingService->isAnjunService();
                     });
             } 
-            if(!setting('china_anjun_api', null,User::ROLE_ADMIN) || Auth::id()!='1137'){
+            if(Auth::id()!='1137'){
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return !$shippingService->isAnjunChinaService();
                 });
