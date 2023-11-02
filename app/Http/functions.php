@@ -230,7 +230,7 @@ function getVolumetricDiscountPercentage(Order $order){
     elseif(optional($order->shippingService)->isHDExpressService())
         $percentage= setting('hd_express_discount_percentage', null, $user_id);
     return $percentage??setting('discount_percentage', null, $user_id);
-
+}
 function responseUnprocessable($message)
 {
     return response()->json([
