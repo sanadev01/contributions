@@ -45,6 +45,9 @@ class ContainerPackageRepository extends AbstractRepository{
         if(!$this->isValidContainerOrder($container,$order)) {
              return $this->validationError404($barcode, 'Order Not Found. Please Check Packet Service.');
         }
+        if ($container->hasAnjunChinaService()) {
+            return $this->toAnjunChinaContainer($container, $barcode);
+        }
         $containerOrder = $container->orders->first();
         if ($containerOrder) {
             $client = new Client();
@@ -55,8 +58,6 @@ class ContainerPackageRepository extends AbstractRepository{
                 return $this->validationError404($barcode, 'Order Service is changed. Please Check Packet Service');
             }
         }
- 
-
 
         if (!$order) {
             return $this->validationError404($barcode, 'Order Not Found.');

@@ -6,16 +6,20 @@ use App\Models\Setting;
 use App\Facades\UPSFacade;
 use App\Models\ShippingService;
 use App\Facades\USPSTrackingFacade;
+use App\Services\TotalExpress\Client;
 use App\Facades\CorreiosChileTrackingFacade;
 use App\Facades\CorreiosBrazilTrackingFacade;
 use App\Services\SwedenPost\DirectLinkTrackingService;
 use App\Http\Resources\TrackingUserResource;
+use App\Services\Correios\Services\Brazil\CorreiosTrackingService;
+
 class OrderTrackingRepository
 {
 
     private $trackingNumber;
     private $brazilTrackingCodes = [];
     private $directLinkTrackingCodes = [];
+    private $totalExpressTrackingCodes = [];
 
     public function __construct($trackingNumber)
     {
@@ -28,9 +32,9 @@ class OrderTrackingRepository
     }
 
     public function searchOrder()
-    {
+    {   
         $trackingNumbers = explode(',', preg_replace('/\s+/', '', $this->trackingNumber));
-
+        // dd($trackingNumbers);
         $orders = Order::whereIn('corrios_tracking_code', $trackingNumbers)->orWhereIn('warehouse_number',$trackingNumbers)->orWhereIn('tracking_id',$trackingNumbers)->get();
 
         $getTrackings = collect();
@@ -42,6 +46,7 @@ class OrderTrackingRepository
                     if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
 
                     if ($order->recipient->country_id == Order::CHILE) {
+                        dd("here2");
                         $response = CorreiosChileTrackingFacade::trackOrder($order->corrios_tracking_code);
                         if ($response->status == true && ($response->data != null || $response->data != [])) {
                             $apiResponse = [
@@ -81,6 +86,11 @@ class OrderTrackingRepository
                             ];
                         }
                     } elseif ($order->recipient->country_id == Order::BRAZIL) {
+                        
+                        if($order->shippingService->is_total_express) {
+                            array_push($this->totalExpressTrackingCodes, $order->corrios_tracking_code);
+                        }
+
                         if ($order->carrier == 'Correios Brazil' || $order->carrier == 'Global eParcel' || $order->carrier == 'Prime5') {
                             array_push($this->brazilTrackingCodes, $order->corrios_tracking_code);
                         }
@@ -125,38 +135,30 @@ class OrderTrackingRepository
             $getTrackings->push($apiResponse);
         }
 
-        if (count($this->brazilTrackingCodes) > 0) {
-            $response = CorreiosBrazilTrackingFacade::trackOrder(implode('', $this->brazilTrackingCodes));
-
-            if ($response->success == true) {
-
+        $serviceClient = new CorreiosTrackingService();
+        if (!empty($this->brazilTrackingCodes)) {
+            // $response = CorreiosBrazilTrackingFacade::trackOrder(implode('', $this->brazilTrackingCodes));
+            if(count($this->brazilTrackingCodes) > 1) {
+                $response = $serviceClient->getMultiTrackings($this->brazilTrackingCodes);
+            } elseif (count($this->brazilTrackingCodes) == 1) {
+                $response = $serviceClient->getTracking($this->brazilTrackingCodes[0]);
+            }
+            if (isset($response->objetos) && is_array($response->objetos) && count($response->objetos) > 0) {
                 $getTrackings = $getTrackings->map(function ($item, $key) use ($response) {
-                    if (count($this->brazilTrackingCodes) > 1) {
-                        foreach ($response->data as $data) {
-                            if ($data->erro ?? false) {
-                                return $item;
-                            }
-                            if ($item['order']->corrios_tracking_code == $data->numero) {
-                                $item['api_trackings'] = collect($data->evento);
-                                $item['service'] = 'Correios_Brazil';
-                            }
-                        }
-                    } else {
-                        if ($response->data->erro ?? false) {
+                    foreach ($response->objetos as $data) {
+                        if (isset($data->erro)) {
                             return $item;
                         }
-
-                        if ($response->data->numero == $item['order']->corrios_tracking_code) {
-
-                            $item['api_trackings'] = collect($response->data->evento);
+                        if ($item['order']->corrios_tracking_code == optional($data)->codObjeto) {
+                            $item['api_trackings'] = collect(optional($data)->eventos);
                             $item['service'] = 'Correios_Brazil';
                         }
                     }
-
                     return $item;
                 });
             }
         }
+
         if (count($this->directLinkTrackingCodes) > 0) {
             $directLinkTrackingService = new DirectLinkTrackingService();
             $response = $directLinkTrackingService->trackOrders($this->directLinkTrackingCodes);
@@ -180,6 +182,24 @@ class OrderTrackingRepository
 
                             $item['api_trackings'] = collect($this->reverseTrackings($response->data['Item']['Events']))->last();
                             $item['service'] = 'Prime5';
+                        }
+                    }
+                    return $item;
+                });
+            }
+        }
+        if (count($this->totalExpressTrackingCodes) > 0) {
+            $totalExpClient = new Client();
+            $response = $totalExpClient->getPacketTracking($this->totalExpressTrackingCodes);
+            if ($response['success'] == true) {
+                $getTrackings = $getTrackings->map(function($item, $key) use ($response){
+                    foreach ($response['data'] as $key=>$data) {
+                        if($response['success'] == false){
+                            return $item;
+                        }
+                        if($item['order']->corrios_tracking_code == $data['trackingNumber']){
+                            $item['api_trackings'] = collect($data['Events']);
+                            $item['service'] = 'Total Express';
                         }
                     }
                     return $item;

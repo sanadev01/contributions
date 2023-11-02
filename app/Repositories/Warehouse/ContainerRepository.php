@@ -11,6 +11,7 @@ class ContainerRepository extends AbstractRepository{
 
     public function get(Request $request, $paginate)
     {
+        
         $query = Container::query();
 
         if ( !Auth::user()->isAdmin() ){
@@ -44,12 +45,13 @@ class ContainerRepository extends AbstractRepository{
 
     public function store(Request $request)
     {
-        try {
-
-            if (in_array($request->services_subclass_code, [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX]) ) {
+        try { 
+            if (in_array($request->services_subclass_code, [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX,Container::CONTAINER_ANJUNC_NX,Container::CONTAINER_ANJUNC_IX]) ) {
                 
                 $latestAnujnContainer = Container::where('services_subclass_code', Container::CONTAINER_ANJUN_NX)
                                                     ->orWhere('services_subclass_code', Container::CONTAINER_ANJUN_IX)
+                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_NX)
+                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_IX)
                                                     ->latest()->first();
 
                 $anjunDispatchNumber = ($latestAnujnContainer->dispatch_number ) ? $latestAnujnContainer->dispatch_number + 1 : 295000;
@@ -66,7 +68,6 @@ class ContainerRepository extends AbstractRepository{
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
-
             $container->update([
                 'dispatch_number' => ($container->hasAnjunService()) ? $anjunDispatchNumber : $container->id,
             ]);

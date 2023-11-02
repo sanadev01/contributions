@@ -59,12 +59,12 @@ class Parcel
          'seller_state' => ($this->order->sender_state_id) ? $this->order->senderState->code : 'FL',
          'seller_zip_code' => ($this->order->sender_zipcode) ? $this->order->sender_zipcode : '33182',
          'seller_country' => 'US',
-         'seller_phone' => ($this->order->sender_phone) ? $this->order->sender_phone : '',
-          'seller_email' => ($this->order->sender_email) ? $this->order->sender_email : '',
+         'seller_phone' => ($this->order->sender_phone) ? $this->order->sender_phone : $this->order->user->phone,
+         'seller_email' => ($this->order->sender_email) ? $this->order->sender_email : $this->order->user->email,
          "seller_tax_number" =>"12345678-998A",
          'customerReferenceID' => ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id) . ' HD-' . $this->order->id,
          "seller_address_number" => "605",
-         "seller_address_complement" => "Apartment 99B",
+         "seller_address_complement" => " ",
          "seller_website" => "www.seller.com",
 
          "volumes_attributes" => [

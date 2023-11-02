@@ -39,43 +39,47 @@ class Trackings extends Component
 
     public function toggleBrazilStatus($tracking, $hdTrackings)
     {
-        if ($tracking['status'] == 16 && $tracking['tipo'] == 'PAR') {
-            return 90;
-        }
+        // dd($tracking, $hdTrackings);
+        foreach($tracking as $tracking) {
+            // dd($tracking->codigo);
+            if ($tracking->codigo == 'PAR') {
+                return 90;
+            }
 
-        if ($tracking['status'] == 17 && $tracking['tipo'] == 'PAR') {
-            return 100;
-        }
+            if ($tracking->codigo == 'PAR') {
+                return 100;
+            }
 
-        if ($tracking['status'] == 01 && $tracking['tipo'] == 'RO') {
-            return 110;
-        }
+            if ($tracking->codigo == 'DO' || $tracking->codigo == 'RO') {
+                return 110;
+            }
 
-        if ($tracking['status'] == 0 && $tracking['tipo'] == 'OEC') {
-            return 120;
-        }
+            if ($tracking->codigo == 'OEC') {
+                return 120;
+            }
 
-        if ($tracking['status'] == 01 && ($tracking['tipo'] == 'BDEBDIBDR' || $tracking['tipo'] == 'BDI')) {
-            return 130;
-        }
+            if ($tracking->codigo == 'BDEBDIBDR' || $tracking->codigo == 'BDI') {
+                return 130;
+            }
 
-        if ($tracking['status'] == 01 && $tracking['tipo'] == 'BDE') {
-            return 140;
-        }
-
-        if ($tracking['status'] == 01 && $tracking['tipo'] == 'PO') {
-            $lastTracking = $hdTrackings->last();
-
-            $todayDate = date('Y-m-d');
-            $lastTrackingDate = $lastTracking->created_at;
-
-            $difference = Carbon::parse($todayDate)->diffInDays(Carbon::parse($lastTrackingDate));
-            
-            if ($difference > 2 && optional($tracking)['cidade']) {
+            if ($tracking->codigo == 'BDE') {
                 return 140;
             }
 
-            return 90;
+            if ($tracking->codigo == 'PO') {
+                $lastTracking = $hdTrackings->last();
+
+                $todayDate = date('Y-m-d');
+                $lastTrackingDate = $lastTracking->created_at;
+
+                $difference = Carbon::parse($todayDate)->diffInDays(Carbon::parse($lastTrackingDate));
+                
+                if ($difference > 2 && optional(optional(optional($tracking)->unidade)->endereco)->cidade) {
+                    return 140;
+                }
+
+                return 90;
+            }
         }
     }
 
@@ -136,6 +140,32 @@ class Trackings extends Component
         }
 
         if ($status == '9') {
+            return 120;
+        }
+    }
+
+    public function toggleTotalExpressStatus($tracking)
+    {
+        $lastTrack = last($tracking);
+        $status = $lastTrack['code'];
+
+        if (in_array($status, [100, 300, 600, 602, 603, 607, 616, 619, 620, 621, 1004])) {
+            return 80;
+        }
+
+        if (in_array($status, [2000, 2013, 2016, 2019, 2020, 2021, 2033, 2036, 2037, 2062, 2064, 2079])) {
+            return 90;
+        }
+
+        if ($status == 2201) {
+            return 100;
+        }
+
+        if ($status == 700) {
+            return 110;
+        }
+
+        if ($status == 900) {
             return 120;
         }
     }

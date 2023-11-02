@@ -27,6 +27,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     const CONTAINER_ANJUN_IX = 'AJ-IX';
     const CONTAINER_BCN_NX = 'BCN-NX';
     const CONTAINER_BCN_IX = 'BCN-IX';
+    const CONTAINER_ANJUNC_NX = 'AJC-NX';
+    const CONTAINER_ANJUNC_IX = 'AJC-IX';
+     
 
     public function user()
     {
@@ -73,13 +76,18 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }elseif($this->services_subclass_code == 'SL-XP'){
             return 'SL Small Parcels';
         }elseif ($this->services_subclass_code == 'AJ-NX') {
-            return 'AJ Packet Standard service';
+            return 'AJ Packet Standard Service';
+        }elseif ($this->services_subclass_code == 'AJC-NX') {
+            return 'AJC Packet Standard Service';
+        }elseif ($this->services_subclass_code == 'AJC-IX') {
+            return 'AJC Packet Express Service';
         }elseif ($this->services_subclass_code == 'AJ-IX') {
             return 'AJ Packet Express service';
         }elseif ($this->services_subclass_code == 'BCN-NX') {
             return 'BCN Standard service';
         }elseif ($this->services_subclass_code == 'BCN-IX') {
             return 'BCN Express service';
+            return 'AJ Packet Express Service';
         }elseif($this->services_subclass_code == 'SRM'){
             return 'SRM service';
         }elseif($this->services_subclass_code == 'SRP'){
@@ -167,13 +175,20 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif($this->services_subclass_code == ShippingService::HD_Express){
             return 17;
-        }elseif( $this->services_subclass_code == 'BCN-NX') {
-            return 18;
-        }
-        elseif($this->services_subclass_code == 'BCN-IX'){
-            return 19;
         }
                 // return $this->services_subclass_code == 'NX' ? 2 : 1;
+        elseif( $this->services_subclass_code == 'AJC-IX') {
+            return 18;
+        }
+        elseif( $this->services_subclass_code == 'AJC-NX') {
+            return 19;
+        }elseif( $this->services_subclass_code == 'BCN-NX') {
+            return 20;
+        }
+        elseif($this->services_subclass_code == 'BCN-IX'){
+            return 21;
+        }
+        // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
 
     public function getDestinationAriport()
@@ -219,10 +234,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getSubClassCode()
     {
-        if(in_array($this->services_subclass_code, ['AJ-NX' , 'BCN-NX'])){
+        if(in_array($this->services_subclass_code, ['AJ-NX' , 'BCN-NX','AJC-NX'])){
             return 'NX';
         }
-    if(in_array($this->services_subclass_code , ['AJ-IX', 'BCN-IX'])){
+        if(in_array($this->services_subclass_code , ['AJ-IX', 'BCN-IX','AJC-IX'])){
             return 'IX';
         }
         return $this->services_subclass_code;
@@ -243,6 +258,19 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasBCNExpressService()
     {
         return in_array($this->services_subclass_code ,['BCN-IX']);
+        return $this->services_subclass_code == 'AJ-NX' || $this->services_subclass_code == 'AJ-IX';
+    } 
+    public function hasAnjunChinaService()
+    {  
+        return in_array($this->services_subclass_code ,['AJC-NX','AJC-IX']);
+    } 
+    public function hasAnjunChinaStandardService()
+    {  
+        return $this->services_subclass_code == 'AJC-NX';
+    } 
+    public function hasAnjunChinaExpressService()
+    {  
+        return $this->services_subclass_code == 'AJC-IX';
     }
     public function hasOrders()
     {
