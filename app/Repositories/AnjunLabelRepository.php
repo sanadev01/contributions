@@ -1,52 +1,45 @@
 <?php
-
-
 namespace App\Repositories;
-
-
 use App\Models\Order;
 use App\Services\Anjun\AnjunClient;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Traits\PrintOrderLabel;
 use Illuminate\Http\Request;
-use App\Repositories\AnjunLabelRepository;
 
 
 class AnjunLabelRepository
 {
-use PrintOrderLabel;
-
+    use PrintOrderLabel;
     public $order;
     public $error;
     public $request;
-    public function __construct(Request $request,Order $order)
+    public function __construct(Order $order, Request $request)
     {
         $this->order = $order;
         $this->error = null;
         $this->request = $request;
     }
-
     public function run()
     {
-        $response = $this->get($this->order);  
-        $this->order->refresh(); 
-        $data = $response->getData();
-        if(!$data->success){ 
-             $this->error = $data->message; 
-        }
-        return $this->renderLabel($this->request, $this->order, $this->error); 
+        return $this->get($this->order);
     }
-
     public function get(Order $order)
     {
         if ($order->getCN23()) {
-            return $this->printLabel($order);
-        }else {
-            return $this->update($order);
+            $this->printLabel($order);
+            return null;
         }
+        return $this->update($order);
     }
-
     public function update(Order $order)
+    {
+        $cn23 = $this->generateLabel($order);
+        if ($cn23) {
+            $this->printLabel($order);
+        }
+        return null;
+    }
+    protected function generateLabel(Order $order)
     {
         $anjunClient = new AnjunClient();
         $response = $anjunClient->createPackage($order);
@@ -57,7 +50,6 @@ use PrintOrderLabel;
             return $response;
         }
     }
-
     public function printLabel(Order $order)
     {
         $labelPrinter = new CN23LabelMaker();

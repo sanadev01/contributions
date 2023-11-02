@@ -25,6 +25,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     const CONTAINER_ANJUN_NX = 'AJ-NX';
     const CONTAINER_ANJUN_IX = 'AJ-IX';
+    const CONTAINER_BCN_NX = 'BCN-NX';
+    const CONTAINER_BCN_IX = 'BCN-IX';
     const CONTAINER_ANJUNC_NX = 'AJC-NX';
     const CONTAINER_ANJUNC_IX = 'AJC-IX';
     const CONTAINER_BCN_NX = 'BCN-NX';
@@ -179,11 +181,17 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         elseif($this->services_subclass_code == 'BCN-IX'){
             return 19;
         }
+                // return $this->services_subclass_code == 'NX' ? 2 : 1;
         elseif( $this->services_subclass_code == 'AJC-IX') {
             return 18;
         }
         elseif( $this->services_subclass_code == 'AJC-NX') {
             return 19;
+        }elseif( $this->services_subclass_code == 'BCN-NX') {
+            return 20;
+        }
+        elseif($this->services_subclass_code == 'BCN-IX'){
+            return 21;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -231,11 +239,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getSubClassCode()
     {
-        if (in_array($this->services_subclass_code, ['AJ-NX' , 'BCN-NX']) || $this->hasAnjunChinaStandardService()){
+        if(in_array($this->services_subclass_code, ['AJ-NX' , 'BCN-NX','AJC-NX'])){
             return 'NX';
         }
-
-        if (in_array($this->services_subclass_code , ['AJ-IX', 'BCN-IX']) || $this->hasAnjunChinaExpressService()){
+        if(in_array($this->services_subclass_code , ['AJ-IX', 'BCN-IX','AJC-IX'])){
             return 'IX';
         }
         return $this->services_subclass_code;
@@ -244,6 +251,19 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasAnjunService()
     {
         return in_array($this->services_subclass_code ,['AJ-NX', 'AJ-IX']);
+    } 
+    public function hasBCNService()
+    {
+        return in_array($this->services_subclass_code ,['BCN-NX', 'BCN-IX']);
+    }
+    public function hasBCNStandardService()
+    {
+        return in_array($this->services_subclass_code ,['BCN-NX']);
+    }
+    public function hasBCNExpressService()
+    {
+        return in_array($this->services_subclass_code ,['BCN-IX']);
+        return $this->services_subclass_code == 'AJ-NX' || $this->services_subclass_code == 'AJ-IX';
     } 
     public function hasAnjunChinaService()
     {  
@@ -256,19 +276,6 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasAnjunChinaExpressService()
     {  
         return $this->services_subclass_code == 'AJC-IX';
-    }
-    
-    public function hasBCNService()
-    {
-        return in_array($this->services_subclass_code ,['BCN-NX', 'BCN-IX']);
-    }
-    public function hasBCNStandardService()
-    {
-        return in_array($this->services_subclass_code ,['BCN-NX']);
-    }
-    public function hasBCNExpressService()
-    {
-        return in_array($this->services_subclass_code ,['BCN-IX']);
     }
     public function hasOrders()
     {

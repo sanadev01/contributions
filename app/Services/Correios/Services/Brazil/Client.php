@@ -25,10 +25,6 @@ class Client{
     protected $client;
     private $baseUri = 'https://api.correios.com.br';
 
-    private $anjun_username = 'anjun2020';
-    private $anjun_password = 'anjun';
-    private $anjun_numero = '0077053850';
-
     public function __construct()
     {
         $this->client = new GuzzleClient([
@@ -213,8 +209,7 @@ class Client{
     public function unitInfo($url, $request)
     {
         try {
-
-            $token = $this->getToken();
+ 
             if($request->api == 'anjun'){
                 $token = (new GetServiceToken())->getAnjunToken();
             }

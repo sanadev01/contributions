@@ -90,12 +90,15 @@ Route::prefix('v1')->group(function(){
            //Cancel Lable Route for GePS
             Route::get('cancel-label/{order}', [App\Http\Controllers\Api\PublicApi\OrderLabelController::class, 'cancelGePSLabel']);
             Route::post('ship/tracking', [App\Http\Controllers\Api\PublicApi\ShipTrackController::class, '__invoke']);
+            Route::get('user-shipping-services', [App\Http\Controllers\Api\PublicApi\UserServicesController::class, '__invoke']);
         });
     
         Route::get('countries', CountryController::class);
         Route::get('country/{country}/states', StateController::class);
         Route::get('shipping-services/{country_code?}', ServicesController::class);
         Route::get('shcodes/{search?}', ShCodeController::class);
+        
+        Route::get('insurances', [App\Http\Controllers\Api\PublicApi\InsuranceController::class, '__invoke']);
     });
     Route::get('refund-tracking-orders', function (Request $request) {
     $orders = Order::whereIn('corrios_tracking_code', $request->trackings)->where('is_paid', true)->where('status', 70)->get();

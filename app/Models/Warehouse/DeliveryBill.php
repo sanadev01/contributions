@@ -126,9 +126,15 @@ class DeliveryBill extends Model
         }
         return false;
     }
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function isAnjunChina()
+    {
+        return $this->containers->first()->hasAnjunChinaService();
     }
 
 }

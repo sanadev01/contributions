@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api\PublicApi;
 
 use App\Models\Order;
+use App\Models\User;
 use App\Events\OrderPaid;
 use Illuminate\Http\Request;
-// use App\Repositories\LabelRepository;
+use App\Repositories\AnjunLabelRepository;
 use App\Services\GePS\Client;
 use App\Models\ShippingService;
 use App\Models\User;
@@ -28,20 +29,23 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Events\AutoChargeAmountEvent;
+
 class OrderLabelController extends Controller
 {
     public function __invoke(Request $request, Order $order)
     {
-        if(Auth::id() != $order->user_id){
-            return apiResponse(false,'Order not found');
+        if (Auth::id() != $order->user_id) {
+            return apiResponse(false, 'Order not found');
         }
-        
+
         $this->authorize('canPrintLableViaApi', $order);
-        if ($order->shippingService->isAnjunService() ||$order->shippingService->is_anjun_china_service_sub_class || $order->shippingService->is_bcn_service ||  $order->shippingService->isCorreiosService()){
-          $order = $this->updateShippingServiceFromSetting($order);
-          
+        if ($order->shippingService->isAnjunService() || $order->shippingService->is_anjun_china_service_sub_class || $order->shippingService->is_bcn_service ||  $order->shippingService->isCorreiosService()) {
+            $order = $this->updateShippingServiceFromSetting($order);
         }
         DB::beginTransaction();
+        if ($order->shippingService->is_anjun_china_service_sub_class && Auth::id() != "1233") {
+            return $this->rollback("service not available for this user.");
+        }
         $isPayingFlag = false;
         try {
             $orders = new Collection;
@@ -118,7 +122,7 @@ class OrderLabelController extends Controller
                     $orders->push($order);
                     event(new OrderPaid($orders, true));
                 }
-                if ($order->shippingService->isGePSService()){
+                if ($order->shippingService->isGePSService()) {
                     $gepsLabelRepository = new GePSLabelRepository();
                     $gepsLabelRepository->get($order);
                     $error = $gepsLabelRepository->getError();
@@ -131,7 +135,7 @@ class OrderLabelController extends Controller
                     $postPlusLabelRepository = new PostPlusLabelRepository();
                     $postPlusLabelRepository->get($order);
                     $error = $postPlusLabelRepository->getError();
-                    if ($error){
+                    if ($error) {
                         return $this->rollback($error);
                     }
                 }
@@ -139,7 +143,7 @@ class OrderLabelController extends Controller
                     $gssLabelRepository = new GSSLabelRepository();
                     $gssLabelRepository->get($order);
                     $error = $gssLabelRepository->getError();
-                    if ($error){
+                    if ($error) {
                         return $this->rollback($error);
                     }
                 }
@@ -147,81 +151,72 @@ class OrderLabelController extends Controller
                     $totalExpressLabelRepository = new TotalExpressLabelRepository();
                     $totalExpressLabelRepository->get($order);
                     $error = $totalExpressLabelRepository->getError();
-                    if ($error){
+                    if ($error) {
                         return $this->rollback((string)$error);
                     }
                 }  
                 if ($order->shippingService->isAnjunService() ||$order->shippingService->is_anjun_china_service_sub_class || $order->shippingService->is_bcn_service ||  $order->shippingService->isCorreiosService()){
                   return $this->correiosOrAnjun($request,$order);
                 }
+                if ($order->shippingService->is_anjun_china_service_sub_class && Auth::id() == '1233') {
+                    $anjun = new AnjunLabelRepository($order, $request);
+                    $labelData = $anjun->run();
+                    $order->refresh();
+                    if ($labelData) {
+                        Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                    }
+                    if ($anjun->getError()) {
+                        return $this->rollback($anjun->getError());
+                    }
+                } else {
 
+                    return $this->rollback('service not availble for this user.');
+                }
+                if ($order->shippingService->isAnjunService() ||  $order->shippingService->isCorreiosService() || $order->shippingService->is_bcn_service) {
+                    $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
+                    $labelData = $corrieosBrazilLabelRepository->run($order, $request->update_label === 'true' ? true : false);
+                    $order->refresh();
+                    if ($labelData) {
+                        Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                    }
+                    if ($corrieosBrazilLabelRepository->getError()) {
+                        return $this->rollback($corrieosBrazilLabelRepository->getError());
+                    }
+                }
             }
-            
+
+
             if ($order->shippingService->isHDExpressService()) {
                 $hdExpressLabelRepository = new HDExpressLabelRepository();
                 $hdExpressLabelRepository->run($order, false);
                 $error = $hdExpressLabelRepository->getError();
-                if ($error){
+                if ($error) {
                     return $this->rollback($error);
                 }
             }
             return $this->commit($order);
-            
         } catch (Exception $e) {
             return $this->rollback($e->getMessage());
         }
     }
 
-    public function correiosOrAnjun($request,$order)
+    function swedenPostLabel($order)
     {
-        if($order->shippingService->is_anjun_china_service_sub_class){
-            return $this->anjunChinaLabel($request,$order);
-        }
-        return $this->corriesBrazilLabel($request,$order);
-    }
-    public function corriesBrazilLabel($request,$order)
-    {
-        $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
-        $labelData = $corrieosBrazilLabelRepository->run($order, $request->update_label === 'true' ? true : false);
-        $order->refresh();
-        if ($labelData) {
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-        }
-        if ($corrieosBrazilLabelRepository->getError()) {
-            return $this->rollback($corrieosBrazilLabelRepository->getError());
-        }
-    }
-    
-    public function anjunChinaLabel($request,$order)
-    {
-        $anjun = new AnjunLabelRepository($request,$order);
-        $labelData = $anjun->run();
-        $order->refresh();
-        if ($labelData) {
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-        }
-        if ($anjun->getError()) {
-            return $this->rollback($anjun->getError());
-        } 
-    }
-
-    function swedenPostLabel($order){
         if ($order->shippingService->isSwedenPostService()) {
             $swedenPostLabelRepository = new SwedenPostLabelRepository();
             $swedenPostLabelRepository->get($order);
             $error = $swedenPostLabelRepository->getError();
-            if ($error){
+            if ($error) {
                 return $this->rollback($error);
             }
-               return $this->commit($order);
-
+            return $this->commit($order);
         }
-    } 
+    }
     private function commit($order)
     {
         DB::commit();
         return apiResponse(true, "Lable Generated successfully.", [
-            'url' => $order->cn23_label_url?? route('order.label.download',  encrypt($order->id)),
+            'url' => $order->cn23_label_url ?? route('order.label.download',  encrypt($order->id)),
             'tracking_code' => $order->corrios_tracking_code
         ]);
     }
@@ -250,13 +245,12 @@ class OrderLabelController extends Controller
             ]);
         }
     }
-    public function updateShippingServiceFromSetting($order){ 
+    public function updateShippingServiceFromSetting($order){
         $service_sub_class = $order->shippingService->service_sub_class;
         if($order->corrios_tracking_code){
             return $order;
         }
         $standard = in_array($service_sub_class,[ShippingService::Packet_Standard,ShippingService::AJ_Packet_Standard,ShippingService::AJ_Standard_CN,ShippingService::BCN_Packet_Standard]);
-        
         if(setting('china_anjun_api', null, User::ROLE_ADMIN) ){
             if($standard){
                 $service_sub_class = ShippingService::AJ_Standard_CN;
@@ -265,7 +259,7 @@ class OrderLabelController extends Controller
                 $service_sub_class = ShippingService::AJ_Express_CN;
             }
         }
-        else if(setting('correios_api', null, User::ROLE_ADMIN) ){    
+        else if(setting('correios_api', null, User::ROLE_ADMIN) ){
             if($standard){
                 $service_sub_class = ShippingService::Packet_Standard;
             }

@@ -374,7 +374,7 @@
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/custom-finished.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
-                                                                    <p class="font-weight-bold">Customs<br>clearance finalized</p>
+                                                                    <p class="font-weight-bold">At Customs<br>Clearance</p>
                                                                 </div>
                                                             </div>
                                                         </li>
