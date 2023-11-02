@@ -33,7 +33,7 @@ class OrderLabelController extends Controller
         if ($order->recipient->country_id == Order::BRAZIL && $order->shippingService->api == 'sinerlog') {
             return (new SinerlogHandleRepository($request, $order))->handle();
         } else {
-            return (new HandleCorreiosLabelsRepository($request, $order))->handle(); // 
+        return (new HandleCorreiosLabelsRepository($request, $order))->handle(); // 
         }
     }
     public function cancelLabel(Order $order)

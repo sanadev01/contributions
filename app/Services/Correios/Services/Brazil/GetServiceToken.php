@@ -73,7 +73,6 @@ class GetServiceToken
     }
     public function getBCNToken()
     {
-        dd(3);
         return Cache::remember('bcn_token_t', Carbon::now()->addHours(0), function () {
             $response = $this->client->post('/token/v1/autentica/cartaopostagem', [
                 'auth' => [
