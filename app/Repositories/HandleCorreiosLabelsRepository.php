@@ -145,16 +145,15 @@ class HandleCorreiosLabelsRepository
         $corrieosChileLabelRepository->run($this->order, $this->update);
         return $this->renderLabel($this->request, $this->order, $corrieosChileLabelRepository->getChileErrors());
     }
-
     public function correiosOrAnjun($order)
     {
-        $order = $this->updateShippingServiceFromSetting($order);
-        if ($order->user->id == "1233" && $this->order->shippingService->is_anjun_china_service_sub_class) {
+        if($order->user->id == "1233" && $this->order->shippingService->is_anjun_china_service_sub_class) {
             return $this->anjunChinaLabel();
         }
+        $order = $this->updateShippingServiceFromSetting($order);
+
         return $this->corriesBrazilLabel();
     }
-
     public function corriesBrazilLabel()
     {
         $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
@@ -216,11 +215,11 @@ class HandleCorreiosLabelsRepository
         $standard = in_array($service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard]);
 
         if (setting('china_anjun_api', null, User::ROLE_ADMIN)) {
-            if ($standard) {
-                $service_sub_class = ShippingService::AJ_Standard_CN;
-            } else {
-                $service_sub_class = ShippingService::AJ_Express_CN;
-            }
+            // if ($standard) {
+            //     $service_sub_class = ShippingService::AJ_Standard_CN;
+            // } else {
+            //     $service_sub_class = ShippingService::AJ_Express_CN;
+            // }
         } else if (setting('correios_api', null, User::ROLE_ADMIN)) {
             if ($standard) {
                 $service_sub_class = ShippingService::Packet_Standard;
