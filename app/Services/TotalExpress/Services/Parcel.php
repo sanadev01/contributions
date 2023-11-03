@@ -51,6 +51,7 @@ class Parcel
          'customer_document_number' => ($this->order->recipient->tax_id) ? $this->order->recipient->tax_id : '',
          "customer_address_reference" => optional($this->order->recipient)->street_no,
          "customer_phone_country_code" => substr($this->order->recipient->phone, 0, 3),
+         'is_commercial_destination' => $this->order->recipient->account_type == "business" ? true: false,
 
          'seller_name' => $this->order->getSenderFullName(),
          'seller_address' => ($this->order->sender_address) ? $this->order->sender_address : '2200 NW 129TH AVE',
