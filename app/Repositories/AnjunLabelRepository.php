@@ -27,12 +27,12 @@ class AnjunLabelRepository
             $this->printLabel($order);
             return null;
         }
-        return $this->update($order);
+                return $this->update($order);
     }
     public function update(Order $order)
     {
         $cn23 = $this->generateLabel($order);
-        if ($cn23) {
+if ($cn23) {
             $this->printLabel($order);
         }
         return null;
@@ -45,10 +45,11 @@ class AnjunLabelRepository
         if ($data->success) {
             return $this->printLabel($order);
         } else {
+            $this->error= $response;
             return $response;
         }
     }
-    public function printLabel(Order $order)
+public function printLabel(Order $order)
     {
         $labelPrinter = new CN23LabelMaker();
         $labelPrinter->setOrder($order);

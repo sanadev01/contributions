@@ -99,7 +99,7 @@ class GetServiceToken
             }
         } else {
             if ($this->order->hasAnjunService()) {
-                return $this->order->getAnjunToken();
+                return $this->getAnjunToken();
             } elseif ($this->order->hasBCNService()) {
                 return $this->getBCNToken();
             } else {
