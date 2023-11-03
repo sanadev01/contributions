@@ -39,8 +39,8 @@ class DepositController extends Controller
     }
 
     public function store(Request $request, DepositRepository $depositRepository)
-    {
-        
+    {        
+
         $request->validate([
             'amount' => 'required|numeric',
         ]);

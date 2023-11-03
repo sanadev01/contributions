@@ -247,21 +247,21 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right mt-4 h5" for="china_anjun_api"> Anjun China Api<span class="text-danger"></span></label>
-                                    <div class="col-md-6">
-                                        <div class="input-group">
-                                            <div class="form-check">
-                                                <input class="form-check-input admin-api-settings" type="radio" name="correios_setting" id="anjun_api" value="china_anjun_api" @if(setting('china_anjun_api', null, $adminId)) checked @endif>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right mt-4 h5" for="bcn_api">BCN Api<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="form-check">
                                                 <input class="form-check-input admin-api-settings" type="radio" name="correios_setting" id="bcn_api" value="bcn_api" @if(setting('bcn_api', null, $adminId)) checked @endif>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">    
+                                    <label class="col-md-3 text-md-right mt-4 h5" for="china_anjun_api"> Anjun China Api<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input admin-api-settings" type="radio" name="correios_setting" id="anjun_api" value="china_anjun_api" @if(setting('china_anjun_api', null, $adminId)) checked @endif>
                                             </div>
                                         </div>
                                     </div>

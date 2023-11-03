@@ -34,9 +34,16 @@ class ContainerPackageRepository extends AbstractRepository{
 
     public function addOrderToContainer(Container $container, string $barcode)
     {
-        $subString = strtolower(substr($barcode,0,2));
-        if(strtolower(substr($barcode,0,2)) == 'na' || strtolower(substr($barcode,0,2)) == 'xl'|| strtolower(substr($barcode,0,2)) == 'nb'){
-            $subString = 'nx';
+        // if ($container->hasAnjunChinaService()) {
+        //     return $this->toAnjunChinaContainer($container, $barcode);
+        // }
+        if ($container->hasBCNService()) {
+            return $this->toBCNContainer($container, $barcode);
+        }
+        $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
+
+        if(!$this->isValidContainerOrder($container,$order)) {
+             return $this->validationError404($barcode, 'Order Not Found. Please Check Packet Service.');
         }
         if ($container->hasAnjunChinaService()) {
             return $this->toAnjunChinaContainer($container, $barcode);
@@ -50,12 +57,6 @@ class ContainerPackageRepository extends AbstractRepository{
 
                 return $this->validationError404($barcode, 'Order Service is changed. Please Check Packet Service');
             }
-        }
- 
-        $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
-
-       if (strtolower($container->getSubClassCode())  != $subString) {
-            return $this->validationError404($barcode, 'Order Not Found. Please Check Packet Service');
         }
 
         if (!$order) {
@@ -96,6 +97,34 @@ class ContainerPackageRepository extends AbstractRepository{
             return $this->validationError404($barcode, 'Order does not belongs to this standard container Service. Please Check Packet Service');
         }
         if ($container->hasAnjunChinaExpressService() && !$order->shippingService->isAnjunChinaExpressService()) {
+
+            return $this->validationError404($barcode, 'Order does not belongs to this container express Service. Please Check Packet Service');
+        }
+
+        return $this->updateContainer($container, $order, $barcode);
+    }
+    
+    public function toBCNContainer(Container $container, string $barcode)
+    {
+        $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
+
+        if (!$order) {
+            return $this->validationError404($barcode,  'Order Not Found.');
+        }
+
+        if ($order->status < Order::STATUS_PAYMENT_DONE) {
+            return $this->validationError404($barcode, 'Please check the Order Status, either the order has been canceled, refunded or not yet paid');
+        }
+        if (!$order->shippingService->is_bcn_service) {
+
+            return $this->validationError404($barcode, 'Order does not belongs to this container Service. Please Check Packet Service');
+        }
+
+        if ($container->hasBCNExpressService() && !$order->shippingService->is_bcn_express) {
+
+            return $this->validationError404($barcode, 'Order does not belongs to this standard container Service. Please Check Packet Service');
+        }
+        if ($container->hasBCNStandardService() && !$order->shippingService->is_bcn_standard) {
 
             return $this->validationError404($barcode, 'Order does not belongs to this container express Service. Please Check Packet Service');
         }
@@ -158,6 +187,17 @@ class ContainerPackageRepository extends AbstractRepository{
         $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
 
         return $order_tracking->delete();
+    }
+    public function isValidContainerOrder($container,$order) { 
+        if(!$order)
+            return false;
+        $barcode = $order->corrios_tracking_code;
+        $subString = strtolower(substr($barcode,0,2));
+        if(strtolower(substr($barcode,0,2)) == 'na' || strtolower(substr($barcode,0,2)) == 'xl'|| strtolower(substr($barcode,0,2)) == 'nb'){
+            $subString = 'nx';
+        }
+        return strtolower($container->getSubClassCode())  == $subString;
+          
     }
     public function validationError404($barcode, $message)
     {

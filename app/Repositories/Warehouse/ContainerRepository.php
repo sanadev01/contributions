@@ -11,48 +11,48 @@ class ContainerRepository extends AbstractRepository{
 
     public function get(Request $request, $paginate)
     {
-        
+
         $query = Container::query();
 
         if ( !Auth::user()->isAdmin() ){
             $query->where('user_id',Auth::id());
         }
         if($request->filled('dispatchNumber')){
-           $query->where('dispatch_number', 'LIKE', '%' . $request->dispatchNumber . '%');
-        } 
+            $query->where('dispatch_number', 'LIKE', '%' . $request->dispatchNumber . '%');
+        }
         if($request->filled('sealNo')){
-          $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
-        } 
+            $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
+        }
         if($request->filled('packetType')){
             $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
         }
         if($request->filled('unitCode')){
             $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
-        } 
-        if($request->filled('startDate')||$request->filled('endDate')){ 
+        }
+        if($request->filled('startDate')||$request->filled('endDate')){
             $query->whereBetween('created_at', [$request->startDate??date('2020-01-01'), $request->endDate??date('Y-m-d')]);
-        } 
-        $services = ['NX','IX', 'XP','AJ-NX','AJ-IX','AJC-NX','AJC-IX'];
-        if($request->filled('service')){
-             $services = json_decode($request->service);
+        }
+        $services = ['NX', 'IX', 'XP', 'AJ-NX', 'AJ-IX', 'BCN-NX', 'BCN-IX', 'AJC-NX', 'AJC-IX'];
+        if ($request->filled('service')) {
+            $services = json_decode($request->service);
         }
         $query->whereIn('services_subclass_code', $services)->latest();
-        
+
         $query = $paginate ? $query->paginate(50) : $query->where('unit_code', '!=', null )->get();
 
         return $query;
-     }
+    }
 
     public function store(Request $request)
     {
-        try { 
+        try {
             if (in_array($request->services_subclass_code, [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX,Container::CONTAINER_ANJUNC_NX,Container::CONTAINER_ANJUNC_IX]) ) {
-                
+
                 $latestAnujnContainer = Container::where('services_subclass_code', Container::CONTAINER_ANJUN_NX)
-                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUN_IX)
-                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_NX)
-                                                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_IX)
-                                                    ->latest()->first();
+                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUN_IX)
+                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_NX)
+                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_IX)
+                    ->latest()->first();
 
                 $anjunDispatchNumber = ($latestAnujnContainer->dispatch_number ) ? $latestAnujnContainer->dispatch_number + 1 : 295000;
             }

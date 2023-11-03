@@ -679,14 +679,16 @@ class OrderRepository
                         return !$shippingService->isAnjunService();
                     });
             }
-            if(!setting('china_anjun_api', null,User::ROLE_ADMIN)){
-                // $this->shippingServiceError = 'Anjun China is disabled.';
+            if(Auth::id()!='1233'){
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return !$shippingService->isAnjunChinaService();
                 });
-            }else if(!Auth::user()->isAdmin()){
-                foreach(ShippingService::whereIn('service_sub_class',[ShippingService::AJ_Standard_CN,ShippingService::AJ_Express_CN])->get() as $anjun)
-                $shippingServices->push($anjun);
+            }
+
+            if(!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return !$shippingService->is_bcn_service;
+                });
             }
             
             if($shippingServices->isEmpty()){

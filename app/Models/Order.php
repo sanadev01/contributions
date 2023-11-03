@@ -394,9 +394,13 @@ class Order extends Model implements Package
 
             }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::HD_Express){
-
                 return 'HD Express';
-
+            }
+            elseif(optional($this->shippingService)->is_bcn_service){
+                return 'Correios B';
+            }
+            elseif(optional($this->shippingService)->isAnjunService()){
+                return 'Correios AJ';
             }
             return 'Correios Brazil';
         }
@@ -703,7 +707,7 @@ class Order extends Model implements Package
 
     public function getDistributionModality(): int
     {
-        if ($this->shippingService && in_array($this->shippingService->service_sub_class, $this->anjunShippingServicesSubClasses())) {
+                if ($this->shippingService && in_array($this->shippingService->service_sub_class, $this->anjunShippingServicesSubClasses())) {
             return __default($this->getCorrespondenceServiceCode($this->shippingService->service_sub_class), ModelsPackage::SERVICE_CLASS_STANDARD);
         }
         return __default( optional($this->shippingService)->service_sub_class ,ModelsPackage::SERVICE_CLASS_STANDARD );
