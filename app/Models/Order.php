@@ -383,10 +383,10 @@ class Order extends Model implements Package
 
             }
             elseif(optional($this->shippingService)->is_anjun_china_service_sub_class){
-                return 'Correios AJ';
+                return 'Correios Brazil';
             }
             elseif(optional($this->shippingService)->isAnjunService()){
-                return 'Correios A';
+                return 'Correios Brazil';
             }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS ){
                 return 'Total Express';
@@ -404,10 +404,7 @@ class Order extends Model implements Package
                 return 'HD Express';
             }
             elseif(optional($this->shippingService)->is_bcn_service){
-                return 'Correios B';
-            }
-            elseif(optional($this->shippingService)->isAnjunService()){
-                return 'Correios AJ';
+                return 'Correios Brazil';
             }
             return 'Correios Brazil';
         }
