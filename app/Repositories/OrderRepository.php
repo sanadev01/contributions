@@ -86,6 +86,24 @@ class OrderRepository
                     ShippingService::Packet_Mini
                 ];
             }
+            if($request->carrier == 'Anjun'){
+                $service = [
+                    ShippingService::AJ_Packet_Standard,
+                    ShippingService::AJ_Packet_Express, 
+                ];
+            }
+            if($request->carrier == 'AnjunChina'){
+                $service = [
+                    ShippingService::AJ_Express_CN,
+                    ShippingService::AJ_Standard_CN,
+                ];
+            }
+            if($request->carrier == 'BCN'){
+                $service = [
+                    ShippingService::BCN_Packet_Standard,
+                    ShippingService::BCN_Packet_Express
+                ];
+            }
             if($request->carrier == 'USPS'){
                 $service = [
                     ShippingService::USPS_PRIORITY,
