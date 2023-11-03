@@ -132,9 +132,4 @@ class DeliveryBill extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function isAnjunChina()
-    {
-        return $this->containers->first()->hasAnjunChinaService();
-    }
-
 }

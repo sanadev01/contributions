@@ -338,7 +338,7 @@ class ParcelController extends Controller
         if (!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->is_bcn_service) {
             return apiResponse(false, $shippingService->name . ' is currently not available.');
         }
-        if (Auth::id() != "1137"  && $shippingService->is_anjun_china_china_shipping_service) {
+        if (Auth::id() != "1137"  && $shippingService->is_anjun_china_service_sub_class) {
             return apiResponse(false, $shippingService->name . ' is currently not available.');
         }
 
