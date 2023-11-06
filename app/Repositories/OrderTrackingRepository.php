@@ -42,11 +42,10 @@ class OrderTrackingRepository
             foreach ($orders as $key => $order) {
 
                 $apiResponse = [];
-                if ($order->trackings->isNotEmpty()) {
+                if ($order->trackings->isNotEmpty() && $order->shippingService != null) {
                     if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
 
                     if ($order->recipient->country_id == Order::CHILE) {
-                        dd("here2");
                         $response = CorreiosChileTrackingFacade::trackOrder($order->corrios_tracking_code);
                         if ($response->status == true && ($response->data != null || $response->data != [])) {
                             $apiResponse = [
