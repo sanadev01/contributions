@@ -153,7 +153,7 @@ class OrderLabelController extends Controller
                         return $this->rollback((string)$error);
                     }
                 }
-                if ($order->shippingService->is_anjun_china_service_sub_class && Auth::id() == '1233') {
+                if ($order->shippingService->is_anjun_china_service_sub_class && Auth::id() == "1233") {
                     $anjun = new AnjunLabelRepository($order, $request);
                     $labelData = $anjun->run();
                     $order->refresh();
