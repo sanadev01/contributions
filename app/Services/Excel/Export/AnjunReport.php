@@ -35,7 +35,7 @@ class AnjunReport extends AbstractExportService
         foreach ($this->deliveryBills as $deliveryBill) {
             foreach ($deliveryBill->containers as $container) {
                 foreach ($container->orders as $order) {
-                    if($order->shippingService->isAnjunService()) {
+                    if(optional(optional($order)->shippingService)->isAnjunService()) {
                         $this->setCellValue('A'.$row, $order->order_date);
                         $this->setCellValue('B'.$row, $order->warehouse_number);
                         $this->setCellValue('C'.$row, $order->user->name);
