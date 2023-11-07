@@ -39,11 +39,11 @@ class RatesCalculator
     {
         $this->order = $order;
         
-        if ($service && $service->service_sub_class == ShippingService::AJ_Packet_Standard) {
+        if ($service && in_array($service->service_sub_class ,[ShippingService::AJ_Packet_Standard,ShippingService::AJ_Standard_CN,ShippingService::BCN_Packet_Standard,])) {
             
             $this->shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
 
-        }elseif($service && $service->service_sub_class == ShippingService::AJ_Packet_Express){
+        }elseif($service && in_array($service->service_sub_class ,[ShippingService::AJ_Packet_Express,ShippingService::AJ_Express_CN,ShippingService::BCN_Packet_Express,])) {
             
             $this->shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
         
