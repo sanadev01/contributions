@@ -303,6 +303,17 @@ Route::get('order-arrived', function(){
 
     return Artisan::output();
 });
+Route::get('test-trackings/{tracking}', function($tracking){
+    $order = Order::where('corrios_tracking_code',$tracking)->first(); 
+    if(!$order)
+       return 'no order found';
+    if($order->trackings)
+        dd($order->trackings);
+    else 
+       echo 'no tracking found';
+    echo 'end';
+    
+});
 
 Route::get('/temp-order-report/{number}',TempOrderReportController::class);
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
