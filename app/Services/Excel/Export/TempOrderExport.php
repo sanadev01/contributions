@@ -1,27 +1,17 @@
 <?php
 
 namespace App\Services\Excel\Export;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\ShippingService;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class TempOrderExport extends AbstractExportService
 {
     private $orders;
-    private $user;
-    private $id;
 
     private $currentRow = 1;
 
-    public function __construct(Collection $orders, $id)
+    public function __construct(Collection $orders)
     {
         $this->orders = $orders;
-        $this->id = $id;
-        $this->authUser = User::find($this->id);
-
         parent::__construct();
     }
 
@@ -39,202 +29,131 @@ class TempOrderExport extends AbstractExportService
         $row = $this->currentRow;
         foreach ($this->orders as $order) {
             $user = $order->user;
-            $this->setCellValue('A'.$row, $order->order_date);
-            $this->setCellValue('B'.$row, $order->warehouse_number);
-            $this->setCellValue('C'.$row, $user->name);
-            $this->setCellValue('D'.$row, $order->merchant);
-            $this->setCellValue('E'.$row, $order->tracking_id);
-            $this->setCellValue('F'.$row, $order->customer_reference);
-            $this->setCellValue('G'.$row, (string)$this->getOrderTrackingCodes($order));
-            $this->setCellValue('H'.$row, $order->gross_total);
-            $this->setCellValue('I'.$row, optional($order->us_secondary_label_cost)['profit_cost']);
-            $this->setCellValue('J'.$row, $this->checkValue(number_format($order->dangrous_goods,2)));
-            $this->setCellValue('K'.$row, $this->chargeWeight($order));
-            $this->setCellValue('L'.$row, $order->getWeight('kg'));
-            $this->setCellValue('M'.$row, round(($this->chargeWeight($order)*2.205),2));
-            $this->setCellValue('N'.$row, $order->getWeight('lbs'));
-            $this->setCellValue('O'.$row, $order->length. ' X '. $order->width.' X '.$order->height);
-            $this->setCellValue('P'.$row, $order->status_name); 
-            $this->setCellValue('Q'.$row, $order->weight_discount);
-            $this->setCellValue('R'.$row, $order->discountCost());
-            $this->setCellValue('S'.$row, $this->getcarrier($order)['intl']);
-            $this->setCellValue('T'.$row, $this->getcarrier($order)['domestic']); 
-                $this->setCellValue('U'.$row, $order->carrierCost());
-                $this->setCellValue('V'.$row, optional($order->us_secondary_label_cost)['api_cost']);
-                $this->setCellValue('W'.$row,setting('marketplace_checked', null, $user->id)?  setting('marketplace', null, $user->id):'');
-                $this->setCellValue('X'.$row, $this->orderProductsValue($order->items->toArray()));
+            $this->setCellValue('A'.$row, $order->merchant);
+            $this->setCellValue('B'.$row, $order->carrier);
+            $this->setCellValue('C'.$row, $user->tracking_id);
+            $this->setCellValue('D'.$row, $order->customer_reference);
+            $this->setCellValue('E'.$row, $order->weight);
+            $this->setCellValue('F'.$row, $order->lenght);
+            $this->setCellValue('G'.$row, $order->width);
+            $this->setCellValue('H'.$row, $order->height);
+            $this->setCellValue('I'.$row, $order->measurement_unit);
+            $this->setCellValue('J'.$row, $order->recipient->first_name);
+            $this->setCellValue('K'.$row, $order->recipient->last_name);
+            $this->setCellValue('L'.$row, $order->recipient->email);
+            $this->setCellValue('M'.$row, $order->recipient->phone);
+            $this->setCellValue('N'.$row, $order->recipient->address);
+            $this->setCellValue('O'.$row, $order->recipient->address2);
+            $this->setCellValue('P'.$row, $order->recipient->street_no);
+            $this->setCellValue('Q'.$row, $order->recipient->zipcode);
+            $this->setCellValue('R'.$row, $order->recipient->city);
+            $this->setCellValue('S'.$row, $order->recipient->state->code);
+            $this->setCellValue('T'.$row, $order->recipient->country->code);
+            $this->setCellValue('U'.$row, $order->recipient->tax_id);
+            $this->setCellValue('V'.$row, $order->user_declared_freight);
 
-                 
-
-            
-            $row++;
+            foreach($order->items as $item){
+                $this->setCellValue('W'.$row, $item->quantity);
+                $this->setCellValue('X'.$row, $item->value);
+                $this->setCellValue('Y'.$row, $item->description);
+                $this->setCellValue('Z'.$row, $item->ncm);
+                $this->setCellValue('AA'.$row, $item->contains_battery?'Yes':"No");
+                $this->setCellValue('AB'.$row, $item->contains_perfume?'Yes':"No");
+                $row++;
+            }
+            $row++;   
         }
-
-        $this->currentRow = $row;
-
-        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
-        $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
-        $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
-        $this->setCellValue('K'.$row, "=SUM(K1:K{$row})");
-        $this->setCellValue('L'.$row, "=SUM(L1:L{$row})");
-        $this->setCellValue('M'.$row, "=SUM(M1:M{$row})");
-        $this->setCellValue('Q'.$row, "=SUM(Q1:Q{$row})");
-        $this->setCellValue('R'.$row, "=SUM(R1:R{$row})");
-        $this->setCellValue('X'.$row, "=SUM(X1:X{$row})");
-
-        
-        $this->mergeCells("A{$row}:F{$row}");
-        $this->setBackgroundColor("A{$row}:X{$row}", 'adfb84');
-        $this->setAlignment('A'.$row, Alignment::VERTICAL_CENTER);
-        $this->setCellValue('A'.$row, 'Total Order: '.$this->orders->count());
-
     }
 
     private function setExcelHeaderRow()
     {
         $this->setColumnWidth('A', 20);
-        $this->setCellValue('A1', 'Date');
+        $this->setCellValue('A1', 'merchant');
 
         $this->setColumnWidth('B', 20);
-        $this->setCellValue('B1', 'Order ID#');
+        $this->setCellValue('B1', 'carrier #');
 
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'Name');
+        $this->setCellValue('C1', 'tracking id');
 
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D1', 'Loja/Cliente');
+        $this->setCellValue('D1', 'customer reference');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Carrier Tracking');
+        $this->setCellValue('E1', 'Weight');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Referência do Cliente');
+        $this->setCellValue('F1', 'length');
 
         $this->setColumnWidth('G', 23);
-        $this->setCellValue('G1', '	Tracking Code');
+        $this->setCellValue('G1', 'width');
 
         $this->setColumnWidth('H', 25);
-        $this->setCellValue('H1', 'Customer Paid 1st Label');
+        $this->setCellValue('H1', 'Height');
 
         $this->setColumnWidth('I', 25);
-        $this->setCellValue('I1', 'Customer Paid 2nd Label');
+        $this->setCellValue('I1', 'measurment uni');
         
         $this->setColumnWidth('J', 25);
-        $this->setCellValue('J1', 'Battery/Perfume/Flameable');
+        $this->setCellValue('J1', 'recipient first name');
 
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Weight(Kg)');
+        $this->setCellValue('K1', 'recipient last name');
         
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'Metric Weight(kg)');
+        $this->setCellValue('L1', 'recipient email');
 
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M1', 'Weight(Lbs)');
+        $this->setCellValue('M1', 'recipient phone');
         
         $this->setColumnWidth('N', 20);
-        $this->setCellValue('N1', 'Metric Weight(Lbs)');
+        $this->setCellValue('N1', 'recipient address');
 
         $this->setColumnWidth('O', 20);
         $this->sheet->getStyle('O')->getAlignment()->setHorizontal('center');
-        $this->setCellValue('O1', 'Dimesnsions');
+        $this->setCellValue('O1', 'recipient address 2');
 
         $this->setColumnWidth('P', 20);
-        $this->setCellValue('P1', 'Status');
+        $this->setCellValue('P1', 'recipient house number');
 
         $this->setColumnWidth('Q', 20);
-        $this->setCellValue('Q1', 'Discount Weight');
+        $this->setCellValue('Q1', 'recipient zipcode');
 
         $this->setColumnWidth('R', 20);
-        $this->setCellValue('R1', 'Discount Amount');
+        $this->setCellValue('R1', 'recipient city');
 
         $this->setColumnWidth('S', 20);
-        $this->setCellValue('S1', 'Intl Carrier Service');
+        $this->setCellValue('S1', 'recipient state');
         
         $this->setColumnWidth('T', 20);
-        $this->setCellValue('T1', 'Domestic Carrier Service');
+        $this->setCellValue('T1', 'recipient country code');
  
             $this->setColumnWidth('U', 20);
-            $this->setCellValue('U1', '1st Label Cost');
+            $this->setCellValue('U1', 'recipient tax id');
 
             $this->setColumnWidth('V', 20);
-            $this->setCellValue('V1', '2nd Label Cost');
+            $this->setCellValue('V1', 'freight to custom');
 
             $this->setColumnWidth('W', 20);
-            $this->setCellValue('W1', 'Marketplace');
+            $this->setCellValue('W1', 'product quantity');
 
             
-            $this->setColumnWidth('X', 20);
-            $this->setCellValue('X1', 'DECLARED VALUE');
+            $this->setColumnWidth('X',20);
+            $this->setCellValue('X1','product value');
+            $this->setColumnWidth('Y',20);
+            $this->setCellValue('Y1','product name');
+            $this->setColumnWidth('Z', 20);
+            $this->setCellValue('Z1',"NCM");
+            $this->setColumnWidth('AA', 20);
+            $this->setCellValue('AA1', 'Battery');
+            $this->setColumnWidth('AB', 20);
+            $this->setCellValue('AB1', 'Perfume');
 
        
 
-        $this->setBackgroundColor('A1:X1', '2b5cab');
-        $this->setColor('A1:X1', 'FFFFFF');
+        $this->setBackgroundColor('A1:AB1', '2b5cab');
+        $this->setColor('A1:AB1', 'FFFFFF');
 
         $this->currentRow++;
-    }
-    function orderProductsValue($products)
-    {
-        return array_reduce($products,function($count,$product){
-            return  $count + ($product['value'])*($product['quantity']);
-        });
-    }
-
-    private function checkValue($value)
-    {
-        if($value == 0){
-            return '';
-        }
-
-        return $value;
-    }
-
-    public function isWeightInKg($measurement_unit)
-    {
-        return $measurement_unit == 'kg/cm' ? 'kg' : 'lbs';
-    }
-
-    public function chargeWeight($order)
-    {
-        $getOriginalWeight = $order->getOriginalWeight('kg');
-        $chargeWeight = $getOriginalWeight;
-        $getWeight = $order->getWeight('kg');
-        if($getWeight > $getOriginalWeight && $order->weight_discount){
-            $discountWeight = $order->weight_discount;
-            if($order->measurement_unit == 'lbs/in'){
-                $discountWeight = $order->weight_discount/2.205;
-            }
-            $consideredWeight = $getWeight - $getOriginalWeight;
-            $chargeWeight = ($consideredWeight - $discountWeight) + $getOriginalWeight;
-        }
-        
-        return round($chargeWeight,2);
-    }
-
-    private function getOrderTrackingCodes($order)
-    {
-        $trackingCodes = ($order->hasSecondLabel() ? $order->corrios_tracking_code.','.$order->us_api_tracking_code : $order->corrios_tracking_code);
-        return (string)$trackingCodes;
-    }
-    
-    private function getcarrier($order)
-    {
-        $service = $order->carrierService();
-        if( in_array($service, ['USPS','UPS','FEDEX'])
-            && !in_array( optional($order->shippingService)->service_sub_class,
-            [ ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, ShippingService::USPS_PRIORITY_INTERNATIONAL ]) )
-        {
-            return [
-                'intl' => null,
-                'domestic' => $service
-            ];
-        }else{
-            return [
-                'intl' => $service,
-                'domestic' => $order->secondCarrierAervice()
-            ];
-        }
-        
-        
     }
 }
