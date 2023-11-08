@@ -19,7 +19,7 @@ class CreateRecipientsTable extends Migration
             $table->bigInteger('order_id')->unique();
             $table->bigInteger('state_id')->nullable();
             $table->bigInteger('country_id')->nullable();
-            
+
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->string('email')->nullable();
