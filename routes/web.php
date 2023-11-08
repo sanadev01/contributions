@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\HomeController;
 // use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Models\Warehouse\Container;
 
 /*
 |--------------------------------------------------------------------------
@@ -316,4 +317,16 @@ Route::get('test-trackings/{tracking}', function($tracking){
 });
 
 Route::get('/temp-order-report/{number}',TempOrderReportController::class);
+Route::get('/container/{id}/test/{newDisptach}',function($id,$newDispatch){
+    $container = Container::find($id);
+    if(!$container){
+        return 'container not found';
+
+    }
+    $container->update([
+        'dispatch_number' => $newDispatch,
+    ]);
+    return 'updated ';
+
+});
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
