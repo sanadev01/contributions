@@ -390,7 +390,7 @@ Route::get('/to-express',function(){
     "IX030164285BR",
     "IX030164294BR",
     "IX030429323BR",
-    "IX030292917BR",])->update(['shipping_service_id'=>42]);
+    "IX030292917BR"])->update(['shipping_service_id'=>42]);
     echo 'updated';
     
 });
