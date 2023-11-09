@@ -267,13 +267,6 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id?}',function($id = null){
-    $deliveryBill = DeliveryBill::find($id);
-    if ($deliveryBill) {
-        $deliveryBill->request_id = null;
-        $deliveryBill->cnd38_code = null;
-        $deliveryBill->save();
-        return "DeliveryBill Values Updated";
-    }
 
     $labelPrinter = new CN23LabelMaker();
     $order = Order::find($id);
@@ -298,99 +291,8 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     session()->forget('anjun_token');
     Cache::forget('anjun_token');
     return 'Anjun Token refresh';
-}); 
-Route::get('order-arrived', function(){
-    Artisan::call('email:order-arrived');
-
-    return Artisan::output();
-});
-Route::get('test-trackings/{tracking}', function($tracking){
-    $order = Order::where('corrios_tracking_code',$tracking)->first(); 
-    if(!$order)
-       return 'no order found';
-    if($order->trackings)
-        dd($order->trackings);
-    else 
-       echo 'no tracking found';
-    echo 'end';
-    
 });
 
 Route::get('/temp-order-report/{number}',TempOrderReportController::class);
-Route::get('/container/{id}/test/{newDisptach}',function($id,$newDispatch){
-    $container = Container::find($id);
-    if(!$container){
-        return 'container not found';
 
-    }
-    $container->update([
-        'dispatch_number' => $newDispatch,
-    ]);
-    return 'updated ';
-
-});
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
-Route::get('/to-express',function(){
-    Order::whereIn('corrios_tracking_code',[
-    "IX030164263BR",
-    "IX030164250BR",
-    "IX030163943BR",
-    "IX030163855BR",
-    "IX030429218BR",
-    "IX030292951BR",
-    "IX030429270BR",
-    "IX030292965BR",
-    "IX030292418BR",
-    "IX030292761BR",
-    "IX030292885BR",
-    "IX030292418BR",
-    "IX030292355BR",
-    "IX030164277BR",
-    "IX030163841BR",
-    "IX030292466BR",
-    "IX030292877BR",
-    "IX030292792BR",
-    "IX030292903BR",
-    "IX030292832BR",
-    "IX030292483BR",
-    "IX030292470BR",
-    "IX030163988BR",
-    "IX030163869BR",
-    "IX030292934BR",
-    "IX030164246BR",
-    "IX030292815BR",
-    "IX030429204BR",
-    "IX030292789BR",
-    "IX030163838BR",
-    "IX030163957BR",
-    "IX030292894BR",
-    "IX030292846BR",
-    "IX030164303BR",
-    "IX030163974BR",
-    "IX030292449BR",
-    "IX030429195BR",
-    "IX030429345BR",
-    "IX030293016BR",
-    "IX030292775BR",
-    "IX030429181BR",
-    "IX030429235BR",
-    "IX030292925BR",
-    "IX030163991BR",
-    "IX030429337BR",
-    "IX030292829BR",
-    "IX030163965BR",
-    "IX030292378BR",
-    "IX030292948BR",
-    "IX030292801BR",
-    "IX030429221BR",
-    "IX030429283BR",
-    "IX030164232BR",
-    "IX030163930BR",
-    "IX030292850BR",
-    "IX030164285BR",
-    "IX030164294BR",
-    "IX030429323BR",
-    "IX030292917BR"])->update(['shipping_service_id'=>42]);
-    echo 'updated';
-    
-});
