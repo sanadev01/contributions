@@ -41,16 +41,6 @@ class SwedenPostContainerPackageRepository
                 'message' =>'Order does not belong to this container. Please Check Packet Service',
             ];
         }
-        $containerOrder = $container->orders->first();
-        if ($containerOrder) {
-            if ($containerOrder->getOriginalWeight('kg') <= 3 && $order->getOriginalWeight('kg') > 3) {
-
-                return $this->validationError404($barcode, 'Order weight is greater then 3 Kg, Please Check Order Weight');
-            } elseif ($containerOrder->getOriginalWeight('kg') > 3 && $order->getOriginalWeight('kg') <= 3) {
-
-                return $this->validationError404($barcode, 'Order weight is less then 3 Kg, Please Check Order Weight');
-            }
-        }
 
         if (!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
 
