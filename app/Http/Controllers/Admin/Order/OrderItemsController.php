@@ -12,6 +12,7 @@ use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
+use App\Models\User;
 
 class OrderItemsController extends Controller
 {
@@ -156,9 +157,11 @@ class OrderItemsController extends Controller
 
         if($response->success == true)
         {
+            $rate =  $response->data['total_amount'];
+            $rate = $rate + ($rate/100) * (int) setting('usps_profit', null, User::ROLE_ADMIN);
             return (Array)[
                 'success' => true,
-                'total_amount' => $response->data['total_amount'],
+                'total_amount' => $rate,
             ]; 
         }
 
