@@ -160,8 +160,8 @@ class OrderItemsController extends Controller
             $rate =  $response->data['total_amount'];
             \Log::info('with out profit');
             \Log::info($rate);
-            $discount = setting('usps_profit', null, $order->user_id)??(int) setting('usps_profit', null, User::ROLE_ADMIN);
-            $rate = $rate + ($rate/100) * $discount;
+            $profit = setting('usps_profit', null, $order->user_id)??(int) setting('usps_profit', null, User::ROLE_ADMIN);
+            $rate = $rate + ($rate/100) * $profit;
             \Log::info('with profit');
             \Log::info($rate);
              
