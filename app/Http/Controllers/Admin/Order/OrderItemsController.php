@@ -158,7 +158,12 @@ class OrderItemsController extends Controller
         if($response->success == true)
         {
             $rate =  $response->data['total_amount'];
-            $rate = $rate + ($rate/100) * (int) setting('usps_profit', null, User::ROLE_ADMIN);
+            \Log::info('with out profit');
+            \Log::info($rate);
+            $profit = setting('usps_profit', null, $order->user_id)??(int) setting('usps_profit', null, User::ROLE_ADMIN);
+            $rate = $rate + ($rate/100) * $profit;
+            \Log::info('with profit');
+            \Log::info($rate);
             return (Array)[
                 'success' => true,
                 'total_amount' => $rate,
