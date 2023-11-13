@@ -468,7 +468,7 @@ class OrderRepository
         }
 
         if ($request->type == 'domestic') {
-                        $orders->where(function ($query) {
+                $orders->where(function ($query) {
                 $query->whereHas('shippingService', function ($query) {
                     $query->whereIn('service_sub_class', [
                         ShippingService::USPS_PRIORITY,
