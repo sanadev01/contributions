@@ -52,6 +52,7 @@
                 <select class="form-control col-2 mr-2" name="type">
                     <option value="">All</option>
                     <option value="domestic">Domestic</option>
+                    <option value="gss">GSS</option>
                     <option value="{{ App\Models\Order::STATUS_ORDER }}">ORDER</option>
                     <option value="{{ App\Models\Order::STATUS_CANCEL }}">CANCELLED</option>
                     <option value="{{ App\Models\Order::STATUS_REJECTED }}">REJECTED</option>

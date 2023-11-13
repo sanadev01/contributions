@@ -468,7 +468,7 @@ class OrderRepository
         }
 
         if ($request->type == 'domestic') {
-            $orders->where(function ($query) {
+                        $orders->where(function ($query) {
                 $query->whereHas('shippingService', function ($query) {
                     $query->whereIn('service_sub_class', [
                         ShippingService::USPS_PRIORITY,
@@ -476,6 +476,18 @@ class OrderRepository
                         ShippingService::UPS_GROUND,
                         ShippingService::FEDEX_GROUND,
                         ShippingService::USPS_GROUND
+                    ]);
+                })->orWhereNotNull('us_api_tracking_code');
+            });
+        } elseif ($request->type == 'gss') {
+            $orders->where(function ($query) {
+                $query->whereHas('shippingService', function ($query) {
+                    $query->whereIn('service_sub_class', [
+                        ShippingService::GSS_PMI, 
+                        ShippingService::GSS_EPMEI,
+                        ShippingService::GSS_EPMI,
+                        ShippingService::GSS_FCM, 
+                        ShippingService::GSS_EMS
                     ]);
                 })->orWhereNotNull('us_api_tracking_code');
             });
