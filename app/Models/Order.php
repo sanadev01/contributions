@@ -382,15 +382,22 @@ class Order extends Model implements Package
                 return 'PostPlus';
 
             }
+            elseif(optional($this->shippingService)->is_anjun_china_service_sub_class){
+                return 'Correios Brazil';
+            }
+            elseif(optional($this->shippingService)->isAnjunService()){
+                return 'Correios Brazil';
+            }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS ){
 
                 return 'Total Express';
 
             }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::HD_Express){
-
                 return 'HD Express';
-
+            }
+            elseif(optional($this->shippingService)->is_bcn_service){
+                return 'Correios Brazil';
             }
             elseif(optional($this->shippingService)->is_hound_express){
 
@@ -512,17 +519,20 @@ class Order extends Model implements Package
         return ($api?'TM':'HD')."{$tempWhr}".(optional($this->recipient)->country->code??"BR");
     }
 
-    public function doCalculations($onVolumetricWeight=true)
+    public function doCalculations($onVolumetricWeight=true, $isServices = false)
     {
         $shippingService = $this->shippingService;
-
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
         if ($shippingService && in_array($shippingService->service_sub_class, $this->usShippingServicesSubClasses())) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
         }elseif ($shippingService && $shippingService->isGSSService()) {
             $shippingCost = $this->user_declared_freight;
-            $this->calculateGSSProfit($shippingCost, $shippingService);
+            if(!$isServices){
+                $this->calculateGSSProfit($shippingCost, $shippingService);
+            }else{
+                $shippingCost = $this->shipping_value;
+            }
         }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
@@ -698,7 +708,7 @@ class Order extends Model implements Package
 
     public function getDistributionModality(): int
     {
-        if ($this->shippingService && in_array($this->shippingService->service_sub_class, $this->anjunShippingServicesSubClasses())) {
+                if ($this->shippingService && in_array($this->shippingService->service_sub_class, $this->anjunShippingServicesSubClasses())) {
             return __default($this->getCorrespondenceServiceCode($this->shippingService->service_sub_class), ModelsPackage::SERVICE_CLASS_STANDARD);
         }
         return __default( optional($this->shippingService)->service_sub_class ,ModelsPackage::SERVICE_CLASS_STANDARD );

@@ -86,6 +86,24 @@ class OrderRepository
                     ShippingService::Packet_Mini
                 ];
             }
+            if($request->carrier == 'Anjun'){
+                $service = [
+                    ShippingService::AJ_Packet_Standard,
+                    ShippingService::AJ_Packet_Express, 
+                ];
+            }
+            if($request->carrier == 'AnjunChina'){
+                $service = [
+                    ShippingService::AJ_Express_CN,
+                    ShippingService::AJ_Standard_CN,
+                ];
+            }
+            if($request->carrier == 'BCN'){
+                $service = [
+                    ShippingService::BCN_Packet_Standard,
+                    ShippingService::BCN_Packet_Express
+                ];
+            }
             if($request->carrier == 'USPS'){
                 $service = [
                     ShippingService::USPS_PRIORITY,
@@ -156,6 +174,18 @@ class OrderRepository
             if($request->carrier == 'HD Express'){
                 $service = [
                     ShippingService::HD_Express
+                ];
+            }
+            if($request->carrier == 'Correios AJ'){
+                $service = [
+                    ShippingService::AJ_Standard_CN, 
+                    ShippingService::AJ_Express_CN, 
+                ];
+            }
+            if($request->carrier == 'Correios A'){
+                $service = [
+                    ShippingService::AJ_Packet_Standard, 
+                    ShippingService::AJ_Packet_Express, 
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
@@ -298,7 +328,7 @@ class OrderRepository
     {
         $order->syncServices($request->get('services',[]));
 
-        $order->doCalculations();
+        $order->doCalculations(true,true);
         return true;
     }
 
@@ -455,6 +485,18 @@ class OrderRepository
                     ]);
                 })->orWhereNotNull('us_api_tracking_code');
             });
+        } elseif ($request->type == 'gss') {
+            $orders->where(function ($query) {
+                $query->whereHas('shippingService', function ($query) {
+                    $query->whereIn('service_sub_class', [
+                        ShippingService::GSS_PMI, 
+                        ShippingService::GSS_EPMEI,
+                        ShippingService::GSS_EPMI,
+                        ShippingService::GSS_FCM, 
+                        ShippingService::GSS_EMS
+                    ]);
+                })->orWhereNotNull('us_api_tracking_code');
+            });
         } elseif ($request->type) {
             $orders->where('status', '=', $request->type);
         }
@@ -579,7 +621,7 @@ class OrderRepository
                 $this->shippingServiceError = ($order->recipient->commune_id != null) ? 'Shipping Service not Available for the Region you have selected' : 'Shipping Service not Available for the Country you have selected';
             }
         }
-
+        
         if ($shippingServices->isNotEmpty()) {
            $shippingServices = $this->filterShippingServices($shippingServices, $order);
         }
@@ -661,41 +703,37 @@ class OrderRepository
         if($order->recipient->country_id == Order::BRAZIL)
         {
             // If sinerlog is enabled for the user, then remove the Correios services
-            if(setting('sinerlog', null, $order->user->id))
+            if(!setting('correios_api', null, User::ROLE_ADMIN))
             {
                 $shippingServices = $shippingServices->filter(function ($item, $key)  {
-                    return $item->service_sub_class != '33162' && $item->service_sub_class != '33170' && $item->service_sub_class != '33197';
+                    return !$item->isCorreiosService();
+                });
+            }
+            if(!setting('anjun_api', null, User::ROLE_ADMIN)){
+                    $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                        return !$shippingService->isAnjunService();
+                    });
+            }
+            if(Auth::id()!="1233"){
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return !$shippingService->isAnjunChinaService();
                 });
             }
 
-            // If sinerlog is not enabled for the user then remove Sinerlog services from shipping service
-            if(!setting('sinerlog', null, $order->user->id))
-            {
-                $shippingServices = $shippingServices->filter(function ($item, $key)  {
-                    return $item->service_sub_class != '33163' && $item->service_sub_class != '33171' && $item->service_sub_class != '33198';
+            if(!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return !$shippingService->is_bcn_service;
                 });
-            }
-
-            if(setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
-                    $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                        return $shippingService->service_sub_class != ShippingService::Packet_Standard 
-                            && $shippingService->service_sub_class != ShippingService::Packet_Express
-                            && $shippingService->service_sub_class != ShippingService::Packet_Mini;
-                    });
-            }
-
-            if(!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
-                    $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                        return $shippingService->service_sub_class != ShippingService::AJ_Packet_Standard 
-                            && $shippingService->service_sub_class != ShippingService::AJ_Packet_Express;
-                    });
             }
             
             if($shippingServices->isEmpty()){
                 $this->shippingServiceError = 'Please check your parcel dimensions';
             }
         }
-
+            
+            if($shippingServices->isEmpty()){
+                $this->shippingServiceError = 'Please check your parcel dimensions';
+            }
         return $shippingServices;
     }
 

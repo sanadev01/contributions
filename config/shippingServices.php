@@ -46,6 +46,10 @@ return [
             33173 => 'HD Express',
             776 => 'LT Prime',
             887 => 'Hound Express',
+            44164 => 'Packet Standard B',
+            44172 => 'Packet Express B',
+            34166 => "AJ China Standard",
+            33174 => "AJ China Express",
         ]
     ]
 ];

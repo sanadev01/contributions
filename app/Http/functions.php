@@ -115,9 +115,9 @@ function sortTrackingEvents($data, $report)
     $delivered = "No";
     $returned = "No";
     $taxed = "No";
-    $response = $data['evento'];
+    $response = $data->eventos;
     for($t = count($response)-1; $t >= 0; $t--) {
-        switch(optional(optional( $response)[$t])['descricao']) {
+        switch(optional(optional( $response)[$t])->descricao) {
             case "Objeto entregue ao destinatário":
                 $delivered = "Yes";
                 if($taxed == "")
@@ -138,28 +138,20 @@ function sortTrackingEvents($data, $report)
         }
     }
 
-    $eventsQtd = count($response)-1;
-    $startDate = date('d/m/Y');
     $endDate = date('d/m/Y');
-    if(optional(optional($response)[$eventsQtd])['data'] && optional(optional($response)[0])['data']){
-        $startDate  = optional(optional($response)[$eventsQtd])['data'];
-        $endDate    = optional(optional($response)[0])['data'];
-    }
     
-    $firstEvent = Carbon::parse(Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d'));
-    $lastEvent = Carbon::parse(Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d'));
-
-    if($firstEvent && $lastEvent){
-        $interval = $firstEvent->diffInDays($lastEvent).' days';
-    }else {
-        $interval = "0 days";
+    if(optional(optional($response)[0])){
+        $endDate    = $response[0]->dtHrCriado;
     }
+
+    $endDate = Carbon::createFromFormat('Y-m-d H:i:s', str_replace("T", " ", $endDate));
+    $lastEvent = $endDate->format('m/d/Y');
 
     return [
         'delivered' => $delivered,
         'returned' => $returned,
         'taxed' => $taxed,
-        'diffDates' => $interval,
+        'lastEvent' => $lastEvent,
     ];
 }
 
@@ -214,6 +206,7 @@ function getGDEProfit($rates, $service)
     $adminProfit = setting($type, null, User::ROLE_ADMIN);
     return $profit = $userProfit ? $userProfit : $adminProfit;
 }
+
 function isActiveService($user,$shippingService){
     if($shippingService->usps_service_sub_class)
       return setting('usps', null, $user->id)? true:false;
@@ -228,4 +221,21 @@ function isActiveService($user,$shippingService){
     if($shippingService->sweden_post_service_sub_class) 
        return setting('sweden_post', null, $user->id)?true:false; 
     return true; 
+}
+
+function responseUnprocessable($message)
+{
+    return response()->json([
+        'success' => false,
+        'message' => $message,
+    ], 422);
+}
+
+function responseSuccessful($output, $message)
+{
+    return response()->json([
+        'success' => true,
+        'output' => $output,
+        'message' =>  $message,
+    ]);
 }

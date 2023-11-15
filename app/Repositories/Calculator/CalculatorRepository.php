@@ -95,7 +95,7 @@ class CalculatorRepository {
 
     public function getShippingService()
     {
-        $anjunSelected = setting('anjun_api', null, User::ROLE_ADMIN); 
+        $anjunSelected = setting('anjun_api', null, User::ROLE_ADMIN) ||setting('bcn_api', null, User::ROLE_ADMIN);  
         $shippingServices = collect();
         foreach (ShippingService::query()->active()->get() as $shippingService) {
             if ($shippingService->isAvailableFor($this->order)){

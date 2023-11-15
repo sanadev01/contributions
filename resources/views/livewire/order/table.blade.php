@@ -52,6 +52,7 @@
                 <select class="form-control col-2 mr-2" name="type">
                     <option value="">All</option>
                     <option value="domestic">Domestic</option>
+                    <option value="gss">GSS</option>
                     <option value="{{ App\Models\Order::STATUS_ORDER }}">ORDER</option>
                     <option value="{{ App\Models\Order::STATUS_CANCEL }}">CANCELLED</option>
                     <option value="{{ App\Models\Order::STATUS_REJECTED }}">REJECTED</option>
@@ -141,6 +142,9 @@
                         <select class="form-control" wire:model.debounce.1000ms="carrier">
                             <option value="">All</option>
                             <option value="Brazil">Correios Brazil</option>
+                            <option value="Anjun">Correios A</option>
+                            <option value="AnjunChina">Correios AJ</option>
+                            <option value="BCN">Correios B</option>
                             <option value="USPS">USPS</option>
                             <option value="UPS">UPS</option>
                             <option value="FEDEX">FEDEX</option>

@@ -6,37 +6,46 @@ use Carbon\Carbon;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\OrderTrackingRepository;
-use App\Http\Resources\OrderTrackingResource;
 use App\Services\Correios\Services\Brazil\CorreiosTrackingService;
 
 class ShipTrackController extends Controller
 {
-    public $trackings;
+    private $orderTrackingService;
+
+    public function __construct(CorreiosTrackingService $orderTrackingService)
+    {
+        $this->orderTrackingService = $orderTrackingService;
+    }
 
     public function __invoke(Request $request)
     {
-        $xmlContent = $request->getContent();
-        $xml = simplexml_load_string($xmlContent);
-        $trackingCode = (string)$xml->TrackingNumber;
+        $trackingCode = $this->extractTrackingCode($request);
+
         $order = Order::where('warehouse_number', $trackingCode)->first();
 
         if ($order) {
-            $orderTrackingService = new CorreiosTrackingService();
-            $apiResponse = $orderTrackingService->getTracking($order->corrios_tracking_code);
+            $apiResponse = $this->getOrderTracking($order->corrios_tracking_code);
             $xmlResponse = $this->generateXmlResponse($order,$apiResponse);
             return response($xmlResponse, 200)->header('Content-Type', 'application/xml');
         }
     }
 
+    private function extractTrackingCode(Request $request): string
+    {
+        $xmlContent = $request->getContent();
+        $xml = simplexml_load_string($xmlContent);
+        return (string) $xml->TrackingNumber;
+    }
+
+    private function getOrderTracking($trackingCode)
+    {
+        return $this->orderTrackingService->getTracking($trackingCode);
+    }
+
     private function generateXmlResponse($order, $apiResponse)
     {
         if (count($order->trackings) < 0 ) {
-            $errorXml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                <AmazonTrackingResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="AmazonTrackingResponse.xsd"></AmazonTrackingResponse>');
-            $errorXml->addChild('APIVersion', '4.0');
-            $errorXml->addChild('ErrorMessage', 'Order Tracking Not Found');
-            return $errorXml->asXML();
+            return $this->generateErrorResponse();
         }
 
         $orderDate = Carbon::parse($order->order_date)->addDays(15);
@@ -117,6 +126,16 @@ class ShipTrackController extends Controller
         $xmlString = $xml->asXML();
 
         return $xmlString;
+    }
+
+    private function generateErrorResponse()
+    {
+        $errorXml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <AmazonTrackingResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="AmazonTrackingResponse.xsd"></AmazonTrackingResponse>');
+        $errorXml->addChild('APIVersion', '4.0');
+        $errorXml->addChild('ErrorMessage', 'Order Tracking Not Found');
+
+        return $errorXml->asXML();
     }
 
     public function mapEvents($descricao) {
