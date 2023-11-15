@@ -72,6 +72,10 @@ use App\Http\Controllers\Warehouse\HDExpressContainerController;
 use App\Http\Controllers\Warehouse\HDExpressUnitRegisterController;
 use App\Http\Controllers\Warehouse\HDExpressCN35DownloadController;
 use App\Http\Controllers\Warehouse\HDExpressContainerPackageController;
+use App\Http\Controllers\Warehouse\HoundCN35DownloadController;
+use App\Http\Controllers\Warehouse\HoundContainerController;
+use App\Http\Controllers\Warehouse\HoundContainerPackageController;
+use App\Http\Controllers\Warehouse\HoundUnitRegisterController;
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Export\OrderExportTemp;
 use Illuminate\Support\Facades\Auth;
@@ -170,6 +174,11 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('gde_container/{container}/download', GDECN35DownloadController::class)->name('gde_container.download');
     Route::get('gde/{delivery_bill}/manifest', GDEManifestDownloadController::class)->name('gde.manifest.download');
 
+    // Routes for Hound Express Container
+    Route::resource('hound_containers', HoundContainerController::class);
+    Route::resource('hound_container.packages', HoundContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('hound_container/{id}/create', [HoundUnitRegisterController::class, 'createMasterBox'])->name('hound_container.createRequest');
+    Route::get('hound_container/{container}/download', HoundCN35DownloadController::class)->name('hound_container.download');
     // Routes for Total Express Container
     Route::resource('totalexpress_containers', TotalExpressContainerController::class);
     Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');

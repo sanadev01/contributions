@@ -1,39 +1,40 @@
 <?php
-namespace App\Services\HoundExpress\Services\CN23;
 
-use App\Models\ShippingService;
-use App\Services\Converters\UnitsConverter;
+namespace App\Services\HoundExpress\Services\CN23;
 use App\Services\HoundExpress\Services\CN23\HoundReceiver;
 use App\Services\HoundExpress\Services\CN23\HoundSender;
 use App\Services\HoundExpress\Services\CN23\HoundPackagepiece;
-class HoundOrder { 
-   protected $order = null; 
+
+class HoundOrder
+{
+   protected $order = null;
 
    public function __construct($order)
    {
-      $this->order = $order;   
+      $this->order = $order;
    }
 
-   public function getRequestBody(){
-     return [
+   public function getRequestBody()
+   {
+      return [
          "sender"    => (new HoundSender($this->order))->getRequestBody(),
          "receiver"  => (new HoundReceiver($this->order))->getRequestBody(),
          "currency"  => "USD",
-         "clientReference"=> [
+         "clientReference" => [
             "code"   => "Your reference value/Code"
          ],
-         "deliveryOption"=> [
+         "deliveryOption" => [
             "id"  => 1
          ],
-         "packageType"=> [
+         "packageType" => [
             "id"  => 2
          ],
-         "insuredValue"=> [
-            "code"=> "USD",
-            "value"=> $this->order->insurance_value
+         "insuredValue" => [
+            "code" => "USD",
+            "value" => $this->order->insurance_value
          ],
-         "packagePieces"=>  (new HoundPackagePiece($this->order))->getRequestBody(),
-         "isReturn"=>false
+         "packagePieces" => (new HoundPackagePiece($this->order))->getRequestBody(),
+         "isReturn" => false
       ];
    }
 }

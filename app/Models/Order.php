@@ -392,7 +392,7 @@ class Order extends Model implements Package
                 return 'HD Express';
 
             }
-            elseif($this->shippingService->is_hound_express){
+            elseif(optional($this->shippingService)->is_hound_express){
 
                 return 'Hound Express';
             }

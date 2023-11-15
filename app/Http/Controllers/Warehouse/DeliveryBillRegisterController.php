@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers\Warehouse;
 
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\DeliveryBill;
-use Illuminate\Support\Facades\Storage;
-use App\Services\GePS\Client as GePSClient;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\Client;
 
@@ -35,7 +31,7 @@ class DeliveryBillRegisterController extends Controller
         } 
 
  
-        if($deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE() || $deliveryBill->isHDExpress())  {            
+        if($deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE() || $deliveryBill->isHDExpress()|| $deliveryBill->isHoundExpress())  {            
             
             $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->setCN38Code(),
