@@ -30,7 +30,7 @@ class HoundContainerPackageRepository {
         if(!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
 
             Session::flash('alert-class', 'alert-success');
-            $message = 'package added';
+            $message = 'order added successfully!';
             $container->orders()->attach($order->id);
             $this->addOrderTracking($order);
             Session::flash('message', $message);
