@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Order;
 
+use App\Models\Order;
 use Livewire\Component;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
@@ -141,7 +142,11 @@ class ShipmentInfo extends Component
     {
         $userId = ($this->order) ? optional($this->order)['user_id'] : auth()->user()->id;
         $volumetricDiscount = setting('volumetric_discount', null, $userId);
-        $discountPercentage = setting('discount_percentage', null, $userId);
+        if(optional($this->order)['id'])
+            $discountPercentage = getVolumetricDiscountPercentage(Order::find(optional($this->order)['id']));
+        else
+             $discountPercentage = setting('discount_percentage', null, $userId);  
+        
 
         if ($volumetricDiscount && $discountPercentage) {
             $this->discountPercentage = ($discountPercentage) ? $discountPercentage / 100 : 0;

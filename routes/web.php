@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Order;
+use App\Models\Warehouse\Container;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
 use App\Models\Warehouse\DeliveryBill;
@@ -51,7 +52,6 @@ Route::get('/home', function () {
 Auth::routes();
 
 Route::post('logout', [\App\Http\Controllers\Auth\LoginController::class,'logout'])->name('logout');
-
 
 Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function () {
 
@@ -293,6 +293,5 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     return 'Anjun Token refresh';
 });
 
-Route::get('/temp-order-report/{number}',TempOrderReportController::class);
-
+Route::get('/temp-order-report',TempOrderReportController::class);
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
