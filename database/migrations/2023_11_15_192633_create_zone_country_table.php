@@ -15,7 +15,6 @@ class CreateZoneCountryTable extends Migration
             $table->decimal('profit_percentage', 5, 2); // Adjust the precision and scale as needed
             $table->timestamps();
 
-            $table->foreign('zone_id')->references('id')->on('zones')->onDelete('cascade');
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
         });
     }

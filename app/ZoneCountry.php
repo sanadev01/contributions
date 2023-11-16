@@ -14,11 +14,6 @@ class ZoneCountry extends Model
         'profit_percentage',
     ];
 
-    public function zone()
-    {
-        return $this->belongsTo(Zone::class);
-    }
-
     public function country()
     {
         return $this->belongsTo(Country::class);
