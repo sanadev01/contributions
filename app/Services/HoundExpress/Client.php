@@ -50,6 +50,25 @@ class Client{
         // Write the binary data to the PDF file
         file_put_contents($filePath, $binaryData); 
     }
+    function generateMasterAirWayBill($deliveryBill){
+        $order = $deliveryBill->containers->first()->orders->first(); 
+        $order_response = json_decode($order->api_response);
+        $response = Http::withHeaders($this->getHeaders())->post($this->baseUrl . '/Sabueso/ws/deliveryServices/receiveMAWB', [                
+                "mawb_number"   => $order_response->id,
+                "isUpdate"      => true
+        ]);
+        $response_body = json_decode($response->getBody()); 
+        $byteArray = $response_body->zipFile; 
+        // Specify the file path where you want to save the PDF
+        $filePath =   storage_path("app/labels/{$order->corrios_tracking_code}.zip");
+        // Convert the byte array to binary data
+        $binaryData = pack('C*', ...$byteArray); 
+        // Write the binary data to the PDF file
+        file_put_contents($filePath, $binaryData);
+        header("Content-disposition: attachment; filename={$order->corrios_tracking_code}.zip");
+        header("Content-type: application/zip");
+        readfile($filePath);
+    }
     public function createPackage($order)
     {
         $houndOrderRequest = (new HoundOrder($order))->getRequestBody();
