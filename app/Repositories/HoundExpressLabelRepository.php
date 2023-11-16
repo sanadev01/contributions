@@ -6,7 +6,6 @@ namespace App\Repositories;
 use App\Models\Order;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Correios\Models\PackageError;
-use App\Services\SwedenPost\Services\UpdateCN23Label;
 use App\Services\HoundExpress\Client;
 class HoundExpressLabelRepository
 {
@@ -56,6 +55,11 @@ class HoundExpressLabelRepository
         return $data;
     }
 
+    function generateMasterAirWayBill($deliveryBill) { 
+        
+        $client = new Client();
+        return  $client->generateMasterAirWayBill($deliveryBill); 
+    }
     public function getError()
     {
         return $this->error;
