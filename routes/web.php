@@ -268,6 +268,9 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}',function($id = null){
 
+    $order = Order::where('corrios_tracking_code', $id)->get();
+    dd($order);
+    
     $labelPrinter = new CN23LabelMaker();
     $order = Order::find($id);
     // dd($order->recipient->country->code);
@@ -296,24 +299,11 @@ Route::get('session-refresh/{slug?}', function($slug = null){
 Route::get('/temp-order-report/{number}',TempOrderReportController::class);
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
-Route::get('/to-express',function(){
-    Order::whereIn('corrios_tracking_code',[ 
-       "IX030293078BR",
-       "IX030293095BR",
-       "IX030429411BR",
-       "IX030293020BR",
-       "IX030429368BR",
-       "IX030429408BR",
-       "IX030293135BR",
-       "IX030429371BR",
-       "IX030429473BR",
-       "IX030429425BR",
-       "IX030429354BR",
-       "IX030429385BR",
-       "IX030293121BR",
-       "IX030293118BR",
-       "IX030293047BR",
-       "IX030293055BR",
-       "IX030293104BR"])->update(['shipping_service_id'=>42]);
-    echo 'updated'; 
+
+Route::get('/to-express/{id?}',function($id = null){
+    
+    Order::whereIn('shipping_service_id',[ 
+       $id,])->update(['shipping_service_id'=>42]);
+
+    return 'shipping service updated to express sucessfully.'; 
 });
