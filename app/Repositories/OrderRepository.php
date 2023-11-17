@@ -490,7 +490,7 @@ class OrderRepository
                         ShippingService::GSS_FCM, 
                         ShippingService::GSS_EMS
                     ]);
-                })->orWhereNotNull('us_api_tracking_code');
+                });
             });
         } elseif ($request->type) {
             $orders->where('status', '=', $request->type);
