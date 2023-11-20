@@ -69,9 +69,7 @@ class Client
                 if(!$order->api_response){
                     $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/orders", $shippingRequest);
                     $response = json_decode($request);
-                    Log::info("response 1");
-                    Log::info("$this->baseUrl/v1/orders") ;
-                    Log::error([$response]);
+                    
                     if ($response->status=="SUCCESS" && $response->data && $response->data->id ) {
                 
                         $mergedResponse = [
@@ -94,9 +92,7 @@ class Client
                     $id = $response->data->id;  
                     $getLabel = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/orders/$id/cn23-merged");
                     $getLabelResponse = json_decode($getLabel);
-                    Log::info("response 2") ;
-                    Log::info("$this->baseUrl/v1/orders/$id/cn23-merged") ;
-                    Log::error([$getLabelResponse]);
+                    
                     if ($getLabelResponse->status=="SUCCESS"){
                         $mergedResponse = [
                         'orderResponse' => $response,
