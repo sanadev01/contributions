@@ -31,24 +31,27 @@ class ImportZoneProfit extends AbstractImportService
     public function readRatesFromFile()
     {
         $rates = [];
-        $limit = 100;
+        $limit = 1000;
 
-        foreach (range(3, $limit) as $row) {
+        foreach (range(2, $limit) as $row) {
+            $countryCode = $this->getValueOrDefault('A'.$row);
 
-            // $weight = round($this->getValueOrDefault('A'.$row),2);
-            
-            // if(($this->country_id == Country::Brazil && $weight <= 30000) || ($this->country_id == Country::Chile && $weight <= 50000))
-            // {
+            if ($countryCode == null) {
+                break;
+            }
+
+            $countryId = Country::where('code', $countryCode)->value('id');
+
+            if ($countryId) {
                 $rates[] = [
                     'zone_id' => $this->zoneId,
-                    'country_id' => 'A'.$row,
-                    'profit_precentage' => round($this->getValueOrDefault('B'.$row),2),
+                    'country_id' => $countryId,
+                    'profit_percentage' => round($this->getValueOrDefault('B'.$row), 2),
                 ];
-            // }
-            dd($rates); 
+            }
         }
 
-        // return $this->storeRatesToDb($rates);
+        return $this->storeRatesToDb($rates);
     }
 
     private function getValueOrDefault($cell,$default = 0)

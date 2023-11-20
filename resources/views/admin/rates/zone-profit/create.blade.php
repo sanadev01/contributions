@@ -67,22 +67,8 @@
                                     <ol>
                                         <li>@lang('shipping-rates.* Upload only Excel files')</li>
                                         <li>@lang('shipping-rates.* Files larger than 15Mb are not allowed')</li>
-                                        {{-- <li>@lang('shipping-rates.* Download and fill in the data in the sample file below to avoid errors')</li> --}}
-                                        {{-- <li class="mt-2">Download Sample File <a href="{{ asset('uploads/accrual.xlsx') }}" class="btn btn-success btn-sm">@lang('shipping-rates.Download')</a></li> --}}
-                                        {{-- <li class="mt-2">@lang('shipping-rates.* Download the sample File')
-                                            <div class="btn-group">
-                                               <div class="dropdown">
-                                                   <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                       @lang('shipping-rates.Download')
-                                                   </button>
-                                                   <div class="dropdown-menu overlap-menu" aria-labelledby="dropdownMenuLink">
-                                                        <a href="{{ asset('uploads/accrual.xlsx') }}" class="dropdown-item">@lang('shipping-rates.Download')</a>
-                                                        <a href="{{ asset('uploads/anjun-accrual.xlsx') }}" class="dropdown-item">@lang('shipping-rates.Anjun Download')</a>
-                                                        <a href="{{ asset('uploads/chile-accural.xlsx') }}" class="dropdown-item">@lang('shipping-rates.Chile Rates')</a>
-                                                   </div>
-                                               </div>
-                                           </div>
-                                       </li> --}}
+                                        <li>@lang('shipping-rates.* Download and fill in the data in the sample file below to avoid errors')</li>
+                                        <li class="mt-2">Download Sample File <a href="{{ asset('uploads/zone-profit.xlsx') }}" class="btn btn-success btn-sm">@lang('shipping-rates.Download')</a></li>
                                     </ol>
                                 </div>
                             </div>

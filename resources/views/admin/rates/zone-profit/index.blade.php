@@ -40,14 +40,14 @@
                                         Zone 1
                                     </th>
                                     <th>
-                                        2
+                                        {{ $zones->where('zone_id', 1)->count() }}
                                     </th>
                                     <th>
                                         <a href="{{ route('admin.rates.zone-profit.show', 1) }}" class="btn btn-primary btn-sm">
                                            <i class="feather icon-eye"></i> View
                                         </a>
                                         |
-                                        <a href="{{ route('admin.rates.download-accrual-rates', 1) }}" class="btn btn-success btn-sm">
+                                        <a href="{{ route('admin.rates.downloadZoneProfit', 1) }}" class="btn btn-success btn-sm">
                                             <i class="feather icon-download"></i> Download
                                         </a>
                                     </th>
@@ -57,14 +57,14 @@
                                         Zone 2
                                     </th>
                                     <th>
-                                        2
+                                        {{ $zones->where('zone_id', 2)->count() }}
                                     </th>
                                     <th>
                                         <a href="{{ route('admin.rates.zone-profit.show', 2) }}" class="btn btn-primary btn-sm">
                                            <i class="feather icon-eye"></i> View
                                         </a>
                                         |
-                                        <a href="{{ route('admin.rates.download-accrual-rates', 2) }}" class="btn btn-success btn-sm">
+                                        <a href="{{ route('admin.rates.downloadZoneProfit', 2) }}" class="btn btn-success btn-sm">
                                             <i class="feather icon-download"></i> Download
                                         </a>
                                     </th>
@@ -74,14 +74,14 @@
                                         Zone 3
                                     </th>
                                     <th>
-                                        2
+                                        {{ $zones->where('zone_id', 3)->count() }}
                                     </th>
                                     <th>
                                         <a href="{{ route('admin.rates.zone-profit.show', 3) }}" class="btn btn-primary btn-sm">
                                            <i class="feather icon-eye"></i> View
                                         </a>
                                         |
-                                        <a href="{{ route('admin.rates.download-accrual-rates', 3) }}" class="btn btn-success btn-sm">
+                                        <a href="{{ route('admin.rates.downloadZoneProfit', 3) }}" class="btn btn-success btn-sm">
                                             <i class="feather icon-download"></i> Download
                                         </a>
                                     </th>
@@ -91,14 +91,14 @@
                                         Zone 4
                                     </th>
                                     <th>
-                                        2
+                                        {{ $zones->where('zone_id', 4)->count() }}
                                     </th>
                                     <th>
                                         <a href="{{ route('admin.rates.zone-profit.show', 4) }}" class="btn btn-primary btn-sm">
                                            <i class="feather icon-eye"></i> View
                                         </a>
                                         |
-                                        <a href="{{ route('admin.rates.download-accrual-rates', 4) }}" class="btn btn-success btn-sm">
+                                        <a href="{{ route('admin.rates.downloadZoneProfit', 4) }}" class="btn btn-success btn-sm">
                                             <i class="feather icon-download"></i> Download
                                         </a>
                                     </th>
@@ -108,14 +108,14 @@
                                         Zone 5
                                     </th>
                                     <th>
-                                        2
+                                        {{ $zones->where('zone_id', 5)->count() }}
                                     </th>
                                     <th>
                                         <a href="{{ route('admin.rates.zone-profit.show', 5) }}" class="btn btn-primary btn-sm">
                                            <i class="feather icon-eye"></i> View
                                         </a>
                                         |
-                                        <a href="{{ route('admin.rates.download-accrual-rates', 5) }}" class="btn btn-success btn-sm">
+                                        <a href="{{ route('admin.rates.downloadZoneProfit', 5) }}" class="btn btn-success btn-sm">
                                             <i class="feather icon-download"></i> Download
                                         </a>
                                     </th>
@@ -125,14 +125,14 @@
                                         Zone 6
                                     </th>
                                     <th>
-                                        2
+                                        {{ $zones->where('zone_id', 6)->count() }}
                                     </th>
                                     <th>
                                         <a href="{{ route('admin.rates.zone-profit.show', 6) }}" class="btn btn-primary btn-sm">
                                            <i class="feather icon-eye"></i> View
                                         </a>
                                         |
-                                        <a href="{{ route('admin.rates.download-accrual-rates', 6) }}" class="btn btn-success btn-sm">
+                                        <a href="{{ route('admin.rates.downloadZoneProfit', 6) }}" class="btn btn-success btn-sm">
                                             <i class="feather icon-download"></i> Download
                                         </a>
                                     </th>
@@ -142,14 +142,14 @@
                                         Zone 7
                                     </th>
                                     <th>
-                                        2
+                                        {{ $zones->where('zone_id', 7)->count() }}
                                     </th>
                                     <th>
                                         <a href="{{ route('admin.rates.zone-profit.show', 7) }}" class="btn btn-primary btn-sm">
                                            <i class="feather icon-eye"></i> View
                                         </a>
                                         |
-                                        <a href="{{ route('admin.rates.download-accrual-rates', 7) }}" class="btn btn-success btn-sm">
+                                        <a href="{{ route('admin.rates.downloadZoneProfit', 7) }}" class="btn btn-success btn-sm">
                                             <i class="feather icon-download"></i> Download
                                         </a>
                                     </th>
@@ -159,14 +159,14 @@
                                         Zone 8
                                     </th>
                                     <th>
-                                        2
+                                        {{ $zones->where('zone_id', 8)->count() }}
                                     </th>
                                     <th>
                                         <a href="{{ route('admin.rates.zone-profit.show', 8) }}" class="btn btn-primary btn-sm">
                                            <i class="feather icon-eye"></i> View
                                         </a>
                                         |
-                                        <a href="{{ route('admin.rates.download-accrual-rates', 8) }}" class="btn btn-success btn-sm">
+                                        <a href="{{ route('admin.rates.downloadZoneProfit', 8) }}" class="btn btn-success btn-sm">
                                             <i class="feather icon-download"></i> Download
                                         </a>
                                     </th>

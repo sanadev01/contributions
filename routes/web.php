@@ -137,6 +137,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('/show-profit-package-rates/{id}/{packageId}', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showPackageRates'])->name('show-profit-rates');
             Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
             Route::resource('zone-profit', ZoneProfitController::class)->only(['index','store', 'create', 'show', 'destroy']);
+            Route::get('zone-profit-download/{id}', [\App\Http\Controllers\Admin\Rates\ZoneProfitController::class, 'downloadZoneProfit'])->name('downloadZoneProfit');
+
         });
 
         Route::namespace('Connect')->group(function(){

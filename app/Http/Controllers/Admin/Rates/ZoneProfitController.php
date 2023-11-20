@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\RateRepository;
 use App\Models\Warehouse\AccrualRate;
 use App\Http\Requests\Admin\Rate\CreateRequest;
-use App\Services\Excel\Export\AccuralRateExport;
+use App\Services\Excel\Export\ZoneProfitExport;
 use App\Services\Excel\ImportCharges\ImportZoneProfit;
 
 class ZoneProfitController extends Controller
@@ -25,8 +25,8 @@ class ZoneProfitController extends Controller
     public function index()
     {
         $this->authorizeResource(Rate::class);
-        
-        return view('admin.rates.zone-profit.index');
+        $zones = ZoneCountry::all();
+        return view('admin.rates.zone-profit.index', compact('zones'));
     }
 
     public function create()
@@ -38,12 +38,7 @@ class ZoneProfitController extends Controller
 
     public function store(Request $request)
     {
-        \Log::info('request');
-        \Log::info($request->all());
-
-        // dd($request->all());
         try{
-            // dd("here");
             $file = $request->file('csv_file');
             $importService = new ImportZoneProfit($file, $request->zone_id);
             $importService->handle();
@@ -57,9 +52,10 @@ class ZoneProfitController extends Controller
         }
     }
 
-    public function show($service)
+    public function show($id)
     {
-        return view('admin.rates.zone-profit.show', compact('service'));
+        $zoneProfit = ZoneCountry::where('zone_id', $id)->get();
+        return view('admin.rates.zone-profit.show', compact('id', 'zoneProfit'));
     }
 
     public function destroy(ZoneCountry $id)
@@ -70,10 +66,11 @@ class ZoneProfitController extends Controller
         return redirect()->route('admin.rates.zone-profit.index');
     }
     
-    public function downloadRates($service)
+    public function downloadZoneProfit($id)
     {
-       $rates = AccrualRate::where('service', $service)->get();
-       $exportService = new AccuralRateExport($rates);
+        // dd($id, "here");
+        $profitList = ZoneCountry::where('zone_id', $id)->get();
+        $exportService = new ZoneProfitExport($profitList);
         return $exportService->handle();
     }
 
