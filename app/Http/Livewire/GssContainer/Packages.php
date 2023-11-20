@@ -78,7 +78,14 @@ class Packages extends Component
       
     public function totalWeight()
     {
-        $orders = $this->container->orders();
-        return $orders->selectRaw('ROUND(CASE WHEN measurement_unit = "kg/cm" THEN weight * 2.205 ELSE weight END, 2) as weight')->first()->weight;
+        $orders = $this->container->orders()->get();
+
+        $totalWeight = $orders->sum(function ($order) {
+            $measurementUnit = is_string($order->measurement_unit) ? $order->measurement_unit : '';
+            return round($measurementUnit === 'kg/cm' ? $order->weight * 2.205 : $order->weight, 2);
+        });
+        
+        return $totalWeight;
+        
     }
 }
