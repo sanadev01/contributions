@@ -3,7 +3,7 @@
 namespace App\Services\HoundExpress\Services\CN23;
 use App\Services\HoundExpress\Services\CN23\HoundReceiver;
 use App\Services\HoundExpress\Services\CN23\HoundSender;
-use App\Services\HoundExpress\Services\CN23\HoundPackagepiece;
+use App\Services\HoundExpress\Services\CN23\HoundPackagePiece;
 
 class HoundOrder
 {
