@@ -117,6 +117,8 @@
                                                 <span class="badge badge-secondary text-black">GSS</span>
                                                 @elseif($deliveryBill->isTotalExpress())
                                                 <span class="badge badge-warning text-black">T</span>
+                                                @elseif($deliveryBill->isHoundExpress())
+                                                    <span class="badge text-dark" style="background-color:#b4e2ef">HE</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif
