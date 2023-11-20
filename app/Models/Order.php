@@ -395,10 +395,11 @@ class Order extends Model implements Package
                 return 'HD Express';
             }
             elseif(optional($this->shippingService)->is_bcn_service){
-                return 'Correios B';
+                return 'Correios Brazil';
             }
-            elseif(optional($this->shippingService)->isAnjunService()){
-                return 'Correios AJ';
+            elseif(optional($this->shippingService)->is_hound_express){
+
+                return 'Hound Express';
             }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::HD_Express){
                 return 'HD Express';

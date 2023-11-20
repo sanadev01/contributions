@@ -92,13 +92,20 @@
                                                     {{ old('services_subclass_code') == 'AJ-IX' ? 'selected' : '' }}>Anjun
                                                     express service</option>
                                             @elseif($anjunChinaApi)
-                                                <option value="AJC-NX"
+                                            
+                                            <option value="AJC-NX"
                                                     {{ old('services_subclass_code') == 'AJC-NX' ? 'selected' : '' }}>Packet
                                                     Standard (AJ)</option>
                                                 <option value="AJC-IX"
                                                     {{ old('services_subclass_code') == 'AJC-IX' ? 'selected' : '' }}>Packet
                                                     Express (AJ)</option>
                                             @endif
+                                                <option value="AJC-NX"
+                                                    {{ old('services_subclass_code') == 'AJC-NX' ? 'selected' : '' }}>Packet
+                                                    Standard (AJ)</option>
+                                                <option value="AJC-IX"
+                                                    {{ old('services_subclass_code') == 'AJC-IX' ? 'selected' : '' }}>Packet
+                                                    Express (AJ)</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>

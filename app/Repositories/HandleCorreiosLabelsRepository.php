@@ -15,6 +15,7 @@ use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\AnjunLabelRepository;
 use App\Services\TotalExpress\TotalExpressLabelRepository;
+use App\Repositories\HoundExpressLabelRepository;
 use App\Models\ShippingService;
 
 class HandleCorreiosLabelsRepository
@@ -36,6 +37,9 @@ class HandleCorreiosLabelsRepository
         if ($this->order->shippingService->isSwedenPostService()) {
             return $this->swedenPostLabel();
         }
+        if ($this->order->shippingService->is_hound_express) { 
+            return $this->isHoundExpress();
+        }
         if ($this->order->recipient->country_id == Order::BRAZIL) {
 
             if ($this->order->shippingService->isGePSService()) {
@@ -45,7 +49,7 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->isCorreiosService() ||$this->order->shippingService->is_bcn_service || $this->order->shippingService->is_anjun_china_service_sub_class || $this->order->shippingService->isAnjunService()) {
                         return $this->correiosOrAnjun($this->order);
             }
-            if ($this->order->shippingService->isPostPlusService()) {
+                        if ($this->order->shippingService->isPostPlusService()) {
                 return $this->postPlusLabel();
             }
             if ($this->order->shippingService->isGSSService()) {
@@ -138,6 +142,11 @@ class HandleCorreiosLabelsRepository
         $swedenpostLabelRepository->run($this->order, $this->update); //by default consider false
         return $this->renderLabel($this->request, $this->order, $swedenpostLabelRepository->getError());
     }
+    function isHoundExpress(){
+        $swedenpostLabelRepository = new HoundExpressLabelRepository(); 
+        $swedenpostLabelRepository->run($this->order,$this->update); //by default consider false
+        return $this->renderLabel($this->request, $this->order, $swedenpostLabelRepository->getError());
+    }
 
     public function corrieosChileLabel()
     {
@@ -145,7 +154,6 @@ class HandleCorreiosLabelsRepository
         $corrieosChileLabelRepository->run($this->order, $this->update);
         return $this->renderLabel($this->request, $this->order, $corrieosChileLabelRepository->getChileErrors());
     }
-
     public function correiosOrAnjun($order)
     {
         if($order->user->id == "1137" && $this->order->shippingService->is_anjun_china_service_sub_class) {
@@ -155,7 +163,6 @@ class HandleCorreiosLabelsRepository
 
         return $this->corriesBrazilLabel();
     }
-
     public function corriesBrazilLabel()
     {
         $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();

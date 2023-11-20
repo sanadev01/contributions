@@ -266,13 +266,6 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
 
 Route::get('test-label/{id?}',function($id = null){
-    $deliveryBill = DeliveryBill::find($id);
-    if ($deliveryBill) {
-        $deliveryBill->request_id = null;
-        $deliveryBill->cnd38_code = null;
-        $deliveryBill->save();
-        return "DeliveryBill Values Updated";
-    }
 
     $labelPrinter = new CN23LabelMaker();
     $order = Order::find($id);
@@ -297,11 +290,6 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     session()->forget('anjun_token');
     Cache::forget('anjun_token');
     return 'Anjun Token refresh';
-}); 
-Route::get('order-arrived', function(){
-    Artisan::call('email:order-arrived');
-
-    return Artisan::output();
 });
 
 Route::get('/temp-order-report',TempOrderReportController::class);

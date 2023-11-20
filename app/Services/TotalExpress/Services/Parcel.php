@@ -12,13 +12,26 @@ class Parcel
 {
 
    protected $order;
+   protected $weight;
+   protected $width;
+   protected $height;
+   protected $length;
+   
    protected $chargableWeight;
    public function __construct(Order $order)
    {
       $this->order = $order;
+      $this->weight = $order->weight;
+      if(!$order->isWeightInKg()) {
+         $this->weight = UnitsConverter::poundToKg($order->getOriginalWeight('lbs'));
+      }
+      $this->width = round($order->isMeasurmentUnitCm() ? $order->width : UnitsConverter::inToCm($order->width));
+      $this->height = round($order->isMeasurmentUnitCm() ? $order->height : UnitsConverter::inToCm($order->height));
+      $this->length = round($order->isMeasurmentUnitCm() ? $order->length : UnitsConverter::inToCm($order->length));
    }
    public function getRequestBody()
    {
+      
       if (app()->isProduction()) {
          $contractId = config('total_express.production.contractId');
       } else {
@@ -70,10 +83,10 @@ class Parcel
 
          "volumes_attributes" => [
             [
-               "height" => $this->order->height,
-               "length" => $this->order->length,
-               "width" => $this->order->width,
-               "weight" => $this->order->weight,
+               "height" => $this->height,
+               "length" => $this->length,
+               "width" => $this->width,
+               "weight" => $this->weight,
                "freight_value" => $this->order->gross_total,
                "order_items_attributes" => $this->setItemsDetails()
 

@@ -35,18 +35,21 @@ class AnjunReport extends AbstractExportService
         foreach ($this->deliveryBills as $deliveryBill) {
             foreach ($deliveryBill->containers as $container) {
                 foreach ($container->orders as $order) {
-                    if($order->shippingService->isAnjunService()) {
-                        $this->setCellValue('A'.$row, $order->order_date);
-                        $this->setCellValue('B'.$row, $order->warehouse_number);
-                        $this->setCellValue('C'.$row, $order->user->name);
-                        $this->setCellValue('D'.$row, $order->corrios_tracking_code);
-                        $this->setCellValue('E'.$row, optional(optional($order->containers)[0])->unit_code);
-                        $this->setCellValue('F'.$row, round($order->gross_total,2));
-                        $this->setCellValue('G'.$row, $this->getValuePaidToCorrieos($order)['airport']);
-                        $this->setCellValue('H'.$row, $this->getValuePaidToCorrieos($order)['commission']);
-                        $this->setCellValue('I'.$row, $order->status_name);
-                        $this->setCellValue('J'.$row, $deliveryBill->created_at);
-                        $row++;
+                    if($order->shippingService){
+                        if($order->shippingService->isAnjunService())
+                        {
+                            $this->setCellValue('A'.$row, $order->order_date);
+                            $this->setCellValue('B'.$row, $order->warehouse_number);
+                            $this->setCellValue('C'.$row, $order->user->name);
+                            $this->setCellValue('D'.$row, $order->corrios_tracking_code);
+                            $this->setCellValue('E'.$row, optional(optional($order->containers)[0])->unit_code);
+                            $this->setCellValue('F'.$row, round($order->gross_total,2));
+                            $this->setCellValue('G'.$row, $this->getValuePaidToCorrieos($order)['airport']);
+                            $this->setCellValue('H'.$row, $this->getValuePaidToCorrieos($order)['commission']);
+                            $this->setCellValue('I'.$row, $order->status_name);
+                            $this->setCellValue('J'.$row, $deliveryBill->created_at);
+                            $row++;
+                        }
                     }
                 }
             }
