@@ -68,10 +68,19 @@ class ZoneProfitController extends Controller
     
     public function downloadZoneProfit($id)
     {
-        // dd($id, "here");
         $profitList = ZoneCountry::where('zone_id', $id)->get();
         $exportService = new ZoneProfitExport($profitList);
         return $exportService->handle();
+    }
+
+    public function updateZoneProfit(Request $request, $id)
+    {
+        $country = ZoneCountry::find($request->data_id);
+        if($country) {
+            $country->update(['profit_percentage' => $request->profit]);
+            session()->flash('alert-success', 'Profit Updated');
+            return back();
+        }
     }
 
 }

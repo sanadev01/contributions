@@ -63,7 +63,17 @@ class ImportZoneProfit extends AbstractImportService
 
     private function storeRatesToDb(array $data)
     {
-        // ZoneCountry::where('zond_id',$this->zondId)->delete();
-        return ZoneCountry::insert($data);
+        foreach ($data as $rate) {
+            ZoneCountry::updateOrInsert(
+                [
+                    'zone_id' => $rate['zone_id'],
+                    'country_id' => $rate['country_id'],
+                ],
+                [
+                    'profit_percentage' => $rate['profit_percentage'],
+                ]
+            );
+        }
     }
+
 }

@@ -37,6 +37,9 @@
                                     <th>
                                         Profit
                                     </th>
+                                    <th>
+                                        Edit
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -48,6 +51,15 @@
                                         <th>
                                             {{ $rate->profit_percentage }}
                                         </th>
+                                        <th>
+                                            <a href="#" class="btn btn-primary mr-2" title="Update Profit Percentage"
+                                                data-data_id="{{$rate->id}}"
+                                                data-country="{{$rate->country->name}}"
+                                                data-profit="{{$rate->profit_percentage}}"
+                                                data-toggle="modal" 
+                                                data-target="#updateProfit"><i class="feather icon-edit"></i>
+                                            </a>
+                                        </th>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -57,4 +69,63 @@
             </div>
         </div>
     </section>
+    <!--Update Profit Modal-->
+    <div class="modal fade" id="updateProfit" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b>Update Profit Value</b></h5>
+                </div>
+                <form class="form" action="{{ route('admin.rates.updateZoneProfit', $id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="data_id" id="data_id" value="">
+                    <div class="modal-body"><br>
+                        <div class="row justify-content-center">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="zone">Zone</label>
+                                    <input type="text" class="form-control" value="Zone {{ $id }}" readonly required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="country">Country</label>
+                                    <input type="text" class="form-control" id="country" name="country" readonly required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="profit">Profit</label>
+                                    <input type="text" class="form-control" id="profit" name="profit" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Update</button>
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </form>    
+            </div>
+        </div>
+    </div>
+    @section('js')
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('#updateProfit').on('show.bs.modal', function(event){
+
+                    var button = $(event.relatedTarget)
+                    var data_id = button.data('data_id')
+                    var country = button.data('country')
+                    var profit = button.data('profit')
+
+                    var modal = $(this)
+                    $('#data_id').val(data_id);
+                    $('#country').val(country);
+                    $('#profit').val(profit);
+                });
+            });
+        </script>
+    @endsection
 @endsection
+
