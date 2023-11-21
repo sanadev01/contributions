@@ -118,7 +118,7 @@
                                                 @elseif($deliveryBill->isTotalExpress())
                                                 <span class="badge badge-warning text-black">T</span>
                                                 @elseif($deliveryBill->isHoundExpress())
-                                                    <span class="badge text-dark" style="background-color:#b4e2ef">HE</span>
+                                                <span class="badge text-dark" style="background-color:#b4e2ef">HE</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif
@@ -149,10 +149,18 @@
                                                                 </a>
                                                             @endif -->
                                                         @endif
+                                                        
+
+                                                        @if(optional(optional($deliveryBill->containers->first()->orders->first())->shippingService)->is_hound_express)
+                                                            <a href="{{ route('warehouse.delivery_bill.manifest', [$deliveryBill, 'service'=> 'hound_mexico']) }}"
+                                                                class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Mexico Manifest 
+                                                            </a>
+                                                        @endif
+
                                                         @if(optional(optional(optional($deliveryBill->containers->first()->orders->first())->recipient)->country)->code=="MX" 
                                                         && optional($deliveryBill->containers->first()->orders->first())->shippingService->isSwedenPostService())
                                                         <a href="{{ route('warehouse.delivery_bill.manifest', [$deliveryBill, 'service'=> 'sweden_mexico']) }}"
-                                                            class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Maxico Manifest 
+                                                            class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Mexico Manifest 
                                                         </a>
                                                         @endif
                                                         <a href="{{ route('warehouse.delivery_bill.manifest', $deliveryBill) }}"
@@ -164,7 +172,7 @@
                                                                 <i class="fa fa-cloud-download"></i> Download PostPlus Manifest
                                                             </a>
                                                         @endif -->
-                                                        @if(!$deliveryBill->isGDE())
+                                                        @if(!$deliveryBill->isGDE()&&!$deliveryBill->isHoundExpress())
                                                             <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> Download Manifest By Service
                                                             </a>
