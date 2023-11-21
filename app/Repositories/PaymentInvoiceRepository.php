@@ -61,7 +61,8 @@ class PaymentInvoiceRepository
                         ->where('status','>=',Order::STATUS_ORDER)
                         ->where('gross_total','>',0)
                         ->where('shipping_service_id','!=',null)
-                        ->doesntHave('paymentInvoices');
+                        ->doesntHave('paymentInvoices')
+                        ->orderBy('id', 'desc');
         
         return $orders->get();
     }
