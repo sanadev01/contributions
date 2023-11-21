@@ -26,8 +26,6 @@ class CN35LabelMaker implements HasLableExport
 
     public function __construct(Container $container)
     {
- 
-
         $this->companyName = 'Hound Services';
         $this->packetType = 'PACKET STANDARD';
         $this->officeAddress = '';
@@ -43,7 +41,7 @@ class CN35LabelMaker implements HasLableExport
         
         $this->weight =  $container->getWeight();
         $this->dispatchNumber = $container->dispatch_number;
-        $this->originAirpot =  $container->origin_airport;
+        $this->originAirpot =  'Miami';
         $this->setService($container->getServiceCode());
         $this->destinationAirport = $container->destination_operator_name;        
         $this->itemsCount = $container->getPiecesCount();
