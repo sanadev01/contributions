@@ -54,7 +54,7 @@ class ShippingOrder {
                   'recipientName' => $this->order->recipient->getFullName(),
                   'phone' => $this->order->recipient->phone ?? '',
                   'email' => $this->order->recipient->email ?? '',
-                  'addressLine1' => $this->order->recipient->address.' '.$this->order->recipient->street_no,
+                  'addressLine1' => $this->order->recipient->address.' '. $this->order->recipient->street_no == 0 ? ' ' : $this->order->recipient->street_no,
                   'addressLine2' => optional($this->order->recipient)->address2,
                   'city' => optional($this->order->recipient)->city,
                   'state' => optional($this->order->recipient->state)->code,
