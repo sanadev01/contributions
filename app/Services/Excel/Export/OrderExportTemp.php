@@ -56,7 +56,8 @@ class OrderExportTemp extends AbstractExportService
             $this->setCellValue('A'.$row, $order->containers->first()->awb);
             $this->setCellValue('B'.$row, $order->containers->first()->seal_no );
             $this->setCellValue('C'.$row, (string)$this->getOrderTrackingCodes($order));
-            $this->setCellValue('D'.$row, optional($order)->customer_reference);
+            // $this->setCellValue('D'.$row, optional($order)->customer_reference);
+            $this->setCellValue('D'.$row, '');
             $this->setCellValue('E'.$row, optional($order->recipient)->getFullName());
             $this->setCellValue('F'.$row, optional($order->recipient)->zipcode);
             $this->setCellValue('G'.$row, optional(optional($order->recipient)->state)->name);
