@@ -44,9 +44,11 @@ class Client{
     public function createPackage(Package $order)
     {  
         $shippingRequest = (new Parcel())->getRequestBody($order);
+        // dd($shippingRequest);
         try {
             $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);
             $data = json_decode($response);
+            // dd($data);
             if(optional(optional($data)->references)->printId) {
                 $trackingNumber = $data->identifiers->parcelNr;
                 $printId = $data->prints[0]->id;
@@ -75,7 +77,7 @@ class Client{
                 return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->status)->errorDetails[0]);
             }
             else {
-                return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->errorDetails[0])->detail);
+                return new PackageError("Error while creating parcel. Description: Internal Server Error 500".optional(optional($data)->errorDetails[0])->detail);
             }
             return null;
         }catch (\Exception $exception){

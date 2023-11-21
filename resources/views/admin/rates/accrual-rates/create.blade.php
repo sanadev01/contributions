@@ -69,6 +69,7 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GDE_FIRSTCLASS}}">GDE First Class</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_TOTAL_EXPRESS}}">Total Express</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_LT_PRIME}}">Prime LT</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_LT_Premium}}">PostPlus Portugal</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>

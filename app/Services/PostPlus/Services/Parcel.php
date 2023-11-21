@@ -18,6 +18,8 @@ class Parcel {
          $type = 'Prime';
       } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
          $type = 'ParcelUPU';
+      }  elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium) {
+         $type = 'Premium';
       }
       $refNo = $order->customer_reference;
 
@@ -36,7 +38,7 @@ class Parcel {
                   'items' => $this->setItemsDetails($order),
                ],
                'additionalInfo' => [
-                  'serviceCode' => $order->shippingService->service_sub_class == ShippingService::LT_PRIME ? "LTPO" : "UZPO",
+                  'serviceCode' => ($order->shippingService->service_sub_class == ShippingService::LT_PRIME || $order->shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium) ? "LTPO" : "UZPO",
                   'taxIdentification' => ($order->recipient->tax_id) ? $order->recipient->tax_id: '',
                ],
                //Recipient Information
@@ -46,7 +48,7 @@ class Parcel {
                   'address' => $order->recipient->address.' '.optional($order->recipient)->address2.' '.$order->recipient->street_no,
                   'zipCode' => cleanString($order->recipient->zipcode),
                   'city' => $order->recipient->city,
-                  'state' => $order->recipient->State->code,
+                  'state' => 'Leiria',
                   'countryCode' => $order->recipient->country->code,
                ],
                //Sender Information

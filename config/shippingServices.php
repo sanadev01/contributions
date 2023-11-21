@@ -49,6 +49,7 @@ return [
             44172 => 'Packet Express B',
             34166 => "AJ China Standard",
             33174 => "AJ China Express",
+            587 => "PostPlus Portugal",
         ]
     ]
 ];
