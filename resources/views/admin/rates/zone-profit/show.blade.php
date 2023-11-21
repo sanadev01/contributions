@@ -8,7 +8,7 @@
                     <div class="card-header">
                         <div class="">
                             <h4 class="mb-0 mr-3">
-                                Profit Rates of Zone {{$id}}
+                                Profit Rates of Zone {{$zoneId}}
                             </h4>
                             <hr>
                         </div>
@@ -18,7 +18,7 @@
                                 <a href="{{ route('admin.rates.zone-profit.index') }}" class="pull-right btn btn-primary ml-2">
                                     @lang('shipping-rates.Return to List')
                                 </a>
-                                <a href="{{ route('admin.rates.downloadZoneProfit', $id) }}" class="pull-right btn btn-success">
+                                <a href="{{ route('admin.rates.downloadZoneProfit', ['zone_id' => $zoneId, 'shipping_service_id' => $serviceId]) }}" class="pull-right btn btn-success">
                                     @lang('shipping-rates.Download')
                                 </a>
                             </div>    
@@ -31,6 +31,9 @@
                         <table class="table table-bordered table-responsive-md">
                             <thead>
                                 <tr>
+                                    <th>
+                                        Shipping Service
+                                    </th>
                                     <th>
                                         Country
                                     </th>
@@ -46,6 +49,9 @@
                                 @foreach($zoneProfit as $rate)
                                     <tr>
                                         <th>
+                                            {{ $rate->shippingService->name }}
+                                        </th>
+                                        <th>
                                             {{ $rate->country->name }}
                                         </th>
                                         <th>
@@ -54,6 +60,7 @@
                                         <th>
                                             <a href="#" class="btn btn-primary mr-2" title="Update Profit Percentage"
                                                 data-data_id="{{$rate->id}}"
+                                                data-service="{{$rate->shippingService->name}}"
                                                 data-country="{{$rate->country->name}}"
                                                 data-profit="{{$rate->profit_percentage}}"
                                                 data-toggle="modal" 
@@ -76,24 +83,30 @@
                 <div class="modal-header">
                     <h5 class="modal-title"><b>Update Profit Value</b></h5>
                 </div>
-                <form class="form" action="{{ route('admin.rates.updateZoneProfit', $id) }}" method="POST" enctype="multipart/form-data">
+                <form class="form" action="{{ route('admin.rates.updateZoneProfit', $zoneId) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="data_id" id="data_id" value="">
                     <div class="modal-body"><br>
                         <div class="row justify-content-center">
-                            <div class="col-md-4">
+                            <div class="col-md-5">
                                 <div class="form-group">
-                                    <label for="zone">Zone</label>
-                                    <input type="text" class="form-control" value="Zone {{ $id }}" readonly required>
+                                    <label for="service">Shipping Service</label>
+                                    <input type="text" class="form-control" id="service" name="service" readonly required>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="zone">Zone</label>
+                                    <input type="text" class="form-control" value="Zone {{ $zoneId }}" readonly required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="country">Country</label>
                                     <input type="text" class="form-control" id="country" name="country" readonly required>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="profit">Profit</label>
                                     <input type="text" class="form-control" id="profit" name="profit" required>
@@ -116,11 +129,13 @@
 
                     var button = $(event.relatedTarget)
                     var data_id = button.data('data_id')
+                    var service = button.data('service')
                     var country = button.data('country')
                     var profit = button.data('profit')
 
                     var modal = $(this)
                     $('#data_id').val(data_id);
+                    $('#service').val(service);
                     $('#country').val(country);
                     $('#profit').val(profit);
                 });

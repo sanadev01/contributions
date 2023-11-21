@@ -10,9 +10,15 @@ class ZoneCountry extends Model
 
     protected $fillable = [
         'zone_id',
+        'shipping_service_id',
         'country_id',
         'profit_percentage',
     ];
+
+    public function shippingService()
+    {
+        return $this->belongsTo(ShippingService::class);
+    }
 
     public function country()
     {

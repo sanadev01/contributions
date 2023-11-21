@@ -25,7 +25,12 @@ class ZoneProfitController extends Controller
     public function index()
     {
         $this->authorizeResource(Rate::class);
-        $zones = ZoneCountry::all();
+
+        $zones = ZoneCountry::orderBy('zone_id')
+            ->orderBy('shipping_service_id')
+            ->get()
+            ->groupBy(['zone_id', 'shipping_service_id']);
+
         return view('admin.rates.zone-profit.index', compact('zones'));
     }
 
@@ -33,14 +38,22 @@ class ZoneProfitController extends Controller
     {   
         $this->authorizeResource(Rate::class);
 
-        return view('admin.rates.zone-profit.create');
+        $services = ShippingService::whereIn('service_sub_class', [
+            ShippingService::GSS_PMI,
+            ShippingService::GSS_EPMEI, 
+            ShippingService::GSS_EPMI, 
+            ShippingService::GSS_FCM, 
+            ShippingService::GSS_EMS, 
+            ])->get();
+        
+        return view('admin.rates.zone-profit.create', compact('services'));
     }
 
     public function store(Request $request)
     {
         try{
             $file = $request->file('csv_file');
-            $importService = new ImportZoneProfit($file, $request->zone_id);
+            $importService = new ImportZoneProfit($file, $request->zone_id, $request->service_id);
             $importService->handle();
             session()->flash('alert-success', 'Zone Profit Updated Successfully');
 
@@ -52,11 +65,12 @@ class ZoneProfitController extends Controller
         }
     }
 
-    public function show($id)
+    public function show($zoneId, $serviceId)
     {
-        $zoneProfit = ZoneCountry::where('zone_id', $id)->get();
-        return view('admin.rates.zone-profit.show', compact('id', 'zoneProfit'));
+        $zoneProfit = ZoneCountry::where('zone_id', $zoneId)->where('shipping_service_id', $serviceId)->get();
+        return view('admin.rates.zone-profit.show', compact('zoneId', 'serviceId', 'zoneProfit'));
     }
+
 
     public function destroy(ZoneCountry $id)
     {
@@ -66,9 +80,9 @@ class ZoneProfitController extends Controller
         return redirect()->route('admin.rates.zone-profit.index');
     }
     
-    public function downloadZoneProfit($id)
+    public function downloadZoneProfit($zoneId, $serviceId)
     {
-        $profitList = ZoneCountry::where('zone_id', $id)->get();
+        $profitList = ZoneCountry::where('zone_id', $zoneId)->where('shipping_service_id', $serviceId)->get();
         $exportService = new ZoneProfitExport($profitList);
         return $exportService->handle();
     }

@@ -34,8 +34,9 @@ class ZoneProfitExport extends AbstractExportService
         $row = $this->currentRow;
 
         foreach ($this->rates as $rate) {
-            $this->setCellValue('A'.$row, $rate->country->name);
-            $this->setCellValue('B'.$row, $rate->profit_percentage);
+            $this->setCellValue('A'.$row, $rate->shippingService->name);
+            $this->setCellValue('B'.$row, $rate->country->name);
+            $this->setCellValue('C'.$row, $rate->profit_percentage);
             $row++;
         }
 
@@ -47,12 +48,12 @@ class ZoneProfitExport extends AbstractExportService
     {
         $zone = 'Zone ' . $this->rates->first()->zone_id;
         $this->setColumnWidth('A', 20);
-        $this->mergeCells("A1:B1");
+        $this->mergeCells("A1:C1");
         $this->setAlignment('A1', 'center');
         $this->setCellValue('A1', $zone);
                 
-        $this->setBackgroundColor('A1:B1', '2b5cab');
-        $this->setColor('A1:B1', 'FFFFFF');
+        $this->setBackgroundColor('A1:C1', '2b5cab');
+        $this->setColor('A1:C1', 'FFFFFF');
         $this->currentRow++;
         return true;
     }
@@ -60,13 +61,16 @@ class ZoneProfitExport extends AbstractExportService
     private function setSecondHeaderRow()
     {
         $this->setColumnWidth('A', 20);
-        $this->setCellValue('A2', 'Country');
-        
+        $this->setCellValue('A2', 'Shipping Service');
+
         $this->setColumnWidth('B', 20);
-        $this->setCellValue('B2', 'Profit Percentage');
+        $this->setCellValue('B2', 'Country');
         
-        $this->setBackgroundColor('A2:B2', '2b5cab');
-        $this->setColor('A2:B2', 'FFFFFF');
+        $this->setColumnWidth('C', 20);
+        $this->setCellValue('C2', 'Profit Percentage');
+        
+        $this->setBackgroundColor('A2:C2', '2b5cab');
+        $this->setColor('A2:C2', 'FFFFFF');
         $this->currentRow++;
         return true;
     }

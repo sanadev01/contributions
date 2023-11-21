@@ -45,6 +45,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="controls">
+                                        <label>Service <span class="text-danger">*</span></label>
+                                        <select name="service_id" id="service_id" required class="form-control">
+                                            <option value="" selected>Select Service</option>
+                                            @foreach($services as $service)
+                                                <option value="{{$service->id}}">{{$service->name}}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="help-block"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row justify-content-center">
 
@@ -76,7 +92,7 @@
                     </div>
 
                     <div class="form-actions pl-5">
-                        <a href="{{ route('admin.rates.shipping-rates.index') }}" class="btn btn-warning mr-1 ml-3">
+                        <a href="{{ route('admin.rates.zone-profit.index') }}" class="btn btn-warning mr-1 ml-3">
                             <i class="ft-x"></i> @lang('shipping-rates.Cancel')
                         </a>
                         <button type="submit" class="btn btn-primary">

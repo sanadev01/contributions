@@ -11,11 +11,11 @@ class CreateZoneCountryTable extends Migration
         Schema::create('zone_country', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('zone_id');
-            $table->unsignedBigInteger('country_id');
-            $table->decimal('profit_percentage', 5, 2); // Adjust the precision and scale as needed
+            $table->foreignId('shipping_service_id')->constrained();
+            $table->foreignId('country_id')->constrained();
+            $table->decimal('profit_percentage', 5, 2);
             $table->timestamps();
 
-            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
         });
     }
 

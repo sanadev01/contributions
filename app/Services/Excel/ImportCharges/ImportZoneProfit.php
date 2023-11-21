@@ -12,9 +12,10 @@ use App\Models\ShippingService;
 class ImportZoneProfit extends AbstractImportService
 {
 
-    public function __construct(UploadedFile $file, $zoneId)
+    public function __construct(UploadedFile $file, $zoneId, $serviceId)
     {
         $this->zoneId = $zoneId;
+        $this->serviceId = $serviceId;
 
         $filename = $this->importFile($file);
 
@@ -46,6 +47,7 @@ class ImportZoneProfit extends AbstractImportService
                 $rates[] = [
                     'zone_id' => $this->zoneId,
                     'country_id' => $countryId,
+                    'shipping_service_id' => $this->serviceId,
                     'profit_percentage' => round($this->getValueOrDefault('B'.$row), 2),
                 ];
             }
@@ -67,6 +69,7 @@ class ImportZoneProfit extends AbstractImportService
             ZoneCountry::updateOrInsert(
                 [
                     'zone_id' => $rate['zone_id'],
+                    'shipping_service_id' => $rate['shipping_service_id'],
                     'country_id' => $rate['country_id'],
                 ],
                 [
