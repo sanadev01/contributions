@@ -307,3 +307,11 @@ Route::get('/to-express/{id?}',function($id = null){
 
     return 'shipping service updated to express sucessfully.'; 
 });
+Route::get('/container-test/{id?}',function($id = null){
+    
+    $container = Container::find($id);
+    foreach($container->orders as $order){
+       echo $order->shippingService->service_sub_class.' '.$order->corrios_tracking_code;
+    }
+    dd('end');
+});
