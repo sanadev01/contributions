@@ -164,6 +164,7 @@ class OrderRepository
                     ShippingService::Post_Plus_Prime,
                     ShippingService::Post_Plus_Premium,
                     ShippingService::LT_PRIME,
+                    ShippingService::Post_Plus_LT_Premium,
                 ];
             }
             if($request->carrier == 'Total Express'){
@@ -494,7 +495,7 @@ class OrderRepository
                         ShippingService::GSS_FCM, 
                         ShippingService::GSS_EMS
                     ]);
-                })->orWhereNotNull('us_api_tracking_code');
+                });
             });
         } elseif ($request->type) {
             $orders->where('status', '=', $request->type);

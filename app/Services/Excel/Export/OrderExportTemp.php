@@ -51,12 +51,15 @@ class OrderExportTemp extends AbstractExportService
             $type = 'ParcelUPU';
          } elseif($order->shippingService->service_sub_class == ShippingService::LT_PRIME) {
             $type = 'Priority';
-         }  
+         }  elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium) {
+            $type = 'Premium';
+         } 
             $user = $order->user; 
             $this->setCellValue('A'.$row, $order->containers->first()->awb);
             $this->setCellValue('B'.$row, $order->containers->first()->seal_no );
             $this->setCellValue('C'.$row, (string)$this->getOrderTrackingCodes($order));
-            $this->setCellValue('D'.$row, optional($order)->customer_reference);
+            // $this->setCellValue('D'.$row, optional($order)->customer_reference);
+            $this->setCellValue('D'.$row, '');
             $this->setCellValue('E'.$row, optional($order->recipient)->getFullName());
             $this->setCellValue('F'.$row, optional($order->recipient)->zipcode);
             $this->setCellValue('G'.$row, optional(optional($order->recipient)->state)->name);
@@ -106,10 +109,10 @@ class OrderExportTemp extends AbstractExportService
         $this->setCellValue('B1', 'PACKAGE ID');
 
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'PERCEL ID');
+        $this->setCellValue('C1', 'PARCEL ID');
 
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D1', 'CLINET ID');
+        $this->setCellValue('D1', 'CLIENT ID');
 
         $this->setColumnWidth('E', 20);
         $this->setCellValue('E1', 'NAME');

@@ -23,11 +23,9 @@ class ScanLabelController extends Controller
         sleep(1);
         $order = Order::where('corrios_tracking_code', $request->tracking_code)->first();
         
-        \Log::info($order);
-        \Log::info('driver scan tracking', ['tracking_code' => $request->tracking_code]);
 
         if (!$order) {
-            \Log::info("order not found");
+           
             return response()->json([
                 'success' => false,
                'message' => 'sorry! parcel not found'
@@ -35,9 +33,6 @@ class ScanLabelController extends Controller
         }
 
         $scanLabelRepository->handle($order);
-
-        \Log::info("order Status: ".$scanLabelRepository->getStatus());
-        \Log::info("order Message: ".$scanLabelRepository->getMessage());
 
         return response()->json([
             'success' => $scanLabelRepository->getStatus(),

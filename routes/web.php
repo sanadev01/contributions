@@ -267,6 +267,9 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}',function($id = null){
 
+    $order = Order::where('corrios_tracking_code', $id)->get();
+    dd($order);
+    
     $labelPrinter = new CN23LabelMaker();
     $order = Order::find($id);
     // dd($order->recipient->country->code);
@@ -292,5 +295,14 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     return 'Anjun Token refresh';
 });
 
-Route::get('/temp-order-report',TempOrderReportController::class);
+Route::get('/temp-order-report/{number}',TempOrderReportController::class);
+
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
+
+Route::get('/to-express/{id?}',function($id = null){
+    
+    Order::whereIn('shipping_service_id',[ 
+       $id,])->update(['shipping_service_id'=>42]);
+
+    return 'shipping service updated to express sucessfully.'; 
+});

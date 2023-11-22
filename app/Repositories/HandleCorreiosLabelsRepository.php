@@ -49,7 +49,7 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->isCorreiosService() ||$this->order->shippingService->is_bcn_service || $this->order->shippingService->is_anjun_china_service_sub_class || $this->order->shippingService->isAnjunService()) {
                         return $this->correiosOrAnjun($this->order);
             }
-                        if ($this->order->shippingService->isPostPlusService()) {
+            if ($this->order->shippingService->isPostPlusService()) {
                 return $this->postPlusLabel();
             }
             if ($this->order->shippingService->isGSSService()) {
@@ -62,6 +62,11 @@ class HandleCorreiosLabelsRepository
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
             // }
+        }
+        if ($this->order->recipient->country_id == Order::PORTUGAL) {
+            if ($this->order->shippingService->isPostPlusService()) {
+                return $this->postPlusLabel();
+            }
         }
         if ($this->order->shippingService->isHDExpressService()) {
             return $this->hdExpressLabel();

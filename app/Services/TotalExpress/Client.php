@@ -15,6 +15,7 @@ use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Models\PackageError;
 use App\Services\TotalExpress\Services\Overpack;
+use Illuminate\Support\Facades\Log;
 
 class Client
 {
@@ -67,8 +68,8 @@ class Client
         try {
                 if(!$order->api_response){
                     $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/orders", $shippingRequest);
-                    $response = json_decode($request); 
-
+                    $response = json_decode($request);
+                    
                     if ($response->status=="SUCCESS" && $response->data && $response->data->id ) {
                 
                         $mergedResponse = [
@@ -81,7 +82,7 @@ class Client
                         $order->refresh();
 
                     } else {
-                        return new PackageError(new HandleError($request));
+                        return new PackageError("Server Error: ".new HandleError($request));
                     }
                 }
                 if($order->api_response) {
@@ -91,7 +92,7 @@ class Client
                     $id = $response->data->id;  
                     $getLabel = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/orders/$id/cn23-merged");
                     $getLabelResponse = json_decode($getLabel);
-
+                    
                     if ($getLabelResponse->status=="SUCCESS"){
                         $mergedResponse = [
                         'orderResponse' => $response,
@@ -109,7 +110,7 @@ class Client
                         ]);
                     }
                     else{
-                        return new PackageError(new HandleError($getLabel));
+                        return new PackageError("Server Error: ".new HandleError($getLabel));
                     }
 
                     // store order status in order tracking
