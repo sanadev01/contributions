@@ -92,6 +92,12 @@
                                 <span class="menu-title">Total Express</span>
                             </a>
                         </li>
+                        <li class="{{ $isActive(['warehouse.hound_containers.index','warehouse.hound_containers.create','warehouse.hound_containers.edit','warehouse.hound_container.packages.index']) }}">
+                            <a href="{{ route('warehouse.hound_containers.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Hound Express</span>
+                            </a>
+                        </li>
                         <li class="{{ $isActive(['warehouse.hd-express-containers.index','warehouse.hd-express-containers.create','warehouse.hd-express-containers.edit','warehouse.hd-express-containers.packages.index']) }}">
                             <a href="{{ route('warehouse.hd-express-containers.index') }}">
                                 <i class="feather icon-circle"></i>

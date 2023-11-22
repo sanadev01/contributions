@@ -15,6 +15,7 @@ use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\AnjunLabelRepository;
 use App\Services\TotalExpress\TotalExpressLabelRepository;
+use App\Repositories\HoundExpressLabelRepository;
 use App\Models\ShippingService;
 
 class HandleCorreiosLabelsRepository
@@ -35,6 +36,9 @@ class HandleCorreiosLabelsRepository
     {
         if ($this->order->shippingService->isSwedenPostService()) {
             return $this->swedenPostLabel();
+        }
+        if ($this->order->shippingService->is_hound_express) { 
+            return $this->isHoundExpress();
         }
         if ($this->order->recipient->country_id == Order::BRAZIL) {
 
@@ -143,6 +147,11 @@ class HandleCorreiosLabelsRepository
         $swedenpostLabelRepository->run($this->order, $this->update); //by default consider false
         return $this->renderLabel($this->request, $this->order, $swedenpostLabelRepository->getError());
     }
+    function isHoundExpress(){
+        $swedenpostLabelRepository = new HoundExpressLabelRepository(); 
+        $swedenpostLabelRepository->run($this->order,$this->update); //by default consider false
+        return $this->renderLabel($this->request, $this->order, $swedenpostLabelRepository->getError());
+    }
 
     public function corrieosChileLabel()
     {
@@ -151,10 +160,10 @@ class HandleCorreiosLabelsRepository
         return $this->renderLabel($this->request, $this->order, $corrieosChileLabelRepository->getChileErrors());
     }
     public function correiosOrAnjun($order)
-    { 
-        if($order->user->id == "1233" && $this->order->shippingService->is_anjun_china_service_sub_class) {
-                    return $this->anjunChinaLabel();
-        } 
+    {
+        if($order->user->id == "1137" && $this->order->shippingService->is_anjun_china_service_sub_class) {
+            return $this->anjunChinaLabel();
+        }
         $order = $this->updateShippingServiceFromSetting($order);
 
         return $this->corriesBrazilLabel();
