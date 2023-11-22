@@ -48,7 +48,7 @@ class Parcel {
                   'address' => $order->recipient->address.' '.optional($order->recipient)->address2.' '.$order->recipient->street_no,
                   'zipCode' => cleanString($order->recipient->zipcode),
                   'city' => $order->recipient->city,
-                  'state' => 'Leiria',
+                  'state' => $order->recipient->State->code,
                   'countryCode' => $order->recipient->country->code,
                ],
                //Sender Information
