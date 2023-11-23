@@ -314,5 +314,4 @@ Route::get('/container-test/{id?}',function($id = null){
        echo $order->shippingService->service_sub_class.' '.$order->corrios_tracking_code;
     }
     dd('end');
-   return 'shipping service updated to express sucessfully.'; 
 });
