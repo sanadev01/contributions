@@ -42,7 +42,7 @@ class OrderLabelController extends Controller
         }
         DB::beginTransaction();
         if ($order->shippingService->is_anjun_china_service_sub_class && Auth::id() != "1233") {
-            return $this->rollback("service not available for this user.");
+        return $this->rollback("service not available for this user.");
         }
         $isPayingFlag = false;
         try {
@@ -154,7 +154,7 @@ class OrderLabelController extends Controller
                     }
                 }
                 if ($order->shippingService->is_anjun_china_service_sub_class && Auth::id() == "1233") {
-                    $anjun = new AnjunLabelRepository($order, $request);
+                                    $anjun = new AnjunLabelRepository($order, $request);
                     $labelData = $anjun->run();
                     $order->refresh();
                     if ($labelData) {
