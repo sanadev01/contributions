@@ -152,6 +152,11 @@ class OrderRepository
                     ShippingService::DirectLinkMexico, 
                 ];
             }
+            if($request->carrier == 'Hound Express'){
+                $service = [
+                    ShippingService::HoundExpress 
+                ];
+            }
             if($request->carrier == 'Post Plus'){
                 $service = [
                     ShippingService::Post_Plus_Registered,

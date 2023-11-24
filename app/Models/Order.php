@@ -399,6 +399,10 @@ class Order extends Model implements Package
             elseif(optional($this->shippingService)->is_bcn_service){
                 return 'Correios Brazil';
             }
+            elseif(optional($this->shippingService)->is_hound_express){
+
+                return 'Hound Express';
+            }
             return 'Correios Brazil';
         }
 
