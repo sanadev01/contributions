@@ -25,7 +25,7 @@ class SenderInfo
             "senderProvince" => $this->order->senderState->name,
             "senderCity" =>  $this->order->sender_city,
             "senderMail" => $this->order->sender_email,
-            "senderArea" => "LONGGANG",
+            "senderArea" =>  $this->order->senderState->name,
             "senderStreet" => "",
             "senderHouseNumber" => "",
             "senderAddress" => $this->order->sender_address,
