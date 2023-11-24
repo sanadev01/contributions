@@ -2,7 +2,7 @@
 
 return [
     'production' => [
-        'baseUri'           => 'http://aj.bailidaming.com',
+        'baseUri'           => 'https://takeno.bailidaming.com',
         'username'          => 'HERCO',
         'password'          => 'e10adc3949ba59abbe56e057f20f883e',
         'bigPackageBaseURL' => 'http://api.bailidaming.com',
