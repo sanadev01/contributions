@@ -152,6 +152,11 @@ class OrderRepository
                     ShippingService::DirectLinkMexico, 
                 ];
             }
+            if($request->carrier == 'Hound Express'){
+                $service = [
+                    ShippingService::HoundExpress 
+                ];
+            }
             if($request->carrier == 'Post Plus'){
                 $service = [
                     ShippingService::Post_Plus_Registered,
@@ -159,6 +164,7 @@ class OrderRepository
                     ShippingService::Post_Plus_Prime,
                     ShippingService::Post_Plus_Premium,
                     ShippingService::LT_PRIME,
+                    ShippingService::Post_Plus_LT_Premium,
                 ];
             }
             if($request->carrier == 'Total Express'){
@@ -371,9 +377,8 @@ class OrderRepository
                 $order->items()->delete();
                 
                 foreach ($request->get('items',[]) as $item) {
-                    
                     $order->items()->create([
-                        'sh_code' => optional($item)['sh_code'],
+                        'sh_code' => substr(optional($item)['sh_code'], 0, 6),
                         'description' => optional($item)['description'],
                         'quantity' => optional($item)['quantity'],
                         'value' => optional($item)['value'],
@@ -518,7 +523,7 @@ class OrderRepository
     {
         $totalDiscountPercentage = 0;
         $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
-        $discountPercentage = setting('discount_percentage', null, $order->user->id);
+        $discountPercentage = getVolumetricDiscountPercentage($order);
         
         if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
             return false;
@@ -708,8 +713,8 @@ class OrderRepository
                     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                         return !$shippingService->isAnjunService();
                     });
-            }
-            if(Auth::id()!="1233"){
+            } 
+            if(Auth::id()!='1137'){
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return !$shippingService->isAnjunChinaService();
                 });

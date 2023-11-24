@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Order;
+use App\Models\Warehouse\Container;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
 use App\Models\Warehouse\DeliveryBill;
@@ -11,7 +12,6 @@ use App\Http\Controllers\Admin\HomeController;
 // use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use App\Models\Warehouse\Container;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +51,6 @@ Route::get('/home', function () {
 Auth::routes();
 
 Route::post('logout', [\App\Http\Controllers\Auth\LoginController::class,'logout'])->name('logout');
-
 
 Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function () {
 
@@ -306,12 +305,4 @@ Route::get('/to-express/{id?}',function($id = null){
        $id,])->update(['shipping_service_id'=>42]);
 
     return 'shipping service updated to express sucessfully.'; 
-});
-Route::get('/container-test/{id?}',function($id = null){
-    
-    $container = Container::find($id);
-    foreach($container->orders as $order){
-       echo $order->shippingService->service_sub_class.' '.$order->corrios_tracking_code;
-    }
-    dd('end');
 });

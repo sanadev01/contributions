@@ -9,7 +9,6 @@ use App\Services\Correios\Contracts\HasLableExport;
 use App\Services\Correios\Models\Package;
 use App\Models\User;
 use App\Models\ShippingService;
-
 class CN23LabelMaker implements HasLableExport
 {
 

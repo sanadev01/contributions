@@ -109,11 +109,11 @@ class ExportMexicoManfestService extends AbstractCsvExportService
             $this->row++;
 
             $this->totalCustomerPaid +=  $package->gross_total;
-            $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package)['airport'];
-            $this->totalPieces++;
-            $this->totalWeight += $package->getWeight('kg');
-            $this->totalCommission += optional($package->affiliateSale)->commission;
-            $this->totalAnjunCommission += $this->getValuePaidToCorrieos($container,$package)['commission'];
+            // $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package)['airport'];
+            // $this->totalPieces++;
+            // $this->totalWeight += $package->getWeight('kg');
+            // $this->totalCommission += optional($package->affiliateSale)->commission;
+            // $this->totalAnjunCommission += $this->getValuePaidToCorrieos($container,$package)['commission'];
         }
 
         $this->csvData[$this->row] = [
