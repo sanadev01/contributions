@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Order;
+use App\Models\State;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
 use App\Models\Warehouse\DeliveryBill;
@@ -314,4 +316,18 @@ Route::get('/container-test/{id?}',function($id = null){
        echo $order->shippingService->service_sub_class.' '.$order->corrios_tracking_code;
     }
     dd('end');
+});
+
+Route::get('/get-states/{countryId}', function ($countryId) {
+    $stateNames = State::where('country_id', $countryId)->pluck('name');
+    foreach ($stateNames as $stateName) {
+        echo $stateName . "<br>";
+    }
+})->name('get-states');
+
+Route::get('/update-portugal-states', function () {
+    
+    State::where('country_id', 188)->update(['code' => DB::raw('name')]);
+
+    return 'States updated successfully!';
 });
