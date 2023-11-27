@@ -41,6 +41,6 @@ class RegistrationController extends Controller
                 'api_token' => $user->api_token,
             ]);
         else
-            return responseUnprocessable('unaable to register user');
+            return responseUnprocessable('unable to register user');
     }
 }
