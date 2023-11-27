@@ -21,7 +21,6 @@ class RegistrationController extends Controller
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['sometimes', 'required_if:account_type,'.User::ACCOUNT_TYPE_INDIVIDUAL],
             'phone' => ['required', 'min:10', 'max:15'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'], 
             'password' => 'required| min:4|confirmed ',
