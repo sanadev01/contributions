@@ -30,6 +30,7 @@ class Package implements \App\Services\Correios\Contracts\Package
     const SERVICE_CLASS_TOTAL_EXPRESS = ShippingService::TOTAL_EXPRESS;
     const SERVICE_CLASS_HD_Express = 33173;
     const SERVICE_CLASS_LT_PRIME = ShippingService::LT_PRIME;
+    const SERVICE_CLASS_Post_Plus_LT_Premium = ShippingService::Post_Plus_LT_Premium;
 
     public $customerControlCode = "";
     public $senderName = "HERCO";

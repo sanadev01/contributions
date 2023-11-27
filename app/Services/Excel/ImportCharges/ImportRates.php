@@ -49,7 +49,8 @@ class ImportRates extends AbstractImportService
         $this->shippingService->service_sub_class == ShippingService::Post_Plus_Prime ||
         $this->shippingService->service_sub_class == ShippingService::LT_PRIME){
             $limit = 33;
-        }elseif($this->shippingService->service_sub_class == ShippingService::Parcel_Post){
+        }elseif($this->shippingService->service_sub_class == ShippingService::Parcel_Post || 
+        $this->shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium){
             $limit = 63;
         }elseif($this->shippingService->service_sub_class == ShippingService::TOTAL_EXPRESS){
             $limit = 610;

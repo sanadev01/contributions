@@ -86,6 +86,10 @@ class DeliveryBill extends Model
             return true;
         }
     }
+    public function isAnjunChina()
+    {
+        return $this->containers->first()->hasAnjunChinaService();
+    }
 
     public function isGDE()
     {
@@ -134,11 +138,6 @@ class DeliveryBill extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function isAnjunChina()
-    {
-        return $this->containers->first()->hasAnjunChinaService();
     }
 
 }
