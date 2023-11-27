@@ -5,11 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use App\Mail\User\AccountCreated;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\Admin\NewRegistration;
 
 class RegistrationController extends Controller
 {
@@ -36,16 +31,16 @@ class RegistrationController extends Controller
         ]);
 
         $user = $this->register->registerUser($request->toArray() + ['name' => $request->first_name, 'come_from' => ($request->come_from ?? '')]);
-        if($user)
-        return response()->json([
-            'id' => $user->id,
-            'name' => $user->name,
-            'last_name' => $user->last_name,
-            'pobox_number' => $user->pobox_number,
-            'email' => $user->email,
-            'api_token' => $user->api_token,
-        ]);
+        if ($user)
+            return response()->json([
+                'id' => $user->id,
+                'name' => $user->name,
+                'last_name' => $user->last_name,
+                'pobox_number' => $user->pobox_number,
+                'email' => $user->email,
+                'api_token' => $user->api_token,
+            ]);
         else
-        return responseUnprocessable('unaable to register user');
+            return responseUnprocessable('unaable to register user');
     }
 }
