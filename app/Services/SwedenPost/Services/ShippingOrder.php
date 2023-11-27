@@ -80,7 +80,8 @@ class ShippingOrder {
                   "returnPostcode" =>"33182",
                   "returnCountry" =>"US",
                   //Parcel Items Information
-                  'orderItems' => $this->setItemsDetails()
+                  'orderItems' => $this->setItemsDetails(),
+                  'packinglist' => true
                ],
             ],
          ];
