@@ -1,5 +1,4 @@
 <?php
-
 use App\Models\Deposit;
 use App\Models\Order;
 use App\Models\PaymentInvoice;
@@ -64,8 +63,8 @@ Route::prefix('v1')->middleware('auth:api')->group(function(){
 
 });
 
-
 Route::prefix('v1')->group(function(){
+Route::post('register',\Api\RegistrationController::class);
     
     Route::namespace('Api\PublicApi')->group(function () {
     
