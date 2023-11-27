@@ -234,8 +234,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getSubClassCode()
     {
-        if(in_array($this->services_subclass_code, ['AJ-NX' , 'BCN-NX','AJC-NX'])){
+        if(in_array($this->services_subclass_code, ['AJ-NX' , 'BCN-NX'])){
             return 'NX';
+        }
+        if(in_array($this->services_subclass_code, ['AJC-NX'])){
+            return 'NC';
         }
         if(in_array($this->services_subclass_code , ['AJ-IX', 'BCN-IX','AJC-IX'])){
             return 'IX';

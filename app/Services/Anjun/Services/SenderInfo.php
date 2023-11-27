@@ -18,8 +18,8 @@ class SenderInfo
     {
         return [ 
             "senderName" => $this->order->sender_first_name .' '. $this->order->sender_last_name,
-            "senderPhone" => $this->order->sender_phone,
-            "senderMobile" => $this->order->sender_phone,
+            "senderPhone" => $this->order->sender_phone??"",
+            "senderMobile" => $this->order->sender_phone??"",
             "senderMail" =>$this->order->sender_email,
             "senderCountry" => $this->order->senderCountry->code,
             "senderProvince" => $this->order->senderState->name,
@@ -31,7 +31,7 @@ class SenderInfo
             "senderAddress" => $this->order->sender_address,
             "senderZipcode" => $this->order->sender_zipcode,
             "senderCompany" => "",
-            "senderTax" => $this->order->sender_taxId,
+            "senderTax" => $this->order->sender_taxId??"",
             "senderCertificateType" => "",
             "senderCertificateCode" => ""
         ];
