@@ -70,6 +70,7 @@ Route::post('register',\Api\RegistrationController::class);
     
         // Authenticated Routes
         Route::middleware(['auth:api','checkPermission'])->group(function (){
+            Route::get('orders',OrderController::class);
             Route::get('deposits',DepositController::class);
             Route::get('balance', BalanceController::class);
             Route::resource('parcels', 'ParcelController')->only('store','show','destroy','update');
