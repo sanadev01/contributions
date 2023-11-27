@@ -15,7 +15,7 @@ class OrderController extends Controller
                    
         $orderByColumn = $request->input('orderByColumn', 'created_at');
         $orderDirection = $request->input('orderDirection', 'desc');
-        $orders = Order::where('user_id',Auth::id())->orderBy($orderByColumn, $orderDirection)->paginate($request->input('perPage', 10));
+        $orders = Order::where('user_id',Auth::id())->orderBy($orderByColumn, $orderDirection)->paginate($request->input('perPage', 50));
         return OrderResource::collection($orders);
     }
 }
