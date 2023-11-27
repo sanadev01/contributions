@@ -319,5 +319,5 @@ Route::get('/container-test/{id?}',function($id = null){
 Route::get('/clear-bootstrap-cache', function () {
     Artisan::call('optimize:clear');
 
-    return 'Application cache cleared successfully.';
+    echo Artisan::output();
 });
