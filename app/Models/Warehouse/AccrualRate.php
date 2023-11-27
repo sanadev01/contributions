@@ -92,9 +92,6 @@ class AccrualRate extends Model
         if ( $this->service == Package::SERVICE_CLASS_LT_PRIME ){
             return "Prime LT";
         }
-        if ( $this->service == Package::SERVICE_CLASS_Post_Plus_LT_Premium ){
-            return "PostPlus Portugal";
-        }
         return '';
     }
 

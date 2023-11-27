@@ -98,10 +98,6 @@ class IndexTable extends Component
             'name' => 'Prime LT',
             'value' => Package::SERVICE_CLASS_LT_PRIME,
         ];
-        $this->services[20] = [
-            'name' => 'PostPlus Portugal',
-            'value' => Package::SERVICE_CLASS_Post_Plus_LT_Premium,
-        ];
         return $this->services;
     }
 }

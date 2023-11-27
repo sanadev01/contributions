@@ -180,17 +180,6 @@ class OrderLabelController extends Controller
                 }
             }
 
-            if ($order->recipient->country_id == Order::PORTUGAL) {
-                if ($order->shippingService->isPostPlusService()) {
-                    $postPlusLabelRepository = new PostPlusLabelRepository();
-                    $postPlusLabelRepository->get($order);
-                    $error = $postPlusLabelRepository->getError();
-                    if ($error) {
-                        return $this->rollback($error);
-                    }
-                }
-            }
-
 
             if ($order->shippingService->isHDExpressService()) {
                 $hdExpressLabelRepository = new HDExpressLabelRepository();
