@@ -15,12 +15,12 @@ class AnjunUnitRegisterController extends Controller
             return back();
         }
         $response = (new AnjunClient())->createContainer($container);
-        $data = $response->getData();
+        $data = $response->getData();  
 
         if ($data->success) {
             $container->update([
-                'unit_response_list' => json_encode($data->output),
-                'unit_code' => $data->output->barCode
+                'unit_response_list' => json_encode($data->output->data),
+                'unit_code' => $data->output->data->barCode
             ]);
         } else {
             session()->flash('alert-danger', $data->message);

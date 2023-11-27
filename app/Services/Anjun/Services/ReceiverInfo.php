@@ -2,10 +2,10 @@
 
 namespace App\Services\Anjun\Services;
 
-use  App\Models\Recipient as OrignalRecipient;
-
-class Recipient
+use  App\Models\Recipient;
+class ReceiverInfo
 {
+
     public $fullName;
     public $tax_id;               //Recipient tax or cpf // Brazilian personal tax number.
     public $companyName;          //company name
@@ -18,7 +18,7 @@ class Recipient
     public $email;
     public $address;
 
-    public function __construct(OrignalRecipient $recipient)
+    public function __construct(Recipient $recipient)
     {
         $this->fullName        = $recipient->first_name . ' ' . $recipient->last_name;
         $this->tax_id          = $recipient->tax_id;
@@ -32,20 +32,27 @@ class Recipient
         $this->email           = $recipient->email;
         $this->address         = $recipient->address;
     }
-    public function convertToChinese()
+
+
+    public function requestBody()
     {
         return [
-            'contact'  => $this->fullName,
-            'tax'      => $this->tax_id,
-            'gs'       => $this->companyName,
-            'tel'      => $this->phone,
-            'sj'       => $this->phone,
-            'country'  => $this->countryCode,
-            'state'    => $this->stateCode,
-            'cs'       => $this->city,
-            'yb'       => $this->zipcode,
-            'email'    => $this->email,
-            'tto'      => $this->address
+            'receiveName'       => $this->fullName,
+            'receivePhone'      => $this->phone,
+            'receiveMobile'     => $this->phone,
+            "receiveMail" => $this->email,
+            "receiveCountry" => $this->countryCode,
+            "receiveProvince" => $this->stateCode,
+            "receiveCity" => $this->city,
+            "receiveArea" => "",
+            "receiveStreet" => "",
+            "receiveHouseNumber" => "",
+            "receiveAddress" => $this->address,
+            "receiveZipcode" =>$this->zipcode,
+            "receiveCompany" => $this->companyName,
+            "receiveTax" => $this->tax_id,
+            "receiveCertificateType" => "",
+            "receiveCertificateCode" => ""
         ];
     }
 }
