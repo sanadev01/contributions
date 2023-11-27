@@ -54,7 +54,6 @@ class RegistrationController extends Controller
             'pobox_number'=>$user->pobox_number,
             'email'=>$user->email,
             'api_token'=>$user->api_token, 
-            'email'=>$user->email,
         ]);
     }
 }
