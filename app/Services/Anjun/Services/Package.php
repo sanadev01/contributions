@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\Anjun\Services;
 use App\Models\Order;
+use App\Models\ShippingService;
 use App\Services\Anjun\Services\ReceiverInfo;
 use App\Services\Anjun\Services\SenderInfo;
 class Package
@@ -28,16 +29,16 @@ class Package
         }
         $receiverInfo = $this->receiver->requestBody();
         $senderInfo = $this->sender->requestBody();
-         
+
         return [
-            "customerChannelId" => 974,
+            "customerChannelId" => $this->order->shippingService->service_sub_class == ShippingService::AJ_Express_CN ? '1905':'1906',
             "orderType" => 1,
             "currency" => "USD",
-            "orderNumber" => "PHFCESHI124ZDZX".$this->order->id."A",
+            "orderNumber" => "PHFCESHI126ZDZX".$this->order->id,
             "hasBack" => 0,
             "packageType" => "goods",
             "prepaymentVat" => "other",
-            "deliveryTerms" => "",
+            "deliveryTerms" => $this->order->tax_modality ?? 'ddu',
             "vat" => "",
             "invoiceInfo" => $invoiceInfo,
             "receiverInfo" => $receiverInfo,
