@@ -250,6 +250,15 @@
                     </li>
                     @endcan
 
+                    @can('viewAny', App\Models\Rate::class)
+                    <li class="{{ $isActive(['admin.rates.zone-profit.index']) }}">
+                        <a href="{{ route('admin.rates.zone-profit.index') }}">
+                            <i class="icon_adjst feather icon-circle"></i>
+                            <span class="menu-title">Zone Profits</span>
+                        </a>
+                    </li>
+                    @endcan
+
                 </ul>
             </li>
             @endif
