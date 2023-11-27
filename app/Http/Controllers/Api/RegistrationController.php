@@ -11,10 +11,6 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\Admin\NewRegistration;
 class RegistrationController extends Controller
 {
-    protected function validator(array $data)
-    {
-        
-    }
 
     public function __invoke(Request $request)
     { 
