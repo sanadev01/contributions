@@ -18,8 +18,6 @@ class Parcel {
          $type = 'Prime';
       } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
          $type = 'ParcelUPU';
-      }  elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium) {
-         $type = 'Premium';
       }
       $refNo = $order->customer_reference;
 
@@ -38,7 +36,7 @@ class Parcel {
                   'items' => $this->setItemsDetails($order),
                ],
                'additionalInfo' => [
-                  'serviceCode' => ($order->shippingService->service_sub_class == ShippingService::LT_PRIME || $order->shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium) ? "LTPO" : "UZPO",
+                  'serviceCode' => $order->shippingService->service_sub_class == ShippingService::LT_PRIME ? "LTPO" : "UZPO",
                   'taxIdentification' => ($order->recipient->tax_id) ? $order->recipient->tax_id: '',
                ],
                //Recipient Information
