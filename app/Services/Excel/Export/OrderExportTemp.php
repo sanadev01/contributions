@@ -51,7 +51,9 @@ class OrderExportTemp extends AbstractExportService
             $type = 'ParcelUPU';
          } elseif($order->shippingService->service_sub_class == ShippingService::LT_PRIME) {
             $type = 'Priority';
-         }  
+         }  elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium) {
+            $type = 'Premium';
+         } 
             $user = $order->user; 
             $this->setCellValue('A'.$row, $order->containers->first()->awb);
             $this->setCellValue('B'.$row, $order->containers->first()->seal_no );
