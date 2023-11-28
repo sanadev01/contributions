@@ -317,17 +317,3 @@ Route::get('/container-test/{id?}',function($id = null){
     }
     dd('end');
 });
-
-Route::get('/get-states/{countryId}', function ($countryId) {
-    $stateNames = State::where('country_id', $countryId)->pluck('name');
-    foreach ($stateNames as $stateName) {
-        echo $stateName . "<br>";
-    }
-})->name('get-states');
-
-Route::get('/update-portugal-states', function () {
-    
-    State::where('country_id', 188)->update(['code' => DB::raw('name')]);
-
-    return 'States updated successfully!';
-});
