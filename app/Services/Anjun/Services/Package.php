@@ -39,7 +39,6 @@ class Package
             "packageType" => "goods",
             "prepaymentVat" => "other", 
             "deliveryTerms" => $this->order->tax_modality == 'ddp'||$this->order->tax_modality == 'DDP'?"DDP":'DDU',
-
             "vat" => "",
             "invoiceInfo" => $invoiceInfo,
             "receiverInfo" => $receiverInfo,
