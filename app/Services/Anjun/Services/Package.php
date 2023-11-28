@@ -30,19 +30,19 @@ class Package
         $receiverInfo = $this->receiver->requestBody();
         $senderInfo = $this->sender->requestBody();
 
-        return [
+        return ([
             "customerChannelId" => $this->order->shippingService->service_sub_class == ShippingService::AJ_Express_CN ? '1905':'1906',
             "orderType" => 1,
             "currency" => "USD",
             "orderNumber" => "PHFCESHI126ZDZX".$this->order->id,
             "hasBack" => 0,
             "packageType" => "goods",
-            "prepaymentVat" => "other",
-            "deliveryTerms" => $this->order->tax_modality ?? 'ddu',
+            "prepaymentVat" => "other", 
+            "deliveryTerms" => $this->order->tax_modality == 'ddp'||$this->order->tax_modality == 'DDP'?"DDP":'DDU',
             "vat" => "",
             "invoiceInfo" => $invoiceInfo,
             "receiverInfo" => $receiverInfo,
             "senderInfo" => $senderInfo
-        ];
+        ]);
     }
 }
