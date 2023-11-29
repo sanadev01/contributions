@@ -17,7 +17,7 @@ class Package
         foreach ($order->items as $orderItem) {
             $this->invoices[] = (new InvoiceInfo($orderItem,$order));
         }
-        $this->receiver = (new ReceiverInfo($order->recipient)); 
+        $this->receiver = (new ReceiverInfo($order->recipient,$order)); 
         $this->sender   = (new SenderInfo($order));
     }
 
@@ -30,7 +30,7 @@ class Package
         $receiverInfo = $this->receiver->requestBody();
         $senderInfo = $this->sender->requestBody();
 
-        return ([
+        return [
             "customerChannelId" => $this->order->shippingService->service_sub_class == ShippingService::AJ_Express_CN ? '1905':'1906',
             "orderType" => 1,
             "currency" => "USD",
@@ -43,6 +43,6 @@ class Package
             "invoiceInfo" => $invoiceInfo,
             "receiverInfo" => $receiverInfo,
             "senderInfo" => $senderInfo
-        ]);
+        ];
     }
 }
