@@ -8,7 +8,7 @@
                     <div class="card-header">
                         <div class="">
                             <h4 class="mb-0 mr-3">
-                                Profit Rates of Zone {{$zoneId}}
+                                Profit Rates of Group {{$groupId}}
                             </h4>
                             <hr>
                         </div>
@@ -18,7 +18,7 @@
                                 <a href="{{ route('admin.rates.zone-profit.index') }}" class="pull-right btn btn-primary ml-2">
                                     @lang('shipping-rates.Return to List')
                                 </a>
-                                <a href="{{ route('admin.rates.downloadZoneProfit', ['zone_id' => $zoneId, 'shipping_service_id' => $serviceId]) }}" class="pull-right btn btn-success">
+                                <a href="{{ route('admin.rates.downloadZoneProfit', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" class="pull-right btn btn-success">
                                     @lang('shipping-rates.Download')
                                 </a>
                             </div>    
@@ -83,7 +83,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title"><b>Update Profit Value</b></h5>
                 </div>
-                <form class="form" action="{{ route('admin.rates.updateZoneProfit', $zoneId) }}" method="POST" enctype="multipart/form-data">
+                <form class="form" action="{{ route('admin.rates.updateZoneProfit', $groupId) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="data_id" id="data_id" value="">
                     <div class="modal-body"><br>
@@ -96,8 +96,8 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="zone">Zone</label>
-                                    <input type="text" class="form-control" value="Zone {{ $zoneId }}" readonly required>
+                                    <label for="group">Group</label>
+                                    <input type="text" class="form-control" value="Group {{ $groupId }}" readonly required>
                                 </div>
                             </div>
                             <div class="col-md-3">

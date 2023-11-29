@@ -8,7 +8,7 @@
                     <div class="card-header">
                         <div class="">
                             <h4 class="mb-0 mr-3">
-                                All Zones
+                                All Groups
                             </h4>
                             <hr>
                         </div>
@@ -24,32 +24,32 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        Zones
+                                        Group
                                     </th>
-                                    <th>
+                                    {{-- <th>
                                         Total Country
-                                    </th>
+                                    </th> --}}
                                     <th>
                                         Action
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($zones as $zoneId => $services)
-                                    @foreach($services as $serviceId => $zoneService)
+                                @foreach($groups as $groupId => $services)
+                                    @foreach($services as $serviceId => $groupService)
                                         <tr>
                                             <th>
-                                                Zone {{$zoneId}} | Service {{$zoneService->first()->shippingService->name}}
+                                                Group {{$groupId}} | Service {{$groupService->first()->shippingService->name}}
                                             </th>
+                                            {{-- <th>
+                                                {{ $groupService->count() }}
+                                            </th> --}}
                                             <th>
-                                                {{ $zoneService->count() }}
-                                            </th>
-                                            <th>
-                                                <a href="{{ route('admin.rates.zone-profit-show', ['zone_id' => $zoneId, 'shipping_service_id' => $serviceId]) }}" class="btn btn-primary btn-sm">
+                                                <a href="{{ route('admin.rates.zone-profit-show', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" class="btn btn-primary btn-sm">
                                                     <i class="feather icon-eye"></i> View
                                                 </a>
                                                 |
-                                                <a href="{{ route('admin.rates.downloadZoneProfit', ['zone_id' => $zoneId, 'shipping_service_id' => $serviceId]) }}" class="btn btn-success btn-sm">
+                                                <a href="{{ route('admin.rates.downloadZoneProfit', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" class="btn btn-success btn-sm">
                                                     <i class="feather icon-download"></i> Download
                                                 </a>
                                             </th>

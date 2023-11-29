@@ -26,12 +26,12 @@ class ZoneProfitController extends Controller
     {
         $this->authorizeResource(Rate::class);
 
-        $zones = ZoneCountry::orderBy('zone_id')
+        $groups = ZoneCountry::orderBy('group_id')
             ->orderBy('shipping_service_id')
             ->get()
-            ->groupBy(['zone_id', 'shipping_service_id']);
+            ->groupBy(['group_id', 'shipping_service_id']);
 
-        return view('admin.rates.zone-profit.index', compact('zones'));
+        return view('admin.rates.zone-profit.index', compact('groups'));
     }
 
     public function create()
@@ -53,36 +53,36 @@ class ZoneProfitController extends Controller
     {
         try{
             $file = $request->file('csv_file');
-            $importService = new ImportZoneProfit($file, $request->zone_id, $request->service_id);
+            $importService = new ImportZoneProfit($file, $request->service_id);
             $importService->handle();
-            session()->flash('alert-success', 'Zone Profit Updated Successfully');
+            session()->flash('alert-success', 'Profit Updated Successfully');
 
             return  redirect()->route('admin.rates.zone-profit.index');
 
         }catch(Exception $exception){
-            session()->flash('alert-danger','Error while Saving Zone Profit: '.$exception->getMessage());
+            session()->flash('alert-danger','Error while Saving Group Profit: '.$exception->getMessage());
             return back();
         }
     }
 
-    public function show($zoneId, $serviceId)
+    public function show($groupId, $serviceId)
     {
-        $zoneProfit = ZoneCountry::where('zone_id', $zoneId)->where('shipping_service_id', $serviceId)->get();
-        return view('admin.rates.zone-profit.show', compact('zoneId', 'serviceId', 'zoneProfit'));
+        $zoneProfit = ZoneCountry::where('group_id', $groupId)->where('shipping_service_id', $serviceId)->get();
+        return view('admin.rates.zone-profit.show', compact('groupId', 'serviceId', 'zoneProfit'));
     }
 
 
     public function destroy(ZoneCountry $id)
     {
-        $zone = ZoneCountry::where('zone_id', $id)->delete();
+        $zone = ZoneCountry::where('group_id', $id)->delete();
         
-        session()->flash('alert-success', 'Zone Profit Deleted');
+        session()->flash('alert-success', 'Profit Deleted');
         return redirect()->route('admin.rates.zone-profit.index');
     }
     
-    public function downloadZoneProfit($zoneId, $serviceId)
+    public function downloadZoneProfit($groupId, $serviceId)
     {
-        $profitList = ZoneCountry::where('zone_id', $zoneId)->where('shipping_service_id', $serviceId)->get();
+        $profitList = ZoneCountry::where('group_id', $groupId)->where('shipping_service_id', $serviceId)->get();
         $exportService = new ZoneProfitExport($profitList);
         return $exportService->handle();
     }
