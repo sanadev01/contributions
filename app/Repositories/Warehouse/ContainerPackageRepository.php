@@ -201,7 +201,7 @@ class ContainerPackageRepository extends AbstractRepository{
             return false;
         $barcode = $order->corrios_tracking_code;
         $subString = strtolower(substr($barcode,0,2));
-        if(strtolower(substr($barcode,0,2)) == 'na' || strtolower(substr($barcode,0,2)) == 'xl'|| strtolower(substr($barcode,0,2)) == 'nb'){
+        if(strtolower(substr($barcode,0,2)) == 'na' || strtolower(substr($barcode,0,2)) == 'xl'||strtolower(substr($barcode,0,2)) == 'nc'|| strtolower(substr($barcode,0,2)) == 'nb'){
             $subString = 'nx';
         }
         return strtolower($container->getSubClassCode())  == $subString;

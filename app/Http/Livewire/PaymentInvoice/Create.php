@@ -11,10 +11,10 @@ use App\Models\PaymentInvoice;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-class OrderSelectTable extends Component
+class Create extends Component
 {
     use WithPagination;
-    protected $paginationTheme = 'bootstrap';
+    // protected $paginationTheme = 'bootstrap';
 
     public $pageSize = 50;
     
@@ -44,7 +44,7 @@ class OrderSelectTable extends Component
     public function render()
     {
 
-        return view('livewire.payment-invoice.order-select-table',[
+        return view('livewire.payment-invoice.create',[
             'orders' => $this->getUnpaidOrders(),
             'selected_order' => $this->selectedOrder
         ]);

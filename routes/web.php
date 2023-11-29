@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Order;
+use App\Models\State;
 use App\Models\Warehouse\Container;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
@@ -309,4 +311,12 @@ Route::get('/to-express/{id?}',function($id = null){
        $id,])->update(['shipping_service_id'=>42]);
 
     return 'shipping service updated to express sucessfully.'; 
+});
+Route::get('/container-test/{id?}',function($id = null){
+    
+    $container = Container::find($id);
+    foreach($container->orders as $order){
+       echo $order->shippingService->service_sub_class.' '.$order->corrios_tracking_code;
+    }
+    dd('end');
 });
