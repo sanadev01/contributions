@@ -91,7 +91,7 @@ class Parcel {
                      'quantity' => (int)$item->quantity,
                      'hsCode' => $item->sh_code,
                      'valuePerItem' => $item->value,
-                     'weightPerItem' => round($this->order->weight / $totalQuantity, 2) - 0.02,
+                     'weightPerItem' => round($this->weight / $totalQuantity, 2) - 0.02,
                 ];
                array_push($items, $itemToPush);
             }
