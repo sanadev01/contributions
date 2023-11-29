@@ -5,6 +5,7 @@ use App\Services\Anjun\AnjunClient;
 use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Traits\PrintOrderLabel;
 use Illuminate\Http\Request;
+
 class AnjunLabelRepository
 {
     use PrintOrderLabel;
@@ -24,15 +25,15 @@ class AnjunLabelRepository
     public function get(Order $order)
     {
         if ($order->getCN23()) {
-            $this->printLabel($order);
-            return null;
+        $this->printLabel($order);
+        return null;
         }
-                return $this->update($order);
+          return $this->update($order);
     }
     public function update(Order $order)
     {
         $cn23 = $this->generateLabel($order);
-if ($cn23) {
+        if ($cn23) {
             $this->printLabel($order);
         }
         return null;
@@ -44,8 +45,8 @@ if ($cn23) {
         $data = $response->getData();
         if ($data->success) {
             return $this->printLabel($order);
-        } else {
-            $this->error= $response;
+        } else { 
+            $this->error= $data->message;
             return $response;
         }
     }

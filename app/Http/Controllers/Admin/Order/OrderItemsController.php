@@ -164,6 +164,7 @@ class OrderItemsController extends Controller
             $rate = $rate + ($rate/100) * $profit;
             \Log::info('with profit');
             \Log::info($rate);
+             
             return (Array)[
                 'success' => true,
                 'total_amount' => $rate,
