@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 class Create extends Component
 {
     use WithPagination;
-    // protected $paginationTheme = 'bootstrap';
+    protected $paginationTheme = 'bootstrap';
 
     public $pageSize = 50;
     
