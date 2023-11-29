@@ -176,7 +176,6 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         elseif($this->services_subclass_code == ShippingService::HD_Express){
             return 17;
         }
-                // return $this->services_subclass_code == 'NX' ? 2 : 1;
         elseif( $this->services_subclass_code == 'AJC-IX') {
             return 18;
         }
@@ -187,6 +186,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif($this->services_subclass_code == 'BCN-IX'){
             return 21;
+        }
+        elseif($this->services_subclass_code == ShippingService::HoundExpress){
+            return 22;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -308,6 +310,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function getHasTotalExpressServiceAttribute()
     {
         return $this->services_subclass_code == ShippingService::TOTAL_EXPRESS;
+    }
+    public function getHasHoundExpressAttribute()
+    {
+        return $this->services_subclass_code == ShippingService::HoundExpress;
     }
 
     public function hasHDExpressService()

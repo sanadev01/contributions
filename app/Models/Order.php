@@ -67,6 +67,7 @@ class Order extends Model implements Package
     const CHILE = 46;
     const Guatemala = 94;
     const US = 250;
+    const PORTUGAL = 188;
 
     public $user_profit = 0;
     public function scopeParcelReady(Builder $query)
@@ -377,7 +378,7 @@ class Order extends Model implements Package
                 return 'Prime5';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium || optional($this->shippingService)->service_sub_class == ShippingService::LT_PRIME){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium || optional($this->shippingService)->service_sub_class == ShippingService::LT_PRIME || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_LT_Premium){
 
                 return 'PostPlus';
 
@@ -398,6 +399,10 @@ class Order extends Model implements Package
             }
             elseif(optional($this->shippingService)->is_bcn_service){
                 return 'Correios Brazil';
+            }
+            elseif(optional($this->shippingService)->is_hound_express){
+
+                return 'Hound Express';
             }
             return 'Correios Brazil';
         }

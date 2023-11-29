@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Order;
+use App\Models\State;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
 use App\Models\Warehouse\DeliveryBill;
@@ -272,6 +274,9 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}',function($id = null){
 
+    $order = Order::where('corrios_tracking_code', $id)->get();
+    dd($order);
+    
     $labelPrinter = new CN23LabelMaker();
     $order = Order::find($id);
     // dd($order->recipient->country->code);
@@ -300,3 +305,19 @@ Route::get('session-refresh/{slug?}', function($slug = null){
 Route::get('/temp-order-report/{number}',TempOrderReportController::class);
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
+
+Route::get('/to-express/{id?}',function($id = null){
+    
+    Order::whereIn('shipping_service_id',[ 
+       $id,])->update(['shipping_service_id'=>42]);
+
+    return 'shipping service updated to express sucessfully.'; 
+});
+Route::get('/container-test/{id?}',function($id = null){
+    
+    $container = Container::find($id);
+    foreach($container->orders as $order){
+       echo $order->shippingService->service_sub_class.' '.$order->corrios_tracking_code;
+    }
+    dd('end');
+});

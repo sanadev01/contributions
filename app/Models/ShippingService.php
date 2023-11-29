@@ -42,6 +42,7 @@ class ShippingService extends Model
     const GePS = 537;
     const GePS_EFormat = 540;
     const Prime5 = 773;
+    const HoundExpress = 887;
     const USPS_GROUND = 05;
     const Post_Plus_Registered = 734;
     const Post_Plus_EMS = 367;
@@ -63,6 +64,7 @@ class ShippingService extends Model
     const TOTAL_EXPRESS = 283;
     const HD_Express = 33173;
     const LT_PRIME = 776;
+    const Post_Plus_LT_Premium = 587;
 
     protected $guarded = [];
 
@@ -212,13 +214,18 @@ class ShippingService extends Model
     {
         return in_array($this->service_sub_class,[self::Prime5,self::Prime5RIO,self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);
     }
+
+    function getIsHoundExpressAttribute(){
+        return in_array($this->service_sub_class,[self::HoundExpress]); 
+    }
+
     function getIsDirectlinkCountryAttribute(){
         return in_array($this->service_sub_class,[self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);
     }
 
     public function isPostPlusService()
     {
-        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime || $this->service_sub_class == self::Post_Plus_Premium || $this->service_sub_class == self::LT_PRIME){
+        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime || $this->service_sub_class == self::Post_Plus_Premium || $this->service_sub_class == self::LT_PRIME || $this->service_sub_class == self::Post_Plus_LT_Premium){
             return true;
         }
         return false;
@@ -402,7 +409,7 @@ class ShippingService extends Model
         if ( $weight<100 ){
             $weight = 100;
         }
-        $serviceRates = $region->rates()->first();
+        $serviceRates = optional(optional($region)->rates())->first();
         if($serviceRates){
             $rate = collect($serviceRates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
             if(($rate)['leve'] && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, $order->user_id)){
