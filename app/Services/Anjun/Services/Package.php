@@ -17,7 +17,7 @@ class Package
         foreach ($order->items as $orderItem) {
             $this->invoices[] = (new InvoiceInfo($orderItem,$order));
         }
-        $this->receiver = (new ReceiverInfo($order->recipient)); 
+        $this->receiver = (new ReceiverInfo($order->recipient,$order)); 
         $this->sender   = (new SenderInfo($order));
     }
 
