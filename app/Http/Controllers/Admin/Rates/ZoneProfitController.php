@@ -22,12 +22,12 @@ class ZoneProfitController extends Controller
         
     } 
 
-    public function index()
+    public function index(Request $request)
     {
-        $this->authorizeResource(Rate::class);
-
-        $groups = ZoneCountry::orderBy('group_id')
-            ->orderBy('shipping_service_id')
+        $sort = $request->get('sort', 'group_id');
+        $order = $request->get('order', 'asc');
+        
+        $groups = ZoneCountry::orderBy($sort, $order)
             ->get()
             ->groupBy(['group_id', 'shipping_service_id']);
 

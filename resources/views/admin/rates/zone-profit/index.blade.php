@@ -24,11 +24,29 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        Group
+                                        <a href="{{ route('admin.rates.zone-profit.index', ['sort' => 'group_id', 'order' => request('sort') == 'group_id' && request('order') == 'desc' ? 'asc' : 'desc']) }}">
+                                            Group 
+                                            @if(request('sort') == 'group_id')
+                                                @if(request('order') == 'asc') 
+                                                    &#8593;
+                                                @else 
+                                                    &#8595;
+                                                @endif
+                                            @endif
+                                        </a>
                                     </th>
-                                    {{-- <th>
-                                        Total Country
-                                    </th> --}}
+                                    <th>
+                                        <a href="{{ route('admin.rates.zone-profit.index', ['sort' => 'shipping_service_id', 'order' => request('sort') == 'shipping_service_id' && request('order') == 'desc' ? 'asc' : 'desc']) }}">
+                                            Shipping Service 
+                                            @if(request('sort') == 'shipping_service_id')
+                                                @if(request('order') == 'asc') 
+                                                    &#8593;
+                                                @else 
+                                                    &#8595;
+                                                @endif
+                                            @endif
+                                        </a>
+                                    </th>
                                     <th>
                                         Action
                                     </th>
@@ -39,11 +57,11 @@
                                     @foreach($services as $serviceId => $groupService)
                                         <tr>
                                             <th>
-                                                Group {{$groupId}} | Service {{$groupService->first()->shippingService->name}}
+                                                Group {{$groupId}}
                                             </th>
-                                            {{-- <th>
-                                                {{ $groupService->count() }}
-                                            </th> --}}
+                                            <th>
+                                                {{$groupService->first()->shippingService->name}}
+                                            </th>
                                             <th>
                                                 <a href="{{ route('admin.rates.zone-profit-show', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" class="btn btn-primary btn-sm">
                                                     <i class="feather icon-eye"></i> View
