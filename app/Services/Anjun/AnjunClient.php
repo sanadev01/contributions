@@ -121,8 +121,9 @@ class AnjunClient
             if ($responseContents->status == 200) {
 
                 return responseSuccessful($responseContents, 'Label Printer Success');
-            } else
-                return responseUnprocessable((new AnjunError($responseContents))->getErrors());
+            } else{
+                return responseUnprocessable($responseContents->msg);
+            }
         } catch (\GuzzleHttp\Exception\ClientException $e) {
 
             return responseUnprocessable($e->getResponse()->getBody()->getContents());
