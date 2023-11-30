@@ -30,6 +30,12 @@ class InvoiceInfo
 
     public function requestBody()
     {
+        $hscode = $this->hscode;
+        if($this->order->shippingService->service_sub_class == ShippingService::AJ_Express_CN){
+            $hscode = substr(str_pad($this->hscode, 8, "0", STR_PAD_RIGHT), 0, 8);
+        }else{
+            $hscode = (integer) substr(str_pad($this->hscode, 8, "0", STR_PAD_RIGHT), 0, 8);
+        }
         return [
             "quantity" => $this->orderItem->quantity,
             "company" => "",
@@ -37,7 +43,7 @@ class InvoiceInfo
             "declaredWeight" => 0.01,
             "nameCn" =>  $this->chineseName,
             "nameEn" => "CAP",
-            "hscode" =>  $this->order->shippingService->service_sub_class == ShippingService::AJ_Express_CN ? substr(str_pad($this->hscode, 8, "0", STR_PAD_RIGHT), 0, 8) : $this->hscode,
+            "hscode" => $hscode,
             "sku" => $this->sku,
             "purpose" => "",
             "material" => "",
