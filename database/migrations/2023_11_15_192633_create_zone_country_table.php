@@ -13,7 +13,7 @@ class CreateZoneCountryTable extends Migration
             $table->unsignedBigInteger('zone_id');
             $table->foreignId('shipping_service_id')->constrained();
             $table->foreignId('country_id')->constrained();
-            $table->decimal('profit_percentage', 5, 2);
+            $table->decimal('profit_percentage', 5, 2)->nullable();
             $table->timestamps();
 
         });

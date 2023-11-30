@@ -46,11 +46,11 @@ class ZoneProfitExport extends AbstractExportService
 
     private function setFirstHeaderRow()
     {
-        $zone = 'Zone ' . $this->rates->first()->zone_id;
+        $group = 'Group ' . $this->rates->first()->group_id;
         $this->setColumnWidth('A', 20);
         $this->mergeCells("A1:C1");
         $this->setAlignment('A1', 'center');
-        $this->setCellValue('A1', $zone);
+        $this->setCellValue('A1', $group);
                 
         $this->setBackgroundColor('A1:C1', '2b5cab');
         $this->setColor('A1:C1', 'FFFFFF');

@@ -12,9 +12,8 @@ use App\Models\ShippingService;
 class ImportZoneProfit extends AbstractImportService
 {
 
-    public function __construct(UploadedFile $file, $zoneId, $serviceId)
+    public function __construct(UploadedFile $file, $serviceId)
     {
-        $this->zoneId = $zoneId;
         $this->serviceId = $serviceId;
 
         $filename = $this->importFile($file);
@@ -33,25 +32,36 @@ class ImportZoneProfit extends AbstractImportService
     {
         $rates = [];
         $limit = 1000;
+        $currentGroupId = null;
+        $countriesNotFound = [];
 
-        foreach (range(2, $limit) as $row) {
-            $countryCode = $this->getValueOrDefault('A'.$row);
+        foreach (range(3, $limit) as $row) {
+            $groupId = $this->getValueOrDefault('A' . $row);
+            $countryCode = str_replace(',', '', $this->getValueOrDefault('B' . $row));
 
-            if ($countryCode == null) {
-                break;
+            if (!empty($groupId)) {
+                $currentGroupId = $groupId;
             }
 
-            $countryId = Country::where('code', $countryCode)->value('id');
+            if (empty($countryCode)) {
+                continue;
+            }
+
+            $countryId = Country::where('name', 'like', '%' . $countryCode . '%')->value('id');
 
             if ($countryId) {
                 $rates[] = [
-                    'zone_id' => $this->zoneId,
+                    'group_id' => $currentGroupId,
                     'country_id' => $countryId,
                     'shipping_service_id' => $this->serviceId,
-                    'profit_percentage' => round($this->getValueOrDefault('B'.$row), 2),
+                    'profit_percentage' => round($this->getValueOrDefault('C' . $row), 2),
                 ];
+            } else {
+                $countriesNotFound[] = $countryCode;
             }
         }
+
+        // dd($countriesNotFound);
 
         return $this->storeRatesToDb($rates);
     }
@@ -68,7 +78,7 @@ class ImportZoneProfit extends AbstractImportService
         foreach ($data as $rate) {
             ZoneCountry::updateOrInsert(
                 [
-                    'zone_id' => $rate['zone_id'],
+                    'group_id' => $rate['group_id'],
                     'shipping_service_id' => $rate['shipping_service_id'],
                     'country_id' => $rate['country_id'],
                 ],
