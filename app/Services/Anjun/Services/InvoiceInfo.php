@@ -34,7 +34,7 @@ class InvoiceInfo
         if($this->order->shippingService->service_sub_class == ShippingService::AJ_Express_CN){
             $hscode = substr(str_pad($this->hscode, 8, "0", STR_PAD_RIGHT), 0, 8);
         }else{
-            $hscode = (integer) substr(str_pad($this->hscode, 8, "00", STR_PAD_LEFT), 0, 8);
+            $hscode = (integer) substr(str_pad($this->hscode, 8, "0", STR_PAD_RIGHT), 0, 8);
         }
         return [
             "quantity" => $this->orderItem->quantity,
