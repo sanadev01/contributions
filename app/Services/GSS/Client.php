@@ -5,6 +5,7 @@ namespace App\Services\GSS;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\ZoneCountry;
 use App\Models\OrderTracking;
 use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
@@ -307,18 +308,24 @@ class Client{
         $data= json_decode($response);
         if ($response->successful() && $data->success == true) {
             
-            //CHECK IF USER HAS GSS PROFIT SETTING
-            $this->gssProfit = setting('gss_profit', null,  $order->user_id);
-            //APPLY ADMIN SIDE GSS PROFIT SETTING
-            if($this->gssProfit == null || $this->gssProfit == 0) { 
-                $this->gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
-            }
-            $profit = round($data->calculatedPostage * ($this->gssProfit / 100), 2 );
-            $price = round($data->calculatedPostage + $profit, 2);
-            if($price > 0) {
+            // //CHECK IF USER HAS GSS PROFIT SETTING
+            // $this->gssProfit = setting('gss_profit', null,  $order->user_id);
+            // //APPLY ADMIN SIDE GSS PROFIT SETTING
+            // if($this->gssProfit == null || $this->gssProfit == 0) { 
+            //     $this->gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
+            // }
+
+            $serviceId = ShippingService::where('service_sub_class', $service)->value('id');
+            $this->gssProfit = ZoneCountry::where('shipping_service_id', $serviceId)
+                                ->where('country_id', $order->recipient->country_id)
+                                ->value('profit_percentage');
+            if($this->gssProfit) {
+                $profit = round($data->calculatedPostage * ($this->gssProfit / 100), 2 );
+                $price = round($data->calculatedPostage + $profit, 2);
                 return $this->responseSuccessful($price, 'Rate Calculation Successful');
-            } 
-            
+            } else {
+                return $this->responseUnprocessable("Server Error! Rates Not Found");
+            }
         } else {
             return $this->responseUnprocessable($data->message);
         }

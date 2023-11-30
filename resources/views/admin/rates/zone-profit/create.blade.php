@@ -84,7 +84,7 @@
                                         <li>@lang('shipping-rates.* Upload only Excel files')</li>
                                         <li>@lang('shipping-rates.* Files larger than 15Mb are not allowed')</li>
                                         <li>@lang('shipping-rates.* Download and fill in the data in the sample file below to avoid errors')</li>
-                                        <li class="mt-2">Download Sample File <a href="{{ asset('uploads/zone-profit.xlsx') }}" class="btn btn-success btn-sm">@lang('shipping-rates.Download')</a></li>
+                                        <li class="mt-2">Download Sample File <a href="{{ asset('uploads/GSS PME Intl Upload.xlsx') }}" class="btn btn-success btn-sm">@lang('shipping-rates.Download')</a></li>
                                     </ol>
                                 </div>
                             </div>

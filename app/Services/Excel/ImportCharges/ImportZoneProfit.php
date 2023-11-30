@@ -32,18 +32,18 @@ class ImportZoneProfit extends AbstractImportService
     {
         $rates = [];
         $limit = 1000;
-
         $currentGroupId = null;
+        $countriesNotFound = [];
 
         foreach (range(3, $limit) as $row) {
-            $groupId = $this->getValueOrDefault('A'.$row);
-            $countryCode = str_replace(',', '', $this->getValueOrDefault('B'.$row));
+            $groupId = $this->getValueOrDefault('A' . $row);
+            $countryCode = str_replace(',', '', $this->getValueOrDefault('B' . $row));
 
-            if ($groupId !== null && $groupId !== '') {
+            if (!empty($groupId)) {
                 $currentGroupId = $groupId;
             }
 
-            if ($countryCode == null) {
+            if (empty($countryCode)) {
                 continue;
             }
 
@@ -51,17 +51,20 @@ class ImportZoneProfit extends AbstractImportService
 
             if ($countryId) {
                 $rates[] = [
-                    'group_id' => $currentGroupId, 
+                    'group_id' => $currentGroupId,
                     'country_id' => $countryId,
                     'shipping_service_id' => $this->serviceId,
-                    'profit_percentage' => round($this->getValueOrDefault('C'.$row), 2),
+                    'profit_percentage' => round($this->getValueOrDefault('C' . $row), 2),
                 ];
+            } else {
+                $countriesNotFound[] = $countryCode;
             }
         }
 
+        // dd($countriesNotFound);
+
         return $this->storeRatesToDb($rates);
     }
-
 
     private function getValueOrDefault($cell,$default = 0)
     {
