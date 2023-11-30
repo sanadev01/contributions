@@ -6,7 +6,6 @@ use App\Models\OrderTracking;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Anjun\Services\Package;
 use App\Models\Order;
-use App\Services\Anjun\Services\AnjunError;
 use App\Services\Anjun\Services\BigPackage;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Contracts\Container;
@@ -43,6 +42,8 @@ class AnjunClient
     {
 
         $orderBody = (new Package($order))->requestBody(); 
+        Log::info('AnjunClient::createPackage orderBody'); 
+        Log::info([$orderBody]);
         try {
             $response = $this->client->post('/logistics/order/api/create', [
                 'json'    =>  $orderBody,
@@ -50,8 +51,9 @@ class AnjunClient
                     'Authorization' => $this->token,
                 ]
             ]);
-            $responseContents = json_decode($response->getBody()->getContents()); 
-            
+            $responseContents = json_decode($response->getBody()->getContents());
+            Log::info('AnjunClient::createPackage responseContents'); 
+            Log::info([$responseContents]);
             if ($responseContents->code == 200) {
                 $trackingNumber = $responseContents->data->trackNum;
                 if ($trackingNumber) {
@@ -91,7 +93,11 @@ class AnjunClient
                 'json' =>  (array) new BigPackage($container),
             ]);
 
-            $responseContents = json_decode($response->getBody()->getContents());  
+            $responseContents = json_decode($response->getBody()->getContents());
+            
+            Log::info('AnjunClient::createContainer responseContents'); 
+            Log::info([$responseContents]);
+
             if ($responseContents->status == 200) { 
                 return $this->getCN35BarCode($responseContents->data);
             } else {
@@ -117,12 +123,16 @@ class AnjunClient
                     'Authorization' => $this->token,
                 ],
             ]);
-            $responseContents = json_decode($response->getBody()->getContents()); 
+            $responseContents = json_decode($response->getBody()->getContents());
+            
+            Log::info('AnjunClient::getCN35BarCode responseContents'); 
+            Log::info([$responseContents]); 
             if ($responseContents->status == 200) {
 
                 return responseSuccessful($responseContents, 'Label Printer Success');
-            } else
-                return responseUnprocessable((new AnjunError($responseContents))->getErrors());
+            } else{
+                return responseUnprocessable($responseContents->msg);
+            }
         } catch (\GuzzleHttp\Exception\ClientException $e) {
 
             return responseUnprocessable($e->getResponse()->getBody()->getContents());
