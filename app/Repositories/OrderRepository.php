@@ -716,9 +716,9 @@ class OrderRepository
                     });
             }
             if(Auth::id()!="1233"){
-                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                    return !$shippingService->isAnjunChinaService();
-                });
+            $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+            return !$shippingService->isAnjunChinaService();
+            });
             }
 
             if(!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){

@@ -39,10 +39,10 @@ class Recipient
             'tax'      => $this->tax_id,
             'gs'       => $this->companyName,
             'tel'      => $this->phone,
-            'sj'       => $this->phone,                                       //mobile number
-            'country'  => $this->countryCode,              //Destination country code  like：BR
+            'sj'       => $this->phone,
+            'country'  => $this->countryCode,
             'state'    => $this->stateCode,
-            'cs'       => $this->city,                                     //city name
+            'cs'       => $this->city,
             'yb'       => $this->zipcode,
             'email'    => $this->email,
             'tto'      => $this->address
