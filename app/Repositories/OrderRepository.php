@@ -377,9 +377,8 @@ class OrderRepository
                 $order->items()->delete();
                 
                 foreach ($request->get('items',[]) as $item) {
-                    
                     $order->items()->create([
-                        'sh_code' => optional($item)['sh_code'],
+                        'sh_code' => substr(optional($item)['sh_code'], 0, 6),
                         'description' => optional($item)['description'],
                         'quantity' => optional($item)['quantity'],
                         'value' => optional($item)['value'],
@@ -524,7 +523,7 @@ class OrderRepository
     {
         $totalDiscountPercentage = 0;
         $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
-        $discountPercentage = setting('discount_percentage', null, $order->user->id);
+        $discountPercentage = getVolumetricDiscountPercentage($order);
         
         if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
             return false;
@@ -714,11 +713,11 @@ class OrderRepository
                     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                         return !$shippingService->isAnjunService();
                     });
-            }
-            if(Auth::id()!="1233"){
-            $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-            return !$shippingService->isAnjunChinaService();
-            });
+            } 
+            if(Auth::id()!='1137'){
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return !$shippingService->isAnjunChinaService();
+                });
             }
 
             if(!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
