@@ -112,12 +112,7 @@
                                                             </a>
                                                             @if( !$container->isRegistered() && $container->hasOrders())
                                                                 <a href="{{ route('warehouse.hound_container.createRequest',$container) }}" class="dropdown-item w-100">
-                                                                    <i class="feather icon-box"></i> Registered Unit
-                                                                </a>
-                                                            @endif
-                                                            @if( $container->unit_response_list )
-                                                                <a href="{{ route('warehouse.hound_container.registerBox',$container) }}" class="dropdown-item w-100">
-                                                                    <i class="feather icon-box"></i> Register MasterBox
+                                                                    <i class="feather icon-box"></i> Register Unit
                                                                 </a>
                                                             @endif
                                                             <form action="{{ route('warehouse.hound_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
