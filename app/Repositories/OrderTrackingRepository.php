@@ -103,7 +103,17 @@ class OrderTrackingRepository
                                 'order' => $order
                             ];
                         
-                        } else {
+                        } elseif ($order->recipient->country_id == Order::Guatemala) {
+
+                            $apiResponse = [
+                                'success' => true,
+                                'status' => 200,
+                                'service' => 'HD',
+                                'trackings' => $order->trackings,
+                                'order' => $order
+                            ];
+                        
+                        }else {
                             $apiResponse = [
                                 'success' => false,
                                 'status' => 201,

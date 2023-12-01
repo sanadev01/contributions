@@ -54,7 +54,7 @@ class Parcel
          'customer_document_type' => $this->order->recipient->account_type == "business"? "CNPJ":"CPF",
          'customer_address' => $this->order->recipient->address,
          'customer_address_complement' => optional($this->order->recipient)->address2,
-         'customer_address_number' => optional($this->order->recipient)->stree_no,
+         'customer_address_number' => optional($this->order->recipient)->street_no,
          'customer_city' => $this->order->recipient->city,
          'customer_state' => $this->order->recipient->State->code,
          'customer_postal_code' => cleanString($this->order->recipient->zipcode),
