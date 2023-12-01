@@ -12,7 +12,7 @@
         <div class="form-group col-12 col-sm-6 col-md-6">
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Description') <span   id="feedback{{$keyId}}"></span></label>
-                <input type="text" id="description{{$keyId}}" class="form-control descp" required name="items[{{$keyId}}][description]" max="200" min="0" onkeyup="descriptionChange({{$keyId}},this)" value="{{ optional($item)['description'] }}">
+                <input type="text" id="description{{$keyId}}" class="form-control descp" required name="items[{{$keyId}}][description]" max="500" min="0" onkeyup="descriptionChange({{$keyId}},this)" value="{{ optional($item)['description'] }}">
                 <small id="characterCount{{$keyId}}" class="form-text text-muted"></small>
 
                 @error("items.{$keyId}.description")
@@ -81,7 +81,7 @@
             }else if(serviceCode == 540 || serviceCode == 537  || serviceCode ==  541 ){
                 limit = 50;
             }else{
-                limit = 200;
+                limit = 500;
             }   
             if(descriptionLength>limit)
             {
@@ -99,7 +99,7 @@
                 }
                 else if(descriptionLength<=150 && descriptionLength<limit)
                     updateFeedback('Good Description!',true,id)
-                else if(descriptionLength<=200 && descriptionLength<limit )
+                else if(descriptionLength<=500 && descriptionLength<limit )
                     updateFeedback('Very Good Description!',true,id)        
                 else
                     updateFeedback('Limit Exceeded!',false,id)
