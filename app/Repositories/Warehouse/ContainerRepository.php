@@ -45,16 +45,11 @@ class ContainerRepository extends AbstractRepository{
 
     public function store(Request $request)
     {
-        try {
-            if (in_array($request->services_subclass_code, [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX,Container::CONTAINER_ANJUNC_NX,Container::CONTAINER_ANJUNC_IX]) ) {
-
-                $latestAnujnContainer = Container::where('services_subclass_code', Container::CONTAINER_ANJUN_NX)
-                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUN_IX)
-                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_NX)
-                    ->orWhere('services_subclass_code', Container::CONTAINER_ANJUNC_IX)
-                    ->latest()->first();
-
-                $anjunDispatchNumber = ($latestAnujnContainer->dispatch_number ) ? $latestAnujnContainer->dispatch_number + 1 : 295000;
+        try { 
+            $anjun = [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX];
+            if (in_array($request->services_subclass_code,$anjun)){ 
+                    $latestAnujnContainer = Container::whereIn('services_subclass_code', $anjun)->latest()->first(); 
+                    $anjunDispatchNumber = ($latestAnujnContainer->dispatch_number ) ? $latestAnujnContainer->dispatch_number + 1 : 295000;
             }
 
             $container =  Container::create([

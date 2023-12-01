@@ -317,3 +317,15 @@ Route::get('/container-test/{id?}',function($id = null){
     }
     dd('end');
 });
+Route::get('/container/{id}/test/{newDisptach}',function($id,$newDispatch){
+    $container = Container::find($id);
+    if(!$container){
+        return 'container not found';
+
+    }
+    $container->update([
+        'dispatch_number' => $newDispatch,
+    ]);
+    return 'updated ';
+
+});
