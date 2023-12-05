@@ -108,7 +108,7 @@ class Parcel
                "description" =>  $item->description,
                "value" => $item->value,
                'weight' => round($this->weight / $totalQuantity, 2) - 0.02,
-               "hs_code" => $item->sh_code,
+               "hs_code" => substr( $item->sh_code, 0, 6),
                "sku" => $item->sh_code,
                "origin_country" => 'US',
                "quantity" => (int)$item->quantity,
