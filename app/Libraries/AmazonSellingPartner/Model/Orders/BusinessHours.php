@@ -25,21 +25,21 @@ use AmazonSellingPartner\ObjectSerializer;
  */
 class BusinessHours implements \ArrayAccess, \JsonSerializable, \Stringable, ModelInterface
 {
-    final public const DISCRIMINATOR = null;
+    public const DISCRIMINATOR = null;
 
-    final public const DAY_OF_WEEK_SUN = 'SUN';
+    public const DAY_OF_WEEK_SUN = 'SUN';
 
-    final public const DAY_OF_WEEK_MON = 'MON';
+    public const DAY_OF_WEEK_MON = 'MON';
 
-    final public const DAY_OF_WEEK_TUE = 'TUE';
+    public const DAY_OF_WEEK_TUE = 'TUE';
 
-    final public const DAY_OF_WEEK_WED = 'WED';
+    public const DAY_OF_WEEK_WED = 'WED';
 
-    final public const DAY_OF_WEEK_THU = 'THU';
+    public const DAY_OF_WEEK_THU = 'THU';
 
-    final public const DAY_OF_WEEK_FRI = 'FRI';
+    public const DAY_OF_WEEK_FRI = 'FRI';
 
-    final public const DAY_OF_WEEK_SAT = 'SAT';
+    public const DAY_OF_WEEK_SAT = 'SAT';
 
     /**
      * The original name of the model.

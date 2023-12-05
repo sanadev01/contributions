@@ -52,9 +52,9 @@ final class ApiException extends Exception
     /**
      * Sets the deseralized response object (during deserialization).
      *
-     * @param \stdClass|string $obj Deserialized response object
+     * @param \stdClass|string  $obj Deserialized response object
      */
-    public function setResponseObject(\stdClass|string $obj) : void
+    public function setResponseObject($obj): void
     {
         $this->responseObject = $obj;
     }

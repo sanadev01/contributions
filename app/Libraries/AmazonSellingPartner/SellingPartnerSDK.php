@@ -19,18 +19,29 @@ final class SellingPartnerSDK
      */
     private array $instances;
 
-    private readonly HttpFactory $httpFactory;
+    private $httpFactory;
+    private $httpClient;
+    private $requestFactory;
+    private $streamFactory;
+    private $configuration;
+    private $logger;
 
     public function __construct(
-        private readonly ClientInterface $httpClient,
-        private readonly RequestFactoryInterface $requestFactory,
-        private readonly StreamFactoryInterface $streamFactory,
-        private readonly Configuration $configuration,
-        private readonly LoggerInterface $logger
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        StreamFactoryInterface $streamFactory,
+        Configuration $configuration,
+        LoggerInterface $logger
     ) {
         $this->instances = [];
 
-        $this->httpFactory = new HttpFactory($requestFactory, $streamFactory);
+        $this->httpClient = $httpClient;
+        $this->requestFactory = $requestFactory;
+        $this->streamFactory = $streamFactory;
+        $this->configuration = $configuration;
+        $this->logger = $logger;
+
+        $this->httpFactory = new HttpFactory($this->requestFactory, $this->streamFactory);
     }
 
     public static function create(
@@ -75,7 +86,7 @@ final class SellingPartnerSDK
      *
      * @return T
      */
-    private function instantiateSDK(string $sdkClass) : string|object
+    private function instantiateSDK(string $sdkClass)
     {
         if (isset($this->instances[$sdkClass])) {
             return $this->instances[$sdkClass];

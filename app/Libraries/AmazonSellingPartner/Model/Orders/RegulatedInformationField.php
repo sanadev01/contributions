@@ -25,11 +25,11 @@ use AmazonSellingPartner\ObjectSerializer;
  */
 class RegulatedInformationField implements \ArrayAccess, \JsonSerializable, \Stringable, ModelInterface
 {
-    final public const DISCRIMINATOR = null;
+    public const DISCRIMINATOR = null;
 
-    final public const FIELD_TYPE_TEXT = 'Text';
+    public const FIELD_TYPE_TEXT = 'Text';
 
-    final public const FIELD_TYPE_FILE_ATTACHMENT = 'FileAttachment';
+    public const FIELD_TYPE_FILE_ATTACHMENT = 'FileAttachment';
 
     /**
      * The original name of the model.

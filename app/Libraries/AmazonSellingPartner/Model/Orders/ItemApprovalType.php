@@ -19,10 +19,11 @@ class ItemApprovalType
     /**
      * Possible values of this enum.
      */
-    final public const LEONARDI_APPROVAL = 'LEONARDI_APPROVAL';
+    public const LEONARDI_APPROVAL = 'LEONARDI_APPROVAL';
 
-    public function __construct(private readonly string $value)
+    public function __construct($value)
     {
+        $this->value = $value;
     }
 
     /**

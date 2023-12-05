@@ -15,22 +15,22 @@ final class Configuration
 
     private string $tmpFolderPath;
 
-    private readonly LoggerConfiguration $loggerConfiguration;
+    private LoggerConfiguration $loggerConfiguration;
 
-    private readonly Extensions $extensions;
+    private Extensions $extensions;
 
     private bool $sandbox = false;
 
     private IdGenerator $idGenerator;
 
     public function __construct(
-        private readonly string $lwaClientID,
-        private readonly string $lwaClientSecret,
-        private ?string $accessKey = null,
-        private ?string $secretKey = null,
-        private ?string $securityToken = null,
-        Extensions $extensions = null,
-        LoggerConfiguration $loggerConfiguration = null
+        string $lwaClientID,
+        string $lwaClientSecret,
+        ?string $accessKey = null,
+        ?string $secretKey = null,
+        ?string $securityToken = null,
+        ?Extensions $extensions = null,
+        ?LoggerConfiguration $loggerConfiguration = null
     ) {
         // https://github.com/amzn/selling-partner-api-docs/blob/main/guides/en-US/developer-guide/SellingPartnerApiDeveloperGuide.md#include-a-user-agent-header-in-all-requests
         $this->userAgent = 'Library amazon-php/sp-api-php (language=PHP ' . \phpversion() . '; Platform=' . \php_uname('s') . ' ' . \php_uname('r') . ' ' . \php_uname('m') . ')';
@@ -80,12 +80,16 @@ final class Configuration
             throw new InvalidArgumentException("Invalid region {$awsRegion}");
         }
 
-        return match ($awsRegion) {
-            Regions::EUROPE => $this->sandbox ? Regions::EUROPE_SANDBOX_URL : Regions::EUROPE_URL,
-            Regions::FAR_EAST => $this->sandbox ? Regions::FAR_EAST_SANDBOX_URL : Regions::FAR_EAST_URL,
-            Regions::NORTH_AMERICA => $this->sandbox ? Regions::NORTH_AMERICA_SANDBOX_URL : Regions::NORTH_AMERICA_URL,
-            default => throw new \RuntimeException('unknown region'),
-        };
+        switch ($awsRegion) {
+            case Regions::EUROPE:
+                return $this->sandbox ? Regions::EUROPE_SANDBOX_URL : Regions::EUROPE_URL;
+            case Regions::FAR_EAST:
+                return $this->sandbox ? Regions::FAR_EAST_SANDBOX_URL : Regions::FAR_EAST_URL;
+            case Regions::NORTH_AMERICA:
+                return $this->sandbox ? Regions::NORTH_AMERICA_SANDBOX_URL : Regions::NORTH_AMERICA_URL;
+            default:
+                throw new \RuntimeException('unknown region');
+        }
     }
 
     public function apiHost(string $awsRegion) : string
@@ -94,12 +98,16 @@ final class Configuration
             throw new InvalidArgumentException("Invalid region {$awsRegion}");
         }
 
-        return match ($awsRegion) {
-            Regions::EUROPE => $this->sandbox ? Regions::EUROPE_SANDBOX_HOST : Regions::EUROPE_HOST,
-            Regions::FAR_EAST => $this->sandbox ? Regions::FAR_EAST_SANDBOX_HOST : Regions::FAR_EAST_HOST,
-            Regions::NORTH_AMERICA => $this->sandbox ? Regions::NORTH_AMERICA_SANDBOX_HOST : Regions::NORTH_AMERICA_HOST,
-            default => throw new \RuntimeException('Unknown region: ' . $awsRegion),
-        };
+        switch ($awsRegion) {
+            case Regions::EUROPE:
+                return $this->sandbox ? Regions::EUROPE_SANDBOX_HOST : Regions::EUROPE_HOST;
+            case Regions::FAR_EAST:
+                return $this->sandbox ? Regions::FAR_EAST_SANDBOX_HOST : Regions::FAR_EAST_HOST;
+            case Regions::NORTH_AMERICA:
+                return $this->sandbox ? Regions::NORTH_AMERICA_SANDBOX_HOST : Regions::NORTH_AMERICA_HOST;
+            default:
+                throw new \RuntimeException('Unknown region: ' . $awsRegion);
+        }
     }
 
     public function accessKey() : ?string

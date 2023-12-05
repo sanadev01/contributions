@@ -19,18 +19,19 @@ class ElectronicInvoiceStatus
     /**
      * Possible values of this enum.
      */
-    final public const NOT_REQUIRED = 'NotRequired';
+    public const NOT_REQUIRED = 'NotRequired';
 
-    final public const NOT_FOUND = 'NotFound';
+    public const NOT_FOUND = 'NotFound';
 
-    final public const PROCESSING = 'Processing';
+    public const PROCESSING = 'Processing';
 
-    final public const ERRORED = 'Errored';
+    public const ERRORED = 'Errored';
 
-    final public const ACCEPTED = 'Accepted';
+    public const ACCEPTED = 'Accepted';
 
-    public function __construct(private readonly string $value)
+    public function __construct($value)
     {
+        $this->value = $value;
     }
 
     /**

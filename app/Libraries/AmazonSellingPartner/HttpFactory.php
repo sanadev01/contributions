@@ -11,8 +11,13 @@ use Psr\Http\Message\StreamInterface;
 
 final class HttpFactory
 {
-    public function __construct(private readonly RequestFactoryInterface $requestFactory, private readonly StreamFactoryInterface $streamFactory)
+    private $requestFactory;
+    private $streamFactory;
+
+    public function __construct(RequestFactoryInterface $requestFactory, StreamFactoryInterface $streamFactory)
     {
+        $this->requestFactory = $requestFactory;
+        $this->streamFactory = $streamFactory;
     }
 
     public function createRequest(string $method, string $url) : RequestInterface

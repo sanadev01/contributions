@@ -25,18 +25,18 @@ use AmazonSellingPartner\ObjectSerializer;
  */
 class OrderItem implements \ArrayAccess, \JsonSerializable, \Stringable, ModelInterface
 {
-    final public const DISCRIMINATOR = null;
+    public const DISCRIMINATOR = null;
 
-    final public const DEEMED_RESELLER_CATEGORY_IOSS = 'IOSS';
-    final public const DEEMED_RESELLER_CATEGORY_UOSS = 'UOSS';
-    final public const DEEMED_RESELLER_CATEGORY_AU_VOEC = 'AU_VOEC';
-    final public const DEEMED_RESELLER_CATEGORY_GB_VOEC = 'GB_VOEC';
-    final public const DEEMED_RESELLER_CATEGORY_KZ_VOEC = 'KZ_VOEC';
-    final public const DEEMED_RESELLER_CATEGORY_NO_VOEC = 'NO_VOEC';
-    final public const DEEMED_RESELLER_CATEGORY_NZ_VOEC = 'NZ_VOEC';
-    final public const DEEMED_RESELLER_CATEGORY_SG_VOEC = 'SG_VOEC';
-    final public const DEEMED_RESELLER_CATEGORY_CA_MBF = 'CA_MBF';
-    final public const DEEMED_RESELLER_CATEGORY_CA_MPF = 'CA_MPF';
+    public const DEEMED_RESELLER_CATEGORY_IOSS = 'IOSS';
+    public const DEEMED_RESELLER_CATEGORY_UOSS = 'UOSS';
+    public const DEEMED_RESELLER_CATEGORY_AU_VOEC = 'AU_VOEC';
+    public const DEEMED_RESELLER_CATEGORY_GB_VOEC = 'GB_VOEC';
+    public const DEEMED_RESELLER_CATEGORY_KZ_VOEC = 'KZ_VOEC';
+    public const DEEMED_RESELLER_CATEGORY_NO_VOEC = 'NO_VOEC';
+    public const DEEMED_RESELLER_CATEGORY_NZ_VOEC = 'NZ_VOEC';
+    public const DEEMED_RESELLER_CATEGORY_SG_VOEC = 'SG_VOEC';
+    public const DEEMED_RESELLER_CATEGORY_CA_MBF = 'CA_MBF';
+    public const DEEMED_RESELLER_CATEGORY_CA_MPF = 'CA_MPF';
 
     /**
      * The original name of the model.

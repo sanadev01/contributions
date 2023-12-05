@@ -6,8 +6,12 @@ namespace AmazonSellingPartner\STSClient;
 
 final class Credentials
 {
-    public function __construct(private readonly string $accessKeyId, private readonly string $secretAccessKey, private readonly string $sessionToken, private readonly int $expiration)
+    public function __construct($accessKeyId, $secretAccessKey, $sessionToken, $expiration)
     {
+        $this->accessKeyId = $accessKeyId;
+        $this->secretAccessKey = $secretAccessKey;
+        $this->sessionToken = $sessionToken;
+        $this->expiration = $expiration;
     }
 
     public static function fromJSON(string $tokenString) : self

@@ -25,11 +25,11 @@ use AmazonSellingPartner\ObjectSerializer;
  */
 class Address implements \ArrayAccess, \JsonSerializable, \Stringable, ModelInterface
 {
-    final public const DISCRIMINATOR = null;
+    public const DISCRIMINATOR = null;
 
-    final public const ADDRESS_TYPE_RESIDENTIAL = 'Residential';
+    public const ADDRESS_TYPE_RESIDENTIAL = 'Residential';
 
-    final public const ADDRESS_TYPE_COMMERCIAL = 'Commercial';
+    public const ADDRESS_TYPE_COMMERCIAL = 'Commercial';
 
     /**
      * The original name of the model.

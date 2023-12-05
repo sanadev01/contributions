@@ -140,10 +140,10 @@ final class ObjectSerializer
      *
      * @return string the serialized object
      */
-    public static function toQueryValue(\DateTime|string|array $object) : string
+    public static function toQueryValue($object)
     {
-        if (\is_array($object)) {
-            return \implode(',', $object);
+        if (is_array($object)) {
+            return implode(',', $object);
         }
 
         return self::toString($object);
@@ -178,7 +178,7 @@ final class ObjectSerializer
      *
      * @return bool|string the form string
      */
-    public static function toFormValue(\SplFileObject|string $value) : bool|string
+    public static function toFormValue($value)
     {
         if ($value instanceof \SplFileObject) {
             return $value->getRealPath();
@@ -228,12 +228,18 @@ final class ObjectSerializer
             return \preg_replace('/%5B[0-9]+%5D=/', '=', \http_build_query($collection, '', '&'));
         }
 
-        return match ($style) {
-            'pipeDelimited', 'pipes' => \implode('|', $collection),
-            'tsv' => \implode("\t", $collection),
-            'spaceDelimited', 'ssv' => \implode(' ', $collection),
-            default => \implode(',', $collection),
-        };
+        switch ($style) {
+            case 'pipeDelimited':
+            case 'pipes':
+                return \implode('|', $collection);
+            case 'tsv':
+                return \implode("\t", $collection);
+            case 'spaceDelimited':
+            case 'ssv':
+                return \implode(' ', $collection);
+            default:
+                return \implode(',', $collection);
+        }
     }
 
     /**
@@ -297,7 +303,7 @@ final class ObjectSerializer
             if (!empty($data)) {
                 try {
                     return new \DateTimeImmutable($data);
-                } catch (\Exception) {
+                } catch (\Exception $e) {
                     // Some API's return a date-time with too high nanosecond
                     // precision for php's DateTime to handle. This conversion
                     // (string -> unix timestamp -> DateTime) is a workaround
@@ -367,8 +373,9 @@ final class ObjectSerializer
         }
 
         try {
-            $data = \is_string($data) ? \json_decode($data, null, 512, JSON_THROW_ON_ERROR) : $data;
-        } catch (\JsonException) {
+            $data = \is_string($data) ? \json_decode($data, null, 512) : $data;
+        } catch (\JsonException $e) {
+            
         }
 
         // If a discriminator is defined and points to a valid subclass, use it.

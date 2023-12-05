@@ -25,9 +25,9 @@ use AmazonSellingPartner\ObjectSerializer;
  */
 class ConfirmShipmentRequest implements \ArrayAccess, \JsonSerializable, \Stringable, ModelInterface
 {
-    final public const DISCRIMINATOR = null;
+    public const DISCRIMINATOR = null;
 
-    final public const COD_COLLECTION_METHOD_DIRECT_PAYMENT = 'DirectPayment';
+    public const COD_COLLECTION_METHOD_DIRECT_PAYMENT = 'DirectPayment';
 
     /**
      * The original name of the model.

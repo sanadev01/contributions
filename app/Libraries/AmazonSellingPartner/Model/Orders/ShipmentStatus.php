@@ -19,14 +19,15 @@ class ShipmentStatus
     /**
      * Possible values of this enum.
      */
-    final public const READY_FOR_PICKUP = 'ReadyForPickup';
+    public const READY_FOR_PICKUP = 'ReadyForPickup';
 
-    final public const PICKED_UP = 'PickedUp';
+    public const PICKED_UP = 'PickedUp';
 
-    final public const REFUSED_PICKUP = 'RefusedPickup';
+    public const REFUSED_PICKUP = 'RefusedPickup';
 
-    public function __construct(private readonly string $value)
+    public function __construct($value)
     {
+        $this->value = $value;
     }
 
     /**

@@ -25,7 +25,7 @@ use AmazonSellingPartner\ObjectSerializer;
  */
 class UpdateShipmentStatusRequest implements \ArrayAccess, \JsonSerializable, \Stringable, ModelInterface
 {
-    final public const DISCRIMINATOR = null;
+    public const DISCRIMINATOR = null;
 
     /**
      * The original name of the model.

@@ -25,13 +25,13 @@ use AmazonSellingPartner\ObjectSerializer;
  */
 class ItemApprovalAction implements \ArrayAccess, \JsonSerializable, \Stringable, ModelInterface
 {
-    final public const DISCRIMINATOR = null;
+    public const DISCRIMINATOR = null;
 
-    final public const ACTION_TYPE_APPROVE = 'APPROVE';
+    public const ACTION_TYPE_APPROVE = 'APPROVE';
 
-    final public const ACTION_TYPE_DECLINE = 'DECLINE';
+    public const ACTION_TYPE_DECLINE = 'DECLINE';
 
-    final public const ACTION_TYPE_APPROVE_WITH_CHANGES = 'APPROVE_WITH_CHANGES';
+    public const ACTION_TYPE_APPROVE_WITH_CHANGES = 'APPROVE_WITH_CHANGES';
 
     /**
      * The original name of the model.

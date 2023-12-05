@@ -25,17 +25,17 @@ use AmazonSellingPartner\ObjectSerializer;
  */
 class ItemApproval implements \ArrayAccess, \JsonSerializable, \Stringable, ModelInterface
 {
-    final public const DISCRIMINATOR = null;
+    public const DISCRIMINATOR = null;
 
-    final public const ACTOR_SELLING_PARTNER = 'SELLING_PARTNER';
+    public const ACTOR_SELLING_PARTNER = 'SELLING_PARTNER';
 
-    final public const ACTOR_AMAZON = 'AMAZON';
+    public const ACTOR_AMAZON = 'AMAZON';
 
-    final public const APPROVAL_ACTION_PROCESS_STATUS_PROCESSING = 'PROCESSING';
+    public const APPROVAL_ACTION_PROCESS_STATUS_PROCESSING = 'PROCESSING';
 
-    final public const APPROVAL_ACTION_PROCESS_STATUS_SUCCESS = 'SUCCESS';
+    public const APPROVAL_ACTION_PROCESS_STATUS_SUCCESS = 'SUCCESS';
 
-    final public const APPROVAL_ACTION_PROCESS_STATUS_ERROR = 'ERROR';
+    public const APPROVAL_ACTION_PROCESS_STATUS_ERROR = 'ERROR';
 
     /**
      * The original name of the model.
