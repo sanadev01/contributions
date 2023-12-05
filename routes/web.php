@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
+use App\Http\Controllers\ConnectionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -241,7 +242,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 });
 
-Route::get('/', [ConnectionsController::class, 'getIndex'])->name('home');
+Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
 Route::get('/home', [ConnectionsController::class, 'getIndex']);
 Route::get('/auth', [ConnectionsController::class, 'getAuth']);
 Route::get('sp/register', [ConnectionsController::class, 'getRegister']);

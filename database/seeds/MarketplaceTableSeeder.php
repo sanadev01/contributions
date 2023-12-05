@@ -1,16 +1,19 @@
 <?php
 
-namespace Database\Seeders;
-
-use App\Models\Marketplace;
 use Illuminate\Database\Seeder;
-
-class MarketplaceTableSeeder extends Seeder {
-
+use App\Models\Marketplace;
+class MarketplaceTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     /**
      * Run the database seeds.
      */
-    public function run(): void {
+    public function run()
+    {
         foreach (config('marketplaces') as $region => $marketplaces) {
             foreach ($marketplaces as $_marketplace) {
                 $marketplace = Marketplace::query()
@@ -27,5 +30,4 @@ class MarketplaceTableSeeder extends Seeder {
             }
         }
     }
-
 }

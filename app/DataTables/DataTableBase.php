@@ -24,7 +24,7 @@ class DataTableBase {
     public function __construct(User $user, Request $request = null) {
         $this->user = $user;
         $this->request = $request;
-        $this->setTableId(get_class_name($this));
+        $this->setTableId(get_class($this));
         $this->ajax_url = $request->fullUrl();
         $this->setOrderBy();
     }

@@ -2,31 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use AmazonSellingPartner\Model\Sellers\MarketplaceParticipation;
-use App\DataTables\ConnectionsDataTable;
+use Exception;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\SpToken;
 use App\Models\BugReport;
 use App\Models\Marketplace;
-use App\Models\SpToken;
-use App\Models\User;
-use App\AmazonSPClients\AuthApiClient;
-use App\AmazonSPClients\SellersApiClient;
-use Carbon\Carbon;
-use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\AmazonSPClients\AuthApiClient;
+use App\DataTables\ConnectionsDataTable;
+use App\AmazonSPClients\SellersApiClient;
 use Psr\Http\Client\ClientExceptionInterface;
+use AmazonSellingPartner\Model\Sellers\MarketplaceParticipation;
 
 class ConnectionsController extends Controller {
 
     public function getIndex(Request $request) {
-        $data_table = new ConnectionsDataTable($this->user, request: $request);
-
+        $user = Auth::user(); 
+        $data_table = new ConnectionsDataTable($user, $request);
+    
         if ($request->ajax()) {
             return $data_table->getData();
         }
 
-        return $this->renderView('connections', compact('data_table'));
+        return view('admin.users.amazon.connections', compact('data_table'));
     }
 
     public function getStatusChange(Request $request): JsonResponse {
@@ -41,16 +43,15 @@ class ConnectionsController extends Controller {
         return $this->resJson('Successfully changed status');
     }
 
-
     /**
      * @throws Exception
      */
     public function getAuth(Request $request) {
         $this->validate($request, ['region' => 'required']);
 
-        return (new AuthApiClient($this->user, 'ACCESS_TOKEN'))
+        return (new AuthApiClient(Auth::user(), 'ACCESS_TOKEN'))
             ->authorizeConsent(
-                $this->user->id,
+                Auth::user()->id,
                 $request->get('region')
             );
     }
@@ -59,7 +60,7 @@ class ConnectionsController extends Controller {
         [$uid, $region] = explode('|', $request->get('state'));
         Log::info('getRegisterSp: ' . json_encode($request->all()));
 
-        if ($this->user->id != $uid) {
+        if ($user->id != $uid) {
             flash()->error('Something went wrong');
             return redirect('/');
         }
@@ -68,12 +69,12 @@ class ConnectionsController extends Controller {
 
         $connection = false;
         try {
-            $response = (new AuthApiClient($this->user, 'ACCESS_TOKEN'))
+            $response = (new AuthApiClient(Auth::user(), 'ACCESS_TOKEN'))
                 ->exchangeLwaCode(
                     $uid, $request->get('spapi_oauth_code')
                 );
 
-            $client = new SellersApiClient($this->user, $response->token(), $region);
+            $client = new SellersApiClient(Auth::user(), $response->token(), $region);
             /** @var MarketplaceParticipation $participation */
             foreach ($client->listParticipations() as $participation) {
                 /** @var Marketplace $marketplace */
@@ -82,7 +83,7 @@ class ConnectionsController extends Controller {
                     continue;
                 }
 
-                $account = $this->user->registerSeller($marketplace, $seller_id);
+                $account = Auth::user()->registerSeller($marketplace, $seller_id);
 
                 SpToken::query()->updateOrCreate([
                     'user_id' => $account->id
@@ -90,7 +91,7 @@ class ConnectionsController extends Controller {
                     'access_token'    => $response->token(),
                     'refresh_token'   => $response->refreshToken(),
                     'token_type'      => $response->type(),
-                    'expires_at'      => Carbon::now()->addSeconds(3000), // deliberately kept 600 secs less
+                    'expires_at'      => Carbon::now()->addSeconds(3000),
                     'last_updated_at' => Carbon::now()
                 ]);
 
@@ -104,11 +105,10 @@ class ConnectionsController extends Controller {
             }
 
         } catch (ClientExceptionInterface|Exception $ex) {
-            BugReport::logException($ex, $this->user);
+            BugReport::logException($ex, Auth::user());
             flash()->error('Failed connecting sellers. ' . $ex->getMessage());
         }
 
         return redirect('/');
     }
-
 }
