@@ -241,6 +241,12 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 });
 
+Route::get('/', [ConnectionsController::class, 'getIndex'])->name('home');
+Route::get('/home', [ConnectionsController::class, 'getIndex']);
+Route::get('/auth', [ConnectionsController::class, 'getAuth']);
+Route::get('sp/register', [ConnectionsController::class, 'getRegister']);
+Route::get('/status-change', [ConnectionsController::class, 'getStatusChange']);
+
 Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->group(function(){
     Route::namespace('Shopify')->prefix('shopify')->as('shopify.')->group(function(){
         Route::get('redirect_uri', RedirectController::class)->name('redirect_uri');
