@@ -51,7 +51,7 @@ class CreateRequest extends FormRequest
         //     $rules['cnpj'] = 'sometimes|cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
         //     $rules['zipcode'] = ['required', new ZipCodeValidator($this->country_id,$this->state_id)];
         // }
-        if (Country::where('code', 'BR')->first()->id == $this->country_id) {
+        if (Country::where('code', 'BR')->first()->id == $this->country_id && $this->account_type =='individual') {
             $rules['tax_id'] = 'sometimes|cpf_cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
             // $rules['tax_id'] = 'sometimes|cnpj|required_if:country_id,'.Country::where('code', 'BR')->first()->id;
             $rules['zipcode'] = [ ($this->country_id == \App\Models\Order::Guatemala ?'nullable':'required'), new ZipCodeValidator($this->country_id,$this->state_id)];
