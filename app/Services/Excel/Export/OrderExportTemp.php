@@ -84,9 +84,9 @@ class OrderExportTemp extends AbstractExportService
             $this->setCellValue('Z'.$row, '');   
             $this->setCellValue('AA'.$row,'');
             $this->setCellValue('AB'.$row,'B2C');
-            $this->setCellValue('AC'.$row, $type == 'Priority' ||$type == 'Priority' ? 'LTPO' : 'UZPO');
+            $this->setCellValue('AC'.$row, $type == 'Priority' ||$type == 'Premium' ? 'LTPO' : 'UZPO');
             $this->setCellValue('AD'.$row, $order->carrierService());
-            $this->setCellValue('AE'.$row, $type == 'Priority' ||$type == 'Priority' ? 'LTPO '.$type : 'UZPO '.$type);
+            $this->setCellValue('AE'.$row, $type == 'Priority' ||$type == 'Premium' ? 'LTPO '.$type : 'UZPO '.$type);
             $this->setCellValue('AF'.$row,'');
             $this->setCellValue('AG'.$row,'');
             $this->setCellValue('AH'.$row,'');
