@@ -243,7 +243,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 });
 
 Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
-Route::get('/home', [ConnectionsController::class, 'getIndex']);
+Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
 Route::get('/auth', [ConnectionsController::class, 'getAuth']);
 Route::get('sp/register', [ConnectionsController::class, 'getRegister']);
 Route::get('/status-change', [ConnectionsController::class, 'getStatusChange']);
