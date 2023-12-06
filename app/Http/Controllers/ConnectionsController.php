@@ -18,20 +18,17 @@ use App\AmazonSPClients\SellersApiClient;
 use Psr\Http\Client\ClientExceptionInterface;
 use AmazonSellingPartner\Model\Sellers\MarketplaceParticipation;
 
-class ConnectionsController extends Controller {
+class ConnectionsController extends Controller
+{
 
-    public function getIndex(Request $request) {
-        $user = Auth::user(); 
-        $data_table = new ConnectionsDataTable($user, $request);
-    
-        if ($request->ajax()) {
-            return $data_table->getData();
-        }
-
-        return view('admin.users.amazon.connections', compact('data_table'));
+    public function getIndex(Request $request)
+    {
+        $user = Auth::user();
+        return view('admin.users.amazon.connections', compact('user'));
     }
 
-    public function getStatusChange(Request $request): JsonResponse {
+    public function getStatusChange(Request $request): JsonResponse
+    {
         $request->validate(['account_id' => ['required']]);
 
         /** @var User $account */
@@ -46,7 +43,8 @@ class ConnectionsController extends Controller {
     /**
      * @throws Exception
      */
-    public function getAuth(Request $request) {
+    public function getAuth(Request $request)
+    {
         $this->validate($request, ['region' => 'required']);
 
         return (new AuthApiClient(Auth::user(), 'ACCESS_TOKEN'))
@@ -56,13 +54,15 @@ class ConnectionsController extends Controller {
             );
     }
 
-    public function getRegister(Request $request) {
+    public function getRegister(Request $request)
+    {
         [$uid, $region] = explode('|', $request->get('state'));
         Log::info('getRegisterSp: ' . json_encode($request->all()));
 
+        $user = Auth::user();
         if ($user->id != $uid) {
-            flash()->error('Something went wrong');
-            return redirect('/');
+            session()->flash('alert-danger', 'Something went wrong');
+            return redirect('/user/amazon/connect');
         }
 
         $seller_id = $request->get('selling_partner_id');
@@ -71,9 +71,9 @@ class ConnectionsController extends Controller {
         try {
             $response = (new AuthApiClient(Auth::user(), 'ACCESS_TOKEN'))
                 ->exchangeLwaCode(
-                    $uid, $request->get('spapi_oauth_code')
+                    $uid,
+                    $request->get('spapi_oauth_code')
                 );
-
             $client = new SellersApiClient(Auth::user(), $response->token(), $region);
             /** @var MarketplaceParticipation $participation */
             foreach ($client->listParticipations() as $participation) {
@@ -82,8 +82,7 @@ class ConnectionsController extends Controller {
                 if (!$marketplace || $marketplace->region_code !== $region) {
                     continue;
                 }
-
-                $account = Auth::user()->registerSeller($marketplace, $seller_id);
+                $account = (Auth::user())->registerSeller($marketplace, $seller_id);
 
                 SpToken::query()->updateOrCreate([
                     'user_id' => $account->id
@@ -99,16 +98,16 @@ class ConnectionsController extends Controller {
             }
 
             if ($connection) {
-                flash()->success('Successfully connected sellers');
+                session()->flash('alert-success', 'Successfully connected sellers');
             } else {
-                flash()->error('Failed connecting sellers');
+                session()->flash('alert-danger', 'Failed connecting sellers');
             }
+        } catch (ClientExceptionInterface | Exception $ex) {
 
-        } catch (ClientExceptionInterface|Exception $ex) {
             BugReport::logException($ex, Auth::user());
-            flash()->error('Failed connecting sellers. ' . $ex->getMessage());
+            session()->flash('alert-danger', 'Failed connecting sellers. ' . $ex->getMessage());
         }
 
-        return redirect('/');
+        return redirect('/user/amazon/connect');
     }
 }

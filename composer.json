@@ -33,11 +33,16 @@
         "setasign/fpdi": "^2.3",
         "spatie/laravel-activitylog": "^3.16",
         "stripe/stripe-php": "^7.100",
-        "stechstudio/backoff": "^1.2",
-        "webklex/laravel-pdfmerger": "^1.3",
-        "yangyao/php-barcode": "dev-master",
-        "yajra/laravel-datatables": "^10.1",
-        "yajra/laravel-datatables-buttons": "^10.0"
+        "stechstudio/backoff": "^1.2",  
+        "webklex/laravel-pdfmerger": "^1.3",   
+        "yangyao/php-barcode": "dev-master",     
+        "awobaz/compoships": "^2.1",  
+        "kriswallsmith/buzz": "^1.1",  
+        "laracasts/flash": "^3.1",
+        "nyholm/psr7": "^1.7" ,
+        "yajra/laravel-datatables": "1.7.0"
+           
+        
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
@@ -67,7 +72,8 @@
             "database/factories"
         ],
         "files": [
-            "app/Http/functions.php"
+            "app/Http/functions.php",
+            "app/Helpers/shared.php"
         ]
     },
     "autoload-dev": {

@@ -23,11 +23,13 @@ class AuthApiClient extends Client {
 			$access_token = $sdk->oAuth()->exchangeLwaCode($lwaCode);
 
 		} catch (ApiException $ex) {
-			SpTokenResponse::query()->create([
-				'user_id'  => $uid,
-				'header'   => $ex->getResponseHeaders(),
-				'response' => $ex->getResponseBody()
-			]);
+			if($ex->getResponseBody() && $ex->getResponseHeaders()){
+				SpTokenResponse::query()->create([
+					'user_id'  => $uid,
+					'header'   => $ex->getResponseHeaders(),
+					'response' => $ex->getResponseBody()
+				]);
+			}
 
 			throw $ex;
 		}

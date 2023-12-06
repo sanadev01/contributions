@@ -63,16 +63,16 @@ abstract class Client {
      * @throws JsonException
      */
     public function getSellingPartnerSDK(): SellingPartnerSDK {
-        $factory = new Psr17Factory();
+        $factory = new  Psr17Factory();
         $client = new Curl($factory);
         $logger = new NullLogger();
-
         $configuration = new Configuration(
             config('services.sp-api.SP_APP_CLIENT_ID'),
             config('services.sp-api.SP_APP_CLIENT_SECRET')
         );
 
         return SellingPartnerSDK::create($client, $factory, $factory, $configuration, $logger);
+
     }
 
     /**

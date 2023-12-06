@@ -17,7 +17,7 @@ final class SellingPartnerSDK
     /**
      * @var array<class-string>
      */
-    private array $instances;
+    private   $instances;
 
     private $httpFactory;
     private $httpClient;

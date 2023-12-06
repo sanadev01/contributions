@@ -1,6 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace AmazonSellingPartner\Exception;
+
+use Exception;
 
 final class ApiException extends Exception
 {
@@ -10,19 +14,20 @@ final class ApiException extends Exception
     protected $responseObject = null;
 
     /**
-     * Constructor.
-     *
-     * @param string $message Error message
-     * @param int $code HTTP status code
-     * @param null|string[] $responseHeaders HTTP response header
-     * @param null|\stdClass|string $responseBody HTTP decoded body of the server response either as \stdClass or string
-     * @param null|\Throwable $previousException
+     * @var null|string[] HTTP response header
      */
-    protected ?array $responseHeaders = null;
+    protected $responseHeaders = null;
+
+    /**
+     * @var null|\stdClass|string HTTP decoded body of the server response either as \stdClass or string
+     */
     protected $responseBody = null;
 
-    public function __construct(string $message = '', int $code = 0, \Throwable $previousException = null)
-    {
+    public function __construct(
+        string $message = '',
+        int $code = 0,
+        ?\Throwable $previousException = null
+    ) {
         $this->responseHeaders = null; // You can initialize this property if needed
         $this->responseBody = null;   // You can initialize this property if needed
 
@@ -34,7 +39,7 @@ final class ApiException extends Exception
      *
      * @return null|string[] HTTP response header
      */
-    public function getResponseHeaders() : ?array
+    public function getResponseHeaders(): ?array
     {
         return $this->responseHeaders;
     }
@@ -50,9 +55,9 @@ final class ApiException extends Exception
     }
 
     /**
-     * Sets the deseralized response object (during deserialization).
+     * Sets the deserialized response object (during deserialization).
      *
-     * @param \stdClass|string  $obj Deserialized response object
+     * @param \stdClass|string $obj Deserialized response object
      */
     public function setResponseObject($obj): void
     {
@@ -60,7 +65,7 @@ final class ApiException extends Exception
     }
 
     /**
-     * Gets the deseralized response object (during deserialization).
+     * Gets the deserialized response object (during deserialization).
      *
      * @return null|\stdClass|string the deserialized response object
      */

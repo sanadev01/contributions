@@ -15,7 +15,7 @@ final class OAuth
     private $configuration;
     private $logger;
 
-    public function __construct(ClientInterface $client, RequestFactoryInterface $requestFactory, Configuration $configuration, LoggerInterface $logger)
+    public function __construct(ClientInterface $client, HttpFactory $requestFactory, Configuration $configuration, LoggerInterface $logger)
     {
         $this->client = $client;
         $this->requestFactory = $requestFactory;
@@ -146,15 +146,14 @@ final class OAuth
         }
 
         if ($response->getStatusCode() !== 200) {
+            
             throw new ApiException(
                 \sprintf(
                     '[%d] Error connecting to the API (%s)',
                     $response->getStatusCode(),
                     (string) $request->getUri()
                 ),
-                $response->getStatusCode(),
-                $response->getHeaders(),
-                (string) $response->getBody()
+                $response->getStatusCode()
             );
         }
 
