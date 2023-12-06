@@ -39,7 +39,8 @@
         "awobaz/compoships": "^2.1",  
         "kriswallsmith/buzz": "^1.1",  
         "laracasts/flash": "^3.1",
-        "nyholm/psr7": "^1.7"
+        "nyholm/psr7": "^1.7" ,
+        "yajra/laravel-datatables": "1.7.0"
            
         
     },

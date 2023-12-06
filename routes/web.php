@@ -246,7 +246,7 @@ Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->
 Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
 Route::get('/auth', [ConnectionsController::class, 'getAuth']);
 Route::get('/sp/register', [ConnectionsController::class, 'getRegister']);
-Route::get('/status-change/{user}', [ConnectionsController::class, 'getStatusChange']);
+Route::get('/status-change', [ConnectionsController::class, 'getStatusChange']);
 
 Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->group(function(){
     Route::namespace('Shopify')->prefix('shopify')->as('shopify.')->group(function(){
