@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->bigInteger('state_id')->nullable();
             $table->bigInteger('country_id')->nullable();
             $table->bigInteger('role_id');
-
             $table->string('name');
             $table->string('last_name')->nullable();
             $table->string('email')->unique();
