@@ -367,7 +367,7 @@ class User extends Authenticatable
      * @return HasMany
      */
     public function siblings() {
-        return $this->hasMany(self::class, ['parent_id', 'user_type', 'seller_id'], ['parent_id', 'user_type', 'seller_id']);
+        return $this->hasMany(self::class, ['parent_id' , 'seller_id'], ['parent_id' , 'seller_id']);
     }
  
     public function marketplace(){
