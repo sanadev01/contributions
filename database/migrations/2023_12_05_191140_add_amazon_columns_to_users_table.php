@@ -10,7 +10,6 @@ class AddAmazonColumnsToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_active')->default(0);
-            $table->string('user_type')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->string('seller_id')->nullable();
             $table->foreignId('marketplace_id')->nullable()->constrained('marketplaces')->cascadeOnDelete();

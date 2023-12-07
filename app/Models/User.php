@@ -35,9 +35,6 @@ class User extends Authenticatable
 
     const ACCOUNT_TYPE_BUSINESS = 'business';
     const ACCOUNT_TYPE_INDIVIDUAL = 'individual';
-    
-    const USER_TYPE_ADMIN = 'ADMIN';
-    const USER_TYPE_SELLER = 'SELLER';
 
     const GILBERTO_ACCOUNT_ID = 13;
     
@@ -71,7 +68,6 @@ class User extends Authenticatable
         'usps', 'api_profit', 'order_dimension', 'sinerlog', 'stripe', 'ups','amazon_api_enabled','amazon_api_key', 
         'email_verified_at', 
         'is_active',
-        'user_type',
         'parent_id',
         'seller_id',
         'marketplace_id',
@@ -399,7 +395,6 @@ class User extends Authenticatable
      */
     public function registerSeller(Marketplace $marketplace, string $seller_id) {
         $account = self::query()->firstOrCreate([
-            'user_type'      => self::USER_TYPE_SELLER,
             'parent_id'      => $this->id,
             'seller_id'      => $seller_id,
             'marketplace_id' => $marketplace->id,
@@ -418,18 +413,12 @@ class User extends Authenticatable
         }
     }
 
-    public static function getActiveCallables($user_type = [self::USER_TYPE_SELLER]) {
-        $user_type = is_array($user_type) ? $user_type : [$user_type];
+    public static function getActiveCallables() {
         $query = self::query()
             ->where('is_active', true)
             ->whereHas('parent', function ($query) {
                 $query->where('is_active', true);
             });
-
-        if ($user_type) {
-            $query->whereIn('user_type', $user_type);
-        }
-
         return $query->get();
     }
 }

@@ -78,7 +78,7 @@ class ExecuteJob extends Command {
 
         switch ($jobType) {
             case 'orders':
-                return User::getActiveCallables([User::USER_TYPE_SELLER]);
+                return User::getActiveCallables();
             default:
                 return User::all();
         }

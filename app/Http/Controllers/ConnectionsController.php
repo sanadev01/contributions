@@ -23,21 +23,18 @@ class ConnectionsController extends Controller
 
     public function getIndex(Request $request)
     {
-        $user = Auth::user();
-        return view('admin.users.amazon.connections', compact('user'));
+        $users = User::whereHas('sp_token')->when(Auth::user()->isUser(), function ($query) {
+            $query->where('id', Auth::id());
+        })->get();
+        return view('admin.users.amazon.connections', compact('users'));
     }
 
-    public function getStatusChange(Request $request): JsonResponse
+    public function getStatusChange(User $user)
     {
-        $request->validate(['account_id' => ['required']]);
 
-        /** @var User $account */
-        $account = User::query()->findOrFail($request->get('account_id'));
-
-        $account->is_active = !$account->is_active;
-        $account->save();
-
-        return $this->resJson('Successfully changed status');
+        $user->is_active = !$user->is_active;
+        $user->save();
+        return redirect('/user/amazon/connect');
     }
 
     /**

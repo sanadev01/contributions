@@ -25,7 +25,6 @@ class ConnectionsDataTable extends DataTableBase {
         return DB::table('users AS u')
             ->join('marketplaces AS m', 'm.id', 'u.marketplace_id')
             ->join('sp_tokens AS spt', 'spt.user_id', 'u.id')
-            ->where('u.user_type', User::USER_TYPE_SELLER)
             ->where('u.parent_id', $this->user->id)
             ->select($this->columns);
     }

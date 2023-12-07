@@ -3,18 +3,16 @@
         <img src="{{ asset('images/icon/profile.svg') }}" alt="Profile">
         <span data-i18n="Apps"> @lang('menu.profile') </span>
     </a>
-</li>
-@user
+</li> 
     @php $user = Auth()->user(); @endphp
-    @if(setting('amazon_sp', null, $user->id))
-        <li class="nav-item mb-3" style="background: #70a6fa; color: #fff; font-weight: 700; font-size: 16px;">
-            <a class="nav-link" href="{{ route('amazon.home') }}" style="color: #fff;">
-                <img src="{{ asset('images/icon/amazon.svg') }}" alt="amazon api" width="20px">
+    @if(setting('amazon_sp', null, $user->id)||Auth()->user()->isAdmin())
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('amazon.home') }}"  >
+                <img src="{{ asset('images/icon/amazon.svg') }}" alt="amazon api" >
                 <span data-i18n="Apps"> Amazon SP Account</span>
             </a>
         </li>
     @endif
-@enduser
 
 @user
     @php $user = Auth()->user(); @endphp
