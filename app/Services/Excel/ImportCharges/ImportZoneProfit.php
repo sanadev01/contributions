@@ -43,7 +43,7 @@ class ImportZoneProfit extends AbstractImportService
                 $currentGroupId = $groupId;
             }
 
-            if (empty($countryCode)) {
+            if (empty($countryCode)||!is_numeric($currentGroupId)) {
                 continue;
             }
 
