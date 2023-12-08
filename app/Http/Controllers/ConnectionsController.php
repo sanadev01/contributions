@@ -65,7 +65,7 @@ class ConnectionsController extends Controller
         $seller_id = $request->get('selling_partner_id');
 
         $connection = false;
-        try {
+        // try {
             $response = (new AuthApiClient(Auth::user(), 'ACCESS_TOKEN'))
                 ->exchangeLwaCode(
                     $uid,
@@ -99,11 +99,11 @@ class ConnectionsController extends Controller
             } else {
                 session()->flash('alert-danger', 'Failed connecting sellers');
             }
-        } catch (ClientExceptionInterface | Exception $ex) {
+        // } catch (ClientExceptionInterface | Exception $ex) {
 
-            BugReport::logException($ex, Auth::user());
-            session()->flash('alert-danger', 'Failed connecting sellers. ' . $ex->getMessage());
-        }
+        //     BugReport::logException($ex, Auth::user());
+        //     session()->flash('alert-danger', 'Failed connecting sellers. ' . $ex->getMessage());
+        // }
 
         return redirect('/user/amazon/connect');
     }
