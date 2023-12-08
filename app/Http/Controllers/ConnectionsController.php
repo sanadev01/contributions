@@ -72,7 +72,7 @@ class ConnectionsController extends Controller
                     $request->get('spapi_oauth_code')
                 );
             $client = new SellersApiClient(Auth::user(), $response->token(), $region);
-            /** @var MarketplaceParticipation $participation */
+           dd($client->listParticipations());
             foreach ($client->listParticipations() as $participation) {
                 /** @var Marketplace $marketplace */
                 $marketplace = Marketplace::getById($participation->getMarketplace()->getId());
