@@ -10,26 +10,25 @@ use Exception;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 
-class AuthApiClient extends Client {
+class AuthApiClient extends Client
+{
 
 	/**
 	 * @throws ClientExceptionInterface
 	 * @throws ApiException
 	 * @throws JsonException
 	 */
-	public function exchangeLwaCode(string $uid, string $lwaCode) {
+	public function exchangeLwaCode(string $uid, string $lwaCode)
+	{
 		$sdk = $this->getSellingPartnerSDK();
 		try {
-			$access_token = $sdk->oAuth()->exchangeLwaCode($lwaCode);
-
+			$access_token = $sdk->oAuth()->exchangeLwaCode(lwaCode: $lwaCode);
 		} catch (ApiException $ex) {
-			if($ex->getResponseBody() && $ex->getResponseHeaders()){
-				SpTokenResponse::query()->create([
-					'user_id'  => $uid,
-					'header'   => $ex->getResponseHeaders(),
-					'response' => $ex->getResponseBody()
-				]);
-			}
+			SpTokenResponse::query()->create([
+				'user_id'  => $uid,
+				'header'   => $ex->getResponseHeaders(),
+				'response' => $ex->getResponseBody()
+			]);
 
 			throw $ex;
 		}
@@ -40,7 +39,8 @@ class AuthApiClient extends Client {
 	/**
 	 * @throws Exception
 	 */
-	public function authorizeConsent(string $uid, string $region) {
+	public function authorizeConsent(string $uid, string $region)
+	{
 		$query = http_build_query([
 			'version'        => 'beta',
 			'application_id' => config('services.sp-api.SP_APP_ID'),
@@ -54,19 +54,13 @@ class AuthApiClient extends Client {
 	/**
 	 * @throws Exception
 	 */
-	private function _getEndpoint($region): string {
-		switch ($region) {
-			case Marketplace::REGION_NA:
-			case Regions::NORTH_AMERICA:
-				return 'https://sellercentral.amazon.com';
-			case Marketplace::REGION_EU:
-			case Regions::EUROPE:
-				return 'https://sellercentral-europe.amazon.com';
-			case Marketplace::REGION_FE:
-			case Regions::FAR_EAST:
-				return 'https://sellercentral.amazon.co.jp';
-			default:
-				throw new Exception('Unknown region [' . $region . '] defined in the call');
-		}
+	private function _getEndpoint($region): string
+	{
+		return match ($region) {
+			Marketplace::REGION_NA, Regions::NORTH_AMERICA => 'https://sellercentral.amazon.com',
+			Marketplace::REGION_EU, Regions::EUROPE => 'https://sellercentral-europe.amazon.com',
+			Marketplace::REGION_FE, Regions::FAR_EAST => 'https://sellercentral.amazon.co.jp',
+			default => throw new Exception('Unknown region [' . $region . '] defined in the call'),
+		};
 	}
 }

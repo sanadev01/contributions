@@ -63,16 +63,16 @@ abstract class Client {
      * @throws JsonException
      */
     public function getSellingPartnerSDK(): SellingPartnerSDK {
-        $factory = new  Psr17Factory();
+        $factory = new Psr17Factory();
         $client = new Curl($factory);
         $logger = new NullLogger();
+
         $configuration = new Configuration(
             config('services.sp-api.SP_APP_CLIENT_ID'),
             config('services.sp-api.SP_APP_CLIENT_SECRET')
         );
 
         return SellingPartnerSDK::create($client, $factory, $factory, $configuration, $logger);
-
     }
 
     /**
@@ -111,16 +111,11 @@ abstract class Client {
      * @return string
      */
     public function getRegion(): string {
-        $region = $this->region ?? $this->user->getRegion();
-    
-        switch ($region) {
-            case Marketplace::REGION_NA:
-                return Regions::NORTH_AMERICA;
-            case Marketplace::REGION_EU:
-                return Regions::EUROPE;
-            default:
-                return Regions::FAR_EAST;
-        }
+        return match ($this->region ?? $this->user->getRegion()) {
+            Marketplace::REGION_NA => Regions::NORTH_AMERICA,
+            Marketplace::REGION_EU => Regions::EUROPE,
+            default => Regions::FAR_EAST,
+        };
     }
 
     /**
