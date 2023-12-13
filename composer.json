@@ -64,8 +64,7 @@
             "database/factories"
         ],
         "files": [
-            "app/Http/functions.php",
-            "app/Helpers/shared.php"
+            "app/Http/functions.php"
         ]
     },
     "autoload-dev": {
