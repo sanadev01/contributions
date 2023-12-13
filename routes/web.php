@@ -243,7 +243,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 });
 
 Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
-Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']); 
+Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
+Route::get('/auth', [ConnectionsController::class, 'getAuth']); 
 Route::get('/status-change/{user}', [ConnectionsController::class, 'getStatusChange']);
 
 Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->group(function(){
