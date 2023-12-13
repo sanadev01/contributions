@@ -38,10 +38,10 @@ class Parcel
          $contractId = config('total_express.test.contractId');
       }
       return [
-         "order_number" => $this->order->id,
+         "order_number" => $this->order->warehouse_number,
          "contract_id" => $contractId,
          "sales_channel_id" => null,
-         "sales_channel_order_number" => null,
+         // "sales_channel_order_number" => null,
          "incoterm" => "DDP",
          "is_landed_cost" => false,
          "observations" => " ",
@@ -77,6 +77,7 @@ class Parcel
          'seller_email' => ($this->order->sender_email) ? $this->order->sender_email : $this->order->user->email,
          "seller_tax_number" =>"12345678-998A",
          'customerReferenceID' => ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id) . ' HD-' . $this->order->id,
+         'sales_channel_order_number' => ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id) . ' HD-' . $this->order->id,
          "seller_address_number" => "605",
          "seller_address_complement" => " ",
          "seller_website" => "www.seller.com",
