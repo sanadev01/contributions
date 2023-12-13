@@ -25,47 +25,47 @@ use AmazonSellingPartner\ObjectSerializer;
  */
 class Order implements \ArrayAccess, \JsonSerializable, \Stringable, ModelInterface
 {
-    public const DISCRIMINATOR = null;
+    final public const DISCRIMINATOR = null;
 
-    public const ORDER_STATUS_PENDING = 'Pending';
+    final public const ORDER_STATUS_PENDING = 'Pending';
 
-    public const ORDER_STATUS_UNSHIPPED = 'Unshipped';
+    final public const ORDER_STATUS_UNSHIPPED = 'Unshipped';
 
-    public const ORDER_STATUS_PARTIALLY_SHIPPED = 'PartiallyShipped';
+    final public const ORDER_STATUS_PARTIALLY_SHIPPED = 'PartiallyShipped';
 
-    public const ORDER_STATUS_SHIPPED = 'Shipped';
+    final public const ORDER_STATUS_SHIPPED = 'Shipped';
 
-    public const ORDER_STATUS_CANCELED = 'Canceled';
+    final public const ORDER_STATUS_CANCELED = 'Canceled';
 
-    public const ORDER_STATUS_UNFULFILLABLE = 'Unfulfillable';
+    final public const ORDER_STATUS_UNFULFILLABLE = 'Unfulfillable';
 
-    public const ORDER_STATUS_INVOICE_UNCONFIRMED = 'InvoiceUnconfirmed';
+    final public const ORDER_STATUS_INVOICE_UNCONFIRMED = 'InvoiceUnconfirmed';
 
-    public const ORDER_STATUS_PENDING_AVAILABILITY = 'PendingAvailability';
+    final public const ORDER_STATUS_PENDING_AVAILABILITY = 'PendingAvailability';
 
-    public const FULFILLMENT_CHANNEL_MFN = 'MFN';
+    final public const FULFILLMENT_CHANNEL_MFN = 'MFN';
 
-    public const FULFILLMENT_CHANNEL_AFN = 'AFN';
+    final public const FULFILLMENT_CHANNEL_AFN = 'AFN';
 
-    public const PAYMENT_METHOD_COD = 'COD';
+    final public const PAYMENT_METHOD_COD = 'COD';
 
-    public const PAYMENT_METHOD_CVS = 'CVS';
+    final public const PAYMENT_METHOD_CVS = 'CVS';
 
-    public const PAYMENT_METHOD_OTHER = 'Other';
+    final public const PAYMENT_METHOD_OTHER = 'Other';
 
-    public const ORDER_TYPE_STANDARD_ORDER = 'StandardOrder';
+    final public const ORDER_TYPE_STANDARD_ORDER = 'StandardOrder';
 
-    public const ORDER_TYPE_LONG_LEAD_TIME_ORDER = 'LongLeadTimeOrder';
+    final public const ORDER_TYPE_LONG_LEAD_TIME_ORDER = 'LongLeadTimeOrder';
 
-    public const ORDER_TYPE_PREORDER = 'Preorder';
+    final public const ORDER_TYPE_PREORDER = 'Preorder';
 
-    public const ORDER_TYPE_BACK_ORDER = 'BackOrder';
+    final public const ORDER_TYPE_BACK_ORDER = 'BackOrder';
 
-    public const ORDER_TYPE_SOURCING_ON_DEMAND_ORDER = 'SourcingOnDemandOrder';
+    final public const ORDER_TYPE_SOURCING_ON_DEMAND_ORDER = 'SourcingOnDemandOrder';
 
-    public const BUYER_INVOICE_PREFERENCE_INDIVIDUAL = 'INDIVIDUAL';
+    final public const BUYER_INVOICE_PREFERENCE_INDIVIDUAL = 'INDIVIDUAL';
 
-    public const BUYER_INVOICE_PREFERENCE_BUSINESS = 'BUSINESS';
+    final public const BUYER_INVOICE_PREFERENCE_BUSINESS = 'BUSINESS';
 
     /**
      * The original name of the model.

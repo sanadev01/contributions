@@ -10,17 +10,8 @@ use Psr\Log\LoggerInterface;
 
 final class OAuth
 {
-    private $client;
-    private $requestFactory;
-    private $configuration;
-    private $logger;
-
-    public function __construct(ClientInterface $client, HttpFactory $requestFactory, Configuration $configuration, LoggerInterface $logger)
+    public function __construct(private readonly ClientInterface $client, private readonly HttpFactory $requestFactory, private readonly Configuration $configuration, private readonly LoggerInterface $logger)
     {
-        $this->client = $client;
-        $this->requestFactory = $requestFactory;
-        $this->configuration = $configuration;
-        $this->logger = $logger;
     }
 
     /**
@@ -146,14 +137,15 @@ final class OAuth
         }
 
         if ($response->getStatusCode() !== 200) {
-            
             throw new ApiException(
                 \sprintf(
                     '[%d] Error connecting to the API (%s)',
                     $response->getStatusCode(),
                     (string) $request->getUri()
                 ),
-                $response->getStatusCode()
+                $response->getStatusCode(),
+                $response->getHeaders(),
+                (string) $response->getBody()
             );
         }
 

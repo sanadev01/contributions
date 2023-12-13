@@ -19,15 +19,14 @@ class OtherDeliveryAttributes
     /**
      * Possible values of this enum.
      */
-    public const HAS_ACCESS_POINT = 'HAS_ACCESS_POINT';
+    final public const HAS_ACCESS_POINT = 'HAS_ACCESS_POINT';
 
-    public const PALLET_ENABLED = 'PALLET_ENABLED';
+    final public const PALLET_ENABLED = 'PALLET_ENABLED';
 
-    public const PALLET_DISABLED = 'PALLET_DISABLED';
+    final public const PALLET_DISABLED = 'PALLET_DISABLED';
 
-    public function __construct($value)
+    public function __construct(private readonly string $value)
     {
-        $this->value = $value;
     }
 
     /**

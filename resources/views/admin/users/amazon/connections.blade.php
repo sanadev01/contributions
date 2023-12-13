@@ -8,10 +8,20 @@
                 <div class="card-header">
                     <h4 class="mb-0">Amazon Selling Partner Connections</h4>
                 </div>
-                <div class="alert {{ Session::get('alert-class')}}" role="alert">
-                        {{  Session::get('message') }}
-                    </div> 
-                    
+                <div class="mt-3 mx-5">
+                    @if(session()->has('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                    @endif
+
+                    @if(session()->has('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                    @endif
+                </div>
+
                 <div class="card-content">
                     <div class="mt-1">
                         <div class="card-body">
@@ -34,6 +44,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach($users as $user)
                                         @if($user->seller_id)
                                         <tr>
                                             <td>
@@ -44,15 +55,21 @@
                                             </td>
                                             <td>
                                                 {{$user->updated_at}}
-                                            </td> 
+                                            </td>
+                                            <td>
+                                                <a href="/status-change/{{$user->id}}" class="btn btn-sm btn-{{ $user->is_active ? 'danger' : 'success' }}">
+                                                    {{ $user->is_active ? 'Deactivate' : 'Activate' }}
+                                                </a>
+                                            </td>
                                         </tr>
                                         @else
                                         <tr>
                                             <td colspan="4" class="text-center">
-                                                   No Connection found !
+                                                No Connection found !
                                             </td>
                                         </tr>
                                         @endif
+                                        @endforeach
                                     </tbody>
 
                                 </table>

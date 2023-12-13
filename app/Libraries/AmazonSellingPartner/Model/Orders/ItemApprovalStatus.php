@@ -19,21 +19,20 @@ class ItemApprovalStatus
     /**
      * Possible values of this enum.
      */
-    public const PENDING_SELLING_PARTNER_APPROVAL = 'PENDING_SELLING_PARTNER_APPROVAL';
+    final public const PENDING_SELLING_PARTNER_APPROVAL = 'PENDING_SELLING_PARTNER_APPROVAL';
 
-    public const PROCESSING_SELLING_PARTNER_APPROVAL = 'PROCESSING_SELLING_PARTNER_APPROVAL';
+    final public const PROCESSING_SELLING_PARTNER_APPROVAL = 'PROCESSING_SELLING_PARTNER_APPROVAL';
 
-    public const PENDING_AMAZON_APPROVAL = 'PENDING_AMAZON_APPROVAL';
+    final public const PENDING_AMAZON_APPROVAL = 'PENDING_AMAZON_APPROVAL';
 
-    public const APPROVED = 'APPROVED';
+    final public const APPROVED = 'APPROVED';
 
-    public const APPROVED_WITH_CHANGES = 'APPROVED_WITH_CHANGES';
+    final public const APPROVED_WITH_CHANGES = 'APPROVED_WITH_CHANGES';
 
-    public const DECLINED = 'DECLINED';
+    final public const DECLINED = 'DECLINED';
 
-    public function __construct($value)
+    public function __construct(private readonly string $value)
     {
-        $this->value = $value;
     }
 
     /**

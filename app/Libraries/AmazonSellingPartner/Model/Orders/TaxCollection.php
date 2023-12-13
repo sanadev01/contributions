@@ -25,11 +25,11 @@ use AmazonSellingPartner\ObjectSerializer;
  */
 class TaxCollection implements \ArrayAccess, \JsonSerializable, \Stringable, ModelInterface
 {
-    public const DISCRIMINATOR = null;
+    final public const DISCRIMINATOR = null;
 
-    public const MODEL_MARKETPLACE_FACILITATOR = 'MarketplaceFacilitator';
+    final public const MODEL_MARKETPLACE_FACILITATOR = 'MarketplaceFacilitator';
 
-    public const RESPONSIBLE_PARTY_AMAZON_SERVICES_INC = 'Amazon Services, Inc.';
+    final public const RESPONSIBLE_PARTY_AMAZON_SERVICES_INC = 'Amazon Services, Inc.';
 
     /**
      * The original name of the model.
