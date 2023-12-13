@@ -20,7 +20,7 @@ class AddAmazonColumnsToUsersTable extends Migration
 
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) { 
             $table->dropColumn('is_active');
             $table->dropForeign(['parent_id']);
             $table->dropColumn('parent_id');
