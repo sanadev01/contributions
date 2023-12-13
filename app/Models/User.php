@@ -387,39 +387,8 @@ class User extends Authenticatable
     public function getRegion(): string {
         return $this->region_code ?: ($this->marketplace ? $this->marketplace->region_code : 'na');
     }
+ 
 
-    /**
-     * @param Marketplace $marketplace
-     * @param string $seller_id
-     * @return User
-     */
-    public function registerSeller(Marketplace $marketplace, string $seller_id) {
-        $account = self::query()->firstOrCreate([
-            'parent_id'      => $this->id,
-            'seller_id'      => $seller_id,
-            'marketplace_id' => $marketplace->id,
-            'region_code'    => $marketplace->region_code
-        ]);
-
-        return $account;
-    }
-
-    public function hasSellingPartnerAccess(){
-        try {
-            (new SellersApiClient($this))->listParticipations();
-            return true;
-        } catch (ApiException|InvalidArgumentException|JsonException|ClientExceptionInterface|Exception $e) { 
-            return false;
-        }
-    }
-
-    public static function getActiveCallables() {
-        $query = self::query()
-            ->where('is_active', true)
-            ->whereHas('parent', function ($query) {
-                $query->where('is_active', true);
-            });
-        return $query->get();
-    }
+    
 }
 
