@@ -18,9 +18,8 @@ class ConnectionsController extends Controller
         return view('admin.users.amazon.connections', compact('users'));
     }
 
-    public function getStatusChange(Request $request): JsonResponse
+    public function getStatusChange(User $user)
     {
-        $request->validate(['account_id' => ['required']]);
 
         $user->is_active = !$user->is_active;
         $user->save();
