@@ -25,13 +25,13 @@ use AmazonSellingPartner\ObjectSerializer;
  */
 class ItemIdentifier implements \ArrayAccess, \JsonSerializable, \Stringable, ModelInterface
 {
-    public const DISCRIMINATOR = null;
+    final public const DISCRIMINATOR = null;
 
-    public const IDENTIFIER_TYPE_ASIN = 'ASIN';
+    final public const IDENTIFIER_TYPE_ASIN = 'ASIN';
 
-    public const IDENTIFIER_TYPE_SELLER_SKU = 'SELLER_SKU';
+    final public const IDENTIFIER_TYPE_SELLER_SKU = 'SELLER_SKU';
 
-    public const IDENTIFIER_TYPE_EXTERNAL_ID = 'EXTERNAL_ID';
+    final public const IDENTIFIER_TYPE_EXTERNAL_ID = 'EXTERNAL_ID';
 
     /**
      * The original name of the model.

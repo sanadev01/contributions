@@ -25,7 +25,7 @@ use AmazonSellingPartner\ObjectSerializer;
  */
 class ProductInfoDetail implements \ArrayAccess, \JsonSerializable, \Stringable, ModelInterface
 {
-    public const DISCRIMINATOR = null;
+    final public const DISCRIMINATOR = null;
 
     /**
      * The original name of the model.

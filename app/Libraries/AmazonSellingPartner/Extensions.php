@@ -12,7 +12,7 @@ final class Extensions
     /**
      * @var Extension[]
      */
-    private   $extensions;
+    private array $extensions;
 
     public function __construct(Extension ...$extensions)
     {

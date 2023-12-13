@@ -28,17 +28,8 @@ use Psr\Log\LoggerInterface;
  */
 final class SellersSDK implements SellersSDKInterface
 {
-    protected ClientInterface $client;
-    protected HttpFactory $httpFactory;
-    protected Configuration $configuration;
-    protected LoggerInterface $logger;
-
-    public function __construct(ClientInterface $client, HttpFactory $httpFactory, Configuration $configuration, LoggerInterface $logger)
+    public function __construct(private readonly ClientInterface $client, private readonly HttpFactory $httpFactory, private readonly Configuration $configuration, private readonly LoggerInterface $logger)
     {
-        $this->client = $client;
-        $this->httpFactory = $httpFactory;
-        $this->configuration = $configuration;
-        $this->logger = $logger;
     }
 
     /**
