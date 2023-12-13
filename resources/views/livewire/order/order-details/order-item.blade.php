@@ -75,13 +75,14 @@
             descriptionLength = event.value.length; 
             $('#feedback'+id).removeClass('text-success  text-danger');
             serviceCode = $('#shipping_service_id option:selected').attr('data-service-code');
-              
             if(serviceCode == 357 || serviceCode == 773 ){
                 limit = 60;
             }else if(serviceCode == 540 || serviceCode == 537  || serviceCode ==  541 ){
                 limit = 50;
-            }else{
+            }else if(serviceCode == 33170 || serviceCode == 33162){
                 limit = 500;
+            }else{
+                limit = 200;
             }   
             if(descriptionLength>limit)
             {
