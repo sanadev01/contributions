@@ -48,10 +48,12 @@ class ShcodeImportService extends AbstractImportService
                 return;
             }
             $shcode = ShCode::updateOrCreate(
-                ['code' => $this->getValue("A{$row}")],
+                [
+                'code' => $this->getValue("A{$row}"),
+                'type'   => $this->getValue("E{$row}") ?? null,
+                ],
                 [
                     'description'   => $this->getValue("B{$row}") . '-------' . $this->getValue("C{$row}") . '-------' . $this->getValue("D{$row}"),
-                    'type'   => $this->getValue("E{$row}") ?? null,
                 ]);
             return $shcode;
         } catch (\Exception $ex) {
