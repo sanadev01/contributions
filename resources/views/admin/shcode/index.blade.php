@@ -31,6 +31,9 @@
                                         Spanish
                                     </th>
                                     <th>
+                                        Type
+                                    </th>
+                                    <th>
                                         @lang('role.Action')
                                     </th>
                                 </tr>
@@ -49,6 +52,9 @@
                                             </td>
                                             <td>
                                                 {{ optional(explode('-------',$shCode->description))[2] }}
+                                            </td>
+                                            <td>
+                                                {{ $shCode->type }}
                                             </td>
                                             <td class="d-flex">
                                                 <a href="{{ route('admin.shcode.edit',$shCode) }}" class="btn btn-primary mr-2" title="Edit Shcode">
