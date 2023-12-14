@@ -8,10 +8,10 @@ use App\Services\Excel\AbstractImportService;
 
 class ShcodeImportService extends AbstractImportService
 {
-    
+
     private $errors = [];
 
-    public function __construct(UploadedFile $file,$request)
+    public function __construct(UploadedFile $file, $request)
     {
 
 
@@ -25,36 +25,35 @@ class ShcodeImportService extends AbstractImportService
     public function handle()
     {
         $response = $this->importShcode();
-         return $response;
+        return $response;
     }
 
     public function importShcode()
     {
-        try{
+        try {
             foreach (range(2, $this->noRows) as $row) {
-               $res = $this->storeShcode($row);
-               \Log::info($res);
+                $res = $this->storeShcode($row);
+                \Log::info($res);
             }
-            // return true;
         } catch (\Exception $ex) {
-         
+
             return $ex->getMessage();
         }
     }
 
     private function storeShcode($row)
-    {
+    {   
         try {
-            $shcode = ShCode::where('code',$this->getValue("A{$row}"))->first();
-            if ($shcode || strlen($this->getValue("A{$row}")) <=0 ){
+            if (strlen($this->getValue("A{$row}")) <=0 ){
                 return;
             }
-            $shcode = ShCode::create([
-                'code' => $this->getValue("A{$row}"),
-                'description'   => $this->getValue("B{$row}").'-------'.$this->getValue("C{$row}").'-------'.$this->getValue("D{$row}"),
-            ]);
+            $shcode = ShCode::updateOrCreate(
+                ['code' => $this->getValue("A{$row}")],
+                [
+                    'description'   => $this->getValue("B{$row}") . '-------' . $this->getValue("C{$row}") . '-------' . $this->getValue("D{$row}"),
+                    'type'   => $this->getValue("E{$row}") ?? null,
+                ]);
             return $shcode;
-
         } catch (\Exception $ex) {
             return $ex->getMessage();
         }
@@ -65,5 +64,4 @@ class ShcodeImportService extends AbstractImportService
     {
         return $this->errors;
     }
-
 }
