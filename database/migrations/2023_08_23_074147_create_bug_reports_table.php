@@ -12,20 +12,18 @@ class CreateBugReportsTable extends Migration
      * @return void
      */
     public function up() {
-        // Schema::create('bug_reports', function (Blueprint $table) {
-        //     $table->id();
-
-        //     $table->foreignId('user_id')->nullable();
-        //     $table->string('server_id')->nullable();
-        //     $table->string('env');
-        //     $table->string('code');
-        //     $table->text('message');
-        //     $table->string('line');
-        //     $table->text('file');
-        //     $table->json('trace');
-
-        //     $table->timestamps();
-        // });
+        Schema::create('bug_reports', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->nullable();
+            $table->string('server_id')->nullable();
+            $table->string('env');
+            $table->string('code');
+            $table->text('message');
+            $table->string('line');
+            $table->text('file');
+            $table->json('trace');
+            $table->timestamps();
+        });
     }
 
     /**
