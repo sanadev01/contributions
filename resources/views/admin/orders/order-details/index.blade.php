@@ -214,6 +214,8 @@
             parseFloat($('option:selected', this).attr("data-cost"))
         );
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        window.livewire.emit('reloadSHCodes', { service: service });
+         
         if(service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
