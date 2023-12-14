@@ -74,12 +74,21 @@
     function descriptionChange(id,event){
             descriptionLength = event.value.length; 
             $('#feedback'+id).removeClass('text-success  text-danger');
-            serviceCode = $('#shipping_service_id option:selected').attr('data-service-code');
-            if(serviceCode == 357 || serviceCode == 773 ){
+            serviceCode = Number($('#shipping_service_id option:selected').attr('data-service-code'));
+           
+            var correios = <?php echo json_encode($correios); ?>; 
+            var isCorreios = correios.indexOf(serviceCode) !== -1; 
+            var geps = <?php echo json_encode($geps); ?>; 
+            var isGeps = geps.indexOf(serviceCode) !== -1;
+
+            var prime5 = <?php echo json_encode($prime5); ?>; 
+            var isPrime5 = prime5.indexOf(serviceCode) !== -1;
+
+            if(isPrime5){
                 limit = 60;
-            }else if(serviceCode == 540 || serviceCode == 537  || serviceCode ==  541 ){
+            }else if(isGeps){
                 limit = 50;
-            }else if(serviceCode == 33170 || serviceCode == 33162){
+            }else if(isCorreios){
                 limit = 500;
             }else{
                 limit = 200;
