@@ -44,6 +44,9 @@ class ShcodeImportService extends AbstractImportService
     private function storeShcode($row)
     {   
         try {
+            if (strlen($this->getValue("A{$row}")) <=0 ){
+                return;
+            }
             $shcode = ShCode::updateOrCreate(
                 ['code' => $this->getValue("A{$row}")],
                 [
