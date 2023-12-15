@@ -8,10 +8,18 @@ use Exception;
 class AuthApiClient extends Client {
   
 	public function authorizeConsent(string $uid, string $region) {
+		if (app()->environment('production') ){
+            $applicationId = config('services.sp-api-prod.SP_APP_ID');
+            $redirectUri = config('services.sp-api-prod.SP_APP_ID');
+        }else{
+            $applicationId  = config('services.sp-api-dev.SP_APP_ID');
+            $redirectUri  = config('services.sp-api-dev.SP_APP_ID');
+        }
+
 		$query = http_build_query([
 			'version'        => 'beta',
-			'application_id' => config('services.sp-api.SP_APP_ID'),
-			'redirect_uri'   => config('services.sp-api.SP_APP_REDIRECT'),
+			'application_id' => $applicationId,
+			'redirect_uri'   => $redirectUri,
 			'state'          => $uid . '|' . $region,
 		]);
 		return redirect($this->_getEndpoint($region) . '/apps/authorize/consent?' . $query);
