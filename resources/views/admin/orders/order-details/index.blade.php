@@ -208,7 +208,11 @@
 <script>
     $("#rateBtn").hide();
     $("#itemLimit").hide();
-    getGSSRates();
+    getGSSRates();    
+    const service = $('#shipping_service_id option:selected').attr('data-service-code');
+    if(service){
+        window.livewire.emit('reloadSHCodes', { service: service });
+    }
     $('#shipping_service_id').on('change',function(){
         $('#user_declared_freight').val(
             parseFloat($('option:selected', this).attr("data-cost"))
