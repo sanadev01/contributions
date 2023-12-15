@@ -32,12 +32,17 @@
         'stripe' => [
             'secret' => env('STRIPE_SECRET'),
         ],
-        
-        'sp-api' => [
-            'SP_APP_ID'            => env('SP_APP_ID'),
-            'SP_APP_REDIRECT'      => env('SP_APP_REDIRECT'),
-            'SP_APP_CLIENT_ID'     => env('SP_APP_CLIENT_ID'),
-            'SP_APP_CLIENT_SECRET' => env('SP_APP_CLIENT_SECRET')
+        'sp-api-prod' => [
+            "SP_APP_ID" => 'amzn1.sp.solution.8516038e-4f0c-466f-8103-95fa2d5ec52c',
+            "SP_APP_CLIENT_ID" => 'amzn1.application-oa2-client.fa76075fa12245679a286245dd0456e6',
+            "SP_APP_CLIENT_SECRET" => 'amzn1.oa2-cs.v1.31af2e97b8ccc5c0a01e494935186a4ae5b315eac19720da680ddf2fd99fc300',
+            "SP_APP_REDIRECT" => 'https://sp-dev.homedeliverybr.com/sp/register',
         ],
+        'sp-api-dev' => [
+            "SP_APP_ID" => 'amzn1.sp.solution.8516038e-4f0c-466f-8103-95fa2d5ec52c',
+            "SP_APP_CLIENT_ID" => 'amzn1.application-oa2-client.fa76075fa12245679a286245dd0456e6',
+            "SP_APP_CLIENT_SECRET" => 'amzn1.oa2-cs.v1.31af2e97b8ccc5c0a01e494935186a4ae5b315eac19720da680ddf2fd99fc300',
+            "SP_APP_REDIRECT" => 'https://sp-dev.homedeliverybr.com/sp/register',
+        ]
 
     ];
