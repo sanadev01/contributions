@@ -11,7 +11,6 @@ class ContainerRepository extends AbstractRepository{
 
     public function get(Request $request, $paginate)
     {
-
         $query = Container::query();
 
         if ( !Auth::user()->isAdmin() ){
@@ -63,6 +62,7 @@ class ContainerRepository extends AbstractRepository{
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
+
             $container->update([
                 'dispatch_number' => ($container->hasAnjunService()) ? $anjunDispatchNumber : $container->id,
             ]);

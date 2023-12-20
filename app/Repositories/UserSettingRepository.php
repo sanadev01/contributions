@@ -32,11 +32,15 @@ class UserSettingRepository {
             'geps_service' => setting('geps_service', null, $user->id)? 'Active': 'Inactive',
             'tax' => setting('tax', null, $user->id)? 'Active': 'Inactive',
             'volumetric_discount'=> setting('volumetric_discount', null,$user->id)? 'Active': 'Inactive',
+            'postal_volumetric_discount'=> setting('postal_volumetric_discount', null,$user->id)? 'Active': 'Inactive',
+            'hd_express_volumetric_discount'=> setting('hd_express_volumetric_discount', null,$user->id)? 'Active': 'Inactive',
             'pay_tax_service'=> setting('pay_tax_service', null,$user->id)? 'Active': 'Inactive',
             'marketplace_checked'=> setting('marketplace_checked', null,$user->id)? 'Active': 'Inactive',
             'usps_profit'=> setting('usps_profit', null, $user->id) ? setting('usps_profit', null, $user->id): 0,
             'ups_profit'=> setting('ups_profit', null, $user->id) ?setting('ups_profit', null, $user->id) : 0,
             'discount_percentage'=> setting('discount_percentage', null, $user->id)? setting('discount_percentage', null, $user->id): 0,
+            'postal_discount_percentage'=> setting('postal_discount_percentage', null, $user->id)? setting('postal_discount_percentage', null, $user->id): 0,
+            'hd_express_discount_percentage'=> setting('hd_express_discount_percentage', null, $user->id)? setting('hd_express_discount_percentage', null, $user->id): 0,
             'marketplace'=> setting('marketplace', null, $user->id)? setting('marketplace', null, $user->id): 0,
             'fedex_profit'=> setting('fedex_profit', null, $user->id)? setting('fedex_profit', null, $user->id): 0,
             'gde_pm_profit'=> setting('gde_pm_profit', null, $user->id)? setting('gde_pm_profit', null, $user->id): 0,
@@ -68,13 +72,18 @@ class UserSettingRepository {
         $request->has('gss') ? saveSetting('gss', true, $user->id) : saveSetting('gss', false, $user->id);
         $request->has('tax') ? saveSetting('tax', true, $user->id) : saveSetting('tax', false, $user->id);
         $request->has('volumetric_discount') ? saveSetting('volumetric_discount', true,$user->id) : saveSetting('volumetric_discount', false, $user->id);
+        $request->has('postal_volumetric_discount') ? saveSetting('postal_volumetric_discount', true,$user->id) : saveSetting('postal_volumetric_discount', false, $user->id);
+        $request->has('hd_express_volumetric_discount') ? saveSetting('hd_express_volumetric_discount', true,$user->id) : saveSetting('hd_express_volumetric_discount', false, $user->id);
         $request->has('marketplace_checked') ? saveSetting('marketplace_checked', true,$user->id) : saveSetting('marketplace_checked', false, $user->id);
         $request->has('pay_tax_service') ? saveSetting('pay_tax_service', true,$user->id) : saveSetting('pay_tax_service', false, $user->id);
         $request->has('gde') ? saveSetting('gde', true, $user->id) : saveSetting('gde', false, $user->id);
+        $request->has('amazon_sp') ? saveSetting('amazon_sp', true, $user->id) : saveSetting('amazon_sp', false, $user->id);
 
         ($request->usps_profit != null ) ? saveSetting('usps_profit', $request->usps_profit, $user->id) : saveSetting('usps_profit', 0, $user->id);
         ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $user->id) : saveSetting('ups_profit', 0, $user->id);
         ($request->discount_percentage != null ) ? saveSetting('discount_percentage', $request->discount_percentage, $user->id) : saveSetting('discount_percentage', 0, $user->id);
+        ($request->postal_discount_percentage != null ) ? saveSetting('postal_discount_percentage', $request->postal_discount_percentage, $user->id) : saveSetting('postal_discount_percentage', 0, $user->id);
+        ($request->hd_express_discount_percentage != null ) ? saveSetting('hd_express_discount_percentage', $request->hd_express_discount_percentage, $user->id) : saveSetting('hd_express_discount_percentage', 0, $user->id);
         ($request->marketplace != null ) ? saveSetting('marketplace', $request->marketplace, $user->id) : saveSetting('marketplace', 0, $user->id);
         ($request->fedex_profit != null ) ? saveSetting('fedex_profit', $request->fedex_profit, $user->id) : saveSetting('fedex_profit', 0, $user->id);
         ($request->gss_profit != null ) ? saveSetting('gss_profit', $request->gss_profit, $user->id) : saveSetting('gss_profit', 0, $user->id);

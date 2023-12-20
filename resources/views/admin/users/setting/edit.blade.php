@@ -272,6 +272,21 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Amazon Selling Partner<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="Amazon Selling Partner">
+                                                <input type="checkbox" name="amazon_sp" id="amazon_sp" @if(setting('amazon_sp', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">SinerLog<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
@@ -365,6 +380,40 @@
                                             </div>
                                             <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
                                             <input type="number" name="discount_percentage" class="form-control col-2" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Postal Discount<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                                <input type="checkbox" name="postal_volumetric_discount" id="postal_volumetric_discount" @if(setting('postal_volumetric_discount', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
+                                            <input type="number" name="postal_discount_percentage" class="form-control col-2" id="postal_discount_percentage" value="{{ setting('postal_discount_percentage', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Hd Express Discount<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                                <input type="checkbox" name="hd_express_volumetric_discount" id="hd_express_volumetric_discount" @if(setting('hd_express_volumetric_discount', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
+                                            <input type="number" name="hd_express_discount_percentage" class="form-control col-2" id="hd_express_discount_percentage" value="{{ setting('hd_express_discount_percentage', null, $user->id) }}">
                                         </div>    
                                     </div>
                                 </div>

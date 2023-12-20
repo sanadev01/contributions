@@ -3,7 +3,17 @@
         <img src="{{ asset('images/icon/profile.svg') }}" alt="Profile">
         <span data-i18n="Apps"> @lang('menu.profile') </span>
     </a>
-</li>
+</li> 
+    @php $user = Auth()->user(); @endphp
+    @if(setting('amazon_sp', null, $user->id)||Auth()->user()->isAdmin())
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('amazon.home') }}"  >
+                <img src="{{ asset('images/icon/amazon.svg') }}" alt="amazon api" >
+                <span data-i18n="Apps"> Amazon SP Account</span>
+            </a>
+        </li>
+    @endif
+
 @user
     @php $user = Auth()->user(); @endphp
     @if($user->amazon_api_enabled && $user->api_enabled && $user->api_token)
