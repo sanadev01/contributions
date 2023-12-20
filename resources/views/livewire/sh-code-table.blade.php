@@ -37,5 +37,7 @@
             @endforeach
         </tbody>
     </table>
-    {{ $shCodes->links() }}
+    <div class="float-right mr-3 mt-3">
+        {{ $shCodes->links() }}
+    </div>
 </div>
