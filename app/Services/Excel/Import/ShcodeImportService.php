@@ -32,8 +32,10 @@ class ShcodeImportService extends AbstractImportService
     {
         try {
             foreach (range(2, $this->noRows) as $row) {
-                $res = $this->storeShcode($row);
-                \Log::info($res);
+                if(!ShCode::where('code', $this->getValue("A{$row}"))->where('type', $this->getValue("E{$row}"))->first()){
+                    $res = $this->storeShcode($row);
+                    \Log::info($res);
+                }
             }
         } catch (\Exception $ex) {
 
