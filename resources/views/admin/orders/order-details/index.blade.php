@@ -208,12 +208,15 @@
 <script>
     $("#rateBtn").hide();
     $("#itemLimit").hide();
-    getGSSRates();
+    getGSSRates();    
     $('#shipping_service_id').on('change',function(){
         $('#user_declared_freight').val(
             parseFloat($('option:selected', this).attr("data-cost"))
         );
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        emitSHCodes(service)
+
+         
         if(service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
@@ -450,5 +453,15 @@
          $('#disposeAll').prop('checked', false);
          }    
      });
+     //handle shcode
+     $('#shipping_service_id').ready(function() {
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        if(service){
+            emitSHCodes(service)
+        }
+    })
+    function emitSHCodes(serviceCode){
+        window.livewire.emit('reloadSHCodes', { service: serviceCode });
+    }
 </script>
 @endsection
