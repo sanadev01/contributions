@@ -79,9 +79,9 @@
                         </th>
                     @endif
                     <th>
-                        @if (\Request::route()->getName() != 'admin.trash-orders.index'  && $isTrashed)
+                        {{-- @if (\Request::route()->getName() != 'admin.trash-orders.index'  && $isTrashed)
                             <span class="mr-4"> @lang('Edit Order')</span>
-                        @endif
+                        @endif --}}
                         <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                     </th>
                     <th>
@@ -119,7 +119,7 @@
                     @endif
                     <th>
                         
-                        <input type="search" class="form-control col-md-9 ml-5" wire:model.debounce.1000ms="date">
+                        <input type="search" class="form-control col-md-9" wire:model.debounce.1000ms="date">
                     </th>
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="whr_number">

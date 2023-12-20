@@ -16,9 +16,9 @@ class SearchShCode extends Component
 
     public function reloadSHCodes($data)
     {
-        $service = $data['service'];
+        $service = optional($data)['service'];
         $shippingService = ShippingService::where('service_sub_class',$service)->first();
-        if($shippingService->is_total_express){
+        if(optional($shippingService)->is_total_express){
             $this->type = 'total';
         }else{
             $this->type= null;
