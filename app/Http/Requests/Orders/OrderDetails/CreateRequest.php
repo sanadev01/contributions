@@ -35,7 +35,7 @@ class CreateRequest extends FormRequest
                 'numeric',
                 new NcmValidator()
             ], 
-            'items.*.description' => 'required|max:200', 
+            'items.*.description' => 'required|max:500', 
             'items.*.quantity' => 'required|gt:0', 
             'items.*.value' => 'required|gt:0', 
             'items.*.dangrous_item' => 'required', 

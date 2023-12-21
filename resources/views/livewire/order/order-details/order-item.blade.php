@@ -12,7 +12,7 @@
         <div class="form-group col-12 col-sm-6 col-md-6">
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Description') <span   id="feedback{{$keyId}}"></span></label>
-                <input type="text" id="description{{$keyId}}" class="form-control descp" required name="items[{{$keyId}}][description]" max="200" min="0" onkeyup="descriptionChange({{$keyId}},this)" value="{{ optional($item)['description'] }}">
+                <input type="text" id="description{{$keyId}}" class="form-control descp" required name="items[{{$keyId}}][description]" max="500" min="0" onkeyup="descriptionChange({{$keyId}},this)" value="{{ optional($item)['description'] }}">
                 <small id="characterCount{{$keyId}}" class="form-text text-muted"></small>
 
                 @error("items.{$keyId}.description")
@@ -74,12 +74,22 @@
     function descriptionChange(id,event){
             descriptionLength = event.value.length; 
             $('#feedback'+id).removeClass('text-success  text-danger');
-            serviceCode = $('#shipping_service_id option:selected').attr('data-service-code');
-              
-            if(serviceCode == 357 || serviceCode == 773 ){
+            serviceCode = Number($('#shipping_service_id option:selected').attr('data-service-code'));
+           
+            var correios = <?php echo json_encode($correios); ?>; 
+            var isCorreios = correios.indexOf(serviceCode) !== -1; 
+            var geps = <?php echo json_encode($geps); ?>; 
+            var isGeps = geps.indexOf(serviceCode) !== -1;
+
+            var prime5 = <?php echo json_encode($prime5); ?>; 
+            var isPrime5 = prime5.indexOf(serviceCode) !== -1;
+
+            if(isPrime5){
                 limit = 60;
-            }else if(serviceCode == 540 || serviceCode == 537  || serviceCode ==  541 ){
+            }else if(isGeps){
                 limit = 50;
+            }else if(isCorreios){
+                limit = 500;
             }else{
                 limit = 200;
             }   
@@ -99,7 +109,7 @@
                 }
                 else if(descriptionLength<=150 && descriptionLength<limit)
                     updateFeedback('Good Description!',true,id)
-                else if(descriptionLength<=200 && descriptionLength<limit )
+                else if(descriptionLength<=500 && descriptionLength<limit )
                     updateFeedback('Very Good Description!',true,id)        
                 else
                     updateFeedback('Limit Exceeded!',false,id)
