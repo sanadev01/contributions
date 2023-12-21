@@ -48,6 +48,8 @@ class SearchShCode extends Component
         return view('livewire.components.search-sh-code',[
             'codes' => ShCode::when($this->type!=null,function($query){
                 $query->where('type',$this->type);
+            })->when($this->type==null,function($query){
+                $query->where('type',null);
             })->orderBy('description','ASC')->get()
         ]);
     }

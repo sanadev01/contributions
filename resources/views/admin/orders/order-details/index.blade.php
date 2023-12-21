@@ -461,7 +461,7 @@
         }
     })
     function emitSHCodes(serviceCode){
-        window.livewire.emit('reloadSHCodes', { service: serviceCode });
+                window.livewire.emit('reloadSHCodes', { service: serviceCode });
     }
 </script>
 @endsection
