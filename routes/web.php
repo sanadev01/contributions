@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
+use App\Http\Controllers\ConnectionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -240,7 +241,12 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('order/{order}/product', \ProductModalController::class)->name('inventory.order.products');
         });
 });
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
+    Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
+    Route::get('/auth', [ConnectionsController::class, 'getAuth']); 
+    Route::get('/status-change/{user}', [ConnectionsController::class, 'getStatusChange']);
+});
 Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->group(function(){
     Route::namespace('Shopify')->prefix('shopify')->as('shopify.')->group(function(){
         Route::get('redirect_uri', RedirectController::class)->name('redirect_uri');
