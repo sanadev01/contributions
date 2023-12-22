@@ -60,6 +60,36 @@ class Client
             'Accept' => 'application/json'
         ];
     }
+    
+    public function labelUrlUpdate(Order $order) {
+
+        $apiResponse = json_decode($order->api_response); 
+        $response = $apiResponse->orderResponse; 
+        $id = $response->data->id;
+        $getLabel = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/orders/$id/cn23-merged");
+        $getLabelResponse = json_decode($getLabel);
+        Log::info('TotalExpress::labelUrlUpdate  getLabel for update');
+        Log::info([$getLabel]);
+        if ($getLabelResponse->status=="SUCCESS"){
+            $mergedResponse = [
+            'orderResponse' => $response,
+            'labelResponse' => $getLabelResponse,
+            ];
+
+            $order->update([
+                'corrios_tracking_code' => optional(optional($getLabelResponse->data)->cn23_numbers)[0],
+                'api_response' => json_encode($mergedResponse),
+                'cn23' => [
+                    "tracking_code" =>  optional(optional($getLabelResponse->data)->cn23_numbers)[0],
+                    "stamp_url" => route('warehouse.cn23.download',$order->id),
+                    'leve' => false
+                ],
+            ]);
+        }
+        else{
+            return new PackageError("Server Error: ".new HandleError($getLabel));
+        }
+    }
 
     public function createPackage(Order $order)
     {
