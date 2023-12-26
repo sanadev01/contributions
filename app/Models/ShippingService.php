@@ -444,9 +444,4 @@ class ShippingService extends Model
     function getSwedenPostServiceSubClassAttribute() {
         return in_array($this->service_sub_class,[self::Prime5,self::Prime5RIO,self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);        
     }
-
-    public function zones()
-    {
-        return $this->hasMany(ZoneCountry::class);
-    }
 }

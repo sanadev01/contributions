@@ -43,9 +43,4 @@ class Country extends Model
     {
         return $this->hasMany(AccrualRate::class);
     }
-
-    public function zoneCountries()
-    {
-        return $this->hasMany(ZoneCountry::class);
-    }
 }
