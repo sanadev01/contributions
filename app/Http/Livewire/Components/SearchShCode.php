@@ -15,7 +15,7 @@ class SearchShCode extends Component
     protected $listeners = ['reloadSHCodes' => 'reloadSHCodes'];
 
     public function reloadSHCodes($data)
-    {
+    { 
         $service = optional($data)['service'];
         $shippingService = ShippingService::where('service_sub_class',$service)->first();
         if(optional($shippingService)->is_total_express){
@@ -23,8 +23,9 @@ class SearchShCode extends Component
         }else{
             $this->type= null;
         }
-
+  
         $this->render();
+        $this->dispatchBrowserEvent('shCodeReloaded');
     }
     public function mount($code= null,$name=null, $order = null)
     {
