@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\State;
-use App\Models\ZoneCountry;
 use App\Services\GSS\Client;
 use App\Models\OrderTracking;
 use Illuminate\Http\UploadedFile;
@@ -925,13 +924,10 @@ class Order extends Model implements Package
 
     public function calculateGSSProfit($shippingCost, $shippingService)
     {
-        // $gssProfit = setting('gss_profit', null,  $this->user->id);
-        // if($gssProfit == null || $gssProfit == 0) { 
-        //     $gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
-        // }
-        $gssProfit = ZoneCountry::where('shipping_service_id', $shippingService->id)
-                    ->where('country_id', $this->recipient->country_id)
-                    ->value('profit_percentage');
+        $gssProfit = setting('gss_profit', null,  $this->user->id);
+        if($gssProfit == null || $gssProfit == 0) { 
+            $gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
+        }
         $profit = round($gssProfit / 100, 2);
         $client = new Client();
         $response = $client->getCostRates($this, $shippingService);
