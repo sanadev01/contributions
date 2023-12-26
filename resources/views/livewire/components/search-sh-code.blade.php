@@ -1,5 +1,5 @@
 <div>
-    <select required class="form-control" name="{{$name}}" wire:model.debounce.500ms="search" id="sh_code" @if($orderInventory) disabled @endif>
+    <select required class="form-control sh_code" name="{{$name}}" wire:model.debounce.500ms="search" id="sh_code" @if($orderInventory) disabled @endif>
         <option value="">Select HS code / Selecione o código HS</option>
         @foreach ($codes as $code)
         <option value="{{ $code->code }}">
@@ -33,18 +33,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function() {
-            setTimeout(() => {
-                $('#sh_code').selectpicker({
-                    liveSearch: true,
-                    liveSearchPlaceholder: 'Search...',
-                });
-
-            }, 4000);
-
-        });
-
+    <script> 
         window.addEventListener('checkShCode', event => {
 
             let code = event.detail.sh_code;
@@ -52,7 +41,15 @@
             if (code == 490199) {
                 $('#warningModal').modal('show');
             }
-        })
+        }) 
+        setTimeout(() => {
+            $('.sh_code').selectpicker({
+                liveSearch: true,
+                liveSearchPlaceholder: 'Search...',
+            });
+        }, 1000);
+        
+    
     </script>
 
 </div>

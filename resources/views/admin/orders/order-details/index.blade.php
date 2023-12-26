@@ -461,7 +461,24 @@
         }
     })
     function emitSHCodes(serviceCode){
-                window.livewire.emit('reloadSHCodes', { service: serviceCode });
+        $('.sh_code').selectpicker('destroy'); 
+        window.livewire.emit('reloadSHCodes', { service: serviceCode });
     }
+
+    $('.sh_code').on('change',function(){
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        if(service){ 
+            emitSHCodes(service)
+        }
+    })
+    window.addEventListener('shCodeReloaded', event => {
+        setTimeout(() => {
+            $('.sh_code').selectpicker({
+                liveSearch: true,
+                liveSearchPlaceholder: 'Search...',
+            });
+        }, 2000);
+            
+    })       
 </script>
 @endsection
