@@ -45,6 +45,7 @@ class PrintLabelController extends Controller
      */
     public function store(Request $request, CorrieosBrazilLabelRepository $labelRepository)
     {
+        ob_end_clean();
         if($request->order){
             if($request->excel){
                 if($request->start_date != null && $request->end_date != null)
