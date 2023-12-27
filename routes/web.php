@@ -336,6 +336,7 @@ Route::get('/container/{id}/test/{newDisptach}',function($id,$newDispatch){
 
 });
 Route::get('/marketplace',function(){
-    Artisan::call('db:seed --class=MarketplaceTableSeeder', ['--force' => true ]);
-    return Artisan::output();
+    Artisan::call('db:seed', ['--class' => 'MarketplaceTableSeeder']); 
+    return response()->json(['message' => 'Seeder executed successfully', 'output' => Artisan::output()]);
+  
 });
