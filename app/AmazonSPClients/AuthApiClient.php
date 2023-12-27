@@ -10,10 +10,10 @@ class AuthApiClient extends Client {
 	public function authorizeConsent(string $uid, string $region) {
 		if (app()->environment('production') ){
             $applicationId = config('services.sp-api-prod.SP_APP_ID');
-            $redirectUri = config('services.sp-api-prod.SP_APP_ID');
+            $redirectUri = config('services.sp-api-prod.SP_APP_REDIRECT');
         }else{
             $applicationId  = config('services.sp-api-dev.SP_APP_ID');
-            $redirectUri  = config('services.sp-api-dev.SP_APP_ID');
+            $redirectUri  = config('services.sp-api-dev.SP_APP_REDIRECT');
         }
 
 		$query = http_build_query([
