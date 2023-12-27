@@ -335,3 +335,7 @@ Route::get('/container/{id}/test/{newDisptach}',function($id,$newDispatch){
     return 'updated ';
 
 });
+Route::get('/marketplace',function(){
+    Artisan::call('db:seed --class=MarketplaceTableSeeder', ['--force' => true ]);
+    return Artisan::output();
+});
