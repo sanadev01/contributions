@@ -4,7 +4,9 @@ namespace App\AmazonSPClients;
  
 use AmazonSellingPartner\Regions; 
 use App\Models\Marketplace;
-use Exception;  
+use Exception;
+use Illuminate\Support\Facades\Log;
+
 class AuthApiClient extends Client {
   
 	public function authorizeConsent(string $uid, string $region) {
@@ -16,6 +18,12 @@ class AuthApiClient extends Client {
             $redirectUri  = config('services.sp-api-dev.SP_APP_REDIRECT');
         }
 
+		Log::info([
+			'version'        => 'beta',
+			'application_id' => $applicationId,
+			'redirect_uri'   => $redirectUri,
+			'state'          => $uid . '|' . $region,
+		]);
 		$query = http_build_query([
 			'version'        => 'beta',
 			'application_id' => $applicationId,
