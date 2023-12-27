@@ -323,8 +323,8 @@ Route::get('/container-test/{id?}',function($id = null){
     }
     dd('end');
 });
-Route::get('/marketplace',function(){
-    Artisan::call('db:seed', ['--class' => 'MarketplaceTableSeeder']); 
+Route::get('/cleared',function(){
+    Artisan::call('config:clear'); 
     return response()->json(['message' => 'Seeder executed successfully', 'output' => Artisan::output()]);
   
 });
