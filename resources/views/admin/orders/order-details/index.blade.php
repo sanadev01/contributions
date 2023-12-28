@@ -213,10 +213,10 @@
         $('#user_declared_freight').val(
             parseFloat($('option:selected', this).attr("data-cost"))
         );
-        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');  
         emitSHCodes(service)
-
          
+
         if(service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
@@ -414,17 +414,24 @@
     }
 
     function getGSSRates(){
-        const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        var order_id = $('#order_id').val();
+        const service = $('#shipping_service_id option:selected').attr('data-service-code'); 
+                var order_id = $('#order_id').val(); 
 
         $('#loading').fadeIn();
         $.get('{{ route("api.gssRates") }}',{
                 service: service,
                 order_id: order_id,
-            }).then(function(response){
+            }).then(function(response){ 
                 if(response.success == true){
                     $('#user_declared_freight').val(response.total_amount);
                     $('#user_declared_freight').prop('readonly', true);
+                }
+                else{
+                    if( service == 3674) { 
+                        alert('Rate not found service has been removed.')
+                        $('#shipping_service_id option:selected').remove(); 
+                        $('#shipping_service_id').selectpicker('refresh');
+                     }
                 }
                 $('#loading').fadeOut();
 
