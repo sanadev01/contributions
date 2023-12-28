@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardRepository
 { 
-    public function getDashboardStatsDelete($startDate = NULL, $endDate = NULL)
+    public function getDashboardStats($startDate = NULL, $endDate = NULL)
     {
         $carbon       = Carbon::now();
         $monthName    = $carbon->format('F');
@@ -112,6 +112,7 @@ class DashboardRepository
             })
             ->selectRaw('id')
             ->count();
+            
             $percentIncreaseThisYear = 0;  
             $newValue = 0;
             $oldValue = 0;
