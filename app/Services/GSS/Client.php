@@ -27,6 +27,7 @@ class Client{
     protected $baseUrl;
     protected $token;
     protected $gssProfit;
+    protected $client;
 
     public function __construct()
     {   
@@ -73,7 +74,7 @@ class Client{
     {
         $shippingRequest = (new Parcel())->getRequestBody($order);
         try {
-            $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
+                        $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
             $response = json_decode($request);
             if($response->success) {
                 $label = $this->makePDFLabel($response);
@@ -90,7 +91,7 @@ class Client{
                 return $this->addOrderTracking($order);
             }
             else {
-                return new PackageError("Error while creating parcel. Code".$response->statusCode.". Description: ".$response->message);
+                return new PackageError("Error while creating parcel. <br> Error Code: ".$response->statusCode.". <br> Error Description: ".$response->message);
             }
             return null;
         }catch (\Exception $exception){
