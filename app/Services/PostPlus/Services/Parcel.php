@@ -9,7 +9,8 @@ use App\Services\Converters\UnitsConverter;
 class Parcel { 
 
    protected $chargableWeight;
-
+   protected $order;
+   protected $weight;
    public function __construct(Order $order)
    {
       $this->order = $order;

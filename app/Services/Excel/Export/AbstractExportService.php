@@ -19,6 +19,7 @@ abstract class AbstractExportService
 
     public function __construct()
     {
+        ob_end_clean();
         $this->spreadSheet = new Spreadsheet();
         $this->sheet = $this->spreadSheet->getActiveSheet();
 

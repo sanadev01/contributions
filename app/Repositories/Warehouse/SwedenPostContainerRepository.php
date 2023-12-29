@@ -38,7 +38,7 @@ class SwedenPostContainerRepository
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
-            if(!in_array($container->services_subclass_code,[ShippingService::Prime5,ShippingService::Prime5RIO,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia]))
+            if(!in_array($container->services_subclass_code,[ShippingService::Prime5,ShippingService::Prime5RIO]))
             {
                 DB::commit();
                 return $container;
