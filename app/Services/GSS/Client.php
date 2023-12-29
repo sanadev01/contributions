@@ -317,8 +317,11 @@ class Client{
             $this->gssProfit = ZoneCountry::where('shipping_service_id', $serviceId)
                                 ->where('country_id', $order->recipient->country_id)
                                 ->value('profit_percentage');
-            if($this->gssProfit) {
-                $profit = round($data->calculatedPostage * ($this->gssProfit / 100), 2 );
+                if($this->gssProfit) {                
+                $userDiscount =  setting('gss_profit', null, $order->user_id);
+                $userDiscount = ($userDiscount >= 0 && $userDiscount <= 100)?$userDiscount:0;
+                $totalProfit =   $this->gssProfit - ( $this->gssProfit / 100 * $userDiscount );
+                $profit = $data->calculatedPostage / 100 * ($totalProfit);
                 $price = round($data->calculatedPostage + $profit, 2);
                 return $this->responseSuccessful($price, 'Rate Calculation Successful');
             } else {
