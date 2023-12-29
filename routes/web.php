@@ -308,7 +308,7 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     return 'Anjun Token refresh';
 });
 
-Route::get('/temp-order-report/{number}',TempOrderReportController::class);
+Route::get('/temp-order-report',TempOrderReportController::class);
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
