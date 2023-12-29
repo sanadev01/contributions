@@ -10,7 +10,7 @@ class DirectLinkReceptacle
 {
     protected $userName;
     protected $password;
-    protected $baseUrl;
+    protected $baseURL;
     protected $container;
     protected $http;
 
