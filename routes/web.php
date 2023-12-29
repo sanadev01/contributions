@@ -37,7 +37,8 @@ Route::get('/', function (Shopify $shopifyClient) {
     }
     return redirect('login');
 });
-
+ini_set('memory_limit', '10000M');
+ini_set('memory_limit', '-1');
 Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
 Route::resource('us-calculator', USCalculatorController::class)->only(['index', 'store']);
 
