@@ -36,7 +36,7 @@ final class Regions
 
     public const NORTH_AMERICA_SANDBOX_URL = 'https://' . self::NORTH_AMERICA_SANDBOX_HOST;
 
-    public static function isValid(string $region) : bool
+    public static function isValid(string $region): bool
     {
         return \in_array($region, [self::EUROPE, self::FAR_EAST, self::NORTH_AMERICA], true);
     }

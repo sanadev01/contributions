@@ -245,10 +245,10 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 });
 Route::middleware(['auth'])->group(function () {
-Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
-Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
-Route::get('/auth', [ConnectionsController::class, 'getAuth']); 
-Route::get('/status-change/{user}', [ConnectionsController::class, 'getStatusChange']);
+    Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
+    Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
+    Route::get('/auth', [ConnectionsController::class, 'getAuth']); 
+    Route::get('/status-change/{user}', [ConnectionsController::class, 'getStatusChange']);
 });
 Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->group(function(){
     Route::namespace('Shopify')->prefix('shopify')->as('shopify.')->group(function(){
@@ -325,4 +325,9 @@ Route::get('/container-test/{id?}',function($id = null){
        echo $order->shippingService->service_sub_class.' '.$order->corrios_tracking_code;
     }
     dd('end');
+});
+Route::get('/cleared',function(){
+    Artisan::call('config:clear'); 
+    return response()->json(['message' => 'Seeder executed successfully', 'output' => Artisan::output()]);
+  
 });

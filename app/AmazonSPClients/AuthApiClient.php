@@ -17,10 +17,12 @@ class AuthApiClient extends Client {
             $applicationId  = config('services.sp-api-dev.SP_APP_ID');
             $redirectUri  = config('services.sp-api-dev.SP_APP_REDIRECT');
         }
-		Log::info('application key and redirect url');
+
 		Log::info([
-			$applicationId,
-			$redirectUri
+			'version'        => 'beta',
+			'application_id' => $applicationId,
+			'redirect_uri'   => $redirectUri,
+			'state'          => $uid . '|' . $region,
 		]);
 		$query = http_build_query([
 			'version'        => 'beta',

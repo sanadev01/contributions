@@ -11,7 +11,8 @@ class CreateBugReportsTable extends Migration
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::create('bug_reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable();
@@ -31,7 +32,8 @@ class CreateBugReportsTable extends Migration
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('bug_reports');
     }
 };
