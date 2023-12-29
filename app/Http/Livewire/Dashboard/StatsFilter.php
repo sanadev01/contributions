@@ -13,13 +13,13 @@ class StatsFilter extends Component
     public $orders;
     public function render(DashboardRepository $dashboard)
     {
-        $this->orders = $this->getOrders();
+        $this->orders = [];//$this->getOrders();
         return view('livewire.dashboard.stats-filter');
     }
 
     public function getorders(){
 
-        return (new DashboardRepository)->getDashboardStats($this->startDate,$this->endDate);
+        // return (new DashboardRepository)->getDashboardStats($this->startDate,$this->endDate);
 
     }
 
