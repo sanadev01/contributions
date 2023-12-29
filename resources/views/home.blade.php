@@ -300,7 +300,7 @@
                             </div>
                         </div>  
                     </div>
-                    {{-- @include('layouts.livewire.loading') --}}
+                   
                 </div>
                 
                 </div>
@@ -354,89 +354,89 @@
     <!-- Dashboard Analytics end -->
 @endsection
 @section('js')
-                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                    <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-base.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-base.min.js"></script>
+
+    <script>
+        const bar = document.getElementById('bar');
+        const labels = {!! json_encode($orders['months'], JSON_HEX_TAG) !!}
+        const totalShippedCount = {!! json_encode($orders['totalShippedCount'], JSON_HEX_TAG) !!}
+        const totalOrderCount = {!! json_encode($orders['totalOrderCount'], JSON_HEX_TAG) !!}
+        const doughnutData = {!! json_encode($orders['doughnutData'], JSON_HEX_TAG) !!}
+        new Chart(bar, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Shipped Orders',
+                    data: totalShippedCount,
+                    borderWidth: 1,
+                    backgroundColor: '#1171b2',
+                }, {
+                    label: 'Total Orders',
+                    data: totalOrderCount,
+                    borderWidth: 1,
+                    backgroundColor: '#1ec09a',
+                }, ]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        offset: true,
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                plugins: {
+                    legend: {
+
+                        fullSize: true,
+                        align: 'end',
+                        lineWidth: 4,
+                        display: true,
+                        labels: {
+                            usePointStyle: true,
+                        },
+                    }
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                        }
+                    }
+                }
+            }
+        });
+        //donut
+        anychart.onDocumentReady(function() {
+            var chart = anychart.pie(doughnutData);
+            chart.innerRadius("75%");
+            var label = anychart.standalones.label();
+            label.text("Total :" + doughnutData.reduce((a, b) => a + b.value, 0));
+            label.width("100%");
+            label.height("100%");
+            label.adjustFontSize(false);
+            label.fontColor("#60727b");
+            label.hAlign("center");
+            label.vAlign("middle");
+            // set the label as the center content
+            chart.center().content(label);
+            chart.title("");
+            chart.container("donut");            
+            // chart.legend().unlisten("click", function(){});
+            // chart.unlisten("click",function(){}); 
+            chart.draw();          
+                // remove all listeners
                 
-                    <script>
-                        const bar = document.getElementById('bar');
-                        const labels = {!! json_encode($orders['months'], JSON_HEX_TAG) !!}
-                        const totalShippedCount = {!! json_encode($orders['totalShippedCount'], JSON_HEX_TAG) !!}
-                        const totalOrderCount = {!! json_encode($orders['totalOrderCount'], JSON_HEX_TAG) !!}
-                        const doughnutData = {!! json_encode($orders['doughnutData'], JSON_HEX_TAG) !!}
-                        new Chart(bar, {
-                            type: 'bar',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Shipped Orders',
-                                    data: totalShippedCount,
-                                    borderWidth: 1,
-                                    backgroundColor: '#1171b2',
-                                }, {
-                                    label: 'Total Orders',
-                                    data: totalOrderCount,
-                                    borderWidth: 1,
-                                    backgroundColor: '#1ec09a',
-                                }, ]
-                            },
-                            options: {
-                                scales: {
-                                    xAxes: [{
-                                        offset: true,
-                                        ticks: {
-                                            beginAtZero: true
-                                        }
-                                    }]
-                                },
-                                plugins: {
-                                    legend: {
-                
-                                        fullSize: true,
-                                        align: 'end',
-                                        lineWidth: 4,
-                                        display: true,
-                                        labels: {
-                                            usePointStyle: true,
-                                        },
-                                    }
-                                },
-                                scales: {
-                                    x: {
-                                        display: true,
-                                        title: {
-                                            display: true,
-                                        }
-                                    },
-                                    y: {
-                                        display: true,
-                                        title: {
-                                            display: true,
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                        //donut
-                        anychart.onDocumentReady(function() {
-                            var chart = anychart.pie(doughnutData);
-                            chart.innerRadius("75%");
-                            var label = anychart.standalones.label();
-                            label.text("Total :" + doughnutData.reduce((a, b) => a + b.value, 0));
-                            label.width("100%");
-                            label.height("100%");
-                            label.adjustFontSize(false);
-                            label.fontColor("#60727b");
-                            label.hAlign("center");
-                            label.vAlign("middle");
-                            // set the label as the center content
-                            chart.center().content(label);
-                            chart.title("");
-                            chart.container("donut");            
-                            // chart.legend().unlisten("click", function(){});
-                            // chart.unlisten("click",function(){}); 
-                            chart.draw();          
-                             // remove all listeners
-                               
-                        });
-                    </script>
-                @endsection
+        });
+    </script>
+@endsection
