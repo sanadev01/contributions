@@ -14,6 +14,11 @@ class DashboardRepository
 { 
     public function getDashboardStats($startDate = NULL, $endDate = NULL)
     {
+        $orderShipped = Order::STATUS_SHIPPED;
+        $orderPaymentDone = Order::STATUS_PAYMENT_DONE;
+        $orderCancel = Order::STATUS_CANCEL;
+        $orderRefund = Order::STATUS_REFUND;
+        
         $carbon       = Carbon::now();
         $monthName    = $carbon->format('F');
         $currentYear  = $carbon->year;
@@ -87,7 +92,7 @@ class DashboardRepository
 
         $totalShippedOrder = Order::when($isUser, function ($query) {
             return $query->where('user_id', Auth::id());
-        })->where('status', Order::STATUS_SHIPPED)->whereBetween('created_at', [$lastTwelveMonths, Carbon::now()])->orderBy('created_at', 'asc')->selectRaw('id,created_at')
+        })->where('status', $orderShipped)->whereBetween('created_at', [$lastTwelveMonths, Carbon::now()])->orderBy('created_at', 'asc')->selectRaw('id,created_at')
             ->get()
             ->groupBy(function ($val) {
                 return Carbon::parse($val->created_at)->format('Y-M');
@@ -113,27 +118,27 @@ class DashboardRepository
             ->selectRaw('id')
             ->count();
             
-            $percentIncreaseThisYear = 0;  
-            $newValue = 0;
-            $oldValue = 0;
-            $percentIncreaseThisMonth = 0;
-        try {
-            $newValue = end($totalOrderCount); // Get the last element
-            $oldValue = prev($totalOrderCount); // Get the second-to-last element 
-            $percentIncreaseThisMonth = number_format(((($newValue - $oldValue) / $oldValue) * 100), 2);
-            $percentIncreaseThisYear = number_format(((($newValue - $oldValue) / $oldValue) * 100), 2); 
-        } catch (\Exception $e) {
-        }
+        $oldValue = 0;
+        $newValue = 0;
+        $percentIncreaseThisYear = 0;  
+        $percentIncreaseThisMonth = 0;
+        $newValue = end($totalOrderCount);
+        $oldValue = prev($totalOrderCount);
+        
+        if($oldValue){
+            $percentIncreaseThisMonth = (number_format(((($newValue - $oldValue) / $oldValue) * 100), 2));
+            $percentIncreaseThisYear = (number_format(((($newValue - $oldValue) / $oldValue) * 100), 2)); 
+        }        
 
         // chart 
         $statusCounts = Order::when($isUser, function ($query) {
                 return $query->where('user_id', Auth::id());
             })->selectRaw('status, COUNT(*) as count')
             ->whereIn('status', [
-                Order::STATUS_SHIPPED,
-                Order::STATUS_PAYMENT_DONE,
-                Order::STATUS_CANCEL,
-                Order::STATUS_REFUND
+                $orderShipped,
+                $orderPaymentDone,
+                $orderCancel,
+                $orderRefund
             ])
             ->groupBy('status')
             ->get();
@@ -141,10 +146,10 @@ class DashboardRepository
         $statusCounts = $statusCounts->pluck('count', 'status');
 
         // Now you can access the counts for each status like this:
-        $shippedOrderCount = $statusCounts[Order::STATUS_SHIPPED] ?? 0;
-        $doneOrderCount = $statusCounts[Order::STATUS_PAYMENT_DONE] ?? 0;
-        $cancelledOrderCount = $statusCounts[Order::STATUS_CANCEL] ?? 0;
-        $refundOrderCount = $statusCounts[Order::STATUS_REFUND] ?? 0;
+        $shippedOrderCount = $statusCounts[$orderShipped] ?? 0;
+        $doneOrderCount = $statusCounts[$orderPaymentDone] ?? 0;
+        $cancelledOrderCount = $statusCounts[$orderCancel] ?? 0;
+        $refundOrderCount = $statusCounts[$orderRefund] ?? 0;
 
 
         //doughnut chart end
