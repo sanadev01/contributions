@@ -703,25 +703,53 @@ class OrderRepository
 
         if($order->recipient->country_id == Order::BRAZIL)
         {
-            // If sinerlog is enabled for the user, then remove the Correios services
-            if(!setting('correios_api', null, User::ROLE_ADMIN))
+            $bcns = $shippingServices->filter(function ($shippingService, $key) {
+                return $shippingService->is_bcn_service;
+            });
+            foreach($bcns as $bcn)
             {
+                \Log::info(['bcn service name'=>$bcn->name,'bcn service code'=>$bcn->service_sub_class]);
+            }
+            // If sinerlog is enabled for the user, then remove the Correios services
+            \Log::info([
+                'correise is active'=>setting('correios_api', null, User::ROLE_ADMIN),
+                'anjun api is active'=>setting('anjun_api', null, User::ROLE_ADMIN),
+                'bcn is active '=>setting('bcn_api', null, \App\Models\User::ROLE_ADMIN),
+                'auth Id'=>Auth::id(),
+                'services'=>[
+                 
+                ]
+            ]);
+             if(!setting('correios_api', null, User::ROLE_ADMIN))
+            {
+                \Log::info([
+                    'deactivating correios_api'
+                ]);
                 $shippingServices = $shippingServices->filter(function ($item, $key)  {
                     return !$item->isCorreiosService();
                 });
             }
             if(!setting('anjun_api', null, User::ROLE_ADMIN)){
+                \Log::info([
+                    'deactivating anjun'
+                ]);
                     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                         return !$shippingService->isAnjunService();
                     });
             }
             if(Auth::id()!="1233"){
-            $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-            return !$shippingService->isAnjunChinaService();
+                \Log::info([
+                    'deactivating anjun china'
+                ]);
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                return !$shippingService->isAnjunChinaService();
             });
             }
 
             if(!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
+                \Log::info([
+                    'deactivating bcn'
+                ]);
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return !$shippingService->is_bcn_service;
                 });
