@@ -37,7 +37,7 @@ class TempOrderExport extends AbstractExportService
             $this->setCellValue('C'.$row, (string)$this->getOrderTrackingCodes($order)); 
             $this->setCellValue('D'.$row, (string)$this->chargeWeight($order)); 
             $this->setCellValue('E'.$row, $order->shipping_value);
-            $this->setCellValue('F'.$row, $order->pobox_number); 
+            $this->setCellValue('F'.$row, $order->user->pobox_number); 
             $this->setCellValue('G'.$row, $order->user_declared_freight); 
             foreach($order->items as $item) { 
                 $this->setCellValue('H'.$row, $item->description);   
