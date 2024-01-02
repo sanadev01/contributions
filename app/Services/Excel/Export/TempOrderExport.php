@@ -36,10 +36,11 @@ class TempOrderExport extends AbstractExportService
             $this->setCellValue('B'.$row, $order->recipient->getFullName()); 
             $this->setCellValue('C'.$row, (string)$this->getOrderTrackingCodes($order)); 
             $this->setCellValue('D'.$row, (string)$this->chargeWeight($order)); 
-            $this->setCellValue('E'.$row, $order->shipping_value); 
-            $this->setCellValue('F'.$row, $order->user_declared_freight); 
+            $this->setCellValue('E'.$row, $order->shipping_value);
+            $this->setCellValue('F'.$row, $order->pobox_number); 
+            $this->setCellValue('G'.$row, $order->user_declared_freight); 
             foreach($order->items as $item) { 
-                $this->setCellValue('G'.$row, $item->description);   
+                $this->setCellValue('H'.$row, $item->description);   
                 $row++;
             } 
         } 
@@ -61,11 +62,13 @@ class TempOrderExport extends AbstractExportService
         $this->setCellValue('D1', 'weight');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'shipping paid');  
+        $this->setCellValue('E1', 'shipping paid');
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'ttl declared value');  
-        $this->setColumnWidth('G', 30);
-        $this->setCellValue('G1', 'Description of product');    
+        $this->setCellValue('F1', 'PO Box Number');    
+        $this->setColumnWidth('G', 20);
+        $this->setCellValue('G1', 'ttl declared value');  
+        $this->setColumnWidth('H', 30);
+        $this->setCellValue('H1', 'Description of product');    
 
         $this->currentRow++;
     } 
