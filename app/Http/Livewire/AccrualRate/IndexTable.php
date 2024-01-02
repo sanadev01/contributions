@@ -101,6 +101,14 @@ class IndexTable extends Component
         $this->services[20] = [
             'name' => 'PostPlus Portugal',
             'value' => Package::SERVICE_CLASS_Post_Plus_LT_Premium,
+        ];    
+        $this->services[21] = [
+            'name' => 'BCN Standard',
+            'value' => Package::SERVICE_CLASS_BCN_Standard,
+        ];
+        $this->services[22] = [
+            'name' => 'BCN Express',
+            'value' => Package::SERVICE_CLASS_BCN_EXPRESS,
         ];
         return $this->services;
     }
