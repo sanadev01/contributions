@@ -330,7 +330,7 @@ Route::get('/container-test/{id?}',function($id = null){
     dd('end');
 });
 Route::get('/cleared',function(){
-    ZoneCountry::query()->delete(); 
+    ZoneCountry::truncate(); 
     dump(ZoneCountry::get()); 
     dd('done');
-   });
+});
