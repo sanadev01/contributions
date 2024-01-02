@@ -1,13 +1,10 @@
 <?php
 
 namespace App\Services\Excel\ImportCharges;
-
-use App\Models\Rate;
 use App\Models\Country;
 use Illuminate\Http\UploadedFile;
 use App\Models\ZoneCountry;
 use App\Services\Excel\AbstractImportService;
-use App\Models\ShippingService;
 
 class ImportZoneProfit extends AbstractImportService
 {
@@ -43,7 +40,7 @@ class ImportZoneProfit extends AbstractImportService
                 $currentGroupId = $groupId;
             }
 
-            if (empty($countryCode)) {
+            if (empty($countryCode)||!is_numeric($currentGroupId)) {
                 continue;
             }
 
