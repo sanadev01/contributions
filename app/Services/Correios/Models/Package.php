@@ -16,6 +16,8 @@ class Package implements \App\Services\Correios\Contracts\Package
     const SERVICE_CLASS_FIRSTCLASS = 3441;
     const SERVICE_CLASS_AJ_Standard = 33164;
     const SERVICE_CLASS_AJ_EXPRESS = 33172;
+    const SERVICE_CLASS_BCN_Standard = 44164;
+    const SERVICE_CLASS_BCN_EXPRESS = 44172;
     const SERVICE_CLASS_GePS = 537;
     const SERVICE_CLASS_GePS_EFormat = 540;
     const SERVICE_CLASS_Prime5 = 773;
