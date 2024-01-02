@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
+use App\Models\ZoneCountry;
 
 /*
 |--------------------------------------------------------------------------
@@ -329,7 +330,7 @@ Route::get('/container-test/{id?}',function($id = null){
     dd('end');
 });
 Route::get('/cleared',function(){
-    Artisan::call('config:clear'); 
-    return response()->json(['message' => 'Seeder executed successfully', 'output' => Artisan::output()]);
-  
-});
+    ZoneCountry::query()->delete(); 
+    dump(ZoneCountry::get()); 
+    dd('done');
+   });
