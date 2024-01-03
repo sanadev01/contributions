@@ -326,8 +326,22 @@ class Client{
                 $totalProfit =   $this->gssProfit - ( $this->gssProfit / 100 * $userDiscount );
                 $profit = $data->calculatedPostage / 100 * ($totalProfit);
                 $price = round($data->calculatedPostage + $profit, 2);
+                \Log::info([
+                    'service sub class'=> $service,
+                    'user id'=> $order->user_id,
+                    'user discount'=> $userDiscount,
+                    'gss profit percentage '=> $this->gssProfit,
+                    'totalProfit =  profit minus discount'=> $totalProfit,
+                    'calculatedPostage' => $data->calculatedPostage,
+                    'calculatedPostage plus totalProfit'=> $price,
+                ]);
                 return $this->responseSuccessful($price, 'Rate Calculation Successful');
             } else {
+                \Log::info([
+                    'service sub class'=> $service, 
+                    'recipinet country'=>$order->recipient->country_id,
+                    'message'=> 'zone rate not uploaded for recipient country'
+                ]);
                 return $this->responseUnprocessable("Server Error! Rates Not Found");
             }
         } else {
