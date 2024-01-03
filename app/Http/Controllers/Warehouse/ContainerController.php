@@ -19,12 +19,7 @@ class ContainerController extends Controller
 
     public function create()
     {
-        $anjunApi = (setting('anjun_api', null, User::ROLE_ADMIN));
-        $bcnApi = (setting('bcn_api', null, User::ROLE_ADMIN));
-        $anjunChinaApi = (setting('china_anjun_api', null, User::ROLE_ADMIN));
-        $correioApi = (setting('correios_api', null, User::ROLE_ADMIN));
-
-        return view('admin.warehouse.containers.create', compact('anjunApi','bcnApi','anjunChinaApi','correioApi'));
+        return view('admin.warehouse.containers.create');
     }
 
     public function store(CreateContainerRequest  $createContainerRequest, ContainerRepository $containerRepository)
