@@ -272,9 +272,13 @@ class Client{
 
     
     public function getServiceRates($request) {
+       
         $rateType = '';
         $service = $request->service;
         $order = Order::find($request->order_id);
+        if($order->is_paid){ 
+            return $this->responseSuccessful($order->gross_total, 'Rate Calculation Successful');
+        }
         if($service == ShippingService::GSS_PMI) {
             $rateType = 'PMI';
         } elseif($service == ShippingService::GSS_EPMEI) {
@@ -309,12 +313,6 @@ class Client{
         $data= json_decode($response);
         if ($response->successful() && $data->success == true) {
             
-            // //CHECK IF USER HAS GSS PROFIT SETTING
-            // $this->gssProfit = setting('gss_profit', null,  $order->user_id);
-            // //APPLY ADMIN SIDE GSS PROFIT SETTING
-            // if($this->gssProfit == null || $this->gssProfit == 0) { 
-            //     $this->gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
-            // }
 
             $serviceId = ShippingService::where('service_sub_class', $service)->value('id');
             $this->gssProfit = ZoneCountry::where('shipping_service_id', $serviceId)
