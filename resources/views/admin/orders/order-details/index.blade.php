@@ -203,17 +203,14 @@
 <div class="modal fade" id="gssRateModal" role="dialog">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Alert</h5>
+            <div class="modal-header bg-danger">
+                <h5 class="modal-title">Error</h5>
             </div>
             <div class="modal-body">
-                <h4>Not Found</h4>
+                <h4>Service Not Found.</h4>
                 <ul>
-                    Rate not found service has been removed
+                    Please contact HomeDeliverybr support.
                 </ul> 
-                <ul>
-                    Please select other service to continue.
-                </ul>
             </div>
             <div class="modal-footer"> 
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
