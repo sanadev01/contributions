@@ -65,7 +65,13 @@ class ContainerPackageRepository extends AbstractRepository{
 
         if ($order->status < Order::STATUS_PAYMENT_DONE) {
             return $this->validationError404($barcode, 'Please check the Order Status, either the order has been canceled, refunded or not yet paid');
-        }
+        } 
+        \Log::info([
+            'container'=>$container->services_subclass_code,
+            'is anjun container'=>$container->hasAnjunService(),
+            'order subclass'=>$order->shippingService->service_sub_class,
+            'is anjun order'=>$order->shippingService->isAnjunService()
+        ]);
         if (!$container->hasAnjunService() || !$order->shippingService->isAnjunService()) {
             return $this->validationError404($barcode, 'Order does not belongs to this container Service. Please Check Packet Service');
         }
