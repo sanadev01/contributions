@@ -67,7 +67,6 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code">
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            @if ($correioApi)
                                                 <option value="NX"
                                                     {{ old('services_subclass_code') == 'NX' ? 'selected' : '' }}>Packet
                                                     Standard service</option>
@@ -76,36 +75,27 @@
                                                     Express service</option>
                                                 <option value="XP"
                                                     {{ old('services_subclass_code') == 'XP' ? 'selected' : '' }}>Packet
-                                                    Mini service</option>
-                                            @elseif($bcnApi)
+                                                    Mini service</option> 
                                                 <option value="BCN-NX"
                                                     {{ old('services_subclass_code') == 'BCN-NX' ? 'selected' : '' }}>BCN
                                                     standard service</option>
                                                 <option value="BCN-IX"
                                                     {{ old('services_subclass_code') == 'BCN-IX' ? 'selected' : '' }}>BCN
-                                                    express service</option>
-                                            @elseif($anjunApi)
+                                                    express service</option> 
                                                 <option value="AJ-NX"
                                                     {{ old('services_subclass_code') == 'AJ-NX' ? 'selected' : '' }}>Anjun
-                                                    standard service</option>
+                                                    Standard </option>
                                                 <option value="AJ-IX"
                                                     {{ old('services_subclass_code') == 'AJ-IX' ? 'selected' : '' }}>Anjun
-                                                    express service</option>
-                                            @elseif($anjunChinaApi)
+                                                    Express</option> 
                                             
-                                            <option value="AJC-NX"
-                                                    {{ old('services_subclass_code') == 'AJC-NX' ? 'selected' : '' }}>Packet
-                                                    Standard (AJ)</option>
-                                                <option value="AJC-IX"
-                                                    {{ old('services_subclass_code') == 'AJC-IX' ? 'selected' : '' }}>Packet
-                                                    Express (AJ)</option>
-                                            @endif
                                                 <option value="AJC-NX"
                                                     {{ old('services_subclass_code') == 'AJC-NX' ? 'selected' : '' }}>Packet
-                                                    Standard (AJ)</option>
+                                                    Standard (AJC)</option>
                                                 <option value="AJC-IX"
                                                     {{ old('services_subclass_code') == 'AJC-IX' ? 'selected' : '' }}>Packet
-                                                    Express (AJ)</option>
+                                                    Express (AJC)</option>
+                                           
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>
