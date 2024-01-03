@@ -62,10 +62,18 @@ class ContainerRepository extends AbstractRepository{
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
-
-            $container->update([
-                'dispatch_number' => ($container->hasAnjunService()) ? $anjunDispatchNumber : $container->id,
-            ]);
+            if ($container->hasBCNService()) {
+                
+                $maxBcnDispatchNumber = $container->where('dispatch_number', 'like', 'BCN%')->max('dispatch_number');
+                $bcnDispatchCounter = (int)substr($maxBcnDispatchNumber, 3) + 1;
+                $container->update([
+                    'dispatch_number' => 'BCN' . sprintf('%03d', $bcnDispatchCounter),
+                ]);
+            } else {
+                $container->update([
+                    'dispatch_number' => ($container->hasAnjunService()) ? $anjunDispatchNumber : $container->id,
+                ]);
+            }
 
             return $container;
 
