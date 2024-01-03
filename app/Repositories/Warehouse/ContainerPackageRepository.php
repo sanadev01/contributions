@@ -69,7 +69,7 @@ class ContainerPackageRepository extends AbstractRepository{
         \Log::info([
             'container'=>$container->services_subclass_code,
             'is anjun container'=>$container->hasAnjunService(),
-            'order subclass'=>$order->shshippingService->service_sub_class,
+            'order subclass'=>$order->shippingService->service_sub_class,
             'is anjun order'=>$order->shippingService->isAnjunService()
         ]);
         if (!$container->hasAnjunService() || !$order->shippingService->isAnjunService()) {
