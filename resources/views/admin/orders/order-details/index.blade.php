@@ -200,6 +200,27 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="gssRateModal" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alert</h5>
+            </div>
+            <div class="modal-body">
+                <h4>Not Found</h4>
+                <ul>
+                    Rate not found service has been removed
+                </ul> 
+                <ul>
+                    Please select other service to continue.
+                </ul>
+            </div>
+            <div class="modal-footer"> 
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -428,7 +449,8 @@
                 }
                 else{
                     if( service == 3674) { 
-                        alert('Rate not found service has been removed.')
+                        $('#gssRateModal').modal('show');
+                        
                         $('#shipping_service_id option:selected').remove(); 
                         $('#shipping_service_id').selectpicker('refresh');
                      }
