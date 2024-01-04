@@ -4,9 +4,9 @@
 @endsection
 @section('wizard-form')
 @if ($error)
-    <div class="alert alert-danger" role="alert">
-        {{$error}}
-    </div>
+<div class="alert alert-danger" role="alert">
+    {{$error}}
+</div>
 @endif
 <div class="alert alert-danger" role="alert" id="ups_response" style="display: none;"></div>
 <form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard" id="order-form">
@@ -20,7 +20,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>@lang('orders.order-details.Customer Reference') <span class="text-danger"></span></label>
-                        <input name="customer_reference" class="form-control" {{($order->recipient->country_id == $chileCountryId) ? 'required' : ''}} value="{{ $order->customer_reference }}" placeholder="@lang('orders.order-details.Customer Reference')"/>
+                        <input name="customer_reference" class="form-control" {{($order->recipient->country_id == $chileCountryId) ? 'required' : ''}} value="{{ $order->customer_reference }}" placeholder="@lang('orders.order-details.Customer Reference')" />
                         <p class="text-danger">{{ $errors->first('customer_reference') }}</p>
                         <div class="help-block"></div>
                     </div>
@@ -28,7 +28,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
                         <label>@lang('orders.order-details.WHR')# <span class="text-danger"></span></label>
-                        <input class="form-control" readonly value="{{ $order->warehouse_number }}" placeholder="@lang('orders.order-details.Warehouse Number')"/>
+                        <input class="form-control" readonly value="{{ $order->warehouse_number }}" placeholder="@lang('orders.order-details.Warehouse Number')" />
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="shipping_service_id" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                                <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
+                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
                             @endforeach
                         </select>
                         @else
@@ -59,11 +59,11 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="us_shipping_service" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                                @if($shippingService->isInboundDomesticService())
-                                    <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
-                                @else
-                                    <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
-                                @endif
+                            @if($shippingService->isInboundDomesticService())
+                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
+                            @else
+                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
+                            @endif
                             @endforeach
                         </select>
                         @endif
@@ -75,7 +75,7 @@
                     <div class="controls">
                         <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
                         <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" readonly required placeholder="@lang('orders.order-details.Tax Modality')">
-                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }} >DDU</option>
+                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }}>DDU</option>
                             <option value="ddp" {{ 'ddp' == $order->tax_modality ? 'selected' : '' }}>DDP</option>
                         </select>
                         <div class="help-block"></div>
@@ -85,81 +85,83 @@
             <hr>
             <div class="col-md-8">
                 @if($order->sinerlog_tran_id)
-                    <div class="controls row mb-1">
-                        <div class="form-check form-check-inline mr-5">
-                            <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
-                                <input type="checkbox" name="return_origin" id="returnParcel" @if($order->sinerlog_tran_id == 1) checked @endif>
-                                <span class="vs-checkbox vs-checkbox-lg">
-                                    <span class="vs-checkbox--check">
-                                        <i class="vs-icon feather icon-check"></i>
-                                    </span>
+                <div class="controls row mb-1">
+                    <div class="form-check form-check-inline mr-5">
+                        <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
+                            <input type="checkbox" name="return_origin" id="returnParcel" @if($order->sinerlog_tran_id == 1) checked @endif>
+                            <span class="vs-checkbox vs-checkbox-lg">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
                                 </span>
-                            </div>
-                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
+                            </span>
                         </div>
-                        <div class="form-check form-check-inline mr-5">
-                            <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
-                                <input type="checkbox" name="dispose_all" id="disposeAll" @if($order->sinerlog_tran_id == 2) checked @endif>
-                                <span class="vs-checkbox vs-checkbox-lg">
-                                    <span class="vs-checkbox--check">
-                                        <i class="vs-icon feather icon-check"></i>
-                                    </span>
-                                </span>
-                            </div>
-                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
-                        </div>
-                        <div class="form-check form-check-inline mr-5">
-                            <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
-                                <input type="checkbox" name="individual_parcel" id="returnIndividual" @if($order->sinerlog_tran_id == 3) checked @endif>
-                                <span class="vs-checkbox vs-checkbox-lg">
-                                    <span class="vs-checkbox--check">
-                                        <i class="vs-icon feather icon-check"></i>
-                                    </span>
-                                </span>
-                            </div>
-                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                        </div>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
                     </div>
+                    <div class="form-check form-check-inline mr-5">
+                        <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
+                            <input type="checkbox" name="dispose_all" id="disposeAll" @if($order->sinerlog_tran_id == 2) checked @endif>
+                            <span class="vs-checkbox vs-checkbox-lg">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
+                                </span>
+                            </span>
+                        </div>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
+                    </div>
+                    <div class="form-check form-check-inline mr-5">
+                        <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
+                            <input type="checkbox" name="individual_parcel" id="returnIndividual" @if($order->sinerlog_tran_id == 3) checked @endif>
+                            <span class="vs-checkbox vs-checkbox-lg">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
+                                </span>
+                            </span>
+                        </div>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
+                    </div>
+                </div>
                 @else
-                    <div class="controls row mb-1">
-                        <div class="form-check form-check-inline mr-5">
-                            <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
-                                <input type="checkbox" name="return_origin" id="returnParcel" @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
-                                <span class="vs-checkbox vs-checkbox-lg">
-                                    <span class="vs-checkbox--check">
-                                        <i class="vs-icon feather icon-check"></i>
-                                    </span>
+                <div class="controls row mb-1">
+                    <div class="form-check form-check-inline mr-5">
+                        <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
+                            <input type="checkbox" name="return_origin" id="returnParcel" @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
+                            <span class="vs-checkbox vs-checkbox-lg">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
                                 </span>
-                            </div>
-                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
+                            </span>
                         </div>
-                        <div class="form-check form-check-inline mr-5">
-                            <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
-                                <input type="checkbox" name="dispose_all" id="disposeAll" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
-                                <span class="vs-checkbox vs-checkbox-lg">
-                                    <span class="vs-checkbox--check">
-                                        <i class="vs-icon feather icon-check"></i>
-                                    </span>
-                                </span>
-                            </div>
-                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
-                        </div>
-                        <div class="form-check form-check-inline mr-5">
-                            <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
-                                <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
-                                <span class="vs-checkbox vs-checkbox-lg">
-                                    <span class="vs-checkbox--check">
-                                        <i class="vs-icon feather icon-check"></i>
-                                    </span>
-                                </span>
-                            </div>
-                            <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                        </div>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
                     </div>
+                    <div class="form-check form-check-inline mr-5">
+                        <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
+                            <input type="checkbox" name="dispose_all" id="disposeAll" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
+                            <span class="vs-checkbox vs-checkbox-lg">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
+                                </span>
+                            </span>
+                        </div>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
+                    </div>
+                    <div class="form-check form-check-inline mr-5">
+                        <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
+                            <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
+                            <span class="vs-checkbox vs-checkbox-lg">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
+                                </span>
+                            </span>
+                        </div>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
+                    </div>
+                </div>
                 @endif
             </div>
-            <div class="row col-12" id="itemLimit"><h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5></div>
-            <livewire:order.order-details.order-items :order-id="$order->id"/>
+            <div class="row col-12" id="itemLimit">
+                <h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5>
+            </div>
+            <livewire:order.order-details.order-items :order-id="$order->id" />
             <hr>
             <div class="row mt-1">
                 <div class="form-group col-12">
@@ -171,7 +173,7 @@
     <div class="actions clearfix">
         <ul role="menu" aria-label="Pagination">
             <li class="disabled" aria-disabled="true">
-                <a href="{{ route('admin.orders.recipient.index',$order->encrypted_id) }}" role="menuitem">@lang('orders.order-details.Previous')</a>   
+                <a href="{{ route('admin.orders.recipient.index',$order->encrypted_id) }}" role="menuitem">@lang('orders.order-details.Previous')</a>
             </li>
             <li aria-hidden="false" aria-disabled="false">
                 <button type="button" class="btn btn-success" id="rateBtn" onClick="checkService()">Get Rate</button>
@@ -190,7 +192,9 @@
             <div class="modal-body">
                 <h4>@lang('orders.order-details.Parcel Rate')</h4>
                 <ul>
-                    <li><h4>@lang('orders.order-details.Charge-msg1') <span class="badge badge-light" id="uspsVal"></span> @lang('orders.order-details.Charge-msg2')</h4></li>
+                    <li>
+                        <h4>@lang('orders.order-details.Charge-msg1') <span class="badge badge-light" id="uspsVal"></span> @lang('orders.order-details.Charge-msg2')</h4>
+                    </li>
                 </ul>
             </div>
             <div class="modal-footer">
@@ -210,9 +214,9 @@
                 <h4>Service Not Found.</h4>
                 <ul>
                     Please contact HomeDeliverybr support.
-                </ul> 
+                </ul>
             </div>
-            <div class="modal-footer"> 
+            <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -226,285 +230,289 @@
 <script>
     $("#rateBtn").hide();
     $("#itemLimit").hide();
-    getGSSRates();    
-    $('#shipping_service_id').on('change',function(){
+    getGSSRates();
+    $('#shipping_service_id').on('change', function() {
         $('#user_declared_freight').val(
             parseFloat($('option:selected', this).attr("data-cost"))
         );
-        const service = $('#shipping_service_id option:selected').attr('data-service-code');  
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
         emitSHCodes(service)
-         
 
-        if(service == 3442 || service == 3443) {
+
+        if (service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
-        }else if(service == 477  || service == 3674 || service == 37634 || service == 3326 || service == 4367) {
+        } else if (service == 477 || service == 3674 || service == 37634 || service == 3326 || service == 4367) {
             return getGSSRates();
-        }else if(service == 537 || service == 540 || service == 773) {
+        } else if (service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
             $("#rateBtn").hide();
-        }else {
+        } else {
             $("#itemLimit").hide();
             $("#rateBtn").hide();
         }
     })
 
     //USPS PRIORITY INTERNATIONAL SERVICE FOR RATES CALL 
-    function checkService(){
+    function checkService() {
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        if(service == 3442) {
-            return  getUspsPriorityIntlRates();
+        if (service == 3442) {
+            return getUspsPriorityIntlRates();
         }
     }
 
-    function getUspsPriorityIntlRates(){
+    function getUspsPriorityIntlRates() {
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-        var descpall = []; var qtyall = []; var valueall = [];
-        $.each($(".descp"), function(){
-            if(!($(this).val()) == '') {
+        var descpall = [];
+        var qtyall = [];
+        var valueall = [];
+        $.each($(".descp"), function() {
+            if (!($(this).val()) == '') {
                 descpall.push($(this).val());
             }
         });
-        $.each($(".quantity"), function(){
-            if(!($(this).val()) == '') {
+        $.each($(".quantity"), function() {
+            if (!($(this).val()) == '') {
                 qtyall.push($(this).val());
             }
         });
-        $.each($(".value"), function(){
-            if(!($(this).val()) == '') {
+        $.each($(".value"), function() {
+            if (!($(this).val()) == '') {
                 valueall.push($(this).val());
             }
         });
-        if(descpall.length && qtyall.length && valueall.length) {
+        if (descpall.length && qtyall.length && valueall.length) {
             $('#loading').fadeIn();
-            $.get('{{ route("api.usps_rates") }}',{
-                    service: service,
-                    order_id: order_id,
-                    descp: descpall,
-                    qty: qtyall,
-                    value: valueall,
-                }).then(function(response){
-                    console.log(response);
-                    if(response.success == true){
-                        $('#user_declared_freight').val(response.total_amount);
-                        $('#user_declared_freight').prop('readonly', true);
-                        $("#uspsVal").text('$' + response.total_amount);
-                        $('#uspsModal').modal('show');
-                        $("#uspsAccept").click(function(){        
-                            $("#order-form").submit();
-                        });
-                    }
-                    $('#loading').fadeOut();
+            $.get('{{ route("api.usps_rates") }}', {
+                service: service,
+                order_id: order_id,
+                descp: descpall,
+                qty: qtyall,
+                value: valueall,
+            }).then(function(response) {
+                console.log(response);
+                if (response.success == true) {
+                    $('#user_declared_freight').val(response.total_amount);
+                    $('#user_declared_freight').prop('readonly', true);
+                    $("#uspsVal").text('$' + response.total_amount);
+                    $('#uspsModal').modal('show');
+                    $("#uspsAccept").click(function() {
+                        $("#order-form").submit();
+                    });
+                }
+                $('#loading').fadeOut();
 
-                }).catch(function(error){
-                    console.log('error');
-                    console.log(error);
-                    $('#loading').fadeOut();
+            }).catch(function(error) {
+                console.log('error');
+                console.log(error);
+                $('#loading').fadeOut();
             })
-        }else {
+        } else {
             alert('Add items to get rates!');
-        }    
+        }
     }
 
 
     $('#us_shipping_service').ready(function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
-        if(service == 3440 || service == 3441) {
+        if (service == 3440 || service == 3441) {
 
-          return  getUspsRates();
+            return getUspsRates();
 
-        } else if(service == 3) {
+        } else if (service == 3) {
             return getUpsRates();
-        } else if(service == 4)
-        {
+        } else if (service == 4) {
             return getFedExRates();
         }
-        
+
     })
 
-    $('#us_shipping_service').on('change',function(){
+    $('#us_shipping_service').on('change', function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
-        
-        if(service == 3440 || service == 3441 || service == 05) {
 
-           return getUspsRates();
+        if (service == 3440 || service == 3441 || service == 05) {
 
-        }else if(service == 4)
-        {
+            return getUspsRates();
+
+        } else if (service == 4) {
             return getFedExRates();
-            
-        } else if(service != undefined && service == 03) {
+
+        } else if (service != undefined && service == 03) {
             return getUpsRates();
         }
     })
-   
-    function change(id){
-        var id = "dangrous_"+id;  
-        value = $('#'+id).val();
-        if(value == 'contains_battery'){
+
+    function change(id) {
+        var id = "dangrous_" + id;
+        value = $('#' + id).val();
+        if (value == 'contains_battery') {
             $(".dangrous").children("option[value^='contains_perfume']").hide()
         }
-        if(value == 'contains_perfume'){
+        if (value == 'contains_perfume') {
             $(".dangrous").children("option[value^='contains_battery']").hide()
         }
-        if(value == 0){
+        if (value == 0) {
             $(".dangrous").children("option[value^='contains_battery']").show();
             $(".dangrous").children("option[value^='contains_perfume']").show();
         }
     }
 
-    function getUspsRates(){
-        const service = $('#us_shipping_service option:selected').attr('data-service-code');
-        var order_id = $('#order_id').val();
-        
-        $('#loading').fadeIn();
-        $.get('{{ route("api.usps_rates") }}',{
-                service: service,
-                order_id: order_id,
-            }).then(function(response){
-                if(response.success == true){
-                    $('#user_declared_freight').val(response.total_amount);
-                    $('#user_declared_freight').prop('readonly', true);
-                }
-                $('#loading').fadeOut();
-
-            }).catch(function(error){
-                console.log(error);
-                $('#loading').fadeOut();
-        })
-        
-    }
-
-    function getUpsRates(){
-        const service = $('#us_shipping_service option:selected').attr('data-service-code');
-        var order_id = $('#order_id').val();
-        
-        $('#loading').fadeIn();
-        $.get('{{ route("api.ups_rates") }}',{
-                service: service,
-                order_id: order_id,
-            }).then(function(response){
-                if(response.success == true){
-                    $('#user_declared_freight').val(response.total_amount);
-                    $('#user_declared_freight').prop('readonly', true);
-                }
-                if(response.success == false)
-                {
-                    toastr.error(response.error);
-                    $('#ups_response').css('display', 'block');
-                    $('#ups_response').empty().append(response.error);
-                }
-                $('#loading').fadeOut();
-
-            }).catch(function(error){
-                console.log(error);
-                $('#loading').fadeOut();
-        })
-    }
-
-    function getFedExRates()
-    {
+    function getUspsRates() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
 
         $('#loading').fadeIn();
-        $.get('{{ route("api.fedExRates") }}',{
-                service: service,
-                order_id: order_id,
-            }).then(function(response){
-                if(response.success == true){
-                    $('#user_declared_freight').val(response.total_amount);
-                    $('#user_declared_freight').prop('readonly', true);
-                }
-                if(response.success == false)
-                {
-                    toastr.error(response.error);
-                    $('#fedex_response').css('display', 'block');
-                    $('#fedex_response').empty().append(response.error);
-                }
-                $('#loading').fadeOut();
+        $.get('{{ route("api.usps_rates") }}', {
+            service: service,
+            order_id: order_id,
+        }).then(function(response) {
+            if (response.success == true) {
+                $('#user_declared_freight').val(response.total_amount);
+                $('#user_declared_freight').prop('readonly', true);
+            }
+            $('#loading').fadeOut();
 
-            }).catch(function(error){
-                console.log(error);
-                $('#loading').fadeOut();
+        }).catch(function(error) {
+            console.log(error);
+            $('#loading').fadeOut();
         })
+
     }
 
-    function getGSSRates(){
-        const service = $('#shipping_service_id option:selected').attr('data-service-code'); 
-                var order_id = $('#order_id').val(); 
+    function getUpsRates() {
+        const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        var order_id = $('#order_id').val();
 
         $('#loading').fadeIn();
-        $.get('{{ route("api.gssRates") }}',{
-                service: service,
-                order_id: order_id,
-            }).then(function(response){ 
-                if(response.success == true){
-                    $('#user_declared_freight').val(response.total_amount);
-                    $('#user_declared_freight').prop('readonly', true);
-                }
-                else{
-                    if( service == 3674) { 
-                        $('#gssRateModal').modal('show');
-                        
-                        $('#shipping_service_id option:selected').remove(); 
-                        $('#shipping_service_id').selectpicker('refresh');
-                     }
-                }
-                $('#loading').fadeOut();
+        $.get('{{ route("api.ups_rates") }}', {
+            service: service,
+            order_id: order_id,
+        }).then(function(response) {
+            if (response.success == true) {
+                $('#user_declared_freight').val(response.total_amount);
+                $('#user_declared_freight').prop('readonly', true);
+            }
+            if (response.success == false) {
+                toastr.error(response.error);
+                $('#ups_response').css('display', 'block');
+                $('#ups_response').empty().append(response.error);
+            }
+            $('#loading').fadeOut();
 
-            }).catch(function(error){
-                console.log(error);
-                $('#loading').fadeOut();
+        }).catch(function(error) {
+            console.log(error);
+            $('#loading').fadeOut();
+        })
+    }
+
+    function getFedExRates() {
+        const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        var order_id = $('#order_id').val();
+
+        $('#loading').fadeIn();
+        $.get('{{ route("api.fedExRates") }}', {
+            service: service,
+            order_id: order_id,
+        }).then(function(response) {
+            if (response.success == true) {
+                $('#user_declared_freight').val(response.total_amount);
+                $('#user_declared_freight').prop('readonly', true);
+            }
+            if (response.success == false) {
+                toastr.error(response.error);
+                $('#fedex_response').css('display', 'block');
+                $('#fedex_response').empty().append(response.error);
+            }
+            $('#loading').fadeOut();
+
+        }).catch(function(error) {
+            console.log(error);
+            $('#loading').fadeOut();
+        })
+    }
+
+    function getGSSRates() {
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        var order_id = $('#order_id').val();
+
+        $('#loading').fadeIn();
+        $.get('{{ route("api.gssRates") }}', {
+            service: service,
+            order_id: order_id,
+        }).then(function(response) {
+            if (response.success == true) {
+                $('#user_declared_freight').val(response.total_amount);
+                $('#user_declared_freight').prop('readonly', true);
+            } else {
+                if (service == 3674) {
+                    $('#gssRateModal').modal('show');
+
+                    $('#shipping_service_id option:selected').remove();
+                    $('#shipping_service_id').selectpicker('refresh');
+                }
+            }
+            $('#loading').fadeOut();
+
+        }).catch(function(error) {
+            console.log(error);
+            $('#loading').fadeOut();
         })
 
     }
-    
+
     $('#returnParcel').change(function() {
-         if($(this).is(":checked")){
-         $('#disposeAll').prop('checked', false);
-         $('#returnIndividual').prop('checked', false);
-         }    
-     });
-     $('#disposeAll').change(function() {
-         if($(this).is(":checked")){
-         $('#returnParcel').prop('checked', false);
-         $('#returnIndividual').prop('checked', false);
-         }    
-     });
-     $('#returnIndividual').change(function() {
-         if($(this).is(":checked")){
-         $('#returnParcel').prop('checked', false);
-         $('#disposeAll').prop('checked', false);
-         }    
-     });
-     //handle shcode
-     $('#shipping_service_id').ready(function() {
+        if ($(this).is(":checked")) {
+            $('#disposeAll').prop('checked', false);
+            $('#returnIndividual').prop('checked', false);
+        }
+    });
+    $('#disposeAll').change(function() {
+        if ($(this).is(":checked")) {
+            $('#returnParcel').prop('checked', false);
+            $('#returnIndividual').prop('checked', false);
+        }
+    });
+    $('#returnIndividual').change(function() {
+        if ($(this).is(":checked")) {
+            $('#returnParcel').prop('checked', false);
+            $('#disposeAll').prop('checked', false);
+        }
+    });
+    //handle shcode
+    $('#shipping_service_id').ready(function() {
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        if(service){
+        if (service) {
             emitSHCodes(service)
         }
     })
-    function emitSHCodes(serviceCode){
-        $('.sh_code').selectpicker('destroy'); 
-        window.livewire.emit('reloadSHCodes', { service: serviceCode });
+
+    function emitSHCodes(serviceCode) {
+        $('.sh_code').selectpicker('destroy');
+        window.livewire.emit('reloadSHCodes', {
+            service: serviceCode
+        });
     }
 
-    $('.sh_code').on('change',function(){
-        const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        if(service){ 
-            emitSHCodes(service)
-        }
-    })
+
     window.addEventListener('shCodeReloaded', event => {
+        initializeSelectpicker();
+    })
+
+    function initializeSelectpicker() {
+        $('#loading').fadeIn();
+        $('.sh_code').selectpicker('destroy');
         setTimeout(() => {
             $('.sh_code').selectpicker({
                 liveSearch: true,
                 liveSearchPlaceholder: 'Search...',
             });
-        }, 2000);
-            
-    })       
+            $('#loading').fadeOut();
+        }, 2500);
+    }
+    window.addEventListener('addItem', event => {
+        console.log('adding item')
+        initializeSelectpicker();
+    })
 </script>
 @endsection
