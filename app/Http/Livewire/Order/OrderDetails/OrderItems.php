@@ -36,6 +36,8 @@ class OrderItems extends Component
 
     public function addItem()
     {
+        
+        $this->dispatchBrowserEvent('addItem');
         array_push($this->items,[]);
     }
 
