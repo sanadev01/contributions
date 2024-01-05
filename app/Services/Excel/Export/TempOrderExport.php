@@ -29,13 +29,14 @@ class TempOrderExport extends AbstractExportService
         foreach ($this->orders as $order) {
             $this->setCellValue('A'.$row, $order->getSenderFullName());
             $this->setCellValue('B'.$row, $order->recipient->getFullName()); 
-            $this->setCellValue('C'.$row, (string)$this->getOrderTrackingCodes($order)); 
-            $this->setCellValue('D'.$row, (string)$this->chargeWeight($order)); 
-            $this->setCellValue('E'.$row, $order->shipping_value);
-            $this->setCellValue('F'.$row, $order->user->pobox_number); 
-            $this->setCellValue('G'.$row, $order->user_declared_freight); 
+            $this->setCellValue('D'.$row, (string)$this->getOrderTrackingCodes($order)); 
+            $this->setCellValue('E'.$row, (string)$this->chargeWeight($order)); 
+            $this->setCellValue('F'.$row, $order->shipping_value); 
+            $this->setCellValue('G'.$row, $order->user->pobox_number); 
+            $this->setCellValue('H'.$row, $order->user_declared_freight); 
             foreach($order->items as $item) { 
-                $this->setCellValue('H'.$row, $item->description);   
+                $this->setCellValue('I'.$row, $item->description);   
+                $this->setCellValue('C'.$row, $item->sh_code);   
                 $row++;
             } 
         } 
@@ -51,19 +52,21 @@ class TempOrderExport extends AbstractExportService
         $this->setCellValue('B1', 'receiver#');
 
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'Tracking');
-
+        $this->setCellValue('C1', 'NCM (HS#)');
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D1', 'weight');
+        $this->setCellValue('D1', 'Tracking');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'shipping paid');
+        $this->setCellValue('E1', 'weight');
+
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'PO Box Number');    
+        $this->setCellValue('F1', 'shipping paid');  
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'ttl declared value');  
-        $this->setColumnWidth('H', 30);
-        $this->setCellValue('H1', 'Description of product');    
+        $this->setCellValue('G1', 'PO Box Number');    
+        $this->setColumnWidth('H', 20);
+        $this->setCellValue('H1', 'ttl declared value');  
+        $this->setColumnWidth('I', 30);
+        $this->setCellValue('I1', 'Description of product');
 
         $this->currentRow++;
     } 

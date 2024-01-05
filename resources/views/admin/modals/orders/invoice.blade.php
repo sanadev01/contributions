@@ -164,7 +164,7 @@
                             <tr>
                                 <td>{{ $order->shippingService->name }}</td>
                                 <td>
-                                    @if($order->sender_city)
+                                    @if($order->sender_city || $order->shippingService->usps_service_sub_class)
                                         {{ number_format($order->gross_total,2) }}
                                     @else
                                         {{ number_format($order->shipping_value,2) }}
