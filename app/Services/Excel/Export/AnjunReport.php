@@ -9,14 +9,14 @@ use App\Models\Warehouse\AccrualRate;
 
 class AnjunReport extends AbstractExportService
 {
-    private $orders;
+    private $deliveryBills;
     private $request;
 
     private $currentRow = 1;
 
-    public function __construct(Collection $orders)
+    public function __construct(Collection $deliveryBills)
     {
-        $this->orders = $orders;
+        $this->deliveryBills = $deliveryBills;
 
         parent::__construct();
     }
@@ -25,36 +25,48 @@ class AnjunReport extends AbstractExportService
     {
         $this->prepareExcelSheet();
 
-        return $this->download();
+        return $this->downloadExcel();
     }
 
     private function prepareExcelSheet()
     {
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
-        foreach ($this->orders as $order) {
-            $this->setCellValue('A'.$row, $order->order_date);
-            $this->setCellValue('B'.$row, $order->warehouse_number);
-            $this->setCellValue('C'.$row, $order->user->name);
-            $this->setCellValue('D'.$row, $order->corrios_tracking_code);
-            $this->setCellValue('E'.$row, round($order->gross_total,2));
-            $this->setCellValue('F'.$row, $this->getValuePaidToCorrieos($order)['airport']);
-            $this->setCellValue('G'.$row, $this->getValuePaidToCorrieos($order)['commission']);
-            $row++;
+        foreach ($this->deliveryBills as $deliveryBill) {
+            foreach ($deliveryBill->containers as $container) {
+                foreach ($container->orders as $order) {
+                    if($order->shippingService){
+                        if($order->shippingService->isAnjunService())
+                        {
+                            $this->setCellValue('A'.$row, $order->order_date);
+                            $this->setCellValue('B'.$row, $order->warehouse_number);
+                            $this->setCellValue('C'.$row, $order->user->name);
+                            $this->setCellValue('D'.$row, $order->corrios_tracking_code);
+                            $this->setCellValue('E'.$row, optional(optional($order->containers)[0])->unit_code);
+                            $this->setCellValue('F'.$row, round($order->gross_total,2));
+                            $this->setCellValue('G'.$row, $this->getValuePaidToCorrieos($order)['airport']);
+                            $this->setCellValue('H'.$row, $this->getValuePaidToCorrieos($order)['commission']);
+                            $this->setCellValue('I'.$row, $order->status_name);
+                            $this->setCellValue('J'.$row, $deliveryBill->created_at);
+                            $row++;
+                        }
+                    }
+                }
+            }
         }
 
         $this->currentRow = $row;
 
-        $this->setCellValue('E'.$row, "=SUM(E1:E{$row})");
         $this->setCellValue('F'.$row, "=SUM(F1:F{$row})");
         $this->setCellValue('G'.$row, "=SUM(G1:G{$row})");
-        $this->setBackgroundColor("A{$row}:G{$row}", 'adfb84');
+        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
+        $this->setBackgroundColor("A{$row}:H{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()
     {
         $this->setColumnWidth('A', 20);
-        $this->setCellValue('A1', 'Date');
+        $this->setCellValue('A1', 'Order Create Date');
 
         $this->setColumnWidth('B', 20);
         $this->setCellValue('B1', 'Warehouse No.');
@@ -64,18 +76,27 @@ class AnjunReport extends AbstractExportService
 
         $this->setColumnWidth('D', 20);
         $this->setCellValue('D1', 'Tracking Code');
-
+        
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Amount Customers Paid');
+        $this->setCellValue('E1', 'Unit Code');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Correios (Anjun)');
+        $this->setCellValue('F1', 'Amount Customers Paid');
 
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Anjun Commission');
+        $this->setCellValue('G1', 'Correios (Anjun)');
 
-        $this->setBackgroundColor('A1:G1', '2b5cab');
-        $this->setColor('A1:H1', 'FFFFFF');
+        $this->setColumnWidth('H', 20);
+        $this->setCellValue('H1', 'Anjun Commission');
+        
+        $this->setColumnWidth('I', 20);
+        $this->setCellValue('I1', 'Status');
+
+        $this->setColumnWidth('J', 20);
+        $this->setCellValue('J1', 'DeliveryBill Date');
+
+        $this->setBackgroundColor('A1:J1', '2b5cab');
+        $this->setColor('A1:J1', 'FFFFFF');
 
         $this->currentRow++;
 

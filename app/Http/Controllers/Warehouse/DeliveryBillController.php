@@ -18,7 +18,7 @@ class DeliveryBillController extends Controller
      */
     public function index(DeliveryBillRepository $deliveryBillRepository,Request $request)
     {
-        $deliveryBills = $deliveryBillRepository->get($request);
+        $deliveryBills = $deliveryBillRepository->get($request,true);
         return view('admin.warehouse.deliverybills.index',compact('deliveryBills'));
     }
 
@@ -43,6 +43,7 @@ class DeliveryBillController extends Controller
      */
     public function store(CreateDeliveryBillRequest $request, DeliveryBillRepository $deliveryBillRepository)
     {
+        
         if ( $container = $deliveryBillRepository->store($request) ){
             session()->flash('alert-success', 'Delivery Bill Created Successfully');
             return redirect()->route('warehouse.delivery_bill.index');

@@ -18,10 +18,12 @@ class KPIReportController extends Controller
      * @return \Illuminate\Http\Response
     */
     public function index(Request $request, KPIReportsRepository $kpiReportsRepository)
-    {
+    { 
         $this->authorize('viewKPIReport',Reports::class);
         $trackings = [];
-        $trackingCodeUser = [];
+        $trackingCodeUsersName = [];
+        $orderDates = [];
+        $firstEventDate = [];
         if($request->start_date && $request->end_date || $request->trackingNumbers) {
             try{ 
             $response = $kpiReportsRepository->get($request);
@@ -31,20 +33,24 @@ class KPIReportController extends Controller
                 return back(); 
             }
             $trackings = $response['trackings'];
-            $trackingCodeUser = $response['trackingCodeUser'];
+            $firstEventDate = $response['firstEventDate'];
+            $trackingCodeUsersName = $response['trackingCodeUsersName'];
+            $orderDates = $response['orderDates'];
         }
-        return view('admin.reports.kpi-report', compact('trackings','trackingCodeUser'));
+        return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates', 'firstEventDate'));
     }
-
     public function store(Request $request)
     {
         if($request->order){
+            
             $trackings = json_decode($request->order, true);
-            $trackingCodeUser =json_decode($request->trackingCodeUser, true);
-
-           
-            $exportService = new KPIReport($trackings,$trackingCodeUser);
+            $trackingCodeUsersName =json_decode($request->trackingCodeUsersName, true);
+            $orderDates =json_decode($request->orderDates, true);
+            $firstEventDate =json_decode($request->firstEventDate, true);
+            
+            $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, $request->type == 'scan' ?'Aguardando pagamento':null, $firstEventDate);
             return $exportService->handle();
         }
-    }
+    } 
+   
 }

@@ -182,6 +182,7 @@ return [
         App\Providers\UPSServiceProvider::class,
         App\Providers\FedExServiceProvider::class,
         App\Providers\ChileServiceProvider::class,
+        Webklex\PDFMerger\Providers\PDFMergerServiceProvider::class,
 
     ],
 
@@ -198,6 +199,7 @@ return [
 
     'aliases' => [
 
+        'User' => \App\Models\User::class,
         'App' => Illuminate\Support\Facades\App::class,
         'Arr' => Illuminate\Support\Arr::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
@@ -235,7 +237,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
-        'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class
+        'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
+        'PDFMerger' => Webklex\PDFMerger\Facades\PDFMergerFacade::class,
     ],
 
 ];

@@ -14,10 +14,9 @@ class ShCodeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(ShcodeRepository $repository)
+    public function index()
     {
-        $shCodes = $repository->get();
-        return view('admin.shcode.index',compact('shCodes'));
+        return view('admin.shcode.index');
     }
 
     /**

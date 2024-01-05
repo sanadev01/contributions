@@ -3,12 +3,47 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">
-                            @lang('warehouse.containers.Containers')
-                        </h4>
-                        <a href="{{ route('warehouse.containers.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
-                    </div>
+                    <div class="row mt-4 ">
+                        <div class="col-md-1">
+                            <div class="card-header">
+                                <h4 class="mb-0">
+                                    @lang('warehouse.containers.Containers')
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                        <div class="col-md-2">
+                            <label>Start Date</label>
+                            <input type="date" class="form-control mb-2 mr-sm-2" wire:model="startDate">
+                        </div>
+                        <div class="col-md-2">
+                            <label>End Date</label>
+                            <input type="date" class="form-control" wire:model="endDate">
+                        </div>
+                        <div class="col-md-2">
+                            <label>Service</label>
+                            <select class="form-control mb-2 mr-sm-2" wire:model="service">
+                                <option value="">All</option>
+                                <option value="{{ json_encode(['NX', 'IX']) }}">Correios Brazil</option>
+                                <option value="{{ json_encode(['BCN-NX', 'BCN-IX']) }}">Correios B</option>
+                                <option value="{{ json_encode(['AJ-IX', 'AJ-NX']) }}">Anjun </option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 d-flex mt-2">
+                            <div class="mt-4">
+                                <button wire:click="download" class="btn btn-success waves-effect waves-light"
+                                    type="submit">Download</button>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex mt-2 justify-content-center ">
+                            <div class="mt-4">
+                                <a href="{{ route('warehouse.containers.create') }}" class="pull-right btn btn-primary">
+                                    @lang('warehouse.containers.Create Container') </a>
+
+                            </div>
+                        </div>
+                    </div> 
                     <div class="card-content card-body" style="min-height: 100vh;">
                         <div class="mt-1">
                             <table class="table mb-0">
@@ -67,6 +102,10 @@
                                             <option value="XP">Packet Mini</option>
                                             <option value="AJ-NX">Anjun Packet Standard</option>
                                             <option value="AJ-IX">Anjun Packet Express</option>
+                                            <option value="BCN-NX">BCN Packet Standard</option>
+                                            <option value="BCN-IX">BCN Packet Express</option>
+                                            <option value="AJC-NX">Packat Standard AJ</option>
+                                            <option value="AJC-IX">Packet Express AJ</option>
                                         </select>
                                     </th>
                                     
@@ -86,12 +125,12 @@
                                                         <i class="vs-icon feather icon-check"></i>
                                                     </span>
                                                 </span>
-                                                <span class="h3 mx-2 text-primary my-0 py-0"></span>
+                                                <h6><span class="h3 mx-2 text-primary my-0 py-0">@admin @if(optional($container->user)->isUser()) <span class="badge badge-danger">GoBox</span> @endif @endadmin</span></h6>
                                             </div>
                                         </td>
                                         <td>{{ $container->dispatch_number }}</td>
                                         <td>{{ $container->seal_no }}</td>
-                                        <td>
+                                        <td> 
                                             {{ $container->getWeight() }} KG
                                         </td>
                                         <td>
@@ -148,7 +187,7 @@
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
                                                             @if( !$container->isRegistered() && $container->hasOrders())
-                                                                <a href="{{ route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
+                                                                <a href="{{  $container->hasAnjunChinaService()?route('warehouse.anjun.container.register',$container):route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Register Unit
                                                                 </a>
                                                             @endif
@@ -166,9 +205,9 @@
                                                             </form>
                                                         @endif
                                                         @if( $container->isRegistered() )
-                                                            <a href="{{ route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> Get CN35
-                                                            </a>
+                                                        <a href="{{$container->hasAnjunChinaService()?route('warehouse.anjun.container.download',$container):route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
+                                                            <i class="feather icon-box"></i> Get CN35
+                                                        </a>
                                                         @endif
                                                     </div>
                                                 </div>

@@ -20,23 +20,33 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($rates as $rate)
+                                    @foreach($settings as $setting)
                                         <tr>
                                             <td>
-                                                {{ $rate['service'] }}
+                                                {{ $setting->shippingService->name }}
                                             </td>
                                             <td>
-                                                <form action="{{ route('admin.rates.show-profit-rates') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="rates" value="{{ $rate['rates'] }}">
-                                                    <input type="hidden" name="service" value="{{ $rate['service'] }}">
-                                                    <input type="hidden" name="packageId" value="{{ $rate['packageId'] }}">
-                                                    <button type="submit" class="btn btn-success btn-sm">View Rates</button>
-                                                </form>
+                                                <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$setting->service_id,'packageId'=>$setting->package_id]) }}" class="btn btn-primary btn-sm">View Rates</a>
+                                                |
+                                                <a href="{{ route('admin.rates.rates.exports', $setting->service_id) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
                                             </td>
                                             
                                         </tr>
-                                    @endforeach
+                                        @endforeach
+                                        @if($services)
+                                            @foreach($services as $service)
+                                                <tr>
+                                                    <td>
+                                                        {{ $service->name }}
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ route('admin.rates.show-profit-rates', ['id'=>$service->id,'packageId'=>$service->id] ) }}" class="btn btn-primary btn-sm">View Rates</a>
+                                                        |
+                                                        <a href="{{ route('admin.rates.rates.exports', $service) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                 </tbody>
                             </table>
                         </div>

@@ -60,7 +60,7 @@ class AuditReportExport extends AbstractExportService
         $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
         $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
         $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
-        // $this->mergeCells("A{$row}:F{$row}");
+        // $this->mergeCells("A1:B2");
         
         $this->setBackgroundColor("A{$row}:O{$row}", 'adfb84');
     }

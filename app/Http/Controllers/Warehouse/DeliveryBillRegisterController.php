@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers\Warehouse;
 
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\DeliveryBill;
-use Illuminate\Support\Facades\Storage;
-use App\Services\GePS\Client as GePSClient;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\Client;
 
@@ -20,15 +16,24 @@ class DeliveryBillRegisterController extends Controller
             session()->flash('alert-danger','Please add containers to this delivery bill');
             return back();
         }
+     
 
         if ($deliveryBill->isRegistered()) {
             session()->flash('alert-danger','This delivery bill has already been registered');
             return back();
         }
-        if($deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->hasColombiaService())  {            
-            
-            $deliveryBill->update([
+       
+        if ($deliveryBill->containerShippingService(ShippingService::TOTAL_EXPRESS)) {
+             $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->setCN38Code(),
+                'request_id' => $deliveryBill->setRandomRequestId()
+            ]);
+        } 
+
+ 
+        if($deliveryBill->isAnjunChina() ||$deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE() || $deliveryBill->isHDExpress()|| $deliveryBill->isHoundExpress() || $deliveryBill->hasColombiaService()){
+            $deliveryBill->update([
+                'cnd38_code' => $deliveryBill->id.''.$deliveryBill->setCN38Code(),
                 'request_id' => $deliveryBill->setRandomRequestId()
             ]);
             

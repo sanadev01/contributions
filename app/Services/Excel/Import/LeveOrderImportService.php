@@ -101,7 +101,7 @@ class LeveOrderImportService extends AbstractImportService
             ]);
 
             $order->update([
-                'warehouse_number' => "TEMPWHR-{$order->id}"
+                'warehouse_number' => $order->getTempWhrNumber(true),
             ]);
 
             $order->doCalculations(false);

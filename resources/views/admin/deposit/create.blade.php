@@ -104,7 +104,7 @@
                                 </div>
                                 <hr>
                                 <div class="billingInfo-div" @admin @if(old('adminpay')) style="display: none" @endif @endadmin>
-                                    <livewire:deposit.auto-charge />
+                                      <livewire:deposit.auto-charge />
                                     <div class="grid-wrapper w-100">
                                         @foreach (auth()->user()->billingInformations as $billingInfo)
                                             <div class="card-wrapper h-auto my-2 w-100">
@@ -163,15 +163,15 @@
                                     </div>
                                     <hr>
                                 </div>
-                                <div class="row mt-4 p-4">
-                                    <div class="col-md-12 text-right">
-                                        <button class="btn btn-lg btn-success" type="submit">
-                                            <i class="feather icon-dollar-sign"></i> @lang('invoice.Pay')
-                                        </button>
-                                        <a href="{{ route('admin.deposit.index') }}" class="btn btn-lg btn-warning">
-                                            <i class="feather icon-x"></i> @lang('invoice.Cancel')
-                                        </a>
-                                    </div>
+                            </div>
+                            <div class="row mt-4 p-4">
+                                <div class="col-md-12 text-right">
+                                    <button class="btn btn-lg btn-success" type="submit">
+                                        <i class="feather icon-dollar-sign"></i> @lang('invoice.Pay')
+                                    </button>
+                                    <a href="{{ route('admin.deposit.index') }}" class="btn btn-lg btn-warning">
+                                        <i class="feather icon-x"></i> @lang('invoice.Cancel')
+                                    </a>
                                 </div>
                             </div>
                         </form>
@@ -244,6 +244,44 @@
                 $('form').removeAttr('novalidate');
             }
         }
+    </script>
+    <script type="text/javascript">
+        $("#autoChargeSwitch").on('change', function(e){
+            if(e.target.checked){
+                $('#termsModal').modal();
+            }else {
+                let event = new Event("click");
+                save.dispatchEvent(event);
+            }
+        });
+        $("#decline").click(function () {
+            $("#autoChargeSwitch").prop( "checked", false);
+            $('#termsModal').modal('hide');
+        });
+        $("#proceed").click(function () {
+            var chargeAmount = $("#chargeAmount").val();
+            var balanceNumber = $("#balanceNumber").val();
+            var billingInfo = $('#billingInfo').val();
+            if(chargeAmount && balanceNumber && billingInfo) {
+                $("#autoChargeSwitch").prop( "checked", true);
+                $('#termsModal').modal('hide');
+            }else{
+                $("#autoChargeSwitch").prop( "checked", false);
+                $('#termsModal').modal('hide'); 
+            }
+        });
+        $("#closeModal").click(function () {
+            $("#autoChargeSwitch").prop( "checked", false);
+            $('#termsModal').modal('hide');
+        });
+        $(document).ready(function(){
+            $('#termsModal').click(function(){
+                $('#termsModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+            });
+        });
     </script>
     {{-- @include('admin.deposit.stripe') --}}
 @endsection

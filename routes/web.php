@@ -1,18 +1,22 @@
 <?php
 
-use App\Models\Order;
-use App\Models\OrderTracking;
-use App\Models\CommissionSetting;
 use Illuminate\Support\Facades\DB;
-use App\Models\Warehouse\Container;
+use App\Models\Order;
+use App\Models\State;
+use App\Models\AffiliateSale;
+use App\Models\ProfitPackage;
 use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Artisan;
+use App\Services\HDExpress\CN23LabelMaker;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
-use App\Services\Correios\Services\Brazil\Client;
+// use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Deposit\DepositController;
-use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Models\Warehouse\Container;
+use App\Http\Controllers\ConnectionsController;
+use App\Models\ZoneCountry;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,8 +26,7 @@ use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
-
+*/  
 Route::get('/', function (Shopify $shopifyClient) {
     $shop = "https://".request()->shop;
     if (request()->has('shop') ) {
@@ -35,7 +38,8 @@ Route::get('/', function (Shopify $shopifyClient) {
     }
     return redirect('login');
 });
-
+ini_set('memory_limit', '10000M');
+ini_set('memory_limit', '-1');
 Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
 Route::resource('us-calculator', USCalculatorController::class)->only(['index', 'store']);
 
@@ -57,6 +61,7 @@ Route::post('logout', [\App\Http\Controllers\Auth\LoginController::class,'logout
 Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function () {
 
         Route::get('dashboard', 'HomeController')->name('home');
+        Route::get('dashboard-test', 'HomeTestController');
         Route::resource('parcels', PreAlertController::class);
         Route::get('parcel/{order}/duplicate',DuplicatePreAlertController::class)->name('parcel.duplicate');
         Route::resource('billing-information', BillingInformationController::class);
@@ -95,6 +100,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('orders.usps-label', OrderUSPSLabelController::class)->only('index','store');
             Route::resource('orders.ups-label', OrderUPSLabelController::class)->only('index','store');
             Route::post('order/update/status',OrderStatusController::class)->name('order.update.status');
+            Route::get('gde/{order}/invoice', GDEInvoiceDownloadController::class)->name('gde.invoice.download');
 
             Route::get('order-ups-label-cancel-pickup/{id?}', [\App\Http\Controllers\Admin\Order\OrderUPSLabelController::class, 'cancelUPSPickup'])->name('order.ups-label.cancel.pickup');
         });
@@ -105,7 +111,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('parcels',SelectPackagesController::class)->only('index','store','edit','update');
             Route::resource('parcels.services',ServicesController::class)->only('index','store');
         });
-
 
         Route::namespace('Payment')->group(function(){
             Route::resource('payment-invoices', PaymentInvoiceController::class)->only(['index','store','destroy']);
@@ -132,10 +137,14 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('accrual-rates/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'showRates'])->name('show-accrual-rates');
             Route::get('accrual-rates-download/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'downloadRates'])->name('download-accrual-rates');
             Route::resource('user-rates', UserRateController::class)->only(['index']);
-            Route::get('rates-exports/{package}', RateDownloadController::class)->name('rates.exports');
+            Route::get('rates-exports/{package}/{regionRates?}', RateDownloadController::class)->name('rates.exports');
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
-            Route::post('/show-profit-package-rates', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showRates'])->name('show-profit-rates');
+            Route::get('/show-profit-package-rates/{id}/{packageId}', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showPackageRates'])->name('show-profit-rates');
             Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
+            Route::resource('zone-profit', ZoneProfitController::class)->only(['index', 'store', 'create', 'destroy']);
+            Route::get('zone-profit/{group_id}/shipping-service/{shipping_service_id}', [\App\Http\Controllers\Admin\Rates\ZoneProfitController::class, 'show'])->name('zone-profit-show');
+            Route::get('zone-profit-download/{group_id}/shipping-service/{shipping_service_id}', [\App\Http\Controllers\Admin\Rates\ZoneProfitController::class, 'downloadZoneProfit'])->name('downloadZoneProfit');
+            Route::post('zone-profit-update/{id}', [\App\Http\Controllers\Admin\Rates\ZoneProfitController::class, 'updateZoneProfit'])->name('updateZoneProfit');
         });
 
         Route::namespace('Connect')->group(function(){
@@ -156,6 +165,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 
         Route::namespace('Tax')->group(function(){
             Route::resource('tax', TaxController::class)->except(['show','destroy']);
+            Route::post('refund-tax',[App\Http\Controllers\Admin\Tax\TaxController::class,'refund'])->name('refund-tax');
         });
 
         Route::namespace('Adjustment')->group(function(){
@@ -230,13 +240,19 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('report/{user}/shipment-user', \ShipmentByServiceController::class)->name('report.shipment-user');
             Route::get('parcel/{parcel}/consolidation-print', \ConsolidationPrintController::class)->name('parcel.consolidation-print');
             Route::get('order/{order}/invoice', \OrderInvoiceModalController::class)->name('order.invoice');
+            Route::get('commissions', \CommissionModalController::class)->name('order.commissions');
             Route::get('order/{error}/edit/{edit?}', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'edit'])->name('order.error.edit');
             Route::get('order/{error}/show', [\App\Http\Controllers\Admin\Modals\ImportOrderModalController::class,'show'])->name('order.error.show');
             Route::get('package/{package}/users', [\App\Http\Controllers\Admin\Rates\ProfitPackageController::class,'packageUsers'])->name('package.users');
             Route::get('order/{order}/product', \ProductModalController::class)->name('inventory.order.products');
         });
 });
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
+    Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
+    Route::get('/auth', [ConnectionsController::class, 'getAuth']); 
+    Route::get('/status-change/{user}', [ConnectionsController::class, 'getStatusChange']);
+});
 Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->group(function(){
     Route::namespace('Shopify')->prefix('shopify')->as('shopify.')->group(function(){
         Route::get('redirect_uri', RedirectController::class)->name('redirect_uri');
@@ -264,12 +280,14 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
 
-Route::get('test-label',function(){
+Route::get('test-label/{id?}',function($id = null){
+
+    $order = Order::where('corrios_tracking_code', $id)->get();
+    dd($order);
     
     $labelPrinter = new CN23LabelMaker();
-    
-    $order = Order::find(179250);
-    // dd($order);
+    $order = Order::find($id);
+    // dd($order->recipient->country->code);
     $labelPrinter->setOrder($order);
     $labelPrinter->setService(2);
     
@@ -281,6 +299,38 @@ Route::get('permission',function($id = null){
     return Artisan::output();
 });
 
-Route::get('find-container/{container}', [HomeController::class, 'findContainer'])->name('find.container');
+Route::get('session-refresh/{slug?}', function($slug = null){
+    if($slug){
+        session()->forget('token');
+        Cache::forget('token');
+        return 'Correios Token refresh';
+    }
+    session()->forget('anjun_token');
+    Cache::forget('anjun_token');
+    return 'Anjun Token refresh';
+});
+
+Route::get('/temp-order-report',TempOrderReportController::class);
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
+
+Route::get('/to-express/{id?}',function($id = null){
+    
+    Order::whereIn('shipping_service_id',[ 
+       $id,])->update(['shipping_service_id'=>42]);
+
+    return 'shipping service updated to express sucessfully.'; 
+});
+Route::get('/container-test/{id?}',function($id = null){
+    
+    $container = Container::find($id);
+    foreach($container->orders as $order){
+       echo $order->shippingService->service_sub_class.' '.$order->corrios_tracking_code;
+    }
+    dd('end');
+});
+Route::get('/cleared',function(){
+    ZoneCountry::truncate(); 
+    dump(ZoneCountry::get()); 
+    dd('done');
+});

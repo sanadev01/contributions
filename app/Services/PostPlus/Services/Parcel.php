@@ -1,77 +1,98 @@
 <?php
 namespace App\Services\PostPlus\Services;
 
+use Carbon\Carbon;
+use App\Models\Order;
 use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
  
 class Parcel { 
 
    protected $chargableWeight;
-
-   public function getRequestBody($order) {
-
-      if($order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered) {
-         $type = 'Registered';
-      } else {
-         $type = 'EMS';
+   protected $order;
+   protected $weight;
+   public function __construct(Order $order)
+   {
+      $this->order = $order;
+      $this->weight = $order->weight;
+      if(!$this->order->isWeightInKg()) {
+         $this->weight = UnitsConverter::poundToKg($this->order->getOriginalWeight('lbs'));
       }
-      $refNo = $order->customer_reference;
+   }
+
+   public function getRequestBody() {
+
+      if($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered) {
+         $type = 'Registered';
+      } elseif($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_EMS) {
+         $type = 'EMS';
+      } elseif($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime || $this->order->shippingService->service_sub_class == ShippingService::LT_PRIME) {
+         $type = 'Prime';
+      } elseif($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Premium) {
+         $type = 'ParcelUPU';
+      }  elseif($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium) {
+         $type = 'Premium';
+      }
+      $refNo = $this->order->customer_reference;
+
       $packet = [
                //Reference Information
                'identifiers' => [
-                  'senderParcelNr' => ($refNo ? $refNo : $order->tracking_id).' HD-'.$order->id,
+                  'senderParcelNr' => ($refNo ? $refNo : $this->order->tracking_id).' HD-'.$this->order->id,
                ],
                'references' => [
-                  'bagNr' => $order->warehouse_number
+                  'bagNr' => $this->order->warehouse_number
                ],
                //Parcel Information
                'parcel' => [
                   'type' => $type,
-                  'parcelGrossWeight' => $order->weight,
-                  'items' => $this->setItemsDetails($order),
+                  'parcelGrossWeight' => $this->weight,
+                  'items' => $this->setItemsDetails(),
                ],
                'additionalInfo' => [
-                  'serviceCode' => "UZPO",
-                  'taxIdentification' => ($order->recipient->tax_id) ? $order->recipient->tax_id: '',
+                  'serviceCode' => ($this->order->shippingService->service_sub_class == ShippingService::LT_PRIME || $this->order->shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium) ? "LTPO" : "UZPO",
+                  'taxIdentification' => ($this->order->recipient->tax_id) ? $this->order->recipient->tax_id: '',
                ],
                //Recipient Information
                'receiver' => [
-                  'name' => $order->recipient->getFullName(),
-                  'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',
-                  'address' => $order->recipient->address.' '.optional($order->recipient)->address2.' '.$order->recipient->street_no,
-                  'zipCode' => cleanString($order->recipient->zipcode),
-                  'city' => $order->recipient->city,
-                  'countryCode' => $order->recipient->country->code,
+                  'name' => $this->order->recipient->getFullName(),
+                  'phone' => ($this->order->recipient->phone) ? $this->order->recipient->phone: '',
+                  'address' => $this->order->recipient->address.' '.optional($this->order->recipient)->address2.' '.$this->order->recipient->street_no,
+                  'zipCode' => cleanString($this->order->recipient->zipcode),
+                  'city' => $this->order->recipient->city,
+                  'state' => $this->order->recipient->State->code,
+                  'countryCode' => $this->order->recipient->country->code,
                ],
                //Sender Information
                'sender' => [
-                  'name' => $order->getSenderFullName(),
-                  'phone' => ($order->sender_phone) ? $order->sender_phone: '',
-                  'email' => ($order->sender_email) ? $order->sender_email: '',
-                  'address' => "2200 NW 129TH AVE",
-                  'zipCode' => "33182",
-                  'city' => "FL",
-                  'countryCode' => "US",
+                  'name' => $this->order->getSenderFullName(),
+                  'phone' => ($this->order->sender_phone) ? $this->order->sender_phone: '',
+                  'email' => ($this->order->sender_email) ? $this->order->sender_email: '',
+                  'address' => ($this->order->sender_address) ? $this->order->sender_address: '2200 NW 129TH AVE',
+                  'zipCode' => ($this->order->sender_zipcode) ? $this->order->sender_zipcode: '33182',
+                  'city' => ($this->order->sender_city) ? $this->order->sender_city: 'Miami',
+                  'state' => ($this->order->sender_state_id) ? $this->order->senderState->code: 'FL',
+                  'countryCode' => 'US',
                ],
             ];
       return $packet;
    }
 
-   private function setItemsDetails($order)
+   private function setItemsDetails()
    {
         $items = [];
       
-        if (count($order->items) >= 1) {
-         $totalQuantity = $order->items->sum('quantity');
-            foreach ($order->items as $key => $item) {
+        if (count($this->order->items) >= 1) {
+         $totalQuantity = $this->order->items->sum('quantity');
+            foreach ($this->order->items as $key => $item) {
                 $itemToPush = [];
-                $originCountryCode = optional($order->senderCountry)->code;
+                $originCountryCode = optional($this->order->senderCountry)->code;
                 $itemToPush = [
                      'description' => $item->description,
                      'quantity' => (int)$item->quantity,
                      'hsCode' => $item->sh_code,
                      'valuePerItem' => $item->value,
-                     'weightPerItem' => round($order->weight / $totalQuantity, 2) - 0.05,
+                     'weightPerItem' => round($this->weight / $totalQuantity, 2) - 0.02,
                 ];
                array_push($items, $itemToPush);
             }

@@ -29,13 +29,13 @@ class CreateRequest extends FormRequest
             'customer_reference' => ($this->order->recipient->country_id == \App\Models\Order::CHILE) ? 'required' : 'nullable',
             'shipping_service_id' => 'required|exists:shipping_services,id',
             'items' => 'required|array|min:1',
-            'tax_modality' => 'required|in:ddu',
+            'tax_modality' => 'required|in:ddu,ddp',
             'items.*.sh_code' => ($this->order->products->isNotEmpty()) ? 'sometimes' : [
                 'required',
                 'numeric',
                 new NcmValidator()
             ], 
-            'items.*.description' => 'required|max:190', 
+            'items.*.description' => 'required|max:500', 
             'items.*.quantity' => 'required|gt:0', 
             'items.*.value' => 'required|gt:0', 
             'items.*.dangrous_item' => 'required', 

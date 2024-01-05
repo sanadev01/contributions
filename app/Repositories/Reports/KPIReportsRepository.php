@@ -7,6 +7,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Correios\Services\Brazil\CorreiosTrackingService;
 
 class KPIReportsRepository
 {
@@ -24,7 +25,8 @@ class KPIReportsRepository
 
     public function get(Request $request)
     {
-        $orders = Order::with('user')->where('corrios_tracking_code','!=',null)->where('status', '>=', Order::STATUS_SHIPPED)
+        $orders = Order::with('user')
+        ->where('corrios_tracking_code','!=',null)->where('status', '>=', Order::STATUS_SHIPPED)
         ->whereHas('shippingService',function($orders) {
                 return $orders->whereIn('service_sub_class', [
                     ShippingService::Packet_Standard, 
@@ -32,9 +34,18 @@ class KPIReportsRepository
                     ShippingService::AJ_Packet_Standard, 
                     ShippingService::AJ_Packet_Express, 
                     ShippingService::Prime5, 
-                    ShippingService::GePS]);
+                    ShippingService::Post_Plus_Registered,
+                    ShippingService::Post_Plus_EMS,
+                    ShippingService::Post_Plus_Prime,
+                    ShippingService::Post_Plus_Premium,
+                    ShippingService::Prime5RIO,
+                    ShippingService::LT_PRIME,
+                ]);
             });
 
+        if ($request->user_id) {
+            $orders->where('user_id', $request->user_id);
+        }
         if (Auth::user()->isUser()) {
             $orders->where('user_id', Auth::id());
         }
@@ -53,33 +64,52 @@ class KPIReportsRepository
             $orders->whereIn('corrios_tracking_code',$splitNos);
         }
 
-        $orders = ($orders->get()); 
-        $codesUsers =  [];
+        $orders = ($orders->get());  
+        $codesUsersName =  [];
+        $orderDate =  [];
         foreach($orders as $order) {
-            $codesUsers[$order->corrios_tracking_code] = $order->user;
+            $created_at = array_reverse($order->trackings->toArray())[0]['created_at'];
+            $firstEventDate[$order->corrios_tracking_code] = date('m/d/Y', strtotime($created_at));
+            $codesUsersName[$order->corrios_tracking_code] = $order->user->name;
+            $orderDate[$order->corrios_tracking_code] = $order->order_date->format('m/d/Y');
         }
         $codes = $orders->pluck('corrios_tracking_code')->toArray();
+
         if(empty($codes)) {
-         return ['trackings'=>[],'trackingCodeUser'=>[]];
+         return [
+            'trackings'=>[],
+            'firstEventDate'=>[],
+            'trackingCodeUsersName'=>[],
+            'orderDates' => []
+         ];
         }
-        $client = new SoapClient($this->wsdlUrl, array('trace'=>1));
-        $request_param = array(
-            'usuario' => $this->user,
-            'senha' => $this->password,
-            'tipo' => 'L',
-            'resultado' => 'T',
-            'lingua' => 101,
-            'objetos' => $codes
-        );
-        $result = $client->buscaEventosLista($request_param);
-        if(!$result->return->objeto) {
-            return false;
+        
+        if (count($codes) > 50) {
+            $codes = array_slice($codes, 0, 50);
         }
-        $trackings = json_decode(json_encode($result), true); ## convert the object to array (you have to)
-        if($trackings['return']['qtd'] == "1") {
-            $trackings['return']['objeto'] = array($trackings['return']['objeto']); ## if you send only one tracking you need to add an array before the content to follow the pattern
-        }  
-        return ['trackings'=>$trackings,'trackingCodeUser'=>$codesUsers];
+
+        $serviceClient = new CorreiosTrackingService();
+
+        if(count($codes) > 1) {
+            $response = $serviceClient->getMultiTrackings($codes);
+        } elseif (count($codes) == 1) {
+            $response = $serviceClient->getTracking($codes[0]);
+        }
+
+        if (isset($response->objetos) && is_array($response->objetos) && count($response->objetos) > 0) {
+            
+            $filteredObjetos = array_filter($response->objetos, function ($objeto) {
+                return !isset($objeto->mensagem) || strpos($objeto->mensagem, "SRO-020") !== 0;
+            });
+
+            return [
+                'trackings' => $filteredObjetos,
+                'firstEventDate' => $firstEventDate,
+                'trackingCodeUsersName' => $codesUsersName,
+                'orderDates' => $orderDate
+            ];
+        }
+        
     }
 
 }

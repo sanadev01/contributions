@@ -7,6 +7,7 @@ use ZipArchive;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Excel\Export\ScanOrderExport;
 use App\Repositories\CorrieosBrazilLabelRepository;
@@ -32,7 +33,7 @@ class PrintLabelController extends Controller
      */
     public function create(Order $order)
     {
-        $this->authorize('labelPrint',$order);
+        $this->authorize('printBulkLabel',$order);
         return view('admin.print-label.create');
     }
 
@@ -66,19 +67,24 @@ class PrintLabelController extends Controller
             if(file_exists($tempFileUri)){
                 unlink($tempFileUri);
             }
-
             if ($zip->open($tempFileUri, ZipArchive::CREATE) === TRUE) {
 
                 foreach($request->order as $orderId){
                     $order = Order::find($orderId);
                     if($order->is_paid){
                         $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
+
+                        if($order->shippingService->is_total_express) {
+                            $pdfFile = file_get_contents($order->totalExpressLabelUrl());
+                            file_put_contents($relativeNameInZipFile, $pdfFile);
+                        }
+
                         if(!file_exists($relativeNameInZipFile)){
-                            $labelData = $labelRepository->get($order);
-                            
-                            if ( $labelData ){
-                                Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-                            }
+                            // $labelData = $labelRepository->get($order);
+                            (new HandleCorreiosLabelsRepository($request,$order))->handle();
+                            // if ( $labelData ){
+                            //     Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                            // }
                             $relativeNameInZipFile = storage_path("app/labels/{$order->corrios_tracking_code}.pdf");
                         }
                         
@@ -90,11 +96,11 @@ class PrintLabelController extends Controller
                 }
 
                 $zip->close();
+                return response()->download($tempFileUri);
             } else {
-                echo 'Could not open ZIP file.';
+                return 'Could not open ZIP file.';
             }
             
-            return response()->download($tempFileUri);
             
         }
         return back();
@@ -107,7 +113,7 @@ class PrintLabelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Order $scan, CorrieosBrazilLabelRepository $labelRepository)
+    public function show(Request $request, Order $scan)
     {
         $order = $scan;
         if($request->search){
@@ -115,6 +121,9 @@ class PrintLabelController extends Controller
         }
         $labelData = null;
         if($order->is_paid){
+            if(!$order->corrios_tracking_code){
+                (new HandleCorreiosLabelsRepository($request,$order))->handle();
+            }
             return redirect()->route('order.label.download',[encrypt($order->id),'time'=>md5(microtime())]);
         }
 
@@ -140,13 +149,18 @@ class PrintLabelController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $query = Order::query();
+
+        if ( !Auth::user()->isAdmin() ){
+            $query->where('user_id',Auth::id());
+        }
         if($request->userId != null)
         {
-            $orders = Order::where('user_id', $request->userId)->whereBetween('arrived_date',[$request->start_date.' 00:00:00', $request->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC')->get();
-        }else {
-            $orders = Order::whereBetween('arrived_date',[$request->start_date.' 00:00:00', $request->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC')->get();
+            $query->where('user_id', $request->userId);
         }
-
+        $query = $query->whereBetween('arrived_date',[$request->start_date.' 00:00:00', $request->end_date.' 23:59:59'])->orderBy('arrived_date', 'DESC')->get();
+        $orders = $query;
+        
         if($orders != null)
         {
             $exportService = new ScanOrderExport($orders);

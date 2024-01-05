@@ -35,7 +35,10 @@ class Deposit extends Model
     {
         return $this->belongsToMany(Order::class);
     }
-
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
     public function depositAttchs()
     {
         return $this->belongsToMany(Document::class);

@@ -20,6 +20,7 @@ class OrderResource extends JsonResource
             "merchant" => $this->merchant,
             "carrier" => $this->carrier,
             "tracking_id" => $this->tracking_id,
+            "tracking_code" => $this->corrios_tracking_code,
             "customer_reference" => $this->customer_reference,
             "measurement_unit" => $this->measurement_unit,
             "weight" => $this->weight,
@@ -44,7 +45,7 @@ class OrderResource extends JsonResource
             "discount" => $this->discount,
             "gross_total" => $this->gross_total,
             "recipient" => OrderRecipientResource::make($this->recipient),
-            "products" => OrderItemResource::collection($this->items)
+            "products" => OrderItemResource::collection($this->items),
         ];
     }
 

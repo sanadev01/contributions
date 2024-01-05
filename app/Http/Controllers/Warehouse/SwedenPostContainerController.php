@@ -40,7 +40,7 @@ class SwedenPostContainerController extends Controller
      */
     public function store(CreateContainerRequest $createContainerRequest, SwedenPostContainerRepository $swedenpostContainerRepository)
     {
-        if ( $container = $swedenpostContainerRepository->store($createContainerRequest) ){
+        if ($swedenpostContainerRepository->store($createContainerRequest)){
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.swedenpost_containers.index');
         }

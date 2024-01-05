@@ -6,17 +6,22 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="">
+                        <div class="col-md-">
                             <h4 class="mb-0 mr-3">
                               Shipping Service : {{ $shipping_service->name }}
                             </h4>
                             <hr>
                         </div>
-                        @can('create', App\Models\Rate::class)
-                            <a href="{{ route('admin.rates.shipping-rates.index') }}" class="pull-right btn btn-primary">
-                                @lang('shipping-rates.Return to List')
-                            </a>
-                        @endcan
+                        <div class="col-md-2">
+                            @if($isGDE)
+                                <a href="{{ route('admin.rates.rates.exports', $shipping_service->id) }}" class="ml-5 btn btn-success float-end content-justify-end"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
+                            @endif
+                            @can('create', App\Models\Rate::class)
+                                <a href="{{ route('admin.rates.shipping-rates.index') }}" class="pull-right btn btn-primary">
+                                    @lang('shipping-rates.Return to List')
+                                </a>
+                            @endcan
+                        </div>
                     </div>
                     <hr>
                     <div class="card-content card-body">
@@ -47,10 +52,12 @@
                                         <a href="{{ route('admin.rates.view-shipping-region-rates', $rate) }}" class="btn btn-primary btn-sm">
                                            <i class="feather icon-eye"></i> View
                                         </a>
-                                        |
-                                        <a href="{{ route('admin.rates.download-shipping-rates', $rate)}}" class="btn btn-success btn-sm">
-                                            <i class="feather icon-download"></i> Download
-                                        </a>
+                                        @if(!$isGDE)
+                                            |
+                                            <a href="{{ route('admin.rates.download-shipping-rates', $rate)}}" class="btn btn-success btn-sm">
+                                                <i class="feather icon-download"></i> Download
+                                            </a>
+                                        @endif
                                     </th>
                                 </tr>
                                 @endforeach

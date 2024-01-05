@@ -7,20 +7,21 @@ use App\Models\State;
 use App\Models\ApiLog;
 use App\Models\Country;
 use Illuminate\Http\Request;
+use App\Models\ProfitSetting;
 use App\Models\ShippingService;
+use FlyingLuscas\Correios\Client;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
+use Illuminate\Support\Facades\Validator;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 use App\Http\Requests\Api\Parcel\CreateRequest;
 use App\Http\Requests\Api\Parcel\UpdateRequest;
 use App\Http\Resources\PublicApi\OrderResource;
 use App\Repositories\ApiShippingServiceRepository;
-use Illuminate\Support\Facades\Validator;
-use FlyingLuscas\Correios\Client;
-use Illuminate\Support\Facades\Log;
 
 class ParcelController extends Controller
 {
@@ -43,83 +44,117 @@ class ParcelController extends Controller
         Log::info('request Data');
         Log::info($request);
 
-        $weight = optional($request->parcel)['weight']??0;
-        $length = optional($request->parcel)['length']??0;
-        $width = optional($request->parcel)['width']??0;
-        $height = optional($request->parcel)['height']??0;
+        $weight = optional($request->parcel)['weight'] ?? 0;
+        $length = optional($request->parcel)['length'] ?? 0;
+        $width = optional($request->parcel)['width'] ?? 0;
+        $height = optional($request->parcel)['height'] ?? 0;
 
         $shippingService = ShippingService::find($request->parcel['service_id'] ?? null);
 
         if (!$shippingService) {
-            return apiResponse(false,'Shipping service not found.');
+            return apiResponse(false, 'Shipping service not found.');
         }
 
         if (!$shippingService->active) {
-            return apiResponse(false,'Selected shipping service is currently not available.');
+            return apiResponse(false, 'Selected shipping service is currently not available.');
         }
 
-        if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->isAnjunService()) {
-            return apiResponse(false,$shippingService->name.' is currently not available.');
+        // if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->isAnjunService()) {
+        //     return apiResponse(false, $shippingService->name . ' is currently not available.');
+        // }
+
+        // if (!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->is_bcn_service) {
+        //     return apiResponse(false, $shippingService->name . ' is currently not available.');
+        // }
+        if (Auth::id() != "1233"  && $shippingService->is_anjun_china_service_sub_class) {
+            return apiResponse(false, $shippingService->name . ' is currently not available.');
         }
 
-        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
+        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
             if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
-                return apiResponse(false,$shippingService->name.' is currently not available.');
+                return apiResponse(false, $shippingService->name . ' is currently not available.');
             }
 
-            if ($shippingService->service_sub_class == ShippingService::Packet_Standard) {
+            if (in_array($shippingService->service_sub_class,[ShippingService::Packet_Standard,ShippingService::BCN_Packet_Standard])){
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Standard)->first();
             }
-
-            if ($shippingService->service_sub_class == ShippingService::Packet_Express) {
+            if (in_array($shippingService->service_sub_class,[ShippingService::Packet_Express,ShippingService::BCN_Packet_Express])){
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Express)->first();
             }
         }
-
-        if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
-            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
-            $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
-            
-            if($shippingService->isCorreiosService() && $volumeWeight > 30){
-                return apiResponse(false,"Your ". $volumeWeight ." kg/cm weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 30 kg/cm");
+        if (setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
+            if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
+                return apiResponse(false, $shippingService->name . ' is currently not available.');
             }
+            if (in_array($shippingService->service_sub_class,[ShippingService::Packet_Standard,ShippingService::AJ_Packet_Standard])){
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::BCN_Packet_Standard)->first();
+            }
+            if (in_array($shippingService->service_sub_class,[ShippingService::Packet_Express,ShippingService::AJ_Packet_Express])){
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::BCN_Packet_Express)->first();
+            }
+        }
+        
+        if (setting('correios_api', null, \App\Models\User::ROLE_ADMIN)){
+            if (in_array($shippingService->service_sub_class,[ShippingService::BCN_Packet_Standard,ShippingService::AJ_Packet_Standard])){
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
+            }
+            if (in_array($shippingService->service_sub_class,[ShippingService::BCN_Packet_Express,ShippingService::AJ_Packet_Express])){
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
+            }
+        }
 
-        }else{
-            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');;
-            $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
-            
-            if($shippingService->isCorreiosService() && $volumeWeight > 65.15){
-                return apiResponse(false,"Your ". $volumeWeight ." lbs/in weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 66.15 lbs/in");
+
+        if (optional($request->parcel)['measurement_unit'] == 'kg/cm') {
+            $volumetricWeight = WeightCalculator::getVolumnWeight($length, $width, $height, 'cm');
+            $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight, 2);
+
+            if ($shippingService->isCorreiosService() && $volumeWeight > 30) {
+                return apiResponse(false, "Your " . $volumeWeight . " kg/cm weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 30 kg/cm");
+            }
+        } else {
+            $volumetricWeight = WeightCalculator::getVolumnWeight($length, $width, $height, 'in');
+            $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight, 2);
+
+            if ($shippingService->isCorreiosService() && $volumeWeight > 65.15) {
+                return apiResponse(false, "Your " . $volumeWeight . " lbs/in weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 66.15 lbs/in");
+            }
+        }
+
+        if ($shippingService->isGDEService()) {
+            $weightLimit = optional($request->parcel)['measurement_unit'] == 'lbs/in' ? UnitsConverter::poundToKg($weight) : $weight;
+            if ($weightLimit <= 0.453) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::GDE_FIRST_CLASS)->first();
+            } else {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)->first();
             }
         }
 
         $senderCountryID = $request->sender['sender_country_id'] ?? null;
         $senderStateID = $request->sender['sender_state_id'] ?? null;
-        
+
         $recipientCountryId = optional($request->recipient)['country_id'];
         $stateID = optional($request->recipient)['state_id'];
-        
+
         if ($senderCountryID && !is_numeric($senderCountryID)) {
             $senderCountryID = Country::where('code', $senderCountryID)->orWhere('name', $senderCountryID)->first()->id;
         }
 
         if ($senderStateID && !is_numeric($senderStateID)) {
-            $senderStateID = State::where([['code', $senderStateID],['country_id', $senderCountryID]])->orWhere([['name', $senderStateID], ['country_id', $senderCountryID]])->first()->id;
+            $senderStateID = State::where([['code', $senderStateID], ['country_id', $senderCountryID]])->orWhere([['name', $senderStateID], ['country_id', $senderCountryID]])->first()->id;
         }
-        
-        if (!is_numeric( optional($request->recipient)['country_id'])){
-            
+
+        if (!is_numeric(optional($request->recipient)['country_id'])) {
+
             $country = Country::where('code', optional($request->recipient)['country_id'])->orwhere('id', optional($request->recipient)['country_id'])->first();
             $recipientCountryId = $country->id;
         }
-        if (!is_numeric( optional($request->recipient)['state_id'])){
+        if (!is_numeric(optional($request->recipient)['state_id'])) {
 
-            $state = State::where('country_id', $recipientCountryId )->where('code', optional($request->recipient)['state_id'])->orwhere('id', optional($request->recipient)['state_id'])->first();
+            $state = State::where('country_id', $recipientCountryId)->where('code', optional($request->recipient)['state_id'])->orwhere('id', optional($request->recipient)['state_id'])->first();
             $stateID = $state->id;
         }
 
-        if($shippingService->isDomesticService() && !$this->usShippingService->isAvalaible($shippingService, $volumeWeight))
-        {
+        if ($shippingService->isDomesticService() && !$this->usShippingService->isAvalaible($shippingService, $volumeWeight)) {
             return apiResponse(false, $this->usShippingService->getError());
         }
 
@@ -127,14 +162,17 @@ class ParcelController extends Controller
             return apiResponse(false, 'this service is availaible for US address only');
         }
 
-        if($shippingService->isInternationalService() && !$this->usShippingService->isAvailableForInternational($shippingService, $volumeWeight)){
+        if ($shippingService->isInternationalService() && !$this->usShippingService->isAvailableForInternational($shippingService, $volumeWeight)) {
             return apiResponse(false, $this->usShippingService->getError());
         }
 
         if ($shippingService->isInternationalService() && $recipientCountryId == Country::US) {
             return apiResponse(false, 'this service is not availaible for US address');
         }
-        
+
+        if (!$this->serviceActive($shippingService)) {
+            return apiResponse(false, 'Selected shipping service is not active against your account!!.');
+        }
         DB::beginTransaction();
 
         try {
@@ -147,15 +185,16 @@ class ParcelController extends Controller
                 "tracking_id" => optional($request->parcel)['tracking_id'],
                 "customer_reference" => optional($request->parcel)['customer_reference'],
                 "measurement_unit" => optional($request->parcel)['measurement_unit'],
-                "weight" =>  round(optional($request->parcel)['weight'],2),
-                "length" =>  round(optional($request->parcel)['length'],2),
-                "width" =>   round(optional($request->parcel)['width'],2),
-                "height" =>  round(optional($request->parcel)['height'],2),
+                "weight" =>  round(optional($request->parcel)['weight'], 2),
+                "length" =>  round(optional($request->parcel)['length'], 2),
+                "width" =>   round(optional($request->parcel)['width'], 2),
+                "height" =>  round(optional($request->parcel)['height'], 2),
                 "is_invoice_created" => true,
                 "order_date" => now(),
                 "is_shipment_added" => true,
                 'status' => Order::STATUS_ORDER,
-                'user_declared_freight' => optional($request->parcel)['shipment_value']??0,
+                'user_declared_freight' => optional($request->parcel)['shipment_value'] ?? 0,
+                'sinerlog_tran_id' => optional($request->parcel)['is_disposal'] ?? 1,
 
                 "sender_first_name" => optional($request->sender)['sender_first_name'],
                 "sender_last_name" => optional($request->sender)['sender_last_name'],
@@ -170,7 +209,7 @@ class ParcelController extends Controller
             ]);
 
             $this->orderRepository->setVolumetricDiscount($order);
-           
+
             $order->recipient()->create([
                 "first_name" => optional($request->recipient)['first_name'],
                 "last_name" => optional($request->recipient)['last_name'],
@@ -184,10 +223,10 @@ class ParcelController extends Controller
                 "tax_id" => optional($request->recipient)['tax_id'],
                 "zipcode" => optional($request->recipient)['zipcode'],
                 "state_id" => $stateID,
-                "country_id" =>$recipientCountryId 
+                "country_id" => $recipientCountryId
             ]);
-            
-            if($recipientCountryId == Order::CHILE){
+
+            if ($recipientCountryId == Order::CHILE) {
                 $order->recipient()->update([
                     "region" => optional($request->recipient)['region'],
                 ]);
@@ -195,11 +234,11 @@ class ParcelController extends Controller
 
             $isBattery = false;
             $isPerfume = false;
-            foreach ($request->get('products',[]) as $product) {
-                if(optional($product)['is_battery']){
+            foreach ($request->get('products', []) as $product) {
+                if (optional($product)['is_battery']) {
                     $isBattery = true;
                 }
-                if(optional($product)['is_perfume']){
+                if (optional($product)['is_perfume']) {
                     $isPerfume = true;
                 }
                 $order->items()->create([
@@ -212,44 +251,50 @@ class ParcelController extends Controller
                     "contains_flammable_liquid" => optional($product)['is_flameable'],
                 ]);
             }
-            if( $isBattery === true && $isPerfume === true){
-                throw new \Exception("Please don't use battery and perfume in one parcels",500);
+            if ($isBattery === true && $isPerfume === true) {
+                throw new \Exception("Please don't use battery and perfume in one parcels", 500);
             }
 
-            $orderValue = collect($request->get('products',[]))->sum(function($item){
+            $orderValue = collect($request->get('products', []))->sum(function ($item) {
                 return $item['value'] * $item['quantity'];
             });
 
             $order->update([
-                'warehouse_number' => "TEMPWHR-{$order->id}",
+                'warehouse_number' => $order->getTempWhrNumber(true),
                 "order_value" => $orderValue,
                 'shipping_service_name' => $order->shippingService->name
             ]);
 
-            if($recipientCountryId == Order::US && !$order->shippingService->isDomesticService()){
+            if ($recipientCountryId == Order::US && !(!$order->shippingService->isDomesticService() || !$order->shippingService->isInboundDomesticService())) {
                 DB::rollback();
 
                 return apiResponse(false, 'this service can not be use against US address');
             }
-            
+
             if ($order->shippingService->isDomesticService() || $order->shippingService->isInternationalService()) {
-                if(!$this->usShippingService->getUSShippingServiceRate($order))
-                {
+                if (!$this->usShippingService->getUSShippingServiceRate($order)) {
                     DB::rollback();
                     return apiResponse(false, $this->usShippingService->getError());
                 }
             }
 
+            if ($order->shippingService->isGSSService()) {
+                if (!$this->usShippingService->getGSSRates($order)) {
+                    DB::rollback();
+                    return apiResponse(false, $this->usShippingService->getError());
+                }
+            }
+
+            $order->syncServices(optional($request->parcel)['services'] ?? []);
+
             $order->doCalculations();
 
             DB::commit();
-            return apiResponse(true,"Parcel Created", OrderResource::make($order) );
-
+            return apiResponse(true, "Parcel Created", OrderResource::make($order));
         } catch (\Exception $ex) {
             DB::rollback();
-           return apiResponse(false,$ex->getMessage());
+            return apiResponse(false, $ex->getMessage());
         }
-
     }
 
     /**
@@ -260,11 +305,11 @@ class ParcelController extends Controller
      */
     public function show($id)
     {
-        $parcel = Order::where('user_id',Auth::id())->where('id',$id)->first();
-        if($parcel){
-            return apiResponse(true,"Get Parcel Data successfully", OrderResource::make($parcel) );
+        $parcel = Order::where('user_id', Auth::id())->where('id', $id)->first();
+        if ($parcel) {
+            return apiResponse(true, "Get Parcel Data successfully", OrderResource::make($parcel));
         }
-        return apiResponse(false,"The parcel doesn't exist", null );
+        return apiResponse(false, "The parcel doesn't exist", null);
     }
 
     /**
@@ -276,30 +321,36 @@ class ParcelController extends Controller
      */
     public function update(UpdateRequest $request, Order $parcel)
     {
-        if(Auth::id() != $parcel->user_id){
-            return apiResponse(false,'Order not found');
+        if (Auth::id() != $parcel->user_id) {
+            return apiResponse(false, 'Order not found');
         }
         if ($parcel->isPaid()) {
-            return apiResponse(false,'order can not be updated once payment has been paid');
+            return apiResponse(false, 'order can not be updated once payment has been paid');
         }
-        $weight = optional($request->parcel)['weight']??0;
-        $length = optional($request->parcel)['length']??0;
-        $width = optional($request->parcel)['width']??0;
-        $height = optional($request->parcel)['height']??0;
+        $weight = optional($request->parcel)['weight'] ?? 0;
+        $length = optional($request->parcel)['length'] ?? 0;
+        $width = optional($request->parcel)['width'] ?? 0;
+        $height = optional($request->parcel)['height'] ?? 0;
 
         $shippingService = ShippingService::find($request->parcel['service_id'] ?? null);
 
         if (!$shippingService) {
-            return apiResponse(false,'Shipping service not found.');
+            return apiResponse(false, 'Shipping service not found.');
+        }
+        if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->isAnjunService()) {
+            return apiResponse(false, $shippingService->name . ' is currently not available.');
         }
 
-        if (!setting('anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->isAnjunService()) {
-            return apiResponse(false,$shippingService->name.' is currently not available.');
+        if (!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->is_bcn_service) {
+            return apiResponse(false, $shippingService->name . ' is currently not available.');
+        }
+        if (Auth::id() != "1233"  && $shippingService->is_anjun_china_service_sub_class) {
+            return apiResponse(false, $shippingService->name . ' is currently not available.');
         }
 
         if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
             if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
-                return apiResponse(false,$shippingService->name.' is currently not available.');
+                return apiResponse(false, $shippingService->name . ' is currently not available.');
             }
 
             if ($shippingService->service_sub_class == ShippingService::Packet_Standard) {
@@ -310,11 +361,22 @@ class ParcelController extends Controller
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Express)->first();
             }
         }
-
+        if (setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)) {
+            if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
+                return apiResponse(false, $shippingService->name . ' is currently not available.');
+            }
+            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard])) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::BCN_Packet_Standard)->first();
+            }
+            if (in_array($shippingService->service_sub_class, [ShippingService::AJ_Packet_Express, ShippingService::AJ_Packet_Express])) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::BCN_Packet_Express)->first();
+            }
+        }
+        
         if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
-            
+
             if($shippingService->isCorreiosService() && $volumeWeight > 30){
                 return apiResponse(false,"Your ". $volumeWeight ." kg/cm weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 30 kg/cm");
             }
@@ -322,7 +384,7 @@ class ParcelController extends Controller
         }else{
             $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'in');;
             $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
-            
+
             if($shippingService->isCorreiosService() && $volumeWeight > 65.15){
                 return apiResponse(false,"Your ". $volumeWeight ." lbs/in weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 66.15 lbs/in");
             }
@@ -341,7 +403,7 @@ class ParcelController extends Controller
         if ($senderStateID && !is_numeric($senderStateID)) {
             $senderStateID = State::where([['code', $senderStateID],['country_id', $senderCountryID]])->orWhere([['name', $senderStateID], ['country_id', $senderCountryID]])->first()->id;
         }
-        
+
         if (!is_numeric( optional($request->recipient)['state_id'])){
 
             $state = State::where('code', optional($request->recipient)['state_id'])->orwhere('id', optional($request->recipient)['state_id'])->first();
@@ -353,7 +415,7 @@ class ParcelController extends Controller
             $recipientCountryId = $country->id;
         }
 
-       
+
         if($shippingService->isDomesticService() && !$this->usShippingService->isAvalaible($shippingService, $volumeWeight))
         {
             return apiResponse(false, $this->usShippingService->getError());
@@ -370,7 +432,7 @@ class ParcelController extends Controller
                 return apiResponse(false, 'this service is not availaible for US address');
             }
         }
-        
+
 
         DB::beginTransaction();
 
@@ -409,7 +471,7 @@ class ParcelController extends Controller
             $totalDiscountPercentage = 0;
             $volumetricDiscount = setting('volumetric_discount', null, $parcel->user->id);
             $discountPercentage = setting('discount_percentage', null, $parcel->user->id);
-            
+
             if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
                 return false;
             }
@@ -433,7 +495,7 @@ class ParcelController extends Controller
                     "weight_discount" => null,
                 ]);
             }
-            
+
             $parcel->recipient()->update([
                 "first_name" => optional($request->recipient)['first_name'],
                 "last_name" => optional($request->recipient)['last_name'],
@@ -447,9 +509,9 @@ class ParcelController extends Controller
                 "tax_id" => optional($request->recipient)['tax_id'],
                 "zipcode" => optional($request->recipient)['zipcode'],
                 "state_id" => $stateID,
-                "country_id" =>$recipientCountryId 
+                "country_id" =>$recipientCountryId
             ]);
-            
+
             if($recipientCountryId ==  Country::Chile){
 
                 $parcel->update([
@@ -464,7 +526,7 @@ class ParcelController extends Controller
             $isBattery = false;
             $isPerfume = false;
             foreach ($request->get('products',[]) as $product) {
-                
+
                 if(optional($product)['is_battery']){
                     $isBattery = true;
                 }
@@ -490,7 +552,6 @@ class ParcelController extends Controller
             });
 
             $parcel->update([
-                'warehouse_number' => "TEMPWHR-{$parcel->id}",
                 "order_value" => $orderValue,
                 'shipping_service_name' => $parcel->shippingService->name
             ]);
@@ -510,7 +571,7 @@ class ParcelController extends Controller
 
         } catch (\Exception $ex) {
             DB::rollback();
-           return apiResponse(false,$ex->getMessage());
+            return apiResponse(false,$ex->getMessage());
         }
     }
 
@@ -525,9 +586,9 @@ class ParcelController extends Controller
         if(Auth::id() != $parcel->user_id){
             return apiResponse(false,'Order not found');
         }
-        
+
         if ( $soft && $parcel->status < Order::STATUS_PAYMENT_DONE ){
-            
+
             optional($parcel->affiliateSale)->delete();
             $parcel->delete();
             return apiResponse(true,"Order deleted" );
@@ -566,7 +627,7 @@ class ParcelController extends Controller
             $isBattery = false;
             $isPerfume = false;
             foreach ($request->get('products',[]) as $product) {
-                
+
                 if(optional($product)['is_battery']){
                     $isBattery = true;
                 }
@@ -600,8 +661,36 @@ class ParcelController extends Controller
 
         } catch (\Exception $ex) {
             DB::rollback();
-           return apiResponse(false,$ex->getMessage());
+            return apiResponse(false,$ex->getMessage());
         }
+    }
+
+    public function serviceActive($shippingService)
+    {
+        if (in_array($shippingService->service_sub_class,[ShippingService::Packet_Standard,ShippingService::AJ_Packet_Standard,ShippingService::AJ_Standard_CN,ShippingService::BCN_Packet_Standard])) {
+            $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
+        }
+        if (in_array($shippingService->service_sub_class,[ShippingService::Packet_Express,ShippingService::AJ_Packet_Express,ShippingService::AJ_Express_CN,ShippingService::BCN_Packet_Express])) {
+            $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
+        }
+
+        $profitSetting = ProfitSetting::where('user_id', Auth::id())
+            ->where('service_id',$shippingService->id)
+            ->where('package_id', '!=', null)
+            ->first();
+        if($profitSetting){
+            return true;
+        }
+        if( $shippingService->isOfUnitedStates() ||
+            $shippingService->isDomesticService() ||
+            $shippingService->isInternationalService() ||
+            $shippingService->isInboundDomesticService() ||
+            $shippingService->isGSSService() ||
+            $shippingService->isGDEService() )
+        {
+            return true;
+        }
+        return false;
     }
 
 }

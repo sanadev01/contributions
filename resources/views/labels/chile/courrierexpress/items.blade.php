@@ -2,7 +2,7 @@
     <table border="1">
         <tbody>
             <tr>
-                <td colspan="3">
+                <td colspan="4">
                    customs declaration
                 </td>
                 <td colspan="3">

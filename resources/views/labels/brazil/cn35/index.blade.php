@@ -57,7 +57,7 @@
                 <td class="column1" style="text-align: center;font-size:28px;font-weight:bold;">{!! $companyName !!}</td>
                 <td rowspan="2" colspan="2">
                     <img class="corrioes-lable" src="{{\public_path('images/correios-1.png')}}" style="display:block;width:30mm;height:30mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:0px;left:220px;" alt="">
-                    @if ($service == 1 || $service == 9 )
+                    @if ($service == 1 || $service == 9 || $service == 18)
                         <img class="corrioes-lable" src="{{\public_path('images/express-package.png')}}" style="display:block;width:20mm;height:20mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:12px;left:370px;" alt="">
                     @else
                         <div style="display:block;width:20mm;height:20mm;border-radius: 1cm;background:black;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:15px;left:370px;"></div>
@@ -92,14 +92,14 @@
                     </div>
                     @if ($OrderWeight > 3)         
                         <div style="position: relative;left:215px !important; margin-top:-40px !important;">
-                            <p style="margin-left:60px !important; font-size:20px;font-weight:bold;">G</p>
+                            <p style="margin-left:70px !important; font-size:20px;font-weight:bold;">G</p>
                             <div style="width: 15px; height: 15px; border: 3px solid rgb(0, 0, 0);margin-left:316.5px !important;margin-top:-40px !important;"></div>
                             <p style="margin-left:140px !important; font-size:10px;">Over 3 kg</p>
                         </div>
                     @endif
                     @if ($OrderWeight <= 3)         
                         <div style="position: relative;left:215px !important; margin-top:-40px !important;">
-                            <p style="margin-left:60px !important; font-size:20px;font-weight:bold;">P</p>
+                            <p style="margin-left:70px !important; font-size:20px;font-weight:bold;">P</p>
                             <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:316.5px !important;margin-top:-40px !important;"></div>
                             <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:325px !important;margin-top:0px !important;"></div>
                             <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:308px !important;margin-top:-15px !important;"></div>

@@ -47,6 +47,7 @@ class UsLabelForm extends Component
     protected $listeners = [
         'searchedAddress' => 'searchAddress',
         'phoneNumber' => 'enteredPhoneNumber',
+        'saveAddress' => 'saveAddress',
     ];
 
     protected $rules = [
@@ -116,6 +117,11 @@ class UsLabelForm extends Component
     public function updatedsenderPhone()
     {
         $this->validate();
+    }
+
+    public function setAddress()
+    {
+        $this->saveAddress();
     }
 
     private function validateUSAddress()
@@ -243,7 +249,7 @@ class UsLabelForm extends Component
     private function saveAddress()
     {
         $existingAddress = Address::where([['user_id', $this->userId],['phone', $this->senderPhone]])->first();
-
+        
         if (!$existingAddress) {
             Address::create([
                 'user_id' => $this->userId,
@@ -256,6 +262,15 @@ class UsLabelForm extends Component
                 'country_id' => Country::US,
                 'zipcode' => $this->senderZipCode,
                 'account_type' => 'individual',
+            ]);
+        } else {
+            $existingAddress->update([
+                'first_name' => $this->firstName,
+                'last_name' => $this->lastName,
+                'address' => $this->senderAddress,
+                'city' => $this->senderCity,
+                'state_id' => State::where([['code', $this->senderState], ['country_id', Country::US]])->first()->id,
+                'zipcode' => $this->senderZipCode,
             ]);
         }
 

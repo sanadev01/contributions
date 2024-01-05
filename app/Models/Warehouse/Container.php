@@ -26,6 +26,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     const CONTAINER_ANJUN_NX = 'AJ-NX';
     const CONTAINER_ANJUN_IX = 'AJ-IX';
     const CONTAINER_COLOMBIA = 'CO-NX';
+    const CONTAINER_BCN_NX = 'BCN-NX';
+    const CONTAINER_BCN_IX = 'BCN-IX';
+    const CONTAINER_ANJUNC_NX = 'AJC-NX';
+    const CONTAINER_ANJUNC_IX = 'AJC-IX';
+     
 
     public function user()
     {
@@ -72,9 +77,18 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }elseif($this->services_subclass_code == 'SL-XP'){
             return 'SL Small Parcels';
         }elseif ($this->services_subclass_code == 'AJ-NX') {
-            return 'AJ Packet Standard service';
+            return 'AJ Packet Standard Service';
+        }elseif ($this->services_subclass_code == 'AJC-NX') {
+            return 'AJC Packet Standard Service';
+        }elseif ($this->services_subclass_code == 'AJC-IX') {
+            return 'AJC Packet Express Service';
         }elseif ($this->services_subclass_code == 'AJ-IX') {
             return 'AJ Packet Express service';
+        }elseif ($this->services_subclass_code == 'BCN-NX') {
+            return 'BCN Standard service';
+        }elseif ($this->services_subclass_code == 'BCN-IX') {
+            return 'BCN Express service';
+            return 'AJ Packet Express Service';
         }elseif($this->services_subclass_code == 'SRM'){
             return 'SRM service';
         }elseif($this->services_subclass_code == 'SRP'){
@@ -91,6 +105,32 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'USPS Ground';
         }elseif($this->services_subclass_code == '734'){
             return 'Post Plus';
+        }elseif($this->services_subclass_code == '357'){
+            return 'Prime5RIO';
+        }elseif($this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL){
+            return 'GDE Priority Mail';
+        }elseif($this->services_subclass_code == ShippingService::GDE_FIRST_CLASS){
+            return 'GDE First Class';
+        }elseif($this->services_subclass_code == ShippingService::GSS_PMI){
+            return 'Priority Mail International';
+        }elseif($this->services_subclass_code == ShippingService::GSS_EPMEI){
+            return 'Priority Mail Express International (Pre-Sort)';
+        }elseif($this->services_subclass_code == ShippingService::GSS_EPMI){
+            return 'Priority Mail International (Pre-Sort)';
+        }elseif($this->services_subclass_code == ShippingService::GSS_FCM){
+            return 'First Class Package International';
+        }elseif($this->services_subclass_code == ShippingService::GSS_EMS){
+            return 'Priority Mail Express International (Nationwide)';
+        }elseif($this->services_subclass_code == ShippingService::TOTAL_EXPRESS){
+            return 'Total Express';
+        }elseif($this->services_subclass_code == ShippingService::DirectLinkAustralia){
+            return 'DirectLink Australia';
+        }elseif($this->services_subclass_code == ShippingService::DirectLinkCanada){
+            return 'DirectLink Canada';
+        }elseif($this->services_subclass_code == ShippingService::DirectLinkMexico){
+            return 'DirectLink Mexico';
+        }elseif($this->services_subclass_code == ShippingService::DirectLinkChile){
+            return 'DirectLink Chile';
         }else {
             return 'FirstClass';
         }
@@ -129,7 +169,32 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 13;
         }
         elseif($this->services_subclass_code == 'CO-NX'){
+            return 23;
+        }
+        elseif( $this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL) {
             return 14;
+        }
+        elseif( $this->services_subclass_code == ShippingService::GDE_FIRST_CLASS) {
+            return 15;
+        }elseif( $this->services_subclass_code == ShippingService::TOTAL_EXPRESS) {
+            return 16;
+        }
+        elseif($this->services_subclass_code == ShippingService::HD_Express){
+            return 17;
+        }
+        elseif( $this->services_subclass_code == 'AJC-IX') {
+            return 18;
+        }
+        elseif( $this->services_subclass_code == 'AJC-NX') {
+            return 19;
+        }elseif( $this->services_subclass_code == 'BCN-NX') {
+            return 20;
+        }
+        elseif($this->services_subclass_code == 'BCN-IX'){
+            return 21;
+        }
+        elseif($this->services_subclass_code == ShippingService::HoundExpress){
+            return 22;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -177,22 +242,44 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getSubClassCode()
     {
-        if ($this->services_subclass_code == 'AJ-NX') {
+        if(in_array($this->services_subclass_code, ['AJ-NX' , 'BCN-NX','AJC-NX'])){
             return 'NX';
         }
-
-        if ($this->services_subclass_code == 'AJ-IX') {
+        if(in_array($this->services_subclass_code , ['AJ-IX', 'BCN-IX','AJC-IX'])){
             return 'IX';
         }
-
         return $this->services_subclass_code;
     }
 
     public function hasAnjunService()
     {
-        return $this->services_subclass_code == 'AJ-NX' || $this->services_subclass_code == 'AJ-IX';
+        return in_array($this->services_subclass_code ,['AJ-NX', 'AJ-IX']);
+    } 
+    public function hasBCNService()
+    {
+        return in_array($this->services_subclass_code ,['BCN-NX', 'BCN-IX']);
     }
-
+    public function hasBCNStandardService()
+    {
+        return in_array($this->services_subclass_code ,['BCN-NX']);
+    }
+    public function hasBCNExpressService()
+    {
+        return in_array($this->services_subclass_code ,['BCN-IX']);
+        return $this->services_subclass_code == 'AJ-NX' || $this->services_subclass_code == 'AJ-IX';
+    } 
+    public function hasAnjunChinaService()
+    {  
+        return in_array($this->services_subclass_code ,['AJC-NX','AJC-IX']);
+    } 
+    public function hasAnjunChinaStandardService()
+    {  
+        return $this->services_subclass_code == 'AJC-NX';
+    } 
+    public function hasAnjunChinaExpressService()
+    {  
+        return $this->services_subclass_code == 'AJC-IX';
+    }
     public function hasOrders()
     {
         return $this->orders->isNotEmpty();
@@ -205,12 +292,39 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasSwedenPostService()
     {
-        return $this->services_subclass_code == ShippingService::Prime5;
+        return in_array($this->services_subclass_code,[ShippingService::Prime5,ShippingService::Prime5RIO,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia]);
+    }
+    function getIsDirectlinkCountryAttribute(){
+        return in_array($this->services_subclass_code,[ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia]);
     }
 
     public function hasPostPlusService()
     {
-        return $this->services_subclass_code == ShippingService::Post_Plus_Registered || $this->services_subclass_code == ShippingService::Post_Plus_EMS;
+        return $this->services_subclass_code == ShippingService::Post_Plus_Registered || $this->services_subclass_code == ShippingService::Post_Plus_EMS || $this->services_subclass_code == ShippingService::Post_Plus_Prime || $this->services_subclass_code == ShippingService::Post_Plus_Premium;
+    }
+
+    public function hasGDEService()
+    {
+        return $this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL || $this->services_subclass_code == ShippingService::GDE_FIRST_CLASS;
+    }
+
+    public function hasGSSService()
+    {
+        return $this->services_subclass_code == ShippingService::GSS_PMI || $this->services_subclass_code == ShippingService::GSS_EPMEI || $this->services_subclass_code == ShippingService::GSS_EPMI || $this->services_subclass_code == ShippingService::GSS_FCM || $this->services_subclass_code == ShippingService::GSS_EMS;
+    }
+
+    public function getHasTotalExpressServiceAttribute()
+    {
+        return $this->services_subclass_code == ShippingService::TOTAL_EXPRESS;
+    }
+    public function getHasHoundExpressAttribute()
+    {
+        return $this->services_subclass_code == ShippingService::HoundExpress;
+    }
+
+    public function hasHDExpressService()
+    {
+        return $this->services_subclass_code == ShippingService::HD_Express;
     }
     
     public function hasColombiaService()

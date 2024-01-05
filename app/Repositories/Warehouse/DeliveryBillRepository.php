@@ -15,19 +15,28 @@ use App\Repositories\AbstractRepository;
 
 class DeliveryBillRepository extends AbstractRepository
 {
-    public function get(Request $request)
+    public function get(Request $request, $isPaginate)
     {
         $query = DeliveryBill::query();
         
-        if($request->startDate){
-            $startDate = $request->startDate. ' 00:00:00';
-            $query->where('created_at','>=', $startDate);
+        if ( !Auth::user()->isAdmin() ){
+            $query->where('user_id',Auth::id());
         }
-        if($request->endDate){
-            $endDate = $request->endDate. ' 23:59:59';
-            $query->where('created_at','<=', $endDate);
+        if ($request->type){
+            $query->whereHas('containers', function ($query) use ($request) {
+                return $query->whereIn('services_subclass_code', json_decode($request->type));
+            });
         }
-        return $query->latest()->paginate(50);
+        if ($request->startDate) {
+            $startDate = $request->startDate . ' 00:00:00';
+            $query->where('created_at', '>=', $startDate);
+        }
+        if ($request->endDate) {
+            $endDate = $request->endDate . ' 23:59:59';
+            $query->where('created_at', '<=', $endDate);
+        }
+        $deliveryBill = $query->latest();
+        return $isPaginate ? $deliveryBill->paginate(50) : $deliveryBill->get();
     }
 
     public function getContainers()
@@ -63,6 +72,7 @@ class DeliveryBillRepository extends AbstractRepository
 
             $deliveryBill = DeliveryBill::create([
                 'name' => 'Delivery BillL: '.Carbon::now()->format('m-d-Y'),
+                'user_id' => Auth::id()
             ]);
 
             $deliveryBill->containers()->sync($request->get('container',[]));
