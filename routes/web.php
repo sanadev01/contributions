@@ -15,7 +15,6 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
-use App\Http\Livewire\OrderTracking\Trackings;
 use App\Models\ZoneCountry;
 
 /*
