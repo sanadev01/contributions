@@ -42,7 +42,7 @@ class AnjunReportsRepository
         $query = DeliveryBill::query();
         $query->whereHas('containers', function ($query) use ($request) {
             if($request->type=="bcn")
-                return $query->whereIn('service_sub_class', 'BCN-NX', 'BCN-IX');
+                return $query->whereIn('services_subclass_code', ['BCN-NX', 'BCN-IX']);
             if($request->type=="anjun")
                 return $query->whereIn('services_subclass_code', ["AJ-IX","AJ-NX"]);
         });
