@@ -94,7 +94,12 @@ class Client{
     public function createContainer(Container $container)
     {
         try {
-            
+            $testTrackings= $container->orders->pluck('corrios_tracking_code')->toArray();
+            \Log::info([
+                'total orders'=> count($container->orders), 
+                'total trackings'=>count($testTrackings),
+                'container trackings'=>$testTrackings,
+            ]); 
             $response = $this->client->post('/packet/v1/units',[
                 'headers' => [
                     'Authorization' =>(new GetServiceToken($container))->getBearerToken() ,
