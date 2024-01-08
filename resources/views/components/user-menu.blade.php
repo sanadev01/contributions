@@ -346,10 +346,16 @@
                     </li>
                     @endcan
                     @can('viewAnjunReport', App\Models\Reports::class)
-                    <li class="{{ $isActive(['admin.reports.anjun.index']) }}">
-                        <a href="{{ route('admin.reports.anjun.index') }}">
+                    <li @if(request('type')=='anjun') class="{{ $isActive(['admin.reports.anjun.index']) }}" @endif>
+                        <a href="{{ route('admin.reports.anjun.index') }}?type=anjun">
                             <i class="icon_adjst feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.Anjun Report')</span>
+                        </a>
+                    </li>
+                    <li @if(request('type')=='bcn') class="{{ $isActive(['admin.reports.anjun.index']) }}" @endif>
+                        <a href="{{ route('admin.reports.anjun.index') }}?type=bcn">
+                            <i class="icon_adjst feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Reports.BCN Report')</span>
                         </a>
                     </li>
                     @endcan

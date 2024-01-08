@@ -23,6 +23,7 @@ return [
     'Remove' => 'Remove Order',
     'Trashed Orders' => 'Trashed Orders',
     'Anjun Orders' => 'Anjun Orders',
+    'BCN Orders' => 'BCN Orders',
     'warehouse-no' => 'Warehouse No.',
     'user-name' => 'User Name',
     'tracking-code' => 'Tracking Code',

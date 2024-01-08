@@ -6,7 +6,13 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">@lang('orders.Anjun Orders')</h4>
+                        <h4 class="mb-0">
+                            @if(request('type'))
+                                @lang('orders.BCN Orders')
+                            @else 
+                                @lang('orders.Anjun Orders')
+                            @endif
+                        </h4>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
@@ -26,6 +32,7 @@
                                     <form action="" method="GET">
                                         <div class="row">
                                             <div class="col-md-10">
+                                                <input type="hidden" name="type" value="{{request('type') }}">
                                                 <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('orders.Search By Name, Warehouse No. or Tracking Code')">
                                             </div>
                                             <div class="col-md-2">
