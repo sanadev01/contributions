@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
+use App\Models\ShippingService;
 use App\Models\ZoneCountry;
 
 /*
@@ -325,6 +326,9 @@ Route::get('/container-trackings/{id?}',function($id = null){
     
     $container = Container::find($id);
     $trackings= $container->orders->pluck('corrios_tracking_code')->toArray();
+    foreach($container->orders as $order){  
+        dump([$order->id.' is bcn'=>optional($order->shippingService)->is_bcn_service??'shipping service '.$order->shipping_service_id.' not found']);
+    }
     dd([
         'total orders'=> count($container->orders), 
         'total trackings'=>count($trackings),
