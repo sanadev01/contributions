@@ -134,9 +134,6 @@
         $('#searchType').change(function () {
             $('#searchForm').submit();
         });
-        $('#searchButton').click(function () {
-            $('#searchForm').submit();
-        });
     });
 </script>
 @endsection
