@@ -328,9 +328,9 @@ Route::get('/container-trackings/{id?}',function($id = null){
     $trackings= $container->orders->pluck('corrios_tracking_code')->toArray();
     foreach($container->orders as $order){
         dump([$order->id.' is bcn'=>optional($order->shippingService)->is_bcn_service??'shipping service '.$order->shipping_service_id.' not found',
-                $order->id.' is express'=>$order->shippingService?$order->shippingService->service_sub_class==ShippingService::BCN_Packet_Express:'shipping service '.$order->shipping_service_id.' not found',
-                $order->id.' is standard'=>$order->shippingService?$order->shippingService->service_sub_class==ShippingService::BCN_Packet_Standard:'shipping service '.$order->shipping_service_id.' not found',
-                $order->id.' corries'=> $order->carrier
+                'is express'=>$order->shippingService?$order->shippingService->service_sub_class==ShippingService::BCN_Packet_Express:'shipping service '.$order->shipping_service_id.' not found',
+                'is standard'=>$order->shippingService?$order->shippingService->service_sub_class==ShippingService::BCN_Packet_Standard:'shipping service '.$order->shipping_service_id.' not found',
+                'carrier'=> $order->carrier
             ]);
     }
     dd([
