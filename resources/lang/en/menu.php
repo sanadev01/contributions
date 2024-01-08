@@ -45,6 +45,7 @@ return [
         'Tax Report Scan' => 'Tax Report Scan',
         'Audit Report' => 'Audit Report',
         'Anjun Report' => 'Anjun Report',
+        'BCN Report' => 'BCN Report',
         'KPI Report' => 'KPI Report',
     ],
     'Warehouse' => [

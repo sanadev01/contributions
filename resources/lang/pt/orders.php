@@ -20,6 +20,8 @@ return [
     'payment-status' => 'Status do pagamento',
     'payment-method' => 'Método de pagamento',
     'Trashed Orders' => 'Pedidos Excluídos',
+    'Anjun Orders' => 'Anjun Ordens',
+    'BCN Orders' => 'BCN Ordens',
     'Amount Customers Paid' => 'Valor Pago Pelos Clientes',
     'Correios Anjun' => 'Correios (Anjun)',
     'Key Performance Indicator Report' => 'Relatório de indicadores-chave de desempenho',

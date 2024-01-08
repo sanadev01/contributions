@@ -41,6 +41,7 @@ return [
         'Shipment Report' => 'Relatório de Remessa',
         'Tracking Report' => 'Relatório de Rastreamento',
         'Orders Report' => 'Relatório de pedidos',
+        'BCN Report' => 'BCN pedidos',
         'Commission Report' => 'Relatório de Comissão',
         'Tax Report Scan' => 'Verificação de relatório fiscal',
         'Audit Report' => 'Relatório de Auditoria',
