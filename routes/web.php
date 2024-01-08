@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
+use App\Models\ShippingService;
 use App\Models\ZoneCountry;
 
 /*
@@ -321,13 +322,22 @@ Route::get('/to-express/{id?}',function($id = null){
 
     return 'shipping service updated to express sucessfully.'; 
 });
-Route::get('/container-test/{id?}',function($id = null){
+Route::get('/container-trackings/{id?}',function($id = null){
     
     $container = Container::find($id);
+    $trackings= $container->orders->pluck('corrios_tracking_code')->toArray();
     foreach($container->orders as $order){
-       echo $order->shippingService->service_sub_class.' '.$order->corrios_tracking_code;
+        dump([$order->id.' '.$order->corrios_tracking_code.'  is bcn'=>optional($order->shippingService)->is_bcn_service??'shipping service '.$order->shipping_service_id.' not found',
+                'is express'=>$order->shippingService?$order->shippingService->service_sub_class==ShippingService::BCN_Packet_Express:'shipping service '.$order->shipping_service_id.' not found',
+                'is standard'=>$order->shippingService?$order->shippingService->service_sub_class==ShippingService::BCN_Packet_Standard:'shipping service '.$order->shipping_service_id.' not found',
+                'carrier'=> $order->carrier
+            ]);
     }
-    dd('end');
+    dd([
+        'total orders'=> count($container->orders), 
+        'total trackings'=>count($trackings),
+        'container trackings'=>$trackings,
+    ]); 
 });
 Route::get('/cleared',function(){
     ZoneCountry::truncate(); 
