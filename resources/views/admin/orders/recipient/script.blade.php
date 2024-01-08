@@ -473,7 +473,7 @@
 
     function activeColombiaFields() {
         $('#cpf').addClass('d-none');
-        $('#state_div').addClass('d-none');
+        $('#div_state').addClass('d-none');
         $('#city_div').addClass('d-none');
         $('#div_street_number').addClass('d-none');
         $('#div_zipcode').addClass('d-block');
@@ -491,7 +491,7 @@
 
     function inactiveColombiaFields() {
         $('#cpf').removeClass('d-none');
-        $('#state_div').removeClass('d-none');
+        $('#div_state').removeClass('d-none');
         $('#city_div').removeClass('d-none');
         $('#div_street_number').removeClass('d-none');
         $('#div_zipcode').removeClass('d-none');
