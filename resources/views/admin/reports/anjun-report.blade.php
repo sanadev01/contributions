@@ -131,17 +131,10 @@
  
 <script>
     $(document).ready(function () {
-        // Handle select change event
-        // Handle select change event
         $('#searchType').change(function () {
-            // Update form action with the selected type value
-            
             $('#searchForm').submit();
         });
-
-        // Handle button click event
         $('#searchButton').click(function () {
-            // Trigger form submission
             $('#searchForm').submit();
         });
     });
