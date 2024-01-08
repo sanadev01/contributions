@@ -140,5 +140,9 @@ class DeliveryBill extends Model
     {
         return $this->containers->first()->hasAnjunChinaService();
     }
+    public function isBCN()
+    {
+        return $this->containers->first()->hasBCNService();
+    }
 
 }

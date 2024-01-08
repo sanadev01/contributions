@@ -94,6 +94,7 @@ class Client{
     public function createContainer(Container $container)
     {
         try {
+            
             $response = $this->client->post('/packet/v1/units',[
                 'headers' => [
                     'Authorization' =>(new GetServiceToken($container))->getBearerToken() ,
@@ -116,13 +117,6 @@ class Client{
             ]);
 
             $data = json_decode($response->getBody()->getContents());
-            $testTrackings= $container->orders->pluck('corrios_tracking_code')->toArray();
-            \Log::info([
-                'total orders'=> count($container->orders), 
-                'total trackings'=>count($testTrackings),
-                'container trackings'=>$testTrackings,
-                'response data'=> $data,
-            ]);
             return $data->unitResponseList[0]->unitCode;
         }catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
