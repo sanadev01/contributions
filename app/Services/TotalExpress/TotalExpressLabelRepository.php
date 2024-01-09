@@ -42,9 +42,15 @@ class TotalExpressLabelRepository
     private function printLabel(Order $order)
     {
         if($order->api_response)
-        {
-            return true;
-        }
+        { 
+            $client = new Client();
+            $data = $client->labelUrlUpdate($order);
+            if ( $data instanceof PackageError){
+                $this->error = $data->getErrors();
+                return false;
+            }
+                return true;
+            }
     }
 
     protected function generateLabel(Order $order)
