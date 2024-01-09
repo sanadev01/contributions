@@ -7,11 +7,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">
-                            @if(request('type'))
-                                @lang('orders.BCN Orders')
-                            @else 
-                                @lang('orders.Anjun Orders')
-                            @endif
+                                @lang('menu.Reports.Service Report')
                         </h4>
                     </div>
                     <div class="card-content">
@@ -29,10 +25,16 @@
                                     </select>
                                 </div>
                                 <div class="col-5">
-                                    <form action="" method="GET">
+                                    <form action="{{ url()->current() }}" method="GET" id="searchForm">
                                         <div class="row">
-                                            <div class="col-md-10">
-                                                <input type="hidden" name="type" value="{{request('type') }}">
+                                            <div class="col-md-3"> 
+                                                <select name="type" id="searchType"  class="form-control" >
+                                                    <option value="bcn" @if(request('type')=='bcn') selected @endif>BCN</option>
+                                                    <option value="anjun"  @if(request('type')=='anjun') selected @endif>anjun</option>
+                                                </select>
+                                            </div>
+                                                
+                                            <div class="col-md-7"> 
                                                 <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('orders.Search By Name, Warehouse No. or Tracking Code')">
                                             </div>
                                             <div class="col-md-2">
@@ -45,7 +47,7 @@
                                 </div>
                                 <div class="col-6 text-right">
                                     <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
-                                        <input type="hidden" name="type" value="Anjun">
+                                        <input type="hidden" name="type" value="{{ request('type') }}">
                                         @csrf
                                         <div class="row">
                                             <div class="offset-1 col-md-5">
@@ -124,4 +126,14 @@
 @endsection
 @section('modal')
 <x-modal />
+@endsection
+@section('js')
+ 
+<script>
+    $(document).ready(function () {
+        $('#searchType').change(function () {
+            $('#searchForm').submit();
+        });
+    });
+</script>
 @endsection

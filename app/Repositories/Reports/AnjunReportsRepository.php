@@ -41,7 +41,10 @@ class AnjunReportsRepository
     {
         $query = DeliveryBill::query();
         $query->whereHas('containers', function ($query) use ($request) {
-            return $query->whereIn('services_subclass_code', ["AJ-IX","AJ-NX"]);
+            if($request->type=="bcn")
+                return $query->whereIn('services_subclass_code', ['BCN-NX', 'BCN-IX']);
+            if($request->type=="anjun")
+                return $query->whereIn('services_subclass_code', ["AJ-IX","AJ-NX"]);
         });
         
         $startDate  = $request['start_date'].' 00:00:00';

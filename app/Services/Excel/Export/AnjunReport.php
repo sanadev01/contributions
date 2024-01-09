@@ -30,13 +30,16 @@ class AnjunReport extends AbstractExportService
 
     private function prepareExcelSheet()
     {
-        $this->setExcelHeaderRow();
+
+       
+                $this->setExcelHeaderRow();
+        
         $row = $this->currentRow;
         foreach ($this->deliveryBills as $deliveryBill) {
             foreach ($deliveryBill->containers as $container) {
                 foreach ($container->orders as $order) {
                     if($order->shippingService){
-                        if($order->shippingService->isAnjunService())
+                        if($order->shippingService->isAnjunService()||$order->shippingService->is_bcn_service)
                         {
                             $this->setCellValue('A'.$row, $order->order_date);
                             $this->setCellValue('B'.$row, $order->warehouse_number);
@@ -84,7 +87,7 @@ class AnjunReport extends AbstractExportService
         $this->setCellValue('F1', 'Amount Customers Paid');
 
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Correios (Anjun)');
+        $this->setCellValue('G1', 'Correios');
 
         $this->setColumnWidth('H', 20);
         $this->setCellValue('H1', 'Anjun Commission');
