@@ -21,7 +21,7 @@ class CorreiosOrder extends Package{
             $kg = UnitsConverter::poundToKg($order->getOriginalWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
         } 
-        \Log::info('serviceSubClassCode: '. $serviceSubClassCode);
+        
         $this->customerControlCode = $order->id;
         $this->senderName = $order->sender_first_name.' '.$order->sender_last_name;
         $this->recipientName = $order->recipient->getFullName();
