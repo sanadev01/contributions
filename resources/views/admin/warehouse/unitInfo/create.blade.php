@@ -25,6 +25,7 @@
                                                         <option value="">@lang('address.Type')</option>
                                                         <option value="correios" {{ old('api') == 'correios' ? 'selected' : '' }}>Correios</option>
                                                         <option value="anjun" {{ old('api') == 'anjun' ? 'selected' : '' }}>Anjun</option>
+                                                        <option value="bcn" {{ old('api') == 'bcn' ? 'selected' : '' }}>Bcn</option>
                                                     </select>
                                                     </div>
                                                 </div>

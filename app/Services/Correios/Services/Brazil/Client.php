@@ -206,9 +206,12 @@ class Client{
     {
         try {
 
-            $token = $this->getToken();
+            $token = (new GetServiceToken())->getToken();
             if($request->api == 'anjun'){
                 $token = (new GetServiceToken())->getAnjunToken();
+            } 
+            if($request->api == 'bcn'){
+                $token = (new GetServiceToken())->getBCNToken();
             }
 
             if($request->type == 'departure_info') {
