@@ -110,6 +110,14 @@ class IndexTable extends Component
             'name' => 'BCN Express',
             'value' => Package::SERVICE_CLASS_BCN_EXPRESS,
         ];
+        $this->services[23] = [
+            'name' => 'PostPlus Colombia EMS',
+            'value' => Package::SERVICE_CLASS_Post_Plus_CO_EMS,
+        ];
+        $this->services[24] = [
+            'name' => 'PostPlus Colombia REG',
+            'value' => Package::SERVICE_CLASS_Post_Plus_CO_REG,
+        ]; 
         return $this->services;
     }
 }

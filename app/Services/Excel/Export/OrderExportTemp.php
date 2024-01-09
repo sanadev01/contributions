@@ -41,9 +41,9 @@ class OrderExportTemp extends AbstractExportService
 
         foreach ($this->orders as $order) {
             
-        if($order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered) {
+        if($order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered || $order->shippingService->service_sub_class == ShippingService::Post_Plus_CO_REG) {
             $type = 'Registered';
-         } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_EMS) {
+         } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_EMS || $order->shippingService->service_sub_class == ShippingService::Post_Plus_CO_EMS) {
             $type = 'EMS';
          } elseif($order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime) {
             $type = 'Prime';

@@ -27,7 +27,7 @@ class PostPlusShippingService
 
     public function isAvailableFor($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::Post_Plus_Registered || $shippingService->service_sub_class == ShippingService::Post_Plus_EMS || $shippingService->service_sub_class == ShippingService::Post_Plus_Prime || $shippingService->service_sub_class == ShippingService::Post_Plus_Premium || $shippingService->service_sub_class == ShippingService::LT_PRIME || $shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::Post_Plus_Registered || $shippingService->service_sub_class == ShippingService::Post_Plus_EMS || $shippingService->service_sub_class == ShippingService::Post_Plus_Prime || $shippingService->service_sub_class == ShippingService::Post_Plus_Premium || $shippingService->service_sub_class == ShippingService::LT_PRIME || $shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium || $shippingService->service_sub_class == ShippingService::Post_Plus_CO_EMS || $shippingService->service_sub_class == ShippingService::Post_Plus_CO_REG) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }
@@ -35,7 +35,7 @@ class PostPlusShippingService
 
     public function isAvailableForInternational($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::Post_Plus_Registered || $shippingService->service_sub_class == ShippingService::Post_Plus_EMS || $shippingService->service_sub_class == ShippingService::Post_Plus_Prime || $shippingService->service_sub_class == ShippingService::Post_Plus_Premium || $shippingService->service_sub_class == ShippingService::LT_PRIME || $shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::Post_Plus_Registered || $shippingService->service_sub_class == ShippingService::Post_Plus_EMS || $shippingService->service_sub_class == ShippingService::Post_Plus_Prime || $shippingService->service_sub_class == ShippingService::Post_Plus_Premium || $shippingService->service_sub_class == ShippingService::LT_PRIME || $shippingService->service_sub_class == ShippingService::Post_Plus_LT_Premium || $shippingService->service_sub_class == ShippingService::Post_Plus_CO_EMS || $shippingService->service_sub_class == ShippingService::Post_Plus_CO_REG) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }
