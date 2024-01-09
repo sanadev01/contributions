@@ -209,8 +209,7 @@ class Client{
     public function unitInfo($url, $request)
     {
         try {
-
-            $token = $this->getToken();
+ 
             if($request->api == 'anjun'){
                 $token = (new GetServiceToken())->getAnjunToken();
             }

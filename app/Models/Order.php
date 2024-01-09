@@ -392,9 +392,7 @@ class Order extends Model implements Package
                 return 'Correios Brazil';
             }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS ){
-
                 return 'Total Express';
-
             }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::HD_Express){
                 return 'HD Express';
@@ -405,6 +403,12 @@ class Order extends Model implements Package
             elseif(optional($this->shippingService)->is_hound_express){
 
                 return 'Hound Express';
+            }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::HD_Express){
+                return 'HD Express';
+            }
+            elseif(optional($this->shippingService)->is_bcn_service){
+                return 'Correios Brazil';
             }
             return 'Correios Brazil';
         }
@@ -943,6 +947,21 @@ class Order extends Model implements Package
         $addedProfit = round($gssCost * $profit, 2);
         $this->user_declared_freight = $this->user_declared_freight - $addedProfit;
         return true;
+    }
+    public function getTaxAndDutyAttribute(){
+        $finalValue = 0;
+        if(strtolower($this->tax_modality) == "ddp"){
+            if($this->recipient->country->code =="MX" || $this->recipient->country->code =="CA"|| $this->recipient->country->code =="BR"){
+                $totalCost = $this->gross_total+$this->insurance_value+$this->carrierCost();
+                $duty = $totalCost * .6;
+                $totalCostOfTheProduct = $this->gross_total+$duty;
+                $icms = .17;
+                $totalIcms = $icms * $totalCostOfTheProduct;
+                $totalTaxAndDuty = $duty + $totalIcms;
+                $finalValue = $this->gross_total + $totalTaxAndDuty;
+            }
+        }
+        return number_format($finalValue,2);
     }
 
 }
