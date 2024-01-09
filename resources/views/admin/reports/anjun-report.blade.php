@@ -26,15 +26,9 @@
                                 </div>
                                 <div class="col-5">
                                     <form action="{{ url()->current() }}" method="GET" id="searchForm">
-                                        <div class="row">
-                                            <div class="col-md-3"> 
-                                                <select name="type" id="searchType"  class="form-control" >
-                                                    <option value="bcn" @if(request('type')=='bcn') selected @endif>BCN</option>
-                                                    <option value="anjun"  @if(request('type')=='anjun') selected @endif>anjun</option>
-                                                </select>
-                                            </div>
-                                                
-                                            <div class="col-md-7"> 
+                                        <div class="row">                                                
+                                            <div class="col-md-7">
+                                                <input type="hidden" id="hiddenType"  name="type" value="{{request('type')}}" >
                                                 <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('orders.Search By Name, Warehouse No. or Tracking Code')">
                                             </div>
                                             <div class="col-md-2">
@@ -47,10 +41,20 @@
                                 </div>
                                 <div class="col-6 text-right">
                                     <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
-                                        <input type="hidden" name="type" value="{{ request('type') }}">
                                         @csrf
+                                       
                                         <div class="row">
-                                            <div class="offset-1 col-md-5">
+                                            <div class="offset-1 col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                    <select name="type"  class="form-control" id="searchType"   >
+                                                        <option class="form-control" value="bcn" @if(request('type')=='bcn') selected @endif>BCN</option>
+                                                        <option class="form-control" value="anjun"  @if(request('type')=='anjun') selected @endif>ANJUN</option>
+                                                    </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
                                                 <div class="row">
                                                     <div class="col-md-4 mt-2">
                                                         <label>Start Date</label>
@@ -60,7 +64,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-3">
                                                 <div class="row">
                                                     <div class="col-md-4 mt-2 pl-0">
                                                         <label>End Date</label>
@@ -132,7 +136,9 @@
 <script>
     $(document).ready(function () {
         $('#searchType').change(function () {
+            $('#hiddenType').val($(this).val()) 
             $('#searchForm').submit();
+         
         });
     });
 </script>
