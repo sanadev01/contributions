@@ -19,7 +19,11 @@ abstract class AbstractExportService
 
     public function __construct()
     {
-        ob_end_clean();
+        try{
+            ob_end_clean();
+        }catch(\Exception $e){
+            Log::info('ob_end_clean error:'.$e->getMessage());
+        }
         $this->spreadSheet = new Spreadsheet();
         $this->sheet = $this->spreadSheet->getActiveSheet();
 
