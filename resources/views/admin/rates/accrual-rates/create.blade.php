@@ -36,6 +36,7 @@
                                             <option value="46">Chile</option>
                                             <option value="250">United States</option>
                                             <option value="188">Portugal</option>
+                                            <option value="50">Colombia</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
@@ -73,6 +74,8 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_TOTAL_EXPRESS}}">Total Express</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_LT_PRIME}}">Prime LT</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_LT_Premium}}">PostPlus Portugal</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_CO_EMS}}">PostPlus Colombia EMS</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_CO_REG}}">PostPlus Colombia REG</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>

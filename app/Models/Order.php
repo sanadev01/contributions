@@ -69,6 +69,7 @@ class Order extends Model implements Package
     const Guatemala = 94;
     const US = 250;
     const PORTUGAL = 188;
+    const COLOMBIA = 50;
 
     public $user_profit = 0;
     public function scopeParcelReady(Builder $query)
@@ -379,7 +380,7 @@ class Order extends Model implements Package
                 return 'Prime5';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium || optional($this->shippingService)->service_sub_class == ShippingService::LT_PRIME || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_LT_Premium){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium || optional($this->shippingService)->service_sub_class == ShippingService::LT_PRIME || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_LT_Premium ||  optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_CO_EMS ||  optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_CO_REG){
 
                 return 'PostPlus';
 

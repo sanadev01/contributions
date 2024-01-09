@@ -22,9 +22,9 @@ class Parcel {
 
    public function getRequestBody() {
 
-      if($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered) {
+      if($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Registered || $this->order->shippingService->service_sub_class == ShippingService::Post_Plus_CO_REG) {
          $type = 'Registered';
-      } elseif($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_EMS) {
+      } elseif($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_EMS || $this->order->shippingService->service_sub_class == ShippingService::Post_Plus_CO_EMS) {
          $type = 'EMS';
       } elseif($this->order->shippingService->service_sub_class == ShippingService::Post_Plus_Prime || $this->order->shippingService->service_sub_class == ShippingService::LT_PRIME) {
          $type = 'Prime';
