@@ -18,10 +18,10 @@ class DeliveryBillRegisterController extends Controller
         }
      
 
-        // if ($deliveryBill->isRegistered()) {
-        //     session()->flash('alert-danger','This delivery bill has already been registered');
-        //     return back();
-        // }
+        if ($deliveryBill->isRegistered()) {
+            session()->flash('alert-danger','This delivery bill has already been registered');
+            return back();
+        }
        
         if ($deliveryBill->containerShippingService(ShippingService::TOTAL_EXPRESS)) {
              $deliveryBill->update([
