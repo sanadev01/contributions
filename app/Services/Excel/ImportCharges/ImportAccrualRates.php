@@ -61,6 +61,12 @@ class ImportAccrualRates extends AbstractImportService
             if($this->service == ShippingService::Post_Plus_Registered){
                 $limit = 22;
             }
+            if($this->service == ShippingService::Post_Plus_CO_REG){
+                $limit = 14;
+            }
+            if($this->service == ShippingService::Post_Plus_CO_EMS){
+                $limit = 50;
+            }
         }
 
         foreach (range(3, $limit) as $row) {

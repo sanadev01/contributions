@@ -165,6 +165,8 @@ class OrderRepository
                     ShippingService::Post_Plus_Premium,
                     ShippingService::LT_PRIME,
                     ShippingService::Post_Plus_LT_Premium,
+                    ShippingService::Post_Plus_CO_EMS,
+                    ShippingService::Post_Plus_CO_REG,
                 ];
             }
             if($request->carrier == 'Total Express'){

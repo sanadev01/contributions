@@ -270,6 +270,7 @@ class Client{
 
     
     public function getServiceRates($request) {
+       
         $rateType = '';
         $service = $request->service;
         $order = Order::find($request->order_id);
@@ -310,12 +311,6 @@ class Client{
         $data= json_decode($response);
         if ($response->successful() && $data->success == true) {
             
-            // //CHECK IF USER HAS GSS PROFIT SETTING
-            // $this->gssProfit = setting('gss_profit', null,  $order->user_id);
-            // //APPLY ADMIN SIDE GSS PROFIT SETTING
-            // if($this->gssProfit == null || $this->gssProfit == 0) { 
-            //     $this->gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
-            // }
 
             $serviceId = ShippingService::where('service_sub_class', $service)->value('id');
             $this->gssProfit = ZoneCountry::where('shipping_service_id', $serviceId)
@@ -341,6 +336,11 @@ class Client{
                 ]);
                 return $this->responseSuccessful($price, 'Rate Calculation Successful');
             } else {
+                \Log::info([
+                    'service sub class'=> $service, 
+                    'recipinet country'=>$order->recipient->country_id,
+                    'message'=> 'zone rate not uploaded for recipient country'
+                ]);
                 return $this->responseUnprocessable("Server Error! Rates Not Found");
             }
         } else {
