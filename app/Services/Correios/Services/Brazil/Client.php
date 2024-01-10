@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\Correios\Services\Brazil;
+
 use App\Models\Order;
 use App\Models\OrderTracking;
 use Illuminate\Support\Facades\Cache;
@@ -11,16 +12,18 @@ use App\Services\Correios\Contracts\Container;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\GetServiceToken;
 use App\Services\Correios\Services\Brazil\cn23\CorreiosOrder;
-class Client{
+
+class Client
+{
     protected $client;
     private $baseUri;
 
     public function __construct()
     {
-        if(app()->isProduction()){
+        if (app()->isProduction()) {
 
             $this->baseUri = 'https://api.correios.com.br';
-        }else{
+        } else {
             $this->baseUri = 'https://apihom.correios.com.br';
         }
         $this->client = new GuzzleClient([
@@ -29,32 +32,32 @@ class Client{
     }
 
     public function createPackage(Package $order)
-    { 
+    {
         $packet = new CorreiosOrder($order);
         \Log::info(
             $packet
-        ); 
+        );
         try {
-            $response = $this->client->post('/packet/v1/packages',[
-               'headers' => [
-                'Authorization' => (new GetServiceToken($order))->getBearerToken()
-               ],
+            $response = $this->client->post('/packet/v1/packages', [
+                'headers' => [
+                    'Authorization' => (new GetServiceToken($order))->getBearerToken()
+                ],
                 'json' => [
                     'packageList' => [
                         $packet
                     ]
                 ]
             ]);
-            
+
             $data = json_decode($response->getBody()->getContents());
             $trackingNumber = $data->packageResponseList[0]->trackingNumber;
 
-            if ( $trackingNumber ){
+            if ($trackingNumber) {
                 $order->update([
                     'corrios_tracking_code' => $trackingNumber,
                     'cn23' => [
                         "tracking_code" => $trackingNumber,
-                        "stamp_url" => route('warehouse.cn23.download',$order->id),
+                        "stamp_url" => route('warehouse.cn23.download', $order->id),
                         'leve' => false
                     ],
                 ]);
@@ -65,24 +68,22 @@ class Client{
                 return $this->addOrderTracking($order);
             }
             return null;
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
-            
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+
             $responseError = $e->getResponse()->getBody()->getContents();
             $errorCopy = new PackageError($responseError);
             $errorMessage = $errorCopy->getErrors();
-            if($errorMessage=="GTW-006: Token inválido." || $errorMessage=="GTW-007: Token expirado."){
-                \Log::info('Token refresh automatically'); 
+            if ($errorMessage == "GTW-006: Token inválido." || $errorMessage == "GTW-007: Token expirado.") {
+                \Log::info('Token refresh automatically');
                 Cache::forget('anjun_token');
                 Cache::forget('bcn_token');
                 Cache::forget('token');
-            return $this->createPackage($order);
+                return $this->createPackage($order);
             }
 
             $error = new PackageError($responseError);
             return $error;
-
-        }
-        catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
     }
@@ -90,10 +91,10 @@ class Client{
     public function createContainer(Container $container)
     {
         try {
-            
-            $response = $this->client->post('/packet/v1/units',[
+
+            $response = $this->client->post('/packet/v1/units', [
                 'headers' => [
-                    'Authorization' =>(new GetServiceToken($container))->getBearerToken() ,
+                    'Authorization' => (new GetServiceToken($container))->getBearerToken(),
                 ],
                 'json' => [
                     "dispatchNumber" => $container->dispatch_number,
@@ -108,16 +109,15 @@ class Client{
                             "unitType" => $container->unit_type,
                             "trackingNumbers" => $container->orders->pluck('corrios_tracking_code')->toArray()
                         ]
-                   ]
+                    ]
                 ]
             ]);
 
             $data = json_decode($response->getBody()->getContents());
             return $data->unitResponseList[0]->unitCode;
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
     }
@@ -125,9 +125,9 @@ class Client{
     public function registerDeliveryBill(DeliveryBill $deliveryBill)
     {
         try {
-            $response = $this->client->post('/packet/v1/cn38request',[
+            $response = $this->client->post('/packet/v1/cn38request', [
                 'headers' => [
-                    'Authorization' =>(new GetServiceToken($deliveryBill->containers()->first()))->getBearerToken() ,
+                    'Authorization' => (new GetServiceToken($deliveryBill->containers()->first()))->getBearerToken(),
                 ],
                 'json' => [
                     'dispatchNumbers' => $deliveryBill->containers->pluck('dispatch_number')->toArray()
@@ -136,10 +136,9 @@ class Client{
 
             $data = json_decode($response->getBody()->getContents());
             return $data->requestId;
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
     }
@@ -147,7 +146,7 @@ class Client{
     public function getDeliveryBillStatus(DeliveryBill $deliveryBill)
     {
         try {
-            $response = $this->client->get("/packet/v1/cn38request?requestId={$deliveryBill->request_id}",[
+            $response = $this->client->get("/packet/v1/cn38request?requestId={$deliveryBill->request_id}", [
                 'headers' => [
                     'Authorization' => (new GetServiceToken($deliveryBill->containers()->first()))->getBearerToken(),
                 ]
@@ -155,23 +154,21 @@ class Client{
 
             $data = json_decode($response->getBody()->getContents());
 
-            if ( $data->requestStatus == 'Error' ){
+            if ($data->requestStatus == 'Error') {
                 throw new \Exception($data->errorMessage);
             }
 
             return $data->requestStatus == 'Success' ? $data->cn38Code : null;
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
     }
 
     public function addOrderTracking($order)
     {
-        if($order->trackings->isEmpty())
-        {
+        if ($order->trackings->isEmpty()) {
             OrderTracking::create([
                 'order_id' => $order->id,
                 'status_code' => Order::STATUS_PAYMENT_DONE,
@@ -180,7 +177,7 @@ class Client{
                 'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
                 'city' => 'Miami',
             ]);
-        }    
+        }
 
         return true;
     }
@@ -188,34 +185,37 @@ class Client{
     public function destroy($container)
     {
         try {
-            $response = $this->client->delete("/packet/v1/units/dispatch/$container->dispatch_number",[
+            $response = $this->client->delete("/packet/v1/units/dispatch/$container->dispatch_number", [
                 'headers' => [
                     'Authorization' => (new GetServiceToken($container))->getBearerToken()
                 ]
             ]);
             return $response;
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
     }
-    
+
     public function unitInfo($url, $request)
     {
         try {
-
             $token = (new GetServiceToken())->getToken();
-            if($request->api == 'anjun'){
+            if ($request->api == 'anjun') {
                 $token = (new GetServiceToken())->getAnjunToken();
-            } 
-            if($request->api == 'bcn'){
+            }
+            if ($request->api == 'bcn') {
                 $token = (new GetServiceToken())->getBCNToken();
             }
+            \Log::info([
+                'url' => $this->baseUri,
+                'token' => $token,
+                'type' => $request->type,
+            ]);
 
-            if($request->type == 'departure_info') {
-                $response = $this->client->put($url,[
+            if ($request->type == 'departure_info') {
+                $response = $this->client->put($url, [
                     'headers' => [
                         'Authorization' => $token
                     ],
@@ -225,49 +225,71 @@ class Client{
                         ],
                         "flightNumber" => $request->flightNo,
                         "airlineCode" => $request->airlineCode,
-                        "departureDate" => $request->start_date.'T00:00:00Z',
+                        "departureDate" => $request->start_date . 'T00:00:00Z',
                         "departureAirportCode" => $request->deprAirportCode,
-                        "arrivalDate" => $request->end_date.'T23:59:59Z',
+                        "arrivalDate" => $request->end_date . 'T23:59:59Z',
                         "arrivalAirportCode" => $request->arrvAirportCode,
                         "destinationCountryCode" => $request->destCountryCode,
                     ]
                 ]);
-            }else {
-                $response = $this->client->get($url,[
+            } elseif ($request->type == 'departure_cn38') {
+                $response = $this->client->put(
+                    $url,
+                    [
+                        'headers' => [
+                            'Authorization' => $token
+                        ],
+                        'json' => [
+                            "unitCodeList" => [ 
+                                "1212", "12122"
+                            ],
+                            "flightList" => [
+                                [
+                                "flightNumber" => $request->flightNo, 
+                                "airlineCode" => $request->airlineCode,
+                                "departureDate" => $request->start_date . 'T22:55:00Z',
+                                "departureAirportCode" => $request->deprAirportCode,
+                                "arrivalDate" => $request->end_date . 'T09:49:00Z',
+                                "arrivalAirportCode" => $request->arrvAirportCode, 
+                                ]
+                            ]
+                        ]
+                    ]
+                );
+            } else {
+                $response = $this->client->get($url, [
                     'headers' =>  [
-                        'Authorization' => "Bearer {$token}"
+                        'Authorization' => $token
                     ],
                 ]);
             }
-            
+
             return json_decode($response->getBody()->getContents());
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
-            return new PackageError($exception->getMessage());
-        }
-    }
-    
-    public function getModality($trackingNumber)
-    {
-        try {
-            $url = "/packet/v1/packages?trackingNumber=$trackingNumber";
-            $response = $this->client->get($url,[
-                'headers' =>  [
-                    'Authorization' => (new GetServiceToken(null,$trackingNumber))->getBearerToken()
-                ],
-            ]);
-            
-            $modality = json_decode($response->getBody()->getContents());
-            
-            return optional(optional($modality->packageList)[0])->distributionModality;
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
-            return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
+        } catch (\Exception $exception) {
+
             return new PackageError($exception->getMessage());
         }
     }
 
+    public function getModality($trackingNumber)
+    {
+        try {
+            $url = "/packet/v1/packages?trackingNumber=$trackingNumber";
+            $response = $this->client->get($url, [
+                'headers' =>  [
+                    'Authorization' => (new GetServiceToken(null, $trackingNumber))->getBearerToken()
+                ],
+            ]);
+
+            $modality = json_decode($response->getBody()->getContents());
+
+            return optional(optional($modality->packageList)[0])->distributionModality;
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        } catch (\Exception $exception) {
+            return new PackageError($exception->getMessage());
+        }
+    }
 }

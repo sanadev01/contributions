@@ -43,13 +43,13 @@ class GetServiceToken
                 $this->bcn_numero = '0076204456'; 
         }else{
                 $this->baseUri = 'https://apihom.correios.com.br';
-                
                 $this->username =$this->anjun_username =  $this->bcn_username = 'testeint';
                 $this->password =  $this->anjun_password =  $this->bcn_password ='sUKDOgmLQaoXgTGDsNveWpnf1KhqEEjeAn2U3Ts4';
-                $this->numero =$this->anjun_numero =  $this->bcn_numero ='0076772055'; 
-                
+                $this->numero =$this->anjun_numero =  $this->bcn_numero ='0076772055';
         }
-
+        \Log::info([
+            'url'=>$this->baseUri,
+        ]);
         if ($order != null)
             $this->order = $order;
         if ($trackingNumber != null)
@@ -61,7 +61,7 @@ class GetServiceToken
 
     public function getToken()
     {
-        return Cache::remember('token', Carbon::now()->addHours(24), function () {
+        return Cache::remember('token_l3', Carbon::now()->addHours(24), function () {
             $response = $this->client->post('/token/v1/autentica/cartaopostagem', [
                 'auth' => [
                     $this->username,
@@ -78,7 +78,7 @@ class GetServiceToken
 
     public function getAnjunToken()
     {
-        return Cache::remember('anjun_token', Carbon::now()->addHours(0), function () {
+        return Cache::remember('anjun_token_l', Carbon::now()->addHours(0), function () {
             $response = $this->client->post('/token/v1/autentica/cartaopostagem', [
                 'auth' => [
                     $this->anjun_username,
@@ -94,7 +94,7 @@ class GetServiceToken
     }
     public function getBCNToken()
     {
-        return Cache::remember('bcn_token', Carbon::now()->addHours(0), function () {
+        return Cache::remember('bcn_token_l', Carbon::now()->addHours(0), function () {
             $response = $this->client->post('/token/v1/autentica/cartaopostagem', [
                 'auth' => [
                     $this->bcn_username,
