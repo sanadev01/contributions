@@ -232,8 +232,32 @@ class Client{
                         "destinationCountryCode" => $request->destCountryCode,
                     ]
                 ]);
-            }else {
-                $response = $this->client->get($url,[
+            } elseif ($request->type == 'departure_cn38') {
+                $response = $this->client->put(
+                    $url,
+                    [
+                        'headers' => [
+                            'Authorization' => $token
+                        ],
+                        'json' => [
+                            "unitCodeList" => [                                
+                            $request->unitCode
+                            ],
+                            "flightList" => [
+                                [
+                                "flightNumber" => $request->flightNo, 
+                                "airlineCode" => $request->airlineCode,
+                                "departureDate" => $request->start_date . 'T22:55:00Z',
+                                "departureAirportCode" => $request->deprAirportCode,
+                                "arrivalDate" => $request->end_date . 'T09:49:00Z',
+                                "arrivalAirportCode" => $request->arrvAirportCode, 
+                                ]
+                            ]
+                        ]
+                    ]
+                );
+            } else {
+                $response = $this->client->get($url, [
                     'headers' =>  [
                         'Authorization' => "Bearer {$token}"
                     ],
