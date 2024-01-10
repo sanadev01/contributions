@@ -22,6 +22,7 @@ class CN35LabelMaker implements HasLableExport
     private $service;
     private $unitCode;
     private $OrderWeight;
+    private $containerGroup;
 
     public function __construct(Container $container)
     {
@@ -44,6 +45,7 @@ class CN35LabelMaker implements HasLableExport
         $this->destinationAirport = $container->getDestinationAriport();        
         $this->itemsCount = $container->getPiecesCount();
         $this->unitCode = $container->getUnitCode();
+        $this->containerGroup = $container->getGroup($container);
     }
 
     public function setCompanyName($companyName)
@@ -195,6 +197,7 @@ class CN35LabelMaker implements HasLableExport
             'service' => $this->service,
             'unitCode' => $this->unitCode,
             'OrderWeight' => $this->OrderWeight,
+            'containerGroup' => $this->containerGroup,
         ];
     }
 
