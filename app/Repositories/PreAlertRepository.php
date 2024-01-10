@@ -211,14 +211,12 @@ class PreAlertRepository
 
         if($order->status == Order::STATUS_PREALERT_TRANSIT){
             try {
-                \Log::info('STATUS_PREALERT_TRANSIT');
                 \Mail::send(new ShipmentTransit($order));
             } catch (\Exception $ex) {
                 \Log::info('Shipment transit email send error: '.$ex->getMessage());
             }
         }else{
             try {
-                \Log::info('STATUS_READ');
                 \Mail::send(new ShipmentReady($order));
             } catch (\Exception $ex) {
                 \Log::info('Shipment ready email send error: '.$ex->getMessage());

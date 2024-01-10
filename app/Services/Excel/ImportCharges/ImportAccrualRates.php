@@ -61,11 +61,11 @@ class ImportAccrualRates extends AbstractImportService
             if($this->service == ShippingService::Post_Plus_Registered){
                 $limit = 22;
             }
-            if($this->service == ShippingService::Post_Plus_CO_REG){
-                $limit = 14;
-            }
             if($this->service == ShippingService::Post_Plus_CO_EMS){
                 $limit = 50;
+            }
+            if($this->service == ShippingService::Post_Plus_CO_REG){
+                $limit = 14;
             }
         }
 
@@ -73,7 +73,7 @@ class ImportAccrualRates extends AbstractImportService
 
             $weight = round($this->getValueOrDefault('A'.$row),2);
             
-            if(($this->country_id == Country::Brazil && $weight <= 30000) || ($this->country_id == Country::Chile && $weight <= 50000) || ($this->country_id == Country::Portugal && $weight <= 20000))
+            if(($this->country_id == Country::Brazil && $weight <= 30000) || ($this->country_id == Country::Chile && $weight <= 50000) || ($this->country_id == Country::Portugal && $weight <= 20000) || ($this->country_id == Country::Colombia && $weight <= 20000))
             {
                 $rates[] = [
                     'service' => $this->service,

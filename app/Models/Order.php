@@ -628,8 +628,6 @@ class Order extends Model implements Package
 
     public function addAffiliateCommissionSale(User $referrer, $commissionCalculator)
     {
-        \Log::info($this);
-        \Log::info($this->user_id);
         return $this->affiliateSale()->create( [
             'value' => $commissionCalculator->getValue(),
             'type' => $commissionCalculator->getCommissionSetting()->type,
