@@ -25,6 +25,9 @@ class UnitInfoRepository
         if($request->type == 'departure_info'){
             $url = "/packet/v1/returning-units";
         }
+        if($request->type == 'departure_cn38'){
+            $url = "/packet/v1/cn38request/departure";
+        }
 
         $client = new Client();
         $response = $client->unitInfo($url, $request);
