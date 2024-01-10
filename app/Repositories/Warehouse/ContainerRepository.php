@@ -11,7 +11,6 @@ class ContainerRepository extends AbstractRepository{
 
     public function get(Request $request, $paginate)
     {
-
         $query = Container::query();
 
         if ( !Auth::user()->isAdmin() ){

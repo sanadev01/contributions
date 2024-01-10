@@ -70,7 +70,6 @@ class SettingController extends Controller
         saveSetting('correios_api', false, $this->adminId);
         saveSetting('anjun_api', false, $this->adminId);
         saveSetting($request->correios_setting, true, $this->adminId);
-
         $request->has('usps') ? saveSetting('usps', true, $this->adminId) : saveSetting('usps', false, $this->adminId);
         $request->has('ups') ? saveSetting('ups', true, $this->adminId) : saveSetting('ups', false, $this->adminId);
         $request->has('fedex') ? saveSetting('fedex', true, $this->adminId) : saveSetting('fedex', false, $this->adminId);
