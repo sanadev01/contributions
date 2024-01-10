@@ -240,8 +240,8 @@ class Client
                             'Authorization' => $token
                         ],
                         'json' => [
-                            "unitCodeList" => [ 
-                                "1212", "12122"
+                            "unitCodeList" => [                                
+                            $request->unitCode
                             ],
                             "flightList" => [
                                 [
