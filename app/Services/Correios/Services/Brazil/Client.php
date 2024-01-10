@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Services\Correios\Services\Brazil;
-
-use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\OrderTracking;
 use Illuminate\Support\Facades\Cache;
@@ -11,22 +9,20 @@ use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Contracts\Container;
 use App\Services\Correios\Models\PackageError;
-use App\Services\Correios\Contracts\CN23Response;
-use App\Services\Correios\Contracts\CN35Response;
-use App\Services\Correios\Contracts\CN38Response;
-use App\Services\Correios\Contracts\PackageResponse;
-use App\Services\Correios\Contracts\SendHttpRequests;
-use App\Services\Correios\Contracts\ContainerResponse;
-use App\Services\Correios\Contracts\Package as PackageAlias;
 use App\Services\Correios\Services\Brazil\GetServiceToken;
 use App\Services\Correios\Services\Brazil\cn23\CorreiosOrder;
 class Client{
-
     protected $client;
-    private $baseUri = 'https://api.correios.com.br';
+    private $baseUri;
 
     public function __construct()
     {
+        if(app()->isProduction()){
+
+            $this->baseUri = 'https://api.correios.com.br';
+        }else{
+            $this->baseUri = 'https://apihom.correios.com.br';
+        }
         $this->client = new GuzzleClient([
             'base_uri' => $this->baseUri
         ]);
@@ -253,7 +249,7 @@ class Client{
     public function getModality($trackingNumber)
     {
         try {
-            $url = "https://api.correios.com.br/packet/v1/packages?trackingNumber=$trackingNumber";
+            $url = "/packet/v1/packages?trackingNumber=$trackingNumber";
             $response = $this->client->get($url,[
                 'headers' =>  [
                     'Authorization' => (new GetServiceToken(null,$trackingNumber))->getBearerToken()

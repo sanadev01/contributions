@@ -277,7 +277,7 @@ class Client{
         $service = $request->service;
         $order = Order::find($request->order_id);
         if($order->is_paid){ 
-            return $this->responseSuccessful($order->gross_total, 'Rate Calculation Successful');
+        return $this->responseSuccessful($order->gross_total, 'Rate Calculation Successful');
         }
         if($service == ShippingService::GSS_PMI) {
             $rateType = 'PMI';
@@ -319,17 +319,20 @@ class Client{
                                 ->where('country_id', $order->recipient->country_id)
                                 ->value('profit_percentage');
                 if($this->gssProfit) {                
-                $userDiscount =  setting('gss_profit', null, $order->user_id);
-                $userDiscount = ($userDiscount >= 0 && $userDiscount <= 100)?$userDiscount:0;
-                $totalProfit =   $this->gssProfit - ( $this->gssProfit / 100 * $userDiscount );
+                $userProfit =  setting('gss_profit', null, $order->user_id);
+
+                $userProfit = ($userProfit >= 0 && $userProfit <= 100)?$userProfit:0;
+
+                $totalProfit =  ($this->gssProfit/100)  * $userProfit + $this->gssProfit;
+
                 $profit = $data->calculatedPostage / 100 * ($totalProfit);
                 $price = round($data->calculatedPostage + $profit, 2);
                 \Log::info([
                     'service sub class'=> $service,
                     'user id'=> $order->user_id,
-                    'user discount'=> $userDiscount,
+                    'user profite'=> $userProfit,
                     'gss profit percentage '=> $this->gssProfit,
-                    'totalProfit =  profit minus discount'=> $totalProfit,
+                    'totalProfit =  profit plus profit'=> $totalProfit,
                     'calculatedPostage' => $data->calculatedPostage,
                     'calculatedPostage plus totalProfit'=> $price,
                 ]);
