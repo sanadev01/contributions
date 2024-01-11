@@ -76,7 +76,7 @@ class Client{
                         $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
             $response = json_decode($request);
             if($response->success) {
-                $order->update([
+                                $order->update([
                     'corrios_tracking_code' => $response->trackingNumber,
                     'api_response' => $request,
                     'cn23' => [
