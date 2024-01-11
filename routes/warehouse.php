@@ -101,7 +101,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
 
      Route::get('container/{container}/register', UnitRegisterController::class)->name('container.register');
     Route::get('container/{container}/cancel', UnitCancelContoller::class)->name('container.cancel');
-    Route::get('container/{container}/download', CN35DownloadController::class)->name('container.download');
+    // Route::get('container/{container}/download', CN35DownloadController::class)->name('container.download');
+    Route::get('container/{container}/download', function ($containerId) {
+        ini_set('memory_limit', '10000M');
+        $container = Container::findOrFail($containerId);
+        return app()->call(CN35DownloadController::class, compact('container'));
+    })->name('container.download');
     
     Route::resource('delivery_bill', DeliveryBillController::class);
     Route::get('delivery_bill/{delivery_bill}/register', DeliveryBillRegisterController::class)->name('delivery_bill.register');
