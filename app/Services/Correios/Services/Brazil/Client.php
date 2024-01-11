@@ -250,10 +250,10 @@ class Client
                         'json' =>  $json
                     ]
                 ); 
-                if ($response->getStatusCode() != 200) { 
+                if ($response->getStatusCode() === 200) { 
                     $responseBody = $response->getBody()->getContents();                    
-                    session()->flash('alert-success','Departure confirmation successfully '.$responseBody); 
-                    return json_decode('alert-success','Departure confirmation successfully '.$responseBody); 
+                    session()->flash('alert-success','Departure confirm successfully '.$responseBody); 
+                    return json_decode('alert-success','Departure confirm successfully '.$responseBody); 
                 }
             } else {
                 $response = $this->client->get($url, [
