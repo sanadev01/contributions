@@ -246,8 +246,9 @@ class Client
                     ]
                 ); 
                 if ($response->getStatusCode() === 200) {
-                    \Log::info('Departure confirm successfully'); 
+                    \Log::info('Departure confirm successfully');
                     \Log::info(explode(",",$request->unitCode));
+                    session()->flash('alert-success','Departure confirm successfully'); 
                     return json_decode('Departure confirm successfully'); 
                 }
             } else {

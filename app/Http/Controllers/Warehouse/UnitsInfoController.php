@@ -26,7 +26,7 @@ class UnitsInfoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request, UnitInfoRepository $repository)
-    {
+    { 
         $type = $request->type;
         $unitInfo = [];
         $rules = [
@@ -59,7 +59,8 @@ class UnitsInfoController extends Controller
             $rules['end_date']= 'required';
         }
         
-        
+         
+        session()->forget('alert-danger'); 
         if($type){
             $this->validate($request,$rules);
             $unitInfo = $repository->getUnitInfo($request);  
