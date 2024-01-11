@@ -19,13 +19,8 @@ class Client
     private $baseUri;
 
     public function __construct()
-    {
-        if (app()->isProduction()) {
-
-            $this->baseUri = 'https://api.correios.com.br';
-        } else {
-            $this->baseUri = 'https://apihom.correios.com.br';
-        }
+    { 
+        $this->baseUri = 'https://api.correios.com.br'; 
         $this->client = new GuzzleClient([
             'base_uri' => $this->baseUri
         ]);
