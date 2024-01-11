@@ -25,6 +25,7 @@
                                                         <option value="">@lang('address.Type')</option>
                                                         <option value="correios" {{ old('api') == 'correios' ? 'selected' : '' }}>Correios</option>
                                                         <option value="anjun" {{ old('api') == 'anjun' ? 'selected' : '' }}>Anjun</option>
+                                                        <option value="bcn" {{ old('api') == 'bcn' ? 'selected' : '' }}>Bcn</option>
                                                     </select>
                                                     </div>
                                                 </div>
@@ -43,6 +44,7 @@
                                                         <option value="units_return" {{ old('type') == 'units_return' ? 'selected' : '' }}>Available Units for Return</option>
                                                         <option value="confirm_departure" {{ old('type') == 'confirm_departure' ? 'selected' : '' }}>Confirmed Departure Units</option>
                                                         <option value="departure_info" {{ old('type') == 'departure_info' ? 'selected' : '' }}>Return Departure Information</option>
+                                                        <option value="departure_cn38" {{ old('type') == 'departure_cn38' ? 'selected' : '' }}> Departure Request CN38</option>
                                                     </select>
                                                     </div>
                                                 </div>
@@ -52,10 +54,11 @@
                                             <div class="offset-3 col-md-4">
                                                 <div class="row">
                                                     <div class="col-md-4 mt-2">
-                                                        <label id="start_date">Start Date</label>
+                                                        <label id="start_date">Departure Date</label>
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="date" name="start_date" class="form-control" value="{{old('start_date')}}">
+                                                        <input type="text" name="start_date" class="form-control" value="{{old('start_date','2024-01-09T22:55:00Z')}}" placeholder="2024-01-09T22:55:00Z">
+                                                        <div class="help-block float-left ">Please use format (2024-01-09T22:55:00Z)</div>
                                                         @error('start_date')
                                                             <div class="help-block text-danger"> {{ $message }} </div>
                                                         @enderror
@@ -67,10 +70,11 @@
                                             <div class="offset-3 col-md-4">
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <label id="end_date">End Date</label>
+                                                        <label id="end_date">Arrival Date</label>
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="date" name="end_date" class="form-control" value="{{old('end_date')}}">
+                                                        <input type="text" name="end_date" class="form-control" value="{{old('end_date','2024-01-10T09:49:00Z')}}" placeholder="2024-01-10T09:49:00Z">
+                                                        <div class="help-block float-left">Please use format (2024-01-10T09:49:00Z)</div>
                                                         @error('end_date')
                                                             <div class="help-block text-danger"> {{ $message }} </div>
                                                         @enderror
@@ -139,7 +143,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row mb-3">
+                                            <div class="row mb-3" id="destinationCountryCode">
                                                 <div class="offset-3 col-md-4">
                                                     <div class="row">
                                                         <div class="col-md-4">
@@ -205,11 +209,19 @@
     <script>
         $(document).ready(function(){
             $('#type').on('change', function(){
-                let type = $(this).val();
+                let type = $(this).val(); 
                 if(type == 'departure_info'){
+                    
                     $("#start_date").text("Departure Date");
                     $("#end_date").text("Arrival Date");
                     $('#div_inputs').removeClass('d-none');
+                    $('#destinationCountryCode').removeClass('d-none');
+                }
+                else if(type == 'departure_cn38'){
+                    $("#start_date").text("Departure Date");
+                    $("#end_date").text("Arrival Date");
+                    $('#div_inputs').removeClass('d-none');
+                    $('#destinationCountryCode').addClass('d-none');
                 }else if(type == 'units_return'){
                     $("#s_date").addClass("d-none");
                     $("#e_date").addClass("d-none");
