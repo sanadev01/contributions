@@ -34,10 +34,6 @@ class UnitsInfoController extends Controller
         ];
 
         if($request->start_date){
-            // $date = Carbon::createFromFormat('Y-m-d', $request->start_date);
-            // $daysToAdd = 8;
-            // $date = $date->addDays($daysToAdd);
-            
             if($request->type != 'units_return'){
                 $rules['start_date']= 'required';
                 $rules['end_date']= 'required';
