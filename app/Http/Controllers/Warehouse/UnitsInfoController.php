@@ -52,11 +52,18 @@ class UnitsInfoController extends Controller
             $rules['arrvAirportCode'] = 'required';
             $rules['destCountryCode'] = 'required';
         }
+        if($request->type == 'departure_cn38'){
+            $rules['unitCode']        = 'required';
+            $rules['flightNo']        = 'required';
+            $rules['airlineCode']     = 'required';
+            $rules['deprAirportCode'] = 'required';
+            $rules['arrvAirportCode'] = 'required';
+        }
         
         
         if($type){
             $this->validate($request,$rules);
-            $unitInfo = $repository->getUnitInfo($request);
+            $unitInfo = $repository->getUnitInfo($request);  
         }
         return view('admin.warehouse.unitInfo.create', compact('unitInfo', 'type'));
     }

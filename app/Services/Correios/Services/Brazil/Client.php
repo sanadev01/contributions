@@ -208,12 +208,6 @@ class Client
             if ($request->api == 'bcn') {
                 $token = (new GetServiceToken())->getBCNToken();
             }
-            \Log::info([
-                'url' => $this->baseUri,
-                'token' => $token,
-                'type' => $request->type,
-            ]);
-
             if ($request->type == 'departure_info') {
                 $response = $this->client->put($url, [
                     'headers' => [
@@ -233,29 +227,34 @@ class Client
                     ]
                 ]);
             } elseif ($request->type == 'departure_cn38') {
-                $response = $this->client->put(
-                    $url,
-                    [
-                        'headers' => [
-                            'Authorization' => $token
-                        ],
-                        'json' => [
-                            "unitCodeList" => [                                
-                            $request->unitCode
-                            ],
-                            "flightList" => [
-                                [
-                                "flightNumber" => $request->flightNo, 
+                $json = array(
+                    "cn38CodeList" =>explode(",",  $request->unitCode),
+                    "flightList" => array(
+                            array(
+                                "flightNumber" => $request->flightNo,
                                 "airlineCode" => $request->airlineCode,
                                 "departureDate" => $request->start_date . 'T22:55:00Z',
                                 "departureAirportCode" => $request->deprAirportCode,
                                 "arrivalDate" => $request->end_date . 'T09:49:00Z',
-                                "arrivalAirportCode" => $request->arrvAirportCode, 
-                                ]
-                            ]
-                        ]
+                                "arrivalAirportCode" => $request->arrvAirportCode
+                            ))
+                        );
+                $response = $this->client->put(
+                    $url,
+                    [
+                        'headers' => [
+                            'Authorization' => $token,
+                            
+                        'Content-Type' => 'application/json',
+                        ],
+                        'json' =>  $json
                     ]
-                );
+                ); 
+                if ($response->getStatusCode() != 200) { 
+                    $responseBody = $response->getBody()->getContents();                    
+                    session()->flash('alert-success','Departure confirmation successfully '.$responseBody); 
+                    return json_decode('alert-success','Departure confirmation successfully '.$responseBody); 
+                }
             } else {
                 $response = $this->client->get($url, [
                     'headers' =>  [
