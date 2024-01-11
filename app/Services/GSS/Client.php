@@ -76,7 +76,7 @@ class Client{
                         $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
             $response = json_decode($request);
             if($response->success) {
-                $order->update([
+                                $order->update([
                     'corrios_tracking_code' => $response->trackingNumber,
                     'api_response' => $request,
                     'cn23' => [
@@ -275,7 +275,7 @@ class Client{
         $service = $request->service;
         $order = Order::find($request->order_id);
         if($order->is_paid){ 
-        return $this->responseSuccessful($order->gross_total, 'Rate Calculation Successful');
+            return $this->responseSuccessful($order->gross_total, 'Rate Calculation Successful');
         }
         if($service == ShippingService::GSS_PMI) {
             $rateType = 'PMI';
@@ -317,20 +317,17 @@ class Client{
                                 ->where('country_id', $order->recipient->country_id)
                                 ->value('profit_percentage');
                 if($this->gssProfit) {                
-                $userProfit =  setting('gss_profit', null, $order->user_id);
-
-                $userProfit = ($userProfit >= 0 && $userProfit <= 100)?$userProfit:0;
-
-                $totalProfit =  ($this->gssProfit/100)  * $userProfit + $this->gssProfit;
-
+                $userDiscount =  setting('gss_profit', null, $order->user_id);
+                $userDiscount = ($userDiscount >= 0 && $userDiscount <= 100)?$userDiscount:0;
+                $totalProfit =   $this->gssProfit - ( $this->gssProfit / 100 * $userDiscount );
                 $profit = $data->calculatedPostage / 100 * ($totalProfit);
                 $price = round($data->calculatedPostage + $profit, 2);
                 \Log::info([
                     'service sub class'=> $service,
                     'user id'=> $order->user_id,
-                    'user profite'=> $userProfit,
+                    'user discount'=> $userDiscount,
                     'gss profit percentage '=> $this->gssProfit,
-                    'totalProfit =  profit plus profit'=> $totalProfit,
+                    'totalProfit =  profit minus discount'=> $totalProfit,
                     'calculatedPostage' => $data->calculatedPostage,
                     'calculatedPostage plus totalProfit'=> $price,
                 ]);
