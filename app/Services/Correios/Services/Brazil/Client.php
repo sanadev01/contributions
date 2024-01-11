@@ -245,7 +245,9 @@ class Client
                         'json' =>  $json
                     ]
                 ); 
-                if ($response->getStatusCode() === 200) {                     
+                if ($response->getStatusCode() === 200) {
+                    \Log::info('Departure confirm successfully'); 
+                    \Log::info(explode(",",$request->unitCode));
                     return json_decode('Departure confirm successfully'); 
                 }
             } else {
