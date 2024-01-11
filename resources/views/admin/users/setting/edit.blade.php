@@ -266,7 +266,7 @@
                                                     </span>
                                                 </span>
                                             </div>
-                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
                                             <input type="number" pattern="/^\d+(\.\d{2})?$/" name="gss_profit" step="0.01" min=0 max="100" class="form-control col-2" id="gss_profit" value="{{ setting('gss_profit', null, $user->id) }}">
                                         </div>    
                                     </div>
