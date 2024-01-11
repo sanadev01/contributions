@@ -34,13 +34,9 @@ class UnitsInfoController extends Controller
         ];
 
         if($request->start_date){
-            $date = Carbon::createFromFormat('Y-m-d', $request->start_date);
-            $daysToAdd = 8;
-            $date = $date->addDays($daysToAdd);
-            
             if($request->type != 'units_return'){
-                $rules['start_date']= 'required|date';
-                $rules['end_date']= 'required|date|after:start_date|before:'.$date->format('Y-m-d');
+                $rules['start_date']= 'required';
+                $rules['end_date']= 'required';
             }
         }
 
@@ -51,6 +47,7 @@ class UnitsInfoController extends Controller
             $rules['deprAirportCode'] = 'required';
             $rules['arrvAirportCode'] = 'required';
             $rules['destCountryCode'] = 'required';
+            
         }
         if($request->type == 'departure_cn38'){
             $rules['unitCode']        = 'required';
@@ -58,6 +55,8 @@ class UnitsInfoController extends Controller
             $rules['airlineCode']     = 'required';
             $rules['deprAirportCode'] = 'required';
             $rules['arrvAirportCode'] = 'required';
+            $rules['start_date']= 'required';
+            $rules['end_date']= 'required';
         }
         
         

@@ -27,26 +27,20 @@ class GetServiceToken
     protected $client;
 
     function __construct($order = null, $trackingNumber = null)
-    {
-        if(app()->isProduction()){ 
-                $this->baseUri = 'https://api.correios.com.br'; 
-                $this->username = 'hercofreight';
-                $this->password = '150495ca';
-                $this->numero = '0075745313';                
-                //anjun credentilas
-                $this->anjun_username = 'anjun2020';
-                $this->anjun_password = 'anjun';
-                $this->anjun_numero = '0077053850';                
-                //bcn credentials
-                $this->bcn_username = '37148594000192';
-                $this->bcn_password = '9wdkSYsvk2FkqNbojC1CLlUhN1RY3HqqmmADFBPa';
-                $this->bcn_numero = '0076204456'; 
-        }else{
-                $this->baseUri = 'https://apihom.correios.com.br';
-                $this->username =$this->anjun_username =  $this->bcn_username = 'testeint';
-                $this->password =  $this->anjun_password =  $this->bcn_password ='sUKDOgmLQaoXgTGDsNveWpnf1KhqEEjeAn2U3Ts4';
-                $this->numero =$this->anjun_numero =  $this->bcn_numero ='0076772055';
-        }
+    { 
+        $this->baseUri = 'https://api.correios.com.br'; 
+        $this->username = 'hercofreight';
+        $this->password = '150495ca';
+        $this->numero = '0075745313';                
+        //anjun credentilas
+        $this->anjun_username = 'anjun2020';
+        $this->anjun_password = 'anjun';
+        $this->anjun_numero = '0077053850';                
+        //bcn credentials
+        $this->bcn_username = '37148594000192';
+        $this->bcn_password = '9wdkSYsvk2FkqNbojC1CLlUhN1RY3HqqmmADFBPa';
+        $this->bcn_numero = '0076204456'; 
+         
         \Log::info([
             'url'=>$this->baseUri,
         ]);
