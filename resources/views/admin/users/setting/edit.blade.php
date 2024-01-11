@@ -204,7 +204,7 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">USPS<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">USPS Domestic<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="usps">
@@ -255,7 +255,7 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">GSS<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">USPS GSS Int'l<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="GSS">
