@@ -54,10 +54,11 @@
                                             <div class="offset-3 col-md-4">
                                                 <div class="row">
                                                     <div class="col-md-4 mt-2">
-                                                        <label id="start_date">Start Date</label>
+                                                        <label id="start_date">Departure Date</label>
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="date" name="start_date" class="form-control" value="{{old('start_date')}}">
+                                                        <input type="text" name="start_date" class="form-control" value="{{old('start_date','2024-01-09T22:55:00Z')}}" placeholder="2024-01-09T22:55:00Z">
+                                                        <div class="help-block float-left ">Please use format (2024-01-09T22:55:00Z)</div>
                                                         @error('start_date')
                                                             <div class="help-block text-danger"> {{ $message }} </div>
                                                         @enderror
@@ -69,10 +70,11 @@
                                             <div class="offset-3 col-md-4">
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <label id="end_date">End Date</label>
+                                                        <label id="end_date">Arrival Date</label>
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="date" name="end_date" class="form-control" value="{{old('end_date')}}">
+                                                        <input type="text" name="end_date" class="form-control" value="{{old('end_date','2024-01-10T09:49:00Z')}}" placeholder="2024-01-10T09:49:00Z">
+                                                        <div class="help-block float-left">Please use format (2024-01-10T09:49:00Z)</div>
                                                         @error('end_date')
                                                             <div class="help-block text-danger"> {{ $message }} </div>
                                                         @enderror

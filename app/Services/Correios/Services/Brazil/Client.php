@@ -219,9 +219,9 @@ class Client
                         ],
                         "flightNumber" => $request->flightNo,
                         "airlineCode" => $request->airlineCode,
-                        "departureDate" => $request->start_date . 'T00:00:00Z',
+                        "departureDate" => $request->start_date,
                         "departureAirportCode" => $request->deprAirportCode,
-                        "arrivalDate" => $request->end_date . 'T23:59:59Z',
+                        "arrivalDate" => $request->end_date,
                         "arrivalAirportCode" => $request->arrvAirportCode,
                         "destinationCountryCode" => $request->destCountryCode,
                     ]
@@ -233,9 +233,9 @@ class Client
                             array(
                                 "flightNumber" => $request->flightNo,
                                 "airlineCode" => $request->airlineCode,
-                                "departureDate" => $request->start_date . 'T22:55:00Z',
+                                "departureDate" => $request->start_date,
                                 "departureAirportCode" => $request->deprAirportCode,
-                                "arrivalDate" => $request->end_date . 'T09:49:00Z',
+                                "arrivalDate" => $request->end_date,
                                 "arrivalAirportCode" => $request->arrvAirportCode
                             ))
                         );
@@ -250,10 +250,8 @@ class Client
                         'json' =>  $json
                     ]
                 ); 
-                if ($response->getStatusCode() === 200) { 
-                    $responseBody = $response->getBody()->getContents();                    
-                    session()->flash('alert-success','Departure confirm successfully '.$responseBody); 
-                    return json_decode('alert-success','Departure confirm successfully '.$responseBody); 
+                if ($response->getStatusCode() === 200) {                     
+                    return json_decode('Departure confirm successfully'); 
                 }
             } else {
                 $response = $this->client->get($url, [
