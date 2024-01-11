@@ -51,6 +51,7 @@ class UnitsInfoController extends Controller
             $rules['deprAirportCode'] = 'required';
             $rules['arrvAirportCode'] = 'required';
             $rules['destCountryCode'] = 'required';
+            
         }
         if($request->type == 'departure_cn38'){
             $rules['unitCode']        = 'required';
@@ -58,6 +59,8 @@ class UnitsInfoController extends Controller
             $rules['airlineCode']     = 'required';
             $rules['deprAirportCode'] = 'required';
             $rules['arrvAirportCode'] = 'required';
+            $rules['start_date']= 'required';
+            $rules['end_date']= 'required';
         }
         
         
