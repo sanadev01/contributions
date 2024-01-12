@@ -513,6 +513,10 @@
     window.addEventListener('addItem', event => {
         console.log('adding item')
         initializeSelectpicker();
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        if (service) {
+            emitSHCodes(service)
+        }
     })
 </script>
 @endsection
