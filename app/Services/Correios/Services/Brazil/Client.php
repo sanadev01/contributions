@@ -234,8 +234,6 @@ class Client
                                 "arrivalAirportCode" => $request->arrvAirportCode
                             ))
                         );
-                \Log::info('CN38 JSON REQUEST');
-                \Log::info($json);
                 $response = $this->client->put(
                     $url,
                     [
