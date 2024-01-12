@@ -23,9 +23,9 @@
                                                     <div class="col-md-8">
                                                     <select class="form-control" name="api" id="api" required >
                                                         <option value="">@lang('address.Type')</option>
-                                                        <option value="correios" {{ old('api') == 'correios' ? 'selected' : '' }}>Correios</option>
-                                                        <option value="anjun" {{ old('api') == 'anjun' ? 'selected' : '' }}>Anjun</option>
-                                                        <option value="bcn" {{ old('api') == 'bcn' ? 'selected' : '' }}>Bcn</option>
+                                                        <option value="correios" {{ old('api',request('api')) == 'correios' ? 'selected' : '' }}>Correios</option>
+                                                        <option value="anjun" {{ old('api',request('api')) == 'anjun' ? 'selected' : '' }}>Anjun</option>
+                                                        <option value="bcn" {{ old('api',request('api')) == 'bcn' ? 'selected' : '' }}>Bcn</option>
                                                     </select>
                                                     </div>
                                                 </div>
@@ -40,11 +40,11 @@
                                                     <div class="col-md-8">
                                                     <select class="form-control" name="type" id="type" required placeholder="@lang('address.Type')">
                                                         <option value="">@lang('address.Type')</option>
-                                                        <option value="units_arrival" {{ old('type') == 'units_arrival' ? 'selected' : '' }}>Units Arrival Confirmation</option>
-                                                        <option value="units_return" {{ old('type') == 'units_return' ? 'selected' : '' }}>Available Units for Return</option>
-                                                        <option value="confirm_departure" {{ old('type') == 'confirm_departure' ? 'selected' : '' }}>Confirmed Departure Units</option>
-                                                        <option value="departure_info" {{ old('type') == 'departure_info' ? 'selected' : '' }}>Return Departure Information</option>
-                                                        <option value="departure_cn38" {{ old('type') == 'departure_cn38' ? 'selected' : '' }}> Departure Request CN38</option>
+                                                        <option value="units_arrival" {{ old('type',request('type')) == 'units_arrival' ? 'selected' : '' }}>Units Arrival Confirmation</option>
+                                                        <option value="units_return" {{ old('type',request('type')) == 'units_return' ? 'selected' : '' }}>Available Units for Return</option>
+                                                        <option value="confirm_departure" {{ old('type',request('type')) == 'confirm_departure' ? 'selected' : '' }}>Confirmed Departure Units</option>
+                                                        <option value="departure_info" {{ old('type',request('type')) == 'departure_info' ? 'selected' : '' }}>Return Departure Information</option>
+                                                        <option value="departure_cn38" {{ old('type',request('type')) == 'departure_cn38' ? 'selected' : '' }}> Departure Request CN38</option>
                                                     </select>
                                                     </div>
                                                 </div>
@@ -57,7 +57,7 @@
                                                         <label id="start_date">Departure Date</label>
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" name="start_date" class="form-control" value="{{old('start_date','2024-01-09T22:55:00Z')}}" placeholder="2024-01-09T22:55:00Z">
+                                                        <input type="text" name="start_date" class="form-control" value="{{old('start_date',request('start_date','2024-01-09T22:55:00Z'))}}" placeholder="2024-01-09T22:55:00Z">
                                                         <div class="help-block float-left ">Please use format (2024-01-09T22:55:00Z)</div>
                                                         @error('start_date')
                                                             <div class="help-block text-danger"> {{ $message }} </div>
@@ -73,7 +73,7 @@
                                                         <label id="end_date">Arrival Date</label>
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" name="end_date" class="form-control" value="{{old('end_date','2024-01-10T09:49:00Z')}}" placeholder="2024-01-10T09:49:00Z">
+                                                        <input type="text" name="end_date" class="form-control" value="{{old('end_date',request('end_date','2024-01-10T09:49:00Z'))}}" placeholder="2024-01-10T09:49:00Z">
                                                         <div class="help-block float-left">Please use format (2024-01-10T09:49:00Z)</div>
                                                         @error('end_date')
                                                             <div class="help-block text-danger"> {{ $message }} </div>
@@ -90,7 +90,7 @@
                                                             <label>Flight Number</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="flightNo" class="form-control" value="{{old('flightNo')}}">
+                                                            <input type="text" name="flightNo" class="form-control" value="{{old('flightNo',request('flightNo'))}}">
                                                             @error('flightNo')
                                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                                             @enderror
@@ -105,7 +105,7 @@
                                                             <label>Airline Code</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="airlineCode" class="form-control" value="{{old('airlineCode')}}">
+                                                            <input type="text" name="airlineCode" class="form-control" value="{{old('airlineCode',request('airlineCode'))}}">
                                                             @error('airlineCode')
                                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                                             @enderror
@@ -120,7 +120,7 @@
                                                             <label>Departure Airport Code</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="deprAirportCode" class="form-control" value="{{old('deprAirportCode')}}">
+                                                            <input type="text" name="deprAirportCode" class="form-control" value="{{old('deprAirportCode',request('deprAirportCode'))}}">
                                                             @error('deprAirportCode')
                                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                                             @enderror
@@ -135,7 +135,7 @@
                                                             <label>Arrival Airport Code</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="arrvAirportCode" class="form-control" value="{{old('arrvAirportCode')}}">
+                                                            <input type="text" name="arrvAirportCode" class="form-control" value="{{old('arrvAirportCode',request('arrvAirportCode'))}}">
                                                             @error('arrvAirportCode')
                                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                                             @enderror
@@ -150,7 +150,7 @@
                                                             <label>Destination Country Code</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" name="destCountryCode" class="form-control" value="{{old('destCountryCode')}}">
+                                                            <input type="text" name="destCountryCode" class="form-control" value="{{old('destCountryCode',request('destCountryCode'))}}">
                                                             @error('destCountryCode')
                                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                                             @enderror
@@ -165,7 +165,7 @@
                                                             <label>Unit Codes</label>
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <textarea type="textarea" name="unitCode" class="form-control" rows="3" value="{{old('unitCode')}}"></textarea>
+                                                            <textarea type="textarea" name="unitCode" class="form-control" rows="3"  >{{old('unitCode',request('unitCode'))}}</textarea>
                                                             @error('unitCode')
                                                                 <div class="help-block text-danger"> {{ $message }} </div>
                                                             @enderror
@@ -208,6 +208,7 @@
     <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
     <script>
         $(document).ready(function(){
+            
             $('#type').on('change', function(){
                 let type = $(this).val(); 
                 if(type == 'departure_info'){
