@@ -223,7 +223,7 @@ class Client
                 ]);
             } elseif ($request->type == 'departure_cn38') {
                 $json = array(
-                    "cn38CodeList" =>explode(",",  $request->unitCode),
+                    "cn38CodeList" => array_map('trim',explode(",",$request->unitCode)),
                     "flightList" => array(
                             array(
                                 "flightNumber" => $request->flightNo,
