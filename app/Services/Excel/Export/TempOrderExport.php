@@ -32,6 +32,10 @@ class TempOrderExport extends AbstractExportService
 
         $row = $this->currentRow;
         foreach ($this->orders as $order) {
+            $totalAmount = $order->items->reduce(function ($carry, $orderItem) {
+                return $carry + ($orderItem->quantity * $orderItem->value);
+            }, 0);
+
             $this->setCellValue('A'.$row, $order->getSenderFullName());
             $this->setCellValue('B'.$row, $order->recipient->getFullName()); 
             $this->setCellValue('D'.$row, (string)$this->getOrderTrackingCodes($order)); 
@@ -39,8 +43,9 @@ class TempOrderExport extends AbstractExportService
             $this->setCellValue('F'.$row, $order->shipping_value); 
             $this->setCellValue('G'.$row, $order->user->pobox_number); 
             $this->setCellValue('H'.$row, $order->user_declared_freight); 
+            $this->setCellValue('I'.$row, number_format($totalAmount,2));
             foreach($order->items as $item) { 
-                $this->setCellValue('I'.$row, $item->description);   
+                $this->setCellValue('J'.$row, $item->description);   
                 $this->setCellValue('C'.$row, $item->sh_code);   
                 $row++;
             } 
@@ -70,8 +75,12 @@ class TempOrderExport extends AbstractExportService
         $this->setCellValue('G1', 'PO Box Number');    
         $this->setColumnWidth('H', 20);
         $this->setCellValue('H1', 'ttl declared value');  
+        
         $this->setColumnWidth('I', 30);
-        $this->setCellValue('I1', 'Description of product');
+        $this->setCellValue('I1', 'Order Value');
+
+        $this->setColumnWidth('J', 30);
+        $this->setCellValue('J1', 'Description of product');
 
         $this->currentRow++;
     } 
