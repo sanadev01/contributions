@@ -92,9 +92,9 @@ class CreateRequest extends FormRequest
         }
 
         if(optional($request->parcel)['measurement_unit'] == 'kg/cm'){
-            $rules["parcel.weight"] = "required|numeric|gt:0|max:30";
+            $rules["parcel.weight"] = "required|numeric|gt:0|max:60";
         }else{
-            $rules["parcel.weight"] = "required|numeric|gt:0|max:66.15";
+            $rules["parcel.weight"] = "required|numeric|gt:0|max:132.28";
         }
         if (is_numeric( optional($request->recipient)['country_id'])){
             $rules["recipient.country_id"] = "required|exists:countries,id";
