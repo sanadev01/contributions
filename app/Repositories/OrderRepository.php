@@ -654,7 +654,8 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::GSS_FCM)
             || $shippingServices->contains('service_sub_class', ShippingService::GSS_EMS)
             || $shippingServices->contains('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)
-            || $shippingServices->contains('service_sub_class', ShippingService::GDE_FIRST_CLASS))
+            || $shippingServices->contains('service_sub_class', ShippingService::GDE_FIRST_CLASS)
+            || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {
