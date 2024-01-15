@@ -38,6 +38,7 @@ class ExportShCodes extends AbstractExportService
             $this->setCellValue('B'.$row, optional($description)[0]);
             $this->setCellValue('C'.$row, optional($description)[1]);
             $this->setCellValue('D'.$row, optional($description)[2]);
+            $this->setCellValue('E'.$row, $shCode->type);
             $row++;
         }
 
@@ -57,9 +58,12 @@ class ExportShCodes extends AbstractExportService
 
         $this->setColumnWidth('D', 20);
         $this->setCellValue('D1', 'Spanish');
+        
+        $this->setColumnWidth('E', 20);
+        $this->setCellValue('E1', 'Type');
 
-        $this->setBackgroundColor('A1:D1', '2b5cab');
-        $this->setColor('A1:D1', 'FFFFFF');
+        $this->setBackgroundColor('A1:E1', '2b5cab');
+        $this->setColor('A1:E1', 'FFFFFF');
 
         $this->currentRow++;
     }
