@@ -48,6 +48,14 @@ class ContainerPackageRepository extends AbstractRepository{
         if ($container->hasAnjunChinaService()) {
             return $this->toAnjunChinaContainer($container, $barcode);
         }
+        if ($container->hasBCNService()) {
+            return $this->toBCNContainer($container, $barcode);
+        }
+        $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
+
+        if(!$this->isValidContainerOrder($container,$order)) {
+             return $this->validationError404($barcode, 'Order Not Found. Please Check Packet Service.');
+        }
         $containerOrder = $container->orders->first();
         if ($containerOrder) {
             $client = new Client();
@@ -148,7 +156,27 @@ class ContainerPackageRepository extends AbstractRepository{
 
                 return $this->validationError404($barcode, 'Order weight is less then 3 Kg, Please Check Order Weight');
             }
-        }
+
+            $firstOrderGroupRange = $container->getOrderGroupRange($containerOrder);
+
+            // If the first order's zipcode is not in the specified group ranges, return an error
+            if ($firstOrderGroupRange === null) {
+                return $this->validationError404($barcode, 'Invalid zipcode range for container');
+            }
+
+            // Check if the current order's zipcode falls within the same group range
+            $currentOrderGroupRange = $container->getOrderGroupRange($order);
+            if ($currentOrderGroupRange !== $firstOrderGroupRange) {
+                $currentOrderZipcode = $order->recipient->zipcode;
+                $validRangeGroup = "Group {$firstOrderGroupRange['group']}";
+                $validRangeStart = $firstOrderGroupRange['start'];
+                $validRangeEnd = $firstOrderGroupRange['end'];
+            
+                $validRange = "Valid range: $validRangeGroup (Start: $validRangeStart, End: $validRangeEnd)";
+                
+                return $this->validationError404($barcode, "Invalid zipcode ($currentOrderZipcode) range for container. $validRange");
+            }
+        }        
 
         if (!$order->containers->isEmpty()) {
             return $this->validationError404($barcode, 'Order Already in Container.');

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,14 +12,16 @@
             margin: 0px;
             padding: 0px;
         }
-        *{
+
+        * {
             padding: 0px !important;
             margin: 0px !important;
             font-family: Arial, Helvetica, sans-serif;
             text-align: center;
         }
-        .page{
-            box-sizing:border-box !important;
+
+        .page {
+            box-sizing: border-box !important;
             text-align: center;
             vertical-align: text-top;
             page-break-inside: avoid;
@@ -26,30 +29,36 @@
             page-break-after: avoid;
             position: absolute;
             top: 0;
-            left:0;
+            left: 0;
         }
-        table{
+
+        table {
             /* margin: 0.05cm !important; */
             border-collapse: collapse;
             width: 22cm;
             height: 11cm;
         }
-        .column1{
+
+        .column1 {
             width: 5cm;
         }
-        .column{
+
+        .column {
             width: 49%;
             height: 100%;
             display: inline-block;
         }
-        .column.origin-column{
+
+        .column.origin-column {
             border-right: 1px solid black;
         }
-        small{
+
+        small {
             font-size: 10px;
         }
     </style>
 </head>
+
 <body>
     <div class="page">
         <table border="2">
@@ -57,11 +66,11 @@
                 <td class="column1" style="text-align: center;font-size:28px;font-weight:bold;">{!! $companyName !!}</td>
                 <td rowspan="2" colspan="2">
                     <img class="corrioes-lable" src="{{\public_path('images/correios-1.png')}}" style="display:block;width:30mm;height:30mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:0px;left:220px;" alt="">
-                    @if (in_array($service ,[1,9,18,21]))
-                        <img class="corrioes-lable" src="{{\public_path('images/express-package.png')}}" style="display:block;width:20mm;height:20mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:12px;left:370px;" alt="">
+                    @if ($service == 1 || $service == 9 || $service == 18|| $service == 21)
+                    <img class="corrioes-lable" src="{{\public_path('images/express-package.png')}}" style="display:block;width:20mm;height:20mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:12px;left:370px;" alt="">
                     @else
-                        <div style="display:block;width:20mm;height:20mm;border-radius: 1cm;background:black;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:15px;left:370px;"></div>
-                    @endif    
+                    <div style="display:block;width:20mm;height:20mm;border-radius: 1cm;background:black;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:15px;left:370px;"></div>
+                    @endif
                     <div style="display:block;width:400px;font-weight:bold;font-size:35px;text-align:center;vertical-align:middle;position:absolute;top:30px;left:440px;">
                         {{ $packetType }}
                     </div>
@@ -70,8 +79,8 @@
             <tr>
                 <td>
                     <div style="height: 1.6cm !important;text-align: center;display:block;">
-                        Nº Do Despacho <br/>
-                        <small><i>(Dispatch No.)</i></small> <br/>
+                        Nº Do Despacho <br />
+                        <small><i>(Dispatch No.)</i></small> <br />
                         <strong>{{ $dispatchNumber }}</strong>
                     </div>
                 </td>
@@ -79,18 +88,23 @@
             <tr>
                 <td style="position: relative">
                     <div style="height: 1.5cm !important;text-align: center;display:block;position: absolute;top:0;margin:auto;width:100%;">
-                        Nº Serial da Mala <br/>
-                        <small><i>(Receptacle Serial No.)</i></small> <br/>
+                        Nº Serial da Mala <br />
+                        <small><i>(Receptacle Serial No.)</i></small> <br />
                         <strong>{{ $serialNumber }}</strong>
                     </div>
                 </td>
                 <td colspan="2" style="text-align: center;font-size:12px;">
                     {!! $officeAddress !!}
 
-                    <div style="position: absolute;top:105px;left:700px;font-size:25px;font-weight:bold;">
+                    <div style="position: absolute;top:108px;left:700px;font-size:25px;font-weight:bold;">
                         CJA01
+                        <div style="background-color: black; width: 115px; float: right;">
+                            <p style="font-size: 30px; font-weight: bold; color: white;">
+                                {{$containerGroup}}
+                            </p>
+                        </div>
                     </div>
-                    @if ($OrderWeight > 3)         
+                    {{-- @if ($OrderWeight > 3)         
                         <div style="position: relative;left:215px !important; margin-top:-40px !important;">
                             <p style="margin-left:70px !important; font-size:20px;font-weight:bold;">G</p>
                             <div style="width: 15px; height: 15px; border: 3px solid rgb(0, 0, 0);margin-left:316.5px !important;margin-top:-40px !important;"></div>
@@ -105,7 +119,8 @@
                             <div style="width: 9px; height: 9px; border: 3px solid rgb(0, 0, 0);margin-left:308px !important;margin-top:-15px !important;"></div>
                             <p style="margin-left:140px !important; font-size:9px;">Up to 3 kg</p>
                         </div>
-                    @endif
+                    @endif --}}
+                    
                 </td>
             </tr>
             <tr>
@@ -176,4 +191,5 @@
         </table>
     </div>
 </body>
+
 </html>
