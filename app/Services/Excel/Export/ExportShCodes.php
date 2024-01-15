@@ -60,7 +60,7 @@ class ExportShCodes extends AbstractExportService
         $this->setCellValue('D1', 'Spanish');
         
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Spanish');
+        $this->setCellValue('E1', 'Type');
 
         $this->setBackgroundColor('A1:E1', '2b5cab');
         $this->setColor('A1:E1', 'FFFFFF');
