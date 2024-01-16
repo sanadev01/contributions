@@ -25,7 +25,7 @@
                 <td>{{$loop->iteration}}</td>
                 <td>
                     {{$item->sh_code}}
-                    <?php $sh_code = App\Models\SHCode::where('code', $item->sh_code)->first() ?>
+                    <?php $sh_code = App\Models\ShCode::where('code', $item->sh_code)->first() ?>
                     @if(app()->getLocale() == 'en'){{ optional(explode('-------',$sh_code->description))[0] }}@endif
                     @if(app()->getLocale() == 'pt'){{ optional(explode('-------',$sh_code->description))[1] }}@endif
                     @if(app()->getLocale() == 'es'){{ optional(explode('-------',$sh_code->description))[2] }}@endif
