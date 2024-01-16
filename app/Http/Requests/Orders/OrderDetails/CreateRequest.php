@@ -1,9 +1,6 @@
 <?php
 
 namespace App\Http\Requests\Orders\OrderDetails;
-
-use App\Rules\NcmValidator;
-use App\Models\ShippingService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateRequest extends FormRequest
@@ -27,18 +24,8 @@ class CreateRequest extends FormRequest
     {
          $rules = [
             'customer_reference' => ($this->order->recipient->country_id == \App\Models\Order::CHILE) ? 'required' : 'nullable',
-            'shipping_service_id' => 'required|exists:shipping_services,id',
-            'items' => 'required|array|min:1',
-            'tax_modality' => 'required|in:ddu,ddp',
-            'items.*.sh_code' => ($this->order->products->isNotEmpty()) ? 'sometimes' : [
-                'required',
-                'numeric',
-                new NcmValidator()
-            ], 
-            'items.*.description' => 'required|max:500', 
-            'items.*.quantity' => 'required|gt:0', 
-            'items.*.value' => 'required|gt:0', 
-            'items.*.dangrous_item' => 'required', 
+            'shipping_service_id' => 'required|exists:shipping_services,id', 
+            'tax_modality' => 'required|in:ddu,ddp', 
         ];
         
         return $rules;
@@ -47,8 +34,7 @@ class CreateRequest extends FormRequest
 
     public function messages()
     {
-        return [
-            'items.*.sh_code.*' => __('validation.ncm.invalid'),
+        return [ 
         ];
     }
 
