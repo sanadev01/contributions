@@ -22,8 +22,6 @@ class OrderItem extends Component
     public $contains_battery;
     public $contains_perfume;
     public $contains_flammable_liquid;
-    public $item;
-    public $keyId;
     public $order;
     public $correios;
     public $geps;

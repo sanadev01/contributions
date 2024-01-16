@@ -105,7 +105,6 @@
 
     <div class="row justify-content-end">
         <div class="col-4 text-right">
-            <!-- wire:click="$emit('removeItem',{{$keyId}})" -->
             @if($editItemId)
             <button wire:click="submitForm" class="btn btn-success" type="submit">@lang('orders.actions.update-item')</button>
             @else
