@@ -374,22 +374,23 @@ class OrderRepository
 
         try {
             
-            if ($order->products->isEmpty()) {
+            // if ($order->products->isEmpty()) {
                 
-                $order->items()->delete();
+            //     $order->items()->delete();
                 
-                foreach ($request->get('items',[]) as $item) {
-                    $order->items()->create([
-                        'sh_code' => substr(optional($item)['sh_code'], 0, 6),
-                        'description' => optional($item)['description'],
-                        'quantity' => optional($item)['quantity'],
-                        'value' => optional($item)['value'],
-                        'contains_battery' => optional($item)['dangrous_item'] == 'contains_battery' ? true: false,
-                        'contains_perfume' => optional($item)['dangrous_item'] == 'contains_perfume' ? true: false,
-                        'contains_flammable_liquid' => optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? true: false,
-                    ]);
-                }
-            }
+            //     foreach ($request->get('items',[]) as $item) {
+                    
+            //         $order->items()->create([
+            //             'sh_code' => optional($item)['sh_code'],
+            //             'description' => optional($item)['description'],
+            //             'quantity' => optional($item)['quantity'],
+            //             'value' => optional($item)['value'],
+            //             'contains_battery' => optional($item)['dangrous_item'] == 'contains_battery' ? true: false,
+            //             'contains_perfume' => optional($item)['dangrous_item'] == 'contains_perfume' ? true: false,
+            //             'contains_flammable_liquid' => optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? true: false,
+            //         ]);
+            //     }
+            // }
 
             $shippingService = ShippingService::find($request->shipping_service_id);
 
