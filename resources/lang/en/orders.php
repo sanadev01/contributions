@@ -80,6 +80,7 @@ return [
             'Unit Value' => 'Unit Value',
             'Total' => 'Total',
             'Is Contains Dangrous Goods' => 'Is Contains restricted goods',
+            'restricted goods' => 'Restricted goods',
             'Remove' => 'Remove',
             'Contains Battery' => 'Contains Battery',
             'Contains Perfume' => 'Contains perfume/aerosol/nail polish',

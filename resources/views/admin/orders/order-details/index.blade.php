@@ -176,7 +176,7 @@
             </li>
             <li aria-hidden="false" aria-disabled="false">
                 <button type="button" class="btn btn-success" id="rateBtn" onClick="checkService()">Get Rate</button>
-                <button class="btn btn-primary" @if($order->items->isEmpty()) title="Please add atleast one item !"  disabled @endif >@lang('orders.order-details.Place Order')</button>
+                <button class="btn btn-primary" id="submitButton" @if($order->items->isEmpty()) title="Please add atleast one item !"  disabled @endif >@lang('orders.order-details.Place Order')</button>
             </li>
         </ul>
     </div>
@@ -523,8 +523,15 @@
         }, 3000); 
     })
     
-    window.addEventListener('reloadPage', event => {
-        location.reload();
+    window.addEventListener('reloadPage', event => { 
+      var button = document.getElementById('submitButton');
+
+        if (button.hasAttribute('disabled')) {
+            button.removeAttribute('disabled');
+        } else {
+            button.setAttribute('disabled', 'disabled');
+        }
     })
+
 </script>
 @endsection
