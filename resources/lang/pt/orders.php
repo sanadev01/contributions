@@ -71,6 +71,7 @@ return [
             'Unit Value' => 'Valor unitário',
             'Total' => 'total',
             'Is Contains Dangrous Goods' => 'Contém material restrito',
+            'restricted goods' => 'restricted goods',
             'Remove' => 'Remover',
             'Contains Battery' => 'Contém Bateria',
             'Contains Perfume' => 'Contém perfume/aerosol/nail polish',
