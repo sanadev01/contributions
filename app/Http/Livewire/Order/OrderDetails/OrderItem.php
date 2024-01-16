@@ -82,11 +82,13 @@ class OrderItem extends Component
         $this->contains_flammable_liquid = null;
         $this->contains_perfume = null;
         $this->contains_battery = null;
+        if(count($this->order->items)==0)
+        {
+            $this->dispatchBrowserEvent('reloadPage');
+        }
     }
-    public function mount($keyId = 0, $item = [], $order)
-    {
-        $this->item = $item;
-        $this->keyId = $keyId;
+    public function mount($order)
+    { 
         $this->order = $order;
         $this->geps = [
             ShippingService::GePS,
@@ -122,16 +124,19 @@ class OrderItem extends Component
         // Perform validation
         $this->validate($rules, []);
         if ($this->editItemId) {
-            (ModelsOrderItem::find($this->editItemId))->update([
-                'order_id' => $this->order->id,
-                'sh_code' => $this->sh_code,
-                'description' => $this->description,
-                'quantity' => $this->quantity,
-                'value' => $this->value,  
-                'contains_battery' => $this->dangrous_item == 'contains_battery' ? true : false,
-                'contains_perfume' => $this->dangrous_item == 'contains_perfume' ? true : false,
-                'contains_flammable_liquid' => $this->dangrous_item == 'contains_flammable_liquid' ? true : false,
-            ]);
+            ModelsOrderItem::updateOrCreate(
+                [
+                    'id'=>$this->editItemId,
+                    'order_id' => $this->order->id
+                ],[
+                    'sh_code' => $this->sh_code,
+                    'description' => $this->description,
+                    'quantity' => $this->quantity,
+                    'value' => $this->value,  
+                    'contains_battery' => $this->dangrous_item == 'contains_battery' ? true : false,
+                    'contains_perfume' => $this->dangrous_item == 'contains_perfume' ? true : false,
+                    'contains_flammable_liquid' => $this->dangrous_item == 'contains_flammable_liquid' ? true : false,
+                ]);
             session()->flash('success', 'Item Updated Successfully.');
         } else {
             ModelsOrderItem::create([
@@ -147,7 +152,6 @@ class OrderItem extends Component
             session()->flash('success', 'Item Added Successfully.');
         }
         $this->resetFormFields();
-
         $this->emitUp('itemAdded');
         $this->dispatchBrowserEvent('emitSHCodesLazy');
 
@@ -160,7 +164,6 @@ class OrderItem extends Component
                 return ShCode::where('type', $this->type == 'default' ? null : $this->type)->orderBy('description', 'ASC')->get();
             }),
             'totalValue' => $this->getTotalValue(),
-
         ]);
     }
     // Computed property

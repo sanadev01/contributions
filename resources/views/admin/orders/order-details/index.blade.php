@@ -176,7 +176,7 @@
             </li>
             <li aria-hidden="false" aria-disabled="false">
                 <button type="button" class="btn btn-success" id="rateBtn" onClick="checkService()">Get Rate</button>
-                <button class="btn btn-primary" @if($order->items->isEmpty()) disabled @endif >@lang('orders.order-details.Place Order')</button>
+                <button class="btn btn-primary" @if($order->items->isEmpty()) title="Please add atleast one item !"  disabled @endif >@lang('orders.order-details.Place Order')</button>
             </li>
         </ul>
     </div>
@@ -516,12 +516,15 @@
             $('#loading').fadeOut();
         }, 2500);
     }
-    window.addEventListener('itemAdded', event => {  
+    window.addEventListener('itemAdded', event => {
         setTimeout(() => {
             emitShCodePicker()
             initializeSelectpicker()
-        }, 3000);
-
+        }, 3000); 
+    })
+    
+    window.addEventListener('reloadPage', event => {
+        location.reload();
     })
 </script>
 @endsection

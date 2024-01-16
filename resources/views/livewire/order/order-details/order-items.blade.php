@@ -55,7 +55,7 @@
 
     </table>
     @endif
-    <livewire:order.order-details.order-item :key-id="$key" :item="$item" :key="$key" :order="$order" />
+    <livewire:order.order-details.order-item :order="$order" />
     @include('layouts.livewire.loading')
 </div>
 @push('lvjs-stack')

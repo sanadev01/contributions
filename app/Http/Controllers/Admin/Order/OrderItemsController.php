@@ -54,6 +54,10 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order)
     {
+        if($order->items->isEmpty()){
+            session()->flash('alert-danger', 'Please add atleast one item!');
+            return redirect()->route('admin.orders.order-details.index',[$order->id]);
+        }
         $shippingService = ShippingService::find($request->shipping_service_id);
 
         $this->authorize('editItems',$order);

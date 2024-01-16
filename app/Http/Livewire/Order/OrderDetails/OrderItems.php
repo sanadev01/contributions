@@ -8,41 +8,49 @@ use Livewire\Component;
 
 class OrderItems extends Component
 {
-    public $orderId;  
+    public $orderId;
     public $order;
-    public $editItemId=null; 
+    public $editItemId = null;
     protected $listeners = ['itemAdded'];
 
-     
+
 
     public function itemAdded()
-    { 
+    {
         $this->order->refresh();
     }
     public function mount($orderId)
     {
         $this->orderId = $orderId;
-        $this->order = Order::find($orderId); 
+        $this->order = Order::find($orderId);
+        
+ 
     }
 
     public function render()
     {
         return view('livewire.order.order-details.order-items');
     }
- 
 
-    
+
+
     public function deleteItem($id)
-    { 
-        OrderItem::where('order_id',$this->order->id)->where('id',$id)->delete();
+    {
+        OrderItem::where('order_id', $this->order->id)->where('id', $id)->delete();
         $this->order->refresh();
-        $this->dispatchBrowserEvent('emitSHCodes');
+        if(count($this->order->items)==0)
+        {
+            $this->dispatchBrowserEvent('reloadPage');
+        }
+        else{
+            $this->dispatchBrowserEvent('emitSHCodes');
+        }
     }
 
-    
+
     public function editItem($id)
-    {         
-        $this->emit('editItem', $id);        
+    {
+        $this->emit('editItem', $id);
         $this->dispatchBrowserEvent('emitSHCodes');
     }
 }
