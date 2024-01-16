@@ -107,9 +107,9 @@
         <div class="col-4 text-right">
             <!-- wire:click="$emit('removeItem',{{$keyId}})" -->
             @if($editItemId)
-            <button wire:click="submitForm" class="btn btn-success" type="submit">Update Item</button>
+            <button wire:click="submitForm" class="btn btn-success" type="submit">@lang('orders.actions.update-item')</button>
             @else
-            <button wire:click="submitForm" class="btn btn-primary" type="submit">Add Item</button>
+            <button wire:click="submitForm" class="btn btn-primary" type="submit">@lang('orders.actions.add-item')</button>
             @endif
         </div>
     </div>

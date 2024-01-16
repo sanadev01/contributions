@@ -46,8 +46,8 @@
                     @endif
                 </td>
                 <td>
-                    <button class="btn btn-danger" type="button" role="button" wire:click="deleteItem({{ $item->id }})">@lang('orders.order-details.order-item.Remove')</button>
-                    <button class="btn btn-primary" type="button" role="button" wire:click="editItem({{ $item->id }})"> Edit </button>
+                    <button class="btn btn-danger" type="button" role="button" wire:click="deleteItem({{ $item->id }})"> @lang('orders.actions.remove-item')</button>
+                    <button class="btn btn-primary" type="button" role="button" wire:click="editItem({{ $item->id }})"> @lang('orders.actions.edit-item') </button>
                 </td>
             </tr>
             @endforeach
