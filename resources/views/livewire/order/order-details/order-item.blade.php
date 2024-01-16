@@ -11,7 +11,6 @@
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Harmonized Code')<span class="text-danger"></span></label>
                 <input type="hidden" wire:model="editItemId">
-                {{$type}}
                 <select class="form-control sh_code" wire:model="sh_code" onclick="initializeSelectpicker()">
                     <option value="">Select HS code / Selecione o código HS</option>
                     @foreach ($codes as $code)
