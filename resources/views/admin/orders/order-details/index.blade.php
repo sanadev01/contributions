@@ -161,7 +161,6 @@
             <div class="row col-12" id="itemLimit">
                 <h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5>
             </div>
-            <livewire:order.order-details.order-items :order-id="$order->id" />
             <hr>
             <div class="row mt-1">
                 <div class="form-group col-12">
@@ -177,11 +176,12 @@
             </li>
             <li aria-hidden="false" aria-disabled="false">
                 <button type="button" class="btn btn-success" id="rateBtn" onClick="checkService()">Get Rate</button>
-                <button class="btn btn-primary">@lang('orders.order-details.Place Order')</button>
+                <button class="btn btn-primary" @if($order->items->isEmpty()) disabled @endif >@lang('orders.order-details.Place Order')</button>
             </li>
         </ul>
     </div>
 </form>
+<livewire:order.order-details.order-items :order-id="$order->id" />
 <!--USPS PRIORITY INTERNATIONAL RATE ALERT MODAL-->
 <div class="modal fade" id="uspsModal" role="dialog">
     <div class="modal-dialog modal-md">
@@ -236,9 +236,7 @@
             parseFloat($('option:selected', this).attr("data-cost"))
         );
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        emitSHCodes(service)
-
-
+        emitSHCodes()
         if (service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
@@ -481,26 +479,34 @@
     });
     //handle shcode
     $('#shipping_service_id').ready(function() {
-        const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        if (service) {
-            emitSHCodes(service)
-        }
+            emitSHCodes()
     })
 
     function emitSHCodes(serviceCode) {
-        $('.sh_code').selectpicker('destroy');
-        window.livewire.emit('reloadSHCodes', {
-            service: serviceCode
-        });
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+            if (service) {
+                $('.sh_code').selectpicker('destroy');
+                window.livewire.emit('loadSHCodes', {
+                    service: service
+                });
+            }
     }
 
 
-    window.addEventListener('shCodeReloaded', event => {
+    window.addEventListener('initializeSelectPicker', event => {
         initializeSelectpicker();
     })
-
+    window.addEventListener('emitSHCodes', event => {
+        emitSHCodes();
+    })
+    window.addEventListener('emitSHCodesLazy', event => {
+        setTimeout(() => {
+            emitSHCodes();
+        }, 1500);
+    })
+ 
     function initializeSelectpicker() {
-        $('#loading').fadeIn();
+        $('#loading').fadeIn(); 
         $('.sh_code').selectpicker('destroy');
         setTimeout(() => {
             $('.sh_code').selectpicker({
@@ -510,13 +516,12 @@
             $('#loading').fadeOut();
         }, 2500);
     }
-    window.addEventListener('addItem', event => {
-        console.log('adding item')
-        initializeSelectpicker();
-        const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        if (service) {
-            emitSHCodes(service)
-        }
+    window.addEventListener('itemAdded', event => {  
+        setTimeout(() => {
+            emitShCodePicker()
+            initializeSelectpicker()
+        }, 3000);
+
     })
 </script>
 @endsection
