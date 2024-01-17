@@ -35,10 +35,9 @@
                                     $filteredServices = $shipping_services->reject(function ($service) use ($servicesToRemove) {
                                         return in_array($service->name, $servicesToRemove);
                                     });
-                                    $sortedServices = $filteredServices->sortBy('name');
                                 @endphp
                     
-                                @foreach ($sortedServices as $service)
+                                @foreach ($filteredServices  as $service)
                                     <a class="dropdown-item service-item" href="{{ route('admin.rates.rates.exports',['package' => 10,'service' => $service->id]) }}">
                                         <i class="fa fa-arrow-down"></i> {{ $service->name }} Download Sample
                                     </a>
