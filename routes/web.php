@@ -294,8 +294,9 @@ Route::get('test-label/{id?}',function($id = null){
     return $labelPrinter->download();
 });
 
-Route::get('permission',function($id = null){
-    Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
+Route::get('clear-cache',function($id = null){
+    Artisan::call('config:clear');
+    Artisan::call('config:cache');
     return Artisan::output();
 });
 
