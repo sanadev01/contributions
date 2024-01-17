@@ -24,12 +24,15 @@
                         <button type="button" class="btn btn-success pull-right mt-3 mr-1 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Download Samples
                         </button>
-                        <div class="dropdown-menu overlap-menu" aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-menu overlap-menu" aria-labelledby="dropdownMenuLink" style="max-height: 300px; overflow-y: auto; width: 350px;">
+                            <div class="input-group mb-3" style="position: sticky; top: 0; z-index: 1; background-color: white;">
+                                <input type="text" class="form-control" placeholder="Search..." oninput="filterServices(this.value)" aria-label="Search" aria-describedby="basic-addon2">
+                            </div>
                             @isset($shipping_services)
                                 @foreach ($shipping_services as $service)
-                                <a class="dropdown-item" href="{{ route('admin.rates.rates.exports',['package' => 10,'service' => $service->id]) }}">
-                                    <i class="fa fa-arrow-down"></i> {{ $service->name }} Download Sample
-                                </a>
+                                    <a class="dropdown-item service-item" href="{{ route('admin.rates.rates.exports',['package' => 10,'service' => $service->id]) }}">
+                                        <i class="fa fa-arrow-down"></i> {{ $service->name }} Download Sample
+                                    </a>
                                 @endforeach
                             @endisset
                         </div>
@@ -101,4 +104,16 @@
             </div>
         </div>
     </div>
+    <script>
+        function filterServices(searchTerm) {
+            searchTerm = searchTerm.toLowerCase();
+            var serviceItems = document.getElementsByClassName('service-item');
+            for (var i = 0; i < serviceItems.length; i++) {
+                var serviceName = serviceItems[i].innerText.toLowerCase();
+                var isVisible = serviceName.includes(searchTerm);
+    
+                serviceItems[i].style.display = isVisible ? 'block' : 'none';
+            }
+        }
+    </script>
 @endsection

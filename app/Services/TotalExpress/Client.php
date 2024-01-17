@@ -66,10 +66,9 @@ class Client
         $apiResponse = json_decode($order->api_response); 
         $response = $apiResponse->orderResponse; 
         $id = $response->data->id;
-        $getLabel = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/orders/$id/cn23-merged");
+        $getLabel = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/orders/$id/cn23-merged");
         $getLabelResponse = json_decode($getLabel);
-        Log::info('TotalExpress::labelUrlUpdate  getLabel for update');
-        Log::info([$getLabel]);
+
         if ($getLabelResponse->status=="SUCCESS"){
             $mergedResponse = [
             'orderResponse' => $response,

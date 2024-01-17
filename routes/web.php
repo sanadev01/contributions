@@ -283,7 +283,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 Route::get('test-label/{id?}',function($id = null){
 
     $order = Order::where('corrios_tracking_code', $id)->get();
-    dd($order);
+    // dd($order);
     
     $labelPrinter = new CN23LabelMaker();
     $order = Order::find($id);
