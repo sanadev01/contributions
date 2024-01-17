@@ -299,7 +299,7 @@ Route::get('clear-cache',function($id = null){
     
     $total = Cache::remember('total', 120, function () {
         // Logic to calculate and return the total
-        return 5;
+        return 'total is cleared';
     });
     dump(['total cache'=>$total]);
     Artisan::call('cache:clear');
