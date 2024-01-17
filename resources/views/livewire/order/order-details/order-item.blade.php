@@ -9,7 +9,6 @@
 
         <div class="form-group col-12 col-sm-6 col-md-6">
             <div class="controls">
-                {{$this->sh_code}}
                 <label>@lang('orders.order-details.order-item.Harmonized Code')<span class="text-danger"></span></label>
                 <input type="hidden" wire:model="editItemId">
                 <select class="form-control sh_code" wire:model="sh_code" onclick="initializeSelectpicker()">
