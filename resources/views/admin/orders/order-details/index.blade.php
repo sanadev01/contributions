@@ -176,7 +176,7 @@
             </li>
             <li aria-hidden="false" aria-disabled="false">
                 <button type="button" class="btn btn-success" id="rateBtn" onClick="checkService()">Get Rate</button>
-                <button class="btn btn-primary" @if($order->items->isEmpty()) title="Please add atleast one item !"  disabled @endif >@lang('orders.order-details.Place Order')</button>
+                <button class="btn btn-primary" id="submitButton" @if($order->items->isEmpty()) title="Please add atleast one item !" disabled @endif >@lang('orders.order-details.Place Order')</button>
             </li>
         </ul>
     </div>
@@ -479,17 +479,17 @@
     });
     //handle shcode
     $('#shipping_service_id').ready(function() {
-            emitSHCodes()
+        emitSHCodes()
     })
 
     function emitSHCodes(serviceCode) {
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-            if (service) {
-                $('.sh_code').selectpicker('destroy');
-                window.livewire.emit('loadSHCodes', {
-                    service: service
-                });
-            }
+        if (service) {
+            $('.sh_code').selectpicker('destroy');
+            window.livewire.emit('loadSHCodes', {
+                service: service
+            });
+        }
     }
 
 
@@ -504,9 +504,9 @@
             emitSHCodes();
         }, 1500);
     })
- 
+
     function initializeSelectpicker() {
-        $('#loading').fadeIn(); 
+        $('#loading').fadeIn();
         $('.sh_code').selectpicker('destroy');
         setTimeout(() => {
             $('.sh_code').selectpicker({
@@ -520,11 +520,17 @@
         setTimeout(() => {
             emitShCodePicker()
             initializeSelectpicker()
-        }, 3000); 
+        }, 3000);
     })
-    
-    window.addEventListener('reloadPage', event => {
-        location.reload();
+
+    window.addEventListener('disabledSubmitButton', event => {
+        var button = document.getElementById('submitButton');
+        button.setAttribute('disabled', 'disabled');
+    })
+
+    window.addEventListener('activateSubmitButton', event => {
+        var button = document.getElementById('submitButton');
+        button.removeAttribute('disabled');
     })
 </script>
 @endsection

@@ -15,7 +15,7 @@
                 <th> @lang('orders.order-details.order-item.Quantity') </th>
                 <th> @lang('orders.order-details.order-item.Unit Value') </th>
                 <th> @lang('orders.order-details.order-item.Total') </th>
-                <th> @lang('orders.order-details.order-item.Is Contains Dangrous Goods')</th>
+                <th> @lang('orders.order-details.order-item.restricted goods')</th>
                 <th> Action</th>
             </tr>
         </thead>
@@ -24,7 +24,8 @@
             <tr>
                 <td>{{$loop->iteration}}</td>
                 <td>
-                    {{$item->sh_code}}
+                <span class="badge badge-primary">{{$item->sh_code}}</span>
+                    
                     <?php $sh_code = App\Models\ShCode::where('code', $item->sh_code)->first() ?>
                     @if(app()->getLocale() == 'en'){{ optional(explode('-------',$sh_code->description))[0] }}@endif
                     @if(app()->getLocale() == 'pt'){{ optional(explode('-------',$sh_code->description))[1] }}@endif
@@ -46,8 +47,10 @@
                     @endif
                 </td>
                 <td>
-                    <button class="btn btn-danger" type="button" role="button" wire:click="deleteItem({{ $item->id }})"> @lang('orders.actions.remove-item')</button>
-                    <button class="btn btn-primary" type="button" role="button" wire:click="editItem({{ $item->id }})"> @lang('orders.actions.edit-item') </button>
+                    <button class="btn btn-danger" type="button" role="button" wire:click="deleteItem({{ $item->id }})"> 
+                        
+            <i class="fa fa-trash"></i> @lang('orders.actions.remove-item')</button>
+                    <button class="btn btn-primary" type="button" role="button" wire:click="editItem({{ $item->id }})"> <i class="fa fa-edit  "></i> @lang('orders.actions.edit-item') </button>
                 </td>
             </tr>
             @endforeach
