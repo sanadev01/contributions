@@ -166,9 +166,7 @@ class OrderItem extends Component
         ini_set('memory_limit', '10000M');
         ini_set('memory_limit', '-1');
         return view('livewire.order.order-details.order-item', [
-            'codes' => Cache::remember($this->type, 120, function () {
-                return ShCode::where('type', $this->type == 'default' ? null : $this->type)->orderBy('description', 'ASC')->get();
-            }),
+            'codes' =>  ShCode::where('type', $this->type == 'default' ? null : $this->type)->orderBy('description', 'ASC')->get(),
             'totalValue' => $this->getTotalValue(),
         ]);
     }
