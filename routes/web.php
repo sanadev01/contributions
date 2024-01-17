@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Http\Controllers\ConnectionsController;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
+use Illuminate\Support\Facades\Cache;
 
 /*
 |--------------------------------------------------------------------------
@@ -295,8 +296,15 @@ Route::get('test-label/{id?}',function($id = null){
 });
 
 Route::get('clear-cache',function($id = null){
-    Artisan::call('config:clear');
+    
+    $total = Cache::remember('total', 120, function () {
+        // Logic to calculate and return the total
+        return 'total is cleared';
+    });
+    dump(['total cache'=>$total]);
+    Artisan::call('cache:clear');
     Artisan::call('config:cache');
+    dump('end');
     return Artisan::output();
 });
 
