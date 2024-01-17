@@ -28,15 +28,23 @@
                             <div class="input-group mb-3" style="position: sticky; top: 0; z-index: 1; background-color: white;">
                                 <input type="text" class="form-control" placeholder="Search..." oninput="filterServices(this.value)" aria-label="Search" aria-describedby="basic-addon2">
                             </div>
+                    
                             @isset($shipping_services)
-                                @foreach ($shipping_services as $service)
+                                @php
+                                    $servicesToRemove = ['Packet Standard (A)', 'Packet Standard (AJ)', 'Packet Standard B', 'Packet Express (A)', 'Packet Express (AJ)', 'Packet Express B'];
+                                    $filteredServices = $shipping_services->reject(function ($service) use ($servicesToRemove) {
+                                        return in_array($service->name, $servicesToRemove);
+                                    });
+                                @endphp
+                    
+                                @foreach ($filteredServices  as $service)
                                     <a class="dropdown-item service-item" href="{{ route('admin.rates.rates.exports',['package' => 10,'service' => $service->id]) }}">
                                         <i class="fa fa-arrow-down"></i> {{ $service->name }} Download Sample
                                     </a>
                                 @endforeach
                             @endisset
                         </div>
-                    </div>
+                    </div>                    
                 </div>
             </div>
             <div class="card-body">
