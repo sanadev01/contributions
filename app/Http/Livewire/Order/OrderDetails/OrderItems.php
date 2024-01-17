@@ -40,11 +40,12 @@ class OrderItems extends Component
         $this->order->refresh();
         if(count($this->order->items)==0)
         {
-            $this->dispatchBrowserEvent('reloadPage');
+            $this->dispatchBrowserEvent('disabledSubmitButton');
         }
         else{
-            $this->dispatchBrowserEvent('emitSHCodes');
+            $this->dispatchBrowserEvent('activateSubmitButton');
         }
+        $this->dispatchBrowserEvent('emitSHCodes');
     }
 
 

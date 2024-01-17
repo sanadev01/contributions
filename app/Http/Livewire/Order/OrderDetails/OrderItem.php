@@ -31,17 +31,17 @@ class OrderItem extends Component
     // public $name;
     public $type = 'default';
     // public $orderInventory = false; 
-    protected $listeners = ['loadSHCodes' => 'loadSHCodes','editItem'=>'editItem'];
+    protected $listeners = ['loadSHCodes' => 'loadSHCodes', 'editItem' => 'editItem'];
 
     public function loadSHCodes($data)
     {
         $service = optional($data)['service'];
-        $shippingService = ShippingService::where('service_sub_class',$service)->first();
-        if(optional($shippingService)->is_total_express){
+        $shippingService = ShippingService::where('service_sub_class', $service)->first();
+        if (optional($shippingService)->is_total_express) {
             $this->type = 'total';
-        }else{
-            $this->type= 'default';
-        } 
+        } else {
+            $this->type = 'default';
+        }
         $this->render();
         $this->dispatchBrowserEvent('initializeSelectPicker');
     }
@@ -55,7 +55,7 @@ class OrderItem extends Component
             $this->value = $editItem->value;
             $this->total = $this->value * $this->quantity;
             $this->description =  $editItem->description;
-            $this->dangrous_item= null;
+            $this->dangrous_item = null;
             $this->contains_battery = $editItem->contains_battery;
             if ($this->contains_battery) {
                 $this->dangrous_item = 'contains_battery';
@@ -80,13 +80,15 @@ class OrderItem extends Component
         $this->contains_flammable_liquid = null;
         $this->contains_perfume = null;
         $this->contains_battery = null;
-        if(count($this->order->items)==0)
-        {
-            $this->dispatchBrowserEvent('reloadPage');
+        $this->order->refresh();
+        if (count($this->order->items) == 0) {
+            $this->dispatchBrowserEvent('disabledSubmitButton');
+        } else {
+            $this->dispatchBrowserEvent('activateSubmitButton');
         }
     }
     public function mount($order)
-    { 
+    {
         $this->order = $order;
         $this->geps = [
             ShippingService::GePS,
@@ -109,8 +111,8 @@ class OrderItem extends Component
     }
     public function submitForm()
     {
-        $rules = [ 
-            'quantity' => 'required|numeric|min:1', 
+        $rules = [
+            'quantity' => 'required|numeric|min:1',
             'value' => 'required|numeric|gt:0|min:0.01',
             'description' => 'required|max:500',
             'sh_code' => ($this->order->products->isNotEmpty()) ? 'sometimes' : [
@@ -124,17 +126,19 @@ class OrderItem extends Component
         if ($this->editItemId) {
             ModelsOrderItem::updateOrCreate(
                 [
-                    'id'=>$this->editItemId,
+                    'id' => $this->editItemId,
                     'order_id' => $this->order->id
-                ],[
+                ],
+                [
                     'sh_code' => $this->sh_code,
                     'description' => $this->description,
                     'quantity' => $this->quantity,
-                    'value' => $this->value,  
+                    'value' => $this->value,
                     'contains_battery' => $this->dangrous_item == 'contains_battery' ? true : false,
                     'contains_perfume' => $this->dangrous_item == 'contains_perfume' ? true : false,
                     'contains_flammable_liquid' => $this->dangrous_item == 'contains_flammable_liquid' ? true : false,
-                ]);
+                ]
+            );
             session()->flash('success', 'Item Updated Successfully.');
         } else {
             ModelsOrderItem::create([
@@ -152,6 +156,7 @@ class OrderItem extends Component
         $this->resetFormFields();
         $this->emitUp('itemAdded');
         $this->dispatchBrowserEvent('emitSHCodesLazy');
+        $this->dispatchBrowserEvent('updateDescriptionMessage');
 
     }
 
@@ -167,6 +172,6 @@ class OrderItem extends Component
     // Computed property
     public function getTotalValue()
     {
-        return (is_numeric($this->value)?$this->value:0) * (is_numeric($this->quantity)?$this->quantity:0);
+        return (is_numeric($this->value) ? $this->value : 0) * (is_numeric($this->quantity) ? $this->quantity : 0);
     }
 }
