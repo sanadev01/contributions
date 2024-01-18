@@ -169,6 +169,8 @@
             </div>
         </fieldset>
     </div>
+    <livewire:order.order-details.order-items :order-id="$order->id" />
+
     <div class="actions clearfix">
         <ul role="menu" aria-label="Pagination">
             <li class="disabled" aria-disabled="true">
@@ -181,7 +183,6 @@
         </ul>
     </div>
 </form>
-<livewire:order.order-details.order-items :order-id="$order->id" />
 <!--USPS PRIORITY INTERNATIONAL RATE ALERT MODAL-->
 <div class="modal fade" id="uspsModal" role="dialog">
     <div class="modal-dialog modal-md">
