@@ -54,6 +54,10 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order)
     {
+        if($order->items->isEmpty()){
+            session()->flash('alert-danger', 'Please add atleast one item!');
+            return redirect()->route('admin.orders.order-details.index',[$order->id]);
+        }
         $shippingService = ShippingService::find($request->shipping_service_id);
 
         $this->authorize('editItems',$order);
@@ -72,8 +76,8 @@ class OrderItemsController extends Controller
         }
         if($this->orderRepository->GePSService($request->shipping_service_id)){
             $value = 0;
-            if (count($request->items) >= 1) {
-                foreach ($request->items as $key => $item) {
+            if (count($order->items) >= 1) {
+                foreach ($order->items as $key => $item) {
                     $value += ($item['value'])*($item['quantity']);
                 }
             }
@@ -83,7 +87,8 @@ class OrderItemsController extends Controller
             }
         }
         if(in_array($shippingService->service_sub_class, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Prime5, ShippingService::Parcel_Post, ShippingService::Prime5RIO])  ) {
-            if(count($request->items) > 5) {
+            if(count($order->items) > 5) {
+                 
                 session()->flash('alert-danger', 'More than 5 Items are Not Allowed with the Selected Service');
                 return back()->withInput();
             }
