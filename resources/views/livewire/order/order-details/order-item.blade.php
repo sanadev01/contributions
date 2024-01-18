@@ -105,9 +105,9 @@
     <div class="row justify-content-end">
         <div class="col-4 text-right">
             @if($editItemId)
-            <button wire:click="submitForm" class="btn btn-success" type="submit">@lang('orders.actions.update-item')</button>
+            <button wire:click.prevent="submitForm" class="btn btn-success" type="submit">@lang('orders.actions.update-item')</button>
             @else
-            <button wire:click="submitForm" class="btn btn-primary" type="submit">@lang('orders.actions.add-item')</button>
+            <button wire:click.prevent="submitForm" class="btn btn-primary" type="submit">@lang('orders.actions.add-item')</button>
             @endif
         </div>
     </div>

@@ -161,6 +161,7 @@
             <div class="row col-12" id="itemLimit">
                 <h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5>
             </div>
+            <livewire:order.order-details.order-items :order-id="$order->id" />
             <hr>
             <div class="row mt-1">
                 <div class="form-group col-12">
@@ -181,7 +182,6 @@
         </ul>
     </div>
 </form>
-<livewire:order.order-details.order-items :order-id="$order->id" />
 <!--USPS PRIORITY INTERNATIONAL RATE ALERT MODAL-->
 <div class="modal fade" id="uspsModal" role="dialog">
     <div class="modal-dialog modal-md">
