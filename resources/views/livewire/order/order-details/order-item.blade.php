@@ -15,9 +15,9 @@
                     <option value="">Select HS code / Selecione o código HS</option>
                     @foreach ($codes as $code)
                     <option value="{{ $code->code }}">
-                        @if(app()->getLocale() == 'en'){{ optional(explode('-------',$code->description))[0] }}@endif
-                        @if(app()->getLocale() == 'pt'){{ optional(explode('-------',$code->description))[1] }}@endif
-                        @if(app()->getLocale() == 'es'){{ optional(explode('-------',$code->description))[2] }}@endif
+                        @if(app()->getLocale() == 'en'){{ substr(optional(explode('-------',$code->description))[0],0,100) }}@endif
+                        @if(app()->getLocale() == 'pt'){{ substr(optional(explode('-------',$code->description))[1],0,100) }}@endif
+                        @if(app()->getLocale() == 'es'){{ substr(optional(explode('-------',$code->description))[2],0,100) }}@endif
                     </option>
                     @endforeach
                 </select>
