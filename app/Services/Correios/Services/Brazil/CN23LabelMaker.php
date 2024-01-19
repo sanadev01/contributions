@@ -28,6 +28,7 @@ class CN23LabelMaker implements HasLableExport
     private $hasSuplimentary;
     private $activeAddress;
     private $isReturn;
+    private $labelZipCodeGroup;
 
     public function __construct()
     {
@@ -53,6 +54,7 @@ class CN23LabelMaker implements HasLableExport
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
+        $this->labelZipCodeGroup = getOrderGroupRange($this->order);
 
         if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->is_bcn_service) {
             if ($this->order->shippingService->is_bcn_service) {
@@ -196,6 +198,7 @@ class CN23LabelMaker implements HasLableExport
             'barcodeNew' => new BarcodeGeneratorPNG(),
             'activeAddress' => $this->activeAddress,
             'isReturn' => $this->isReturn,
+            'labelZipCodeGroup' => $this->labelZipCodeGroup,
         ];
     }
 
