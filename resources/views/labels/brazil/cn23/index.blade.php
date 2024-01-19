@@ -425,7 +425,10 @@
                 <strong>DEVOLUCÃO:</strong> <br>
                 {!! $returnAddress !!}
             </div>
-            @if($order->getOriginalWeight('kg') > 3)
+            <div class="bottom-block">
+                <div class="box-text" style="font-size: 24px !important; font-weight: bold; ">{{ optional($labelZipCodeGroup)['group'] }}</div>
+            </div>
+            {{-- @if($order->getOriginalWeight('kg') > 3)
                 <div class="bottom-block">
                     <div class="box-g">    </div>
                     <div class="box-text">G</div>
@@ -437,7 +440,7 @@
                     <div class="box-p3">    </div>
                     <div class="box-text">P</div>
                 </div>
-            @endif
+            @endif --}}
             <br>
         </div>
         <div class="right-block">
