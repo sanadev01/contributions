@@ -118,7 +118,7 @@ class OrderImportService extends AbstractImportService
                     "sender_phone" => $user->phone,//$this->getValue("M{$row}"),
                     'user_declared_freight' => $this->getValue("V{$row}"),
                     'error' => $orderError,
-
+                    "tax_modality" => in_array($this->getValue("AE{$row}"),['ddp','ddu',"DDP",'DDU'])?strtoupper($this->getValue("AE{$row}")):'DDU',
                     'recipient' => [
                         "first_name" =>$this->getValue("J{$row}"),
                         "last_name" => $this->getValue("K{$row}"),
