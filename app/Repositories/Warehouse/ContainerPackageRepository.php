@@ -149,7 +149,7 @@ class ContainerPackageRepository extends AbstractRepository{
                 return $this->validationError404($barcode, 'Order weight is less then 3 Kg, Please Check Order Weight');
             }
 
-            $firstOrderGroupRange = getOrderGroupRange($containerOrder);
+            $firstOrderGroupRange = $container->getOrderGroupRange($containerOrder);
 
             // If the first order's zipcode is not in the specified group ranges, return an error
             if ($firstOrderGroupRange === null) {
@@ -157,7 +157,7 @@ class ContainerPackageRepository extends AbstractRepository{
             }
 
             // Check if the current order's zipcode falls within the same group range
-            $currentOrderGroupRange = getOrderGroupRange($order);
+            $currentOrderGroupRange = $container->getOrderGroupRange($order);
             if ($currentOrderGroupRange !== $firstOrderGroupRange) {
                 $currentOrderZipcode = $order->recipient->zipcode;
                 $validRangeGroup = "Group {$firstOrderGroupRange['group']}";
