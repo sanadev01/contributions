@@ -31,6 +31,8 @@ class CN35LabelMaker implements HasLableExport
         $this->serialNumber = 1;
         $this->flightNumber = '';
         $this->dispatchDate = '';
+        $this->containerGroup = '';
+
         $order = $container->orders->first();
         
         if($order){ 
@@ -44,6 +46,10 @@ class CN35LabelMaker implements HasLableExport
         $this->destinationAirport = $container->getDestinationAriport();        
         $this->itemsCount = $container->getPiecesCount();
         $this->unitCode = $container->getUnitCode();
+        $firstOrderDate = optional($container->orders->first())->order_date;
+        if($firstOrderDate >= '2024-01-22') {
+            $this->containerGroup = $container->getGroup($container);
+        }
     }
 
     public function setCompanyName($companyName)

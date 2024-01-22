@@ -43,6 +43,7 @@ class CN23LabelMaker implements HasLableExport
         Sao Paulo CEP 04201-020';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
         $this->activeAddress = '';
+        $this->labelZipCodeGroup = '';
     }
 
     public function setOrder(Order $order)
@@ -53,6 +54,9 @@ class CN23LabelMaker implements HasLableExport
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
+        if($this->order->order_date >= '2024-01-22') {
+            $this->labelZipCodeGroup = getOrderGroupRange($this->order);
+        }
 
         if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->is_bcn_service) {
             if ($this->order->shippingService->is_bcn_service) {
