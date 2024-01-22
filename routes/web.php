@@ -335,7 +335,7 @@ Route::get('/export-sh-code',function($id = null){
         $totalDuplicated+=$duplicate->count;
         echo ("Code '{$duplicate->code}' type ".($duplicate->type?$duplicate->type:'default')." has {$duplicate->count} occurrences.<br>\n");
     }
-    dd("Total duplicated entry {$totalDuplicated}");
+    dump("Total duplicated entry {$totalDuplicated}");
 
     $shCodes = [
         '610190',
