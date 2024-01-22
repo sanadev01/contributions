@@ -35,7 +35,7 @@ class DeliveryBillStatusUpdateController extends Controller
             'cnd38_code' => $response
         ]);
 
-        session()->flash('alert-danger','CN38 Generated Successfully You can download Delivery Bill now');
+        session()->flash('alert-success','CN38 Generated Successfully You can download Delivery Bill now');
         return back();
     }
 
