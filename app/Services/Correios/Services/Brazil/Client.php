@@ -86,7 +86,7 @@ class Client
     public function createContainer(Container $container)
     {
         try {
-
+            
             $response = $this->client->post('/packet/v1/units', [
                 'headers' => [
                     'Authorization' => (new GetServiceToken($container))->getBearerToken(),
@@ -107,6 +107,28 @@ class Client
                     ]
                 ]
             ]);
+            
+            \Log::info('Authorization Token');
+            \Log::info((new GetServiceToken($container))->getBearerToken());
+            \Log::info('dispatchNumber');
+            \Log::info($container->dispatch_number);
+            \Log::info('originCountry');
+            \Log::info($container->origin_country);
+            \Log::info('originOperatorName');
+            \Log::info($container->origin_operator_name);
+            \Log::info('destinationOperatorName');
+            \Log::info($container->destination_operator_name);
+            \Log::info('postalCategoryCode');
+            \Log::info($container->postal_category_code);
+            \Log::info('serviceSubclassCode');
+            \Log::info($container->getSubClassCode());
+            \Log::info('sequence');
+            \Log::info($container->sequence);
+            \Log::info('unitType');
+            \Log::info($container->unit_type);
+            \Log::info('trackingNumbers');
+            \Log::info($container->orders->pluck('corrios_tracking_code')->toArray());
+
 
             $data = json_decode($response->getBody()->getContents());
             return $data->unitResponseList[0]->unitCode;
