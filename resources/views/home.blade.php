@@ -183,7 +183,7 @@
                             </h2>
                             <p class="mb-0">
                                 <strong> {{ auth()->user()->name . ' ' . auth()->user()->last_name }} <br>
-                                    {!! auth()->user()->pobox_number !!} </strong>
+                                    {!! auth()->user()->pobox_number !!} (HomeDeliverybr)</strong>
                                 <br>
                                 {{-- {!! auth()->user()->getPoboxAddress() ?? '' !!} <br> --}}
                             <table>

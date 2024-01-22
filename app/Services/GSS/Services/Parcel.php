@@ -30,7 +30,7 @@ class Parcel {
                'senderAddress' => [
                   'firstName' => $order->sender_first_name,
                   'lastName' => $order->sender_last_name,
-                  'addressLine1' => ($order->sender_address) ? $order->sender_address: '2200 NW 129TH AVE',
+                  'addressLine1' => ($order->sender_address) ? $order->sender_address: '2200 NW 129TH AVE Suite# 100',
                   // 'addressIsPOBox' => true,
                   'city' => ($order->sender_city) ? $order->sender_city: 'Miami',
                   'province' => ($order->sender_state_id) ? $order->senderState->code: 'FL',
