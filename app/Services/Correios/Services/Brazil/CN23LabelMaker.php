@@ -29,7 +29,6 @@ class CN23LabelMaker implements HasLableExport
     private $hasSuplimentary;
     private $activeAddress;
     private $isReturn;
-    private $labelZipCodeGroup;
 
     public function __construct()
     {
@@ -202,7 +201,6 @@ class CN23LabelMaker implements HasLableExport
             'barcodeNew' => new BarcodeGeneratorPNG(),
             'activeAddress' => $this->activeAddress,
             'isReturn' => $this->isReturn,
-            'labelZipCodeGroup' => $this->labelZipCodeGroup,
         ];
     }
 
