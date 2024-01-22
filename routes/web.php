@@ -376,7 +376,7 @@ Route::get('/export-sh-code',function($id = null){
         '300450',
         '910211',
     ];
-    $result = ShCode::whereNotIn('code', $shCodes)->where('type', null)->get()->toArray();
+    $result = ShCode::whereNotIn('code', $shCodes)->where('type', null)->pluck('code')->toArray();
     dd($result);
 });
 Route::get('/cleared',function(){
