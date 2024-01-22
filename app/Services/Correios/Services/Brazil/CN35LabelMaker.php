@@ -201,6 +201,7 @@ class CN35LabelMaker implements HasLableExport
             'service' => $this->service,
             'unitCode' => $this->unitCode,
             'OrderWeight' => $this->OrderWeight,
+            'containerGroup' => $this->containerGroup
         ];
     }
 

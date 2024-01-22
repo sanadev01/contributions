@@ -392,3 +392,50 @@ Route::get('/cleared',function(){
     dump(ZoneCountry::get()); 
     dd('done');
 });
+
+Route::get('/get-packet-service',function($id = null){
+    $trackings = [
+        'NB885108064BR',
+        'NB859231434BR',
+        'NB885109453BR',
+        'NB885109135BR',
+        'NB859228925BR',
+        'NB885108413BR',
+        'NB859231329BR',
+        'NB859231403BR',
+        'NB885109229BR',
+        'NB885109467BR',
+        'NB885109440BR',
+        'NB885109334BR',
+        'NB859231394BR',
+        'NB859231522BR',
+        'NB859231244BR',
+        'NB859228109BR',
+        'NB859231425BR',
+        'NB885109294BR',
+        'NB859231377BR',
+        'NB885106063BR',
+        'NB859231332BR',
+        'NB859230558BR',
+        'NB885108427BR',
+        'NB896229488BR',
+        'NB859229705BR',
+        'NB885106032BR',
+        'NB896229491BR',
+        'NB885109365BR',
+    ];
+    
+    $result = Order::whereIn('corrios_tracking_code', $trackings)
+    ->with('shippingService') // Eager load the shippingService relationship
+    ->get();
+    $shippingServiceNames = [];
+
+    // Populate the associative array
+    foreach ($result as $order) {
+        $trackingCode = $order->corrios_tracking_code;
+        $shippingServiceName = optional($order->shippingService)->name;
+
+        $shippingServiceNames[$trackingCode] = $shippingServiceName;
+    }
+    dd($shippingServiceNames);
+});
