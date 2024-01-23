@@ -16,7 +16,8 @@ class ActivityRepository
 
         if ($user_id = request('id')){
             $query->where('causer_id', $user_id);
-        } elseif (Auth::user()->isUser()){
+        } 
+        if (Auth::user()->isUser()){
             $query->where('causer_id', Auth::id());
         }
 
