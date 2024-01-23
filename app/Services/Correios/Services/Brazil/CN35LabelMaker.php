@@ -2,6 +2,7 @@
 
 namespace App\Services\Correios\Services\Brazil;
 
+use Carbon\Carbon;
 use App\Models\Warehouse\Container;
 use App\Services\Correios\Contracts\HasLableExport;
 
@@ -47,7 +48,7 @@ class CN35LabelMaker implements HasLableExport
         $this->itemsCount = $container->getPiecesCount();
         $this->unitCode = $container->getUnitCode();
         $firstOrderDate = optional($container->orders->first())->order_date;
-        if($firstOrderDate >= '2024-01-22') {
+        if(optional($firstOrderDate)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
             $this->containerGroup = $container->getGroup($container);
         }
     }
