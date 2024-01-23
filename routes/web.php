@@ -332,6 +332,19 @@ Route::get('/to-express/{id?}',function($id = null){
     return 'shipping service updated to express sucessfully.'; 
 });
 Route::get('/export-sh-code',function($id = null){
+    $duplicateCodes = DB::table('sh_codes')
+    ->select('code','type', DB::raw('COUNT(*) as count'))
+    ->groupBy('code')
+    ->having('count', '>', 1)
+    ->get();
+
+    $totalDuplicated = 0;
+    foreach ($duplicateCodes as $duplicate) {
+        $totalDuplicated+=$duplicate->count;
+        echo ("Code '{$duplicate->code}' type ".($duplicate->type?$duplicate->type:'default')." has {$duplicate->count} occurrences.<br>\n");
+    }
+    dump("Total duplicated entry {$totalDuplicated}");
+
     $shCodes = [
         '610190',
         '854231',
@@ -384,8 +397,9 @@ Route::get('/export-sh-code',function($id = null){
         '300450',
         '910211',
     ];
-    $result = ShCode::whereNotIn('code', $shCodes)->where('type', null)->get()->toArray();
+    $result = ShCode::whereNotIn('code', $shCodes)->where('type', null)->pluck('code')->toArray();
     dd($result);
+
 });
 Route::get('/cleared',function(){
     ZoneCountry::truncate(); 
