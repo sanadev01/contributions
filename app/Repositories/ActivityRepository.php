@@ -13,44 +13,35 @@ class ActivityRepository
     {
 
         $query = Activity::query();
-        
-        $user_id = request('id');
-        
-        if ( $user_id ){
-            $query->where('causer_id',$user_id);
+
+        if ($user_id = request('id')){
+            $query->where('causer_id', $user_id);
+        } elseif (Auth::user()->isUser()){
+            $query->where('causer_id', Auth::id());
         }
 
-        if ( Auth::user()->isUser() ){
-            $query->where('causer_id',Auth::id());
+        if ($date = $request->date){
+             $query->whereDate('created_at', 'LIKE', "%{$date}%");
         }
 
-        if ( $request->date ){
-            $query->where(function($query) use($request){
-                return $query->where('created_at', 'LIKE', "%{$request->date}%");
-            });
-        }
-        
-        if ( $request->name ){
-            $query->whereHasMorph('causer', User::class ,function($query) use($request) {
-                return $query->where('name', 'LIKE', "%{$request->name}%");
-            });
-        }
-        
-        if ( $request->model ){
-            $query->where(function($query) use($request){
-                return $query->where('subject_type', 'LIKE', "%{$request->model}%");
-            });
-        }
-        if ( $request->content ){
-            $query->where(function($query) use($request){
-                return $query->where('properties', 'LIKE', "%{$request->content}%");
+        if ($name = $request->name){
+            $query->whereHasMorph('causer', User::class, function ($query) use ($name) {
+                $query->where('name', 'LIKE', "%{$name}%");
             });
         }
 
-        $activities = $query
-        ->orderBy($orderBy,$orderType);
+        if ($model = $request->model) {
+            $query->where('subject_type', 'LIKE', "%{$model}%");
+        }
+
+        if ($content = $request->content) {
+            $query->where('properties', 'LIKE', "%{$content}%");
+        }
+
+        $activities = $query->orderBy($orderBy, $orderType);
 
         return $paginate ? $activities->paginate($pageSize) : $activities->get();
+
     }
 
 
