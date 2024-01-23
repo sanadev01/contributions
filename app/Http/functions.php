@@ -243,7 +243,7 @@ function responseSuccessful($output, $message)
 function getOrderGroupRange($order)
 {
     if ($order) {
-        $orderZipcode = $order->recipient->zipcode;
+        $orderZipcode = str_replace('-', '', $order->recipient->zipcode);
         $groupRanges = [
             ['start' => 1000000, 'end' => 11599999, 'group' => 1],
             ['start' => 11600000, 'end' => 19999999, 'group' => 2],
