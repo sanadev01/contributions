@@ -318,4 +318,12 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         return $this->services_subclass_code == ShippingService::HD_Express;
     }
+
+    public function getGroup($container) {
+        
+        $containerOrder = $container->orders->first();
+        $firstOrderGroupRange = getOrderGroupRange($containerOrder);
+        
+        return $firstOrderGroupRange['group'];
+    }
 }
