@@ -74,17 +74,17 @@ class Slabs extends Component
         if($package->shippingService){
             $shippingService = $package->shippingService;
             $shippingService->cacheCalculator = false;
-            if ( $shippingService->isAvailableFor($order) ){
+            // if ( $shippingService->isAvailableFor($order) ){
                     $rate = $shippingService->getRateFor($order,$isRate,false);
                     return $rate;
-                }
+                // }
         }else{
             foreach (ShippingService::query()->active()->get() as $shippingService) {
                 $shippingService->cacheCalculator = false;
-                if ( $shippingService->isAvailableFor($order) ){
+                // if ( $shippingService->isAvailableFor($order) ){
                     $rate = $shippingService->getRateFor($order,$isRate,false);
                     return $rate;
-                }
+                // }
             }
         }
 
