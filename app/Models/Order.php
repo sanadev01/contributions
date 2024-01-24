@@ -20,6 +20,8 @@ use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\Package as ModelsPackage;
 use Exception;
 use Illuminate\Support\Facades\Crypt;
+use Spatie\Activitylog\LogOptions;
+
 class Order extends Model implements Package
 {
 

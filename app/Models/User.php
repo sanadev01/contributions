@@ -7,21 +7,15 @@ use Milon\Barcode\DNS2D;
 use Illuminate\Support\Str;
 use App\Models\AffiliateSale;
 use App\Models\CommissionSetting;
-use App\Models\Warehouse\Container;
-use Illuminate\Support\Facades\Cache;
+use App\Models\Warehouse\Container; 
 use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
-use AmazonSellingPartner\Exception\ApiException;
-use AmazonSellingPartner\Exception\InvalidArgumentException;
-use App\AmazonSPClients\SellersApiClient; 
-use Exception;
-use JsonException; 
-use Psr\Http\Client\ClientExceptionInterface;
+ 
+use Spatie\Activitylog\LogOptions;
 
 class User extends Authenticatable
 {

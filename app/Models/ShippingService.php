@@ -10,7 +10,9 @@ use LaravelJsonColumn\Traits\JsonColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Services\Calculators\RatesCalculator;
-use App\Services\Calculators\WeightCalculator; 
+use App\Services\Calculators\WeightCalculator;
+use Spatie\Activitylog\LogOptions;
+
 class ShippingService extends Model
 {
     use JsonColumn;
