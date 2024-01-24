@@ -58,8 +58,8 @@
                                     </div>
                                     <div class="form-group col-12 col-sm-6 col-md-4">
                                         <div class="controls">
-                                            <label>@lang('parcel.Tracking Inside') <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="tracking_id" value="{{ old('tracking_id') }}" placeholder="" maxlength ="22">
+                                            <label>@lang('parcel.Tracking Inside')<span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="tracking_id" id="trackingInput" value="{{ old('tracking_id') }}" placeholder="" maxlength="22">
                                             @error('tracking_id')
                                                 <div class="help-block text-danger">{{ $message }}</div>
                                             @enderror
@@ -173,4 +173,15 @@
             </div>
         </div>
     </section>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var trackingInput = $('#trackingInput');
+            $(document).on('keypress', function (e) {
+                if (trackingInput.is(':focus')) {
+                    trackingInput.val(trackingInput.val() + String.fromCharCode(e.which));
+                }
+            });
+        });
+    </script>
 @endsection
