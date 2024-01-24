@@ -89,7 +89,7 @@ class Client
 
             $response = $this->client->post('/packet/v1/units', [
                 'headers' => [
-                    'Authorization' => (new GetServiceToken($container))->getBearerToken(),
+                    'Authorization' => (new GetServiceToken($container->orders()->first()))->getBearerToken(),
                 ],
                 'json' => [
                     "dispatchNumber" => $container->dispatch_number,
@@ -122,7 +122,7 @@ class Client
         try {
             $response = $this->client->post('/packet/v1/cn38request', [
                 'headers' => [
-                    'Authorization' => (new GetServiceToken($deliveryBill->containers()->first()))->getBearerToken(),
+                    'Authorization' => (new GetServiceToken($deliveryBill->containers()->first()->orders()->first()))->getBearerToken(),
                 ],
                 'json' => [
                     'dispatchNumbers' => $deliveryBill->containers->pluck('dispatch_number')->toArray()
@@ -143,7 +143,7 @@ class Client
         try {
             $response = $this->client->get("/packet/v1/cn38request?requestId={$deliveryBill->request_id}", [
                 'headers' => [
-                    'Authorization' => (new GetServiceToken($deliveryBill->containers()->first()))->getBearerToken(),
+                    'Authorization' => (new GetServiceToken($deliveryBill->containers()->first()->orders()->first()))->getBearerToken(),
                 ]
             ]);
 
@@ -182,7 +182,7 @@ class Client
         try {
             $response = $this->client->delete("/packet/v1/units/dispatch/$container->dispatch_number", [
                 'headers' => [
-                    'Authorization' => (new GetServiceToken($container))->getBearerToken()
+                    'Authorization' => (new GetServiceToken($container->orders()->first()))->getBearerToken()
                 ]
             ]);
             return $response;
