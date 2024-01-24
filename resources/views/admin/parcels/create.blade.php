@@ -173,4 +173,15 @@
             </div>
         </div>
     </section>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var trackingInput = $('#trackingInput');
+            $(document).on('keypress', function (e) {
+                if (trackingInput.is(':focus')) {
+                    trackingInput.val(trackingInput.val() + String.fromCharCode(e.which));
+                }
+            });
+        });
+    </script>
 @endsection
