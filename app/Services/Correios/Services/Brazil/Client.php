@@ -57,8 +57,8 @@ class Client
                     ],
                 ]);
 
-                \Log::info('Response');
-                \Log::info([$data]);
+                // \Log::info('Response');
+                // \Log::info([$data]);
                 // store order status in order tracking
                 return $this->addOrderTracking($order);
             }
@@ -69,7 +69,7 @@ class Client
             $errorCopy = new PackageError($responseError);
             $errorMessage = $errorCopy->getErrors();
             if ($errorMessage == "GTW-006: Token inválido." || $errorMessage == "GTW-007: Token expirado.") {
-                \Log::info('Token refresh automatically');
+                // \Log::info('Token refresh automatically');
                 Cache::forget('anjun_token');
                 Cache::forget('bcn_token');
                 Cache::forget('token');
@@ -246,8 +246,8 @@ class Client
                     ]
                 ); 
                 if ($response->getStatusCode() === 200) {
-                    \Log::info('Departure confirm successfully');
-                    \Log::info(explode(",",$request->unitCode));
+                    // \Log::info('Departure confirm successfully');
+                    // \Log::info(explode(",",$request->unitCode));
                     session()->flash('alert-success','Departure confirm successfully'); 
                     return json_decode('Departure confirm successfully'); 
                 }
