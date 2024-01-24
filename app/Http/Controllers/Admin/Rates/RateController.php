@@ -79,10 +79,13 @@ class RateController extends Controller
 
     public function shippingRegionRates(RateRepository $repository, ShippingService $shipping_service)
     {
+        $isGDE = false;
+        if($shipping_service->isGDEService()) {
+            $isGDE = true;
+        }
         $this->authorizeResource(Rate::class);
         $shippingRegionRates = $repository->getRegionRates($shipping_service);
-        
-        return view('admin.rates.shipping-rates.region.index', compact('shipping_service', 'shippingRegionRates'));
+        return view('admin.rates.shipping-rates.region.index', compact('shipping_service', 'shippingRegionRates', 'isGDE'));
     }
 
     public function showShippingRegionRates($id)

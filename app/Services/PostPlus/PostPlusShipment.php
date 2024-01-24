@@ -46,15 +46,14 @@ class PostPlusShipment
                 $weight+= $package->getWeight();
             }
             $body = [
-                "type" => "AWB",
-                "terminalCode" => "PDL",
+                "type" => "VirtualDespatch",
                 "shipmentNr" => $this->containers[0]->awb,
                 'arrivalInfo' => [
                     'transportNr' => $this->containers[0]->dispatch_number,
                     'originCountryCode' => "US",
                     'totalWeight' => $weight,
                     'totalBags' => count($this->containers),
-                    'arrivalOn' => Carbon::now()->addDay(),
+                    'arrivalOn' => Carbon::today()->toDateString(),
                     'notes' => ''
                  ],
             ];
@@ -98,7 +97,7 @@ class PostPlusShipment
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
         $data= json_decode($response);
         if ($response->successful() && !is_null($data->parcels)) {
-            return $this->prepareShipment($id);
+            return $this->responseSuccessful($id, 'Container preparation is successfull. Now you can register the unit.');
         } else {
             return $this->responseUnprocessable($data->detail);
         }
@@ -109,12 +108,13 @@ class PostPlusShipment
         $url = $this->baseUri . "/shipments/$id/prepare";
         $body = [ "" => '', ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+        
         $data= json_decode($response);
         if ($response->successful() && optional($data)->shipmentSubmitToken) {
             return $this->submitShipment($data->shipmentSubmitToken, $id);
         } else {
             $this->deleteShipment($id);
-            return $this->responseUnprocessable($data->status->warningDetails[1]);
+            return $this->responseUnprocessable(optional(optional(optional($data)->status)->warningDetails)[0]);
         }
     }
 
@@ -125,6 +125,7 @@ class PostPlusShipment
             "shipmentSubmitToken" =>  $token,
         ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+        
         $data= json_decode($response);
         if ($response->successful()) {
             return $this->getShipmentDetails($id);

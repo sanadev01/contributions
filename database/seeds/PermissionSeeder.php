@@ -58,7 +58,7 @@ class PermissionSeeder extends Seeder
             [
                 'slug' => 'edit_parcel_shipment_details',
                 'group' => 'Parcel',
-                'description' => ''
+                'description' => 'User can edit parcel shipment details'
             ],
             [
                 'slug' => 'edit_order',
@@ -472,7 +472,93 @@ class PermissionSeeder extends Seeder
                 'slug' => 'update_tax',
                 'group' => 'Tax',
                 'description' => 'User can update tax'
+            ],            
+            [
+                'slug' => 'view_adjustment',
+                'group' => 'Tax',
+                'description' => 'User can see adjustment'
             ],
+            [
+                'slug' => 'create_adjustment',
+                'group' => 'Tax',
+                'description' => 'User can create adjustment'
+            ], 
+            [
+                'slug' => 'update_adjustment',
+                'group' => 'Tax',
+                'description' => 'User can update adjustment'
+            ], 
+            [
+                'slug' => 'consolidate_parcel',
+                'group' => 'Order',
+                'description' => 'User can consolidate order'
+            ],
+ 
+            [
+                'slug' => 'change_order_status',
+                'group' => 'Order',
+                'description' => 'User can change order status'
+            ],
+            [
+                'slug' => 'reply_ticket',
+                'group' => 'Ticket',
+                'description' => 'User can reply ticket'
+            ],
+            [
+                'slug' => 'open_ticket',
+                'group' => 'Ticket',
+                'description' => 'User can open ticket'
+            ],
+            [
+                'slug' => 'close_ticket',
+                'group' => 'Ticket',
+                'description' => 'User can close ticket'
+            ],
+            [
+                'slug' => 'view_tracking',
+                'group' => 'Tracking',
+                'description' => 'User can view tracking'
+            ],
+            [
+                'slug' => 'print_bulk_label',
+                'group' => 'Label',
+                'description' => 'User can print bulk label'
+            ],
+            [
+                'slug' => 'view_payment_invoice',
+                'group' => 'Payment Invoices',
+                'description' => 'User can pay invoice'
+            ],
+            [
+                'slug' => 'view_calculator',
+                'group' => 'Calculator',
+                'description' => 'User can view calculator'
+            ],
+            [
+                'slug' => 'view_trashed_order',
+                'group' => 'Order',
+                'description' => 'User can view trashed order'
+            ],
+            [
+                'slug' => 'impersonate',
+                'group' => 'Impersonate',
+                'description' => 'User can impersonate user'
+            ],
+            [
+                'slug' => 'view_box_control',
+                'group' => 'Box',
+                'description' => 'User can view box control '
+            ],
+            [
+                'slug' => 'view_label_post',
+                'group' => 'Label',
+                'description' => 'User can view post label'
+            ],
+            [
+                'slug' => 'view_api_docs',
+                'group' => 'API',
+                'description' => 'User can view api documentations'
+            ]
         ];
     }
 }

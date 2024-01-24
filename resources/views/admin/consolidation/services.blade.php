@@ -29,7 +29,7 @@
         </div>
         <div class="row justify-content-end">
             <div class="col-md-12">
-                <a href="{{ route('admin.consolidation.parcels.edit',$parcel) }}" class="btn btn-primary btn-lg pull-left">@lang('consolidation.Previous')</a>
+                <a href="{{ route('admin.consolidation.parcels.edit',$parcel->encrypted_id) }}" class="btn btn-primary btn-lg pull-left">@lang('consolidation.Previous')</a>
                 <button class="btn btn-primary btn-lg pull-right">@lang('consolidation.Save')</button>
             </div>
         </div>

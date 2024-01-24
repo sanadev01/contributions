@@ -14,7 +14,6 @@
         </thead>
         <tbody>
             @foreach ($orders as $key => $order)
-            
             <tr id="{{ $key }}">
                 <td>
                     {{ $order->corrios_tracking_code }}

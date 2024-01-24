@@ -204,7 +204,7 @@
         
         .items-table{
             position: absolute;
-            top: 11.96cm;
+            top: 11.90cm;
             font-size: 7px;
             font-weight: bold;
             width: auto;
@@ -212,7 +212,7 @@
         .items-table table{
             margin: 0.1cm;
             border-collapse: collapse;
-            width: 100%;
+            width: 98%;
             /* page-break-inside: auto; */
             margin-bottom: 0.2cm;
         }
@@ -356,13 +356,15 @@
         .site-text{
             position: absolute;
             top: 15px !important;
+            margin-top:5px;
         }
         .return-box-text{
             position: absolute;
             top: 0.6mm;
             /* left: 0.1mm; */
             /* font-size: 16px !important; */
-            margin-left: -2.3px !important;
+            margin-left: -3px !important;
+            margin-top: 4px !important;
         }
     </style>
 </head>
@@ -401,7 +403,8 @@
             {{ $recipient->first_name }} {{ $recipient->last_name }} <br>
             {{ $recipient->address }}, @if ($recipient->street_no != 0 ) {{ $recipient->street_no }}, @endif {{ $recipient->address2 }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
             {{ $recipient->state->name }}
-            {{ $recipient->country->name }}
+            {{ $recipient->country->name }} <br>
+            CPF: {{ $recipient->tax_id }}
         </div>
     </div>
     @if($order->hasBattery())
@@ -417,34 +420,43 @@
     <div class="serivce-zipcode">
         <div class="left-block">
             <div class="return-address">
-                <span class="return-box"> <i class="return-box-text">X</i> </span> &nbsp; Retorno a origem  <span class="return-box">   </span> Tratar como abandono<br>
-                <span class="site-text">Dúvidas e reclamações: homedeliverybr.com</span><br><br>
+                <span class="return-box"> <i class="return-box-text">@if($isReturn) X @else  @endif</i></span> &nbsp; &nbsp; Retorno a origem  <span class="return-box">@if(!$isReturn) X @else   @endif</span> Tratar como abandono<br>
+                <span class="site-text" >Dúvidas e reclamações: homedeliverybr.com</span><br><br>
                 <strong>DEVOLUCÃO:</strong> <br>
                 {!! $returnAddress !!}
             </div>
-            @if($order->getOriginalWeight('kg') > 3)
+            @if(!empty($labelZipCodeGroup))
                 <div class="bottom-block">
-                    <div class="box-g">    </div>
-                    <div class="box-text">G</div>
+                    <div class="box-text" style="font-size: 24px !important; font-weight: bold; ">{{ optional($labelZipCodeGroup)['group'] }}</div>
                 </div>
             @else
-                <div class="bottom-block">
-                    <div class="box-p1">    </div>
-                    <div class="box-p2">    </div>
-                    <div class="box-p3">    </div>
-                    <div class="box-text">P</div>
-                </div>
+                @if($order->getOriginalWeight('kg') > 3)
+                    <div class="bottom-block">
+                        <div class="box-g">    </div>
+                        <div class="box-text">G</div>
+                    </div>
+                @else
+                    <div class="bottom-block">
+                        <div class="box-p1">    </div>
+                        <div class="box-p2">    </div>
+                        <div class="box-p3">    </div>
+                        <div class="box-text">P</div>
+                    </div>
+                @endif
             @endif
             <br>
         </div>
         <div class="right-block">
-            <h2>Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2>
+            <h2 style="margin-bottom: 0px !important">Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2>
             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
             {{ $order->sender_email }} <br>
-            <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
-            <strong>CR#:</strong>{{ $order->customer_reference }} <br>
-            <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>
-            <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
+            {{ $activeAddress }}
+            <div style="font-size: 6.5px !important">
+                <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
+                <strong>CR#:</strong>{{ $order->customer_reference }} <br>
+                <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs 
+                <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
+            </div>
         </div>
     </div>
     <div class="complain_address">

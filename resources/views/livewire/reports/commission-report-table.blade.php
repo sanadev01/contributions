@@ -181,14 +181,11 @@
                                 {{ number_format($commission->commission,2) }} USD
                             </td>
                             @if($commission->referrer)
-                            <td class="h4">
-                                <a href="{{ route('admin.reports.commission.show',$commission->referrer) }}">
-                                    <i class="fa fa-eye text-success"></i>
-                                </a>
-                            </td>
-                            @else
-                                {{ \Log::info('commision',[$commission]) }}
-                                {{ \Log::info('user',[Auth::user()]) }}
+                                <td class="h4">
+                                    <a href="{{ route('admin.reports.commission.show',$commission->referrer) }}">
+                                        <i class="fa fa-eye text-success"></i>
+                                    </a>
+                                </td>
                             @endif 
 
                         </tr>

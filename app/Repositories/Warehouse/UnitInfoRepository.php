@@ -17,13 +17,16 @@ class UnitInfoRepository
             $url = "/packet/v1/units/arrival?initialDate=$startDate&finalDate=$endDate&page=0";
         }
         if($request->type == 'units_return'){
-            $url = "packet/v1/returning-units/available";
+            $url = "/packet/v1/returning-units/available";
         }
         if($request->type == 'confirm_departure'){
-            $url = "packet/v1/returning-units/confirmed-departure?initialDepartureDate=$startDate&finalDepartureDate=$endDate&page=0";
+            $url = "/packet/v1/returning-units/confirmed-departure?initialDepartureDate=$startDate&finalDepartureDate=$endDate&page=0";
         }
         if($request->type == 'departure_info'){
             $url = "/packet/v1/returning-units";
+        }
+        if($request->type == 'departure_cn38'){
+            $url = "/packet/v1/cn38request/departure";
         }
 
         $client = new Client();

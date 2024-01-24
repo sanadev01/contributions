@@ -2,10 +2,13 @@
 
 namespace App\Services\Excel\Export;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
 
 abstract class AbstractExportService
 {
@@ -17,6 +20,11 @@ abstract class AbstractExportService
 
     public function __construct()
     {
+        try{
+            ob_end_clean();
+        }catch(\Exception $e){
+            Log::info('ob_end_clean error:'.$e->getMessage());
+        }
         $this->spreadSheet = new Spreadsheet();
         $this->sheet = $this->spreadSheet->getActiveSheet();
 
@@ -143,5 +151,16 @@ abstract class AbstractExportService
         $this->sheet->mergeCells($range);
 
         return $this;
+    }
+    protected function setBorder($cells, $isBottom)
+    {
+        foreach($cells as $cell){ 
+            $cell = $this->sheet->getStyle($cell)
+                ->getBorders();
+                $cell = $isBottom ? $cell->getBottom(): $cell->getOutline();
+                
+                $cell->setBorderStyle(Border::BORDER_THIN)
+                ->setColor(new Color('000'));
+        }
     }
 }

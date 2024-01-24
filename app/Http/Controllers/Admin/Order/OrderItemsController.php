@@ -7,10 +7,12 @@ use App\Facades\UPSFacade;
 use App\Facades\USPSFacade;
 use App\Facades\FedExFacade;
 use Illuminate\Http\Request;
+use App\Services\GSS\Client;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
+use App\Models\User;
 
 class OrderItemsController extends Controller
 {
@@ -52,6 +54,10 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order)
     {
+        if($order->items->isEmpty()){
+            session()->flash('alert-danger', 'Please add atleast one item!');
+            return redirect()->route('admin.orders.order-details.index',[$order->id]);
+        }
         $shippingService = ShippingService::find($request->shipping_service_id);
 
         $this->authorize('editItems',$order);
@@ -70,8 +76,8 @@ class OrderItemsController extends Controller
         }
         if($this->orderRepository->GePSService($request->shipping_service_id)){
             $value = 0;
-            if (count($request->items) >= 1) {
-                foreach ($request->items as $key => $item) {
+            if (count($order->items) >= 1) {
+                foreach ($order->items as $key => $item) {
                     $value += ($item['value'])*($item['quantity']);
                 }
             }
@@ -80,8 +86,9 @@ class OrderItemsController extends Controller
                 return back()->withInput();
             }
         }
-        if(in_array($shippingService->service_sub_class, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Prime5, ShippingService::Parcel_Post])  ) {
-            if(count($request->items) > 5) {
+        if(in_array($shippingService->service_sub_class, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Prime5, ShippingService::Parcel_Post, ShippingService::Prime5RIO])  ) {
+            if(count($order->items) > 5) {
+                 
                 session()->flash('alert-danger', 'More than 5 Items are Not Allowed with the Selected Service');
                 return back()->withInput();
             }
@@ -128,9 +135,9 @@ class OrderItemsController extends Controller
             session()->flash('alert-success','orders.Order Placed');
             if ($order->user->hasRole('wholesale') && $order->user->insurance == true) 
             {
-                return redirect()->route('admin.orders.order-invoice.index',$order);# code...
+                return redirect()->route('admin.orders.order-invoice.index',$order->encrypted_id);# code...
             }
-            return \redirect()->route('admin.orders.services.index',$order);
+            return \redirect()->route('admin.orders.services.index',$order->encrypted_id);
         }
         return \back()->withInput();
     }
@@ -155,9 +162,16 @@ class OrderItemsController extends Controller
 
         if($response->success == true)
         {
+            $rate =  $response->data['total_amount'];
+            \Log::info('with out profit');
+            \Log::info($rate);
+            $profit = setting('usps_profit', null, $order->user_id)??(int) setting('usps_profit', null, User::ROLE_ADMIN);
+            $rate = $rate + ($rate/100) * $profit;
+            \Log::info('with profit');
+            \Log::info($rate);
             return (Array)[
                 'success' => true,
-                'total_amount' => $response->data['total_amount'],
+                'total_amount' => $rate,
             ]; 
         }
 
@@ -203,5 +217,25 @@ class OrderItemsController extends Controller
             'success' => true,
             'total_amount' => number_format($response->data['output']['rateReplyDetails'][0]['ratedShipmentDetails'][0]['totalNetFedExCharge'], 2),
         ];
+    }
+
+    public function GSSRates(Request $request)
+    {
+        $client = new Client();
+        $response =  $client->getServiceRates($request);
+        $data = $response->getData();
+        if ($data->isSuccess && $data->output > 0){
+            return (array)[
+                'success' => true,
+                'total_amount' => number_format($data->output, 2),
+            ];
+        } else {
+            return (array)[
+                'success' => false,
+                'error' => 'server error occured',
+            ];
+        }
+
+        
     }
 }

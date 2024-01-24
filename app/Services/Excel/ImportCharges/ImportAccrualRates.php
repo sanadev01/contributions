@@ -47,14 +47,28 @@ class ImportAccrualRates extends AbstractImportService
             if($this->service == ShippingService::GePS_EFormat){
                 $limit = 41;
             }
-            if($this->service == ShippingService::Prime5 || $this->service == ShippingService::Post_Plus_Prime){
+            if($this->service == ShippingService::Prime5 || $this->service == ShippingService::Post_Plus_Prime ||$this->service == ShippingService::LT_PRIME){
                 $limit = 33;
             }
+
+            if($this->service == ShippingService::Post_Plus_LT_Premium){
+                $limit = 63;
+            }
+            
             if($this->service == ShippingService::GePS){
                 $limit = 27;
             }
             if($this->service == ShippingService::Post_Plus_Registered){
                 $limit = 22;
+            }
+            if($this->service == ShippingService::Post_Plus_CO_EMS){
+                $limit = 50;
+            }
+            if($this->service == ShippingService::Post_Plus_CO_REG){
+                $limit = 14;
+            }
+            if($this->service == ShippingService::TOTAL_EXPRESS){
+                $limit = 130;
             }
         }
 
@@ -62,7 +76,7 @@ class ImportAccrualRates extends AbstractImportService
 
             $weight = round($this->getValueOrDefault('A'.$row),2);
             
-            if(($this->country_id == Country::Brazil && $weight <= 30000) || ($this->country_id == Country::Chile && $weight <= 50000))
+            if(($this->country_id == Country::Brazil && $weight <= 30000) || ($this->country_id == Country::Chile && $weight <= 50000) || ($this->country_id == Country::Portugal && $weight <= 20000) || ($this->country_id == Country::Colombia && $weight <= 20000) || ($this->country_id == Country::Brazil && $weight <= 60000))
             {
                 $rates[] = [
                     'service' => $this->service,

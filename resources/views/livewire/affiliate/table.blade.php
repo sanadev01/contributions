@@ -65,7 +65,9 @@
                         <th>@lang('sales-commission.User')</th>
                     @endadmin
                     <th>Commission From</th>
-                    <th>@lang('sales-commission.Order ID')</th>
+                    @admin
+                        <th>@lang('sales-commission.Order ID')</th>
+                    @endadmin
                     <th>WHR#</th>
                     <th>Tracking Code</th>
                     <th>Customer Reference</th>
@@ -104,10 +106,11 @@
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="user">
                     </th>
-
-                    <th>
-                        <input type="search" class="form-control" wire:model.debounce.1000ms="order">
-                    </th>
+                    @admin
+                        <th>
+                            <input type="search" class="form-control" wire:model.debounce.1000ms="order">
+                        </th>
+                    @endadmin
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="whr">
                     </th>

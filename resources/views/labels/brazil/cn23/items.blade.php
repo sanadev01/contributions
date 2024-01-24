@@ -1,8 +1,8 @@
 <div class="items-table">
-    <table border="1">
+    <table border="1" style="width: 370px !important">
         <tbody>
             <tr>
-                <td colspan="3">
+                <td colspan="4">
                     DECLARACÃO PARA ALFÃNDEGA
                 </td>
                 <td colspan="3">

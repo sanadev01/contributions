@@ -26,6 +26,8 @@ class Country extends Model
     const Chile = 46;
     const Brazil = 30;
     const US = 250;
+    const Portugal = 188;
+    const Colombia = 50;
 
     public function states()
     {
@@ -45,5 +47,10 @@ class Country extends Model
     public function accrualRates()
     {
         return $this->hasMany(AccrualRate::class);
+    }
+
+    public function zoneCountries()
+    {
+        return $this->hasMany(ZoneCountry::class);
     }
 }

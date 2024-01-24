@@ -37,9 +37,6 @@ class SinerlogLabelRepository
                 $arrSinerlogReturn = (array)$arrCN23['data'];
                 $arrSinerlogReturn = (array)$arrSinerlogReturn['data'];
                 
-                Log::info('Sinerlog Label Repository: update() - CN23 data: ');
-                Log::info(json_encode($arrSinerlogReturn));
-                
                 $order->setCN23($arrSinerlogReturn);
                 $order->setSinerlogTrxId($arrSinerlogReturn['order_code']);
                 $order->setSinerlogFreight($arrSinerlogReturn['data']->freight_price);

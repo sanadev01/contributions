@@ -18,9 +18,7 @@ class StatsFilter extends Component
     }
 
     public function getorders(){
-
         return (new DashboardRepository)->getDashboardStats($this->startDate,$this->endDate);
-
     }
 
    

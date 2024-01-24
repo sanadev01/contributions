@@ -3,30 +3,28 @@
 namespace App\Http\Livewire\Order\OrderDetails;
 
 use App\Models\Order;
+use App\Models\OrderItem;
 use Livewire\Component;
 
 class OrderItems extends Component
 {
-    public $orderId; 
-    public $items;
+    public $orderId;
     public $order;
+    public $editItemId = null;
+    protected $listeners = ['itemAdded'];
 
-    protected $listeners = [
-        'removeItem' => 'removeItem'
-    ];
 
+
+    public function itemAdded()
+    {
+        $this->order->refresh();
+    }
     public function mount($orderId)
     {
         $this->orderId = $orderId;
         $this->order = Order::find($orderId);
-
-        $this->items = old('items', $this->order->items->toArray() );
-
-        if ( count($this->items) <1 ){
-            $this->addItem();
-            // $this->addItem();
-        }
-
+        
+ 
     }
 
     public function render()
@@ -34,13 +32,26 @@ class OrderItems extends Component
         return view('livewire.order.order-details.order-items');
     }
 
-    public function addItem()
+
+
+    public function deleteItem($id)
     {
-        array_push($this->items,[]);
+        OrderItem::where('order_id', $this->order->id)->where('id', $id)->delete();
+        $this->order->refresh();
+        if(count($this->order->items)==0)
+        {
+            $this->dispatchBrowserEvent('disabledSubmitButton');
+        }
+        else{
+            $this->dispatchBrowserEvent('activateSubmitButton');
+        }
+        $this->dispatchBrowserEvent('emitSHCodes');
     }
 
-    public function removeItem($index)
+
+    public function editItem($id)
     {
-        unset($this->items[$index]);
+        $this->emit('editItem', $id);
+        $this->dispatchBrowserEvent('emitSHCodes');
     }
 }

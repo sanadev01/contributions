@@ -80,6 +80,32 @@ class AccrualRate extends Model
         if ( $this->service == Package::SERVICE_CLASS_Post_Plus_Premium){
             return "PrimeRIO";
         }
+
+        if ( $this->service == Package::SERVICE_CLASS_Prime5RIO ){
+            return "Prime5RIO";
+        }
+
+        if ( $this->service == Package::SERVICE_CLASS_GDE_PRIORITY ){
+            return "GDE Priority Mail";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_GDE_FIRSTCLASS ){
+            return "GDE First Class";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_TOTAL_EXPRESS ){
+            return "Total Express";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_LT_PRIME ){
+            return "Prime LT";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_Post_Plus_LT_Premium ){
+            return "PostPlus Portugal";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_Post_Plus_CO_EMS ){
+            return "PostPlus Colombia EMS";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_Post_Plus_CO_REG ){
+            return "PostPlus Colombia REG";
+        }
         return '';
     }
 

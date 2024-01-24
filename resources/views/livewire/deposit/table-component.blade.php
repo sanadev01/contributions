@@ -4,7 +4,7 @@
             <strong>Statement From: </strong> {{ $dateFrom }} - {{ $dateTo }} <br>
             {{-- <strong>Total Deposit:</strong> {{ 0 }} <br>
             <strong>Total Debit: </strong>  {{ 0 }} <br> --}}
-            <strong>Balance: <span style="font-size: 16px;">{{ getBalance() }} USD </span></strong>
+            <strong>Balance: <span style="font-size: 16px;">{{ number_format( getBalance(), 2 ) }} USD </span></strong>
         </div>
     </div>
     <div class="row justify-content-end mb-1">
@@ -65,7 +65,7 @@
         <tr>
             <th>
                 <input type="search" wire:model.debounce.500ms="uuid" class="form-control">
-            </th>            
+            </th>
             @admin
             <th>
                 <input type="search" wire:model.debounce.500ms="user" class="form-control">
@@ -110,27 +110,22 @@
                         <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
                             {{ $deposit->firstOrder()->us_api_tracking_code }}
                         </a>
-                    @elseif($deposit->order_id && $deposit->getOrder($deposit->order_id))
-                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->getOrder($deposit->order_id)) }}" class="w-100" title="Show Order Details">
-                            {{ $deposit->getOrder($deposit->order_id)->corrios_tracking_code }}
-                        </a>    
-                    @endif    
+                    @elseif($deposit->order_id)
+                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
+                            {{ optional($deposit->order)->corrios_tracking_code }}
+                        </a>
+                    @endif
                 </td>
                 <td>
-                    @if($deposit->order_id != null)
-                        @if($deposit->getOrder($deposit->order_id))
-                            <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->getOrder($deposit->order_id)) }}" class="w-100" title="Show Order Details">
-                                {{ $deposit->getOrder($deposit->order_id)->warehouse_number }}
+                    @if($deposit->order_id)
+                        @if(optional($deposit->order)->warehouse_number)
+                            <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
+                                {{ optional($deposit->order)->warehouse_number }}
                             </a>
                         @else
-                            <p class="font-italic text-danger">{{$deposit->order_id}} : Order Deleted</p> 
-                        @endif    
-                    @endif    
-                    {{-- @if($deposit->hasOrder())
-                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
-                            {{ $deposit->orders()->first()->warehouse_number }}
-                        </a>
-                    @endif --}}
+                            {{  "$deposit->order_id  Order Deleted "}}
+                        @endif
+                    @endif
                 </td>
                 <td>
                     {{ $deposit->last_four_digits  }}
@@ -156,15 +151,15 @@
                     @if( $deposit->isCredit() )
                         <i class="fa fa-arrow-up text-success"></i>
                         <br>
-                         <span class="text-success">$ {{ $deposit->amount }}</span>
+                         <span class="text-success">$ {{ number_format($deposit->amount, 2) }}</span>
                     @else
                         <i class="fa fa-arrow-down text-danger"></i>
                         <br>
-                         <span class="text-danger">$ {{ $deposit->amount }}</span>
+                         <span class="text-danger">$ {{ number_format($deposit->amount, 2) }}</span>
                     @endif
                 </th>
                 <td>
-                    {{ $deposit->balance }}
+                    {{ number_format($deposit->balance, 2) }}
                 </td>
                 <td>
                     {{ optional($deposit->created_at)->format('m/d/Y') }}

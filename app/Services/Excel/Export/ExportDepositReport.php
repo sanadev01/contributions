@@ -156,14 +156,16 @@ class ExportDepositReport extends AbstractExportService
                     if ($order->shippingService->sub_class_code == ShippingService::GePS || $order->shippingService->sub_class_code == ShippingService::GePS_EFormat || $order->shippingService->sub_class_code == ShippingService::Parcel_Post) {
                         return 'Global eParcel';
                     }
-                    if ($order->shippingService->sub_class_code == ShippingService::Prime5) {
+                    if ($order->shippingService->sub_class_code == ShippingService::Prime5 || $order->shippingService->sub_class_code == ShippingService::Prime5RIO) {
                         return 'Prime5';
                     }
                     if (in_array($order->shippingService->sub_class_code, 
                         [ShippingService::Packet_Standard, 
                         ShippingService::Packet_Express, 
                         ShippingService::AJ_Packet_Standard, 
-                        ShippingService::AJ_Packet_Express])) 
+                        ShippingService::AJ_Packet_Express,
+                        ShippingService::BCN_Packet_Standard, 
+                        ShippingService::BCN_Packet_Express])) 
                         {
                         return 'Correios Brazil';
                     }

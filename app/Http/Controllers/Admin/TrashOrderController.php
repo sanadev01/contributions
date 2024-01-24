@@ -17,6 +17,7 @@ class TrashOrderController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewTrashedOrder',Order::class);
         return view('admin.orders.trash');
     }
     
@@ -24,13 +25,15 @@ class TrashOrderController extends Controller
     {
         try{
 
-            $orderIds = json_decode($request->get('data'),true);
-            $orders = Order::find($orderIds)->each->delete();
+            $orderIds = array_map(function($id){
+              return decrypt($id);  
+            },json_decode($request->get('data'),true));
             
-            // if ( $preAlertRepository->delete($request->data) ){
-                session()->flash('alert-success','Parcel Deleted');
-                return back();
-            // }
+            Order::find($orderIds)->each->delete();
+
+            session()->flash('alert-success','Parcel Deleted');
+            return back();
+             
         }catch(\Exception $e){
             session()->flash('alert-danger','Error While Deleting Parcel');
             return back();

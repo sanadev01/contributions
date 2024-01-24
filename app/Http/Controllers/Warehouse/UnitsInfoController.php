@@ -26,7 +26,7 @@ class UnitsInfoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request, UnitInfoRepository $repository)
-    {
+    { 
         $type = $request->type;
         $unitInfo = [];
         $rules = [
@@ -34,13 +34,9 @@ class UnitsInfoController extends Controller
         ];
 
         if($request->start_date){
-            $date = Carbon::createFromFormat('Y-m-d', $request->start_date);
-            $daysToAdd = 8;
-            $date = $date->addDays($daysToAdd);
-            
             if($request->type != 'units_return'){
-                $rules['start_date']= 'required|date';
-                $rules['end_date']= 'required|date|after:start_date|before:'.$date->format('Y-m-d');
+                $rules['start_date']= 'required';
+                $rules['end_date']= 'required';
             }
         }
 
@@ -51,12 +47,23 @@ class UnitsInfoController extends Controller
             $rules['deprAirportCode'] = 'required';
             $rules['arrvAirportCode'] = 'required';
             $rules['destCountryCode'] = 'required';
+            
+        }
+        if($request->type == 'departure_cn38'){
+            $rules['unitCode']        = 'required';
+            $rules['flightNo']        = 'required';
+            $rules['airlineCode']     = 'required';
+            $rules['deprAirportCode'] = 'required';
+            $rules['arrvAirportCode'] = 'required';
+            $rules['start_date']= 'required';
+            $rules['end_date']= 'required';
         }
         
-        
+         
+        session()->forget('alert-danger'); 
         if($type){
             $this->validate($request,$rules);
-            $unitInfo = $repository->getUnitInfo($request);
+            $unitInfo = $repository->getUnitInfo($request);  
         }
         return view('admin.warehouse.unitInfo.create', compact('unitInfo', 'type'));
     }

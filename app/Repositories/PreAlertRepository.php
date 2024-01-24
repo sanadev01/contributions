@@ -78,7 +78,7 @@ class PreAlertRepository
 
         if ( !Auth::user()->isAdmin() && Auth::user()->can('addShipmentDetails',Order::class) ){
             $order->update([
-                'warehouse_number' => $order->getTempWhrNumber()
+                'warehouse_number' => $order->getTempWhrNumber(false)
             ]);
         }
 
@@ -211,14 +211,12 @@ class PreAlertRepository
 
         if($order->status == Order::STATUS_PREALERT_TRANSIT){
             try {
-                \Log::info('STATUS_PREALERT_TRANSIT');
                 \Mail::send(new ShipmentTransit($order));
             } catch (\Exception $ex) {
                 \Log::info('Shipment transit email send error: '.$ex->getMessage());
             }
         }else{
             try {
-                \Log::info('STATUS_READ');
                 \Mail::send(new ShipmentReady($order));
             } catch (\Exception $ex) {
                 \Log::info('Shipment ready email send error: '.$ex->getMessage());
@@ -299,7 +297,7 @@ class PreAlertRepository
             $order->subOrders()->sync($request->parcels);
 
             $order->update([
-                'warehouse_number' => "HD-{$order->id}-C"
+                'warehouse_number' => $order->getTempWhrNumber()."-C"
             ]);
             
             DB::commit();

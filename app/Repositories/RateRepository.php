@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Excel\ImportCharges\ImportRates;
+use App\Services\Excel\ImportCharges\ImportGDERates;
 use App\Services\Excel\ImportCharges\ImportCourierExpressRates;
 
 class RateRepository
@@ -33,6 +34,9 @@ class RateRepository
                    
                     $importCourierExpressService = new ImportCourierExpressRates($file, $shippingService, $request);
                     $importCourierExpressService->handle();
+                }elseif ($shippingService && ($shippingService->service_sub_class == ShippingService::GDE_PRIORITY_MAIL || $shippingService->service_sub_class == ShippingService::GDE_FIRST_CLASS)) {
+                    $importPostNLRates = new ImportGDERates($file, $shippingService, $request);
+                    $importPostNLRates->handle();
                 }else
                 {
                     $importService = new ImportRates($file, $shippingService, $request->country_id);

@@ -34,6 +34,14 @@ class ScanOrderExport extends AbstractExportService
         return $this->download();
     }
 
+    
+    public function getFilePath()
+    {
+        $this->prepareExcelSheet();
+
+        return $this->downloadExcel();
+    }
+
     private function prepareExcelSheet()
     {
         $this->setExcelHeaderRow();
@@ -59,12 +67,9 @@ class ScanOrderExport extends AbstractExportService
             $this->setCellValue('L'.$row, $order->arrived_date);
             $this->setCellValue('M'.$row, optional(optional($order->driverTracking)->user)->name);
             $this->setCellValue('N'.$row, optional(optional($order->driverTracking)->created_at)->format('m-d-Y'));
-            if($order->status < 80 ){
-                $this->setCellValue('O'.$row, 'Scanned in the warehouse');
-            }
-            if($order->status >= 80 ){
-                $this->setCellValue('O'.$row, 'Shipped');
-            }
+            $this->setCellValue('O'.$row, $order->status < 80 ?'Scanned in the warehouse':'Shipped');
+            $this->setCellValue('P'.$row, $order->customer_reference);
+
             $this->count++ ;
             $row++;
         }
@@ -153,8 +158,11 @@ class ScanOrderExport extends AbstractExportService
         $this->setColumnWidth('O', 20);
         $this->setCellValue('O7', 'Status');
 
-        $this->setBackgroundColor('A7:O7', '2b5cab');
-        $this->setColor('A7:O7', 'FFFFFF');
+        $this->setColumnWidth('P', 20);
+        $this->setCellValue('P7', 'Additional Reference');
+
+        $this->setBackgroundColor('A7:P7', '2b5cab');
+        $this->setColor('A7:P7', 'FFFFFF');
         $this->currentRow++;
 
         return true;

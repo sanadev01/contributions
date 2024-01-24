@@ -6,7 +6,9 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">@lang('orders.Anjun Orders')</h4>
+                        <h4 class="mb-0">
+                                @lang('menu.Reports.Service Report')
+                        </h4>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
@@ -23,9 +25,10 @@
                                     </select>
                                 </div>
                                 <div class="col-5">
-                                    <form action="" method="GET">
-                                        <div class="row">
-                                            <div class="col-md-10">
+                                    <form action="{{ url()->current() }}" method="GET" id="searchForm">
+                                        <div class="row">                                                
+                                            <div class="col-md-7">
+                                                <input type="hidden" id="hiddenType"  name="type" value="{{request('type')}}" >
                                                 <input type="search" class="form-control" name="search" value="{{ old('search',request('search')) }}" placeholder="@lang('orders.Search By Name, Warehouse No. or Tracking Code')">
                                             </div>
                                             <div class="col-md-2">
@@ -37,10 +40,21 @@
                                     </form>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <form action="{{ route('admin.reports.anjun.create') }}" method="GET" target="_blank">
+                                    <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                                         @csrf
+                                       
                                         <div class="row">
-                                            <div class="offset-1 col-md-5">
+                                            <div class="offset-1 col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                    <select name="type"  class="form-control" id="searchType"   >
+                                                        <option class="form-control" value="bcn" @if(request('type')=='bcn') selected @endif>BCN</option>
+                                                        <option class="form-control" value="anjun"  @if(request('type')=='anjun') selected @endif>ANJUN</option>
+                                                    </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
                                                 <div class="row">
                                                     <div class="col-md-4 mt-2">
                                                         <label>Start Date</label>
@@ -50,7 +64,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-3">
                                                 <div class="row">
                                                     <div class="col-md-4 mt-2 pl-0">
                                                         <label>End Date</label>
@@ -79,6 +93,7 @@
                                         <th>@lang('orders.Amount Customers Paid')</th>
                                         <th>@lang('orders.Correios Anjun')</th>
                                         <th>@lang('Anjun Commission')</th>
+                                        <th>@lang('orders.status')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -88,7 +103,7 @@
                                             <td>
                                                 <span>
                                                     <a href="#" title="Click to see Shipment" data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.parcel.shipment-info',$order->id) }}">
-                                                        WRH#: {{ $order->warehouse_number }}
+                                                          {{ $order->warehouse_number }}
                                                     </a>
                                                 </span>
                                             </td>
@@ -97,6 +112,7 @@
                                             <td>{{ $order->gross_total }}</td>
                                             <td><livewire:reports.anjun-report :order="$order" :isCommission="false"/></td>
                                             <td><livewire:reports.anjun-report :order="$order" :isCommission="true"/></td>
+                                            <td>{{ $order->status_name }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -114,4 +130,16 @@
 @endsection
 @section('modal')
 <x-modal />
+@endsection
+@section('js')
+ 
+<script>
+    $(document).ready(function () {
+        $('#searchType').change(function () {
+            $('#hiddenType').val($(this).val()) 
+            $('#searchForm').submit();
+         
+        });
+    });
+</script>
 @endsection

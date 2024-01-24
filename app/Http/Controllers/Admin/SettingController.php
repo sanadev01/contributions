@@ -48,7 +48,7 @@ class SettingController extends Controller
             'fedex_profit'=> setting('fedex_profit', null, $this->adminId)? setting('fedex_profit', null, $this->adminId): 0,
             'AUTHORIZE_ID'=> setting('AUTHORIZE_ID'),
             'AUTHORIZE_KEY'=> setting('AUTHORIZE_KEY'),
-            'correios_setting'=> setting('anjun_api', null, $this->adminId) ? 'Anjun API' : 'Correios API',
+            'correios_setting'=> setting('anjun_api', null, $this->adminId) ? 'Correios Anjun API' : (setting('china_anjun_api', null, $this->adminId)?'China Anjun':(setting('bcn_api', null, $this->adminId)?'BCN Setting':'Correios API')),
         ];
         try {
             \Mail::send(new SettingUpdate($user, $request, $userData, true));
@@ -63,18 +63,29 @@ class SettingController extends Controller
         Setting::saveByKey('TYPE', $request->TYPE,null,true);
         Setting::saveByKey('VALUE', $request->VALUE,null,true);
 
-        ($request->correios_setting == 'anjun_api') ? saveSetting('anjun_api', true, $this->adminId) : saveSetting('anjun_api', false, $this->adminId);
         
+        //switch 3 api for correies/anjun standerd/express api.
+        saveSetting('bcn_api', false, $this->adminId);
+        saveSetting('china_anjun_api', false, $this->adminId);
+        saveSetting('correios_api', false, $this->adminId);
+        saveSetting('anjun_api', false, $this->adminId);
+        saveSetting($request->correios_setting, true, $this->adminId);
+
         $request->has('usps') ? saveSetting('usps', true, $this->adminId) : saveSetting('usps', false, $this->adminId);
         $request->has('ups') ? saveSetting('ups', true, $this->adminId) : saveSetting('ups', false, $this->adminId);
         $request->has('fedex') ? saveSetting('fedex', true, $this->adminId) : saveSetting('fedex', false, $this->adminId);
         $request->has('geps_service') ? saveSetting('geps_service', true, $this->adminId) : saveSetting('geps_service', false, $this->adminId);
         $request->has('sweden_post') ? saveSetting('sweden_post', true, $this->adminId) : saveSetting('sweden_post', false, $this->adminId);
         $request->has('post_plus') ? saveSetting('post_plus', true, $this->adminId) : saveSetting('post_plus', false, $this->adminId);
+        $request->has('gss') ? saveSetting('gss', true, $this->adminId) : saveSetting('gss', false, $this->adminId);
+        $request->has('gde') ? saveSetting('gde', true, $this->adminId) : saveSetting('gde', false, $this->adminId);
 
         ($request->usps_profit != null ) ? saveSetting('usps_profit', $request->usps_profit, $this->adminId) : saveSetting('usps_profit', 0, $this->adminId);
         ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $this->adminId) : saveSetting('ups_profit', 0, $this->adminId);
         ($request->fedex_profit != null ) ? saveSetting('fedex_profit', $request->fedex_profit, $this->adminId) : saveSetting('fedex_profit', 0, $this->adminId);
+        ($request->gss_profit != null ) ? saveSetting('gss_profit', $request->gss_profit, $this->adminId) : saveSetting('gss_profit', 0, $this->adminId);
+        ($request->gde_pm_profit != null ) ? saveSetting('gde_pm_profit', $request->gde_pm_profit, $this->adminId) : saveSetting('gde_pm_profit', 0, $this->adminId);
+        ($request->gde_fc_profit != null ) ? saveSetting('gde_fc_profit', $request->gde_fc_profit, $this->adminId) : saveSetting('gde_fc_profit', 0, $this->adminId);
 
         session()->flash('alert-success', 'setting.Settings Saved');
         return back();

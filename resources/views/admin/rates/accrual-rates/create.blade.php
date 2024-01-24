@@ -34,6 +34,9 @@
                                             <option value="" selected>@lang('shipping-rates.Select Country')</option>
                                             <option value="30">Brazil</option>
                                             <option value="46">Chile</option>
+                                            <option value="250">United States</option>
+                                            <option value="188">Portugal</option>
+                                            <option value="50">Colombia</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
@@ -55,6 +58,8 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_SRM}}">SRM</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_Standard}}">AJ Standard</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_EXPRESS}}">AJ Express</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_BCN_Standard}}">BCN Standard</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_BCN_EXPRESS}}">BCN Express</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GePS}}">Global eParcel Prime</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GePS_EFormat}}">Global eParcel Untracked Packet</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Prime5}}">Prime5</option>
@@ -63,6 +68,14 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Parcel_Post}}">Parcel Post</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_Prime}}">Post Plus Prime</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_Premium}}">PrimeRIO</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Prime5RIO}}">Prime5RIO</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GDE_PRIORITY}}">GDE Priority Mail</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_GDE_FIRSTCLASS}}">GDE First Class</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_TOTAL_EXPRESS}}">Total Express</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_LT_PRIME}}">Prime LT</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_LT_Premium}}">PostPlus Portugal</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_CO_EMS}}">PostPlus Colombia EMS</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_CO_REG}}">PostPlus Colombia REG</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>

@@ -3,15 +3,25 @@
 namespace App\Models;
 
 use App\Models\Order;
+use Milon\Barcode\DNS2D;
 use Illuminate\Support\Str;
 use App\Models\AffiliateSale;
 use App\Models\CommissionSetting;
+use App\Models\Warehouse\Container;
+use Illuminate\Support\Facades\Cache;
+use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Activitylog\LogOptions;
+
+use AmazonSellingPartner\Exception\ApiException;
+use AmazonSellingPartner\Exception\InvalidArgumentException;
+use App\AmazonSPClients\SellersApiClient; 
+use Exception;
+use JsonException; 
+use Psr\Http\Client\ClientExceptionInterface;
 
 class User extends Authenticatable
 {
@@ -29,7 +39,6 @@ class User extends Authenticatable
                             ->logOnlyDirty()
                             ->dontSubmitEmptyLogs();
     }
-    protected static $ignoreChangedAttributes = ['password','api_token','api_enabled'];
 
     const ROLE_ADMIN = 1;
     const ROLE_USER = 2;
@@ -38,9 +47,28 @@ class User extends Authenticatable
 
     const ACCOUNT_TYPE_BUSINESS = 'business';
     const ACCOUNT_TYPE_INDIVIDUAL = 'individual';
+    
+    const USER_TYPE_ADMIN = 'ADMIN';
+    const USER_TYPE_SELLER = 'SELLER';
 
     const GILBERTO_ACCOUNT_ID = 13;
     
+    protected static $ignoreChangedAttributes = ['password','api_token','api_enabled'];
+    protected static $logAttributes = [
+        'pobox_number', 'package_id', 'state_id', 'country_id', 'role_id','name', 'email', 'last_name', 
+        'phone', 'city', 'street_no', 'address', 'address2', 'account_type', 'tax_id', 'zipcode', 
+        'locale','market_place_name','image_id','reffered_by', 'reffer_code', 'battery', 'perfume',
+        'status', 'insurance', 'stripe', 'usps', 'ups', 'api_profit','amazon_api_enabled','amazon_api_key'
+    ];
+    protected static $logOnlyDirty = true;
+    protected static $submitEmptyLogs = false;
+ 
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password'          => 'hashed',
+        'created_at'        => 'datetime',
+        'updated_at'        => 'datetime',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -52,7 +80,15 @@ class User extends Authenticatable
         'password', 'phone', 'city', 'street_no', 'address', 'address2', 'account_type', 'tax_id', 'zipcode', 
         'api_token', 'api_enabled', 'locale','market_place_name','image_id','reffered_by', 'reffer_code','come_from', 'battery', 'perfume','status', 'insurance',
         'api_token', 'api_enabled', 'locale','market_place_name','image_id','reffered_by', 'reffer_code','come_from', 'battery', 'perfume','status', 
-        'usps', 'api_profit', 'order_dimension', 'sinerlog', 'stripe', 'ups','amazon_api_enabled','amazon_api_key'
+        'usps', 'api_profit', 'order_dimension', 'sinerlog', 'stripe', 'ups','amazon_api_enabled','amazon_api_key', 
+        'email_verified_at', 
+        'is_active',
+        'user_type',
+        'parent_id',
+        'seller_id',
+        'marketplace_id',
+        'region_code',
+        'delete_status',
     ];
 
     /**
@@ -68,10 +104,7 @@ class User extends Authenticatable
      * The attributes that should be cast to native types.
      *
      * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+     */ 
 
     public function role()
     {
@@ -322,4 +355,56 @@ class User extends Authenticatable
     {
         return $this->hasMany(Deposit::class);
     }
+    public function containers()
+    {
+        return $this->hasMany(Container::class);
+    }
+    public function deliveryBills()
+    {
+        return $this->hasMany(DeliveryBill::class);
+    }
+
+
+    /**
+     * @return BelongsTo
+     */
+    public function parent(){
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function children(){
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function siblings() {
+        return $this->hasMany(self::class, ['parent_id', 'user_type', 'seller_id'], ['parent_id', 'user_type', 'seller_id']);
+    }
+ 
+    public function marketplace(){
+        return $this->belongsTo(Marketplace::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function sp_token(){
+        return $this->hasOne(SpToken::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegion(): string {
+        return $this->region_code ?: ($this->marketplace ? $this->marketplace->region_code : 'na');
+    }
+ 
+
+    
 }
+

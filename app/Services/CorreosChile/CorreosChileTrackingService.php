@@ -38,7 +38,7 @@ class CorreosChileTrackingService
             }
             
        } catch (Exception $e) {
-            Log::info($e->getMessage());
+            
             return (Object)[
                 'status' => false,
                 'message' => $e->getMessage(),

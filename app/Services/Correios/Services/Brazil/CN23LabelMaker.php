@@ -3,10 +3,13 @@
 namespace App\Services\Correios\Services\Brazil;
 
 use Exception;
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Order;
+use App\Models\ShippingService;
 use Picqer\Barcode\BarcodeGeneratorPNG;
-use App\Services\Correios\Contracts\HasLableExport;
 use App\Services\Correios\Models\Package;
+use App\Services\Correios\Contracts\HasLableExport;
 
 class CN23LabelMaker implements HasLableExport
 {
@@ -25,7 +28,8 @@ class CN23LabelMaker implements HasLableExport
     private $items;
     private $sumplementryItems;
     private $hasSuplimentary;
-    private $hasDescpCount;
+    private $activeAddress;
+    private $isReturn;
 
     public function __construct()
     {
@@ -36,11 +40,12 @@ class CN23LabelMaker implements HasLableExport
         $this->packetType = 'Packet Standard';
         $this->contractNumber = 'Contrato:  9912501576';
         $this->service = 2;
-        $this->returnAddress = 'Blue Line Ag. De Cargas Ltda. <br>
-        Rua Barao Do Triunfo, 520 - CJ 152 - Brooklin Paulista
-        CEP 04602-001 - São Paulo - SP- Brasil';
+        $this->returnAddress = 'Homedeliverybr <br>
+        Rua Acaçá 47- Ipiranga <br>
+        Sao Paulo CEP 04201-020';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
-        $this->hasDescpCount = '';
+        $this->activeAddress = '';
+        $this->labelZipCodeGroup = '';
     }
 
     public function setOrder(Order $order)
@@ -49,10 +54,18 @@ class CN23LabelMaker implements HasLableExport
         $this->recipient = $order->recipient;
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
+        $this->getActiveAddress($this->order);
+        $this->checkReturn($this->order);
+        if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
+            $this->labelZipCodeGroup = getOrderGroupRange($this->order);
+        }
 
-        if ($this->order->shippingService->isAnjunService()) {
-            $this->contractNumber = 'Contrato:  9912501700';
-            $this->hasAnjunLabel = true;
+        if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->is_bcn_service) {
+            if ($this->order->shippingService->is_bcn_service) {
+                $this->contractNumber = 'Contrato: 0076204456';
+            } else {
+                $this->contractNumber = 'Contrato: 9912501700';
+            }
         }
         return $this;
     }
@@ -65,20 +78,27 @@ class CN23LabelMaker implements HasLableExport
 
     public function setPacketType(int $packetType)
     {
-        switch($packetType):
+        switch ($packetType):
             case Package::SERVICE_CLASS_EXPRESS:
                 $this->packetType = 'Packet Express';
                 $this->serviceLogo = public_path('images/express-package.png');
-            break;
+                break;
+            case ShippingService::BCN_Packet_Express:
+                $this->packetType = 'Packet Express';
+                $this->serviceLogo = public_path('images/express-package.png');
+            case ShippingService::AJ_Express_CN:
+                $this->packetType = 'Packet Express';
+                $this->serviceLogo = public_path('images/express-package.png');
+                break;
             case Package::SERVICE_CLASS_MINI:
                 $this->packetType = 'Packet Mini';
                 $this->serviceLogo = public_path('images/mini-package.png');
-            break;
+                break;
             case Package::SERVICE_CLASS_STANDARD:
             default:
                 $this->packetType = 'Packet Standard';
                 $this->serviceLogo = public_path('images/standard-package.png');
-            break;
+                break;
         endswitch;
 
         return $this;
@@ -110,40 +130,56 @@ class CN23LabelMaker implements HasLableExport
 
     private function setItems()
     {
-        $this->getItemsDescpCount();
+        $this->items = $this->order->items->take($this->suplimentryAt());
         return $this;
     }
 
     private function setSuplimentryItems()
     {
-        if ( $this->order->items->count() > 2 ){
+        $suplimentryAt = $this->suplimentryAt();
+        if ($this->order->items->count() > $suplimentryAt) {
             $this->hasSuplimentary = true;
-            $this->getItemsDescpCount();
+            $this->sumplementryItems = $this->order->items->skip($suplimentryAt)->chunk(30);
         }
-
         return $this;
+    }
+    private function suplimentryAt()
+    {
+        foreach ($this->order->items as  $key => $item) {
+            if (strlen($item->description) > 65) {
+                try {
+
+                    if (strlen($this->order->items[$key + 1]->description) <= 70  && $key < 2)
+                        return $key == 0 ? 2 : $key + 1;
+                } catch (Exception $e) {
+                    return $key == 0 ? 1 : $key;
+                }
+                return $key == 0 ? 1 : $key;
+            }
+        }
+        return 4;
     }
 
     public function render()
     {
-        return view('labels.brazil.cn23.index',$this->getViewData());
+        return view('labels.brazil.cn23.index', $this->getViewData());
     }
 
     public function download()
     {
-        if ( ! $this->order ){
+        if (!$this->order) {
             throw new Exception("Order not Set");
         }
 
-        return \PDF::loadView('labels.brazil.cn23.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.brazil.cn23.index', $this->getViewData())->stream();
     }
 
     public function saveAs($path)
     {
-        if ( !file_exists(dirname($path)) ){
-            mkdir(dirname($path),0775,true);
+        if (!file_exists(dirname($path))) {
+            mkdir(dirname($path), 0775, true);
         }
-        return \PDF::loadView('labels.brazil.cn23.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.brazil.cn23.index', $this->getViewData())->save($path);
     }
 
     private function getViewData()
@@ -164,23 +200,37 @@ class CN23LabelMaker implements HasLableExport
             'suplimentaryItems' => $this->sumplementryItems,
             'hasSumplimentary' => $this->hasSuplimentary,
             'barcodeNew' => new BarcodeGeneratorPNG(),
+            'activeAddress' => $this->activeAddress,
+            'isReturn' => $this->isReturn,
+            'labelZipCodeGroup' => $this->labelZipCodeGroup
         ];
     }
 
-    private function getItemsDescpCount ()
+    private function getActiveAddress(Order $order)
     {
-        $orderItem = $this->order->items()->take(4)->selectRaw(\DB::raw('LENGTH(description)'))->get()->toArray();
-        $descpItems = array_flatten($orderItem);
-        $itemCount = count($descpItems);
-        
-        if($itemCount > 1 && array_sum(array_slice($descpItems, 0, 2)) > 245) {
-            $itemSelect = 2;
-        }elseif( ($itemCount > 2 && array_sum(array_slice($descpItems, 0, 3)) > 200) || ($itemCount > 3 && array_sum(array_slice($descpItems, 0, 4)) > 257) ) {
-            $itemSelect = 3;
-        }else {
-            $itemSelect = 4;
+        if (setting('default_address', null, $order->user_id) == 3) {
+            $user = $order->user;
+            $this->activeAddress = $user->address . ', ' . $user->state->code . ', ' . $user->zipcode . ', ' . $user->country()->first()->code;
+        } else {
+            $this->activeAddress = "2200 NW 129th Ave - Suite # 100, Miami, FL 33182 US";
         }
-        $this->items = $this->order->items->take($itemSelect);
-        $this->sumplementryItems = $this->order->items->skip($itemSelect)->chunk(30);
+        return $this;
+    }
+
+    private function checkReturn(Order $order)
+    {
+        if ($order->sinerlog_tran_id) {
+            $this->isReturn = false;
+            if ($order->sinerlog_tran_id == 1  || $order->sinerlog_tran_id == 3) {
+                $this->isReturn = true;
+            }
+        } else {
+            // $id = auth()->user()->id;
+            $this->isReturn = true;
+            // if(setting('return_origin', null, $id) || setting('individual_parcel', null, $id)) {
+            //     $this->isReturn = true;
+            // }
+        }
+        return $this;
     }
 }

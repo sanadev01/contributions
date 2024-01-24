@@ -16,6 +16,6 @@ class ShCode extends Model
                             ->dontSubmitEmptyLogs();
     }
     protected $fillable = [
-        'code','description'
+        'code','description','type'
     ];
 }

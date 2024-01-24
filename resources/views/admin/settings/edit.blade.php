@@ -93,7 +93,7 @@
                                 <h4>Services Settings</h4>
                                 <hr>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">USPS<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">USPS Domestic<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="usps">
@@ -144,6 +144,23 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">USPS GSS Int'l<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="GSS">
+                                                <input type="checkbox" name="gss" id="gss" @if(setting('gss', null, $adminId)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Profit Percentage (%) :</span>
+                                            <input type="number" name="gss_profit" step="0.01" min=0 class="form-control col-2" id="gss_profit" value="{{ setting('gss_profit', null, $adminId) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">GePS Prime<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
@@ -188,6 +205,25 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">GDE<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="GDE">
+                                                <input type="checkbox" name="gde" id="gde" @if(setting('gde', null, \App\Models\User::ROLE_ADMIN)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Priority Mail (%) :</span>
+                                            <input type="number" name="gde_pm_profit" step="0.01" min=0 class="form-control col-2" id="gde_pm_profit" value="{{ setting('gde_pm_profit', null, $adminId) }}">
+                                            <span class="ml-3 mr-2 mt-2">First Class (%) :</span>
+                                            <input type="number" name="gde_fc_profit" step="0.01" min=0 class="form-control col-2" id="gde_fc_profit" value="{{ setting('gde_fc_profit', null, $adminId) }}">
+                                        </div>
+                                    </div>
+                                </div> 
                                 <h4>Correios Settings</h4>
                                 <hr>
                                 <div class="controls row mb-1 align-items-center">
@@ -195,19 +231,39 @@
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="form-check">
-                                                <input class="form-check-input admin-api-settings" type="radio" name="correios_setting" id="correios_api" value="correios_api" @if(!setting('anjun_api', null, $adminId)) checked @endif>
+                                                <input class="form-check-input admin-api-settings" type="radio" name="correios_setting" id="correios_api" value="correios_api" @if(setting('correios_api', null, $adminId)) checked @endif>
                                             </div>
                                         </div>    
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right mt-4 h5" for="anjun_api">Anjun Api<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right mt-4 h5" for="anjun_api">Correios Anjun Api<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="form-check">
                                                 <input class="form-check-input admin-api-settings" type="radio" name="correios_setting" id="anjun_api" value="anjun_api" @if(setting('anjun_api', null, $adminId)) checked @endif>
                                             </div>
                                         </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right mt-4 h5" for="bcn_api">BCN Api<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input admin-api-settings" type="radio" name="correios_setting" id="bcn_api" value="bcn_api" @if(setting('bcn_api', null, $adminId)) checked @endif>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">    
+                                    <label class="col-md-3 text-md-right mt-4 h5" for="china_anjun_api"> Anjun China Api<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input admin-api-settings" type="radio" name="correios_setting" id="anjun_api" value="china_anjun_api" @if(setting('china_anjun_api', null, $adminId)) checked @endif>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mt-1">

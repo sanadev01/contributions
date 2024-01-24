@@ -53,7 +53,7 @@ class CorreiosBrazilTrackingService{
             
         }
         catch (Exception $e) {
-            Log::info($e->getMessage());
+            
             return (Object)[
                 'success' => false,
                 'error' => $e->getMessage(),

@@ -29,6 +29,9 @@ class OrderCreatedController extends Controller
                 $shippingService = ShippingService::query()->active()->first();
             }
             
+            if(!User::find(base64_decode($request->callbackUser))->isActive()){
+                return null;
+            }
             $order = Order::create([
                 'user_id' => base64_decode($request->callbackUser),
                 'sender_first_name' => optional($request->customer)['first_name'],
@@ -52,7 +55,7 @@ class OrderCreatedController extends Controller
             ]);
     
             $order->update([
-                'warehouse_number' => $order->getTempWhrNumber()
+                'warehouse_number' => $order->getTempWhrNumber(false)
             ]);
     
             $senderCountry = Country::where('code',optional($request->shipping_address)['country_code'])->first();
