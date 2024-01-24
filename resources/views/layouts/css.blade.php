@@ -224,6 +224,20 @@
     .search-header {
         display: table-header-group;
     }
-
+    .main-menu.menu-light .navigation > li.active > a {
+          background: #ebfafa !important;
+          box-shadow: 0px #ebfafa !important;
+          color: #000000 !important;  
+          font-weight: 200;
+          border-radius: 0px !important; 
+        }
+        .main-menu.menu-light .navigation > li .active {
+          background: #ebfafa !important; }
+          .main-menu.menu-light .navigation > li .active > a {
+            color: #565656 !important;
+            margin-bottom: 0; }
+          .main-menu.menu-light .navigation > li .active .hover > a {
+            background: whitesmoke; 
+            }
 </style>
 @yield('custom-css')
