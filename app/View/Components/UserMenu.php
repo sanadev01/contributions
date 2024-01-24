@@ -34,14 +34,14 @@ class UserMenu extends Component
         if (is_array($route)) {
             foreach ($route as $r) {
                 if (request()->routeIs($r)) {
-                    return 'active new-active ';
+                    return 'active new-active';
                 }
             }
 
             return '';
         }
 
-        return request()->routeIs($route) ? 'active new-active ' : '';
+        return request()->routeIs($route) ? 'active new-active' : '';
     }
 
     public function header()
