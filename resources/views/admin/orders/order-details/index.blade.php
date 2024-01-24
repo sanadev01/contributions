@@ -177,7 +177,7 @@
             </li>
             <li aria-hidden="false" aria-disabled="false">
                 <button type="button" class="btn btn-success" id="rateBtn" onClick="checkService()">Get Rate</button>
-                <button class="btn btn-primary">@lang('orders.order-details.Place Order')</button>
+                <button class="btn btn-primary" id="submitButton" @if($order->items->isEmpty()) title="Please add atleast one item !" disabled @endif >@lang('orders.order-details.Place Order')</button>
             </li>
         </ul>
     </div>
@@ -236,9 +236,7 @@
             parseFloat($('option:selected', this).attr("data-cost"))
         );
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        emitSHCodes(service)
-
-
+        emitSHCodes()
         if (service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
@@ -481,22 +479,30 @@
     });
     //handle shcode
     $('#shipping_service_id').ready(function() {
-        const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        if (service) {
-            emitSHCodes(service)
-        }
+        emitSHCodes()
     })
 
     function emitSHCodes(serviceCode) {
-        $('.sh_code').selectpicker('destroy');
-        window.livewire.emit('reloadSHCodes', {
-            service: serviceCode
-        });
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        if (service) {
+            $('.sh_code').selectpicker('destroy');
+            window.livewire.emit('loadSHCodes', {
+                service: service
+            });
+        }
     }
 
 
-    window.addEventListener('shCodeReloaded', event => {
+    window.addEventListener('initializeSelectPicker', event => {
         initializeSelectpicker();
+    })
+    window.addEventListener('emitSHCodes', event => {
+        emitSHCodes();
+    })
+    window.addEventListener('emitSHCodesLazy', event => {
+        setTimeout(() => {
+            emitSHCodes();
+        }, 1500);
     })
 
     function initializeSelectpicker() {
@@ -510,13 +516,21 @@
             $('#loading').fadeOut();
         }, 2500);
     }
-    window.addEventListener('addItem', event => {
-        console.log('adding item')
-        initializeSelectpicker();
-        const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        if (service) {
-            emitSHCodes(service)
-        }
+    window.addEventListener('itemAdded', event => {
+        setTimeout(() => {
+            emitShCodePicker()
+            initializeSelectpicker()
+        }, 3000);
+    })
+
+    window.addEventListener('disabledSubmitButton', event => {
+        var button = document.getElementById('submitButton');
+        button.setAttribute('disabled', 'disabled');
+    })
+
+    window.addEventListener('activateSubmitButton', event => {
+        var button = document.getElementById('submitButton');
+        button.removeAttribute('disabled');
     })
 </script>
 @endsection

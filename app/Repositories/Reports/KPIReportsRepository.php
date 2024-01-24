@@ -29,6 +29,8 @@ class KPIReportsRepository
         ->where('corrios_tracking_code','!=',null)->where('status', '>=', Order::STATUS_SHIPPED)
         ->whereHas('shippingService',function($orders) {
                 return $orders->whereIn('service_sub_class', [
+                    ShippingService::BCN_Packet_Standard, 
+                    ShippingService::BCN_Packet_Express, 
                     ShippingService::Packet_Standard, 
                     ShippingService::Packet_Express, 
                     ShippingService::AJ_Packet_Standard, 

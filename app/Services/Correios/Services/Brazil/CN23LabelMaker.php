@@ -3,12 +3,13 @@
 namespace App\Services\Correios\Services\Brazil;
 
 use Exception;
-use App\Models\Order;
-use Picqer\Barcode\BarcodeGeneratorPNG;
-use App\Services\Correios\Contracts\HasLableExport;
-use App\Services\Correios\Models\Package;
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\ShippingService;
+use Picqer\Barcode\BarcodeGeneratorPNG;
+use App\Services\Correios\Models\Package;
+use App\Services\Correios\Contracts\HasLableExport;
 
 class CN23LabelMaker implements HasLableExport
 {
@@ -44,6 +45,7 @@ class CN23LabelMaker implements HasLableExport
         Sao Paulo CEP 04201-020';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
         $this->activeAddress = '';
+        $this->labelZipCodeGroup = '';
     }
 
     public function setOrder(Order $order)
@@ -54,6 +56,9 @@ class CN23LabelMaker implements HasLableExport
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
+        if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
+            $this->labelZipCodeGroup = getOrderGroupRange($this->order);
+        }
 
         if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->is_bcn_service) {
             if ($this->order->shippingService->is_bcn_service) {
@@ -197,6 +202,7 @@ class CN23LabelMaker implements HasLableExport
             'barcodeNew' => new BarcodeGeneratorPNG(),
             'activeAddress' => $this->activeAddress,
             'isReturn' => $this->isReturn,
+            'labelZipCodeGroup' => $this->labelZipCodeGroup
         ];
     }
 

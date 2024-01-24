@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Order;
+use App\Models\ShCode;
 use App\Models\State;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
@@ -322,25 +323,125 @@ Route::get('/to-express/{id?}',function($id = null){
 
     return 'shipping service updated to express sucessfully.'; 
 });
-Route::get('/container-trackings/{id?}',function($id = null){
-    
-    $container = Container::find($id);
-    $trackings= $container->orders->pluck('corrios_tracking_code')->toArray();
-    foreach($container->orders as $order){
-        dump([$order->id.' '.$order->corrios_tracking_code.'  is bcn'=>optional($order->shippingService)->is_bcn_service??'shipping service '.$order->shipping_service_id.' not found',
-                'is express'=>$order->shippingService?$order->shippingService->service_sub_class==ShippingService::BCN_Packet_Express:'shipping service '.$order->shipping_service_id.' not found',
-                'is standard'=>$order->shippingService?$order->shippingService->service_sub_class==ShippingService::BCN_Packet_Standard:'shipping service '.$order->shipping_service_id.' not found',
-                'carrier'=> $order->carrier
-            ]);
+Route::get('/export-sh-code',function($id = null){
+    $duplicateCodes = DB::table('sh_codes')
+    ->select('code','type', DB::raw('COUNT(*) as count'))
+    ->groupBy('code')
+    ->having('count', '>', 1)
+    ->get();
+
+    $totalDuplicated = 0;
+    foreach ($duplicateCodes as $duplicate) {
+        $totalDuplicated+=$duplicate->count;
+        echo ("Code '{$duplicate->code}' type ".($duplicate->type?$duplicate->type:'default')." has {$duplicate->count} occurrences.<br>\n");
     }
-    dd([
-        'total orders'=> count($container->orders), 
-        'total trackings'=>count($trackings),
-        'container trackings'=>$trackings,
-    ]); 
+    dump("Total duplicated entry {$totalDuplicated}");
+
+    $shCodes = [
+        '610190',
+        '854231',
+        '852110',
+        '392330',
+        '400129',
+        '330410',
+        '871200',
+        '490700',
+        '490199',
+        '490199',
+        '852580',
+        '852550',
+        '870810',
+        '852349',
+        '851712',
+        '621010',
+        '970600',
+        '847329',
+        '847170',
+        '847130',
+        '701310',
+        '293629',
+        '854231',
+        '854370',
+        '610419',
+        '950490',
+        '210610',
+        '845129',
+        '392690',
+        '820559',
+        '830890',
+        '392610',
+        '851712',
+        '920790',
+        '920710',
+        '392610',
+        '330300',
+        '630790',
+        '640199',
+        '621139',
+        '950691',
+        '847130',
+        '640420',
+        '820320',
+        '950300',
+        '950300',
+        '300510',
+        '300450',
+        '300450',
+        '910211',
+    ];
+    $result = ShCode::whereNotIn('code', $shCodes)->where('type', null)->pluck('code')->toArray();
+    dd($result);
+
 });
 Route::get('/cleared',function(){
     ZoneCountry::truncate(); 
     dump(ZoneCountry::get()); 
     dd('done');
+});
+
+Route::get('/get-packet-service',function($id = null){
+    $trackings = [
+        'NB885108064BR',
+        'NB859231434BR',
+        'NB885109453BR',
+        'NB885109135BR',
+        'NB859228925BR',
+        'NB885108413BR',
+        'NB859231329BR',
+        'NB859231403BR',
+        'NB885109229BR',
+        'NB885109467BR',
+        'NB885109440BR',
+        'NB885109334BR',
+        'NB859231394BR',
+        'NB859231522BR',
+        'NB859231244BR',
+        'NB859228109BR',
+        'NB859231425BR',
+        'NB885109294BR',
+        'NB859231377BR',
+        'NB885106063BR',
+        'NB859231332BR',
+        'NB859230558BR',
+        'NB885108427BR',
+        'NB896229488BR',
+        'NB859229705BR',
+        'NB885106032BR',
+        'NB896229491BR',
+        'NB885109365BR',
+    ];
+    
+    $result = Order::whereIn('corrios_tracking_code', $trackings)
+    ->with('shippingService') // Eager load the shippingService relationship
+    ->get();
+    $shippingServiceNames = [];
+
+    // Populate the associative array
+    foreach ($result as $order) {
+        $trackingCode = $order->corrios_tracking_code;
+        $shippingServiceName = optional($order->shippingService)->name;
+
+        $shippingServiceNames[$trackingCode] = $shippingServiceName;
+    }
+    dd($shippingServiceNames);
 });
