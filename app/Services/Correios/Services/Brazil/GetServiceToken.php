@@ -118,13 +118,13 @@ class GetServiceToken
             }
         } else {
             if ($this->order->hasAnjunService()) {
-                Log::info('getAnjunToken');
+                Log::info('CgetAnjunToken');
                 return $this->getAnjunToken();
             } elseif ($this->order->hasBCNService()) {
-                Log::info('getBCNToken');
+                Log::info('CgetBCNToken');
                 return $this->getBCNToken();
             } else {
-                Log::info('getToken');
+                Log::info('CgetToken');
                 return $this->getToken();
             }
         }
