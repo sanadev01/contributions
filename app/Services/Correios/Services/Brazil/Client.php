@@ -57,8 +57,8 @@ class Client
                     ],
                 ]);
 
-                \Log::info('Response');
-                \Log::info([$data]);
+                // \Log::info('Response');
+                // \Log::info([$data]);
                 // store order status in order tracking
                 return $this->addOrderTracking($order);
             }
@@ -69,7 +69,7 @@ class Client
             $errorCopy = new PackageError($responseError);
             $errorMessage = $errorCopy->getErrors();
             if ($errorMessage == "GTW-006: Token inválido." || $errorMessage == "GTW-007: Token expirado.") {
-                \Log::info('Token refresh automatically');
+                // \Log::info('Token refresh automatically');
                 Cache::forget('anjun_token');
                 Cache::forget('bcn_token');
                 Cache::forget('token');
@@ -89,7 +89,7 @@ class Client
             
             $response = $this->client->post('/packet/v1/units', [
                 'headers' => [
-                    'Authorization' => (new GetServiceToken($container))->getBearerToken(),
+                    'Authorization' => (new GetServiceToken($container->orders()->first()))->getBearerToken(),
                 ],
                 'json' => [
                     "dispatchNumber" => $container->dispatch_number,
@@ -122,7 +122,7 @@ class Client
         try {
             $response = $this->client->post('/packet/v1/cn38request', [
                 'headers' => [
-                    'Authorization' => (new GetServiceToken($deliveryBill->containers()->first()))->getBearerToken(),
+                    'Authorization' => (new GetServiceToken($deliveryBill->containers()->first()->orders()->first()))->getBearerToken(),
                 ],
                 'json' => [
                     'dispatchNumbers' => $deliveryBill->containers->pluck('dispatch_number')->toArray()
@@ -143,7 +143,7 @@ class Client
         try {
             $response = $this->client->get("/packet/v1/cn38request?requestId={$deliveryBill->request_id}", [
                 'headers' => [
-                    'Authorization' => (new GetServiceToken($deliveryBill->containers()->first()))->getBearerToken(),
+                    'Authorization' => (new GetServiceToken($deliveryBill->containers()->first()->orders()->first()))->getBearerToken(),
                 ]
             ]);
 
@@ -182,7 +182,7 @@ class Client
         try {
             $response = $this->client->delete("/packet/v1/units/dispatch/$container->dispatch_number", [
                 'headers' => [
-                    'Authorization' => (new GetServiceToken($container))->getBearerToken()
+                    'Authorization' => (new GetServiceToken($container->orders()->first()))->getBearerToken()
                 ]
             ]);
             return $response;
@@ -246,8 +246,8 @@ class Client
                     ]
                 ); 
                 if ($response->getStatusCode() === 200) {
-                    \Log::info('Departure confirm successfully');
-                    \Log::info(explode(",",$request->unitCode));
+                    // \Log::info('Departure confirm successfully');
+                    // \Log::info(explode(",",$request->unitCode));
                     session()->flash('alert-success','Departure confirm successfully'); 
                     return json_decode('Departure confirm successfully'); 
                 }

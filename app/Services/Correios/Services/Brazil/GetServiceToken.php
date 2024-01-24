@@ -105,28 +105,18 @@ class GetServiceToken
     }
     public function getBearerToken()
     {
-        if ($this->order instanceof Order) {
-            if ($this->order->shippingService->isAnjunService()) {
-                Log::info('getAnjunToken');
-                return $this->getAnjunToken();
-            } elseif ($this->order->shippingService->is_bcn_service) {
-                Log::info('getBCNToken');
-                return $this->getBCNToken();
-            } else {
-                Log::info('getToken');
-                return $this->getToken();
-            }
-        } else {
-            if ($this->order->hasAnjunService()) {
-                Log::info('CgetAnjunToken');
-                return $this->getAnjunToken();
-            } elseif ($this->order->hasBCNService()) {
-                Log::info('CgetBCNToken');
-                return $this->getBCNToken();
-            } else {
-                Log::info('CgetToken');
-                return $this->getToken();
-            }
+        if ($this->order->shippingService->isAnjunService()) {
+            Log::info('getAnjunToken');
+            return $this->getAnjunToken();
         }
+        if ($this->order->shippingService->is_bcn_service) {
+            Log::info('getBCNToken');
+            return $this->getBCNToken();
+        }
+        if($this->order->shippingService->isCorreiosService()){
+            Log::info('getToken');
+            return $this->getToken();
+        }
+       
     }
 }
