@@ -2,10 +2,11 @@
 
 namespace App\Services\Correios\Services\Brazil;
 
-use GuzzleHttp\Client as GuzzleClient;
 use Carbon\Carbon;
 use App\Models\Order;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use GuzzleHttp\Client as GuzzleClient;
 
 class GetServiceToken
 {
@@ -104,22 +105,18 @@ class GetServiceToken
     }
     public function getBearerToken()
     {
-        if ($this->order instanceof Order) {
-            if ($this->order->shippingService->is_anjun_service) {
-                return $this->getAnjunToken();
-            } elseif ($this->order->shippingService->is_bcn_service) {
-                return $this->getBCNToken();
-            } else {
-                return $this->getToken();
-            }
-        } else {
-            if ($this->order->has_anjun_service) {
-                return $this->getAnjunToken();
-            } elseif ($this->order->has_bcn_service) {
-                return $this->getBCNToken();
-            } else {
-                return $this->getToken();
-            }
+        if ($this->order->shippingService->is_anjun_service) {
+            Log::info('getAnjunToken');
+            return $this->getAnjunToken();
         }
+        if ($this->order->shippingService->is_bcn_service) {
+            Log::info('getBCNToken');
+            return $this->getBCNToken();
+        }
+        if($this->order->shippingService->is_correios_service){
+            Log::info('getToken');
+            return $this->getToken();
+        }
+       
     }
 }
