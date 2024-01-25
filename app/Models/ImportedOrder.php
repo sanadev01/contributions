@@ -12,7 +12,7 @@ class ImportedOrder extends Model
         'length','width','height','measurement_unit','is_invoice_created','is_shipment_added','status','order_date','sender_first_name',
         'sender_last_name','sender_email','sender_phone','first_name','last_name','email','phone','address','address2','street_no',
         'zipcode','city','account_type','state_id','country_id','tax_id','user_declared_freight','quantity','value','description',
-        'sh_code','contains_battery','contains_perfume','recipient','items','error','correios_tracking_code'
+        'sh_code','contains_battery','contains_perfume','recipient','items','error','correios_tracking_code','tax_modality'
     ];
 
     protected $casts = ['items' => 'array','recipient' => 'array','error' => 'array'];

@@ -16,7 +16,6 @@ use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Models\PackageError;
-use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 
 class Client{
 
@@ -77,10 +76,9 @@ class Client{
                         $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
             $response = json_decode($request);
             if($response->success) {
-                $label = $this->makePDFLabel($response);
-                $order->update([
+                                $order->update([
                     'corrios_tracking_code' => $response->trackingNumber,
-                    'api_response' => $label,
+                    'api_response' => $request,
                     'cn23' => [
                         "tracking_code" => $response->trackingNumber,
                         "stamp_url" => route('warehouse.cn23.download',$order->id),

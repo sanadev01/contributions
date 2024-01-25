@@ -526,7 +526,7 @@ class OrderRepository
     {
         $totalDiscountPercentage = 0;
         $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
-        $discountPercentage = setting('discount_percentage', null, $order->user->id);
+        $discountPercentage = getVolumetricDiscountPercentage($order);
         
         if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
             return false;
@@ -717,11 +717,11 @@ class OrderRepository
                     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                         return !$shippingService->isAnjunService();
                     });
-            }
-            if(Auth::id()!="1233"){
+            } 
+            if(Auth::id()!='1137'){
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                return !$shippingService->isAnjunChinaService();
-            });
+                    return !$shippingService->isAnjunChinaService();
+                });
             }
 
             if(!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
