@@ -179,7 +179,7 @@ class Order extends Model implements Package
         return $this->status == self::STATUS_NEEDS_PROCESSING;
     }
 
-    public function getIsShippedAttrbute()
+    public function getIsShippedAttribute()
     {
         return $this->status == self::STATUS_SHIPPED;
     }
