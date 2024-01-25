@@ -27,22 +27,22 @@ class GetServiceToken
     protected $client;
 
     function __construct($order = null, $trackingNumber = null)
-    { 
-        $this->baseUri = 'https://api.correios.com.br'; 
+    {
+        $this->baseUri = 'https://api.correios.com.br';
         $this->username = 'hercofreight';
         $this->password = '150495ca';
-        $this->numero = '0075745313';                
+        $this->numero = '0075745313';
         //anjun credentilas
         $this->anjun_username = 'anjun2020';
         $this->anjun_password = 'anjun';
-        $this->anjun_numero = '0077053850';                
+        $this->anjun_numero = '0077053850';
         //bcn credentials
         $this->bcn_username = '37148594000192';
         $this->bcn_password = '9wdkSYsvk2FkqNbojC1CLlUhN1RY3HqqmmADFBPa';
-        $this->bcn_numero = '0076204456'; 
-         
+        $this->bcn_numero = '0076204456';
+
         \Log::info([
-            'url'=>$this->baseUri,
+            'url' => $this->baseUri,
         ]);
         if ($order != null)
             $this->order = $order;
@@ -105,7 +105,7 @@ class GetServiceToken
     public function getBearerToken()
     {
         if ($this->order instanceof Order) {
-            if ($this->order->shippingService->isAnjunService()) {
+            if ($this->order->shippingService->is_anjun_service) {
                 return $this->getAnjunToken();
             } elseif ($this->order->shippingService->is_bcn_service) {
                 return $this->getBCNToken();
@@ -113,9 +113,9 @@ class GetServiceToken
                 return $this->getToken();
             }
         } else {
-            if ($this->order->hasAnjunService()) {
+            if ($this->order->has_anjun_service) {
                 return $this->getAnjunToken();
-            } elseif ($this->order->hasBCNService()) {
+            } elseif ($this->order->has_bcn_service) {
                 return $this->getBCNToken();
             } else {
                 return $this->getToken();

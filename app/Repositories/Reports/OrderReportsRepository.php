@@ -116,7 +116,7 @@ class OrderReportsRepository
         $record = collect();
         $orders = $query->get();
         
-        foreach($this->getWeight() as $weight){
+        foreach($this->total_weight as $weight){
             $ordersCount = $orders->whereBetween('kgweight', [$weight['min_weight'], $weight['max_weight']]);
             $record->push([
                 'orders' => $ordersCount->count(),
@@ -128,7 +128,7 @@ class OrderReportsRepository
         return $record;
     }
     
-    public function getWeight(){
+    public function total_weight{
         return [
             [
                 'min_weight' => '0.00',

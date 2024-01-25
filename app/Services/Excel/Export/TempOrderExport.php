@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\Excel\Export;
+
 use App\Models\User;
 use App\Models\Order;
 use App\Models\ShippingService;
@@ -10,12 +11,12 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class TempOrderExport extends AbstractExportService
 {
-    private $orders; 
+    private $orders;
     private $currentRow = 1;
 
     public function __construct(Collection $orders)
     {
-        $this->orders = $orders; 
+        $this->orders = $orders;
         parent::__construct();
     }
 
@@ -36,21 +37,20 @@ class TempOrderExport extends AbstractExportService
                 return $carry + ($orderItem->quantity * $orderItem->value);
             }, 0);
 
-            $this->setCellValue('A'.$row, $order->getSenderFullName());
-            $this->setCellValue('B'.$row, $order->recipient->getFullName()); 
-            $this->setCellValue('D'.$row, (string)$this->getOrderTrackingCodes($order)); 
-            $this->setCellValue('E'.$row, (string)$this->chargeWeight($order)); 
-            $this->setCellValue('F'.$row, $order->shipping_value); 
-            $this->setCellValue('G'.$row, $order->user->pobox_number); 
-            $this->setCellValue('H'.$row, $order->user_declared_freight); 
-            $this->setCellValue('I'.$row, number_format($totalAmount,2));
-            foreach($order->items as $item) { 
-                $this->setCellValue('J'.$row, $item->description);   
-                $this->setCellValue('C'.$row, $item->sh_code);   
+            $this->setCellValue('A' . $row, $order->getSenderFullName());
+            $this->setCellValue('B' . $row, $order->recipient->getFullName());
+            $this->setCellValue('D' . $row, (string)$this->getOrderTrackingCodes($order));
+            $this->setCellValue('E' . $row, (string)$this->chargeWeight($order));
+            $this->setCellValue('F' . $row, $order->shipping_value);
+            $this->setCellValue('G' . $row, $order->user->pobox_number);
+            $this->setCellValue('H' . $row, $order->user_declared_freight);
+            $this->setCellValue('I' . $row, number_format($totalAmount, 2));
+            foreach ($order->items as $item) {
+                $this->setCellValue('J' . $row, $item->description);
+                $this->setCellValue('C' . $row, $item->sh_code);
                 $row++;
-            } 
-        } 
-
+            }
+        }
     }
 
     private function setExcelHeaderRow()
@@ -70,12 +70,12 @@ class TempOrderExport extends AbstractExportService
         $this->setCellValue('E1', 'weight');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'shipping paid');  
+        $this->setCellValue('F1', 'shipping paid');
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'PO Box Number');    
+        $this->setCellValue('G1', 'PO Box Number');
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'ttl declared value');  
-        
+        $this->setCellValue('H1', 'ttl declared value');
+
         $this->setColumnWidth('I', 30);
         $this->setCellValue('I1', 'Order Value');
 
@@ -83,7 +83,7 @@ class TempOrderExport extends AbstractExportService
         $this->setCellValue('J1', 'Description of product');
 
         $this->currentRow++;
-    } 
+    }
     public function isWeightInKg($measurement_unit)
     {
         return $measurement_unit == 'kg/cm' ? 'kg' : 'lbs';
@@ -94,21 +94,21 @@ class TempOrderExport extends AbstractExportService
         $getOriginalWeight = $order->getOriginalWeight('kg');
         $chargeWeight = $getOriginalWeight;
         $getWeight = $order->getWeight('kg');
-        if($getWeight > $getOriginalWeight && $order->weight_discount){
+        if ($getWeight > $getOriginalWeight && $order->weight_discount) {
             $discountWeight = $order->weight_discount;
-            if($order->measurement_unit == 'lbs/in'){
-                $discountWeight = $order->weight_discount/2.205;
+            if ($order->measurement_unit == 'lbs/in') {
+                $discountWeight = $order->weight_discount / 2.205;
             }
             $consideredWeight = $getWeight - $getOriginalWeight;
             $chargeWeight = ($consideredWeight - $discountWeight) + $getOriginalWeight;
         }
-        
-        return round($chargeWeight,2);
+
+        return round($chargeWeight, 2);
     }
 
     private function getOrderTrackingCodes($order)
     {
-        $trackingCodes = ($order->hasSecondLabel() ? $order->corrios_tracking_code.','.$order->us_api_tracking_code : $order->corrios_tracking_code);
+        $trackingCodes = ($order->has_second_label ? $order->corrios_tracking_code . ',' . $order->us_api_tracking_code : $order->corrios_tracking_code);
         return (string)$trackingCodes;
-    } 
+    }
 }

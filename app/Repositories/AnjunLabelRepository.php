@@ -10,15 +10,12 @@ class AnjunLabelRepository
     use PrintOrderLabel;
     public $order;
     public $error;
-    public $request;
-    public function __construct(Order $order, Request $request)
+    public $request; 
+    public function run(Order $order, Request $request)
     {
         $this->order = $order;
         $this->error = null;
         $this->request = $request;
-    }
-    public function run()
-    {
         return $this->get($this->order);
     }
     public function get(Order $order)
@@ -49,7 +46,7 @@ class AnjunLabelRepository
             return $response;
         }
     }
-public function printLabel(Order $order)
+    public function printLabel(Order $order)
     {
         $labelPrinter = new CN23LabelMaker();
         $labelPrinter->setOrder($order);

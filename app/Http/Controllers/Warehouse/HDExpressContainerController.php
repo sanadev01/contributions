@@ -50,7 +50,7 @@ class HDExpressContainerController extends Controller
         if (!auth()->user()->isAdmin()) {
             abort(403);
         }
-        if ($hdExpressContainerRepository->store($request) ){
+        if ($hdExpressContainerRepository->store($request)) {
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.hd-express-containers.index');
         }
@@ -71,10 +71,10 @@ class HDExpressContainerController extends Controller
             abort(403);
         }
 
-        if ($hd_express_container->isRegistered()) {
+        if ($hd_express_container->is_registered) {
             return back();
         }
-        
+
         return view('admin.warehouse.hdExpressContainers.edit')->with([
             'container' => $hd_express_container
         ]);
@@ -89,10 +89,10 @@ class HDExpressContainerController extends Controller
      */
     public function update(UpdateContainerRequest $request, Container $hd_express_container, HDExpressContainerRepository $hdExpressContainerRepository)
     {
-        if ($hd_express_container->isRegistered()) {
+        if ($hd_express_container->is_registered) {
             return back();
         }
-        if ( $hdExpressContainerRepository->update($hd_express_container, $request) ){
+        if ($hdExpressContainerRepository->update($hd_express_container, $request)) {
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.hd-express-containers.index');
         }
@@ -113,11 +113,11 @@ class HDExpressContainerController extends Controller
             abort(403);
         }
 
-        if ($hd_express_container->isRegistered()) {
+        if ($hd_express_container->is_registered) {
             return back();
         }
-        
-        if ($hdExpressContainerRepository->delete($hd_express_container) ){
+
+        if ($hdExpressContainerRepository->delete($hd_express_container)) {
             session()->flash('alert-success', 'Container Deleted');
             return redirect()->route('warehouse.hd-express-containers.index');
         }

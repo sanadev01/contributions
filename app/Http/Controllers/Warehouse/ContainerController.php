@@ -24,7 +24,7 @@ class ContainerController extends Controller
 
     public function store(CreateContainerRequest  $createContainerRequest, ContainerRepository $containerRepository)
     {
-        if ( $container = $containerRepository->store($createContainerRequest) ){
+        if ($container = $containerRepository->store($createContainerRequest)) {
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.containers.index');
         }
@@ -34,20 +34,20 @@ class ContainerController extends Controller
 
     public function edit(Container $container)
     {
-        if ( $container->isRegistered() ){
+        if ($container->is_registered) {
             abort(405);
         }
 
-        return view('admin.warehouse.containers.edit',compact('container'));
+        return view('admin.warehouse.containers.edit', compact('container'));
     }
 
     public function update(UpdateContainerRequest $updateContainerRequest, Container $container, ContainerRepository $containerRepository)
     {
-        if ( $container->isRegistered() ){
+        if ($container->is_registered) {
             abort(405);
         }
-        
-        if ( $container = $containerRepository->update($container, $updateContainerRequest) ){
+
+        if ($container = $containerRepository->update($container, $updateContainerRequest)) {
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.containers.index');
         }
@@ -57,10 +57,10 @@ class ContainerController extends Controller
 
     public function destroy(Container $container, ContainerRepository $containerRepository)
     {
-        if ( $container->isRegistered() ){
-            abort(403,'Cannot Delete Container registered on Correios.');
+        if ($container->is_registered) {
+            abort(403, 'Cannot Delete Container registered on Correios.');
         }
-        if ( $container = $containerRepository->delete($container) ){
+        if ($container = $containerRepository->delete($container)) {
             session()->flash('alert-success', 'Container Deleted');
             return redirect()->route('warehouse.containers.index');
         }
