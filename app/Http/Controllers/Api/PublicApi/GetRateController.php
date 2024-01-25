@@ -120,22 +120,40 @@ class GetRateController extends Controller
                 $chargableWeight = $chargableWeight.' lbs/in';
             }
 
-            $getRate =collect();
-            
-            foreach(ShippingService::query()->active()->get() as $shippingService){
+            $getRate = collect();
+            $corrieosServices = [ShippingService::AJ_Standard_CN, ShippingService::AJ_Express_CN, ShippingService::Packet_Standard, ShippingService::Packet_Express, ShippingService::BCN_Packet_Standard, ShippingService::BCN_Packet_Express, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express];
+            $activeServices = $this->getActiveService();
+            foreach (ShippingService::query()->active()->get() as $shippingService) {
                 $shippingService->cacheCalculator = false;
-                if ( $shippingService->isAvailableFor($order) ){
-                    $getRate->push([
-                        'shippingServices'  => $shippingService->name,
-                        // 'weightInOtherUnit'  => $weightInOtherUnit,
-                        'Weight'  => $chargableWeight,
-                        'cost'  => $shippingService->getRateFor($order,true,false),
-                    ]);
+                if ($shippingService->isAvailableFor($order)) {
+                    if (
+                        !in_array($shippingService->service_sub_class, $corrieosServices) ||
+                        in_array($shippingService->service_sub_class, $activeServices)
+                    ) {
+                        $getRate->push([
+                            'shippingServices' => $shippingService->name,
+                            'Weight'           => $chargableWeight,
+                            'cost'             => $shippingService->getRateFor($order, true, false),
+                        ]);
+                    }
                 }
             }
             return apiResponse(true,$getRate->count().' Services Rate Found against your Weight',$getRate);
         } catch (\Exception $ex) {
            return apiResponse(false,$ex->getMessage());
+        }
+    }
+
+    public function getActiveService()
+    {        
+        if (setting('china_anjun_api', null, User::ROLE_ADMIN)) {
+            return [ShippingService::AJ_Standard_CN, ShippingService::AJ_Express_CN];
+        } else if (setting('correios_api', null, User::ROLE_ADMIN)) {
+            return [ShippingService::Packet_Standard, ShippingService::Packet_Express];
+        } else if (setting('bcn_api', null, User::ROLE_ADMIN)) {
+            return [ShippingService::BCN_Packet_Standard, ShippingService::BCN_Packet_Express];
+        } else if (setting('anjun_api', null, User::ROLE_ADMIN)) {
+            return [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express];
         }
     }
 }
