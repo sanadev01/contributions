@@ -200,9 +200,20 @@
                                 <td>{{ number_format($service->price,2) }} USD</td>
                             </tr>
                             @endforeach
+                            @if($order->tax_and_duty>0)
+                             <tr>
+                                <td>
+                                    Taxes & Duties
+                                </td>
+                                <td>
+                                    {{$order->tax_and_duty}}
+                                </td>
+                             </tr>
+                            @endif
+
                             <tr class="border-top-light">
                                 <td class="text-center h4">@lang('orders.invoice.Total')</td>
-                                <td class="h4">{{ number_format($services->sum('price'),2) }} USD</td>
+                                <td class="h4">{{ number_format($services->sum('price')+$order->tax_and_duty,2) }} USD</td>
                             </tr>
                         </tbody>
                     </table>
@@ -287,7 +298,7 @@
                                 <tr>
                                     <th>@lang('orders.invoice.Additional Services')</th>
                                     <td>
-                                        {{ number_format($services->sum('price'),2) }} USD
+                                        {{ number_format($services->sum('price')+$order->tax_and_duty,2) }} USD
                                     </td>
                                 </tr>
                                 <tr>
@@ -306,7 +317,7 @@
                                 @endif
                                 <tr>
                                     <th>@lang('orders.invoice.TOTAL')</th>
-                                    <td> {{ number_format($order->gross_total,2) }} USD</td>
+                                    <td> {{ number_format($order->gross_total+$order->tax_and_duty,2) }} USD</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -2,9 +2,7 @@
 
 namespace App\Services\GePS;
 
-use App\Models\Warehouse\Container;
 use App\Services\Correios\Contracts\HasLableExport;
-use Carbon\Carbon;
 
 class CN35LabelMaker implements HasLableExport
 {
@@ -24,7 +22,7 @@ class CN35LabelMaker implements HasLableExport
     private $unitCode;
     private $OrderWeight;
 
-    public function __construct(Container $container)
+    public function __construct()
     {
 
 
@@ -33,21 +31,7 @@ class CN35LabelMaker implements HasLableExport
         $this->officeAddress = '';
         $this->serialNumber = 1;
         $this->flightNumber = '';
-        $this->dispatchDate = Carbon::now()->format('Y-m-d');
-
-        $order = $container->orders->first();
-
-        if ($order) {
-            $this->setType($order->getOriginalWeight('kg'));
-        }
-
-        $this->weight =  $container->total_weight;
-        $this->dispatchNumber = $container->dispatch_number;
-        $this->originAirpot = 'MIA';
-        $this->setService($container->service_code);
-        $this->destinationAirport = $container->destination_ariport;
-        $this->itemsCount = $container->total_orders;
-        $this->unitCode = $container->unit_code;
+        $this->dispatchDate = '';
     }
 
     public function setCompanyName($companyName)

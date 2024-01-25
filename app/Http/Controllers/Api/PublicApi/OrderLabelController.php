@@ -39,7 +39,7 @@ class OrderLabelController extends Controller
         $this->authorize('canPrintLableViaApi', $order);
         $order = $order->updateShippingServiceFromSetting();
         DB::beginTransaction();
-        if ($order->shippingService->is_anjun_china_service && Auth::id() != "1233") {
+        if ($order->shippingService->is_anjun_china_service && Auth::id() != "1137") {
             return $this->rollback("service not available for this user.");
         }
         $isPayingFlag = false;
@@ -151,7 +151,7 @@ class OrderLabelController extends Controller
                         return $this->rollback((string)$error);
                     }
                 }
-                if ($order->shippingService->is_anjun_china_service && Auth::id() == "1233") {
+                if ($order->shippingService->is_anjun_china_service && Auth::id() == "1137") {
                     $anjun = new AnjunLabelRepository();
                     $labelData = $anjun->run($order, $request);
                     $order->refresh();
@@ -174,6 +174,16 @@ class OrderLabelController extends Controller
                     }
                     if ($corrieosBrazilLabelRepository->getError()) {
                         return $this->rollback($corrieosBrazilLabelRepository->getError());
+                    }
+                }
+            }
+            if ($order->recipient->country_id == Order::PORTUGAL) {
+                if ($order->shippingService->isPostPlusService()) {
+                    $postPlusLabelRepository = new PostPlusLabelRepository();
+                    $postPlusLabelRepository->get($order);
+                    $error = $postPlusLabelRepository->getError();
+                    if ($error) {
+                        return $this->rollback($error);
                     }
                 }
             }

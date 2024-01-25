@@ -50,6 +50,14 @@ class ContainerPackageRepository extends AbstractRepository
         if ($container->has_anjun_china_service) {
             return $this->toAnjunChinaContainer($container, $barcode);
         }
+        if ($container->hasBCNService()) {
+            return $this->toBCNContainer($container, $barcode);
+        }
+        $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
+
+        if(!$this->isValidContainerOrder($container,$order)) {
+             return $this->validationError404($barcode, 'Order Not Found. Please Check Packet Service.');
+        }
         $containerOrder = $container->orders->first();
         if ($containerOrder) {
             $client = new Client();

@@ -29,11 +29,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     const CONTAINER_ANJUN_NX = 'AJ-NX';
     const CONTAINER_ANJUN_IX = 'AJ-IX';
-    const CONTAINER_BCN_NX = 'BCN-NX';
-    const CONTAINER_BCN_IX = 'BCN-IX';
     const CONTAINER_ANJUNC_NX = 'AJC-NX';
     const CONTAINER_ANJUNC_IX = 'AJC-IX';
-     
+    const CONTAINER_BCN_NX = 'BCN-NX';
+    const CONTAINER_BCN_IX = 'BCN-IX';
 
     public function user()
     {

@@ -91,6 +91,7 @@ class DeliveryBill extends Model
             return true;
         }
     }
+    
 
     public function isGDE()
     {
