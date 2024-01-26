@@ -152,14 +152,7 @@ class ContainerPackageRepository extends AbstractRepository{
         $firstOrderGroupRange = getOrderGroupRange($containerOrder);
 
         if ($containerOrder) {
-            if ($containerOrder->getOriginalWeight('kg') <= 3 && $order->getOriginalWeight('kg') > 3) {
-
-                return $this->validationError404($barcode, 'Order weight is greater then 3 Kg, Please Check Order Weight');
-            } elseif ($containerOrder->getOriginalWeight('kg') > 3 && $order->getOriginalWeight('kg') <= 3) {
-
-                return $this->validationError404($barcode, 'Order weight is less then 3 Kg, Please Check Order Weight');
-            }
-
+            
             if (optional($containerOrder->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
 
                 if ($order->order_date && $order->order_date < $containerOrder->order_date) {
@@ -183,6 +176,15 @@ class ContainerPackageRepository extends AbstractRepository{
                     $validRange = "Valid range: $validRangeGroup (Start: $validRangeStart, End: $validRangeEnd)";
                     
                     return $this->validationError404($barcode, "Invalid Zipcode Group for container. Valid Group is {$firstOrderGroupRange['group']}");
+                }
+            } else {
+                
+                if ($containerOrder->getOriginalWeight('kg') <= 3 && $order->getOriginalWeight('kg') > 3) {
+
+                    return $this->validationError404($barcode, 'Order weight is greater then 3 Kg, Please Check Order Weight');
+                } elseif ($containerOrder->getOriginalWeight('kg') > 3 && $order->getOriginalWeight('kg') <= 3) {
+    
+                    return $this->validationError404($barcode, 'Order weight is less then 3 Kg, Please Check Order Weight');
                 }
             }
         }        
