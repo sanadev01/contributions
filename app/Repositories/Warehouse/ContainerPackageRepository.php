@@ -144,20 +144,20 @@ class ContainerPackageRepository extends AbstractRepository{
         $firstOrderGroupRange = getOrderGroupRange($containerOrder);
 
         if ($containerOrder) {
-            // if ($containerOrder->getOriginalWeight('kg') <= 3 && $order->getOriginalWeight('kg') > 3) {
+            if ($containerOrder->getOriginalWeight('kg') <= 3 && $order->getOriginalWeight('kg') > 3) {
 
-            //     return $this->validationError404($barcode, 'Order weight is greater then 3 Kg, Please Check Order Weight');
-            // } elseif ($containerOrder->getOriginalWeight('kg') > 3 && $order->getOriginalWeight('kg') <= 3) {
+                return $this->validationError404($barcode, 'Order weight is greater then 3 Kg, Please Check Order Weight');
+            } elseif ($containerOrder->getOriginalWeight('kg') > 3 && $order->getOriginalWeight('kg') <= 3) {
 
-            //     return $this->validationError404($barcode, 'Order weight is less then 3 Kg, Please Check Order Weight');
-            // }
+                return $this->validationError404($barcode, 'Order weight is less then 3 Kg, Please Check Order Weight');
+            }
 
-            // if (optional($containerOrder->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
+            if (optional($containerOrder->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
 
-                // if ($order->order_date && $order->order_date < $containerOrder->order_date) {
-                //     $firstOrderDate = optional($containerOrder->order_date)->format('Y-m-d');
-                //     return $this->validationError404($barcode, 'Order date should be greater than or equal to the first container order date (' . $firstOrderDate . ')');
-                // }
+                if ($order->order_date && $order->order_date < $containerOrder->order_date) {
+                    $firstOrderDate = optional($containerOrder->order_date)->format('Y-m-d');
+                    return $this->validationError404($barcode, 'Order date should be greater than or equal to the first container order date (' . $firstOrderDate . ')');
+                }
 
                 // If the first order's zipcode is not in the specified group ranges, return an error
                 if ($firstOrderGroupRange === null) {
@@ -176,7 +176,7 @@ class ContainerPackageRepository extends AbstractRepository{
                     
                     return $this->validationError404($barcode, "Invalid Zipcode Group for container. Valid Group is {$firstOrderGroupRange['group']}");
                 }
-            // }
+            }
         }        
 
         if (!$order->containers->isEmpty()) {
