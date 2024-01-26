@@ -101,7 +101,7 @@ class Parcel
       $items = [];
 
       if (count($this->order->items) >= 1) {
-         $totalQuantity = $this->order->items->sum('quantity');
+         $totalQuantity = $this->order->items->count();
          foreach ($this->order->items as $key => $item) {
             $itemToPush = []; 
             $itemToPush = [

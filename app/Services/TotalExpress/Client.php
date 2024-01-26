@@ -93,7 +93,8 @@ class Client
     public function createPackage(Order $order)
     {
         $shippingRequest = (new Parcel($order))->getRequestBody();
-        
+        \Log::info('total express');
+        \Log::info($shippingRequest);
         $apiResponse = json_decode($order->api_response); 
         try {
                 if(!$order->api_response){
