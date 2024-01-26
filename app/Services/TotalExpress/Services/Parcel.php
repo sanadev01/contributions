@@ -3,8 +3,6 @@
 namespace App\Services\TotalExpress\Services;
 
 use App\Models\Order;
-use Carbon\Carbon;
-use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
 use DateTime;
 
@@ -101,7 +99,7 @@ class Parcel
       $items = [];
 
       if (count($this->order->items) >= 1) {
-         $totalQuantity = $this->order->items->count();
+         $totalQuantity = $this->order->items->sum('quantity');
          foreach ($this->order->items as $key => $item) {
             $itemToPush = []; 
             $itemToPush = [
