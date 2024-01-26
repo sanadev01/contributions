@@ -3,8 +3,6 @@
 namespace App\Services\TotalExpress\Services;
 
 use App\Models\Order;
-use Carbon\Carbon;
-use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
 use DateTime;
 
