@@ -174,7 +174,7 @@ class ContainerPackageRepository extends AbstractRepository{
 
                 // Check if the current order's zipcode falls within the same group range
                 $currentOrderGroupRange = getOrderGroupRange($order);
-                if ($currentOrderGroupRange !== $firstOrderGroupRange) {
+                if ($currentOrderGroupRange['group'] !== $firstOrderGroupRange['group']) {
                     $currentOrderZipcode = $order->recipient->zipcode;
                     $validRangeGroup = "Group {$firstOrderGroupRange['group']}";
                     $validRangeStart = $firstOrderGroupRange['start'];
@@ -182,7 +182,7 @@ class ContainerPackageRepository extends AbstractRepository{
                 
                     $validRange = "Valid range: $validRangeGroup (Start: $validRangeStart, End: $validRangeEnd)";
                     
-                    return $this->validationError404($barcode, "Invalid zipcode ($currentOrderZipcode) range for container. $validRange");
+                    return $this->validationError404($barcode, "Invalid Zipcode Group for container. Valid Group is {$firstOrderGroupRange['group']}");
                 }
             // }
         }        
