@@ -55,7 +55,12 @@ class TaxRepository
             'user_id' => 'required',
         ]);
           $splitNos = str_split(str_replace(',', '', preg_replace('/\s+/', '', $request->trackingNumbers)),13);
-          return  Order::where('user_id', $request->user_id)->whereIn('corrios_tracking_code', $splitNos)->get();
+          $orders=  Order::where('user_id', $request->user_id)->whereIn('corrios_tracking_code', $splitNos)->get();
+          if($orders->isEmpty()){
+            $splitNos = explode(',',preg_replace('/,{2,}/', ',', preg_replace('/\s+/', '', $request->trackingNumbers)));
+            $orders=  Order::where('user_id', $request->user_id)->whereIn('corrios_tracking_code', $splitNos)->get();
+          }
+          return $orders;
  
     }
 
