@@ -5,7 +5,7 @@
         {{ optional($order->order_date)->format('m/d/Y') }}
     </td>
     <td style="width: 200px;">
-        @if ( $order->isArrivedAtWarehouse() )
+        @if ( $order->is_arrived_at_warehouse )
             <i class="fa fa-star text-success p-1"></i>
         @endif
         @if( $order->warehouse_number)
@@ -33,7 +33,7 @@
     </td> 
     <td>
         {{ $order->corrios_tracking_code }}
-        @if($order->hasSecondLabel())
+        @if($order->has_second_label)
             <hr>
             {{ $order->us_api_tracking_code }}
         @endif
