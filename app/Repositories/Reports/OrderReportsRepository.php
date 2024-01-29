@@ -128,7 +128,7 @@ class OrderReportsRepository
         return $record;
     }
     
-    public function total_weight{
+    public function getTotalWeightAttribute(){
         return [
             [
                 'min_weight' => '0.00',
