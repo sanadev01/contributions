@@ -25,14 +25,16 @@ class LabelRepositoryFactory
         $shippingService = $order->shippingService;
     
         return match (true) {
-            $shippingService->is_sweden_post_service => new SwedenPostLabelRepository(),$shippingService->is_hound_express => new HoundExpressLabelRepository(),
+            $shippingService->is_sweden_post_service => new SwedenPostLabelRepository(),
+            $shippingService->is_hound_express => new HoundExpressLabelRepository(),
             $order->recipient->country_id == Order::BRAZIL && $shippingService->is_geps_service => new GePSLabelRepository(),
             $order->recipient->country_id == Order::BRAZIL && ($shippingService->is_correios_service || $shippingService->is_bcn_service || $shippingService->is_anjun_china_service || $shippingService->is_anjun_service) => new CorrieosBrazilLabelRepository(),
             $order->recipient->country_id == Order::BRAZIL && $shippingService->is_post_plus_service => new PostPlusLabelRepository(),
             $order->recipient->country_id == Order::BRAZIL && $shippingService->is_gss_service => new GSSLabelRepository(),
             $order->recipient->country_id == Order::BRAZIL && $shippingService->is_total_express => new TotalExpressLabelRepository(),
             in_array($order->recipient->country_id, [Order::PORTUGAL, Order::COLOMBIA]) && $shippingService->is_post_plus_service => new PostPlusLabelRepository(),
-            $shippingService->is_hd_express_service => new HDExpressLabelRepository(),$order->recipient->country_id == Order::CHILE => new CorrieosChileLabelRepository(),
+            $shippingService->is_hd_express_service => new HDExpressLabelRepository(),
+            $order->recipient->country_id == Order::CHILE => new CorrieosChileLabelRepository(),
             $order->recipient->country_id == Order::US && ($shippingService->is_usps_priority || $shippingService->is_usps_firstclass || $shippingService->is_usps_ground || $shippingService->is_gde_priority || $shippingService->is_gde_first_class) => new USPSLabelRepository(),
             $order->recipient->country_id == Order::US && $shippingService->is_fedex_ground => new FedExLabelRepository(),
             $order->recipient->country_id == Order::US && $shippingService->is_ups_ground => new UPSLabelRepository(),
