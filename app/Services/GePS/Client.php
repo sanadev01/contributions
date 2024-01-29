@@ -16,7 +16,8 @@ use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\PackageError;
 
-class Client{
+class Client
+{
 
     protected $client;
     protected $chargableWeight;
@@ -29,11 +30,11 @@ class Client{
     private function getKeys()
     {
         $token = 'Z3BwOmFwaXRlc3Q=';
-        if(app()->isProduction()){
+        if (app()->isProduction()) {
             $token = 'aGVyY29hcGk6aGVyY29AMDk4';
         }
         $headers = [
-            'Authorization'=> "Basic {$token}",
+            'Authorization' => "Basic {$token}",
             'Accept' => "application/json",
             'Content-Type' => "application/json",
 
@@ -57,7 +58,7 @@ class Client{
     {
         $items = [];
         $singleItemWeight = UnitsConverter::kgToGrams($this->calulateItemWeight($order));
-        
+
         if (count($order->items) >= 1) {
             foreach ($order->items as $key => $item) {
                 $itemToPush = [];
@@ -65,14 +66,14 @@ class Client{
                 $itemToPush = [
                     'description' => $item->description,
                     'qty' => (int)$item->quantity,
-                    'value' => number_format($item->value * (int)$item->quantity , 2),
+                    'value' => number_format($item->value * (int)$item->quantity, 2),
                     'hscode' => "$item->sh_code",
                     'currency' => "USD",
-                    'origin' => $originCountryCode ? $originCountryCode: 'US',
+                    'origin' => $originCountryCode ? $originCountryCode : 'US',
                     'exportreason' => 'Sale of Goods',
                     'exporttype' => 'Permanent',
                 ];
-               array_push($items, $itemToPush);
+                array_push($items, $itemToPush);
             }
         }
 
@@ -81,15 +82,14 @@ class Client{
 
     public function calculateVolumetricWeight($order)
     {
-        if ( $order->measurement_unit == 'kg/cm' ){
+        if ($order->measurement_unit == 'kg/cm') {
 
-            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'cm');
+            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length, $order->width, $order->height, 'cm');
             return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight);
+        } else {
 
-        }else{
-
-            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'in');
-           return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight);
+            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length, $order->width, $order->height, 'in');
+            return $this->chargableWeight = round($volumetricWeight >  $order->weight ? $volumetricWeight :  $order->weight);
         }
     }
 
@@ -104,7 +104,7 @@ class Client{
     }
 
     public function createPackage($order)
-    {   
+    {
         //GET CONTAINER FOR PARCEL
 
         // $container = Container::where('services_subclass_code', ShippingService::GePS)
@@ -131,29 +131,28 @@ class Client{
 
         // }
 
-        
-        if($order->isWeightInKg()) {
+
+        if ($order->is_weight_in_kg) {
             $weight = UnitsConverter::kgToGrams($order->getWeight('kg'));
-        }else{
+        } else {
             $kg = UnitsConverter::poundToKg($order->getWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
         }
-        if($order->measurement_unit == "lbs/in") {
+        if ($order->measurement_unit == "lbs/in") {
             $uom = "LB";
-        }else {
+        } else {
             $uom = "KG";
         }
-        if($order->shippingService->service_sub_class == ShippingService::GePS) {
+        if ($order->shippingService->service_sub_class == ShippingService::GePS) {
             $serviceCode = "KP";
-        }elseif($order->shippingService->service_sub_class == ShippingService::GePS_EFormat) {
+        } elseif ($order->shippingService->service_sub_class == ShippingService::GePS_EFormat) {
             $serviceCode = "IM";
-        }
-        elseif($order->shippingService->service_sub_class == ShippingService::Parcel_Post) {
+        } elseif ($order->shippingService->service_sub_class == ShippingService::Parcel_Post) {
             $serviceCode = "PR";
         }
         $packet =
-        [
-            'shipment' => [
+            [
+                'shipment' => [
                     'servicecode' => $serviceCode,
                     'reference' => ($order->customer_reference) ? $order->customer_reference : '',
                     'custtracknbr' => $order->tracking_id,
@@ -165,59 +164,59 @@ class Client{
                     'inco' => "DDU",
                     // 'manifestnbr' => "HD".'-'.$container->destination_operator_name.''.$container->dispatch_number,
                     'contentcategory' => "NP",
-                'shipperaddress' => [
-                    'name' => $order->getSenderFullName(),
-                    'addr1' => "2200 NW 129TH AVE",
-                    'state' => "FL",
-                    'city' => "Miami",
-                    'country' => "US",
-                    'postal' => "33182",
-                    'phone' => ($order->sender_phone) ? $order->sender_phone : '',
-                    'email' => ($order->sender_email) ? $order->sender_email : '',
+                    'shipperaddress' => [
+                        'name' => $order->getSenderFullName(),
+                        'addr1' => "2200 NW 129TH AVE",
+                        'state' => "FL",
+                        'city' => "Miami",
+                        'country' => "US",
+                        'postal' => "33182",
+                        'phone' => ($order->sender_phone) ? $order->sender_phone : '',
+                        'email' => ($order->sender_email) ? $order->sender_email : '',
+                    ],
+                    'consigneeaddress' => [
+                        'name' => $order->recipient->getFullName() . ' ' . $order->warehouse_number,
+                        'attention' => $order->customer_reference,
+                        'addr1' => $order->recipient->address . ' ' . $order->recipient->street_no,
+                        'addr2' => optional($order->recipient)->address2,
+                        'state' => $order->recipient->state->code,
+                        'city' => $order->recipient->city,
+                        'country' => $order->recipient->country->code,
+                        'postal' => cleanString($order->recipient->zipcode),
+                        'phone' => ($order->recipient->phone) ? $order->recipient->phone : '',
+                        'taxid' => ($order->recipient->tax_id) ? $order->recipient->tax_id : '',
+                    ],
+                    'item' => $this->setItemsDetails($order),
+                    'shippingoptions' => [
+                        'hazmat' => 1,
+                        'handlinginstructions' => "Land in the backyard, by the pool!"
+                    ],
                 ],
-                'consigneeaddress' => [
-                    'name' => $order->recipient->getFullName().' '.$order->warehouse_number,
-                    'attention' => $order->customer_reference,
-                    'addr1' => $order->recipient->address.' '.$order->recipient->street_no,
-                    'addr2' => optional($order->recipient)->address2,
-                    'state' => $order->recipient->state->code,
-                    'city' => $order->recipient->city,
-                    'country' => $order->recipient->country->code,
-                    'postal' => cleanString($order->recipient->zipcode),
-                    'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',
-                    'taxid' => ($order->recipient->tax_id) ? $order->recipient->tax_id: '',
-                ],
-                'item' => $this->setItemsDetails($order),
-                'shippingoptions' => [
-                    'hazmat' => 1,
-                    'handlinginstructions' => "Land in the backyard, by the pool!"
-                ],
-            ],
-        ];
+            ];
         \Log::info(
             $packet
         );
         Cache::flush();
         try {
-            usleep( 250000 ); //Sleep for quarter of a second. Value is in microseconds
-            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
+            usleep(250000); //Sleep for quarter of a second. Value is in microseconds
+            $response = $this->client->post('https://globaleparcel.com/api.aspx', [
                 'headers' => $this->getKeys(),
                 'json' => $packet
             ]);
 
             $data = json_decode($response->getBody()->getContents());
-            if(isset($data->err)) {
+            if (isset($data->err)) {
                 return new PackageError($data->err);
             }
             $trackingNumber = $data->shipmentresponse->tracknbr;
 
-            if ( $trackingNumber ){
+            if ($trackingNumber) {
                 $order->update([
                     'corrios_tracking_code' => $trackingNumber,
                     'api_response' => json_encode($data),
                     'cn23' => [
                         "tracking_code" => $trackingNumber,
-                        "stamp_url" => route('warehouse.cn23.download',$order->id),
+                        "stamp_url" => route('warehouse.cn23.download', $order->id),
                         'leve' => false
                     ],
                 ]);
@@ -227,15 +226,14 @@ class Client{
                 return $this->addOrderTracking($order);
             }
             return null;
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
         }
     }
 
     public function addOrderTracking($order)
     {
-        if($order->trackings->isEmpty())
-        {
+        if ($order->trackings->isEmpty()) {
             OrderTracking::create([
                 'order_id' => $order->id,
                 'status_code' => Order::STATUS_PAYMENT_DONE,
@@ -253,14 +251,14 @@ class Client{
     {
         $manifest = [
             'manifest' => [
-                'manifestnbr' => "HD".'-'.$deliveryBill->containers[0]->destination_operator_name.''.$deliveryBill->containers[0]->id,
+                'manifestnbr' => "HD" . '-' . $deliveryBill->containers[0]->destination_operator_name . '' . $deliveryBill->containers[0]->id,
             ],
         ];
         try {
-            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
+            $response = $this->client->post('https://globaleparcel.com/api.aspx', [
                 'headers' => $this->getKeys(),
                 'json' => $manifest,
-                ]);
+            ]);
             $data = json_decode($response->getBody()->getContents());
             if (isset($data->err)) {
                 return [
@@ -274,10 +272,9 @@ class Client{
                 'success' => true,
                 'data' => $data
             ];
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
     }
@@ -286,14 +283,14 @@ class Client{
     {
         $manifest = [
             'manifest' => [
-                'manifestnbr' => "HD".'-'.$deliveryBill->containers[0]->destination_operator_name.''.$deliveryBill->containers[0]->id,
+                'manifestnbr' => "HD" . '-' . $deliveryBill->containers[0]->destination_operator_name . '' . $deliveryBill->containers[0]->id,
             ],
         ];
         try {
-            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
+            $response = $this->client->post('https://globaleparcel.com/api.aspx', [
                 'headers' => $this->getKeys(),
                 'json' => $manifest,
-                ]);
+            ]);
             $data = json_decode($response->getBody()->getContents());
             if (isset($data->err)) {
                 return [
@@ -307,10 +304,9 @@ class Client{
                 'success' => true,
                 'data' => $data
             ];
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
     }
@@ -323,10 +319,10 @@ class Client{
             ],
         ];
         try {
-            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
+            $response = $this->client->post('https://globaleparcel.com/api.aspx', [
                 'headers' => $this->getKeys(),
                 'json' => $cancelRequest,
-                ]);
+            ]);
             $data = json_decode($response->getBody()->getContents());
             if (isset($data->err)) {
                 return [
@@ -339,10 +335,9 @@ class Client{
                 'success' => true,
                 'data' => $data
             ];
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
     }
@@ -355,10 +350,10 @@ class Client{
             ],
         ];
         try {
-            $response = $this->client->post('https://globaleparcel.com/api.aspx',[
+            $response = $this->client->post('https://globaleparcel.com/api.aspx', [
                 'headers' => $this->getKeys(),
                 'json' => $confirmRequest,
-                ]);
+            ]);
             $data = json_decode($response->getBody()->getContents());
             if (isset($data->err)) {
                 return [
@@ -371,12 +366,10 @@ class Client{
                 'success' => true,
                 'data' => $data
             ];
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-        catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
     }
-
 }

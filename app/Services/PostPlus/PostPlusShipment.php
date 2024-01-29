@@ -26,12 +26,11 @@ class PostPlusShipment
         $this->container = $container;
         $this->containers = Container::where('awb', $this->container->awb)->get();
         $this->client = new GuzzleClient(['verify' => false]);
-        
     }
 
     private function getHeaders()
     {
-        return [ 
+        return [
             'x-api-key' => $this->apiKey,
             'Content-Type' => 'application/json'
         ];
@@ -41,9 +40,9 @@ class PostPlusShipment
     {
         $url = $this->baseUri . '/shipments';
         $weight = 0;
-        if($this->containers[0]->awb) {
-            foreach($this->containers as $package) {
-                $weight+= $package->getWeight();
+        if ($this->containers[0]->awb) {
+            foreach ($this->containers as $package) {
+                $weight += $package->total_weight;
             }
             $body = [
                 "type" => "VirtualDespatch",
@@ -55,12 +54,12 @@ class PostPlusShipment
                     'totalBags' => count($this->containers),
                     'arrivalOn' => Carbon::today()->toDateString(),
                     'notes' => ''
-                 ],
+                ],
             ];
             $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-            $data= json_decode($response);
-    
-            if ($response->successful()) { 
+            $data = json_decode($response);
+
+            if ($response->successful()) {
                 if ($data->id) {
                     return $this->addParcels($data->id);
                 } else {
@@ -69,8 +68,7 @@ class PostPlusShipment
             } else {
                 return $this->responseUnprocessable($data->detail);
             }
-        }
-        else {
+        } else {
             return $this->responseUnprocessable("Airway Bill Number is Required for Processing.");
         }
     }
@@ -95,7 +93,7 @@ class PostPlusShipment
             "linkShipmentId" => $id
         ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        $data= json_decode($response);
+        $data = json_decode($response);
         if ($response->successful() && !is_null($data->parcels)) {
             return $this->responseSuccessful($id, 'Container preparation is successfull. Now you can register the unit.');
         } else {
@@ -106,10 +104,10 @@ class PostPlusShipment
     public function prepareShipment($id)
     {
         $url = $this->baseUri . "/shipments/$id/prepare";
-        $body = [ "" => '', ];
+        $body = ["" => '',];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        
-        $data= json_decode($response);
+
+        $data = json_decode($response);
         if ($response->successful() && optional($data)->shipmentSubmitToken) {
             return $this->submitShipment($data->shipmentSubmitToken, $id);
         } else {
@@ -125,8 +123,8 @@ class PostPlusShipment
             "shipmentSubmitToken" =>  $token,
         ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        
-        $data= json_decode($response);
+
+        $data = json_decode($response);
         if ($response->successful()) {
             return $this->getShipmentDetails($id);
         } else {
@@ -137,7 +135,7 @@ class PostPlusShipment
     public function getShipmentDetails($id)
     {
         $url = $this->baseUri . "/shipments/$id?IncludeBags=true&IncludeDocuments=true&IncludeManifestFiles=true";
-        $response = $this->client->get($url,['headers' => $this->getHeaders()]);
+        $response = $this->client->get($url, ['headers' => $this->getHeaders()]);
         $data = json_decode($response->getBody()->getContents());
         if ($data->bags) {
             return $this->responseSuccessful($data, 'Container registration is successfull. Please donwload CN35 Label after 5 Mins');

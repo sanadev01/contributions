@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Repositories\Warehouse;
 
@@ -12,7 +12,8 @@ use App\Repositories\AbstractRepository;
 use App\Services\Correios\Services\Brazil\Client;
 use App\Http\Resources\Warehouse\Container\PackageResource;
 
-class ContainerPackageRepository extends AbstractRepository{
+class ContainerPackageRepository extends AbstractRepository
+{
 
     public function store(Request $request)
     {
@@ -35,18 +36,18 @@ class ContainerPackageRepository extends AbstractRepository{
 
     public function addOrderToContainer(Container $container, string $barcode)
     {
-        // if ($container->hasAnjunChinaService()) {
+        // if ($container->has_anjun_china_service) {
         //     return $this->toAnjunChinaContainer($container, $barcode);
         // }
-        if ($container->hasBCNService()) {
+        if ($container->has_bcn_service) {
             return $this->toBCNContainer($container, $barcode);
         }
         $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
 
-        if(!$this->isValidContainerOrder($container,$order)) {
-             return $this->validationError404($barcode, 'Order Not Found. Please Check Packet Service.');
+        if (!$this->isValidContainerOrder($container, $order)) {
+            return $this->validationError404($barcode, 'Order Not Found. Please Check Packet Service.');
         }
-        if ($container->hasAnjunChinaService()) {
+        if ($container->has_anjun_china_service) {
             return $this->toAnjunChinaContainer($container, $barcode);
         }
         if ($container->hasBCNService()) {
@@ -74,14 +75,14 @@ class ContainerPackageRepository extends AbstractRepository{
 
         if ($order->status < Order::STATUS_PAYMENT_DONE) {
             return $this->validationError404($barcode, 'Please check the Order Status, either the order has been canceled, refunded or not yet paid');
-        } 
+        }
         \Log::info([
-            'container'=>$container->services_subclass_code,
-            'is anjun container'=>$container->hasAnjunService(),
-            'order subclass'=>$order->shippingService->service_sub_class,
-            'is anjun order'=>$order->shippingService->isAnjunService()
+            'container' => $container->services_subclass_code,
+            'is anjun container' => $container->has_anjun_service,
+            'order subclass' => $order->shippingService->service_sub_class,
+            'is anjun order' => $order->shippingService->is_anjun_service
         ]);
-        if (!$container->hasAnjunService() || !$order->shippingService->isAnjunService()) {
+        if (!$container->has_anjun_service || !$order->shippingService->is_anjun_service) {
             return $this->validationError404($barcode, 'Order does not belongs to this container Service. Please Check Packet Service');
         }
 
@@ -102,23 +103,23 @@ class ContainerPackageRepository extends AbstractRepository{
         // if($subString != 'nb' && $subString != 'xl'){
         //     return $this->validationError404($barcode, 'Order does not belongs to this anjun china container Service. Please Check Packet Service');
         //  }
-        if (!$order->shippingService->isAnjunChinaService()) {
+        if (!$order->shippingService->is_anjun_china_service) {
 
             return $this->validationError404($barcode, 'Order does not belongs to this container Service. Please Check Packet Service');
         }
-        
-        if ($container->hasAnjunChinaStandardService() && !$order->shippingService->isAnjunChinaStandardService()) {
+
+        if ($container->has_anjun_china_standard_service && !$order->shippingService->is_anjun_china_standard_service) {
 
             return $this->validationError404($barcode, 'Order does not belongs to this standard container Service. Please Check Packet Service');
         }
-        if ($container->hasAnjunChinaExpressService() && !$order->shippingService->isAnjunChinaExpressService()) {
+        if ($container->has_anjun_china_express_service && !$order->shippingService->is_anjun_china_express_service) {
 
             return $this->validationError404($barcode, 'Order does not belongs to this container express Service. Please Check Packet Service');
         }
 
         return $this->updateContainer($container, $order, $barcode);
     }
-    
+
     public function toBCNContainer(Container $container, string $barcode)
     {
         $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
@@ -135,11 +136,11 @@ class ContainerPackageRepository extends AbstractRepository{
             return $this->validationError404($barcode, 'Order does not belongs to this container Service. Please Check Packet Service');
         }
 
-        if ($container->hasBCNExpressService() && !$order->shippingService->is_bcn_express) {
+        if ($container->has_bcn_express_service && !$order->shippingService->is_bcn_express) {
 
             return $this->validationError404($barcode, 'Order does not belongs to this standard container Service. Please Check Packet Service');
         }
-        if ($container->hasBCNStandardService() && !$order->shippingService->is_bcn_standard) {
+        if ($container->has_bcn_standard_service && !$order->shippingService->is_bcn_standard) {
 
             return $this->validationError404($barcode, 'Order does not belongs to this container express Service. Please Check Packet Service');
         }
@@ -172,7 +173,7 @@ class ContainerPackageRepository extends AbstractRepository{
                     $validRangeGroup = "Group {$firstOrderGroupRange['group']}";
                     $validRangeStart = $firstOrderGroupRange['start'];
                     $validRangeEnd = $firstOrderGroupRange['end'];
-                
+
                     $validRange = "Valid range: $validRangeGroup (Start: $validRangeStart, End: $validRangeEnd)";
                     
                     return $this->validationError404($barcode, "Invalid Zipcode Group for container. Valid Group is {$firstOrderGroupRange['group']}");
@@ -233,16 +234,16 @@ class ContainerPackageRepository extends AbstractRepository{
 
         return $order_tracking->delete();
     }
-    public function isValidContainerOrder($container,$order) { 
-        if(!$order)
+    public function isValidContainerOrder($container, $order)
+    {
+        if (!$order)
             return false;
         $barcode = $order->corrios_tracking_code;
-        $subString = strtolower(substr($barcode,0,2));
-        if(strtolower(substr($barcode,0,2)) == 'na' || strtolower(substr($barcode,0,2)) == 'xl'||strtolower(substr($barcode,0,2)) == 'nc'|| strtolower(substr($barcode,0,2)) == 'nb'){
+        $subString = strtolower(substr($barcode, 0, 2));
+        if (strtolower(substr($barcode, 0, 2)) == 'na' || strtolower(substr($barcode, 0, 2)) == 'xl' || strtolower(substr($barcode, 0, 2)) == 'nc' || strtolower(substr($barcode, 0, 2)) == 'nb') {
             $subString = 'nx';
         }
-        return strtolower($container->getSubClassCode())  == $subString;
-          
+        return strtolower($container->subclass_code)  == $subString;
     }
     public function validationError404($barcode, $message)
     {
@@ -254,5 +255,4 @@ class ContainerPackageRepository extends AbstractRepository{
             ],
         ];
     }
-
 }
