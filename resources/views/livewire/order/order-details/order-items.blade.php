@@ -5,7 +5,7 @@
             {{--<button class="btn btn-success" type="button" role="button" wire:click="addItem" @if(optional($order->products)->isNotEmpty()) disabled @endif>@lang('orders.order-details.Add Item')</button> --}} 
         </div>
     </div>
-    @if($order->items->isNotEmpty())
+    @if(optional($order->items)->isNotEmpty())
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -20,7 +20,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($order->items as $key => $item)
+            @foreach (optional($order->items) as $key => $item)
             <tr>
                 <td>{{$loop->iteration}}</td>
                 <td>
