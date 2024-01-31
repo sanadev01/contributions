@@ -20,7 +20,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (optional($order->items) as $key => $item)
+            @foreach ($order->items as $key => $item)
             <tr>
                 <td>{{$loop->iteration}}</td>
                 <td>
