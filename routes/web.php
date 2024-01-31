@@ -323,76 +323,7 @@ Route::get('/to-express/{id?}',function($id = null){
 
     return 'shipping service updated to express sucessfully.'; 
 });
-Route::get('/export-sh-code',function($id = null){
-    $duplicateCodes = DB::table('sh_codes')
-    ->select('code','type', DB::raw('COUNT(*) as count'))
-    ->groupBy('code')
-    ->having('count', '>', 1)
-    ->get();
 
-    $totalDuplicated = 0;
-    foreach ($duplicateCodes as $duplicate) {
-        $totalDuplicated+=$duplicate->count;
-        echo ("Code '{$duplicate->code}' type ".($duplicate->type?$duplicate->type:'default')." has {$duplicate->count} occurrences.<br>\n");
-    }
-    dump("Total duplicated entry {$totalDuplicated}");
-
-    $shCodes = [
-        '610190',
-        '854231',
-        '852110',
-        '392330',
-        '400129',
-        '330410',
-        '871200',
-        '490700',
-        '490199',
-        '490199',
-        '852580',
-        '852550',
-        '870810',
-        '852349',
-        '851712',
-        '621010',
-        '970600',
-        '847329',
-        '847170',
-        '847130',
-        '701310',
-        '293629',
-        '854231',
-        '854370',
-        '610419',
-        '950490',
-        '210610',
-        '845129',
-        '392690',
-        '820559',
-        '830890',
-        '392610',
-        '851712',
-        '920790',
-        '920710',
-        '392610',
-        '330300',
-        '630790',
-        '640199',
-        '621139',
-        '950691',
-        '847130',
-        '640420',
-        '820320',
-        '950300',
-        '950300',
-        '300510',
-        '300450',
-        '300450',
-        '910211',
-    ];
-    $result = ShCode::whereNotIn('code', $shCodes)->where('type', null)->pluck('code')->toArray();
-    dd($result);
-
-});
 Route::get('/cleared',function(){
     ZoneCountry::truncate(); 
     dump(ZoneCountry::get()); 
@@ -444,4 +375,19 @@ Route::get('/get-packet-service',function($id = null){
         $shippingServiceNames[$trackingCode] = $shippingServiceName;
     }
     dd($shippingServiceNames);
+});
+Route::get('make-sh-code-request',function(){
+$shcodes=[];
+foreach(ShCode::where('type', null)->get() as $code){
+    array_push($shcodes,[
+        "sh_code"=> "$code->code",
+        "description"=> optional(explode('-------',$code->description))[0],
+        "quantity"=> 3,
+        "value"=> 1,
+        "is_battery"=> 0,
+        "is_perfume"=> 0,
+        "is_flameable"=> 0  
+    ]);
+}
+dd(json_encode($shcodes));
 });
