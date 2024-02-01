@@ -80,7 +80,7 @@ class OrderItemsController extends Controller
         }
         else{
             if($this->deleteIfTypeNotMatch($order,null)){
-                session()->flash('alert-danger', 'Invalid Item deleted successfully.Please confirm and continue');               
+                session()->flash('alert-danger', 'Invalid Item (Sh code) deleted successfully.Please confirm and continue');               
                 return redirect()->back();
               }
         }
