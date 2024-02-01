@@ -12,6 +12,7 @@ use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
+use App\Models\ShCode;
 use App\Models\User;
 
 class OrderItemsController extends Controller
@@ -51,7 +52,19 @@ class OrderItemsController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     */
+     */ 
+    public function deleteIfTypeNotMatch($order, $itemType)
+    {
+        $itemsToDelete = $order->items->filter(function ($item) use($itemType){
+            return ShCode::where('code',$item->sh_code)->where('type',$itemType)->first()==null;  
+        });
+        $flag=false;
+        foreach ($itemsToDelete as $item) {
+            $item->delete();
+            $flag=true;
+        }
+        return $flag;
+    }
     public function store(CreateRequest $request,Order $order)
     {
         if($order->items->isEmpty()){
@@ -59,7 +72,18 @@ class OrderItemsController extends Controller
             return redirect()->route('admin.orders.order-details.index',[$order->id]);
         }
         $shippingService = ShippingService::find($request->shipping_service_id);
-
+        if($shippingService->is_total_express){
+          if($this->deleteIfTypeNotMatch($order,'total')){
+            session()->flash('alert-danger', 'Invalid Item (Sh code) deleted successfully.Please confirm and continue');               
+            return redirect()->back();
+          }
+        }
+        else{
+            if($this->deleteIfTypeNotMatch($order,null)){
+                session()->flash('alert-danger', 'Invalid Item deleted successfully.Please confirm and continue');               
+                return redirect()->back();
+              }
+        }
         $this->authorize('editItems',$order);
 
         if ( !$order->recipient ){
