@@ -60,9 +60,9 @@ class OrderItemsController extends Controller
             return redirect()->route('admin.orders.order-details.index',[$order->id]);
         }
         $shippingService = ShippingService::find($request->shipping_service_id);
-        $deleteResult = $this->deleteInvalidShCode($order, $shippingService->is_total_express ? 'total' : null);
-        if ($deleteResult) {
-            return $this->redirectWithErrorMessage($deleteResult, 'Invalid Item (Sh code) deleted successfully. Please confirm and continue');
+        if ($this->deleteInvalidShCode($order, $shippingService)){
+            session()->flash('alert-danger','Invalid Item (Sh code) deleted successfully. Please confirm and continue');
+            return redirect()->route('admin.orders.order-details.index',[$order->id]);
         }
         $this->authorize('editItems',$order);
 
@@ -145,8 +145,9 @@ class OrderItemsController extends Controller
         }
         return \back()->withInput();
     }
-    public function deleteInvalidShCode($order, $itemType)
+    public function deleteInvalidShCode($order, $shippingService)
     {
+        $itemType = $shippingService->is_total_express ? 'total' : null;
         $itemsToDelete = $order->items->filter(function ($item) use($itemType){
             return ShCode::where('code',$item->sh_code)->where('type',$itemType)->first()==null;  
         });
