@@ -52,19 +52,7 @@ class OrderItemsController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     */ 
-    public function deleteIfTypeNotMatch($order, $itemType)
-    {
-        $itemsToDelete = $order->items->filter(function ($item) use($itemType){
-            return ShCode::where('code',$item->sh_code)->where('type',$itemType)->first()==null;  
-        });
-        $flag=false;
-        foreach ($itemsToDelete as $item) {
-            $item->delete();
-            $flag=true;
-        }
-        return $flag;
-    }
+     */
     public function store(CreateRequest $request,Order $order)
     {
         if($order->items->isEmpty()){
@@ -72,17 +60,9 @@ class OrderItemsController extends Controller
             return redirect()->route('admin.orders.order-details.index',[$order->id]);
         }
         $shippingService = ShippingService::find($request->shipping_service_id);
-        if($shippingService->is_total_express){
-          if($this->deleteIfTypeNotMatch($order,'total')){
-            session()->flash('alert-danger', 'Invalid Item (Sh code) deleted successfully.Please confirm and continue');               
-            return redirect()->back();
-          }
-        }
-        else{
-            if($this->deleteIfTypeNotMatch($order,null)){
-                session()->flash('alert-danger', 'Invalid Item (Sh code) deleted successfully.Please confirm and continue');               
-                return redirect()->back();
-              }
+        $deleteResult = $this->deleteInvalidShCode($order, $shippingService->is_total_express ? 'total' : null);
+        if ($deleteResult) {
+            return $this->redirectWithErrorMessage($deleteResult, 'Invalid Item (Sh code) deleted successfully. Please confirm and continue');
         }
         $this->authorize('editItems',$order);
 
@@ -164,6 +144,18 @@ class OrderItemsController extends Controller
             return \redirect()->route('admin.orders.services.index',$order->encrypted_id);
         }
         return \back()->withInput();
+    }
+    public function deleteInvalidShCode($order, $itemType)
+    {
+        $itemsToDelete = $order->items->filter(function ($item) use($itemType){
+            return ShCode::where('code',$item->sh_code)->where('type',$itemType)->first()==null;  
+        });
+        $flag=false;
+        foreach ($itemsToDelete as $item) {
+            $item->delete();
+            $flag=true;
+        }
+        return $flag;
     }
 
     public function uspsRates(Request $request)
