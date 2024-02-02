@@ -134,7 +134,7 @@ class OrderItemsController extends Controller
         if ( $this->orderRepository->updateShippingAndItems($request,$order) ){
             if ($this->deleteInvalidShCode($order, $shippingService)){
                 session()->flash('alert-danger','Please remove invalid sh code and continue!');
-                return redirect()->route('admin.orders.order-details.index',[$order->id]);
+                return redirect()->route('admin.orders.order-details.index',[$order->encrypted_id]);
             }
             session()->flash('alert-success','orders.Order Placed');
             if ($order->user->hasRole('wholesale') && $order->user->insurance == true) 
