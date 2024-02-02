@@ -60,10 +60,6 @@ class OrderItemsController extends Controller
             return redirect()->route('admin.orders.order-details.index',[$order->id]);
         }
         $shippingService = ShippingService::find($request->shipping_service_id);
-        if ($this->deleteInvalidShCode($order, $shippingService)){
-            session()->flash('alert-danger','Invalid Item (Sh code) deleted successfully. Please confirm and continue');
-            return redirect()->route('admin.orders.order-details.index',[$order->id]);
-        }
         $this->authorize('editItems',$order);
 
         if ( !$order->recipient ){
@@ -119,8 +115,7 @@ class OrderItemsController extends Controller
          */
         $shipping_service_data = \DB::table('shipping_services')
             ->select('max_sum_of_all_products','api','service_api_alias')
-            ->find($request->shipping_service_id)
-        ;
+            ->find($request->shipping_service_id);
         if ($shipping_service_data->api == 'sinerlog' && $shipping_service_data->service_api_alias == 'XP') {
             
             $sum_of_all_products = 0;
@@ -136,6 +131,10 @@ class OrderItemsController extends Controller
         }    
         
         if ( $this->orderRepository->updateShippingAndItems($request,$order) ){
+            if ($this->deleteInvalidShCode($order, $shippingService)){
+                session()->flash('alert-danger','Please remove invalid sh code and continue!');
+                return redirect()->route('admin.orders.order-details.index',[$order->id]);
+            }
             session()->flash('alert-success','orders.Order Placed');
             if ($order->user->hasRole('wholesale') && $order->user->insurance == true) 
             {
@@ -151,12 +150,7 @@ class OrderItemsController extends Controller
         $itemsToDelete = $order->items->filter(function ($item) use($itemType){
             return ShCode::where('code',$item->sh_code)->where('type',$itemType)->first()==null;  
         });
-        $flag=false;
-        foreach ($itemsToDelete as $item) {
-            $item->delete();
-            $flag=true;
-        }
-        return $flag;
+        return $itemsToDelete->count()>0;
     }
 
     public function uspsRates(Request $request)
