@@ -20,8 +20,8 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($order->items as $key => $item)
-            <tr>
+            @foreach ($order->items as $key => $item)            
+            <tr class="{{$this->isValidShCode($item->sh_code)?'bg-danger text-white':''}}">
                 <td>{{$loop->iteration}}</td>
                 <td>
                 <span class="badge badge-primary">{{$item->sh_code}}</span>
