@@ -2,7 +2,7 @@
     <h3 class="my-3 border-bottom-light py-2">@lang('orders.order-details.Order Items')</h3>
     <div class="row my-3">
         <div class="col-12">
-            {{--<button class="btn btn-success" type="button" role="button" wire:click="addItem" @if(optional($order->products)->isNotEmpty()) disabled @endif>@lang('orders.order-details.Add Item')</button> --}} 
+            {{--<button class="btn btn-success" type="button" role="button" wire:click="addItem" @if(optional($order->products)->isNotEmpty()) disabled @endif>@lang('orders.order-details.Add Item')</button> --}}
         </div>
     </div>
     @if(optional($order->items)->isNotEmpty())
@@ -20,8 +20,8 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($order->items as $key => $item)
-            <tr>
+            @foreach ($order->items as $key => $item)            
+            <tr class="{{$this->isValidShCode($item->sh_code)?'bg-danger text-white':''}}">
                 <td>{{$loop->iteration}}</td>
                 <td>
                 <span class="badge badge-primary">{{$item->sh_code}}</span>
