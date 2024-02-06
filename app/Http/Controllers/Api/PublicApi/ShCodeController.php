@@ -15,7 +15,7 @@ class ShCodeController extends Controller
             $type = request('postal') == "Courier" ? 'total' : $type;
             $shCode = ShCode::query()
                 ->where('type', $type)
-                ->where('code', "LIKE", "{$search}%")
+                ->where('code', "LIKE", "%{$search}%")
                 ->orWhere('description', 'LIKE', "%{$search}%")
                 ->orderBy('description', 'ASC')
                 ->get(['code', 'description']);
