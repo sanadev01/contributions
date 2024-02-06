@@ -11,8 +11,8 @@ class ShCodeController extends Controller
     public function __invoke($search = null)
     {
         if ($search) {
-            $type = request()->type == "Courier" ? 'total' : null;
-            $type = request('postal') == "Courier" ? 'total' : $type;
+            $type = strtolower(request()->type) == "courier"  ? 'total' : null;
+            $type = strtolower(request()->type) == "postal" ? 'postal' : $type;
             $shCode = ShCode::query()
                 ->where('type', $type)
                 ->where('code', "LIKE", "%{$search}%")
