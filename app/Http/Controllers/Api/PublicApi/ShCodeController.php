@@ -19,20 +19,23 @@ class ShCodeController extends Controller
                 ->orWhere('description', 'LIKE', "%{$search}%")
                 ->orderBy('description', 'ASC')
                 ->get(['code', 'description']);
-            if (!$shCode->isEmpty()) {
-                $shCodes = array();
-                foreach ($shCode as $sh) {
-                    array_push($shCodes, [
-                        'code' => $sh->code,
-                        'type' =>  request()->type  ?? 'Corroies',
-                        'description' => $sh->description,
-                    ]);
-                }
-                return $shCodes;
+            if ($shCode->isEmpty()) {  
+                return apiResponse(false, 'No SH Code Found');
             }
-
-            return apiResponse(false, 'No SH Code Found');
         }
-        return ShCode::query()->get(['code', 'description']);
+        else{
+            $shCode = ShCode::query()->get(['code', 'description']);
+        }
+        if (!$shCode->isEmpty()) {
+            $shCodes = array();
+            foreach ($shCode as $sh) {
+                array_push($shCodes, [
+                    'code' => $sh->code,
+                    'type' =>  request()->type  ?? 'Corroies',
+                    'description' => $sh->description,
+                ]);
+            }
+            return $shCodes;
+        }
     }
 }
