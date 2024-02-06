@@ -1,4 +1,4 @@
-<div class="p-2" >
+<div class="p-2">
     <div class="row mb-2 no-print">
         <div class="col-1">
             <select class="form-control" wire:model="pageSize">
@@ -17,14 +17,14 @@
             </a>
         </div>
     </div>
-    <table class="table mb-0 table-responsive-md">
+    <table class="table mb-0 table-responsive">
         <thead>
             <tr>
                 <th>
                     <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                 </th>
                 <th>
-                    <a href="#" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i>  </i>
+                    <a href="#" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i> </i>
                 </th>
                 @admin
                 <th>User Name</th>
@@ -34,7 +34,7 @@
                 <th>Referência do Cliente</th>
                 <th>Carrier</th>
                 @admin
-                    <th>Carrier Cost</th>
+                <th>Carrier Cost</th>
                 @endadmin
                 <th>Tracking Code</th>
                 <th>@lang('orders.amount')</th>
@@ -88,7 +88,7 @@
                         <option value="{{ App\Models\Order::STATUS_SHIPPED }}">SHIPPED</option>
                     </select>
                 </th>
-                <th >
+                <th>
                     <select class="form-control" wire:model="orderType">
                         <option value="">All</option>
                         <option value="consolidated">Consolidated</option>
@@ -106,11 +106,11 @@
             </tr>
         </thead>
         <tbody>
-            
+
             @forelse ($orders as $order)
-                @include('admin.orders.components.order-row',['order'=>$order])    
+            @include('admin.orders.components.order-row',['order'=>$order])
             @empty
-                <x-tables.no-record colspan="9"></x-tables.no-record>
+            <x-tables.no-record colspan="9"></x-tables.no-record>
             @endforelse
         </tbody>
     </table>
@@ -121,28 +121,28 @@
 </div>
 
 @push('lvjs-stack')
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
 
-            @this.on('updated-status',function(orderId,status){
-                @this.call('render')
-                $.post('{{route("admin.order.update.status")}}',{
+        @this.on('updated-status', function(orderId, status) {
+            @this.call('render')
+            $.post('{{route("admin.order.update.status")}}', {
                     order_id: orderId,
-                    status : status
+                    status: status
                 })
-                .then(function(response){
-                    if ( response.success ){
+                .then(function(response) {
+                    if (response.success) {
                         toastr.success(response.message)
                         @this.call('render')
-                    }else{
+                    } else {
                         toastr.error(response.message)
                         @this.call('render')
                     }
-                }).catch(function(data){
+                }).catch(function(data) {
                     toastr.error(response.message)
                 })
 
-            })
-        });
-    </script>
+        })
+    });
+</script>
 @endpush
