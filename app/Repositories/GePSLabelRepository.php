@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 use App\Models\Order;
+use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Correios\Models\PackageError;
@@ -48,9 +49,10 @@ class GePSLabelRepository
             $geps_response = json_decode($order->api_response);
             $base64_pdf = $geps_response->shipmentresponse->label;
             Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64_pdf)); 
-            // if(Auth::user()->id==1357)
-            return (new UpdateCN23Label($order))->run(); 
-            // return true;
+            if($order->shippingService->service_sub_class == ShippingService::GePS || $order->shippingService->service_sub_class == ShippingService::Parcel_Post) {
+                return (new UpdateCN23Label($order))->run(); 
+            }
+            return true;
         }
     }
 

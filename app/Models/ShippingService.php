@@ -70,6 +70,9 @@ class ShippingService extends Model
     const Post_Plus_LT_Premium = 587;
     const Post_Plus_CO_EMS = 588;
     const Post_Plus_CO_REG = 582;
+    const Japan_Prime = 5537;
+    const Japan_EMS = 5541;
+
     const STANDARDS = [self::Packet_Standard, self::AJ_Packet_Standard, self::AJ_Standard_CN, self::BCN_Packet_Standard];
     const EXPRESSES = [self::Packet_Express, self::AJ_Packet_Express, self::AJ_Express_CN, self::BCN_Packet_Express];
     protected $guarded = [];

@@ -28,6 +28,7 @@ class LabelRepositoryFactory
             $shippingService->is_sweden_post_service => new SwedenPostLabelRepository(),
             $shippingService->is_hound_express => new HoundExpressLabelRepository(),
             $order->recipient->country_id == Order::BRAZIL && $shippingService->is_geps_service => new GePSLabelRepository(),
+            $order->recipient->country_id == Order::Japan && $shippingService->is_geps_service => new GePSLabelRepository(),
             $order->recipient->country_id == Order::BRAZIL && ($shippingService->is_correios_service || $shippingService->is_bcn_service || $shippingService->is_anjun_china_service || $shippingService->is_anjun_service) => new CorrieosBrazilLabelRepository(),
             $order->recipient->country_id == Order::BRAZIL && $shippingService->is_post_plus_service => new PostPlusLabelRepository(),
             $order->recipient->country_id == Order::BRAZIL && $shippingService->is_gss_service => new GSSLabelRepository(),

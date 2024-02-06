@@ -143,11 +143,12 @@ class Client
         } else {
             $uom = "KG";
         }
-        if ($order->shippingService->service_sub_class == ShippingService::GePS) {
+        if($order->shippingService->service_sub_class == ShippingService::GePS || $order->shippingService->service_sub_class == ShippingService::Japan_Prime) {
             $serviceCode = "KP";
         } elseif ($order->shippingService->service_sub_class == ShippingService::GePS_EFormat) {
             $serviceCode = "IM";
-        } elseif ($order->shippingService->service_sub_class == ShippingService::Parcel_Post) {
+        }
+        elseif($order->shippingService->service_sub_class == ShippingService::Parcel_Post || $order->shippingService->service_sub_class == ShippingService::Japan_EMS) {
             $serviceCode = "PR";
         }
         $packet =

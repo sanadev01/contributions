@@ -117,7 +117,15 @@ class IndexTable extends Component
         $this->services[24] = [
             'name' => 'PostPlus Colombia REG',
             'value' => Package::SERVICE_CLASS_Post_Plus_CO_REG,
-        ]; 
+        ];
+        $this->services[25] = [
+            'name' => 'Japan Prime JerseyPost',
+            'value' => Package::SERVICE_CLASS_Japan_Prime,
+        ];
+        $this->services[26] = [
+            'name' => 'Japan EMS JerseyPost',
+            'value' => Package::SERVICE_CLASS_Japan_EMS,
+        ];  
         return $this->services;
     }
 }

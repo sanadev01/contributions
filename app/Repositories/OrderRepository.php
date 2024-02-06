@@ -139,6 +139,8 @@ class OrderRepository
                     ShippingService::GePS,
                     ShippingService::GePS_EFormat,
                     ShippingService::Parcel_Post,
+                    ShippingService::Japan_Prime,
+                    ShippingService::Japan_EMS,
                 ];
             }
             if ($request->carrier == 'Prime5') {
@@ -628,8 +630,11 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)
             || $shippingServices->contains('service_sub_class', ShippingService::GDE_FIRST_CLASS)
             || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS)
-        ) {
-            if (!setting('usps', null, User::ROLE_ADMIN)) {
+            || $shippingServices->contains('service_sub_class', ShippingService::Japan_Prime)
+            || $shippingServices->contains('service_sub_class', ShippingService::Japan_EMS))
+        {
+            if(!setting('usps', null, User::ROLE_ADMIN))
+            {
                 $this->shippingServiceError = 'USPS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::USPS_PRIORITY
