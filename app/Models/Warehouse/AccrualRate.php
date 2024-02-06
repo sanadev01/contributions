@@ -101,6 +101,12 @@ class AccrualRate extends Model
         if ( $this->service == Package::SERVICE_CLASS_Post_Plus_CO_REG ){
             return "PostPlus Colombia REG";
         }
+        if ( $this->service == Package::SERVICE_CLASS_Japan_Prime ){
+            return "Japan JerseyPost Prime";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_Japan_EMS ){
+            return "Japan JerseyPost EMS";
+        }
         return '';
     }
 

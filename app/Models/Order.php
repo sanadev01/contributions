@@ -70,6 +70,7 @@ class Order extends Model implements Package
     const US = 250;
     const PORTUGAL = 188;
     const COLOMBIA = 50;
+    const Japan = 114;
 
     public $user_profit = 0;
     public function scopeParcelReady(Builder $query)

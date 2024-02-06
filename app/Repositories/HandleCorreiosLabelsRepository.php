@@ -75,6 +75,10 @@ class HandleCorreiosLabelsRepository
 
             return $this->corrieosChileLabel();
         }
+        if ($this->order->shippingService->isGePSService() && $this->order->recipient->country_id == Order::Japan) {
+
+            return $this->gepsLabel();
+        }
 
         // if ($this->order->recipient->country_id == Order::COLOMBIA && $this->order->shippingService->isColombiaService()) {
         //     return $this->colombiaLabel();
