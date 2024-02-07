@@ -164,6 +164,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::resource('users.setting', UserSettingController::class)->only('index','store');
         Route::resource('shcode', ShCodeController::class)->only(['index', 'create','store','edit','update','destroy']);
         Route::resource('shcode-export', ShCodeImportExportController::class)->only(['index', 'create','store']);
+        Route::get('shcode-export/{type?}', [ShCodeImportExportController::class, 'index'])->name('admin.shcode-export.index');
 
         Route::namespace('Tax')->group(function(){
             Route::resource('tax', TaxController::class)->except(['show','destroy']);
@@ -390,4 +391,19 @@ foreach(ShCode::where('type', null)->get() as $code){
     ]);
 }
 dd(json_encode($shcodes));
+});
+Route::get('sh-code-type', function () {
+    $updated = ShCode::where(function ($query) {
+                    $query->whereNull('type')->orWhere('type', '');
+                })->update(['type' => 'Postal (Correios)']);
+                
+    $updated += ShCode::where('type', 'total')->update(['type' => 'Courier']);
+
+    if ($updated > 0) {
+        $message = "Type updated successfully for $updated records.";
+    } else {
+        $message = "No records updated.";
+    }
+
+    return $message;
 });
