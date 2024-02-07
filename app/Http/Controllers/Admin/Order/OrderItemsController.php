@@ -147,7 +147,7 @@ class OrderItemsController extends Controller
     }
     public function deleteInvalidShCode($order, $shippingService)
     {
-        $itemType = $shippingService->is_total_express ? 'total' : null;
+        $itemType = $shippingService->is_total_express ? 'Courier' : 'Postal (Correios)';
         $itemsToDelete = $order->items->filter(function ($item) use($itemType){
             return ShCode::where('code',$item->sh_code)->where('type',$itemType)->first()==null;  
         });

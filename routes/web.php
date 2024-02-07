@@ -392,18 +392,18 @@ foreach(ShCode::where('type', null)->get() as $code){
 }
 dd(json_encode($shcodes));
 });
-Route::get('sh-code-type', function () {
-    $updated = ShCode::where(function ($query) {
-                    $query->whereNull('type')->orWhere('type', '');
-                })->update(['type' => 'Postal (Correios)']);
+// Route::get('sh-code-type', function () {
+//     $updated = ShCode::where(function ($query) {
+//                     $query->whereNull('type')->orWhere('type', '');
+//                 })->update(['type' => 'Postal (Correios)']);
                 
-    $updated += ShCode::where('type', 'total')->update(['type' => 'Courier']);
+//     $updated += ShCode::where('type', 'total')->update(['type' => 'Courier']);
 
-    if ($updated > 0) {
-        $message = "Type updated successfully for $updated records.";
-    } else {
-        $message = "No records updated.";
-    }
+//     if ($updated > 0) {
+//         $message = "Type updated successfully for $updated records.";
+//     } else {
+//         $message = "No records updated.";
+//     }
 
-    return $message;
-});
+//     return $message;
+// });
