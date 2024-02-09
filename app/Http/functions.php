@@ -381,7 +381,7 @@ function getOrderGroupRange($order)
     return null;
 }
 
-function getValidShCode($shCode)
+function getValidShCode($shCode, $service)
 {
     $invalidShCodes = [
         '640420',
@@ -409,14 +409,32 @@ function getValidShCode($shCode)
         '970600',
         '490700',
     ];
+    if($service->is_total_express) {
+        $type = 'Courier';
+    }else {
+        $type = 'Postal (Correios)';
+    }
 
     if (in_array($shCode, $invalidShCodes)) {
-        $pattern = '^' . $shCode . '\d*$';
-        $newShCode = ShCode::where('code', 'regexp', $pattern)->first();
-        if ($newShCode) {
-            return $newShCode->code;
-        } else {
-            return $newShCode = null;
+
+        $codeLength = strlen($shCode);
+    
+        $searchRange = max($codeLength - 3, 0); 
+
+        $nearestRecord = ShCode::whereNotIn('code', $invalidShCodes)->where('type', $type)->orderByRaw('ABS(code - ' . $shCode . ')')
+        ->first();
+        if($nearestRecord) {
+            return $nearestRecord->code;
         }
+
+        // for ($i = $codeLength - 1; $i >= $searchRange; $i--) {
+        //     $searchPattern = substr($shCode, 0, $i);
+        //     $newShCode = ShCode::whereNotIn('code', $invalidShCodes)->where('code', 'like', $searchPattern . '%')->where('type', $type)->first();
+        //     if ($newShCode) {
+        //         return $newShCode->code;
+        //     }
+        // }
+
+        return null;
     }
 }
