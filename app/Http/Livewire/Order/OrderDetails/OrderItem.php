@@ -26,21 +26,22 @@ class OrderItem extends Component
     public $correios;
     public $geps;
     public $prime5;
+    public $service;
 
     // public $search;
     // public $name;
-    public $type = 'default';
+    public $type = 'Postal (Correios)';
     // public $orderInventory = false; 
     protected $listeners = ['loadSHCodes' => 'loadSHCodes', 'editItem' => 'editItem'];
 
     public function loadSHCodes($data)
     {
-        $service = optional($data)['service'];
-        $shippingService = ShippingService::where('service_sub_class', $service)->first();
+        $this->service = optional($data)['service'];
+        $shippingService = ShippingService::where('service_sub_class', $this->service)->first();
         if (optional($shippingService)->is_total_express) {
-            $this->type = 'total';
+            $this->type = 'Courier';
         } else {
-            $this->type = 'default';
+            $this->type = 'Postal (Correios)';
         }
         $this->render();
         $this->dispatchBrowserEvent('initializeSelectPicker');
@@ -111,18 +112,32 @@ class OrderItem extends Component
     }
     public function submitForm()
     {
+        $shCode = getValidShCode($this->sh_code);
+
+        if($shCode) {
+            $this->sh_code = $shCode;
+        }
+
+        $shippingService = ShippingService::where('service_sub_class', $this->service)->first();
+
         $rules = [
             'quantity' => 'required|numeric|min:1',
             'value' => 'required|numeric|gt:0|min:0.01',
-            'description' => 'required|max:500',
             'sh_code' => ($this->order->products->isNotEmpty()) ? 'sometimes' : [
                 'required',
                 'numeric',
                 new NcmValidator()
             ],
         ];
-        // Perform validation
+
+        if ($shippingService && $shippingService->is_total_express) {
+            $rules['description'] = 'required|max:60';
+        } else {
+            $rules['description'] = 'required|max:210';
+        }
+
         $this->validate($rules, []);
+
         if ($this->editItemId) {
             ModelsOrderItem::updateOrCreate(
                 [
@@ -157,16 +172,15 @@ class OrderItem extends Component
         $this->emitUp('itemAdded');
         $this->dispatchBrowserEvent('emitSHCodesLazy');
         $this->dispatchBrowserEvent('updateDescriptionMessage');
-
     }
+
 
     public function render()
     {
-        
         ini_set('memory_limit', '10000M');
         ini_set('memory_limit', '-1');
         return view('livewire.order.order-details.order-item', [
-            'codes' =>  ShCode::where('type', $this->type == 'default' ? null : $this->type)->orderBy('description', 'ASC')->get(),
+            'codes' =>  ShCode::where('type', $this->type)->orderBy('description', 'ASC')->get(),
             'totalValue' => $this->getTotalValue(),
         ]);
     }

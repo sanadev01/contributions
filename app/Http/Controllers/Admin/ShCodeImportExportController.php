@@ -14,12 +14,22 @@ class ShCodeImportExportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(ShcodeRepository $repository)
+    public function index(Request $request, ShcodeRepository $repository)
     {
-        $exportUsers = new ExportShCodes(
-            $repository->get()
-        );
-        return $exportUsers->handle();
+        $type = $request->get('type');
+        
+        if ($type === 'All') {
+            $exportShCodes = new ExportShCodes(
+                $repository->get()
+            );
+        } else {
+            $exportShCodes = new ExportShCodes(
+                $repository->getByType($type),
+                $type
+            );
+        }
+
+        return $exportShCodes->handle();
     }
 
     /**

@@ -133,7 +133,7 @@ class OrderItemsController extends Controller
         if ( $this->orderRepository->updateShippingAndItems($request,$order) ){
             if ($this->deleteInvalidShCode($order, $shippingService)){
                 session()->flash('alert-danger','Please remove invalid sh code and continue!');
-                return redirect()->route('admin.orders.order-details.index',[$order->id]);
+                return redirect()->route('admin.orders.order-details.index',[$order->encrypted_id]);
             }
             session()->flash('alert-success','orders.Order Placed');
             if ($order->user->hasRole('wholesale') && $order->user->insurance == true) 
@@ -146,7 +146,7 @@ class OrderItemsController extends Controller
     }
     public function deleteInvalidShCode($order, $shippingService)
     {
-        $itemType = $shippingService->is_total_express ? 'total' : null;
+        $itemType = optional($shippingService)->is_total_express ? 'Courier' : 'Postal (Correios)';
         $itemsToDelete = $order->items->filter(function ($item) use($itemType){
             return ShCode::where('code',$item->sh_code)->where('type',$itemType)->first()==null;  
         });
@@ -179,8 +179,7 @@ class OrderItemsController extends Controller
             $profit = setting('usps_profit', null, $order->user_id)??(int) setting('usps_profit', null, User::ROLE_ADMIN);
             $rate = $rate + ($rate/100) * $profit;
             \Log::info('with profit');
-            \Log::info($rate);
-             
+            \Log::info($rate);             
             return (Array)[
                 'success' => true,
                 'total_amount' => $rate,
