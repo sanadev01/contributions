@@ -112,10 +112,10 @@ class OrderItem extends Component
     }
     public function submitForm()
     {
-        $ShCode = getValidShCode($this->sh_code);
+        $shCode = getValidShCode($this->sh_code);
 
-        if($ShCode) {
-            $this->sh_code = $ShCode;
+        if($shCode) {
+            $this->sh_code = $shCode;
         }
 
         $shippingService = ShippingService::where('service_sub_class', $this->service)->first();
