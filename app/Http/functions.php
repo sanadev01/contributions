@@ -421,19 +421,19 @@ function getValidShCode($shCode, $service)
     
         $searchRange = max($codeLength - 3, 0); 
 
-        $nearestRecord = ShCode::whereNotIn('code', $invalidShCodes)->where('type', $type)->orderByRaw('ABS(code - ' . $shCode . ')')
-        ->first();
-        if($nearestRecord) {
-            return $nearestRecord->code;
-        }
-
-        // for ($i = $codeLength - 1; $i >= $searchRange; $i--) {
-        //     $searchPattern = substr($shCode, 0, $i);
-        //     $newShCode = ShCode::whereNotIn('code', $invalidShCodes)->where('code', 'like', $searchPattern . '%')->where('type', $type)->first();
-        //     if ($newShCode) {
-        //         return $newShCode->code;
-        //     }
+        // $nearestRecord = ShCode::whereNotIn('code', $invalidShCodes)->where('type', $type)->orderByRaw('ABS(code - ' . $shCode . ')')
+        // ->first();
+        // if($nearestRecord) {
+        //     return $nearestRecord->code;
         // }
+
+        for ($i = $codeLength - 1; $i >= $searchRange; $i--) {
+            $searchPattern = substr($shCode, 0, $i);
+            $newShCode = ShCode::whereNotIn('code', $invalidShCodes)->where('code', 'like', $searchPattern . '%')->where('type', $type)->first();
+            if ($newShCode) {
+                return $newShCode->code;
+            }
+        }
 
         return null;
     }
