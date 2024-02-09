@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Concerns\HasJsonResponse;
+use App\Models\ShCode;
 
 class CreateRequest extends FormRequest
 {
@@ -31,15 +32,15 @@ class CreateRequest extends FormRequest
     public function rules(Request $request)
     {
         $order = Order::where([
-                    ['user_id', auth()->user()->id],
-                    ['tracking_id', $request->parcel['tracking_id']]
-                ])
-                ->orWhere([
-                    ['user_id', auth()->user()->id],
-                    ['customer_reference', $request->parcel['customer_reference']]
-                ])
-                ->first();
-                
+            ['user_id', auth()->user()->id],
+            ['tracking_id', $request->parcel['tracking_id']]
+        ])
+            ->orWhere([
+                ['user_id', auth()->user()->id],
+                ['customer_reference', $request->parcel['customer_reference']]
+            ])
+            ->first();
+
         $rules = [
             "parcel.service_id" => "bail|required|exists:shipping_services,id",
             "parcel.merchant" => "required",
@@ -47,7 +48,7 @@ class CreateRequest extends FormRequest
             'parcel.tracking_id' => 'required|max:22',
             'parcel.customer_reference' => 'required|max:22',
             "parcel.measurement_unit" => "required|in:kg/cm,lbs/in",
-            
+
             "parcel.length" => "required|numeric|gt:0",
             "parcel.width" => "required|numeric|gt:0",
             "parcel.height" => "required|numeric|gt:0",
@@ -71,7 +72,7 @@ class CreateRequest extends FormRequest
             "recipient.zipcode" => "required",
             "recipient.state_id" => "required|exists:states,id",
             "recipient.country_id" => "required|exists:countries,id",
-            
+
             "products" => "required|array|min:1",
 
             "products.*.sh_code" => [
@@ -85,6 +86,17 @@ class CreateRequest extends FormRequest
             "products.*.is_perfume" => "required|in:0,1",
             "products.*.is_flameable" => "required|in:0,1",
         ];
+        $shippingService = ShippingService::find(optional($request->parcel)['service_id']);
+        if ($shippingService->is_sweden_post) {
+            $limit = 60;
+        } else if ($shippingService->is_geps) {
+            $limit = 50;
+        } else if ($shippingService->is_correios) {
+            $limit = 500;
+        } else {
+            $limit = 200;
+        }
+        $rules['products.*.description'] = 'required|string|max:' . $limit;
 
         if ($order) {
             $rules['parcel.tracking_id'] = 'required|unique:orders,tracking_id';
@@ -120,13 +132,24 @@ class CreateRequest extends FormRequest
             $rules['recipient.phone'] = 'required|string|max:12';
         }
 
+
         return $rules;
     }
-
+    public function isValidShCode($shCode, $shippingService)
+    {
+        $itemType = optional($shippingService)->is_total_express ? 'Courier' : 'Postal (Correios)';
+        return ShCode::where('code', $shCode)->where('type', $itemType)->first() == null;
+    }
+    public function getShCodeSuggestions($shCode, $shippingService)
+    {
+        $itemType = optional($shippingService)->is_total_express ? 'Courier' : 'Postal (Correios)';
+        $shCode = ShCode::where('is_valid', true)->where('code', 'like', substr($itemType, 0, 3) . '%')->first();
+        return $shCode?$shCode->code:null;
+    }
     public function messages()
     {
         return [
-            "products.*.sh_code.*" => __('validation.ncm.invalid')." (:input)",
+            "products.*.sh_code.*" => __('validation.ncm.invalid') . " (:input)",
             'sender.sender_address.required_if' => __('validation.sender_address.required_if'),
             'sender.sender_country_id.required_if' => __('validation.sender_country_id.required_if'),
             'sender.sender_state_id.required_if' => __('validation.sender_state_id.required_if'),
