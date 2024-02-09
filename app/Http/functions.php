@@ -1,13 +1,14 @@
 <?php
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\State;
+use App\Models\ShCode;
 use App\Models\Country;
 use App\Models\Deposit;
 use App\Models\Setting;
 use App\Models\ShippingService;
-use App\Models\User;
 use App\Services\Calculators\AbstractRateCalculator;
 
 function countries()
@@ -378,4 +379,44 @@ function getOrderGroupRange($order)
         }
     }
     return null;
+}
+
+function getValidShCode($shCode)
+{
+    $invalidShCodes = [
+        '640420',
+        '210610',
+        '701310',
+        '820559',
+        '392610',
+        '33051000',
+        '29362990',
+        '42029200',
+        '33041000',
+        '85442000',
+        '91022900',
+        '58071000',
+        '64042000',
+        '90041000',
+        '87150000',
+        '70132900',
+        '39261000',
+        '33079000',
+        '49019900',
+        '870810',
+        '621010',
+        '950691',
+        '970600',
+        '490700',
+    ];
+
+    if (in_array($shCode, $invalidShCodes)) {
+        $pattern = '^' . $shCode . '\d*$';
+        $newShCode = ShCode::where('code', 'regexp', $pattern)->first();
+        if ($newShCode) {
+            return $newShCode->code;
+        } else {
+            return; $newShCode = null;
+        }
+    }
 }

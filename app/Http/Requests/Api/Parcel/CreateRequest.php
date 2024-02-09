@@ -120,6 +120,15 @@ class CreateRequest extends FormRequest
             $rules['recipient.phone'] = 'required|string|max:12';
         }
 
+        if ($request->recipient['country_id'] == 'BR' || $request->recipient['country_id'] == 30) {
+            $rules['recipient.phone'] = 'required|string|regex:/^\+55\d{8,12}$/';
+        }
+
+        if ($shippingService && $shippingService->is_total_express) {
+
+            $rules['products.*.description'] = 'required|max:60';
+        }
+
         return $rules;
     }
 
