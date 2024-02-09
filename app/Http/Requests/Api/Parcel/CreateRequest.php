@@ -45,6 +45,7 @@ class CreateRequest extends FormRequest
             "parcel.service_id" => "bail|required|exists:shipping_services,id",
             "parcel.merchant" => "required",
             "parcel.carrier" => "required",
+            "parcel.tax_modality" => "in:ddu,ddp",
             'parcel.tracking_id' => 'required|max:22',
             'parcel.customer_reference' => 'required|max:22',
             "parcel.measurement_unit" => "required|in:kg/cm,lbs/in",
@@ -103,25 +104,25 @@ class CreateRequest extends FormRequest
             $rules['parcel.customer_reference'] = 'required|unique:orders,customer_reference';
         }
 
-        if(optional($request->parcel)['measurement_unit'] == 'kg/cm'){
+        if (optional($request->parcel)['measurement_unit'] == 'kg/cm') {
             $rules["parcel.weight"] = "required|numeric|gt:0|max:60";
-        }else{
+        } else {
             $rules["parcel.weight"] = "required|numeric|gt:0|max:132.28";
         }
-        if (is_numeric( optional($request->recipient)['country_id'])){
+        if (is_numeric(optional($request->recipient)['country_id'])) {
             $rules["recipient.country_id"] = "required|exists:countries,id";
-        }else{
+        } else {
             $rules["recipient.country_id"] = "required|exists:countries,code";
         }
-        if (is_numeric( optional($request->recipient)['state_id'])){
+        if (is_numeric(optional($request->recipient)['state_id'])) {
             $rules["recipient.state_id"] = "required|exists:states,id";
-        }else{
+        } else {
             $rules["recipient.state_id"] = "required|exists:states,code";
         }
 
         $shippingService = ShippingService::find($request->parcel['service_id'] ?? null);
 
-        if ($shippingService && $shippingService->isOfUnitedStates()) {
+        if ($shippingService && $shippingService->is_of_united_states) {
 
             $rules['sender.sender_country_id'] = 'required';
             $rules['sender.sender_state_id'] = 'required';
@@ -134,17 +135,6 @@ class CreateRequest extends FormRequest
 
 
         return $rules;
-    }
-    public function isValidShCode($shCode, $shippingService)
-    {
-        $itemType = optional($shippingService)->is_total_express ? 'Courier' : 'Postal (Correios)';
-        return ShCode::where('code', $shCode)->where('type', $itemType)->first() == null;
-    }
-    public function getShCodeSuggestions($shCode, $shippingService)
-    {
-        $itemType = optional($shippingService)->is_total_express ? 'Courier' : 'Postal (Correios)';
-        $shCode = ShCode::where('is_valid', true)->where('code', 'like', substr($itemType, 0, 3) . '%')->first();
-        return $shCode?$shCode->code:null;
     }
     public function messages()
     {
