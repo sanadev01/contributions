@@ -136,17 +136,6 @@ class CreateRequest extends FormRequest
 
         return $rules;
     }
-    public function isValidShCode($shCode, $shippingService)
-    {
-        $itemType = optional($shippingService)->is_total_express ? 'Courier' : 'Postal (Correios)';
-        return ShCode::where('code', $shCode)->where('type', $itemType)->first() == null;
-    }
-    public function getShCodeSuggestions($shCode, $shippingService)
-    {
-        $itemType = optional($shippingService)->is_total_express ? 'Courier' : 'Postal (Correios)';
-        $shCode = ShCode::where('is_valid', true)->where('code', 'like', substr($itemType, 0, 3) . '%')->first();
-        return $shCode?$shCode->code:null;
-    }
     public function messages()
     {
         return [
