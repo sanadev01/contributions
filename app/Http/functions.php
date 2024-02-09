@@ -435,6 +435,6 @@ function getValidShCode($shCode, $service)
             }
         }
 
-        return $shCode;
     }
+    return $shCode;
 }
