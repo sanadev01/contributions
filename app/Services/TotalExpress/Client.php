@@ -1,21 +1,13 @@
 <?php
 
 namespace App\Services\TotalExpress;
-
-use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\OrderTracking;
-use App\Models\ShippingService;
-use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Http;
-use App\Models\Warehouse\DeliveryBill;
 use App\Services\TotalExpress\Services\Parcel;
 use GuzzleHttp\Client as GuzzleClient;
-use App\Services\Converters\UnitsConverter;
-use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Models\PackageError;
 use App\Services\TotalExpress\Services\Overpack;
-use Illuminate\Support\Facades\Log;
 
 class Client
 {
@@ -93,7 +85,8 @@ class Client
     public function createPackage(Order $order)
     {
         $shippingRequest = (new Parcel($order))->getRequestBody();
-        
+        \Log::info('total express');
+        \Log::info($shippingRequest);
         $apiResponse = json_decode($order->api_response); 
         try {
                 if(!$order->api_response){

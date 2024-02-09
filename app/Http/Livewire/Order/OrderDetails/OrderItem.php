@@ -29,7 +29,7 @@ class OrderItem extends Component
 
     // public $search;
     // public $name;
-    public $type = 'default';
+    public $type = 'Postal (Correios)';
     // public $orderInventory = false; 
     protected $listeners = ['loadSHCodes' => 'loadSHCodes', 'editItem' => 'editItem'];
 
@@ -38,9 +38,9 @@ class OrderItem extends Component
         $service = optional($data)['service'];
         $shippingService = ShippingService::where('service_sub_class', $service)->first();
         if (optional($shippingService)->is_total_express) {
-            $this->type = 'total';
+            $this->type = 'Courier';
         } else {
-            $this->type = 'default';
+            $this->type = 'Postal (Correios)';
         }
         $this->render();
         $this->dispatchBrowserEvent('initializeSelectPicker');
@@ -162,11 +162,10 @@ class OrderItem extends Component
 
     public function render()
     {
-        
         ini_set('memory_limit', '10000M');
         ini_set('memory_limit', '-1');
         return view('livewire.order.order-details.order-item', [
-            'codes' =>  ShCode::where('type', $this->type == 'default' ? null : $this->type)->orderBy('description', 'ASC')->get(),
+            'codes' =>  ShCode::where('type', $this->type)->orderBy('description', 'ASC')->get(),
             'totalValue' => $this->getTotalValue(),
         ]);
     }
