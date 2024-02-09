@@ -28,6 +28,7 @@ class ShcodeRepository
 
             ShCode::create([
                 'code' => $request->code,
+                'type' => $request->type,
                 'description' => $request->en.'-------'.$request->pt.'-------'.$request->sp,
             ]);
 
@@ -46,6 +47,7 @@ class ShcodeRepository
             
             $shcode->update([
                 'code' => $request->code,
+                'type' => $request->type,
                 'description' => $request->en.'-------'.$request->pt.'-------'.$request->sp,
             ]);
 
