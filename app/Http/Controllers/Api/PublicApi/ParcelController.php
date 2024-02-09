@@ -244,11 +244,7 @@ class ParcelController extends Controller
                 }
 
                 $shCode = optional($product)['sh_code'];
-                $newShCode = getValidShCode(optional($product)['sh_code']);
-                
-                if($newShCode) {
-                    $shCode = $newShCode;
-                }
+                $shCode = getValidShCode(optional($product)['sh_code'], $order->shippingService);
 
                 $order->items()->create([
                     "sh_code" => $shCode,
