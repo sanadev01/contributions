@@ -416,7 +416,7 @@ function getValidShCode($shCode)
         if ($newShCode) {
             return $newShCode->code;
         } else {
-            return; $newShCode = null;
+            return $newShCode = null;
         }
     }
 }
