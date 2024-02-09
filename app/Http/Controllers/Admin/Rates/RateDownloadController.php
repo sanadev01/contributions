@@ -26,17 +26,17 @@ class RateDownloadController extends Controller
         }
 
         $service = ShippingService::find($packageId);
-        if(optional($service)->rates && $service->isGDEService()){
-            if($service->rates && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
+        if (optional($service)->rates && $service->is_gde_service) {
+            if ($service->rates && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)) {
                 $profit = getGDEProfit($service->rates, $service->service_sub_class);
             }
             $exportService = new ShippingServiceRegionRateExport($service->rates, $profit);
-            return $exportService->handle(); 
+            return $exportService->handle();
         }
 
         if($packageId == 0 ){
             $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();
-            $rates = collect($service->rates[0]->data);         
+            $rates = collect($service->rates[0]->data);
         }else{
             $rates = $rateReportsRepository->getRateReport($packageId);
         }

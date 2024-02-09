@@ -14,22 +14,22 @@ class Parcel
    protected $width;
    protected $height;
    protected $length;
-   
+
    protected $chargableWeight;
    public function __construct(Order $order)
    {
       $this->order = $order;
       $this->weight = $order->weight;
-      if(!$order->isWeightInKg()) {
+      if (!$order->is_weight_in_kg) {
          $this->weight = UnitsConverter::poundToKg($order->getOriginalWeight('lbs'));
       }
-      $this->width = round($order->isMeasurmentUnitCm() ? $order->width : UnitsConverter::inToCm($order->width));
-      $this->height = round($order->isMeasurmentUnitCm() ? $order->height : UnitsConverter::inToCm($order->height));
-      $this->length = round($order->isMeasurmentUnitCm() ? $order->length : UnitsConverter::inToCm($order->length));
+      $this->width = round($order->is_weight_in_kg ? $order->width : UnitsConverter::inToCm($order->width));
+      $this->height = round($order->is_weight_in_kg ? $order->height : UnitsConverter::inToCm($order->height));
+      $this->length = round($order->is_weight_in_kg ? $order->length : UnitsConverter::inToCm($order->length));
    }
    public function getRequestBody()
    {
-      
+
       if (app()->isProduction()) {
          $contractId = config('total_express.production.contractId');
       } else {
@@ -49,7 +49,7 @@ class Parcel
          "estimated_delivery_date" => ((new DateTime())->modify('+3 days'))->format('Y-m-d'),
 
          'customer_full_name' => $this->order->recipient->getFullName(),
-         'customer_document_type' => $this->order->recipient->account_type == "business"? "CNPJ":"CPF",
+         'customer_document_type' => $this->order->recipient->account_type == "business" ? "CNPJ" : "CPF",
          'customer_address' => $this->order->recipient->address,
          'customer_address_complement' => optional($this->order->recipient)->address2,
          'customer_address_number' => optional($this->order->recipient)->street_no,
@@ -62,7 +62,7 @@ class Parcel
          'customer_document_number' => ($this->order->recipient->tax_id) ? $this->order->recipient->tax_id : '',
          "customer_address_reference" => optional($this->order->recipient)->street_no,
          "customer_phone_country_code" => substr($this->order->recipient->phone, 0, 3),
-         'is_commercial_destination' => $this->order->recipient->account_type == "business" ? true: false,
+         'is_commercial_destination' => $this->order->recipient->account_type == "business" ? true : false,
 
          'seller_name' => $this->order->getSenderFullName(),
          'seller_address' => ($this->order->sender_address) ? $this->order->sender_address : '2200 NW 129TH AVE',
@@ -73,7 +73,7 @@ class Parcel
          'seller_country' => 'US',
          'seller_phone' => ($this->order->sender_phone) ? $this->order->sender_phone : $this->order->user->phone,
          'seller_email' => ($this->order->sender_email) ? $this->order->sender_email : $this->order->user->email,
-         "seller_tax_number" =>"12345678-998A",
+         "seller_tax_number" => "12345678-998A",
          'customerReferenceID' => ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id) . ' HD-' . $this->order->id,
          'sales_channel_order_number' => ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id) . ' HD-' . $this->order->id,
          "seller_address_number" => "605",
@@ -101,13 +101,13 @@ class Parcel
       if (count($this->order->items) >= 1) {
          $totalQuantity = $this->order->items->sum('quantity');
          foreach ($this->order->items as $key => $item) {
-            $itemToPush = []; 
+            $itemToPush = [];
             $itemToPush = [
                "name" => substr($item->description, 20),
                "description" =>  $item->description,
                "value" => $item->value,
                'weight' => round($this->weight / $totalQuantity, 2) - 0.02,
-               "hs_code" => substr( $item->sh_code, 0, 6),
+               "hs_code" => substr($item->sh_code, 0, 6),
                "sku" => $item->sh_code,
                "origin_country" => 'US',
                "quantity" => (int)$item->quantity,

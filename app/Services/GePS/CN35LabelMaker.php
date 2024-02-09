@@ -1,10 +1,8 @@
-<?php 
+<?php
 
 namespace App\Services\GePS;
 
-use App\Models\Warehouse\Container;
 use App\Services\Correios\Contracts\HasLableExport;
-use Carbon\Carbon;
 
 class CN35LabelMaker implements HasLableExport
 {
@@ -24,30 +22,16 @@ class CN35LabelMaker implements HasLableExport
     private $unitCode;
     private $OrderWeight;
 
-    public function __construct(Container $container)
+    public function __construct()
     {
- 
 
-        $this->companyName = '<img src="'.public_path('images/hd-1cm.png').'" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
+
+        $this->companyName = '<img src="' . public_path('images/hd-1cm.png') . '" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
         $this->packetType = 'PACKET STANDARD';
         $this->officeAddress = '';
         $this->serialNumber = 1;
         $this->flightNumber = '';
-        $this->dispatchDate = Carbon::now()->format('Y-m-d');
-        
-        $order = $container->orders->first();
-        
-        if($order){ 
-              $this->setType($order->getOriginalWeight('kg')); 
-        }
-        
-        $this->weight =  $container->getWeight();
-        $this->dispatchNumber = $container->dispatch_number;
-        $this->originAirpot = 'MIA';
-        $this->setService($container->getServiceCode());
-        $this->destinationAirport = $container->getDestinationAriport();        
-        $this->itemsCount = $container->getPiecesCount();
-        $this->unitCode = $container->getUnitCode();
+        $this->dispatchDate = '';
     }
 
     public function setCompanyName($companyName)
@@ -60,13 +44,13 @@ class CN35LabelMaker implements HasLableExport
     {
         $this->service = $service;
 
-        if ( $this->service == 1 || $this->service == 9 ) {
+        if ($this->service == 1 || $this->service == 9) {
             $this->packetType = 'PACKET EXPRESS';
         }
-        if ( $this->service == 2 || $this->service == 8 ) {
+        if ($this->service == 2 || $this->service == 8) {
             $this->packetType = 'PACKET STANDARD';
         }
-        if ( $this->service == 3 ){
+        if ($this->service == 3) {
             $this->packetType = 'PACKET MINI';
         }
 
@@ -112,8 +96,8 @@ class CN35LabelMaker implements HasLableExport
     public function setType(string $weight)
     {
         $this->OrderWeight = $weight;
-        if($weight > 3){
-            if($this->packetType == 'PACKET EXPRESS'){
+        if ($weight > 3) {
+            if ($this->packetType == 'PACKET EXPRESS') {
                 $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/>
                                         Centro Internacional de São Paulo – SE/SPM <br/>
                                         Rua Mergenthaler, 592 – Bloco III, 5 Mezanino <br/>
@@ -121,7 +105,7 @@ class CN35LabelMaker implements HasLableExport
                                         CNPJ 34.028.316/7105-85';
                 return $this;
             }
-            if($this->packetType == 'PACKET STANDARD'){
+            if ($this->packetType == 'PACKET STANDARD') {
                 $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/> 
                                         Centro Internacional do Rio de Janeiro –SE/RJ <br/>
                                         Ponta do Galeão, s/n 2 andar TECA Correios Galeão, <br/>
@@ -164,17 +148,17 @@ class CN35LabelMaker implements HasLableExport
 
     public function render()
     {
-        return view('labels.geps.cn35.index',$this->getViewData());
+        return view('labels.geps.cn35.index', $this->getViewData());
     }
 
     public function download()
     {
-        return \PDF::loadView('labels.geps.cn35.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.geps.cn35.index', $this->getViewData())->stream();
     }
 
     public function saveAs($path)
     {
-        return \PDF::loadView('labels.geps.cn35.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.geps.cn35.index', $this->getViewData())->save($path);
     }
 
     private function getViewData()
@@ -196,5 +180,4 @@ class CN35LabelMaker implements HasLableExport
             'OrderWeight' => $this->OrderWeight,
         ];
     }
-
 }

@@ -29,7 +29,6 @@ class RateReportsRepository
         $newUser = Auth::user();
         $newUser->profitPackage = $package;
         $profitPackageSlabRates = collect();
-
         foreach($package->data as $profitPackageSlab){
             $order = new Order();
             $order->user = $newUser;
@@ -50,12 +49,12 @@ class RateReportsRepository
             if($package->shippingService){
                 $shippingService = $package->shippingService;
                 $shippingService->cacheCalculator = false;
-                if ( $shippingService->isAvailableFor($order) ){
+                // if ( $shippingService->isAvailableFor($order) ){
                     $rate = $shippingService->getRateFor($order,true,false);
                     $value = $shippingService->getRateFor($order,false,false);
                     $shippingRates->push($rate);
                     $shippingValue->push($value);
-                }
+                // }
             }else{
 
                 if($serviceId)
@@ -64,23 +63,23 @@ class RateReportsRepository
                     if($service){
 
                         $service->cacheCalculator = false;
-                        if ( $service->isAvailableFor($order) ){
+                        // if ( $service->isAvailableFor($order) ){
                             $rate = $service->getRateFor($order,true,false);
                             $value = $service->getRateFor($order,false,false);
                             $shippingRates->push($rate);
                             $shippingValue->push($value);
-                        }
+                        // }
                     }
                     
                 }else{
                     foreach (ShippingService::query()->active()->get() as $shippingService) {
                         $shippingService->cacheCalculator = false;
-                        if ( $shippingService->isAvailableFor($order) ){
+                        // if ( $shippingService->isAvailableFor($order) ){
                             $rate = $shippingService->getRateFor($order,true,false);
                             $value = $shippingService->getRateFor($order,false,false);
                             $shippingRates->push($rate);
                             $shippingValue->push($value);
-                        }
+                        // }
                     }
                 }
             }

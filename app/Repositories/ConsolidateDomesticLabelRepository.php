@@ -22,20 +22,20 @@ class ConsolidateDomesticLabelRepository
     public function getInternationalOrders(array $ids)
     {
         $orders = Order::whereIn('id', $ids)
-                            ->where('corrios_tracking_code', '!=', null)
-                            ->get();
+            ->where('corrios_tracking_code', '!=', null)
+            ->get();
 
         return $orders->filter(function ($order) {
 
-            if ($order->hasSecondLabel()) {
-                array_push($this->errors, $order->warehouse_number.' already has a second label');
+            if ($order->has_second_label) {
+                array_push($this->errors, $order->warehouse_number . ' already has a second label');
             }
 
-            if (!$order->isInternational()) {
-                array_push($this->errors, $order->warehouse_number.' is of US origin');
+            if (!$order->is_international) {
+                array_push($this->errors, $order->warehouse_number . ' is of US origin');
             }
 
-            return (!$order->hasSecondLabel() && $order->isInternational());
+            return (!$order->has_second_label && $order->is_international);
         });
     }
 
@@ -78,15 +78,15 @@ class ConsolidateDomesticLabelRepository
 
     public function getStates()
     {
-        return State::query()->where("country_id", Country::US)->get(["name","code","id"]);
+        return State::query()->where("country_id", Country::US)->get(["name", "code", "id"]);
     }
 
     private function consolidatedOrderWeightandDimensions($order)
     {
         $this->totalOrdersWeight += $order->getWeight('lbs');
-        $this->totalOrdersLength += ($order->isMeasurmentUnitCm()) ? UnitsConverter::cmToIn($order->length) : $order->length;
-        $this->totalOrdersWidth += ($order->isMeasurmentUnitCm()) ? UnitsConverter::cmToIn($order->width) : $order->width;
-        $this->totalOrdersHeight += ($order->isMeasurmentUnitCm()) ? UnitsConverter::cmToIn($order->height) : $order->height;
+        $this->totalOrdersLength += ($order->is_weight_in_kg) ? UnitsConverter::cmToIn($order->length) : $order->length;
+        $this->totalOrdersWidth += ($order->is_weight_in_kg) ? UnitsConverter::cmToIn($order->width) : $order->width;
+        $this->totalOrdersHeight += ($order->is_weight_in_kg) ? UnitsConverter::cmToIn($order->height) : $order->height;
 
         return true;
     }
