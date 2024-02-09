@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Concerns\HasJsonResponse;
+use App\Models\ShCode;
 
 class CreateRequest extends FormRequest
 {
@@ -86,6 +87,17 @@ class CreateRequest extends FormRequest
             "products.*.is_perfume" => "required|in:0,1",
             "products.*.is_flameable" => "required|in:0,1",
         ];
+        $shippingService = ShippingService::find(optional($request->parcel)['service_id']);
+        if ($shippingService->is_sweden_post) {
+            $limit = 60;
+        } else if ($shippingService->is_geps) {
+            $limit = 50;
+        } else if ($shippingService->is_correios) {
+            $limit = 500;
+        } else {
+            $limit = 200;
+        }
+        $rules['products.*.description'] = 'required|string|max:' . $limit;
 
         if ($order) {
             $rules['parcel.tracking_id'] = 'required|unique:orders,tracking_id';
@@ -121,9 +133,20 @@ class CreateRequest extends FormRequest
             $rules['recipient.phone'] = 'required|string|max:12';
         }
 
+
         return $rules;
     }
-
+    public function isValidShCode($shCode, $shippingService)
+    {
+        $itemType = optional($shippingService)->is_total_express ? 'Courier' : 'Postal (Correios)';
+        return ShCode::where('code', $shCode)->where('type', $itemType)->first() == null;
+    }
+    public function getShCodeSuggestions($shCode, $shippingService)
+    {
+        $itemType = optional($shippingService)->is_total_express ? 'Courier' : 'Postal (Correios)';
+        $shCode = ShCode::where('is_valid', true)->where('code', 'like', substr($itemType, 0, 3) . '%')->first();
+        return $shCode?$shCode->code:null;
+    }
     public function messages()
     {
         return [
