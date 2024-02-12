@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Order;
 use App\Models\ShCode;
 use App\Models\State;
+use App\Models\Warehouse\Container;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
 use App\Models\Warehouse\DeliveryBill;
@@ -14,10 +15,10 @@ use App\Http\Controllers\Admin\HomeController;
 // use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
+use Illuminate\Support\Facades\Cache;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +59,6 @@ Route::get('/home', function () {
 Auth::routes();
 
 Route::post('logout', [\App\Http\Controllers\Auth\LoginController::class,'logout'])->name('logout');
-
 
 Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function () {
 
@@ -297,8 +297,16 @@ Route::get('test-label/{id?}',function($id = null){
     return $labelPrinter->download();
 });
 
-Route::get('permission',function($id = null){
-    Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
+Route::get('clear-cache',function($id = null){
+    
+    $total = Cache::remember('total', 120, function () {
+        // Logic to calculate and return the total
+        return 'total is cleared';
+    });
+    dump(['total cache'=>$total]);
+    Artisan::call('cache:clear');
+    Artisan::call('config:cache');
+    dump('end');
     return Artisan::output();
 });
 
@@ -392,18 +400,18 @@ foreach(ShCode::where('type', null)->get() as $code){
 }
 dd(json_encode($shcodes));
 });
-// Route::get('sh-code-type', function () {
-//     $updated = ShCode::where(function ($query) {
-//                     $query->whereNull('type')->orWhere('type', '');
-//                 })->update(['type' => 'Postal (Correios)']);
+Route::get('sh-code-type', function () {
+    $updated = ShCode::where(function ($query) {
+                    $query->whereNull('type')->orWhere('type', '');
+                })->update(['type' => 'Postal (Correios)']);
                 
-//     $updated += ShCode::where('type', 'total')->update(['type' => 'Courier']);
+    $updated += ShCode::where('type', 'total')->update(['type' => 'Courier']);
 
-//     if ($updated > 0) {
-//         $message = "Type updated successfully for $updated records.";
-//     } else {
-//         $message = "No records updated.";
-//     }
+    if ($updated > 0) {
+        $message = "Type updated successfully for $updated records.";
+    } else {
+        $message = "No records updated.";
+    }
 
-//     return $message;
-// });
+    return $message;
+});
