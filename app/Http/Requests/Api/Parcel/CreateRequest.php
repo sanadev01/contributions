@@ -87,17 +87,6 @@ class CreateRequest extends FormRequest
             "products.*.is_perfume" => "required|in:0,1",
             "products.*.is_flameable" => "required|in:0,1",
         ];
-        $shippingService = ShippingService::find(optional($request->parcel)['service_id']);
-        if ($shippingService->is_sweden_post) {
-            $limit = 60;
-        } else if ($shippingService->is_geps) {
-            $limit = 50;
-        } else if ($shippingService->is_correios) {
-            $limit = 500;
-        } else {
-            $limit = 200;
-        }
-        $rules['products.*.description'] = 'required|string|max:' . $limit;
 
         if ($order) {
             $rules['parcel.tracking_id'] = 'required|unique:orders,tracking_id';
@@ -131,9 +120,18 @@ class CreateRequest extends FormRequest
             $rules['sender.sender_phone'] = 'sometimes|string|max:100';
             $rules['sender.sender_zipcode'] = 'required';
             $rules['recipient.phone'] = 'required|string|max:12';
+            if ($shippingService->is_sweden_post){
+                $limit = 60;
+            } else if ($shippingService->is_geps){
+                $limit = 50;
+            } else if ($shippingService->is_correios){
+                $limit = 500;
+            } else {
+                $limit = 200;
+            }
+            $rules['products.*.description'] = 'required|string|max:' . $limit;
+
         }
-
-
         return $rules;
     }
     public function messages()
