@@ -128,6 +128,17 @@ class CreateRequest extends FormRequest
                 $limit = 200;
             }
             $rules['products.*.description'] = 'required|string|max:' . $limit;
+  
+        }
+
+
+        if ($request->recipient['country_id'] == 'BR' || $request->recipient['country_id'] == 30) {
+            $rules['recipient.phone'] = 'required|string|regex:/^\+55\d{8,12}$/';
+        }
+
+        if ($shippingService && $shippingService->is_total_express) {
+
+            $rules['products.*.description'] = 'required|max:60';
         }
 
         return $rules;
@@ -141,6 +152,8 @@ class CreateRequest extends FormRequest
             'sender.sender_country_id.required_if' => __('validation.sender_country_id.required_if'),
             'sender.sender_state_id.required_if' => __('validation.sender_state_id.required_if'),
             'sender.sender_city.required_if' => __('validation.sender_city.required_if'),
+            'recipient.phone.required' => 'The phone number field is required.',
+            'recipient.phone.regex' => 'Please enter a valid phone number in international format. Example: +551234567890',
         ];
     }
 }
