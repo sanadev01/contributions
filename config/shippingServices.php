@@ -55,6 +55,7 @@ return [
             582 => "PostPlus Colombia Reg",
             5537 => 'Japan Prime JerseyPost',
             5541 => 'Japan EMS JerseyPost',
+            237 => 'GSS CEP',
         ]
     ]
 ];

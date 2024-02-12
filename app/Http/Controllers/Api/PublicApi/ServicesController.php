@@ -78,6 +78,7 @@ class ServicesController extends Controller
             ShippingService::GSS_EPMI,
             ShippingService::GSS_FCM,
             ShippingService::GSS_EMS,
+            ShippingService::GSS_CEP
         ];
     }
 

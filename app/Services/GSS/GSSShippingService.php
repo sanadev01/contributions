@@ -27,7 +27,7 @@ class GSSShippingService
 
     public function isAvailableFor($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::GSS_PMI || $shippingService->service_sub_class == ShippingService::GSS_EPMEI || $shippingService->service_sub_class == ShippingService::GSS_EPMI || $shippingService->service_sub_class == ShippingService::GSS_FCM || $shippingService->service_sub_class == ShippingService::GSS_EMS) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::GSS_PMI || $shippingService->service_sub_class == ShippingService::GSS_EPMEI || $shippingService->service_sub_class == ShippingService::GSS_EPMI || $shippingService->service_sub_class == ShippingService::GSS_FCM || $shippingService->service_sub_class == ShippingService::GSS_EMS || $shippingService->service_sub_class == ShippingService::GSS_CEP) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }
@@ -35,7 +35,7 @@ class GSSShippingService
 
     public function isAvailableForInternational($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::GSS_PMI || $shippingService->service_sub_class == ShippingService::GSS_EPMEI || $shippingService->service_sub_class == ShippingService::GSS_EPMI || $shippingService->service_sub_class == ShippingService::GSS_FCM || $shippingService->service_sub_class == ShippingService::GSS_EMS) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::GSS_PMI || $shippingService->service_sub_class == ShippingService::GSS_EPMEI || $shippingService->service_sub_class == ShippingService::GSS_EPMI || $shippingService->service_sub_class == ShippingService::GSS_FCM || $shippingService->service_sub_class == ShippingService::GSS_EMS || $shippingService->service_sub_class == ShippingService::GSS_CEP) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }

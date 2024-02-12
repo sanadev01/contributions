@@ -69,6 +69,7 @@ class ShippingService extends Model
     const Post_Plus_CO_REG = 582;
     const Japan_Prime = 5537;
     const Japan_EMS = 5541;
+    const GSS_CEP = 237;
 
     protected $guarded = [];
 
@@ -270,7 +271,7 @@ class ShippingService extends Model
 
     public function isGSSService()
     {
-        if($this->service_sub_class == self::GSS_PMI || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_FCM || $this->service_sub_class == self::GSS_EMS){
+        if($this->service_sub_class == self::GSS_PMI || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_FCM || $this->service_sub_class == self::GSS_EMS || $this->service_sub_class == self::GSS_CEP){
             return true;
         }
         return false;
