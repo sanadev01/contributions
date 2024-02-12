@@ -572,7 +572,8 @@ class OrderRepository
                 }
             }
             // USPS Intenrational Services
-            if (optional($order->recipient)->country_id != Order::US && setting('usps', null, User::ROLE_ADMIN)) {
+            if (optional($order->recipient)->country_id != Order::US && setting('usps', null, auth()->user()->id)) 
+            {
                 $uspsShippingService = new USPSShippingService($order);
 
                 foreach (ShippingService::where('active', true)->get() as $shippingService) {
