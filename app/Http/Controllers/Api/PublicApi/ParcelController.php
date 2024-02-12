@@ -241,8 +241,12 @@ class ParcelController extends Controller
                 if (optional($product)['is_perfume']) {
                     $isPerfume = true;
                 }
+
+                $shCode = optional($product)['sh_code'];
+                $shCode = getValidShCode(optional($product)['sh_code'], $order->shippingService);
+
                 $order->items()->create([
-                    "sh_code" => optional($product)['sh_code'],
+                    "sh_code" => $shCode,
                     "description" => optional($product)['description'],
                     "quantity" => optional($product)['quantity'],
                     "value" => optional($product)['value'],

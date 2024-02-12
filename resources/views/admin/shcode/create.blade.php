@@ -51,6 +51,15 @@
                                         <div class="help-block"></div>
                                     </div>
                                 </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Type<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="type">
+                                            <option value="Postal (Correios)">Postal (Correios)</option>
+                                            <option value="Courier">Courier</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">

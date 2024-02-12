@@ -154,7 +154,7 @@
         <!-- Invoice Items Details -->
         <div id="invoice-items-details" class="pt-1 invoice-items-table">
             <div class="row">
-                <div class="table-responsive-md col-12">
+                <div class="table-responsive-md col-12" style="min-height: 0px;">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -181,7 +181,7 @@
         </div>
         <div id="invoice-items-details" class="pt-1 invoice-items-table">
             <div class="row">
-                <div class="table-responsive-md col-12">
+                <div class="table-responsive-md col-12" style="min-height: 0px;">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -265,7 +265,7 @@
         <div id="invoice-total-details" class="invoice-total-table">
             <div class="row">
                 <div class="col-7 offset-5">
-                    <div class="table-responsive-md">
+                    <div class="table-responsive-md" style="min-height: 0px;">
                         <table class="table table-bordered">
                             <tbody>
 
