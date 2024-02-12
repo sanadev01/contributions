@@ -118,7 +118,22 @@ class CreateRequest extends FormRequest
             $rules['sender.sender_phone'] = 'sometimes|string|max:100';
             $rules['sender.sender_zipcode'] = 'required';
             $rules['recipient.phone'] = 'required|string|max:12';
+
         }
+        if ($shippingService){
+            if ($shippingService->is_sweden_post){
+                $limit = 60;
+            } else if ($shippingService->is_geps){
+                $limit = 50;
+            } else if ($shippingService->is_correios){
+                $limit = 500;
+            } else {
+                $limit = 200;
+            }
+            $rules['products.*.description'] = 'required|string|max:' . $limit;
+        }
+
+
 
         if ($request->recipient['country_id'] == 'BR' || $request->recipient['country_id'] == 30) {
             $rules['recipient.phone'] = 'required|string|regex:/^\+55\d{8,12}$/';
