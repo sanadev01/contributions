@@ -10,32 +10,33 @@ use Illuminate\Support\Facades\Session;
 use App\Services\Excel\Import\TrackingsImportService;
 
 
-class GePSContainerPackageRepository {
+class GePSContainerPackageRepository
+{
 
 
     public function addOrderToContainer($container, $order)
     {
         $error = null;
 
-        if(!$order->containers->isEmpty()) {
+        if (!$order->containers->isEmpty()) {
             $error = "Order is already present in Container";
         }
         if ($order->status != Order::STATUS_PAYMENT_DONE) {
             $error = 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid';
         }
-        if ( (!$container->hasGePSService() ||  !$order->shippingService->isGePSService())){
+        if ((!$container->has_geps_service ||  !$order->shippingService->is_geps_service)) {
 
             $error = 'Order does not belong to this container. Please Check Packet Service';
         }
-        if(!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
+        if (!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
             $container->orders()->attach($order->id);
             $this->addOrderTracking($order);
-            $gepsClient = new Client();   
+            $gepsClient = new Client();
             $response = $gepsClient->confirmShipment($order->corrios_tracking_code);
             if (!$response['success']) {
                 Session::flash('alert-class', 'alert-info');
-                $message = "Order Added in the Container Successfully, But ".$response['message'];
-            }else{
+                $message = "Order Added in the Container Successfully, But " . $response['message'];
+            } else {
                 Session::flash('alert-class', 'alert-success');
                 $message = 'Order Added in the Container Successfully';
             }
@@ -55,7 +56,7 @@ class GePSContainerPackageRepository {
     public function removeOrderFromContainer(Container $container, $id)
     {
         $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
-        if($order_tracking) {
+        if ($order_tracking) {
             $order_tracking->delete();
         }
         try {
@@ -70,12 +71,12 @@ class GePSContainerPackageRepository {
     public function addTrackings($request, $id)
     {
         $container = Container::find($id);
-        try{
+        try {
             $file = $request->file('csv_file');
             try {
                 $importTrackingService = new TrackingsImportService($file, $container);
                 $importTrackingService->handle();
-                if($container) {
+                if ($container) {
                     session()->flash('alert-success', 'Trackings has been Uploaded Successfully');
                     return back();
                 }
@@ -85,8 +86,8 @@ class GePSContainerPackageRepository {
                 session()->flash('alert-danger', 'Error While Uploading Trackings');
                 return back();
             }
-        }catch(Exception $exception){
-            session()->flash('alert-danger','Error while Upload: '.$exception->getMessage());
+        } catch (Exception $exception) {
+            session()->flash('alert-danger', 'Error while Upload: ' . $exception->getMessage());
             return null;
         }
     }
