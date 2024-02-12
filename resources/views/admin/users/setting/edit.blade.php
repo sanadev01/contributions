@@ -204,10 +204,10 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">USPS Domestic<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">USPS Int'l<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <div class="vs-checkbox-con vs-checkbox-primary" title="usps">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="USPS International">
                                                 <input type="checkbox" name="usps" id="usps" @if(setting('usps', null, $user->id)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
                                                     <span class="vs-checkbox--check">

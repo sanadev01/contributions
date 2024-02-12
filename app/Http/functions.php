@@ -1,13 +1,14 @@
 <?php
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\State;
+use App\Models\ShCode;
 use App\Models\Country;
 use App\Models\Deposit;
 use App\Models\Setting;
 use App\Models\ShippingService;
-use App\Models\User;
 use App\Services\Calculators\AbstractRateCalculator;
 
 function countries()
@@ -386,4 +387,62 @@ function getOrderGroupRange($order)
         }
     }
     return null;
+}
+
+function getValidShCode($shCode, $service)
+{
+    $invalidShCodes = [
+        '640420',
+        '210610',
+        '701310',
+        '820559',
+        '392610',
+        '33051000',
+        '29362990',
+        '42029200',
+        '33041000',
+        '85442000',
+        '91022900',
+        '58071000',
+        '64042000',
+        '90041000',
+        '87150000',
+        '70132900',
+        '39261000',
+        '33079000',
+        '49019900',
+        '870810',
+        '621010',
+        '950691',
+        '970600',
+        '490700',
+    ];
+    if($service->is_total_express) {
+        $type = 'Courier';
+    }else {
+        $type = 'Postal (Correios)';
+    }
+
+    if (in_array($shCode, $invalidShCodes)) {
+
+        $codeLength = strlen($shCode);
+    
+        $searchRange = max($codeLength - 3, 0); 
+
+        // $nearestRecord = ShCode::whereNotIn('code', $invalidShCodes)->where('type', $type)->orderByRaw('ABS(code - ' . $shCode . ')')
+        // ->first();
+        // if($nearestRecord) {
+        //     return $nearestRecord->code;
+        // }
+
+        for ($i = $codeLength - 1; $i >= $searchRange; $i--) {
+            $searchPattern = substr($shCode, 0, $i);
+            $newShCode = ShCode::whereNotIn('code', $invalidShCodes)->where('code', 'like', $searchPattern . '%')->where('type', $type)->first();
+            if ($newShCode) {
+                return $newShCode->code;
+            }
+        }
+
+    }
+    return $shCode;
 }

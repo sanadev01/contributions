@@ -16,6 +16,12 @@ class ShcodeRepository
 
     }
 
+    public function getByType($type)
+    {
+        $shCodes = ShCode::where('type', $type)->orderBy('description', 'ASC')->get();
+        return $shCodes;
+    }
+
     public function store(Request $request)
     {   
         try{

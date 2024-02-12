@@ -11,7 +11,7 @@ class SearchShCode extends Component
 {
     public $search;
     public $name;
-    public $type='default';
+    public $type='Postal (Correios)';
     public $orderInventory = false; 
     protected $listeners = ['reloadSHCodes' => 'reloadSHCodes'];
 
@@ -20,9 +20,9 @@ class SearchShCode extends Component
         $service = optional($data)['service'];
         $shippingService = ShippingService::where('service_sub_class',$service)->first();
         if(optional($shippingService)->is_total_express){
-            $this->type = 'total';
+            $this->type = 'Courier';
         }else{
-            $this->type= 'default';
+            $this->type= 'Postal (Correios)';
         }
   
         $this->render();
@@ -49,7 +49,7 @@ class SearchShCode extends Component
     {
         return view('livewire.components.search-sh-code',[
              'codes' => Cache::remember($this->type,120,function(){ 
-                return ShCode::where('type',$this->type=='default'?null:$this->type)->orderBy('description','ASC')->get();
+                return ShCode::where('type',$this->type)->orderBy('description','ASC')->get();
             })
 
         ]);

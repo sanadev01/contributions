@@ -36,7 +36,7 @@ class OrderItems extends Component
     }
     public function isValidShCode($shCode){
         $this->shippingService = $this->shippingService??$this->order->shippingService;
-        $itemType = $this->shippingService->is_total_express ? 'total' : null;
+        $itemType = optional($this->shippingService)->is_total_express ? 'Courier' : 'Postal (Correios)';
         return ShCode::where('code', $shCode)->where('type', $itemType)->first() == null;
     }
 
