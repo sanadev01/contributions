@@ -386,4 +386,19 @@ class ShippingService extends Model
     {
         return $this->hasMany(ZoneCountry::class);
     }
+    public function getIsCorreiosAttribute()
+    {
+        return in_array(
+            $this->service_sub_class,
+            [
+                self::BCN_Packet_Standard,
+                self::BCN_Packet_Express,
+                self::Packet_Standard,
+                self::Packet_Express,
+                self::AJ_Packet_Standard,
+                self::AJ_Packet_Express,
+                self::Packet_Mini,
+            ]
+        );
+    }
 }
