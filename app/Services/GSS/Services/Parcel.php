@@ -21,6 +21,8 @@ class Parcel {
          $type = 'FCM';
       } elseif($order->shippingService->service_sub_class == ShippingService::GSS_EMS) {
          $type = 'EMS';
+      } elseif($order->shippingService->service_sub_class == ShippingService::GSS_CEP) {
+         $type = 'CEP';
       } 
 
       $refNo = $order->customer_reference;

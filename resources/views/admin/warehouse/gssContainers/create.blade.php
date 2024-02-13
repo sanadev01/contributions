@@ -60,6 +60,7 @@
                                             <option value="{{App\Models\ShippingService::GSS_EPMEI}}" {{ old('services_subclass_code') == App\Models\ShippingService::GSS_EPMEI ? 'selected': '' }}>Priority Mail Express International (Pre-Sort)</option>
                                             <option value="{{App\Models\ShippingService::GSS_EPMI}}" {{ old('services_subclass_code') == App\Models\ShippingService::GSS_EPMI ? 'selected': '' }}>Priority Mail International (Pre-Sort)</option>
                                             {{-- <option value="{{App\Models\ShippingService::GSS_EMS}}" {{ old('services_subclass_code') == App\Models\ShippingService::GSS_EMS ? 'selected': '' }}>Priority Mail Express International (Nationwide)</option> --}}
+                                            <option value="{{App\Models\ShippingService::GSS_CEP}}" {{ old('services_subclass_code') == App\Models\ShippingService::GSS_CEP ? 'selected': '' }}>GSS Commercial E-Packet</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>
