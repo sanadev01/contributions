@@ -43,23 +43,24 @@ class ImportZoneProfit extends AbstractImportService
             if (empty($countryCode)||!is_numeric($currentGroupId)) {
                 continue;
             }
-
+            
             $countryId = Country::where('name', 'like', '%' . $countryCode . '%')->value('id');
 
             if ($countryId) {
+                $profit = round($this->getValueOrDefault('C' . $row), 2);
                 $rates[] = [
                     'group_id' => $currentGroupId,
                     'country_id' => $countryId,
                     'shipping_service_id' => $this->serviceId,
-                    'profit_percentage' => round($this->getValueOrDefault('C' . $row), 2),
+                    'profit_percentage' => $profit < 1 ? $profit * 100:$profit,
                 ];
             } else {
-                $countriesNotFound[] = $countryCode;
+                $countriesNotFound[] = '<br>'.$countryCode;
             }
+            
+            session()->flash('alert-danger','The following country not found: '.json_encode($countriesNotFound));
         }
-
-        // dd($countriesNotFound);
-
+        
         return $this->storeRatesToDb($rates);
     }
 

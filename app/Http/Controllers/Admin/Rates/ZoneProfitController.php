@@ -44,7 +44,7 @@ class ZoneProfitController extends Controller
             ShippingService::GSS_EPMI, 
             ShippingService::GSS_FCM, 
             ShippingService::GSS_EMS, 
-            ])->get();
+            ])->where('active',true)->get();
         
         return view('admin.rates.zone-profit.create', compact('services'));
     }
@@ -72,10 +72,10 @@ class ZoneProfitController extends Controller
     }
 
 
-    public function destroy(ZoneCountry $id)
+    public function destroy($id)
     {
-        $zone = ZoneCountry::where('group_id', $id)->delete();
-        
+         ZoneCountry::where('id', $id)->delete();
+         
         session()->flash('alert-success', 'Profit Deleted');
         return redirect()->route('admin.rates.zone-profit.index');
     }
