@@ -130,7 +130,7 @@ class Client
         } elseif ($container->services_subclass_code == ShippingService::GSS_FCM) {
             $rateType = 'EFCM';
             $foreignOECode = "CWB";
-        } elseif ($container->services_subclass_code == ShippingService::GSS_EMS) {
+        }elseif($container->services_subclass_code == ShippingService::GSS_EMS || $container->services_subclass_code == ShippingService::GSS_CEP) {
             $rateType = 'EMS';
             $foreignOECode = "CWB";
         }
@@ -287,6 +287,8 @@ class Client
             $rateType = 'FCM';
         } elseif ($service == ShippingService::GSS_EMS) {
             $rateType = 'EMS';
+        } elseif($service == ShippingService::GSS_CEP) {
+            $rateType = 'CEP';
         }
 
         $url = $this->baseUrl . '/Utility/CalculatePostage';
@@ -396,6 +398,8 @@ class Client
             $rateType = 'FCM';
         } elseif ($service->service_sub_class == ShippingService::GSS_EMS) {
             $rateType = 'EMS';
+        } elseif($service->service_sub_class == ShippingService::GSS_CEP) {
+            $rateType = 'CEP';
         }
 
         $url = $this->baseUrl . '/Utility/CalculatePostage';

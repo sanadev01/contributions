@@ -389,6 +389,7 @@ class Order extends Model implements Package
             ShippingService::HoundExpress => 'Hound Express',
             ShippingService::TOTAL_EXPRESS => 'Total Express',
             ShippingService::HD_Express => 'HD Express',
+            ShippingService::GSS_CEP,
             default => 'Correios Brazil',
         };
     }
@@ -818,14 +819,15 @@ class Order extends Model implements Package
         // if($gssProfit == null || $gssProfit == 0) { 
         //     $gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
         // }
+        $gssCost = 0;
         $gssProfit = ZoneCountry::where('shipping_service_id', $shippingService->id)
             ->where('country_id', $this->recipient->country_id)
             ->value('profit_percentage');
         $profit = round($gssProfit / 100, 2);
         $client = new Client();
         $response = $client->getCostRates($this, $shippingService);
-        $data = $response->getData();
-        if ($data->isSuccess && $data->output > 0) {
+        $data = optional($response)->getData();
+        if ($data->isSuccess && $data->output > 0){
             $gssCost = $data->output;
         }
         $addedProfit = round($gssCost * $profit, 2);

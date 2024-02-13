@@ -161,7 +161,7 @@ class ApiShippingServiceRepository
             return false;
         }
 
-        if (in_array($order->shippingService->service_sub_class, [ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS]))
+        if (in_array($order->shippingService->service_sub_class, [ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS, ShippingService::GSS_CEP]))
         {
             if(!setting('gss', null, $order->user->id))
             {

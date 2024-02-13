@@ -94,6 +94,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             ShippingService::GSS_EPMI => 'Priority Mail International (Pre-Sort)',
             ShippingService::GSS_FCM => 'First Class Package International',
             ShippingService::GSS_EMS => 'Priority Mail Express International (Nationwide)',
+            ShippingService::GSS_CEP => 'GSS Commercial E-Packet',
             ShippingService::TOTAL_EXPRESS => 'Total Express',
             ShippingService::DirectLinkAustralia => 'DirectLink Australia',
             ShippingService::DirectLinkCanada => 'DirectLink Canada',
@@ -262,7 +263,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             ShippingService::GSS_EPMEI,
             ShippingService::GSS_EPMI,
             ShippingService::GSS_FCM,
-            ShippingService::GSS_EMS
+            ShippingService::GSS_EMS,
+            ShippingService::GSS_CEP
         ]);
     }
     public function getHasTotalExpressServiceAttribute()

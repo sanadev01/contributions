@@ -43,7 +43,8 @@ class ZoneProfitController extends Controller
             ShippingService::GSS_EPMEI, 
             ShippingService::GSS_EPMI, 
             ShippingService::GSS_FCM, 
-            ShippingService::GSS_EMS, 
+            ShippingService::GSS_EMS,
+            ShippingService::GSS_CEP
             ])->get();
         
         return view('admin.rates.zone-profit.create', compact('services'));

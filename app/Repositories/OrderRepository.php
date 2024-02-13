@@ -114,7 +114,8 @@ class OrderRepository
                     ShippingService::GSS_EPMEI,
                     ShippingService::GSS_EPMI,
                     ShippingService::GSS_FCM,
-                    ShippingService::GSS_EMS
+                    ShippingService::GSS_EMS,
+                    ShippingService::GSS_CEP
                 ];
             }
             if ($request->carrier == 'UPS') {
@@ -477,8 +478,9 @@ class OrderRepository
                         ShippingService::GSS_PMI,
                         ShippingService::GSS_EPMEI,
                         ShippingService::GSS_EPMI,
-                        ShippingService::GSS_FCM,
-                        ShippingService::GSS_EMS
+                        ShippingService::GSS_FCM, 
+                        ShippingService::GSS_EMS,
+                        ShippingService::GSS_CEP
                     ]);
                 });
             });
@@ -558,7 +560,8 @@ class OrderRepository
             }
         } else {
             $gssShippingService = new GSSShippingService($order);
-            foreach (ShippingService::whereIn('service_sub_class', [ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS])->where('active', true)->get() as $shippingService) {
+            foreach (ShippingService::whereIn('service_sub_class', [ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS, ShippingService::GSS_CEP])->where('active',true)->get() as $shippingService) 
+            {
                 if ($gssShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
                 }
@@ -632,7 +635,8 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::GDE_FIRST_CLASS)
             || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS)
             || $shippingServices->contains('service_sub_class', ShippingService::Japan_Prime)
-            || $shippingServices->contains('service_sub_class', ShippingService::Japan_EMS))
+            || $shippingServices->contains('service_sub_class', ShippingService::Japan_EMS)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_CEP))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {

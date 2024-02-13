@@ -42,6 +42,7 @@ class ShCodeController extends Controller
             'en' => 'required',
             'pt' => 'required',
             'sp' => 'required',
+            'type' => 'required',
         ];
         $this->validate($request, $rules);
 

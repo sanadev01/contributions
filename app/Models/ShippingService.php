@@ -72,6 +72,7 @@ class ShippingService extends Model
     const Post_Plus_CO_REG = 582;
     const Japan_Prime = 5537;
     const Japan_EMS = 5541;
+    const GSS_CEP = 237;
 
     const STANDARDS = [self::Packet_Standard, self::AJ_Packet_Standard, self::AJ_Standard_CN, self::BCN_Packet_Standard];
     const EXPRESSES = [self::Packet_Express, self::AJ_Packet_Express, self::AJ_Express_CN, self::BCN_Packet_Express];
@@ -270,7 +271,8 @@ class ShippingService extends Model
             self::GSS_EPMEI,
             self::GSS_EPMI,
             self::GSS_FCM,
-            self::GSS_EMS
+            self::GSS_EMS,
+            self::GSS_CEP
         ]);
     }
 
