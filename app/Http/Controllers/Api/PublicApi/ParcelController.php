@@ -148,7 +148,7 @@ class ParcelController extends Controller
             $country = Country::where('code', optional($request->recipient)['country_id'])->orwhere('id', optional($request->recipient)['country_id'])->first();
             $recipientCountryId = $country->id;
         }
-        if (!is_numeric(optional($request->recipient)['state_id'])) {
+        if (!is_numeric(optional($request->recipient)['state_id']) && $stateID !== null) {
 
             $state = State::where('country_id', $recipientCountryId)->where('code', optional($request->recipient)['state_id'])->orwhere('id', optional($request->recipient)['state_id'])->first();
             $stateID = $state->id;
@@ -223,11 +223,11 @@ class ParcelController extends Controller
                 "account_type" => optional($request->recipient)['account_type'],
                 "tax_id" => optional($request->recipient)['tax_id'],
                 "zipcode" => optional($request->recipient)['zipcode'],
-                "state_id" => $stateID,
+                "state_id" => ($recipientCountryId == Order::UK) ? null : $stateID,
                 "country_id" => $recipientCountryId
             ]);
 
-            if ($recipientCountryId == Order::CHILE) {
+            if ($recipientCountryId == Order::CHILE || $recipientCountryId == Order::UK) {
                 $order->recipient()->update([
                     "region" => optional($request->recipient)['region'],
                 ]);
