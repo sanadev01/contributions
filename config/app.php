@@ -165,7 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
-        Milon\Barcode\BarcodeServiceProvider::class,
+        // Milon\Barcode\BarcodeServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -183,7 +183,7 @@ return [
         App\Providers\FedExServiceProvider::class,
         App\Providers\ChileServiceProvider::class,
         Webklex\PDFMerger\Providers\PDFMergerServiceProvider::class,
-
+        Milon\Barcode\BarcodeServiceProvider::class,
     ],
 
     /*

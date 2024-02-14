@@ -99,7 +99,7 @@ class PaymentInvoicePolicy
         //
     }
 
-    public function canChnageStatus(User $user, PaymentInvoice $paymentInvoice)
+    public function canChangeStatus(User $user, PaymentInvoice $paymentInvoice)
     {
         return false;
     }
@@ -112,6 +112,5 @@ class PaymentInvoicePolicy
     public function canCreatePostPaidInvoices(User $user)
     {
         return $user->hasPermission('can_create_post_paid_invoices');
-
     }
 }
