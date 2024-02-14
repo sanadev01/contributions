@@ -364,6 +364,7 @@ class Order extends Model implements Package
             ShippingService::GSS_EPMEI,
             ShippingService::GSS_EPMI,
             ShippingService::GSS_FCM,
+            ShippingService::GSS_CEP,
             ShippingService::GSS_EMS => 'USPS',
             ShippingService::UPS_GROUND => 'UPS',
             ShippingService::FEDEX_GROUND => 'FEDEX',
@@ -389,7 +390,6 @@ class Order extends Model implements Package
             ShippingService::HoundExpress => 'Hound Express',
             ShippingService::TOTAL_EXPRESS => 'Total Express',
             ShippingService::HD_Express => 'HD Express',
-            ShippingService::GSS_CEP,
             default => 'Correios Brazil',
         };
     }
