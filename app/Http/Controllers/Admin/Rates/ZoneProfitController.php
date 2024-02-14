@@ -76,10 +76,15 @@ class ZoneProfitController extends Controller
     {
          ZoneCountry::where('id', $id)->delete();
          
-        session()->flash('alert-success', 'Profit Deleted');
+        session()->flash('alert-success', 'Group country deleted successfully');
         return redirect()->route('admin.rates.zone-profit.index');
     }
-    
+    public function destroyZoneProfit($groupId, $serviceId)
+    {
+        ZoneCountry::where('group_id', $groupId)->where('shipping_service_id', $serviceId)->delete();
+        session()->flash('alert-danger', 'Service Group deleted successfully!');
+        return redirect()->route('admin.rates.zone-profit.index');
+    }
     public function downloadZoneProfit($groupId, $serviceId)
     {
         $profitList = ZoneCountry::where('group_id', $groupId)->where('shipping_service_id', $serviceId)->get();
