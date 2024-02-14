@@ -41,7 +41,7 @@
                                         Profit
                                     </th>
                                     <th>
-                                        Edit
+                                        Action
                                     </th>
                                 </tr>
                             </thead>
@@ -66,6 +66,17 @@
                                                 data-toggle="modal" 
                                                 data-target="#updateProfit"><i class="feather icon-edit"></i>
                                             </a>
+                                            
+                                        
+                                            <form action="{{ route('admin.rates.zone-profit.destroy', ['zone_profit' => $rate->id]) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit" class="btn btn-danger btn-md">
+                                                <i class="feather icon-trash"></i> 
+                                            </button>
+                                        </form>
+
                                         </th>
                                     </tr>
                                 @endforeach

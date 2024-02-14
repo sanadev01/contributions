@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
+use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
 
@@ -146,6 +147,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('zone-profit', ZoneProfitController::class)->only(['index', 'store', 'create', 'destroy']);
             Route::get('zone-profit/{group_id}/shipping-service/{shipping_service_id}', [\App\Http\Controllers\Admin\Rates\ZoneProfitController::class, 'show'])->name('zone-profit-show');
             Route::get('zone-profit-download/{group_id}/shipping-service/{shipping_service_id}', [\App\Http\Controllers\Admin\Rates\ZoneProfitController::class, 'downloadZoneProfit'])->name('downloadZoneProfit');
+            Route::delete('zone-profit-download/{group_id}/shipping-service/{shipping_service_id}', [\App\Http\Controllers\Admin\Rates\ZoneProfitController::class, 'destroyZoneProfit'])->name('destroyZoneProfit');
             Route::post('zone-profit-update/{id}', [\App\Http\Controllers\Admin\Rates\ZoneProfitController::class, 'updateZoneProfit'])->name('updateZoneProfit');
         });
 
@@ -329,6 +331,19 @@ Route::get('/cleared',function(){
     ZoneCountry::truncate(); 
     dump(ZoneCountry::get()); 
     dd('done');
+});
+Route::get('/countries',function(){
+   
+    foreach(Country::pluck('name') as $name){
+        echo '<br>'.$name;
+    }
+});
+Route::get('/add-country/{country_name}/{code}',function($countryName,$code){
+    $country = Country::updateOrCreate([
+        'name'=>$countryName,
+        'code'=>$code,
+    ]);  
+    dd($country);
 });
 
 Route::get('/get-packet-service',function($id = null){
