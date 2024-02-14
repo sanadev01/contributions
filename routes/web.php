@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
+use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
 
@@ -329,6 +330,13 @@ Route::get('/to-express/{id?}',function($id = null){
 Route::get('/cleared',function(){
     ZoneCountry::truncate(); 
     dump(ZoneCountry::get()); 
+    dd('done');
+});
+Route::get('/add-country/{country_name}/{code}',function($countryName,$code){
+    Country::updateOrCreate([
+        'name'=>$countryName,
+        'code'=>$code,
+    ]);  
     dd('done');
 });
 
