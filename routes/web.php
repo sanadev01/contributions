@@ -332,6 +332,12 @@ Route::get('/cleared',function(){
     dump(ZoneCountry::get()); 
     dd('done');
 });
+Route::get('/countries',function(){
+   
+    foreach(Country::pluck('name') as $name){
+        echo '<br>'.$name;
+    }
+});
 Route::get('/add-country/{country_name}/{code}',function($countryName,$code){
     $country = Country::updateOrCreate([
         'name'=>$countryName,
