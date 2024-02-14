@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Concerns\HasJsonResponse;
+use App\Models\Country;
 
 class CreateRequest extends FormRequest
 {
@@ -142,6 +143,12 @@ class CreateRequest extends FormRequest
         if ($shippingService && $shippingService->is_total_express) {
 
             $rules['products.*.description'] = 'required|max:60';
+        }
+
+        if ($request->recipient['country_id'] == 'UK' || $request->recipient['country_id'] == Country::UK) {
+            $rules['recipient.state_id'] = 'nullable';
+            $rules['recipient.tax_id'] = 'nullable';
+            $rules['recipient.street_no'] = 'nullable';
         }
 
         return $rules;
