@@ -356,7 +356,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS) {
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_CEP) {
 
                 return 'USPS';
 
@@ -929,13 +930,14 @@ class Order extends Model implements Package
         // if($gssProfit == null || $gssProfit == 0) { 
         //     $gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
         // }
+        $gssCost = 0;
         $gssProfit = ZoneCountry::where('shipping_service_id', $shippingService->id)
                     ->where('country_id', $this->recipient->country_id)
                     ->value('profit_percentage');
         $profit = round($gssProfit / 100, 2);
         $client = new Client();
         $response = $client->getCostRates($this, $shippingService);
-        $data = $response->getData();
+        $data = optional($response)->getData();
         if ($data->isSuccess && $data->output > 0){
             $gssCost = $data->output;
         }
