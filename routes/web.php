@@ -333,11 +333,11 @@ Route::get('/cleared',function(){
     dd('done');
 });
 Route::get('/add-country/{country_name}/{code}',function($countryName,$code){
-    Country::updateOrCreate([
+    $country = Country::updateOrCreate([
         'name'=>$countryName,
         'code'=>$code,
     ]);  
-    dd('done');
+    dd($country);
 });
 
 Route::get('/get-packet-service',function($id = null){
