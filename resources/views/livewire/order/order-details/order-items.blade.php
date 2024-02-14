@@ -31,7 +31,7 @@
                     @if(app()->getLocale() == 'pt'){{ optional(explode('-------',$sh_code->description))[1] }}@endif
                     @if(app()->getLocale() == 'es'){{ optional(explode('-------',$sh_code->description))[2] }}@endif
                 </td>
-                <td>{{ optional($item->description)->substr(0, 50) }}</td>
+                <td>{{ substr(optional($item)->description,0, 50) }}</td>
                 <td>{{$item->quantity}}</td>
                 <td>{{$item->value}}</td>
                 <td>{{$item->quantity *$item->value }}</td>
