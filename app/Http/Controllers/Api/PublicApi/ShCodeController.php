@@ -10,9 +10,7 @@ class ShCodeController extends Controller
 {
     public function __invoke($search = null)
     {
-        $type = request()->has('type') ? request()->type : null;
-
-        $type = strtolower($type);
+        $type = request()->has('type') ? strtolower(request()->type) : null;
         $type = $type == "courier" ? 'Courier' : ($type == "postal" ? 'Postal (Correios)' : null);
 
         $shCode = ShCode::query();
