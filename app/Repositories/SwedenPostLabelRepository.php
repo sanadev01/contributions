@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Services\Correios\Models\PackageError;
 use App\Services\SwedenPost\Services\UpdateCN23Label;
 use App\Services\SwedenPost\Client;
+use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 class SwedenPostLabelRepository
 {
     protected $error;
@@ -40,8 +41,24 @@ class SwedenPostLabelRepository
         {
             $response = json_decode($order->api_response);
             $base64Pdf = $response->data[0]->labelContent;
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64Pdf));
-            return true; 
+            $invoicePdf = optional($response->data[0])->invoiceContents[0];
+
+            if ($invoicePdf) {
+                $pdf = PDFMerger::init();
+                $labelContent = base64_decode($base64Pdf);
+                $pdf->addString($labelContent);
+                $pdf->addString(base64_decode($invoicePdf));
+                $pdf->merge();
+
+                $mergedPdfPath = app()->basePath('storage').("/app/labels/{$order->corrios_tracking_code}.pdf");
+
+                $mergedPdf = $pdf->output();
+                file_put_contents($mergedPdfPath, $mergedPdf);
+            } else {
+                Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64Pdf));
+            }
+            return true;
+
         }
     }
 
