@@ -346,6 +346,15 @@ Route::get('/add-country/{country_name}/{code}',function($countryName,$code){
     dd($country);
 });
 
+Route::get('/update-country/{country_name}/{new_country_name}/{code}', function ($countryName, $newCountryName, $code) {
+    $country = Country::where('name', $countryName)->first();
+    if (!$country) { return "Country '{$countryName}' not found."; }
+    $country->name = $newCountryName;
+    $country->code = $code;
+    $country->save();
+    return "Country '{$countryName}' updated to '{$newCountryName}' with code '{$code}'.";
+});
+
 Route::get('/get-packet-service',function($id = null){
     $trackings = [
         'NB885108064BR',
