@@ -38,8 +38,8 @@ class CreateRequest extends FormRequest
             'phone' => [
                 (($this->country_id == \App\Models\Order::Guatemala)?'nullable':'required'),'max:15','min:11', new PhoneNumberValidator($this->country_id)
             ],
-            'state_id' => 'sometimes|required|exists:states,id',
-            'region' => ['sometimes', ($this->country_id == \App\Models\Order::Guatemala)?'nullable':'required'],
+            'state_id' => ['sometimes', ($this->country_id == Country::UK)?'nullable':'required|exists:states,id'],
+            'region' => ['sometimes', ($this->country_id == \App\Models\Order::Guatemala || $this->country_id == Country::UK)?'nullable':'required'],
             'zipcode' => [
                 ($this->country_id == \App\Models\Order::Guatemala)?'nullable': 'required'
                 // 'required',  new CorreosAddresstValidator($this->country_id,$this->address), new ZipCodeValidator($this->country_id,$this->state_id)
