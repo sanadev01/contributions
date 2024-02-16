@@ -354,19 +354,19 @@
                     </li>
                     @endcan
                     @can('viewKPIReport', App\Models\Reports::class)
-                    <li class="@if(request('type')=='report') new-active @endif">
+                    <li class="@if(request('type')=='report') active @endif">
                         <a href="{{ route('admin.reports.kpi-report.index',['type' =>'report']) }}">
                             <i class="icon_adjst feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.KPI Report')</span>
                         </a>
                     </li> 
-                    <li class="@if(request('type')=='scan') new-active @endif">
+                    <li class="@if(request('type')=='scan') active @endif">
                         <a href="{{ route('admin.reports.kpi-report.index',['type' => 'scan']) }}">
                             <i class="icon_adjst feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.Tax Report Scan')</span>
                         </a>
                     </li>
-                    <li class="@if(request('type')=='accrual') new-active @endif">
+                    <li class="@if(request('type')=='accrual') active @endif">
                         <a href="{{ route('admin.reports.kpi-report.index',['type' => 'accrual']) }}">
                             <i class="icon_adjst feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.Tax Report Accrual')</span>
