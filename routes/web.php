@@ -19,6 +19,7 @@ use App\Http\Controllers\ConnectionsController;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
+use Illuminate\Http\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -431,3 +432,14 @@ dd(json_encode($shcodes));
 
 //     return $message;
 // });
+Route::get('create-temp-folder', function () {
+    // Path to the temporary folder
+    $tempFolderPath = storage_path('tmp');
+
+    // Create the temporary folder if it doesn't exist
+    if (!file_exists($tempFolderPath)) {
+        mkdir($tempFolderPath, 0777, true); // Recursive directory creation
+    }
+
+    return new Response("Temporary folder created at: $tempFolderPath");
+});

@@ -364,6 +364,18 @@ function getOrderGroupRange($order)
             ['start' => 65035000, 'end' => 65079999, 'group' => 5],
             ['start' => 65090000, 'end' => 69999999, 'group' => 5],
             ['start' => 76800000, 'end' => 79999999, 'group' => 5],
+
+            ['start' => 29166651, 'end' => 29166651, 'group' => 5],
+            ['start' => 29164340, 'end' => 29164340, 'group' => 5],
+            ['start' => 74230022, 'end' => 74230022, 'group' => 4],
+            ['start' => 74230022, 'end' => 74230022, 'group' => 4],
+            ['start' => 74603190, 'end' => 74603190, 'group' => 4],
+            ['start' => 74603190, 'end' => 74603190, 'group' => 4],
+            ['start' => 74150070, 'end' => 74150070, 'group' => 4],
+            ['start' => 74343240, 'end' => 74343240, 'group' => 4],
+            ['start' => 74280210, 'end' => 74280210, 'group' => 4],
+            ['start' => 13172651, 'end' => 13172651, 'group' => 2],
+
         ];
             // Sort the groupRanges array based on the 'start' key
         usort($groupRanges, function ($a, $b) {
