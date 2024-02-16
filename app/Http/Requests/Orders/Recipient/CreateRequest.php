@@ -27,7 +27,7 @@ class CreateRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [ 
+        $rules = [
             'first_name' => ($this->country_id == Country::Chile) ? 'required|max:28' : 'required|max:50',
             'address' => 'required',
             'address2' => 'nullable|max:50',
@@ -38,7 +38,7 @@ class CreateRequest extends FormRequest
             'phone' => [
                 (($this->country_id == \App\Models\Order::Guatemala)?'nullable':'required'),'max:15','min:11', new PhoneNumberValidator($this->country_id)
             ],
-            'state_id' => ['sometimes', ($this->country_id == Country::UK)?'nullable':'required|exists:states,id'],
+            'state_id' => ['sometimes', 'exists:states,id', ($this->country_id == Country::UK)?'nullable':'required'],
             'region' => ['sometimes', ($this->country_id == \App\Models\Order::Guatemala || $this->country_id == Country::UK)?'nullable':'required'],
             'zipcode' => [
                 ($this->country_id == \App\Models\Order::Guatemala)?'nullable': 'required'
