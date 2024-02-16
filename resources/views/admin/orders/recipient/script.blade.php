@@ -627,5 +627,18 @@
             })
         }
     }
+
+    activeUKFields = function(){
+        $('#div_state').css('display', 'none')
+        $('#state_input').css('display', 'block');
+        $('#state_input').prop('disabled', false);
+        $('#commune').prop('disabled', true);
+    }
+    inActiveUKFields = function(){
+        $('#div_state').css('display', 'block')
+        $('#state_input').css('display', 'none'); 
+        $('#state_input').prop('disabled', true);
+        $('#commune').prop('disabled', true);
+    }
  
 </script>
