@@ -928,6 +928,7 @@ class Order extends Model implements Package
         $finalValue = 0;
         if(strtolower($this->tax_modality) == "ddp"){
             if($this->recipient->country->code =="MX" || $this->recipient->country->code =="CA"|| $this->recipient->country->code =="BR"){
+
                 $totalCost = $this->gross_total+$this->insurance_value+$this->carrierCost();
                 $duty = $totalCost * .6;
                 $totalCostOfTheProduct = $this->gross_total+$duty;
@@ -935,6 +936,19 @@ class Order extends Model implements Package
                 $totalIcms = $icms * $totalCostOfTheProduct;
                 $totalTaxAndDuty = $duty + $totalIcms;
                 $finalValue = $this->gross_total + $totalTaxAndDuty;
+                \Log::info([
+                    'recipient country'=>$this->recipient->country->code,
+                    'gross total'=>$this->gross_total,
+                    'insurance value'=>$this->insurance_value,
+                    'carrierCost'=>$this->carrierCost(),
+                    'totalCost'=>$totalCost,
+                    'duty'=>$duty,
+                    'totalCostOfTheProduct'=>$totalCostOfTheProduct,
+                    'icms' => $icms,
+                    'totalIcms' => $totalIcms,
+                    'totalTaxAndDuty'=> $totalTaxAndDuty,
+                    'finalValue'=>$finalValue,
+                ]);
             }
         }
         return number_format($finalValue,2);

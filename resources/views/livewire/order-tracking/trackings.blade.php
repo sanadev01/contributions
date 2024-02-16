@@ -60,7 +60,7 @@
                                         <div class="col-12">
                                             <ul id="progressbar" class="text-center d-flex justify-content-center">
                                                 @if ($tracking['service'] == 'HD')
-                                                    <li class="@if($tracking['trackings']->last()->status_code >=  70) new-active @endif step0">
+                                                    <li class="@if($tracking['trackings']->last()->status_code >=  70) active @endif step0">
                                                         <div class="icon-content">
                                                             <img class="icon offset-1" src="{{ asset('images/tracking/order-placed.png') }}">
                                                             <div class="d-flex flex-column mt-2">
@@ -68,7 +68,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="@if($tracking['trackings']->last()->status_code >=  72) new-active @endif step0">
+                                                    <li class="@if($tracking['trackings']->last()->status_code >=  72) active @endif step0">
                                                         <div class="icon-content">
                                                             <img class="icon offset-1" src="{{ asset('images/tracking/to-hd.png') }}">
                                                             <div class="d-flex flex-column mt-2">
@@ -76,7 +76,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="@if($tracking['trackings']->last()->status_code >=  73) new-active @endif step0">
+                                                    <li class="@if($tracking['trackings']->last()->status_code >=  73) active @endif step0">
                                                         <div class="icon-content">
                                                             <img class="icon offset-1" src="{{ asset('images/tracking/hd-whr.png') }}">
                                                             <div class="d-flex flex-column mt-2">
@@ -85,7 +85,7 @@
                                                         </div>
                                                     </li>
 
-                                                    <li class="@if($tracking['trackings']->last()->status_code >=  75) new-active @endif step0">
+                                                    <li class="@if($tracking['trackings']->last()->status_code >=  75) active @endif step0">
                                                         <div class="icon-content">
                                                             <img class="icon offset-1" src="{{ asset('images/tracking/container.png') }}">
                                                             <div class="d-flex flex-column mt-4">
@@ -93,7 +93,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li class="@if($tracking['trackings']->last()->status_code >=  80) new-active @endif step0">
+                                                    <li class="@if($tracking['trackings']->last()->status_code >=  80) active @endif step0">
                                                         <div class="icon-content">
                                                             <img class="icon offset-1" src="{{ asset('images/tracking/awb.png') }}">
                                                             <div class="d-flex flex-column mt-4">
@@ -221,7 +221,7 @@
                                                         </div>
                                                     </li>
                                                     @if ($tracking['service'] == 'Correios_Brazil')
-                                                        <li class="@if( $this->toggleBrazilStatus($tracking['api_trackings'], $tracking['trackings']) >= 90) new-active @endif step0">
+                                                        <li class="@if( $this->toggleBrazilStatus($tracking['api_trackings'], $tracking['trackings']) >= 90) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/brazil-flag.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -229,7 +229,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if( $this->toggleBrazilStatus($tracking['api_trackings'], $tracking['trackings']) >= 100) new-active @endif step0">
+                                                        <li class="@if( $this->toggleBrazilStatus($tracking['api_trackings'], $tracking['trackings']) >= 100) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/custom-finished.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -237,7 +237,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if( $this->toggleBrazilStatus($tracking['api_trackings'], $tracking['trackings']) >= 110) new-active @endif step0">
+                                                        <li class="@if( $this->toggleBrazilStatus($tracking['api_trackings'], $tracking['trackings']) >= 110) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -246,7 +246,7 @@
                                                             </div>
                                                         </li>
 
-                                                        <li class="@if( $this->toggleBrazilStatus($tracking['api_trackings'], $tracking['trackings']) >= 120) new-active @endif step0">
+                                                        <li class="@if( $this->toggleBrazilStatus($tracking['api_trackings'], $tracking['trackings']) >= 120) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -254,7 +254,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if( $this->toggleBrazilStatus($tracking['api_trackings'], $tracking['trackings']) >= 130) new-active @endif step0">
+                                                        <li class="@if( $this->toggleBrazilStatus($tracking['api_trackings'], $tracking['trackings']) >= 130) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/delivered.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -263,7 +263,7 @@
                                                             </div>
                                                         </li>
                                                     @elseif( $tracking['service'] == 'Correios_Chile' )
-                                                        <li class="@if( $this->toggleChileStatus($tracking['api_trackings']) >= 90) new-active @endif step0">
+                                                        <li class="@if( $this->toggleChileStatus($tracking['api_trackings']) >= 90) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/chile-flag.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -271,7 +271,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if($this->toggleChileStatus($tracking['api_trackings']) >= 100) new-active @endif step0">
+                                                        <li class="@if($this->toggleChileStatus($tracking['api_trackings']) >= 100) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -279,7 +279,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if($this->toggleChileStatus($tracking['api_trackings']) >= 110) new-active @endif step0">
+                                                        <li class="@if($this->toggleChileStatus($tracking['api_trackings']) >= 110) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -288,7 +288,7 @@
                                                             </div>
                                                         </li>
                                                     @elseif( $tracking['service'] == 'UPS' )
-                                                        <li class="@if( $this->toggleUpsStatus($tracking['api_trackings']) >= 90 ) new-active @endif step0">
+                                                        <li class="@if( $this->toggleUpsStatus($tracking['api_trackings']) >= 90 ) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/ups-logo.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -296,7 +296,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if($this->toggleUpsStatus($tracking['api_trackings']) >= 100 ) new-active @endif step0">
+                                                        <li class="@if($this->toggleUpsStatus($tracking['api_trackings']) >= 100 ) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -304,7 +304,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if($this->toggleUpsStatus($tracking['api_trackings']) >= 110 ) new-active @endif step0">
+                                                        <li class="@if($this->toggleUpsStatus($tracking['api_trackings']) >= 110 ) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -312,7 +312,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if($this->toggleUpsStatus($tracking['api_trackings']) >= 120) new-active @endif step0">
+                                                        <li class="@if($this->toggleUpsStatus($tracking['api_trackings']) >= 120) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -321,7 +321,7 @@
                                                             </div>
                                                         </li>
                                                     @elseif( $tracking['service'] == 'Prime5' )
-                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 80 ) new-active @endif step0">
+                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 80 ) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/Direct Link.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -329,7 +329,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 90) new-active @endif step0">
+                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 90) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/custom-finished.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -337,7 +337,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if($this->togglePrime5Status($tracking['api_trackings']) >= 100 ) new-active @endif step0">
+                                                        <li class="@if($this->togglePrime5Status($tracking['api_trackings']) >= 100 ) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -345,7 +345,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 110) new-active @endif step0">
+                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 110) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -353,7 +353,48 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 120) new-active @endif step0">
+                                                        <li class="@if( $this->togglePrime5Status($tracking['api_trackings']) >= 120) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/delivered.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Parcels Delivered </p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        @elseif( $tracking['service'] == 'Total Express' )
+                                                        <li class="@if( $this->toggleTotalExpressStatus($tracking['api_trackings']) >= 80 ) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/total-express-logo.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Received <br>by Total Express</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->toggleTotalExpressStatus($tracking['api_trackings']) >= 90) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/custom-finished.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">At Customs<br>Clearance</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if($this->toggleTotalExpressStatus($tracking['api_trackings']) >= 100 ) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Parcel in<br> Transit</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->toggleTotalExpressStatus($tracking['api_trackings']) >= 110) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Out for  <br> Delivery</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->toggleTotalExpressStatus($tracking['api_trackings']) >= 120) active @endif step0">
                                                             <div class="icon-content">
                                                                 <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/delivered.png') }}">
                                                                 <div class="d-flex flex-column" mt-4>
@@ -395,17 +436,19 @@
                                                     </tr>
                                                 @endforeach
                                                 @if (optional($tracking)['service'] == 'Correios_Brazil')
-                                                    <tr>
-                                                        <td>
-                                                            {{ Carbon\Carbon::createFromFormat('d/m/Y', $tracking['api_trackings']['data'])->format('Y-m-d') }} {{ $tracking['api_trackings']['hora'] }}
-                                                        </td>
-                                                        <td>
-                                                            Brazil
-                                                        </td>
-                                                        <td>
-                                                            {{ $tracking['api_trackings']['descricao'] }}
-                                                        </td>
-                                                    </tr>
+                                                    @foreach($tracking['api_trackings']->reverse() as $event)
+                                                        <tr>
+                                                            <td>
+                                                                {{ str_replace('T', ' ', optional($event)->dtHrCriado) }}
+                                                            </td>
+                                                            <td>
+                                                                Brazil
+                                                            </td>
+                                                            <td>
+                                                                {{ optional($event)->descricao }}
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
                                                 @endif
                                                 @if (optional($tracking)['service'] == 'Correios_Chile')
                                                     <tr>
@@ -448,6 +491,18 @@
                                                         </tr>
                                                     @endforeach
                                                     
+                                                @endif
+                                                @if(optional($tracking)['service'] == 'Total Express')
+                                                    <tr>
+                                                        <td>
+                                                            {{ date('y-m-d', strtotime($tracking['api_trackings']['createdAt'])) }} {{ date('H:i:s', strtotime($tracking['api_trackings']['createdAt'])) }}
+                                                        </td>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                            {{ $tracking['api_trackings']['description'] }} - Status: {{ $tracking['api_trackings']['title'] }}
+                                                        </td>
+                                                    </tr>
                                                 @endif
                                             </tbody>
                                         </table>
