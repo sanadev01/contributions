@@ -77,9 +77,15 @@
             font-weight: bold;
             font-size: 10pt;
         }
+        .service-contract-code{
+            position: absolute;
+            right: 5mm;
+            top: 27mm;
+            width: 5cm;
+        }
         .contract-code{
             font-size: 8pt;
-            text-align: center;
+            text-align: right;
         }
 
         .tracking_code{
@@ -299,6 +305,21 @@
             box-sizing: border-box;
             text-align: center;
         }
+        .package-sign{
+            border-radius: 1mm;
+            top: 93mm;
+            position:absolute;
+            background-color: black;
+            right: 14mm;
+            border: 1px solid black; 
+            font-weight: bold;
+            color: white;
+            display: block;
+            width: 4mm;
+            height: 5mm; 
+            box-sizing: border-box;
+            text-align: center;
+        }
         .bottom-block{
             position: absolute;
             top: 11mm;
@@ -384,6 +405,8 @@
         <div class="service-name">
             {!! $packetType !!}
         </div>
+    </div>
+    <div class="service-contract-code"> 
         <div class="contract-code">
             {!! $contractNumber !!}
         </div>
@@ -407,6 +430,7 @@
             CPF: {{ $recipient->tax_id }}
         </div>
     </div>
+    <div class="package-sign">{{$packageSign}}</div>
     @if($order->hasBattery())
     <div class="battery">B</div>
     @endif
