@@ -66,7 +66,7 @@ class CN23LabelMaker implements HasLableExport
             $this->contractNumber = 'Contract BCN Logistics: 0076204456';
             $this->packageSign = 'B';
         } 
-        if($this->order->shippingService->isAnjunService()) {
+        if($this->order->shippingService->is_anjun_service){
             $this->contractNumber = 'Contract ANJUN : 9912501700';
             $this->packageSign = 'A';
 

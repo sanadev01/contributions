@@ -470,7 +470,7 @@
         </div>
     </div>
     <div class="package-sign">{{$packageSign}}</div>
-    @if($order->hasBattery())
+    @if($order->has_battery)
     <div class="battery">B</div>
     @endif
     @if($order->has_perfume)
