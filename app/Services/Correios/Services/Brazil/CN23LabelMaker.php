@@ -30,6 +30,8 @@ class CN23LabelMaker implements HasLableExport
     private $hasSuplimentary;
     private $activeAddress;
     private $isReturn;
+    private $packageSign;
+    private $labelZipCodeGroup;
 
     public function __construct()
     {
@@ -38,7 +40,8 @@ class CN23LabelMaker implements HasLableExport
         $this->corriosLogo = \public_path('images/correios-1.png');
         $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
         $this->packetType = 'Packet Standard';
-        $this->contractNumber = 'Contrato:  9912501576';
+        $this->contractNumber = 'Contract HERCO:  9912501576';
+        $this->packageSign = 'H';
         $this->service = 2;
         $this->returnAddress = 'Homedeliverybr <br>
         Rua Acaçá 47- Ipiranga <br>
@@ -59,13 +62,14 @@ class CN23LabelMaker implements HasLableExport
         if (optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
             $this->labelZipCodeGroup = getOrderGroupRange($this->order);
         }
+        if ($this->order->shippingService->is_bcn_service) {
+            $this->contractNumber = 'Contract BCN Logistics: 0076204456';
+            $this->packageSign = 'B';
+        } 
+        if($this->order->shippingService->is_anjun_service){
+            $this->contractNumber = 'Contract ANJUN : 9912501700';
+            $this->packageSign = 'A';
 
-        if ($this->order->shippingService->is_anjun_service || $this->order->shippingService->is_bcn_service) {
-            if ($this->order->shippingService->is_bcn_service) {
-                $this->contractNumber = 'Contrato: 0076204456';
-            } else {
-                $this->contractNumber = 'Contrato: 9912501700';
-            }
         }
         return $this;
     }
@@ -202,7 +206,8 @@ class CN23LabelMaker implements HasLableExport
             'barcodeNew' => new BarcodeGeneratorPNG(),
             'activeAddress' => $this->activeAddress,
             'isReturn' => $this->isReturn,
-            'labelZipCodeGroup' => $this->labelZipCodeGroup
+            'labelZipCodeGroup' => $this->labelZipCodeGroup,
+            'packageSign' => $this->packageSign
         ];
     }
 
