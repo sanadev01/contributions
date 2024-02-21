@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
+use App\Services\SwedenPost\Services\Parcel;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\PackageError;
 use App\Services\SwedenPost\Services\ShippingOrder;
@@ -59,32 +60,55 @@ class Client{
 
     public function createPackage($order)
     {   
-        $shippingRequest = (new ShippingOrder($order))->getRequestBody();
+        $parcel = new Parcel($order);
+        $shippingRequest = $parcel->getRequestBody();
+
         try {
-            $path = 'services/shipper/orderLabels';
+            $orderURI = 'services/shipper/orders';
+            $labelURI = 'services/shipper/labels';
             $shipmentClose = 'services/shipper/closeShipments';
-            $response = Http::withHeaders($this->getHeaders('POST', $path))->post($this->baseUrl.$path, $shippingRequest);
+            $response = Http::withHeaders($this->getHeaders('POST', $orderURI))->post($this->baseUrl.$orderURI, [$shippingRequest]);
+
             $data = json_decode($response);
             if($data->status == "Success") {
                 $trackingNumber = $data->data[0]->trackingNo;
+                $orderId = $data->data[0]->orderId;
                 if ($trackingNumber){
-                    $closeShipment = Http::withHeaders($this->getHeaders('POST', $shipmentClose))->post($this->baseUrl.$shipmentClose, ['shipmentIds' => [$trackingNumber]]);
-                    $closeShipmentResponse = json_decode($closeShipment);
-                    if($closeShipmentResponse->status == "Success") {
-                        $order->update([
-                            'corrios_tracking_code' => $trackingNumber,
-                            'api_response' => json_encode($data),
-                            'cn23' => [
-                                "tracking_code" => $trackingNumber,
-                                "stamp_url" => route('warehouse.cn23.download',$order->id),
-                                'leve' => false
-                            ],
-                        ]);
-                        // store order status in order tracking
-                        return $this->addOrderTracking($order);
-                    }
-                    if($closeShipmentResponse->status == "Failure") {
-                        return new PackageError("Error while closing Shipment. Code: ".$closeShipmentResponse->errors[0]->code.' Description: '.$closeShipmentResponse->errors[0]->message);
+                    $labelData = [
+                        "orderIds" => ["$trackingNumber"],
+                        "labelType" => 1,
+                        "packinglist" => true,
+                        "merged" => false,
+                        "labelFormat" => "PDF",
+                    ];
+                    $printLabel = Http::withHeaders($this->getHeaders('POST', $labelURI))->post($this->baseUrl.$labelURI, $labelData);
+
+                    $printResponse = json_decode($printLabel);
+                    if($printResponse->status == "Success") {
+
+                        $closeShipment = Http::withHeaders($this->getHeaders('POST', $shipmentClose))->post($this->baseUrl.$shipmentClose, ['shipmentIds' => [$trackingNumber]]);
+
+                        $closeShipmentResponse = json_decode($closeShipment);
+                        if($closeShipmentResponse->status == "Success") {
+                            $order->update([
+                                'corrios_tracking_code' => $trackingNumber,
+                                'api_response' => json_encode([$data, $printResponse]),
+                                'cn23' => [
+                                    "tracking_code" => $trackingNumber,
+                                    "stamp_url" => route('warehouse.cn23.download',$order->id),
+                                    'leve' => false
+                                ],
+                            ]);
+                            // store order status in order tracking
+                            return $this->addOrderTracking($order);
+                        }
+                        if($closeShipmentResponse->status == "Failure") {
+                            return new PackageError("Error while closing Shipment. Code: ".$closeShipmentResponse->errors[0]->code.' Description: '.$closeShipmentResponse->errors[0]->message);
+                        }
+                    } if($printResponse->status == "Failure") {
+                        $deleteURI = 'services/shipper/order/'.$orderId;
+                        $deleteLabel = Http::withHeaders($this->getHeaders('DELETE', $deleteURI))->DELETE($this->baseUrl.$deleteURI);
+                        return new PackageError("Error while printing label. Code: ".$printResponse->errors[0]->code.' Description: '.$printResponse->errors[0]->message);
                     }
                 }
             }

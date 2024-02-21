@@ -2,7 +2,6 @@
 namespace App\Services\GSS\Services;
 
 use Carbon\Carbon;
-use App\Models\Country;
 use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
  
@@ -53,7 +52,7 @@ class Parcel {
                   // 'addressLine3' => optional($order->recipient)->street_no,
                   // 'addressIsPOBox' => true,
                   'city' => $order->recipient->city,
-                  'province' => ($order->recipient->country->code == Country::UK) ? $order->recipient->region : $order->recipient->State->code,
+                  'province' => $order->recipient->State->code,
                   'postalCode' => cleanString($order->recipient->zipcode),
                   'countryCode' => $order->recipient->country->code,
                   'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',

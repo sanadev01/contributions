@@ -16,8 +16,10 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Http\Controllers\ConnectionsController;
+use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
 /*
@@ -339,6 +341,28 @@ Route::get('/cleared',function(){
     dump(ZoneCountry::get()); 
     dd('done');
 });
+Route::get('/countries',function(){
+   
+    foreach(Country::pluck('name') as $name){
+        echo '<br>'.$name;
+    }
+});
+Route::get('/add-country/{country_name}/{code}',function($countryName,$code){
+    $country = Country::updateOrCreate([
+        'name'=>$countryName,
+        'code'=>$code,
+    ]);  
+    dd($country);
+});
+
+Route::get('/update-country/{country_name}/{new_country_name}/{code}', function ($countryName, $newCountryName, $code) {
+    $country = Country::where('name', $countryName)->first();
+    if (!$country) { return "Country '{$countryName}' not found."; }
+    $country->name = $newCountryName;
+    $country->code = $code;
+    $country->save();
+    return "Country '{$countryName}' updated to '{$newCountryName}' with code '{$code}'.";
+});
 
 Route::get('/get-packet-service',function($id = null){
     $trackings = [
@@ -414,5 +438,16 @@ Route::get('sh-code-type', function () {
         $message = "No records updated.";
     }
 
-    return $message;
+//     return $message;
+// });
+Route::get('create-temp-folder', function () {
+    // Path to the temporary folder
+    $tempFolderPath = storage_path('tmp');
+
+    // Create the temporary folder if it doesn't exist
+    if (!file_exists($tempFolderPath)) {
+        mkdir($tempFolderPath, 0777, true); // Recursive directory creation
+    }
+
+    return new Response("Temporary folder created at: $tempFolderPath");
 });

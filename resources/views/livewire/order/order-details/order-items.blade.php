@@ -27,11 +27,11 @@
                 <span class="badge badge-primary">{{$item->sh_code}}</span>
                     
                     <?php $sh_code = App\Models\ShCode::where('code', $item->sh_code)->first() ?>
-                    @if(app()->getLocale() == 'en'){{ optional(explode('-------',$sh_code->description))[0] }}@endif
-                    @if(app()->getLocale() == 'pt'){{ optional(explode('-------',$sh_code->description))[1] }}@endif
-                    @if(app()->getLocale() == 'es'){{ optional(explode('-------',$sh_code->description))[2] }}@endif
+                    @if(app()->getLocale() == 'en'){{ optional(explode('-------',optional($sh_code)->description))[0] }}@endif
+                    @if(app()->getLocale() == 'pt'){{ optional(explode('-------',optional($sh_code)->description))[1] }}@endif
+                    @if(app()->getLocale() == 'es'){{ optional(explode('-------',optional($sh_code)->description))[2] }}@endif
                 </td>
-                <td>{{substr($item->description,0,50)}}</td>
+                <td>{{ substr(optional($item)->description,0, 50) }}</td>
                 <td>{{$item->quantity}}</td>
                 <td>{{$item->value}}</td>
                 <td>{{$item->quantity *$item->value }}</td>
