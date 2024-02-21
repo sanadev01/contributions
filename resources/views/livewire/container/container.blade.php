@@ -32,8 +32,7 @@
                         </div>
                         <div class="col-md-1 d-flex mt-2">
                             <div class="mt-4">
-                                <button wire:click="download" class="btn btn-success waves-effect waves-light"
-                                    type="submit">Download</button>
+                                <button wire:click="download" class="btn btn-success waves-effect waves-light" type="submit">Download</button>
                             </div>
                         </div>
                         <div class="col-md-2 d-flex mt-2 justify-content-center ">
@@ -43,79 +42,79 @@
 
                             </div>
                         </div>
-                    </div> 
+                    </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
                         <div class="mt-1">
                             <table class="table mb-0">
                                 <thead>
-                                <tr>
-                                    <th style="min-width: 100px;">
-                                        <select name="" id="bulk-actions" class="form-control">
-                                            <option value="clear">Clear All</option>
-                                            <option value="checkAll">Select All</option>
-                                            <option value="assign-awb">Assign AWB</option>
-                                        </select>
-                                    </th>
-                                    <th>@lang('warehouse.containers.Dispatch Number')</th>
-                                    <th>@lang('warehouse.containers.Seal No')</th>
-                                    <th>
-                                        Weight (Kg)
-                                    </th>
-                                    <th>
-                                        Pieces
-                                    </th>
-                                    <th>
-                                        @lang('warehouse.containers.Origin Country')
-                                    </th>
-                                    <th>@lang('warehouse.containers.Destination Airport')</th>
-                                    <th>@lang('warehouse.containers.Container Type')</th>
-                                    <th>@lang('warehouse.containers.Distribution Service Class')</th>
-                                    <th>
-                                        Unit Code
-                                    </th>
-                                    <th>
-                                        AWB#
-                                    </th>
-                                    <th>
-                                        Status
-                                    </th>
-                                    <th>@lang('warehouse.actions.Action')</th>
-                                </tr>
-                                <tr>
-                                    <th></th>
-                                    <th>    
-                                        <input type="search" class="form-control" wire:model.debounce.1000ms="dispatchNumber">
-                                    </th>
-                                    <th>
-                                        <input type="search" class="form-control" wire:model.debounce.1000ms="sealNo">
-                                    </th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>               
-                                    <th>
-                                        <select class="form-control" wire:model="packetType">
-                                            <option value="">Select Type</option>
-                                            <option value="NX">Packet Standard</option>
-                                            <option value="IX">Packet Express</option>
-                                            <option value="XP">Packet Mini</option>
-                                            <option value="AJ-NX">Anjun Packet Standard</option>
-                                            <option value="AJ-IX">Anjun Packet Express</option>
-                                            <option value="BCN-NX">BCN Packet Standard</option>
-                                            <option value="BCN-IX">BCN Packet Express</option>
-                                            <option value="AJC-NX">Packat Standard AJ</option>
-                                            <option value="AJC-IX">Packet Express AJ</option>
-                                        </select>
-                                    </th>
-                                    
-                                    <th>
-                                        <input type="search" class="form-control" wire:model.debounce.1000ms="unitCode">
-                                    </th>
-                                </tr>
+                                    <tr>
+                                        <th style="min-width: 100px;">
+                                            <select name="" id="bulk-actions" class="form-control">
+                                                <option value="clear">Clear All</option>
+                                                <option value="checkAll">Select All</option>
+                                                <option value="assign-awb">Assign AWB</option>
+                                            </select>
+                                        </th>
+                                        <th>@lang('warehouse.containers.Dispatch Number')</th>
+                                        <th>@lang('warehouse.containers.Seal No')</th>
+                                        <th>
+                                            Weight (Kg)
+                                        </th>
+                                        <th>
+                                            Pieces
+                                        </th>
+                                        <th>
+                                            @lang('warehouse.containers.Origin Country')
+                                        </th>
+                                        <th>@lang('warehouse.containers.Destination Airport')</th>
+                                        <th>@lang('warehouse.containers.Container Type')</th>
+                                        <th>@lang('warehouse.containers.Distribution Service Class')</th>
+                                        <th>
+                                            Unit Code
+                                        </th>
+                                        <th>
+                                            AWB#
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <th>@lang('warehouse.actions.Action')</th>
+                                    </tr>
+                                    <tr>
+                                        <th></th>
+                                        <th>
+                                            <input type="search" class="form-control" wire:model.debounce.1000ms="dispatchNumber">
+                                        </th>
+                                        <th>
+                                            <input type="search" class="form-control" wire:model.debounce.1000ms="sealNo">
+                                        </th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>
+                                            <select class="form-control" wire:model="packetType">
+                                                <option value="">Select Type</option>
+                                                <option value="NX">Packet Standard</option>
+                                                <option value="IX">Packet Express</option>
+                                                <option value="XP">Packet Mini</option>
+                                                <option value="AJ-NX">Anjun Packet Standard</option>
+                                                <option value="AJ-IX">Anjun Packet Express</option>
+                                                <option value="BCN-NX">BCN Packet Standard</option>
+                                                <option value="BCN-IX">BCN Packet Express</option>
+                                                <option value="AJC-NX">Packat Standard AJ</option>
+                                                <option value="AJC-IX">Packet Express AJ</option>
+                                            </select>
+                                        </th>
+
+                                        <th>
+                                            <input type="search" class="form-control" wire:model.debounce.1000ms="unitCode">
+                                        </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($containers as $container)
+                                    @foreach($containers as $container)
                                     <tr>
                                         <td>
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
@@ -130,46 +129,46 @@
                                         </td>
                                         <td>{{ $container->dispatch_number }}</td>
                                         <td>{{ $container->seal_no }}</td>
-                                        <td> 
-                                            {{ $container->getWeight() }} KG
+                                        <td>
+                                            {{ $container->total_weight }} KG
                                         </td>
                                         <td>
-                                            {{  $container->getPiecesCount() }}
+                                            {{ $container->total_orders }}
                                         </td>
                                         <td>
                                             {{ $container->origin_country }}
                                         </td>
                                         <td>
-                                            {{ $container->getDestinationAriport() }}
+                                            {{ $container->destination_ariport }}
                                         </td>
                                         <td>
-                                            {{ $container->getContainerType() }}
+                                            {{ $container->container_type }}
                                         </td>
                                         <td>
-                                            {{ $container->getServiceSubClass() }}
+                                            {{ $container->service_subclass_name }}
                                         </td>
                                         <td>
-                                            {{ $container->getUnitCode() }}
+                                            {{ $container->unit_code }}
                                         </td>
                                         <td>
                                             {{ $container->awb }}
                                         </td>
                                         <td>
-                                            @if(!$container->isRegistered())
-                                                <div class="btn btn-info">
-                                                    New
-                                                </div>
+                                            @if(!$container->is_registered)
+                                            <div class="btn btn-info">
+                                                New
+                                            </div>
                                             @endif
-                                            @if($container->isRegistered() && !$container->isShipped())
-                                                <div class="btn btn-primary">
-                                                    Registered
-                                                </div>
+                                            @if($container->is_registered && !$container->is_shipped)
+                                            <div class="btn btn-primary">
+                                                Registered
+                                            </div>
                                             @endif
 
-                                            @if($container->isShipped())
-                                                <div class="btn btn-success">
-                                                    Shipped
-                                                </div>
+                                            @if($container->is_shipped)
+                                            <div class="btn btn-success">
+                                                Shipped
+                                            </div>
                                             @endif
                                         </td>
                                         <td class="d-flex">
@@ -182,30 +181,30 @@
                                                         <a href="{{ route('warehouse.containers.packages.index',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
-                                                        @if( !$container->isShipped() )
-                                                            <a href="{{ route('warehouse.containers.edit',$container) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
-                                                            </a>
-                                                            @if( !$container->isRegistered() && $container->hasOrders())
-                                                                <a href="{{  $container->hasAnjunChinaService()?route('warehouse.anjun.container.register',$container):route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
-                                                                    <i class="feather icon-box"></i> Register Unit
-                                                                </a>
-                                                            @endif
-                                                            @if( $container->isRegistered())
-                                                                <a href="{{ route('warehouse.container.cancel',$container) }}" class="dropdown-item w-100">
-                                                                    <i class="feather icon-box"></i> Cancel Unit
-                                                                </a>
-                                                            @endif
-                                                            <form action="{{ route('warehouse.containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button class="dropdown-item w-100 text-danger">
-                                                                    <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
-                                                                </button>
-                                                            </form>
+                                                        @if( !$container->is_shipped )
+                                                        <a href="{{ route('warehouse.containers.edit',$container) }}" class="dropdown-item w-100">
+                                                            <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
+                                                        </a>
+                                                        @if( !$container->is_registered && $container->has_orders)
+                                                        <a href="{{  $container->has_anjun_china_service?route('warehouse.anjun.container.register',$container):route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
+                                                            <i class="feather icon-box"></i> Register Unit
+                                                        </a>
                                                         @endif
-                                                        @if( $container->isRegistered() )
-                                                        <a href="{{$container->hasAnjunChinaService()?route('warehouse.anjun.container.download',$container):route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
+                                                        @if( $container->is_registered)
+                                                        <a href="{{ route('warehouse.container.cancel',$container) }}" class="dropdown-item w-100">
+                                                            <i class="feather icon-box"></i> Cancel Unit
+                                                        </a>
+                                                        @endif
+                                                        <form action="{{ route('warehouse.containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="dropdown-item w-100 text-danger">
+                                                                <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
+                                                            </button>
+                                                        </form>
+                                                        @endif
+                                                        @if( $container->is_registered )
+                                                        <a href="{{$container->has_anjun_china_service?route('warehouse.anjun.container.download',$container):route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> Get CN35
                                                         </a>
                                                         @endif
@@ -214,8 +213,8 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    
-                                @endforeach
+
+                                    @endforeach
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-end py-2 px-3">
@@ -228,29 +227,29 @@
 
             <div class="modal fade" id="confirm" role="dialog">
                 <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="col-8">
-                            <h4>
-                               Are you Sure!
-                            </h4>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="col-8">
+                                <h4>
+                                    Are you Sure!
+                                </h4>
+                            </div>
                         </div>
+                        <form action="{{ route('warehouse.container.awb') }}" method="GET" id="bulk_sale_form">
+                            <div class="modal-body" style="font-size: 15px;">
+                                <p>
+                                    Are you Sure want to Assign AWB number to Selected Containers {{-- <span class="result"></span> --}}
+                                </p>
+                                <input type="text" name="awb" required class="form-control" value="">
+                                <input type="hidden" name="command" id="command" value="">
+                                <input type="hidden" name="data" id="data" value="">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" id="save"> Yes Add</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('consolidation.Cancel')</button>
+                            </div>
+                        </form>
                     </div>
-                    <form action="{{ route('warehouse.container.awb') }}" method="GET" id="bulk_sale_form">
-                        <div class="modal-body" style="font-size: 15px;">
-                            <p>
-                                Are you Sure want to Assign AWB number to Selected Containers  {{-- <span class="result"></span> --}}
-                            </p>
-                            <input type="text" name="awb" required class="form-control" value="">
-                            <input type="hidden" name="command" id="command" value="">
-                            <input type="hidden" name="data" id="data" value="">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" id="save"> Yes Add</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('consolidation.Cancel')</button>
-                        </div>
-                    </form>
-                  </div>
                 </div>
             </div>
 

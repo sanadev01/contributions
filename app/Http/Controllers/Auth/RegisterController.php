@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use App\Models\CommissionSetting;
 
+use Illuminate\Support\Str;
 class RegisterController extends Controller
 {
     /*
@@ -75,8 +76,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
-    {
+    function registerUser(array $data){
         $locale = app()->getLocale();
         
         $referrer = User::findRef($data['reffered_by']);
@@ -92,7 +92,9 @@ class RegisterController extends Controller
             'reffer_code' => generateRandomString(),
             'come_from' => $data['come_from'],
             'password' => Hash::make($data['password']),
-            'account_type' => $data['account_type'] == 'business' ? User::ACCOUNT_TYPE_BUSINESS : User::ACCOUNT_TYPE_INDIVIDUAL
+            'account_type' => $data['account_type'] == 'business' ? User::ACCOUNT_TYPE_BUSINESS : User::ACCOUNT_TYPE_INDIVIDUAL,
+            'api_token' => md5(microtime()).'-'.Str::random(116).'-'.md5(microtime()),
+                'api_enabled'=>true,
         ]);
 
         if ($user->reffered_by) {
@@ -102,6 +104,10 @@ class RegisterController extends Controller
         saveSetting('locale', $locale, $user->id);
         saveSetting('geps_service', true, $user->id);
         return $user;
+    }
+    protected function create(array $data)
+    {
+        return $this->registerUser($data);
     }
 
     public function registered(Request $request, $user)

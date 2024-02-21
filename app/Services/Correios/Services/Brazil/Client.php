@@ -19,8 +19,8 @@ class Client
     private $baseUri;
 
     public function __construct()
-    { 
-        $this->baseUri = 'https://api.correios.com.br'; 
+    {
+        $this->baseUri = 'https://api.correios.com.br';
         $this->client = new GuzzleClient([
             'base_uri' => $this->baseUri
         ]);
@@ -86,7 +86,7 @@ class Client
     public function createContainer(Container $container)
     {
         try {
-            
+
             $response = $this->client->post('/packet/v1/units', [
                 'headers' => [
                     'Authorization' => (new GetServiceToken($container->orders()->first()))->getBearerToken(),
@@ -97,7 +97,7 @@ class Client
                     "originOperatorName" => $container->origin_operator_name,
                     "destinationOperatorName" => $container->destination_operator_name,
                     "postalCategoryCode" => $container->postal_category_code,
-                    "serviceSubclassCode" => $container->getSubClassCode(),
+                    "serviceSubclassCode" => $container->subclass_code,
                     "unitList" => [
                         [
                             "sequence" => $container->sequence,
@@ -223,28 +223,29 @@ class Client
                 ]);
             } elseif ($request->type == 'departure_cn38') {
                 $json = array(
-                    "cn38CodeList" => array_map('trim',explode(",",$request->unitCode)),
+                    "cn38CodeList" => array_map('trim', explode(",", $request->unitCode)),
                     "flightList" => array(
-                            array(
-                                "flightNumber" => $request->flightNo,
-                                "airlineCode" => $request->airlineCode,
-                                "departureDate" => $request->start_date,
-                                "departureAirportCode" => $request->deprAirportCode,
-                                "arrivalDate" => $request->end_date,
-                                "arrivalAirportCode" => $request->arrvAirportCode
-                            ))
-                        );
+                        array(
+                            "flightNumber" => $request->flightNo,
+                            "airlineCode" => $request->airlineCode,
+                            "departureDate" => $request->start_date,
+                            "departureAirportCode" => $request->deprAirportCode,
+                            "arrivalDate" => $request->end_date,
+                            "arrivalAirportCode" => $request->arrvAirportCode
+                        )
+                    )
+                );
                 $response = $this->client->put(
                     $url,
                     [
                         'headers' => [
                             'Authorization' => $token,
-                            
-                        'Content-Type' => 'application/json',
+
+                            'Content-Type' => 'application/json',
                         ],
                         'json' =>  $json
                     ]
-                ); 
+                );
                 if ($response->getStatusCode() === 200) {
                     // \Log::info('Departure confirm successfully');
                     // \Log::info(explode(",",$request->unitCode));
