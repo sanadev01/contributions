@@ -3,12 +3,14 @@
 
 namespace App\Repositories;
 
+use Carbon\Carbon;
 use App\Models\Order;
+use App\Services\SwedenPost\Client;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Correios\Models\PackageError;
 use App\Services\SwedenPost\Services\UpdateCN23Label;
-use App\Services\SwedenPost\Client;
 use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
+
 class SwedenPostLabelRepository
 {
     protected $error;
@@ -40,23 +42,28 @@ class SwedenPostLabelRepository
         if($order->api_response)
         {
             $response = json_decode($order->api_response);
-            $base64Pdf = $response->data[0]->labelContent;
-            $invoicePdf = optional($response->data[0])->invoiceContents[0];
-
-            if ($invoicePdf) {
-                $pdf = PDFMerger::init();
-                $labelContent = base64_decode($base64Pdf);
-                $pdf->addString($labelContent);
-                $pdf->addString(base64_decode($invoicePdf));
-                $pdf->merge();
-
-                $mergedPdfPath = app()->basePath('storage').("/app/labels/{$order->corrios_tracking_code}.pdf");
-
-                $mergedPdf = $pdf->output();
-                file_put_contents($mergedPdfPath, $mergedPdf);
+            if (optional($order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-02-21'))) {
+                $base64Pdf = $response[1]->data[0]->labelContent;
             } else {
-                Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64Pdf));
+                $base64Pdf = $response->data[0]->labelContent;
             }
+
+            // $invoicePdf = optional($response[1]->data[0])->invoiceContents[0];
+
+            // if ($invoicePdf) {
+            //     $pdf = PDFMerger::init();
+            //     $labelContent = base64_decode($base64Pdf);
+            //     $pdf->addString($labelContent);
+            //     $pdf->addString(base64_decode($invoicePdf));
+            //     $pdf->merge();
+
+            //     $mergedPdfPath = app()->basePath('storage').("/app/labels/{$order->corrios_tracking_code}.pdf");
+
+            //     $mergedPdf = $pdf->output();
+            //     file_put_contents($mergedPdfPath, $mergedPdf);
+            // } else {
+                Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64Pdf));
+            // }
             return true;
 
         }
