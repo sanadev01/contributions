@@ -22,6 +22,9 @@ class Table extends Component
 
     public function render()
     {
+        
+        ini_set('memory_limit', '10000M');
+        ini_set('memory_limit', '-1');
         return view('livewire.activity.table',[
             'activities' => $this->getActivities(),
             'models' => $this->getModels()
