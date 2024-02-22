@@ -45,6 +45,14 @@ class GetServiceToken
         \Log::info([
             'url'=>$this->baseUri,
         ]);
+        \Log::info('Shipping Service');
+        \Log::info('BCN Service');
+        \Log::info($this->order->shippingService->is_bcn_service);
+        \Log::info('Anjun Service');
+        \Log::info($this->order->shippingService->isAnjunService());
+        \Log::info('Corrieos');
+        \Log::info($this->order->shippingService->isCorreiosService());
+
         if ($order != null)
             $this->order = $order;
         if ($trackingNumber != null)
