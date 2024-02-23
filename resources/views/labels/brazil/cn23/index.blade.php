@@ -306,17 +306,11 @@
             text-align: center;
         }
         .package-sign{
-            border-radius: 1mm;
             top: 93mm;
             position:absolute;
-            background-color: black;
             right: 14mm;
-            border: 1px solid black; 
             font-weight: bold;
-            color: white;
             display: block;
-            width: 4mm;
-            height: 5mm; 
             box-sizing: border-box;
             text-align: center;
         }
