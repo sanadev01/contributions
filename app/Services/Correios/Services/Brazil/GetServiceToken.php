@@ -42,6 +42,14 @@ class GetServiceToken
         $this->bcn_password = '9wdkSYsvk2FkqNbojC1CLlUhN1RY3HqqmmADFBPa';
         $this->bcn_numero = '0076204456'; 
          
+
+        if ($order != null)
+            $this->order = $order;
+        if ($trackingNumber != null)
+            $this->order = Order::where('corrios_tracking_code', strtoupper($trackingNumber))->first();
+        $this->client = new GuzzleClient([
+            'base_uri' => $this->baseUri
+        ]);
         \Log::info([
             'url'=>$this->baseUri,
         ]);
@@ -53,13 +61,6 @@ class GetServiceToken
         \Log::info('Corrieos');
         \Log::info($this->order->shippingService->isCorreiosService());
 
-        if ($order != null)
-            $this->order = $order;
-        if ($trackingNumber != null)
-            $this->order = Order::where('corrios_tracking_code', strtoupper($trackingNumber))->first();
-        $this->client = new GuzzleClient([
-            'base_uri' => $this->baseUri
-        ]);
     }
 
     public function getToken()
@@ -113,6 +114,7 @@ class GetServiceToken
     }
     public function getBearerToken()
     {
+        $this->order = $this->order->refresh();
         if ($this->order->shippingService->isAnjunService()) {
             Log::info('getAnjunToken');
             return $this->getAnjunToken();
