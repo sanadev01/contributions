@@ -437,6 +437,7 @@ Route::get('sh-code-type', function () {
     } else {
         $message = "No records updated.";
     }
+});
 
 //     return $message;
 // });
