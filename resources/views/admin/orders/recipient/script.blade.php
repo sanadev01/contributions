@@ -103,13 +103,10 @@
             }
             if(val == '249')
             {
-                console.log('uk selected')
-                $('#div_region').css('display', 'none');
-                $('#state_input').css('display', 'block');
+                window.onSelectUK()
                 return;
-            }else{ 
-                console.log('uk state input display none')
-                $('#state_input').css('display', 'none');
+            }else{
+                window.onDeselectUK();
             }
             const old_region = $('#region').data('value');
 
@@ -175,13 +172,10 @@
             }
             if(val == '249')
             {
-                console.log('uk selected')
-                $('#div_region').css('display', 'none');
-                $('#state_input').css('display', 'block');
+                window.onSelectUK();
                 return;
-            }else{ 
-                console.log('uk state input display none')
-                $('#state_input').css('display', 'none');
+            }else{
+                window.onDeselectUK();
             }
             if(val == '94')
             {
@@ -647,5 +641,21 @@
             })
         }
     }
- 
-</script>
+    onSelectUK = function(){
+        $('#div_state').css('display', 'none')
+        
+        $('#state_input').css('display', 'block');
+        $('#state_input').prop('disabled', false);
+        
+        $('#div_state').css('display', 'none');
+        $('#state_id').prop('disabled', true);
+        
+        $('#div_communes').css('display', 'none')
+        $('#commune').prop('disabled', true);
+    }
+    onDeselectUK = function(){
+        
+        $('#state_input').css('display', 'none');
+        $('#state_input').prop('disabled', true);
+    }
+    </script>
