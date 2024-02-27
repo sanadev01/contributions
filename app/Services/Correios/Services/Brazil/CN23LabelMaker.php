@@ -59,7 +59,7 @@ class CN23LabelMaker implements HasLableExport
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
-        if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
+        if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-01'))) {
             $this->labelZipCodeGroup = getOrderGroupRange($this->order);
         }
         if ($this->order->shippingService->is_bcn_service) {
