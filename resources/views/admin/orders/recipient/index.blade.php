@@ -157,13 +157,6 @@
                         </select>
                         <div class="help-block"></div>
                     </div> 
-                    <div class="form-group col-12 col-sm-6 col-md-4" id="state_input"  style="display: none">
-                        <div class="controls">
-                            <label>@lang('address.State') <span class="text-danger">*</span></label>
-                            <input type="text" name="region" id="region_input" value="{{old('region',optional($order->recipient)->region)}}" class="form-control" placeholder="State"/>
-                            <div class="help-block"></div>
-                        </div>
-                    </div>
                 {{-- <div class="form-group col-12 offset-4">
                     <div class="controls">
                         <div class="help-block" id="regions_response">
