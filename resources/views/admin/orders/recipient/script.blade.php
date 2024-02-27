@@ -95,7 +95,6 @@
         // For getting Chile Regions
         $('#country').ready(function() {
             $('#regions_response').css('display', 'none');
-            $('#state_input').css('display', 'none');
             let val = $('#country').val();
             if(val == '94')
             {
@@ -104,8 +103,10 @@
             }
             if(val == '249')
             {
-                window.activeUKFields();
+                window.onSelectUK()
                 return;
+            }else{
+                window.onDeselectUK();
             }
             const old_region = $('#region').data('value');
 
@@ -169,18 +170,18 @@
                 $('#country_message').empty();
                 return;
             }
+            if(val == '249')
+            {
+                window.onSelectUK();
+                return;
+            }else{
+                window.onDeselectUK();
+            }
             if(val == '94')
             {
 
                 window.inactiveChileFields();
-                window.inActiveUKFields();
                 window.activeGuatmalaFields();
-                return;
-            }
-
-            if(val == '249')
-            {
-                window.activeUKFields();
                 return;
             }
 
@@ -476,29 +477,23 @@
 
         $('#country').on('change', function() {
             window.validate_us_address();
-            if($('#country').val() == '250' || $('#country').val() == '46' || $('#country').val() == '94' || $('#country').val() == '249'){
+            if($('#country').val() == '250' || $('#country').val() == '46' || $('#country').val() == '94'){
                 if($('#country').val() != '94')
                 $('#div_street_number').css('display', 'none')
 
                 $('#cpf').css('display', 'none')
-            }else if($('#country').val() == '249'){
-                activeUKFields();
             }else{
-                inActiveUKFields();
                 $('#div_street_number').css('display', 'block')
                 $('#cpf').css('display', 'block')
             }
         });
 
         $('#country').ready(function() {
-            if($('#country').val() == '250' || $('#country').val() == '46' || $('#country').val() == '94' || $('#country').val() == '249'){
+            if($('#country').val() == '250' || $('#country').val() == '46' || $('#country').val() == '94'){
                 if($('#country').val() != '94')
                 $('#div_street_number').css('display', 'none')
                 $('#cpf').css('display', 'none')
-            }else if($('#country').val() == '249'){
-                activeUKFields();
             }else{
-                inActiveUKFields();
                 $('#div_street_number').css('display', 'block')
                 $('#cpf').css('display', 'block')
             }
@@ -646,18 +641,21 @@
             })
         }
     }
-
-    activeUKFields = function(){
+    onSelectUK = function(){
         $('#div_state').css('display', 'none')
+        
         $('#state_input').css('display', 'block');
         $('#state_input').prop('disabled', false);
+        
+        $('#div_state').css('display', 'none');
+        $('#state_id').prop('disabled', true);
+        
+        $('#div_communes').css('display', 'none')
         $('#commune').prop('disabled', true);
     }
-    inActiveUKFields = function(){
-        $('#div_state').css('display', 'block')
-        $('#state_input').css('display', 'none'); 
+    onDeselectUK = function(){
+        
+        $('#state_input').css('display', 'none');
         $('#state_input').prop('disabled', true);
-        $('#commune').prop('disabled', true);
     }
- 
-</script>
+    </script>
