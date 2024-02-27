@@ -160,7 +160,7 @@
                     <div class="form-group col-12 col-sm-6 col-md-4" id="state_input"  style="display: none">
                         <div class="controls">
                             <label>@lang('address.State') uk <span class="text-danger">*</span></label>
-                            <input type="text" name="region" value="{{old('region',optional($order->recipient)->region)}}" class="form-control" placeholder="State"/>
+                            <input type="text" name="region" id="region_input" value="{{old('region',optional($order->recipient)->region)}}" class="form-control" placeholder="State"/>
                             <div class="help-block"></div>
                         </div>
                     </div>
@@ -179,9 +179,9 @@
                     {{-- Chile Communes --}}
                     <div class="controls" id="div_communes" style="display: none">
                         <label>Communes <span class="text-danger">*</span></label>
-                        <select name="city" id="commune" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('city', optional($order->recipient)->city) }}" data-commune="{{ old('commune_id', optional($order->recipient)->commune_id) }}">
+                        <!-- <select name="city" id="commune" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('city', optional($order->recipient)->city) }}" data-commune="{{ old('commune_id', optional($order->recipient)->commune_id) }}">
                             <option value="">Select Commune</option>
-                        </select>
+                        </select> -->
                         <div class="help-block"></div>
                     </div>
                     <div class="controls">
