@@ -151,7 +151,7 @@
                     </div>
                     {{-- Chile Regions --}}
                     <div class="controls form-group col-12 col-sm-6 col-md-4" id="div_region" style="display: none">
-                        <label>Regions  not uk<span class="text-danger">*</span></label>
+                        <label>Regions<span class="text-danger">*</span></label>
                         <select name="region" id="region" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('region', optional($order->recipient)->region) }}">
                             <option value="">Select Region</option>
                         </select>
@@ -159,7 +159,7 @@
                     </div> 
                     <div class="form-group col-12 col-sm-6 col-md-4" id="state_input"  style="display: none">
                         <div class="controls">
-                            <label>@lang('address.State') uk <span class="text-danger">*</span></label>
+                            <label>@lang('address.State') <span class="text-danger">*</span></label>
                             <input type="text" name="region" id="region_input" value="{{old('region',optional($order->recipient)->region)}}" class="form-control" placeholder="State"/>
                             <div class="help-block"></div>
                         </div>
