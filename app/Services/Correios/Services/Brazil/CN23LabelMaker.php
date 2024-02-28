@@ -156,10 +156,11 @@ class CN23LabelMaker implements HasLableExport
 
                     if (strlen($this->order->items[$key + 1]->description) <= 70  && $key < 2)
                         $suplimentryAt = $key == 0 ? 2 : $key + 1;
+                    else
+                        $suplimentryAt = $key == 0 ? 1 : $key;
                 } catch (Exception $e) {
                     $suplimentryAt = $key == 0 ? 1 : $key;
                 }
-                $suplimentryAt = $key == 0 ? 1 : $key;
             }
         }
         return $suplimentryAt > 4 ? 4 : $suplimentryAt;
