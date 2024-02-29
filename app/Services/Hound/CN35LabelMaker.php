@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services\Hound;
 
@@ -32,20 +32,20 @@ class CN35LabelMaker implements HasLableExport
         $this->serialNumber = 1;
         $this->flightNumber = $container->flight_number;
         $this->dispatchDate = Carbon::now()->format('Y-m-d');
-        
+
         $order = $container->orders->first();
-        
-        if($order){ 
-              $this->setType($order->getOriginalWeight('kg')); 
+
+        if ($order) {
+            $this->setType($order->getOriginalWeight('kg'));
         }
-        
-        $this->weight =  $container->getWeight();
+
+        $this->weight =  $container->total_weight;
         $this->dispatchNumber = $container->dispatch_number;
         $this->originAirpot =  'Miami';
-        $this->setService($container->getServiceCode());
-        $this->destinationAirport = $container->destination_operator_name;        
-        $this->itemsCount = $container->getPiecesCount();
-        $this->unitCode = $container->getUnitCode();
+        $this->setService($container->service_code);
+        $this->destinationAirport = $container->destination_operator_name;
+        $this->itemsCount = $container->total_orders;
+        $this->unitCode = $container->unit_code;
     }
 
     public function setCompanyName($companyName)
@@ -58,8 +58,8 @@ class CN35LabelMaker implements HasLableExport
     {
         $this->service = $service;
 
-         
-            $this->packetType = 'Hound'; 
+
+        $this->packetType = 'Hound';
 
         return $this;
     }
@@ -133,17 +133,17 @@ class CN35LabelMaker implements HasLableExport
 
     public function render()
     {
-        return view('labels.hound.cn35.index',$this->getViewData());
+        return view('labels.hound.cn35.index', $this->getViewData());
     }
 
     public function download()
     {
-        return \PDF::loadView('labels.hound.cn35.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.hound.cn35.index', $this->getViewData())->stream();
     }
 
     public function saveAs($path)
     {
-        return \PDF::loadView('labels.hound.cn35.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.hound.cn35.index', $this->getViewData())->save($path);
     }
 
     private function getViewData()
@@ -165,5 +165,4 @@ class CN35LabelMaker implements HasLableExport
             'OrderWeight' => $this->OrderWeight,
         ];
     }
-
 }

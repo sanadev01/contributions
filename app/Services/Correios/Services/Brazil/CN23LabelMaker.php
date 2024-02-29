@@ -59,14 +59,14 @@ class CN23LabelMaker implements HasLableExport
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
-        if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-01'))) {
+        if (optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
             $this->labelZipCodeGroup = getOrderGroupRange($this->order);
         }
         if ($this->order->shippingService->is_bcn_service) {
             $this->contractNumber = 'Contract BCN Logistics: 0076204456';
             $this->packageSign = 'B';
         } 
-        if($this->order->shippingService->isAnjunService()) {
+        if($this->order->shippingService->is_anjun_service){
             $this->contractNumber = 'Contract ANJUN : 9912501700';
             $this->packageSign = 'A';
 
@@ -149,19 +149,21 @@ class CN23LabelMaker implements HasLableExport
     }
     private function suplimentryAt()
     {
+        $suplimentryAt = 4;
         foreach ($this->order->items as  $key => $item) {
             if (strlen($item->description) > 65) {
                 try {
 
                     if (strlen($this->order->items[$key + 1]->description) <= 70  && $key < 2)
-                        return $key == 0 ? 2 : $key + 1;
+                        $suplimentryAt = $key == 0 ? 2 : $key + 1;
+                    else
+                        $suplimentryAt = $key == 0 ? 1 : $key;
                 } catch (Exception $e) {
-                    return $key == 0 ? 1 : $key;
+                    $suplimentryAt = $key == 0 ? 1 : $key;
                 }
-                return $key == 0 ? 1 : $key;
             }
         }
-        return 4;
+        return $suplimentryAt > 4 ? 4 : $suplimentryAt;
     }
 
     public function render()

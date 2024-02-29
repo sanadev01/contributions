@@ -366,6 +366,12 @@
                             <span class="menu-title">@lang('menu.Reports.Tax Report Scan')</span>
                         </a>
                     </li>
+                    <li class="@if(request('type')=='accrual') active @endif">
+                        <a href="{{ route('admin.reports.kpi-report.index',['type' => 'accrual']) }}">
+                            <i class="icon_adjst feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Reports.Tax Report Accrual')</span>
+                        </a>
+                    </li>
                     @endcan
                     @admin
                         <li class="{{ $isActive(['admin.reports.unpaid-orders']) }}">

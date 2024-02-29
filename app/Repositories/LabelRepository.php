@@ -18,9 +18,9 @@ class LabelRepository
     public function get(Order $order)
     {
         $leveClient = new Client;
-        if ( $order->getCN23() ){
+        if ($order->getCN23()) {
             $data = $leveClient->downloadCN23($order->getCN23()->stamp_url);
-            if ( $data->success ){
+            if ($data->success) {
                 return $data->data;
             }
 
@@ -36,10 +36,10 @@ class LabelRepository
         $leveClient = new Client;
         $cn23 = $this->generateLabel($order);
 
-        if ( $cn23 ){
-            $order->setCN23( (array) $cn23);
+        if ($cn23) {
+            $order->setCN23((array) $cn23);
             $data = $leveClient->downloadCN23($order->getCN23()->stamp_url);
-            if ( $data->success ){
+            if ($data->success) {
                 return $data->data;
             }
 
@@ -54,55 +54,55 @@ class LabelRepository
     {
         $recipientAddress = $order->recipient;
 
-        $width = round($order->isMeasurmentUnitCm() ? $order->width : UnitsConverter::inToCm($order->width));
-        $height = round($order->isMeasurmentUnitCm() ? $order->height : UnitsConverter::inToCm($order->height));
-        $length = round($order->isMeasurmentUnitCm() ? $order->length : UnitsConverter::inToCm($order->length));
+        $width = round($order->is_weight_in_kg ? $order->width : UnitsConverter::inToCm($order->width));
+        $height = round($order->is_weight_in_kg ? $order->height : UnitsConverter::inToCm($order->height));
+        $length = round($order->is_weight_in_kg ? $order->length : UnitsConverter::inToCm($order->length));
 
         $leveOrder = new LeveOrder();
         $leveOrder->order_number = $order->warehouse_number;
         $leveOrder->external_reference = $order->customer_reference;
         $leveOrder->purchase_date = $order->created_at->toIso8601String();
-        $leveOrder->weight =  round($order->isWeightInKg() ? $order->weight  : UnitsConverter::poundToKg($order->weight),2) ;
+        $leveOrder->weight =  round($order->is_weight_in_kg ? $order->weight  : UnitsConverter::poundToKg($order->weight), 2);
         $leveOrder->width =  $width > 11 ? $width : 11;
         $leveOrder->height = $height > 2 ? $height : 2;
-        $leveOrder->extent_length = $length > 16 ? $length : 16 ;
-        $leveOrder->shipment_value = $order->user_declared_freight ?  round($order->user_declared_freight,2) : round($order->shipping_value,2) ;
+        $leveOrder->extent_length = $length > 16 ? $length : 16;
+        $leveOrder->shipment_value = $order->user_declared_freight ?  round($order->user_declared_freight, 2) : round($order->shipping_value, 2);
         $leveOrder->sender_name = $order->sender_first_name ? "{$order->sender_first_name} {$order->sender_last_name}" : "{$order->user->name} {$order->user->last_name}";
         $leveOrder->mkt_place_name = $order->user->market_place_name;
-        
+
         $hazardousItems = [];
-        if ( $order->items()->where('contains_battery',true)->count() > 0 ){
+        if ($order->items()->where('contains_battery', true)->count() > 0) {
             $hazardousItems = ["UN3481"];
         }
-        
-        if ( $order->items()->where('contains_perfume',true)->count() > 0 ){
-            $hazardousItems = array_merge(["ID8000"],$hazardousItems);
+
+        if ($order->items()->where('contains_perfume', true)->count() > 0) {
+            $hazardousItems = array_merge(["ID8000"], $hazardousItems);
         }
 
         $leveOrder->hazardous_contents_labels = $hazardousItems;
 
         $address = new Address();
-        $address->number= $recipientAddress->street_no ? $recipientAddress->street_no :'s/n';
-        $address->neighborhood= 's/n';
-        $address->street= $recipientAddress->address;
-        $address->complement= $recipientAddress->address2;
-        $address->city= $recipientAddress->city;
-        $address->zip_code=  cleanString($recipientAddress->zipcode);
-        $address->state_abbreviation= $recipientAddress->state->code;
-        $address->country_abbreviation= $recipientAddress->country->code;
+        $address->number = $recipientAddress->street_no ? $recipientAddress->street_no : 's/n';
+        $address->neighborhood = 's/n';
+        $address->street = $recipientAddress->address;
+        $address->complement = $recipientAddress->address2;
+        $address->city = $recipientAddress->city;
+        $address->zip_code =  cleanString($recipientAddress->zipcode);
+        $address->state_abbreviation = $recipientAddress->state->code;
+        $address->country_abbreviation = $recipientAddress->country->code;
 
         $recipient = new Recipient();
         $recipient->name = "{$recipientAddress->first_name} $recipientAddress->last_name";
         $recipient->email = $recipientAddress->email;
         $recipient->phone_number = $recipientAddress->phone;
-        $recipient->registration_number = cleanString( $recipientAddress->tax_id );
+        $recipient->registration_number = cleanString($recipientAddress->tax_id);
 
         $products = [];
-        foreach ( $order->items as $orderItem){
+        foreach ($order->items as $orderItem) {
             $item = new Product();
             $item->description = $orderItem->description;
             $item->amount = (int)$orderItem->quantity;
-            $item->unit_value = round((float)$orderItem->value,2);
+            $item->unit_value = round((float)$orderItem->value, 2);
             $item->hs_code = $orderItem->sh_code;
             $products[] = $item;
         }
@@ -116,10 +116,9 @@ class LabelRepository
         $leveClient = new Client;
         $response = $leveClient->createPackage($package);
 
-        if ( !$response->success ){
-           $this->error = $response->message;
-           return false;
-
+        if (!$response->success) {
+            $this->error = $response->message;
+            return false;
         }
 
         return $response->data;

@@ -1,5 +1,4 @@
 <?php
-
 use App\Models\Deposit;
 use App\Models\Order;
 use App\Models\PaymentInvoice;
@@ -64,19 +63,20 @@ Route::prefix('v1')->middleware('auth:api')->group(function(){
 
 });
 
-
 Route::prefix('v1')->group(function(){
+Route::post('register',\Api\RegistrationController::class);
     
     Route::namespace('Api\PublicApi')->group(function () {
     
         // Authenticated Routes
         Route::middleware(['auth:api','checkPermission'])->group(function (){
+            Route::get('orders',OrderController::class);
             Route::get('deposits',DepositController::class);
             Route::get('balance', BalanceController::class);
             Route::resource('parcels', 'ParcelController')->only('store','show','destroy','update');
             Route::get('parcel/{order}/cn23',OrderLabelController::class);
             Route::put('parcel/items/{parcel}',[App\Http\Controllers\Api\PublicApi\ParcelController::class, 'updateItems']);
-            Route::get('order/tracking/{search}/{format?}', OrderTrackingController::class);
+            Route::match(['get', 'post'], 'order/tracking/{search?}/{format?}', [App\Http\Controllers\Api\PublicApi\OrderTrackingController::class, '__invoke']);
             Route::get('services-rates', GetRateController::class);
             Route::resource('products', 'ProductController')->only('index', 'show', 'store');
             Route::get('api/token', AmazonApiTokenController::class);
