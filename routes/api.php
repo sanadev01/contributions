@@ -97,6 +97,7 @@ Route::prefix('v1')->group(function(){
         Route::get('country/{country}/states', StateController::class);
         Route::get('shipping-services/{country_code?}', ServicesController::class);
         Route::get('shcodes/{search?}', ShCodeController::class);
+        Route::get('additional-services', AdditionalServicesController::class);
         
         Route::get('insurances', [App\Http\Controllers\Api\PublicApi\InsuranceController::class, '__invoke']);
     });
