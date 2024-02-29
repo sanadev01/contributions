@@ -289,7 +289,7 @@ class ParcelController extends Controller
                 }
             }
 
-            $order->syncServices(optional($request->parcel)['services'] ?? []);
+            $order->syncServices(optional($request->parcel)['additional_service'] ?? []);
 
             $order->doCalculations();
 

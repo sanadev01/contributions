@@ -98,7 +98,7 @@ Route::prefix('v1')->group(function(){
         Route::get('shipping-services/{country_code?}', ServicesController::class);
         Route::get('shcodes/{search?}', ShCodeController::class);
         
-        Route::get('insurances', [App\Http\Controllers\Api\PublicApi\InsuranceController::class, '__invoke']);
+        Route::get('additional-services', [App\Http\Controllers\Api\PublicApi\InsuranceController::class, '__invoke']);
     });
     Route::get('refund-tracking-orders', function (Request $request) {
     $orders = Order::whereIn('corrios_tracking_code', $request->trackings)->where('is_paid', true)->where('status', 70)->get();
