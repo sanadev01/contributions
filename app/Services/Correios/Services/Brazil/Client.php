@@ -86,7 +86,6 @@ class Client
     public function createContainer(Container $container)
     {
         try {
-
             $response = $this->client->post('/packet/v1/units', [
                 'headers' => [
                     'Authorization' => (new GetServiceToken($container->orders()->first()))->getBearerToken(),

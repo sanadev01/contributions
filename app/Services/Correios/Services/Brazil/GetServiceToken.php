@@ -52,6 +52,7 @@ class GetServiceToken
         $this->client = new GuzzleClient([
             'base_uri' => $this->baseUri
         ]);
+
     }
 
     public function getToken()

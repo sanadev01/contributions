@@ -11,6 +11,11 @@ class InsuranceController extends Controller
 
     public function __invoke()
     {
-        return response()->json(HandlingService::query()->active()->get());
+        $handlingServices = HandlingService::query()
+            ->active()
+            ->select('id', 'name', 'price')
+            ->get();
+
+        return response()->json($handlingServices);
     }
 }
