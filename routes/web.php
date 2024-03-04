@@ -1,8 +1,12 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Order;
+use App\Models\ShCode;
+use App\Models\State;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
+use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Artisan;
 use App\Services\HDExpress\CN23LabelMaker;
 use App\Services\StoreIntegrations\Shopify;
@@ -10,6 +14,12 @@ use App\Http\Controllers\Admin\HomeController;
 // use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Models\Warehouse\Container;
+use App\Http\Controllers\ConnectionsController;
+use App\Models\Country;
+use App\Models\ShippingService;
+use App\Models\ZoneCountry;
+use Illuminate\Http\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +42,8 @@ Route::get('/', function (Shopify $shopifyClient) {
     }
     return redirect('login');
 });
-
+ini_set('memory_limit', '10000M');
+ini_set('memory_limit', '-1');
 Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
 Route::resource('us-calculator', USCalculatorController::class)->only(['index', 'store']);
 
@@ -134,6 +145,11 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
             Route::get('/show-profit-package-rates/{id}/{packageId}', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showPackageRates'])->name('show-profit-rates');
             Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
+            Route::resource('zone-profit', ZoneProfitController::class)->only(['index', 'store', 'create', 'destroy']);
+            Route::get('zone-profit/{group_id}/shipping-service/{shipping_service_id}', [\App\Http\Controllers\Admin\Rates\ZoneProfitController::class, 'show'])->name('zone-profit-show');
+            Route::get('zone-profit-download/{group_id}/shipping-service/{shipping_service_id}', [\App\Http\Controllers\Admin\Rates\ZoneProfitController::class, 'downloadZoneProfit'])->name('downloadZoneProfit');
+            Route::delete('zone-profit-download/{group_id}/shipping-service/{shipping_service_id}', [\App\Http\Controllers\Admin\Rates\ZoneProfitController::class, 'destroyZoneProfit'])->name('destroyZoneProfit');
+            Route::post('zone-profit-update/{id}', [\App\Http\Controllers\Admin\Rates\ZoneProfitController::class, 'updateZoneProfit'])->name('updateZoneProfit');
         });
 
         Route::namespace('Connect')->group(function(){
@@ -151,6 +167,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::resource('users.setting', UserSettingController::class)->only('index','store');
         Route::resource('shcode', ShCodeController::class)->only(['index', 'create','store','edit','update','destroy']);
         Route::resource('shcode-export', ShCodeImportExportController::class)->only(['index', 'create','store']);
+        Route::get('shcode-export/{type?}', [ShCodeImportExportController::class, 'index'])->name('admin.shcode-export.index');
 
         Route::namespace('Tax')->group(function(){
             Route::resource('tax', TaxController::class)->except(['show','destroy']);
@@ -236,7 +253,12 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('order/{order}/product', \ProductModalController::class)->name('inventory.order.products');
         });
 });
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
+    Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
+    Route::get('/auth', [ConnectionsController::class, 'getAuth']); 
+    Route::get('/status-change/{user}', [ConnectionsController::class, 'getStatusChange']);
+});
 Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->group(function(){
     Route::namespace('Shopify')->prefix('shopify')->as('shopify.')->group(function(){
         Route::get('redirect_uri', RedirectController::class)->name('redirect_uri');
@@ -266,6 +288,9 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 
 Route::get('test-label/{id?}',function($id = null){
 
+    $order = Order::where('corrios_tracking_code', $id)->get();
+    // dd($order);
+    
     $labelPrinter = new CN23LabelMaker();
     $order = Order::find($id);
     // dd($order->recipient->country->code);
@@ -289,12 +314,132 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     session()->forget('anjun_token');
     Cache::forget('anjun_token');
     return 'Anjun Token refresh';
-}); 
-Route::get('order-arrived', function(){
-    Artisan::call('email:order-arrived');
-
-    return Artisan::output();
 });
 
-Route::get('/temp-order-report/{number}',TempOrderReportController::class);
+Route::get('/temp-order-report',TempOrderReportController::class);
+
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
+
+Route::get('/to-express/{id?}',function($id = null){
+    
+    Order::whereIn('shipping_service_id',[ 
+       $id,])->update(['shipping_service_id'=>42]);
+
+    return 'shipping service updated to express sucessfully.'; 
+});
+
+Route::get('/cleared',function(){
+    ZoneCountry::truncate(); 
+    dump(ZoneCountry::get()); 
+    dd('done');
+});
+Route::get('/countries',function(){
+   
+    foreach(Country::pluck('name') as $name){
+        echo '<br>'.$name;
+    }
+});
+Route::get('/add-country/{country_name}/{code}',function($countryName,$code){
+    $country = Country::updateOrCreate([
+        'name'=>$countryName,
+        'code'=>$code,
+    ]);  
+    dd($country);
+});
+
+Route::get('/update-country/{country_name}/{new_country_name}/{code}', function ($countryName, $newCountryName, $code) {
+    $country = Country::where('name', $countryName)->first();
+    if (!$country) { return "Country '{$countryName}' not found."; }
+    $country->name = $newCountryName;
+    $country->code = $code;
+    $country->save();
+    return "Country '{$countryName}' updated to '{$newCountryName}' with code '{$code}'.";
+});
+
+Route::get('/get-packet-service',function($id = null){
+    $trackings = [
+        'NB885108064BR',
+        'NB859231434BR',
+        'NB885109453BR',
+        'NB885109135BR',
+        'NB859228925BR',
+        'NB885108413BR',
+        'NB859231329BR',
+        'NB859231403BR',
+        'NB885109229BR',
+        'NB885109467BR',
+        'NB885109440BR',
+        'NB885109334BR',
+        'NB859231394BR',
+        'NB859231522BR',
+        'NB859231244BR',
+        'NB859228109BR',
+        'NB859231425BR',
+        'NB885109294BR',
+        'NB859231377BR',
+        'NB885106063BR',
+        'NB859231332BR',
+        'NB859230558BR',
+        'NB885108427BR',
+        'NB896229488BR',
+        'NB859229705BR',
+        'NB885106032BR',
+        'NB896229491BR',
+        'NB885109365BR',
+    ];
+    
+    $result = Order::whereIn('corrios_tracking_code', $trackings)
+    ->with('shippingService') // Eager load the shippingService relationship
+    ->get();
+    $shippingServiceNames = [];
+
+    // Populate the associative array
+    foreach ($result as $order) {
+        $trackingCode = $order->corrios_tracking_code;
+        $shippingServiceName = optional($order->shippingService)->name;
+
+        $shippingServiceNames[$trackingCode] = $shippingServiceName;
+    }
+    dd($shippingServiceNames);
+});
+Route::get('make-sh-code-request',function(){
+$shcodes=[];
+foreach(ShCode::where('type', null)->get() as $code){
+    array_push($shcodes,[
+        "sh_code"=> "$code->code",
+        "description"=> optional(explode('-------',$code->description))[0],
+        "quantity"=> 3,
+        "value"=> 1,
+        "is_battery"=> 0,
+        "is_perfume"=> 0,
+        "is_flameable"=> 0  
+    ]);
+}
+dd(json_encode($shcodes));
+});
+// Route::get('sh-code-type', function () {
+//     $updated = ShCode::where(function ($query) {
+//                     $query->whereNull('type')->orWhere('type', '');
+//                 })->update(['type' => 'Postal (Correios)']);
+                
+//     $updated += ShCode::where('type', 'total')->update(['type' => 'Courier']);
+
+//     if ($updated > 0) {
+//         $message = "Type updated successfully for $updated records.";
+//     } else {
+//         $message = "No records updated.";
+//     }
+
+//     return $message;
+// });
+Route::get('create-temp-folder', function () {
+    // Path to the temporary folder
+    $tempFolderPath = storage_path('tmp');
+
+    // Create the temporary folder if it doesn't exist
+    if (!file_exists($tempFolderPath)) {
+        mkdir($tempFolderPath, 0777, true); // Recursive directory creation
+    }
+
+    return new Response("Temporary folder created at: $tempFolderPath");
+});

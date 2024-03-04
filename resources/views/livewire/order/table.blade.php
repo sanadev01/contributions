@@ -52,6 +52,7 @@
                 <select class="form-control col-2 mr-2" name="type">
                     <option value="">All</option>
                     <option value="domestic">Domestic</option>
+                    <option value="gss">GSS</option>
                     <option value="{{ App\Models\Order::STATUS_ORDER }}">ORDER</option>
                     <option value="{{ App\Models\Order::STATUS_CANCEL }}">CANCELLED</option>
                     <option value="{{ App\Models\Order::STATUS_REJECTED }}">REJECTED</option>
@@ -78,9 +79,9 @@
                         </th>
                     @endif
                     <th>
-                        @if (\Request::route()->getName() != 'admin.trash-orders.index'  && $isTrashed)
+                        {{-- @if (\Request::route()->getName() != 'admin.trash-orders.index'  && $isTrashed)
                             <span class="mr-4"> @lang('Edit Order')</span>
-                        @endif
+                        @endif --}}
                         <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                     </th>
                     <th>
@@ -118,7 +119,7 @@
                     @endif
                     <th>
                         
-                        <input type="search" class="form-control col-md-9 ml-5" wire:model.debounce.1000ms="date">
+                        <input type="search" class="form-control col-md-9" wire:model.debounce.1000ms="date">
                     </th>
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="whr_number">
@@ -141,6 +142,9 @@
                         <select class="form-control" wire:model.debounce.1000ms="carrier">
                             <option value="">All</option>
                             <option value="Brazil">Correios Brazil</option>
+                            <option value="Anjun">Correios A</option>
+                            <option value="AnjunChina">Correios AJ</option>
+                            <option value="BCN">Correios B</option>
                             <option value="USPS">USPS</option>
                             <option value="UPS">UPS</option>
                             <option value="FEDEX">FEDEX</option>
@@ -150,6 +154,7 @@
                             <option value="Post Plus">Post Plus</option>
                             <option value="Total Express">Total Express</option>
                             <option value="HD Express">HD Express</option>
+                            <option value="Hound Express">Hound Express</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin

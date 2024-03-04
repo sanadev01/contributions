@@ -20,9 +20,9 @@
     RewriteRule ^ index.php [L]
 </IfModule>
 
-php_value max_execution_time 1500
-php_value max_input_time 1500
-php_value max_input_vars 2000
-php_value memory_limit 10G
-php_value post_max_size 6G
-php_value upload_max_filesize 6G
+php_value max_execution_time 2000
+php_value max_input_time 2000
+php_value max_input_vars 3000
+php_value memory_limit 16G
+php_value post_max_size 10G
+php_value upload_max_filesize 10G

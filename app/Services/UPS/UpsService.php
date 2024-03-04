@@ -504,7 +504,7 @@ class UpsService
                 ];
             }
        } catch (Exception $e) {
-            Log::info('UPS Error'. $e->getMessage());
+            
             return (object) [
                 'success' => false,
                 'error' => [
@@ -548,7 +548,7 @@ class UpsService
                 ];
             }
        } catch (Exception $e) {
-            Log::info('UPS Error'. $e->getMessage());
+            
             return (object) [
                 'success' => false,
                 'error' => [
@@ -600,7 +600,7 @@ class UpsService
             }
 
        } catch (Exception $e) {
-           Log::info('UPS Error'. $e->getMessage());
+           
             return (object) [
                 'success' => false,
                 'error' => [
@@ -644,7 +644,7 @@ class UpsService
                     ];
                 }
             } catch (Exception $e) {
-            Log::info('UPS Error'. $e->getMessage());
+            
             return (object) [
                 'success' => false,
                 'error' => [

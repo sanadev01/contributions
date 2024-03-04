@@ -250,6 +250,15 @@
                     </li>
                     @endcan
 
+                    @can('viewAny', App\Models\Rate::class)
+                    <li class="{{ $isActive(['admin.rates.zone-profit.index']) }}">
+                        <a href="{{ route('admin.rates.zone-profit.index') }}">
+                            <i class="icon_adjst feather icon-circle"></i>
+                            <span class="menu-title">Zone Profits</span>
+                        </a>
+                    </li>
+                    @endcan
+
                 </ul>
             </li>
             @endif
@@ -337,10 +346,10 @@
                     </li>
                     @endcan
                     @can('viewAnjunReport', App\Models\Reports::class)
-                    <li class="{{ $isActive(['admin.reports.anjun.index']) }}">
-                        <a href="{{ route('admin.reports.anjun.index') }}">
+                    <li @if(request('type')=='anjun') class="{{ $isActive(['admin.reports.anjun.index']) }}" @endif>
+                        <a href="{{ route('admin.reports.anjun.index') }}?type=anjun">
                             <i class="icon_adjst feather icon-circle"></i>
-                            <span class="menu-title">@lang('menu.Reports.Anjun Report')</span>
+                            <span class="menu-title">@lang('menu.Reports.Service Report')</span>
                         </a>
                     </li>
                     @endcan

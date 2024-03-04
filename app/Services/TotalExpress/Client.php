@@ -1,18 +1,11 @@
 <?php
 
 namespace App\Services\TotalExpress;
-
-use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\OrderTracking;
-use App\Models\ShippingService;
-use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Http;
-use App\Models\Warehouse\DeliveryBill;
 use App\Services\TotalExpress\Services\Parcel;
 use GuzzleHttp\Client as GuzzleClient;
-use App\Services\Converters\UnitsConverter;
-use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Models\PackageError;
 use App\Services\TotalExpress\Services\Overpack;
 
@@ -59,16 +52,47 @@ class Client
             'Accept' => 'application/json'
         ];
     }
+    
+    public function labelUrlUpdate(Order $order) {
+
+        $apiResponse = json_decode($order->api_response); 
+        $response = $apiResponse->orderResponse; 
+        $id = $response->data->id;
+        $getLabel = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/orders/$id/cn23-merged");
+        $getLabelResponse = json_decode($getLabel);
+
+        if ($getLabelResponse->status=="SUCCESS"){
+            $mergedResponse = [
+            'orderResponse' => $response,
+            'labelResponse' => $getLabelResponse,
+            ];
+
+            $order->update([
+                'corrios_tracking_code' => optional(optional($getLabelResponse->data)->cn23_numbers)[0],
+                'api_response' => json_encode($mergedResponse),
+                'cn23' => [
+                    "tracking_code" =>  optional(optional($getLabelResponse->data)->cn23_numbers)[0],
+                    "stamp_url" => route('warehouse.cn23.download',$order->id),
+                    'leve' => false
+                ],
+            ]);
+        }
+        else{
+            return new PackageError("Server Error: ".new HandleError($getLabel));
+        }
+    }
 
     public function createPackage(Order $order)
     {
         $shippingRequest = (new Parcel($order))->getRequestBody();
+        \Log::info('total express');
+        \Log::info($shippingRequest);
         $apiResponse = json_decode($order->api_response); 
         try {
                 if(!$order->api_response){
                     $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/orders", $shippingRequest);
-                    $response = json_decode($request); 
-
+                    $response = json_decode($request);
+                    
                     if ($response->status=="SUCCESS" && $response->data && $response->data->id ) {
                 
                         $mergedResponse = [
@@ -81,7 +105,7 @@ class Client
                         $order->refresh();
 
                     } else {
-                        return new PackageError(new HandleError($request));
+                        return new PackageError("Server Error: ".new HandleError($request));
                     }
                 }
                 if($order->api_response) {
@@ -89,9 +113,10 @@ class Client
                     $apiResponse = json_decode($order->api_response); 
                     $response = $apiResponse->orderResponse; 
                     $id = $response->data->id;  
+                    
                     $getLabel = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/orders/$id/cn23-merged");
                     $getLabelResponse = json_decode($getLabel);
-
+                    
                     if ($getLabelResponse->status=="SUCCESS"){
                         $mergedResponse = [
                         'orderResponse' => $response,
@@ -109,7 +134,7 @@ class Client
                         ]);
                     }
                     else{
-                        return new PackageError(new HandleError($getLabel));
+                        return new PackageError("Server Error: ".new HandleError($getLabel));
                     }
 
                     // store order status in order tracking
@@ -145,8 +170,7 @@ class Client
                 $overpackRequest =  $overpack->getRequestBody();
                 $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/overpacks", $overpackRequest);
                 $response = json_decode($request);
-                \Log::info('over pack');
-                \Log::info([$response]);
+                
                 if($response->status=="SUCCESS"){
                     $container->update([
                     'unit_code' => $response->data->reference,
@@ -183,8 +207,7 @@ class Client
             $data =  $response->data;
             $request = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/overpacks/$data->id/label");
             $response = json_decode($request);
-            \Log::info('over pack label');
-            \Log::info([$response]);
+            
             if($response->status=="SUCCESS"){
             return [
                 'type'=>'alert-success',
@@ -236,6 +259,48 @@ class Client
                 'message'=>$e->getMessage()
             ];
         }
+    }
+
+    public function getPacketTracking($trackingNumbers)
+    {
+        $trackings = [];
+        foreach ($trackingNumbers as $code) {
+            $orderId = json_decode(Order::where('corrios_tracking_code', $code)->value('api_response'))->orderResponse->data->id;
+            try {
+                $request = Http::withHeaders($this->getHeaders())->get("$this->baseUrl/v1/orders/$orderId/status");
+                $response = json_decode($request);
+
+                if ($response->status == "SUCCESS") {
+                    $eventData = [
+                        'createdAt' => $response->data->status->created_at,
+                        'description' => $response->data->status->macro_status->description,
+                        'title' => $response->data->status->macro_status->title,
+                        'code' => $response->data->status->macro_status->tracking_code
+                    ];
+
+                    $trackingInfo = [
+                        'trackingNumber' => $code,
+                        'Events' => $eventData
+                    ];
+
+                    array_push($trackings, $trackingInfo);
+                } else {
+                    return [
+                        'success' => false,
+                        'message' => (new HandleError($request))->getMessage()
+                    ];
+                }
+            } catch (\Throwable $e) {
+                return [
+                    'type' => 'alert-danger',
+                    'message' => $e->getMessage()
+                ];
+            }
+        }
+        return [
+            'success' => true,
+            'data' => $trackings,
+        ];
     }
 
 }

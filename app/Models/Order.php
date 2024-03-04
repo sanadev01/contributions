@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\State;
+use App\Models\ZoneCountry;
 use App\Services\GSS\Client;
 use App\Models\OrderTracking;
 use Illuminate\Http\UploadedFile;
@@ -67,6 +68,10 @@ class Order extends Model implements Package
     const CHILE = 46;
     const Guatemala = 94;
     const US = 250;
+    const PORTUGAL = 188;
+    const COLOMBIA = 50;
+    const Japan = 114;
+    const UK = 249;
 
     public $user_profit = 0;
     public function scopeParcelReady(Builder $query)
@@ -352,7 +357,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS) {
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_CEP) {
 
                 return 'USPS';
 
@@ -377,10 +383,16 @@ class Order extends Model implements Package
                 return 'Prime5';
 
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium || optional($this->shippingService)->service_sub_class == ShippingService::LT_PRIME){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium || optional($this->shippingService)->service_sub_class == ShippingService::LT_PRIME || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_LT_Premium ||  optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_CO_EMS ||  optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_CO_REG){
 
                 return 'PostPlus';
 
+            }
+            elseif(optional($this->shippingService)->is_anjun_china_service_sub_class){
+                return 'Correios Brazil';
+            }
+            elseif(optional($this->shippingService)->isAnjunService()){
+                return 'Correios Brazil';
             }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS ){
 
@@ -388,9 +400,14 @@ class Order extends Model implements Package
 
             }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::HD_Express){
-
                 return 'HD Express';
+            }
+            elseif(optional($this->shippingService)->is_bcn_service){
+                return 'Correios Brazil';
+            }
+            elseif(optional($this->shippingService)->is_hound_express){
 
+                return 'Hound Express';
             }
             return 'Correios Brazil';
         }
@@ -508,17 +525,20 @@ class Order extends Model implements Package
         return ($api?'TM':'HD')."{$tempWhr}".(optional($this->recipient)->country->code??"BR");
     }
 
-    public function doCalculations($onVolumetricWeight=true)
+    public function doCalculations($onVolumetricWeight=true, $isServices = false)
     {
         $shippingService = $this->shippingService;
-
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
         if ($shippingService && in_array($shippingService->service_sub_class, $this->usShippingServicesSubClasses())) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
         }elseif ($shippingService && $shippingService->isGSSService()) {
             $shippingCost = $this->user_declared_freight;
-            $this->calculateGSSProfit($shippingCost, $shippingService);
+            if(!$isServices){
+                $this->calculateGSSProfit($shippingCost, $shippingService);
+            }else{
+                $shippingCost = $this->shipping_value;
+            }
         }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
@@ -607,8 +627,6 @@ class Order extends Model implements Package
 
     public function addAffiliateCommissionSale(User $referrer, $commissionCalculator)
     {
-        \Log::info($this);
-        \Log::info($this->user_id);
         return $this->affiliateSale()->create( [
             'value' => $commissionCalculator->getValue(),
             'type' => $commissionCalculator->getCommissionSetting()->type,
@@ -694,7 +712,7 @@ class Order extends Model implements Package
 
     public function getDistributionModality(): int
     {
-        if ($this->shippingService && in_array($this->shippingService->service_sub_class, $this->anjunShippingServicesSubClasses())) {
+                if ($this->shippingService && in_array($this->shippingService->service_sub_class, $this->anjunShippingServicesSubClasses())) {
             return __default($this->getCorrespondenceServiceCode($this->shippingService->service_sub_class), ModelsPackage::SERVICE_CLASS_STANDARD);
         }
         return __default( optional($this->shippingService)->service_sub_class ,ModelsPackage::SERVICE_CLASS_STANDARD );
@@ -909,14 +927,18 @@ class Order extends Model implements Package
 
     public function calculateGSSProfit($shippingCost, $shippingService)
     {
-        $gssProfit = setting('gss_profit', null,  $this->user->id);
-        if($gssProfit == null || $gssProfit == 0) { 
-            $gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
-        }
+        // $gssProfit = setting('gss_profit', null,  $this->user->id);
+        // if($gssProfit == null || $gssProfit == 0) { 
+        //     $gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
+        // }
+        $gssCost = 0;
+        $gssProfit = ZoneCountry::where('shipping_service_id', $shippingService->id)
+                    ->where('country_id', $this->recipient->country_id)
+                    ->value('profit_percentage');
         $profit = round($gssProfit / 100, 2);
         $client = new Client();
         $response = $client->getCostRates($this, $shippingService);
-        $data = $response->getData();
+        $data = optional($response)->getData();
         if ($data->isSuccess && $data->output > 0){
             $gssCost = $data->output;
         }

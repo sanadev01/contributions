@@ -43,7 +43,7 @@ class Client{
     }
     public function createPackage(Package $order)
     {  
-        $shippingRequest = (new Parcel())->getRequestBody($order);
+        $shippingRequest = (new Parcel($order))->getRequestBody();
         try {
             $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/parcels", $shippingRequest);
             $data = json_decode($response);
@@ -75,7 +75,7 @@ class Client{
                 return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->status)->errorDetails[0]);
             }
             else {
-                return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->errorDetails[0])->detail);
+                return new PackageError("Error while creating parcel. Description: Server Error".optional(optional($data)->errorDetails[0])->detail);
             }
             return null;
         }catch (\Exception $exception){

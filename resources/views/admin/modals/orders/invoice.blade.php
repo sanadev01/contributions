@@ -43,7 +43,7 @@
                 <div class="recipient-info my-2">
                     <p> {{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }} </p>
                     <p>{{ optional($order->recipient)->address }} {{ optional($order->recipient)->address2 }} {{ optional($order->recipient)->street_no }}<br>
-                        {{ optional($order->recipient)->city }}, {{ optional(optional($order->recipient)->state)->code }}, {{ optional($order->recipient)->zipcode }}<br>
+                        {{ optional($order->recipient)->city }}, {{ optional($order->recipient)->region }}, {{ optional(optional($order->recipient)->state)->code }}, {{ optional($order->recipient)->zipcode }}<br>
                         {{ optional(optional($order->recipient)->country)->name }}<br>
                         <i class="feather icon-phone"></i> Ph#: {{ optional($order->recipient)->phone }}
                     </p>
@@ -135,10 +135,12 @@
                                 <td @if (!$appliedVolumeWeight) colspan="2" @endif>{{ $order->measurement_unit }} </td>
                                 @if ($appliedVolumeWeight)
                                 <td>
-                                    Actual Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value + $order->discountCost(), 2) }}</span> to {{ round($order->getWeight('kg'),2) }} Kg<br>
-                                    Applied Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value, 2) }}</span> to {{ $order->measurement_unit == 'kg/cm'? round($appliedVolumeWeight,2):round($appliedVolumeWeight / 2.205, 2) }} Kg <br>
-                                    @if($order->shipping_value + $order->discountCost() - $order->shipping_value > 0)
-                                        Difference <span class="text-primary font-weight-bold">${{ $order->discountCost() }} </span>Saving
+                                    @if(!$order->shippingService->is_total_express)
+                                        Actual Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value + $order->discountCost(), 2) }}</span> to {{ round($order->getWeight('kg'),2) }} Kg<br>
+                                        Applied Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value, 2) }}</span> to {{ $order->measurement_unit == 'kg/cm'? round($appliedVolumeWeight,2):round($appliedVolumeWeight / 2.205, 2) }} Kg <br>
+                                        @if($order->shipping_value + $order->discountCost() - $order->shipping_value > 0)
+                                            Difference <span class="text-primary font-weight-bold">${{ $order->discountCost() }} </span>Saving
+                                        @endif
                                     @endif
                                 </td>
                                 @endif
@@ -152,7 +154,7 @@
         <!-- Invoice Items Details -->
         <div id="invoice-items-details" class="pt-1 invoice-items-table">
             <div class="row">
-                <div class="table-responsive-md col-12">
+                <div class="table-responsive-md col-12" style="min-height: 0px;">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -162,9 +164,9 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{{ $order->shipping_service_name }}</td>
+                                <td>{{ $order->shippingService->name }}</td>
                                 <td>
-                                    @if($order->sender_city)
+                                    @if($order->sender_city || $order->shippingService->usps_service_sub_class)
                                         {{ number_format($order->gross_total,2) }}
                                     @else
                                         {{ number_format($order->shipping_value,2) }}
@@ -179,7 +181,7 @@
         </div>
         <div id="invoice-items-details" class="pt-1 invoice-items-table">
             <div class="row">
-                <div class="table-responsive-md col-12">
+                <div class="table-responsive-md col-12" style="min-height: 0px;">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -274,7 +276,7 @@
         <div id="invoice-total-details" class="invoice-total-table">
             <div class="row">
                 <div class="col-7 offset-5">
-                    <div class="table-responsive-md">
+                    <div class="table-responsive-md" style="min-height: 0px;">
                         <table class="table table-bordered">
                             <tbody>
 

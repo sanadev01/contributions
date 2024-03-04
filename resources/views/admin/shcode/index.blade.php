@@ -7,66 +7,26 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">ShCodes</h4>
-                        <div>
-                            <a href="{{ route('admin.shcode-export.create') }}" class="pull-right btn btn-secondary">@lang('shcode.Import Sh Code')</a>
-                            <a href="{{ route('admin.shcode-export.index') }}" class="pull-right btn btn-success mr-2">@lang('shcode.Download')</a>
-                            <a href="{{ route('admin.shcode.create') }}" class="pull-right btn btn-primary mr-2">@lang('shcode.Create Sh Code')</a>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ route('admin.shcode-export.create') }}" class="btn btn-secondary mr-2">@lang('shcode.Import Sh Code')</a>
+                        
+                            <div class="dropdown">
+                                <button class="btn btn-success dropdown-toggle pt-1 pb-1 mr-2" type="button" id="downloadDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    @lang('shcode.Download')
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="downloadDropdown">
+                                    <a class="dropdown-item" href="{{ route('admin.shcode-export.index', ['type' => 'All']) }}">All</a>
+                                    <a class="dropdown-item" href="{{ route('admin.shcode-export.index', ['type' => 'Postal (Correios)']) }}">Postal (Correios)</a>
+                                    <a class="dropdown-item" href="{{ route('admin.shcode-export.index', ['type' => 'Courier']) }}">Courier</a>
+                                </div>
+                            </div>
+                        
+                            <a href="{{ route('admin.shcode.create') }}" class="btn btn-primary">@lang('shcode.Create Sh Code')</a>
                         </div>
                     </div>
                     <div class="card-content">
-                        <div class="mt-1">
-                            <table class="table mb-0">
-                                <thead>
-                                <tr>
-                                    <th>
-                                        Code
-                                    </th>
-                                    <th>
-                                        English
-                                    </th>
-                                    <th>
-                                        Portuguese
-                                    </th>
-                                    <th>
-                                        Spanish
-                                    </th>
-                                    <th>
-                                        @lang('role.Action')
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($shCodes as $shCode)
-                                        <tr>
-                                            <td>
-                                                {{ $shCode->code }}
-                                            </td>
-                                            <td>
-                                                {{ optional(explode('-------',$shCode->description))[0] }}
-                                            </td>
-                                            <td>
-                                                {{ optional(explode('-------',$shCode->description))[1] }}
-                                            </td>
-                                            <td>
-                                                {{ optional(explode('-------',$shCode->description))[2] }}
-                                            </td>
-                                            <td class="d-flex">
-                                                <a href="{{ route('admin.shcode.edit',$shCode) }}" class="btn btn-primary mr-2" title="Edit Shcode">
-                                                    <i class="feather icon-edit"></i>
-                                                </a>
-                                                
-                                                <form action="{{ route('admin.shcode.destroy',$shCode) }}" method="post" onsubmit="return confirmDelete()">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-danger" title="Delete Shcode">
-                                                        <i class="feather icon-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        <div class="mt-1"> 
+                            <livewire:sh-code-table />  
                         </div>
                     </div>
                 </div>

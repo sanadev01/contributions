@@ -2,19 +2,18 @@
 
 namespace App\Services\Excel\Export;
 
-use App\Models\ProfitPackage;
-use App\Models\ProfitSetting;
 use Illuminate\Support\Collection;
 
 class ExportShCodes extends AbstractExportService
 {
     private $shCodes;
-
+    private $type;
     private $currentRow = 1;
 
-    public function __construct(Collection $shCodes)
+    public function __construct(Collection $shCodes, $type = null)
     {
         $this->shCodes = $shCodes;
+        $this->type = $type;
 
         parent::__construct();
     }
@@ -22,25 +21,25 @@ class ExportShCodes extends AbstractExportService
     public function handle()
     {
         $this->prepareExcelSheet();
-
         return $this->download();
     }
 
     private function prepareExcelSheet()
     {
         $this->setExcelHeaderRow();
-
         $row = $this->currentRow;
 
         foreach ($this->shCodes as $shCode) {
-            $description = explode('-------',$shCode->description);
-            $this->setCellValue('A'.$row, $shCode->code);
-            $this->setCellValue('B'.$row, optional($description)[0]);
-            $this->setCellValue('C'.$row, optional($description)[1]);
-            $this->setCellValue('D'.$row, optional($description)[2]);
-            $row++;
+            if (!$this->type || $shCode->type === $this->type) {
+                $description = explode('-------', $shCode->description);
+                $this->setCellValue('A'.$row, $shCode->code);
+                $this->setCellValue('B'.$row, optional($description)[0]);
+                $this->setCellValue('C'.$row, optional($description)[1]);
+                $this->setCellValue('D'.$row, optional($description)[2]);
+                $this->setCellValue('E'.$row, $shCode->type);
+                $row++;
+            }
         }
-
         $this->currentRow = $row;
     }
 
@@ -57,9 +56,12 @@ class ExportShCodes extends AbstractExportService
 
         $this->setColumnWidth('D', 20);
         $this->setCellValue('D1', 'Spanish');
+        
+        $this->setColumnWidth('E', 20);
+        $this->setCellValue('E1', 'Type');
 
-        $this->setBackgroundColor('A1:D1', '2b5cab');
-        $this->setColor('A1:D1', 'FFFFFF');
+        $this->setBackgroundColor('A1:E1', '2b5cab');
+        $this->setColor('A1:E1', 'FFFFFF');
 
         $this->currentRow++;
     }

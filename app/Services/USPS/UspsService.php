@@ -71,7 +71,7 @@ class UspsService
             }
             
         } catch (Exception $ex) {
-            Log::info('USPS Error'. $ex->getMessage());
+            
             return (Array)[
                 'success' => false,
                 'message' => $ex->getMessage(),
@@ -146,7 +146,7 @@ class UspsService
             }
             
         } catch (Exception $e) {
-            Log::info('USPS Error'. $e->getMessage());
+            
             return (object) [
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -174,7 +174,7 @@ class UspsService
             ];
 
         } catch (Exception $e) {
-            Log::info('USPS Error'. $e->getMessage());
+            
             return (object) [
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -221,7 +221,7 @@ class UspsService
             }
 
         } catch (Exception $e) {
-            Log::info('USPS Error'. $e->getMessage());
+            
             return (object) [
                 'success' => false,
                 'message' => $e->getMessage(),

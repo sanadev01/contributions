@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Concerns\HasJsonResponse;
+use App\Models\Country;
 
 class CreateRequest extends FormRequest
 {
@@ -93,9 +94,9 @@ class CreateRequest extends FormRequest
         }
 
         if(optional($request->parcel)['measurement_unit'] == 'kg/cm'){
-            $rules["parcel.weight"] = "required|numeric|gt:0|max:30";
+            $rules["parcel.weight"] = "required|numeric|gt:0|max:60";
         }else{
-            $rules["parcel.weight"] = "required|numeric|gt:0|max:66.15";
+            $rules["parcel.weight"] = "required|numeric|gt:0|max:132.28";
         }
         if (is_numeric( optional($request->recipient)['country_id'])){
             $rules["recipient.country_id"] = "required|exists:countries,id";
@@ -119,6 +120,36 @@ class CreateRequest extends FormRequest
             $rules['sender.sender_phone'] = 'sometimes|string|max:100';
             $rules['sender.sender_zipcode'] = 'required';
             $rules['recipient.phone'] = 'required|string|max:12';
+
+        }
+        if ($shippingService){
+            if ($shippingService->is_sweden_post){
+                $limit = 60;
+            } else if ($shippingService->is_geps){
+                $limit = 50;
+            } else if ($shippingService->is_correios){
+                $limit = 500;
+            } else {
+                $limit = 200;
+            }
+            $rules['products.*.description'] = 'required|string|max:' . $limit;
+        }
+
+
+
+        if ($request->recipient['country_id'] == 'BR' || $request->recipient['country_id'] == 30) {
+            $rules['recipient.phone'] = 'required|string|regex:/^\+55\d{8,12}$/';
+        }
+
+        if ($shippingService && $shippingService->is_total_express) {
+
+            $rules['products.*.description'] = 'required|max:60';
+        }
+
+        if ($request->recipient['country_id'] == 'UK' || $request->recipient['country_id'] == Country::UK) {
+            $rules['recipient.state_id'] = 'nullable';
+            $rules['recipient.tax_id'] = 'nullable';
+            $rules['recipient.street_no'] = 'nullable';
         }
 
         return $rules;
@@ -132,6 +163,8 @@ class CreateRequest extends FormRequest
             'sender.sender_country_id.required_if' => __('validation.sender_country_id.required_if'),
             'sender.sender_state_id.required_if' => __('validation.sender_state_id.required_if'),
             'sender.sender_city.required_if' => __('validation.sender_city.required_if'),
+            'recipient.phone.required' => 'The phone number field is required.',
+            'recipient.phone.regex' => 'Please enter a valid phone number in international format. Example: +551234567890',
         ];
     }
 }

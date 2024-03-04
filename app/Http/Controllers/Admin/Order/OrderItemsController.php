@@ -12,6 +12,8 @@ use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
+use App\Models\ShCode;
+use App\Models\User;
 
 class OrderItemsController extends Controller
 {
@@ -53,6 +55,10 @@ class OrderItemsController extends Controller
      */
     public function store(CreateRequest $request,Order $order)
     {
+        if($order->items->isEmpty()){
+            session()->flash('alert-danger', 'Please add atleast one item!');
+            return redirect()->route('admin.orders.order-details.index',[$order->id]);
+        }
         $shippingService = ShippingService::find($request->shipping_service_id);
 
         $this->authorize('editItems',$order);
@@ -71,8 +77,8 @@ class OrderItemsController extends Controller
         }
         if($this->orderRepository->GePSService($request->shipping_service_id)){
             $value = 0;
-            if (count($request->items) >= 1) {
-                foreach ($request->items as $key => $item) {
+            if (count($order->items) >= 1) {
+                foreach ($order->items as $key => $item) {
                     $value += ($item['value'])*($item['quantity']);
                 }
             }
@@ -81,8 +87,9 @@ class OrderItemsController extends Controller
                 return back()->withInput();
             }
         }
-        if(in_array($shippingService->service_sub_class, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Prime5, ShippingService::Parcel_Post, ShippingService::Prime5RIO])  ) {
-            if(count($request->items) > 5) {
+        if(in_array($shippingService->service_sub_class, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Parcel_Post, ShippingService::Prime5RIO])  ) {
+            if(count($order->items) > 5) {
+                 
                 session()->flash('alert-danger', 'More than 5 Items are Not Allowed with the Selected Service');
                 return back()->withInput();
             }
@@ -109,8 +116,7 @@ class OrderItemsController extends Controller
          */
         $shipping_service_data = \DB::table('shipping_services')
             ->select('max_sum_of_all_products','api','service_api_alias')
-            ->find($request->shipping_service_id)
-        ;
+            ->find($request->shipping_service_id);
         if ($shipping_service_data->api == 'sinerlog' && $shipping_service_data->service_api_alias == 'XP') {
             
             $sum_of_all_products = 0;
@@ -126,6 +132,10 @@ class OrderItemsController extends Controller
         }    
         
         if ( $this->orderRepository->updateShippingAndItems($request,$order) ){
+            if ($this->deleteInvalidShCode($order, $shippingService)){
+                session()->flash('alert-danger','Please remove invalid sh code and continue!');
+                return redirect()->route('admin.orders.order-details.index',[$order->encrypted_id]);
+            }
             session()->flash('alert-success','orders.Order Placed');
             if ($order->user->hasRole('wholesale') && $order->user->insurance == true) 
             {
@@ -134,6 +144,14 @@ class OrderItemsController extends Controller
             return \redirect()->route('admin.orders.services.index',$order->encrypted_id);
         }
         return \back()->withInput();
+    }
+    public function deleteInvalidShCode($order, $shippingService)
+    {
+        $itemType = optional($shippingService)->is_total_express ? 'Courier' : 'Postal (Correios)';
+        $itemsToDelete = $order->items->filter(function ($item) use($itemType){
+            return ShCode::where('code',$item->sh_code)->where('type',$itemType)->first()==null;  
+        });
+        return $itemsToDelete->count()>0;
     }
 
     public function uspsRates(Request $request)
@@ -156,9 +174,16 @@ class OrderItemsController extends Controller
 
         if($response->success == true)
         {
+            $rate =  $response->data['total_amount'];
+            \Log::info('with out profit');
+            \Log::info($rate);
+            $profit = setting('usps_profit', null, $order->user_id)??(int) setting('usps_profit', null, User::ROLE_ADMIN);
+            $rate = $rate + ($rate/100) * $profit;
+            \Log::info('with profit');
+            \Log::info($rate);             
             return (Array)[
                 'success' => true,
-                'total_amount' => $response->data['total_amount'],
+                'total_amount' => $rate,
             ]; 
         }
 

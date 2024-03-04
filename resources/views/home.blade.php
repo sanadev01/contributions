@@ -170,29 +170,6 @@
         </ol>
     </nav>
     {{-- contact us --}}
-    <div class='row no-gutters d-flex align-items-center'>
-        <div class="col-xl-4 col-lg-12">
-            <div class="light-green-color welcome-admin height-100">
-                <div class="ml-3">
-                    <dl>
-                        <div class="font-weight-bold large-heading-text pt-3 ">Welcome to the Dashboard 👋
-                        </div>
-                        <dd class="font-weight-light pb-2 mb-4">Your one-stop destination for tracking and analyzing order data.</dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-8 col-lg-12 light-green-color  border-radius-15 p-2">
-            <div class="row mt-0 ">
-                <div class="col-12 pb-xl-2 pb-1 h-25">
-                    <a href="{{ url('tickets') }}" target="_blank"> <img class="banner border-radius-15" rounded-corners
-                            src="{{ asset('images/kpi-banner.png') }}" width="100%" height="auto" alt="contact us">
-                    </a>
-                </div>
-            </div>
-        </div>
-
-    </div>
 
     <!-- Dashboard Analytics Start -->
     <section id="dashboard-analytics"> 
@@ -206,7 +183,7 @@
                             </h2>
                             <p class="mb-0">
                                 <strong> {{ auth()->user()->name . ' ' . auth()->user()->last_name }} <br>
-                                    {!! auth()->user()->pobox_number !!} </strong>
+                                    {!! auth()->user()->pobox_number !!} (HomeDeliverybr)</strong>
                                 <br>
                                 {{-- {!! auth()->user()->getPoboxAddress() ?? '' !!} <br> --}}
                             <table>

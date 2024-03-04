@@ -101,6 +101,13 @@
                 window.activeGuatmalaFields();
                 return;
             }
+            if(val == '249')
+            {
+                window.onSelectUK()
+                return;
+            }else{
+                window.onDeselectUK();
+            }
             const old_region = $('#region').data('value');
 
             if(val == '46'){
@@ -162,6 +169,13 @@
                 window.getHDChileRegions();
                 $('#country_message').empty();
                 return;
+            }
+            if(val == '249')
+            {
+                window.onSelectUK();
+                return;
+            }else{
+                window.onDeselectUK();
             }
             if(val == '94')
             {
@@ -627,5 +641,21 @@
             })
         }
     }
- 
-</script>
+    onSelectUK = function(){
+        $('#div_state').css('display', 'none')
+        
+        $('#state_input').css('display', 'block');
+        $('#state_input').prop('disabled', false);
+        
+        $('#div_state').css('display', 'none');
+        $('#state_id').prop('disabled', true);
+        
+        $('#div_communes').css('display', 'none')
+        $('#commune').prop('disabled', true);
+    }
+    onDeselectUK = function(){
+        
+        $('#state_input').css('display', 'none');
+        $('#state_input').prop('disabled', true);
+    }
+    </script>

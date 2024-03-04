@@ -16,6 +16,7 @@ class TrackingUserResource extends JsonResource
     {
         return [
             'name' => $this->user->full_name,
+            'date' => $this->updated_at,
             'corrios_tracking_code'=>$this->corrios_tracking_code
         ];
     }

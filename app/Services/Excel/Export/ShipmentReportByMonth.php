@@ -36,8 +36,7 @@ class ShipmentReportByMonth extends AbstractExportService
         $orderReportsRepository = new OrderReportsRepository;
         foreach ($this->months as $month) {
             $report = $orderReportsRepository->getShipmentReportOfUsersByWeight(null,$this->getMonthName($month->month), $this->request);
-            \Log::info($month->month);
-            \Log::info($this->getMonthName($month->month));
+            
             $this->setCellValue('A'.$row, $this->getMonthName($month->month));
             $this->setCellValue('B'.$row, $month->total);
             $this->setCellValue('C'.$row, round($month->weight,2));

@@ -97,7 +97,7 @@ class DeliveryBill extends Model
 
     public function isGSS()
     {
-        if(($this->containers->first()->services_subclass_code == ShippingService::GSS_PMI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EPMEI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EPMI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_FCM) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EMS)){
+        if(($this->containers->first()->services_subclass_code == ShippingService::GSS_PMI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EPMEI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EPMI) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_FCM) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_EMS) || ($this->containers->first()->services_subclass_code == ShippingService::GSS_CEP)){
             return true;
         }
     }
@@ -115,6 +115,14 @@ class DeliveryBill extends Model
         return false;
     }
 
+    public function isHoundExpress()
+    {
+        if($this->containers->first()->services_subclass_code == ShippingService::HoundExpress){
+            return true;
+        }
+        return false;
+    }
+
     public function isTotalExpress()
     {
         if($this->containers->first()->services_subclass_code == ShippingService::TOTAL_EXPRESS){
@@ -122,9 +130,19 @@ class DeliveryBill extends Model
         }
         return false;
     }
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function isAnjunChina()
+    {
+        return $this->containers->first()->hasAnjunChinaService();
+    }
+    public function isBCN()
+    {
+        return $this->containers->first()->hasBCNService();
     }
 
 }

@@ -98,6 +98,34 @@ class IndexTable extends Component
             'name' => 'Prime LT',
             'value' => Package::SERVICE_CLASS_LT_PRIME,
         ];
+        $this->services[20] = [
+            'name' => 'PostPlus Portugal',
+            'value' => Package::SERVICE_CLASS_Post_Plus_LT_Premium,
+        ];    
+        $this->services[21] = [
+            'name' => 'BCN Standard',
+            'value' => Package::SERVICE_CLASS_BCN_Standard,
+        ];
+        $this->services[22] = [
+            'name' => 'BCN Express',
+            'value' => Package::SERVICE_CLASS_BCN_EXPRESS,
+        ];
+        $this->services[23] = [
+            'name' => 'PostPlus Colombia EMS',
+            'value' => Package::SERVICE_CLASS_Post_Plus_CO_EMS,
+        ];
+        $this->services[24] = [
+            'name' => 'PostPlus Colombia REG',
+            'value' => Package::SERVICE_CLASS_Post_Plus_CO_REG,
+        ];
+        $this->services[25] = [
+            'name' => 'Japan Prime JerseyPost',
+            'value' => Package::SERVICE_CLASS_Japan_Prime,
+        ];
+        $this->services[26] = [
+            'name' => 'Japan EMS JerseyPost',
+            'value' => Package::SERVICE_CLASS_Japan_EMS,
+        ];  
         return $this->services;
     }
 }

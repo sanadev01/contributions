@@ -2,6 +2,8 @@
 
 namespace App\Services\Correios\Services\Brazil;
 
+use Carbon\Carbon;
+use App\Models\Warehouse\Container;
 use App\Services\Correios\Contracts\HasLableExport;
 
 class CN35LabelMaker implements HasLableExport
@@ -22,7 +24,7 @@ class CN35LabelMaker implements HasLableExport
     private $unitCode;
     private $OrderWeight;
 
-    public function __construct()
+    public function __construct(Container $container)
     {
         $this->companyName = '<img src="'.public_path('images/hd-1cm.png').'" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
         $this->packetType = 'PACKET STANDARD';
@@ -30,6 +32,25 @@ class CN35LabelMaker implements HasLableExport
         $this->serialNumber = 1;
         $this->flightNumber = '';
         $this->dispatchDate = '';
+        $this->containerGroup = '';
+
+        $order = $container->orders->first();
+        
+        if($order){ 
+              $this->setType($order->getOriginalWeight('kg')); 
+        }
+        
+        $this->weight =  $container->getWeight();
+        $this->dispatchNumber = $container->dispatch_number;
+        $this->originAirpot = 'MIA';
+        $this->setService($container->getServiceCode());
+        $this->destinationAirport = $container->getDestinationAriport();        
+        $this->itemsCount = $container->getPiecesCount();
+        $this->unitCode = $container->getUnitCode();
+        $firstOrderDate = optional($container->orders->first())->order_date;
+        if(optional($firstOrderDate)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
+            $this->containerGroup = $container->getGroup($container);
+        }
     }
 
     public function setCompanyName($companyName)
@@ -41,17 +62,22 @@ class CN35LabelMaker implements HasLableExport
     public function setService(int $service)
     {
         $this->service = $service;
-
-        if ( $this->service == 1 || $this->service == 9 ) {
+ 
+        if (in_array($this->service ,[1,9,18,21]) ) {
             $this->packetType = 'PACKET EXPRESS';
         }
-        if ( $this->service == 2 || $this->service == 8 ) {
+        if (in_array($this->service ,[2,8,19,20])) {
             $this->packetType = 'PACKET STANDARD';
         }
         if ( $this->service == 3 ){
             $this->packetType = 'PACKET MINI';
         }
 
+        return $this;
+    }
+    public function setPacketType($packetType)
+    {
+        $this->packetType = $packetType;
         return $this;
     }
 
@@ -176,6 +202,7 @@ class CN35LabelMaker implements HasLableExport
             'service' => $this->service,
             'unitCode' => $this->unitCode,
             'OrderWeight' => $this->OrderWeight,
+            'containerGroup' => $this->containerGroup
         ];
     }
 

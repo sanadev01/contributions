@@ -10,7 +10,7 @@ class DirectLinkReceptacle
 {
     protected $userName;
     protected $password;
-    protected $baseUrl;
+    protected $baseURL;
     protected $container;
     protected $http;
 
@@ -40,7 +40,7 @@ class DirectLinkReceptacle
         $url = $this->baseURL . 'bagscan?op=createReceptacle';
         $body = [
             "dlOfficeCode" => "600",
-            "eventId" => "34",
+            "eventId" => "18",
             "contentCode" => $contentCode,
             "countryCode" => "BR",
             "receptacleType" => "01",

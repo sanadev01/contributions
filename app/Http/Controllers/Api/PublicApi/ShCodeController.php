@@ -10,18 +10,38 @@ class ShCodeController extends Controller
 {
     public function __invoke($search = null)
     {
-        if($search){
-            $shCode = ShCode::query()
-                        ->where('code',"LIKE","%{$search}%")
-                        ->orWhere('description','LIKE',"%{$search}%")
-                        ->orderBy('description','ASC')
-                        ->get(['code','description']);
-            if(!$shCode->isEmpty()){
-                return $shCode;
-            }
+        $type = request()->has('type') ? strtolower(request()->type) : null;
+        $type = $type == "courier" ? 'Courier' : ($type == "postal" ? 'Postal (Correios)' : null);
 
+        $shCode = ShCode::query();
+
+        if ($type !== null) {
+            $shCode->where('type', $type);
+        } elseif ($search == null) {
+            $shCode->where('type', 'Postal (Correios)');
+        }
+
+        if ($search != null) {
+            $shCode->where(function ($query) use ($search) {
+                $query->where('code', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $shCodes = $shCode->orderBy('description', 'ASC')->get(['code', 'description', 'type']);
+
+        if ($shCodes->isEmpty()) {
             return apiResponse(false, 'No SH Code Found');
         }
-        return ShCode::query()->get(['code','description']);
+
+        return $shCodes->map(function ($sh) {
+            return [
+                'code' => $sh->code,
+                'type' => $sh->type,
+                'description' => $sh->description,
+            ];
+        });
+
     }
+
 }

@@ -31,12 +31,18 @@ class ShippingService extends Model
     const Packet_Standard = 33162;
     const Packet_Express = 33170;
     const Packet_Mini = 33197;
+    const AJ_Standard_CN = 34166;
+    const AJ_Express_CN = 33174;
+
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
+    const BCN_Packet_Standard = 44164;
+    const BCN_Packet_Express = 44172;
     const Brazil_Redispatch = 100;
     const GePS = 537;
     const GePS_EFormat = 540;
     const Prime5 = 773;
+    const HoundExpress = 887;
     const USPS_GROUND = 05;
     const Post_Plus_Registered = 734;
     const Post_Plus_EMS = 367;
@@ -58,6 +64,12 @@ class ShippingService extends Model
     const TOTAL_EXPRESS = 283;
     const HD_Express = 33173;
     const LT_PRIME = 776;
+    const Post_Plus_LT_Premium = 587;
+    const Post_Plus_CO_EMS = 588;
+    const Post_Plus_CO_REG = 582;
+    const Japan_Prime = 5537;
+    const Japan_EMS = 5541;
+    const GSS_CEP = 237;
 
     protected $guarded = [];
 
@@ -160,6 +172,36 @@ class ShippingService extends Model
 
         return false;
     }
+    public function isAnjunChinaService()
+    {
+        return in_array($this->service_sub_class,[self::AJ_Standard_CN,self::AJ_Express_CN]);
+    }
+    public function isAnjunChinaExpressService()
+    {
+        return self::AJ_Express_CN  == $this->service_sub_class;
+    }
+    public function isAnjunChinaStandardService()
+    {
+        return self::AJ_Standard_CN == $this->service_sub_class;
+    }
+    function getIsBcnServiceAttribute() {
+        return in_array($this->service_sub_class,[
+            self::BCN_Packet_Standard, 
+            self::BCN_Packet_Express,
+        ]);
+    }
+    
+    function getIsBcnExpressAttribute() {
+        return in_array($this->service_sub_class,[
+            self::BCN_Packet_Express,
+        ]);
+    }
+
+    function getIsBcnStandardAttribute() {
+        return in_array($this->service_sub_class,[
+            self::BCN_Packet_Standard,
+        ]);
+    }
 
     public function isGePSService()
     {
@@ -177,13 +219,18 @@ class ShippingService extends Model
     {
         return in_array($this->service_sub_class,[self::Prime5,self::Prime5RIO,self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);
     }
+
+    function getIsHoundExpressAttribute(){
+        return in_array($this->service_sub_class,[self::HoundExpress]); 
+    }
+
     function getIsDirectlinkCountryAttribute(){
         return in_array($this->service_sub_class,[self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);
     }
 
     public function isPostPlusService()
     {
-        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime || $this->service_sub_class == self::Post_Plus_Premium || $this->service_sub_class == self::LT_PRIME){
+        if($this->service_sub_class == self::Post_Plus_Registered || $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime || $this->service_sub_class == self::Post_Plus_Premium || $this->service_sub_class == self::LT_PRIME || $this->service_sub_class == self::Post_Plus_LT_Premium || $this->service_sub_class == self::Post_Plus_CO_EMS || $this->service_sub_class == self::Post_Plus_CO_REG){
             return true;
         }
         return false;
@@ -224,7 +271,7 @@ class ShippingService extends Model
 
     public function isGSSService()
     {
-        if($this->service_sub_class == self::GSS_PMI || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_FCM || $this->service_sub_class == self::GSS_EMS){
+        if($this->service_sub_class == self::GSS_PMI || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_FCM || $this->service_sub_class == self::GSS_EMS || $this->service_sub_class == self::GSS_CEP){
             return true;
         }
         return false;
@@ -285,6 +332,8 @@ class ShippingService extends Model
             self::GePS,
             self::GePS_EFormat,
             self::Parcel_Post,
+            self::Japan_Prime,
+            self::Japan_EMS,
         ];
     }
 
@@ -342,7 +391,11 @@ class ShippingService extends Model
     }
     public function getIsUspsGroundAttribute()
     { 
-        return $this->service_sub_class == ShippingService::USPS_GROUND;
+        return $this->service_sub_class == self::USPS_GROUND;
+    }
+    public function getIsAnjunChinaServiceSubClassAttribute()
+    {
+        return in_array($this->service_sub_class,[self::AJ_Standard_CN,self::AJ_Express_CN]);
     }
     public function getIsGdePriorityAttribute()
     { 
@@ -363,7 +416,7 @@ class ShippingService extends Model
         if ( $weight<100 ){
             $weight = 100;
         }
-        $serviceRates = $region->rates()->first();
+        $serviceRates = optional(optional($region)->rates())->first();
         if($serviceRates){
             $rate = collect($serviceRates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
             if(($rate)['leve'] && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, $order->user_id)){
@@ -397,5 +450,25 @@ class ShippingService extends Model
     }
     function getSwedenPostServiceSubClassAttribute() {
         return in_array($this->service_sub_class,[self::Prime5,self::Prime5RIO,self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);        
+    }
+
+    public function zones()
+    {
+        return $this->hasMany(ZoneCountry::class);
+    }
+    public function getIsCorreiosAttribute()
+    {
+        return in_array(
+            $this->service_sub_class,
+            [
+                self::BCN_Packet_Standard,
+                self::BCN_Packet_Express,
+                self::Packet_Standard,
+                self::Packet_Express,
+                self::AJ_Packet_Standard,
+                self::AJ_Packet_Express,
+                self::Packet_Mini,
+            ]
+        );
     }
 }

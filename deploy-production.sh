@@ -5,8 +5,8 @@ git checkout master
 git pull origin master
 rsync -av /var/repos/hd/ /var/www/hd
 cd /var/www/hd
-composer install --no-interaction
-php artisan migrate --force
-php artisan cache:clear --no-interaction
-php artisan view:clear --no-interaction
-php artisan config:clear --no-interaction
+/usr/bin/php7.4 composer.phar install --no-interaction
+/usr/bin/php7.4 artisan migrate --force
+/usr/bin/php7.4 artisan cache:clear --no-interaction
+/usr/bin/php7.4 artisan view:clear --no-interaction
+/usr/bin/php7.4 artisan config:clear --no-interaction

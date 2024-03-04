@@ -45,6 +45,17 @@ return [
             283 => 'Total Express',
             33173 => 'HD Express',
             776 => 'LT Prime',
+            887 => 'Hound Express',
+            44164 => 'Packet Standard B',
+            44172 => 'Packet Express B',
+            34166 => "AJ China Standard",
+            33174 => "AJ China Express",
+            587 => "PostPlus Portugal",
+            588 => "PostPlus Colombia EMS",
+            582 => "PostPlus Colombia Reg",
+            5537 => 'Japan Prime JerseyPost',
+            5541 => 'Japan EMS JerseyPost',
+            237 => 'GSS CEP',
         ]
     ]
 ];

@@ -27,7 +27,7 @@ class GePSShippingService
 
     public function isAvailableFor($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::GePS || $shippingService->service_sub_class == ShippingService::GePS_EFormat || $shippingService->service_sub_class == ShippingService::Parcel_Post) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::GePS || $shippingService->service_sub_class == ShippingService::GePS_EFormat || $shippingService->service_sub_class == ShippingService::Parcel_Post || $shippingService->service_sub_class == ShippingService::Japan_Prime || $shippingService->service_sub_class == ShippingService::Japan_EMS) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }
@@ -35,7 +35,7 @@ class GePSShippingService
 
     public function isAvailableForInternational($shippingService)
     {
-        if(($shippingService->service_sub_class == ShippingService::GePS || $shippingService->service_sub_class == ShippingService::GePS_EFormat || $shippingService->service_sub_class == ShippingService::Parcel_Post) && $this->weight <= $shippingService->max_weight_allowed)
+        if(($shippingService->service_sub_class == ShippingService::GePS || $shippingService->service_sub_class == ShippingService::GePS_EFormat || $shippingService->service_sub_class == ShippingService::Parcel_Post || $shippingService->service_sub_class == ShippingService::Japan_Prime || $shippingService->service_sub_class == ShippingService::Japan_EMS) && $this->weight <= $shippingService->max_weight_allowed)
         {
             return true;
         }

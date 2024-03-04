@@ -30,7 +30,7 @@ class OrderTrackingResource extends JsonResource
             'tracking_id' => $this->order->tracking_id,
             'tracking_code' => $this->order->corrios_tracking_code,
             'city' => $this->order->recipient->city,
-            'state' => $this->order->recipient->State->code,
+            'state' => optional(optional(optional($this->order)->recipient)->State)->code,
             'zipcode' => $this->order->recipient->zipcode,
             'country' => $this->order->recipient->country->code,
         ];

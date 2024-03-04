@@ -38,11 +38,12 @@ class SwedenPostContainerRepository
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
-            if(!$container->is_sweden_post_service)
+            if(!in_array($container->services_subclass_code,[ShippingService::Prime5,ShippingService::Prime5RIO]))
             {
                 DB::commit();
                 return $container;
             }
+            
             $response =  (new DirectLinkReceptacle($container))->create($request->services_subclass_code);
             $data = $response->getData();
             if ($data->isSuccess) {

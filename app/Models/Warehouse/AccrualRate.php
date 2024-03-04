@@ -92,6 +92,21 @@ class AccrualRate extends Model
         if ( $this->service == Package::SERVICE_CLASS_LT_PRIME ){
             return "Prime LT";
         }
+        if ( $this->service == Package::SERVICE_CLASS_Post_Plus_LT_Premium ){
+            return "PostPlus Portugal";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_Post_Plus_CO_EMS ){
+            return "PostPlus Colombia EMS";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_Post_Plus_CO_REG ){
+            return "PostPlus Colombia REG";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_Japan_Prime ){
+            return "Japan JerseyPost Prime";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_Japan_EMS ){
+            return "Japan JerseyPost EMS";
+        }
         return '';
     }
 

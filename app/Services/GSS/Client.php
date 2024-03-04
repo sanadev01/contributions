@@ -5,6 +5,7 @@ namespace App\Services\GSS;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\ZoneCountry;
 use App\Models\OrderTracking;
 use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
@@ -26,6 +27,7 @@ class Client{
     protected $baseUrl;
     protected $token;
     protected $gssProfit;
+    protected $client;
 
     public function __construct()
     {   
@@ -72,7 +74,7 @@ class Client{
     {
         $shippingRequest = (new Parcel())->getRequestBody($order);
         try {
-            $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
+                        $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
             $response = json_decode($request);
             if($response->success) {
                 $label = $this->makePDFLabel($response);
@@ -89,7 +91,7 @@ class Client{
                 return $this->addOrderTracking($order);
             }
             else {
-                return new PackageError("Error while creating parcel. Code".$response->statusCode.". Description: ".$response->message);
+                return new PackageError("Error while creating parcel. <br> Error Code: ".$response->statusCode.". <br> Error Description: ".$response->message);
             }
             return null;
         }catch (\Exception $exception){
@@ -132,7 +134,7 @@ class Client{
         } elseif($container->services_subclass_code == ShippingService::GSS_FCM) {
             $rateType = 'EFCM';
             $foreignOECode = "CWB";
-        }elseif($container->services_subclass_code == ShippingService::GSS_EMS) {
+        }elseif($container->services_subclass_code == ShippingService::GSS_EMS || $container->services_subclass_code == ShippingService::GSS_CEP) {
             $rateType = 'EMS';
             $foreignOECode = "CWB";
         }
@@ -142,30 +144,25 @@ class Client{
                 $piecesCount = $container->getPiecesCount();
             // }
 
-            if($weight >= 50) {
-                $body = [
-                    "rateType" => $rateType,
-                    "dutiable" => true,
-                    "receptacleType" => "E",
-                    "foreignOECode" => $foreignOECode,
-                    "countryCode" => "BR",
-                    "dateOfMailing" => Carbon::now(),
-                    "pieceCount" => $piecesCount,
-                    "weightInLbs" => $weight,
-                ];
-                $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-                $data= json_decode($response);
-        
-                if ($response->successful() && $data->success == true) { 
-                    
-                    return $this->addPackagesToReceptacle($data->receptacleID, $container);
+            $body = [
+                "rateType" => $rateType,
+                "dutiable" => true,
+                "receptacleType" => "E",
+                "foreignOECode" => $foreignOECode,
+                "countryCode" => "BR",
+                "dateOfMailing" => Carbon::now(),
+                "pieceCount" => $piecesCount,
+                "weightInLbs" => $weight,
+            ];
+            $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+            $data= json_decode($response);
+    
+            if ($response->successful() && $data->success == true) { 
+                
+                return $this->addPackagesToReceptacle($data->receptacleID, $container);
 
-                } else {
-                    return $this->responseUnprocessable($data->message);
-                }
-            }
-            else {
-                return $this->responseUnprocessable("Container given weight $weight Lb is less than the minimum required weight i.e. 50 Lb");
+            } else {
+                return $this->responseUnprocessable($data->message);
             }
         // }
         // else {
@@ -275,9 +272,13 @@ class Client{
 
     
     public function getServiceRates($request) {
-        
+       
+        $rateType = '';
         $service = $request->service;
         $order = Order::find($request->order_id);
+        if($order->is_paid){ 
+            return $this->responseSuccessful($order->gross_total, 'Rate Calculation Successful');
+        }
         if($service == ShippingService::GSS_PMI) {
             $rateType = 'PMI';
         } elseif($service == ShippingService::GSS_EPMEI) {
@@ -288,6 +289,8 @@ class Client{
             $rateType = 'FCM';
         } elseif($service == ShippingService::GSS_EMS) {
             $rateType = 'EMS';
+        } elseif($service == ShippingService::GSS_CEP) {
+            $rateType = 'CEP';
         }
 
         $url = $this->baseUrl . '/Utility/CalculatePostage';
@@ -312,18 +315,35 @@ class Client{
         $data= json_decode($response);
         if ($response->successful() && $data->success == true) {
             
-            //CHECK IF USER HAS GSS PROFIT SETTING
-            $this->gssProfit = setting('gss_profit', null,  $order->user_id);
-            //APPLY ADMIN SIDE GSS PROFIT SETTING
-            if($this->gssProfit == null || $this->gssProfit == 0) { 
-                $this->gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
-            }
-            $profit = round($data->calculatedPostage * ($this->gssProfit / 100), 2 );
-            $price = round($data->calculatedPostage + $profit, 2);
-            if($price > 0) {
+
+            $serviceId = ShippingService::where('service_sub_class', $service)->value('id');
+            $this->gssProfit = ZoneCountry::where('shipping_service_id', $serviceId)
+                                ->where('country_id', $order->recipient->country_id)
+                                ->value('profit_percentage');
+                if($this->gssProfit) {                
+                $userDiscount =  setting('gss_profit', null, $order->user_id);
+                $userDiscount = ($userDiscount >= 0 && $userDiscount <= 100)?$userDiscount:0;
+                $totalProfit =   $this->gssProfit - ( $this->gssProfit / 100 * $userDiscount );
+                $profit = $data->calculatedPostage / 100 * ($totalProfit);
+                $price = round($data->calculatedPostage + $profit, 2);
+                \Log::info([
+                    'service sub class'=> $service,
+                    'user id'=> $order->user_id,
+                    'user discount'=> $userDiscount,
+                    'gss profit percentage '=> $this->gssProfit,
+                    'totalProfit =  profit minus discount'=> $totalProfit,
+                    'calculatedPostage' => $data->calculatedPostage,
+                    'calculatedPostage plus totalProfit'=> $price,
+                ]);
                 return $this->responseSuccessful($price, 'Rate Calculation Successful');
-            } 
-            
+            } else {
+                \Log::info([
+                    'service sub class'=> $service, 
+                    'recipinet country'=>$order->recipient->country_id,
+                    'message'=> 'zone rate not uploaded for recipient country'
+                ]);
+                return $this->responseUnprocessable("Server Error! Rates Not Found");
+            }
         } else {
             return $this->responseUnprocessable($data->message);
         }
@@ -367,6 +387,7 @@ class Client{
 
     public function getCostRates($order, $service) {
         
+        $rateType = '';
         if($service->service_sub_class == ShippingService::GSS_PMI) {
             $rateType = 'PMI';
         } elseif($service->service_sub_class == ShippingService::GSS_EPMEI) {
@@ -377,6 +398,8 @@ class Client{
             $rateType = 'FCM';
         } elseif($service->service_sub_class == ShippingService::GSS_EMS) {
             $rateType = 'EMS';
+        } elseif($service->service_sub_class == ShippingService::GSS_CEP) {
+            $rateType = 'CEP';
         }
 
         $url = $this->baseUrl . '/Utility/CalculatePostage';
