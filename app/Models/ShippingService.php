@@ -384,6 +384,14 @@ class ShippingService extends Model
         return in_array($this->service_sub_class, [self::Prime5, self::Prime5RIO, self::DirectLinkCanada, self::DirectLinkMexico, self::DirectLinkChile, self::DirectLinkAustralia]);
     }
 
+    public function isGDEService()
+    {
+        if(in_array($this->service_sub_class, [self::GDE_PRIORITY_MAIL, self::GDE_FIRST_CLASS])){
+            return true;
+        }
+        return false;
+    }
+
     public function zones()
     {
         return $this->hasMany(ZoneCountry::class);
