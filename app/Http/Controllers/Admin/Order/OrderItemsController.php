@@ -60,7 +60,6 @@ class OrderItemsController extends Controller
             return redirect()->route('admin.orders.order-details.index',[$order->id]);
         }
         $shippingService = ShippingService::find($request->shipping_service_id);
-
         $this->authorize('editItems',$order);
 
         if ( !$order->recipient ){

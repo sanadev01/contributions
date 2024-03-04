@@ -9,6 +9,7 @@ use App\Services\SwedenPost\Services\Container\CN35CountriesLabel;
 use Carbon\Carbon;
 
 use App\Services\TotalExpress\Client;
+
 class SwedenPostCN35DownloadController extends Controller
 {
     /**
@@ -20,30 +21,29 @@ class SwedenPostCN35DownloadController extends Controller
     public function __invoke(Container $container)
     {
         $order = $container->orders->first();
-        if($order){
+        if ($order) {
             $orderWeight = $order->getOriginalWeight('kg');
         }
-        
+
         // $destinationAirport = 'EWR';
         // if($order->recipient->country->code == 'MX' && $order->taxModility == "DDP"){
         //     $destinationAirport = "LRD";
         // }
 
-    $cn23Maker = new CN35CountriesLabel();
+        $cn23Maker = new CN35CountriesLabel();
         $cn23Maker->setDispatchNumber($container->dispatch_number)
-                     ->setDispatchDate(Carbon::now()->format('Y-m-d'))
-                     ->setSerialNumber(1)
-                     ->setOriginAirport('MIA')
-                     ->setType($orderWeight)
-                     ->setDestinationAirport($order->recipient->country->code)
-                     ->setWeight($container->getWeight())
-                     ->setItemsCount($container->getPiecesCount())
-                     ->setUnitCode($container->getUnitCode()); 
-        // if($container->hasAnjunService()){
-          $cn23Maker->setCompanyName('DirectLink'); 
-          $cn23Maker->packetType = "Direct Link";
+            ->setDispatchDate(Carbon::now()->format('Y-m-d'))
+            ->setSerialNumber(1)
+            ->setOriginAirport('MIA')
+            ->setType($orderWeight)
+            ->setDestinationAirport($order->recipient->country->code)
+            ->setWeight($container->total_weight)
+            ->setItemsCount($container->total_orders)
+            ->setUnitCode($container->unit_code);
+        // if($container->has_anjun_service){
+        $cn23Maker->setCompanyName('DirectLink');
+        $cn23Maker->packetType = "Direct Link";
         // }
         return $cn23Maker->download();
-        
     }
 }
