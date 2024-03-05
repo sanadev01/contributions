@@ -84,7 +84,7 @@
         </div>
     </td>
     <td>
-        <select style="min-width:150px;" class="form-control {{ !auth()->user()->is_admin ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin() && !$order->is_deleted) wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled" @endif>
+        <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin() && !$order->is_deleted) wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled" @endif>
             <option class="bg-info" value="{{ App\Models\Order::STATUS_ORDER }}" {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected': '' }}>ORDER</option>
             {{-- <option class="bg-warning" value="{{ App\Models\Order::STATUS_NEEDS_PROCESSING }}" {{ $order->status == App\Models\Order::STATUS_NEEDS_PROCESSING ? 'selected': '' }}>NEEDS PROCESSING</option> --}}
             <option class="btn-cancelled" value="{{ App\Models\Order::STATUS_CANCEL }}" {{ $order->status == App\Models\Order::STATUS_CANCEL ? 'selected': '' }}>CANCELLED</option>
