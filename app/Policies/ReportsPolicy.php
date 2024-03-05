@@ -40,4 +40,9 @@ class ReportsPolicy
     {
         return $user->hasPermission('kpi-report');
     }
+
+    public function viewTaxAndDutyReport(User $user)
+    {
+        return $user->hasPermission('tax-and-duty-report');
+    }
 }

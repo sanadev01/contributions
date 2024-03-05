@@ -559,6 +559,11 @@ class PermissionSeeder extends Seeder
                 'group' => 'API',
                 'description' => 'User can view api documentations'
             ],
+            [
+                'slug' => 'tax-and-duty-report',
+                'group' => 'Reports',
+                'description' => 'User can view tax and duty reports'
+            ]
         ];
     }
 }

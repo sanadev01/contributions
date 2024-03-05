@@ -100,7 +100,20 @@ class ShippingService extends Model
     {
         return $builder->where('active', true);
     }
-
+    public function getSubNameAttribute()
+    {
+        $serviceSubClass = $this->service_sub_class;
+        $serviceMapping = [
+            ShippingService::AJ_Standard_CN => 'Packet Standard', 
+            ShippingService::BCN_Packet_Standard => 'Packet Standard', 
+            ShippingService::AJ_Packet_Express => 'Packet Express', 
+            ShippingService::BCN_Packet_Express => 'Packet Express', 
+        ]; 
+        if (array_key_exists($serviceSubClass, $serviceMapping)) { 
+            return $serviceMapping[$serviceSubClass];
+        }
+        return  $this->name;
+    }
     public function isAvailableFor(Order $order)
     {
         return $this->getCalculator($order)->isAvailable();

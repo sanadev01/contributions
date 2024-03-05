@@ -78,10 +78,13 @@
         @endif
     </td>
     <td>
-        ${{ number_format($order->gross_total,2) }}
+        <div class="custom-tooltip">
+            {{ number_format($order->gross_total, 2) }} USD
+            <x-gross-total-details :order="$order" /> 
+        </div>
     </td>
     <td>
-        <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin() && !$order->deleted_at) wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled" @endif>
+        <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin() && !$order->isTrashed()) wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled" @endif>
             <option class="bg-info" value="{{ App\Models\Order::STATUS_ORDER }}" {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected': '' }}>ORDER</option>
             {{-- <option class="bg-warning" value="{{ App\Models\Order::STATUS_NEEDS_PROCESSING }}" {{ $order->status == App\Models\Order::STATUS_NEEDS_PROCESSING ? 'selected': '' }}>NEEDS PROCESSING</option> --}}
             <option class="btn-cancelled" value="{{ App\Models\Order::STATUS_CANCEL }}" {{ $order->status == App\Models\Order::STATUS_CANCEL ? 'selected': '' }}>CANCELLED</option>

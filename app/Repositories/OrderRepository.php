@@ -45,6 +45,10 @@ class OrderRepository
         if ($request->userType == 'domestic') {
             $query->where('sender_country_id', Country::US);
         }
+        if($request->taxAndDutyOnly)
+        {
+            $query->where('tax_and_duty','!=',0);
+        }
 
         if ($request->userType == 'pickups') {
             $query->where('api_pickup_response', '!=', null);

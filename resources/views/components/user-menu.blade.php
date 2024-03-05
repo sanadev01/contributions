@@ -366,6 +366,9 @@
                             <span class="menu-title">@lang('menu.Reports.Tax Report Scan')</span>
                         </a>
                     </li>
+                    @endcan
+                    
+                    @can('viewTaxAndDutyReport', App\Models\Reports::class)
                     <li class="@if(request('type')=='accrual') active @endif">
                         <a href="{{ route('admin.reports.kpi-report.index',['type' => 'accrual']) }}">
                             <i class="icon_adjst feather icon-circle"></i>

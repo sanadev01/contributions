@@ -44,6 +44,9 @@
     <td>
         ${{ number_format($order->tax_and_duty,2) }}
     </td> 
+    <td>
+        ${{ number_format($order->fee_for_tax_and_duty,2) }}
+    </td> 
   
     <td class="font-large-1">
         @if( $order->isPaid() )

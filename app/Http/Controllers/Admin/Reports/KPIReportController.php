@@ -21,9 +21,14 @@ class KPIReportController extends Controller
     */
     public function index(Request $request, KPIReportsRepository $kpiReportsRepository)
     { 
-        $this->authorize('viewKPIReport',Reports::class);
-        if($request->type == 'accrual')
+        if($request->type=='accrual'){
+            $this->authorize('viewTaxAndDutyReport',Reports::class);
             return view('admin.reports.report-accrual');
+        }
+        else{
+            $this->authorize('viewKPIReport',Reports::class);
+        }
+            
         
         $trackings = [];
         $trackingCodeUsersName = [];
