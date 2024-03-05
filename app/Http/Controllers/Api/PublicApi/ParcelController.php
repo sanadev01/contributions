@@ -555,7 +555,7 @@ class ParcelController extends Controller
 
             $parcel->update([
                 "order_value" => $orderValue,
-                'shipping_service_name' => $parcel->shippingService->name
+                'shipping_service_name' => $parcel->shippingService->sub_name
             ]);
 
             if ($shippingService->is_domestic_service || $shippingService->is_international_service) {
