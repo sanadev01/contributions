@@ -51,7 +51,7 @@ class AccrualTable extends Component
     {
         if (! $this->query) {
             $this->query = $this->getOrders();
-        }
+        } 
         return view('livewire.order.accrual-table', [
             'orders' => $this->getOrders(),
             'isTrashed' => true
@@ -84,6 +84,7 @@ class AccrualTable extends Component
             'orderType' => $this->orderType,
             'paymentStatus' => $this->paymentStatus,
             'userType' => $this->userType,
+            'taxAndDutyOnly' =>true,
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 

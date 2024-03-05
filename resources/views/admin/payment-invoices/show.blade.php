@@ -82,7 +82,12 @@
                                             <td>{{ $order->warehouse_number }}</td>
                                             <td>{{ $order->customer_reference }}</td>
                                             <td>{{ optional($order->created_at)->format('Y-m-d') }}</td>
-                                            <td>@if($invoice->differnceAmount()) {{ $order->gross_total }}  @else {{ $order->shipping_value }} @endif USD</td>
+                                            <td> 
+                                                <div class="custom-tooltip">
+                                                    {{ number_format($order->gross_total, 2) }} USD
+                                                    <x-gross-total-details :order="$order" /> 
+                                                </div>
+                                            </td>
                                             @if ( auth()->user()->isAdmin() && $invoice->isPrePaid() )
                                                 <td>{{ $order->services()->sum( 'price' ) }} USD</td>
                                                 <td>{{ $order->consolidation }} USD</td>

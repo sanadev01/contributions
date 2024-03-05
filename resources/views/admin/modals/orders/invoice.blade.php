@@ -136,11 +136,11 @@
                                 @if ($appliedVolumeWeight)
                                 <td>
                                     @if(!$order->shippingService->is_total_express)
-                                        Actual Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value + $order->discountCost(), 2) }}</span> to {{ round($order->getWeight('kg'),2) }} Kg<br>
-                                        Applied Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value, 2) }}</span> to {{ $order->measurement_unit == 'kg/cm'? round($appliedVolumeWeight,2):round($appliedVolumeWeight / 2.205, 2) }} Kg <br>
-                                        @if($order->shipping_value + $order->discountCost() - $order->shipping_value > 0)
-                                            Difference <span class="text-primary font-weight-bold">${{ $order->discountCost() }} </span>Saving
-                                        @endif
+                                    Actual Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value + $order->discountCost(), 2) }}</span> to {{ round($order->getWeight('kg'),2) }} Kg<br>
+                                    Applied Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value, 2) }}</span> to {{ $order->measurement_unit == 'kg/cm'? round($appliedVolumeWeight,2):round($appliedVolumeWeight / 2.205, 2) }} Kg <br>
+                                    @if($order->shipping_value + $order->discountCost() - $order->shipping_value > 0)
+                                    Difference <span class="text-primary font-weight-bold">${{ $order->discountCost() }} </span>Saving
+                                    @endif
                                     @endif
                                 </td>
                                 @endif
@@ -201,19 +201,27 @@
                             </tr>
                             @endforeach
                             @if($order->tax_and_duty>0)
-                             <tr>
+                            <tr>
                                 <td>
                                     Taxes & Duties
                                 </td>
                                 <td>
                                     {{$order->tax_and_duty}}
                                 </td>
-                             </tr>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Convenience Fee for Tax Services
+                                </td>
+                                <td>
+                                    {{$order->fee_for_tax_and_duty}}
+                                </td>
+                            </tr>
                             @endif
 
                             <tr class="border-top-light">
                                 <td class="text-center h4">@lang('orders.invoice.Total')</td>
-                                <td class="h4">{{ number_format($services->sum('price')+$order->tax_and_duty,2) }} USD</td>
+                                <td class="h4">{{ number_format($services->sum('price')+$order->tax_and_duty+$order->fee_for_tax_and_duty,2) }} USD</td>
                             </tr>
                         </tbody>
                     </table>
@@ -298,7 +306,7 @@
                                 <tr>
                                     <th>@lang('orders.invoice.Additional Services')</th>
                                     <td>
-                                        {{ number_format($services->sum('price')+$order->tax_and_duty,2) }} USD
+                                        {{ number_format($services->sum('price')+$order->tax_and_duty+$order->fee_for_tax_and_duty,2) }} USD
                                     </td>
                                 </tr>
                                 <tr>
@@ -317,7 +325,7 @@
                                 @endif
                                 <tr>
                                     <th>@lang('orders.invoice.TOTAL')</th>
-                                    <td> {{ number_format($order->gross_total+$order->tax_and_duty,2) }} USD</td>
+                                    <td> {{ number_format($order->gross_total,2) }} USD</td>
                                 </tr>
                             </tbody>
                         </table>
