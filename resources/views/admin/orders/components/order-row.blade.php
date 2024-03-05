@@ -80,11 +80,11 @@
     <td>
         <div class="custom-tooltip">
             {{ number_format($order->gross_total, 2) }} USD
-            <x-gross-total-details :order="$order" /> 
+            <x-gross-total-details :order="$order" />
         </div>
     </td>
     <td>
-        <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin() && !$order->isTrashed()) wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled" @endif>
+        <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin() && !$order->is_deleted) wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled" @endif>
             <option class="bg-info" value="{{ App\Models\Order::STATUS_ORDER }}" {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected': '' }}>ORDER</option>
             {{-- <option class="bg-warning" value="{{ App\Models\Order::STATUS_NEEDS_PROCESSING }}" {{ $order->status == App\Models\Order::STATUS_NEEDS_PROCESSING ? 'selected': '' }}>NEEDS PROCESSING</option> --}}
             <option class="btn-cancelled" value="{{ App\Models\Order::STATUS_CANCEL }}" {{ $order->status == App\Models\Order::STATUS_CANCEL ? 'selected': '' }}>CANCELLED</option>
@@ -191,15 +191,15 @@
                     </a>
                     @endcan
 
-                   @if(optional($order->shippingService)->isGDEService() || optional($order->shippingService)->is_total_express) 
-                        <a href="{{ route('admin.gde.invoice.download', $order->id) }}" class="dropdown-item w-100"> 
-                            <i class="fa fa-cloud-download"></i>
-                            @if(optional($order->shippingService)->is_total_express)
-                                HD Courier Express Invoice
-                            @else
-                                GDE Invoice 
-                            @endif 
-                        </a> 
+                    @if(optional($order->shippingService)->isGDEService() || optional($order->shippingService)->is_total_express)
+                    <a href="{{ route('admin.gde.invoice.download', $order->id) }}" class="dropdown-item w-100">
+                        <i class="fa fa-cloud-download"></i>
+                        @if(optional($order->shippingService)->is_total_express)
+                        HD Courier Express Invoice
+                        @else
+                        GDE Invoice
+                        @endif
+                    </a>
                     @endif
 
                     @if( Auth::user()->isActive() && !$order->deleted_at && Auth::user()->isAdmin() || !$order->isPaid())
