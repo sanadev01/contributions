@@ -30,7 +30,8 @@
                     <th>Tracking Code</th> 
                     
                     <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
-                    <th> Amount Ext Tax & Duty</th>
+                    <th>   Tax & Duty</th>
+                    <th> Fee for Tax & Duty</th>
                     <th>@lang('orders.payment-status')</th>
                     <!-- <th class="no-print">@lang('orders.actions.actions')</th> -->
                 </tr>

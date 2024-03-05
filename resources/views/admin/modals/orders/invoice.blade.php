@@ -3,13 +3,13 @@
         <div class="py-0 mt-0 pl-3">
             <p class="mb-0">Herco Freight Forwarding <br>
                 2200 NW 129th Ave Suite#100 <br>
-                Miami, FL 33182 DBA As 
+                Miami, FL 33182 DBA As
             </p>
         </div>
         <div class="no-print">
-          <button class="btn btn-primary btn-print mb-1 mb-md-0 waves-effect waves-light" onclick="print('.invoice-page');"> <i class="feather icon-file-text"></i> Print</button>
+            <button class="btn btn-primary btn-print mb-1 mb-md-0 waves-effect waves-light" onclick="print('.invoice-page');"> <i class="feather icon-file-text"></i> Print</button>
         </div>
-    </div> 
+    </div>
 
     <div id="invoice-template" class="card-body pt-0">
         <!-- Invoice Company Details -->
@@ -26,9 +26,9 @@
                     <p>{{ $order->warehouse_number }}</p>
                     <h6 class="mt-2">@lang('orders.invoice.INVOICE DATE')</h6>
                     @if($order->getPaymentInvoice())
-                        <p>{{ $order->getPaymentInvoice()->updated_at->format('d M Y') }}</p>
+                    <p>{{ $order->getPaymentInvoice()->updated_at->format('d M Y') }}</p>
                     @else
-                        <p>{{ optional($order->order_date)->format('m/d/Y') }}</p>
+                    <p>{{ optional($order->order_date)->format('m/d/Y') }}</p>
                     @endif
 
                 </div>
@@ -63,12 +63,12 @@
                 <div class="company-info my-2">
                     {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
                     @if($order->sender_city)
-                        {{ optional($order)->sender_address }}<br> 
-                        {{ optional($order)->sender_city }}, {{ optional($order)->sender_state }}, {{ optional($order)->sender_zipcode }}<br>
-                        {{ optional($order)->sender_country}}<br>
-                        Ph#: {{ optional($order)->sender_phone }}
+                    {{ optional($order)->sender_address }}<br>
+                    {{ optional($order)->sender_city }}, {{ optional($order)->sender_state }}, {{ optional($order)->sender_zipcode }}<br>
+                    {{ optional($order)->sender_country}}<br>
+                    Ph#: {{ optional($order)->sender_phone }}
                     @else
-                        2200 NW, 129th Ave - Suite # 100<br> Miami, FL, 33182<br>United States<br>Ph#: +13058885191
+                    2200 NW, 129th Ave - Suite # 100<br> Miami, FL, 33182<br>United States<br>Ph#: +13058885191
                     @endif
                 </div>
                 <div class="recipient-contact pb-2">
@@ -124,23 +124,23 @@
                                     Weight: {{ round($order->getOriginalWeight('kg'),2) }} Kg ( {{ round($order->getOriginalWeight('lbs'),2) }} lbs ) <br>
                                     Vol. Weight: {{ round($order->getWeight('kg'),2) }} Kg ( {{ round($order->getWeight('lbs'),2) }} lbs ) <br>
                                     @if ($appliedVolumeWeight && !$order->sender_city)
-                                        Applied Weight:
-                                        @if($order->measurement_unit == 'kg/cm')
-                                            {{ round($appliedVolumeWeight,2) }} Kg ( {{ round($appliedVolumeWeight * 2.205, 2) }} lbs )
-                                        @else
-                                            {{ round($appliedVolumeWeight / 2.205, 2) }} Kg ( {{ round($appliedVolumeWeight,2) }} lbs )
-                                        @endif
+                                    Applied Weight:
+                                    @if($order->measurement_unit == 'kg/cm')
+                                    {{ round($appliedVolumeWeight,2) }} Kg ( {{ round($appliedVolumeWeight * 2.205, 2) }} lbs )
+                                    @else
+                                    {{ round($appliedVolumeWeight / 2.205, 2) }} Kg ( {{ round($appliedVolumeWeight,2) }} lbs )
+                                    @endif
                                     @endif
                                 </td>
                                 <td @if (!$appliedVolumeWeight) colspan="2" @endif>{{ $order->measurement_unit }} </td>
                                 @if ($appliedVolumeWeight)
                                 <td>
                                     @if(!$order->shippingService->is_total_express)
-                                        Actual Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value + $order->discountCost(), 2) }}</span> to {{ round($order->getWeight('kg'),2) }} Kg<br>
-                                        Applied Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value, 2) }}</span> to {{ $order->measurement_unit == 'kg/cm'? round($appliedVolumeWeight,2):round($appliedVolumeWeight / 2.205, 2) }} Kg <br>
-                                        @if($order->shipping_value + $order->discountCost() - $order->shipping_value > 0)
-                                            Difference <span class="text-primary font-weight-bold">${{ $order->discountCost() }} </span>Saving
-                                        @endif
+                                    Actual Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value + $order->discountCost(), 2) }}</span> to {{ round($order->getWeight('kg'),2) }} Kg<br>
+                                    Applied Rate <span class="text-primary font-weight-bold">${{ number_format($order->shipping_value, 2) }}</span> to {{ $order->measurement_unit == 'kg/cm'? round($appliedVolumeWeight,2):round($appliedVolumeWeight / 2.205, 2) }} Kg <br>
+                                    @if($order->shipping_value + $order->discountCost() - $order->shipping_value > 0)
+                                    Difference <span class="text-primary font-weight-bold">${{ $order->discountCost() }} </span>Saving
+                                    @endif
                                     @endif
                                 </td>
                                 @endif
@@ -167,9 +167,9 @@
                                 <td>{{ $order->shippingService->name }}</td>
                                 <td>
                                     @if($order->sender_city || $order->shippingService->usps_service_sub_class)
-                                        {{ number_format($order->gross_total,2) }}
+                                    {{ number_format($order->gross_total,2) }}
                                     @else
-                                        {{ number_format($order->shipping_value,2) }}
+                                    {{ number_format($order->shipping_value,2) }}
                                     @endif
                                     USD
                                 </td>
@@ -191,25 +191,33 @@
                         </thead>
                         <tbody>
                             @foreach ($services as $service)
-                                <tr>
-                                    <td>{{ $service->name }}</td>
-                                    <td>{{ number_format($service->price,2) }} USD</td>
-                                </tr>
+                            <tr>
+                                <td>{{ $service->name }}</td>
+                                <td>{{ number_format($service->price,2) }} USD</td>
+                            </tr>
                             @endforeach
                             @if($order->tax_and_duty>0)
-                             <tr>
+                            <tr>
                                 <td>
                                     Taxes & Duties
                                 </td>
                                 <td>
                                     {{$order->tax_and_duty}}
                                 </td>
-                             </tr>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Convenience Fee for Tax Services
+                                </td>
+                                <td>
+                                    {{$order->fee_for_tax_and_duty}}
+                                </td>
+                            </tr>
                             @endif
 
                             <tr class="border-top-light">
                                 <td class="text-center h4">@lang('orders.invoice.Total')</td>
-                                <td class="h4">{{ number_format($services->sum('price')+$order->tax_and_duty,2) }} USD</td>
+                                <td class="h4">{{ number_format($services->sum('price')+$order->tax_and_duty+$order->fee_for_tax_and_duty,2) }} USD</td>
                             </tr>
                         </tbody>
                     </table>
@@ -237,18 +245,18 @@
                         </thead>
                         <tbody>
                             @foreach ($order->items as $item)
-                                <tr>
-                                    <td>{{ $item->sh_code }}</td>
-                                    <td>{{ $item->description }}</td>
-                                    <td>{{ $item->quantity }}</td>
-                                    <td>{{ number_format($item->value,2) }} USD</td>
-                                    <td>{{ number_format($item->value * $item->quantity,2) }}</td>
-                                    <td>
-                                        {{ $item->contains_battery ? 'battery' : '' }}
-                                        {{ $item->contains_perfume ? 'perfume' : '' }}
-                                        {{ $item->contains_flammable_liquid ? 'flameable' : '' }}
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>{{ $item->sh_code }}</td>
+                                <td>{{ $item->description }}</td>
+                                <td>{{ $item->quantity }}</td>
+                                <td>{{ number_format($item->value,2) }} USD</td>
+                                <td>{{ number_format($item->value * $item->quantity,2) }}</td>
+                                <td>
+                                    {{ $item->contains_battery ? 'battery' : '' }}
+                                    {{ $item->contains_perfume ? 'perfume' : '' }}
+                                    {{ $item->contains_flammable_liquid ? 'flameable' : '' }}
+                                </td>
+                            </tr>
                             @endforeach
                             <tr class="border-top-light">
                                 <td colspan="4" class="text-center h4">@lang('orders.invoice.Order Value')</td>
@@ -261,9 +269,9 @@
                                 <td colspan="4" class="text-center h4">@lang('orders.invoice.Freight Declared to Custom')</td>
                                 <td class="h4">
                                     @if (number_format($order->user_declared_freight,2) == 0.01)
-                                        0.00 USD
+                                    0.00 USD
                                     @else
-                                        {{ number_format($order->user_declared_freight,2) }} USD
+                                    {{ number_format($order->user_declared_freight,2) }} USD
                                     @endif
                                 </td>
                                 <td></td>
@@ -284,9 +292,9 @@
                                     <th>@lang('orders.invoice.Shipping')</th>
                                     <td>
                                         @if($order->sender_city)
-                                            {{ number_format($order->gross_total,2) }}
+                                        {{ number_format($order->gross_total,2) }}
                                         @else
-                                            {{ number_format($order->shipping_value,2) }}
+                                        {{ number_format($order->shipping_value,2) }}
                                         @endif
                                         USD
                                     </td>
@@ -294,7 +302,7 @@
                                 <tr>
                                     <th>@lang('orders.invoice.Additional Services')</th>
                                     <td>
-                                        {{ number_format($services->sum('price')+$order->tax_and_duty,2) }} USD
+                                        {{ number_format($services->sum('price')+$order->tax_and_duty+$order->fee_for_tax_and_duty,2) }} USD
                                     </td>
                                 </tr>
                                 <tr>
@@ -304,16 +312,16 @@
                                     </td>
                                 </tr>
                                 @if ( $order->isConsolidated() )
-                                    <tr>
-                                        <th>@lang('orders.invoice.consolidation')</th>
-                                        <td>
-                                            {{ number_format($order->consolidation,2) }} USD
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <th>@lang('orders.invoice.consolidation')</th>
+                                    <td>
+                                        {{ number_format($order->consolidation,2) }} USD
+                                    </td>
+                                </tr>
                                 @endif
                                 <tr>
                                     <th>@lang('orders.invoice.TOTAL')</th>
-                                    <td> {{ number_format($order->gross_total+$order->tax_and_duty,2) }} USD</td>
+                                    <td> {{ number_format($order->gross_total,2) }} USD</td>
                                 </tr>
                             </tbody>
                         </table>

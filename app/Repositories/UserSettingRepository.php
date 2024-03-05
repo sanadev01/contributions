@@ -81,6 +81,7 @@ class UserSettingRepository {
         ($request->gss_profit != null ) ? saveSetting('gss_profit', $request->gss_profit, $user->id) : saveSetting('gss_profit', 0, $user->id);
         ($request->gde_pm_profit != null ) ? saveSetting('gde_pm_profit', $request->gde_pm_profit,$user->id) : saveSetting('gde_pm_profit', 0,$user->id);
         ($request->gde_fc_profit != null ) ? saveSetting('gde_fc_profit', $request->gde_fc_profit,$user->id) : saveSetting('gde_fc_profit', 0,$user->id);
+        ($request->pay_tax_service_percentage != null ) ? saveSetting('pay_tax_service_percentage', $request->pay_tax_service_percentage,$user->id) : saveSetting('pay_tax_service_percentage', 0,$user->id);
         
         ($request->weight != null ) ? saveSetting('weight', $request->weight, $user->id) : saveSetting('weight', 0, $user->id);
         ($request->length != null ) ? saveSetting('length', $request->length, $user->id) : saveSetting('length', 0, $user->id);

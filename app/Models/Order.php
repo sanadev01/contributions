@@ -567,6 +567,12 @@ class Order extends Model implements Package
             'user_declared_freight' => $this->user_declared_freight
             // 'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
         ]);
+        $this->update([
+            'tax_and_duty' =>  (float)$this->calculate_tax_and_duty,
+            'fee_for_tax_and_duty' => (float) $this->calculate_fee_for_tax_and_duty,
+            'gross_total' => $gross_total + $this->calculate_tax_and_duty + $this->calculate_fee_for_tax_and_duty,
+
+        ]);
     }
 
     public function calculateAdditionalServicesCost($services)
@@ -946,34 +952,41 @@ class Order extends Model implements Package
         $this->user_declared_freight = $this->user_declared_freight - $addedProfit;
         return true;
     }
-    public function getTaxAndDutyAttribute(){
-        $finalValue = 0;
-        if(strtolower($this->tax_modality) == "ddp"){
-            if($this->recipient->country->code =="MX" || $this->recipient->country->code =="CA"|| $this->recipient->country->code =="BR"){
+    public function getCalculateTaxAndDutyAttribute()
+    {
+        $totalTaxAndDuty = 0;
+        if (strtolower($this->tax_modality) == "ddp") {
+            if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
 
-                $totalCost = $this->gross_total+$this->insurance_value+$this->carrierCost();
-                $duty = $totalCost * .6;
-                $totalCostOfTheProduct = $this->gross_total+$duty;
+                $totalCost = $this->gross_total + $this->insurance_value + $this->carrierCost();
+                $duty = $totalCost > 50 ? $totalCost * .6 : 0;
+                $totalCostOfTheProduct = $totalCost + $duty;
                 $icms = .17;
                 $totalIcms = $icms * $totalCostOfTheProduct;
-                $totalTaxAndDuty = $duty + $totalIcms;
-                $finalValue = $this->gross_total + $totalTaxAndDuty;
+                $totalTaxAndDuty = $duty + $totalIcms; 
                 \Log::info([
-                    'recipient country'=>$this->recipient->country->code,
-                    'gross total'=>$this->gross_total,
-                    'insurance value'=>$this->insurance_value,
-                    'carrierCost'=>$this->carrierCost(),
-                    'totalCost'=>$totalCost,
-                    'duty'=>$duty,
-                    'totalCostOfTheProduct'=>$totalCostOfTheProduct,
+                    'recipient country' => $this->recipient->country->code,
+                    'gross total' => $this->gross_total,
+                    'insurance value' => $this->insurance_value,
+                    'carrierCost' => $this->carrierCost(),
+                    'totalCost' => $totalCost,
+                    'duty' => $duty,
+                    'totalCostOfTheProduct' => $totalCostOfTheProduct,
                     'icms' => $icms,
                     'totalIcms' => $totalIcms,
-                    'totalTaxAndDuty'=> $totalTaxAndDuty,
-                    'finalValue'=>$finalValue,
+                    'totalTaxAndDuty' => $totalTaxAndDuty, 
                 ]);
             }
         }
-        return number_format($finalValue,2);
+        return round($totalTaxAndDuty, 2);
+    }
+    public function getCalculateFeeForTaxAndDutyAttribute()
+    {
+        $percent = setting('pay_tax_service_percentage', null, $this->user_id) ?? 2;
+        // if (!setting('pay_tax_service', null, $this->user_id))
+        //     return 0; 
+        $fee = $this->calculate_tax_and_duty / 100 * $percent;
+        return $fee < 0.5 ?0.5: number_format($fee, 2);
     }
 
 }
