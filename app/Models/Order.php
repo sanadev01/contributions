@@ -554,7 +554,7 @@ class Order extends Model implements Package
         $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $this->user_profit;
 
         $discount = 0; // not implemented yet
-        $gross_total = $total - $discount;
+        $grossTotal = $total - $discount;
 
         $this->update([
             'consolidation' => $consolidation,
@@ -563,15 +563,18 @@ class Order extends Model implements Package
             'dangrous_goods' => $dangrousGoodsCost,
             'total' => $total,
             'discount' => $discount,
-            'gross_total' => $gross_total,
+            'gross_total' => $grossTotal,
             'user_declared_freight' => $this->user_declared_freight
-            // 'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
         ]);
+        $taxAndDuty = (float)$this->calculate_tax_and_duty;
+        $feeForTaxAndDuty = (float)$this->calculate_fee_for_tax_and_duty;
+        $total = $grossTotal + $taxAndDuty + $feeForTaxAndDuty;        
+        $grossTotal = $total - $discount;
         $this->update([
-            'tax_and_duty' =>  (float)$this->calculate_tax_and_duty,
-            'fee_for_tax_and_duty' => (float) $this->calculate_fee_for_tax_and_duty,
-            'gross_total' => $gross_total + $this->calculate_tax_and_duty + $this->calculate_fee_for_tax_and_duty,
-
+            'tax_and_duty' =>  $taxAndDuty,
+            'fee_for_tax_and_duty' => $feeForTaxAndDuty,
+            'total' => $total,
+            'gross_total' => $grossTotal,
         ]);
     }
 
