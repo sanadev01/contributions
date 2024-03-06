@@ -983,10 +983,9 @@ class Order extends Model implements Package
     public function getCalculateFeeForTaxAndDutyAttribute()
     {
         $percent = setting('pay_tax_service_percentage', null, $this->user_id) ?? 2;
-        // if (!setting('pay_tax_service', null, $this->user_id))
-        //     return 0; 
-        $fee = $this->calculate_tax_and_duty / 100 * $percent;
-        return $fee < 0.5 ?0.5: number_format($fee, 2);
+        $taxAndDuty = $this->calculate_tax_and_duty;
+        $fee = $taxAndDuty / 100 * $percent;
+        return $taxAndDuty >0 && $fee  < 0.5 ? 0.5: number_format($fee, 2);
     }
 
 }

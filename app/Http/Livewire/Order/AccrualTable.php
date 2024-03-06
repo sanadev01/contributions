@@ -2,9 +2,11 @@
 
 namespace App\Http\Livewire\Order;
 
+use App\Models\Order;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Repositories\OrderRepository;
+use Illuminate\Support\Facades\Auth;
 
 class AccrualTable extends Component
 {
@@ -34,6 +36,9 @@ class AccrualTable extends Component
     public $orderType = null;
     public $userType = null;
     public $paymentStatus = null;
+    public $totalGrossTotal = 1234;
+    public $totalTaxAndDuty = 1234;
+    public $feeForTotalTaxAndDuty = 1234;
 
     /**
      * Sort Asc.
@@ -45,13 +50,24 @@ class AccrualTable extends Component
     {
         $this->userType = $userType;
         $this->query = $this->getOrders();
+        $this->calculateTotal();
+
+    }
+    public function calculateTotal() {
+        
+        $orders=   Order::when(Auth::user()->isUser(),function($query){
+            $query->where('user_id', Auth::id());
+        })->get();
+        $this->totalGrossTotal = $orders->sum('gross_total');
+        $this->totalTaxAndDuty = $orders->sum('tax_and_duty');
+        $this->feeForTotalTaxAndDuty = $orders->sum('fee_for_tax_and_duty'); 
     }
 
     public function render()
     {
-        if (! $this->query) {
+        if (!$this->query) {
             $this->query = $this->getOrders();
-        } 
+        }
         return view('livewire.order.accrual-table', [
             'orders' => $this->getOrders(),
             'isTrashed' => true
@@ -61,7 +77,7 @@ class AccrualTable extends Component
     public function sortBy($name)
     {
         if ($name == $this->sortBy) {
-            $this->sortAsc = ! $this->sortAsc;
+            $this->sortAsc = !$this->sortAsc;
         } else {
             $this->sortBy = $name;
         }
@@ -84,8 +100,8 @@ class AccrualTable extends Component
             'orderType' => $this->orderType,
             'paymentStatus' => $this->paymentStatus,
             'userType' => $this->userType,
-            'taxAndDutyOnly' =>true,
-        ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
+            'taxAndDutyOnly' => true,
+        ]), true, $this->pageSize, $this->sortBy, $this->sortAsc ? 'asc' : 'desc');
     }
 
     public function updating()
