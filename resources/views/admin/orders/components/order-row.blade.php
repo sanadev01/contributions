@@ -191,10 +191,15 @@
                     </a>
                     @endcan
 
-                    @if(optional($order->shippingService)->isGDEService())
-                    <a href="{{ route('admin.gde.invoice.download', $order->id) }}" class="dropdown-item w-100">
-                        <i class="fa fa-cloud-download"></i>GDE Invoice
-                    </a>
+                   @if(optional($order->shippingService)->isGDEService() || optional($order->shippingService)->is_total_express) 
+                        <a href="{{ route('admin.gde.invoice.download', $order->id) }}" class="dropdown-item w-100"> 
+                            <i class="fa fa-cloud-download"></i>
+                            @if(optional($order->shippingService)->is_total_express)
+                                HD Courier Express Invoice
+                            @else
+                                GDE Invoice 
+                            @endif 
+                        </a> 
                     @endif
 
                     @if( Auth::user()->isActive() && !$order->isTrashed() && Auth::user()->isAdmin() || !$order->isPaid())
