@@ -36,9 +36,9 @@ class AccrualTable extends Component
     public $orderType = null;
     public $userType = null;
     public $paymentStatus = null;
-    public $totalGrossTotal = 1234;
-    public $totalTaxAndDuty = 1234;
-    public $feeForTotalTaxAndDuty = 1234;
+    public $totalGrossTotal = 0;
+    public $totalTaxAndDuty = 0;
+    public $feeForTotalTaxAndDuty = 0;
 
     /**
      * Sort Asc.
