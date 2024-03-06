@@ -1,5 +1,5 @@
-<div class="p-2" >
-    <div class="row mb-2 no-print">      
+<div class="p-2">
+    <div class="row mb-2 no-print">
         <div class="col-1">
             <select class="form-control" wire:model="pageSize">
                 <option value="1">1</option>
@@ -10,36 +10,36 @@
                 <option value="100">100</option>
                 <option value="300">300</option>
             </select>
-        </div> 
+        </div>
     </div>
     <div class=" ">
-        
-    <table class="table  table-borderless p-0 table-responsive-md table-striped" id="kpi-report">
-                    <thead>
-                        <tr id="kpiHead"> 
-                    <th> 
+
+        <table class="table  table-borderless p-0 table-responsive-md table-striped" id="kpi-report">
+            <thead>
+                <tr id="kpiHead">
+                    <th>
                         <a href="#" wire:click.prevent="sortBy('created_at')">@lang('orders.date')</a>
                     </th>
                     <th>
-                        <a href="#" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i>  </i>
+                        <a href="#" wire:click.prevent="sortBy('id')">@lang('orders.order-id')</a> <i> </i>
                     </th>
                     @admin
                     <th>User Name</th>
-                    @endadmin   
+                    @endadmin
                     <th>Carrier</th>
-                    <th>Tracking Code</th> 
-                    
+                    <th>Tracking Code</th>
+
                     <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
-                    <th>   Tax & Duty</th>
+                    <th> Tax & Duty</th>
                     <th> Fee for Tax & Duty</th>
                     <th>@lang('orders.payment-status')</th>
                     <!-- <th class="no-print">@lang('orders.actions.actions')</th> -->
                 </tr>
-                
-                <tfoot class="search-header">
-                 <tr id="kpiHeadSearch"> 
+
+            <tfoot class="search-header">
+                <tr id="kpiHeadSearch">
                     <th>
-                        
+
                         <input type="search" class="form-control" wire:model.debounce.1000ms="date">
                     </th>
                     <th>
@@ -54,6 +54,9 @@
                         <select class="form-control" wire:model.debounce.1000ms="carrier">
                             <option value="">All</option>
                             <option value="Brazil">Correios Brazil</option>
+                            <option value="Anjun">Correios A</option>
+                            <option value="AnjunChina">Correios AJ</option>
+                            <option value="BCN">Correios B</option>
                             <option value="USPS">USPS</option>
                             <option value="UPS">UPS</option>
                             <option value="FEDEX">FEDEX</option>
@@ -64,61 +67,45 @@
                             <option value="Total Express">Total Express</option>
                             <option value="HD Express">HD Express</option>
                         </select>
-                    </th> 
+                    </th>
+                    <th>
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="tracking_code">
+                    </th>
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="amount">
-                    </th>    
-                    <th></th> 
+                    </th>
+                    <td></td>
                     <td></td>
                     <td></td>
                 </tr>
             </tfoot>
             </thead>
             <tbody>
-                @forelse ($orders as $order) 
-                        @include('admin.orders.components.accrual-row',['order'=>$order])    
+                @forelse ($orders as $order)
+                @include('admin.orders.components.accrual-row',['order'=>$order])
                 @empty
-                    <x-tables.no-record colspan="12"></x-tables.no-record>
+                <x-tables.no-record colspan="12"></x-tables.no-record>
                 @endforelse
+                <tr>
+            <tfoot class="search-header">
+                <tr id="kpiHeadSearch">
+                    
+                    @admin  <th> </th> @endadmin
+                    <th colspan="3"> </th>
+                    <th> Total</th>
+                    <th> {{$totalGrossTotal}}</th>
+                    <th>{{$totalTaxAndDuty}}</th>
+                    <th>{{$feeForTotalTaxAndDuty}}</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+            </tr>
             </tbody>
         </table>
-        <livewire:order.bulk-edit.modal/>
+        <livewire:order.bulk-edit.modal />
     </div>
     <div class="d-flex justify-content-end my-2 py-4 mx-2">
         {{ $orders->links() }}
     </div>
     @include('layouts.livewire.loading')
 </div>
-
-@push('lvjs-stack')
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            
-            @this.on('updated-status',function(orderId,status){
-                @this.call('render')
-                $.post('{{route("admin.order.update.status")}}',{
-                    _token: "{{ csrf_token() }}",
-                    order_id: orderId,
-                    status : status,
-                    user: '{{auth()->user()->name}}'
-                })
-                .then(function(response){
-                    if ( response.success ){
-                        toastr.success(response.message)
-                        @this.call('render')
-                    }else{
-                        toastr.error(response.message)
-                        @this.call('render')
-                    }
-                }).catch(function(data){
-                    toastr.error(response.message)
-                })
-            })
-
-            // @this.on('edit-order',function(){
-            //     $('#order-table').addClass('w-25');
-            //     $('#order-table').removeClass('w-100');
-            // })
-        });
-    </script>
-@endpush
