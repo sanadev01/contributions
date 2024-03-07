@@ -86,7 +86,7 @@ class Parcel
                "length" => $this->length,
                "width" => $this->width,
                "weight" => $this->weight,
-               "freight_value" => $this->order->gross_total,
+               "freight_value" => $this->order->insurance_value+$this->order->freight_value,
                "order_items_attributes" => $this->setItemsDetails()
 
             ]
