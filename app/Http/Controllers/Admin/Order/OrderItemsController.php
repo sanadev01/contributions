@@ -60,13 +60,13 @@ class OrderItemsController extends Controller
             return redirect()->route('admin.orders.order-details.index',[$order->id]);
         }
         $shippingService = ShippingService::find($request->shipping_service_id);
+
         $this->authorize('editItems',$order);
 
         if ( !$order->recipient ){
             abort(404);
         }
-
-        if($this->orderRepository->domesticService($request->shipping_service_id)){
+        if ($this->orderRepository->domesticService($request->shipping_service_id) || $order->shippingService->is_total_express) {
             $request->validate([
                 'user_declared_freight' => 'bail|required|gt:0',
             ], [
