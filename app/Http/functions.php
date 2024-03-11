@@ -458,3 +458,6 @@ function getValidShCode($shCode, $service)
     }
     return $shCode;
 }
+function currentActiveApiName() {
+    return  setting('correios_api', null, User::ROLE_ADMIN) ? 'Correios Api' : (setting('anjun_api', null,  User::ROLE_ADMIN) ? 'Correios Anjun Api' : (setting('bcn_api', null,User::ROLE_ADMIN) ? 'BCN Setting' : 'Anjun China Api'));
+}
