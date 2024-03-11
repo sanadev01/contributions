@@ -440,8 +440,10 @@
             order_id: order_id,
         }).then(function(response) {
             if (response.success == true) {
-                $('#user_declared_freight').val(response.total_amount);
-                $('#user_declared_freight').prop('readonly', true);
+                if(service!=283){
+                    $('#user_declared_freight').val(response.total_amount);
+                    $('#user_declared_freight').prop('readonly', true);
+                }
             } else {
                 if (service == 3674) {
                     $('#gssRateModal').modal('show');
