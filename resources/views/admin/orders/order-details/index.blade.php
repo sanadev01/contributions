@@ -441,15 +441,13 @@
         }).then(function(response) {
             if (response.success == true) {
                 has_corrios_tracking_code = <?php echo json_encode($order->corrios_tracking_code); ?>;
-                if(has_corrios_tracking_code){
-                    if(service!=283){
-                        $('#user_declared_freight').val(response.total_amount); 
-                    }
+                if (has_corrios_tracking_code && service !== 283) {
+                    $('#user_declared_freight').val(response.total_amount);
                 }
-                else{
-                        $('#user_declared_freight').val(response.total_amount);
+                if (!has_corrios_tracking_code){
+                    $('#user_declared_freight').val(response.total_amount);
                 }
-                if(service!=283){
+                if (service !== 283) {
                     $('#user_declared_freight').prop('readonly', true);
                 }
             } else {
