@@ -13,9 +13,12 @@
                         <hr>
                     </div>
                     @can('create', App\Models\Rate::class)
-                    <a href="{{ route('admin.rates.zone-profit.create') }}" class="pull-right btn btn-primary">
-                        Upload Profit Rate
-                    </a>
+                        <a href="{{ route('admin.rates.zone-cost-upload') }}" class="pull-right btn btn-primary">
+                            Upload Rates
+                        </a>
+                        <a href="{{ route('admin.rates.zone-profit.create') }}" class="pull-right btn btn-primary">
+                            Upload Profit
+                        </a>
                     @endcan
                 </div>
                 <hr>
