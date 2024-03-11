@@ -409,6 +409,10 @@ class Order extends Model implements Package
 
                 return 'Hound Express';
             }
+            elseif(optional($this->shippingService)->is_pasar_ex){
+
+                return 'PasarEx';
+            }
             return 'Correios Brazil';
         }
 
