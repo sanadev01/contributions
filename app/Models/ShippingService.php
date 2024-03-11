@@ -70,6 +70,7 @@ class ShippingService extends Model
     const Japan_Prime = 5537;
     const Japan_EMS = 5541;
     const GSS_CEP = 237;
+    const PasarEx = 238;
 
     protected $guarded = [];
 
