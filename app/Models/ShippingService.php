@@ -289,6 +289,14 @@ class ShippingService extends Model
         ]);
     }
 
+    public function isGSSService()
+    {
+        if($this->service_sub_class == self::GSS_PMI || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_FCM || $this->service_sub_class == self::GSS_EMS || $this->service_sub_class == self::GSS_CEP){
+            return true;
+        }
+        return false;
+    }
+
     public function getIsMilliExpressAttribute()
     {
         return $this->service_sub_class == ShippingService::HD_Express;
