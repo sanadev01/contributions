@@ -467,7 +467,7 @@
                                 </div>
 
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Pay Tax Service<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">Convenience Fee for Tax Services<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="pay_tax_service">
@@ -478,6 +478,9 @@
                                                     </span>
                                                 </span>
                                             </div>
+                                            <span class="offset-2 mr-2 mt-2">Percentage :</span>
+                                            <input type="number" name="pay_tax_service_percentage" class="form-control col-5" step="0.01" min="0" max="100" id="pay_tax_service_percentage" value="{{ setting('pay_tax_service_percentage', null, $user->id) }}">
+                                    
                                          </div>    
                                     </div>
                                 </div>

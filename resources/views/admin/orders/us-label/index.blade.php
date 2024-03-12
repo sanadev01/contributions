@@ -4,7 +4,7 @@
 @endsection
 @section('page')
 
-@if($order->hasSecondLabel())
+@if($order->has_second_label)
 <div class="card pb-3">
     <div class="row mr-3">
         <div class="ml-auto mt-5">
@@ -23,7 +23,7 @@
     </div>
 </div>
 @else
-    @livewire('order.us-label-form', ['order' => $order, 'states' => $states, 'usShippingServices' => $usShippingServices, 'errors' => $errors])
+@livewire('order.us-label-form', ['order' => $order, 'states' => $states, 'usShippingServices' => $usShippingServices, 'errors' => $errors])
 @endif
 
 @endsection

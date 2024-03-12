@@ -20,6 +20,8 @@ use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\Package as ModelsPackage;
 use Exception;
 use Illuminate\Support\Facades\Crypt;
+use Spatie\Activitylog\LogOptions;
+
 class Order extends Model implements Package
 {
 
@@ -27,13 +29,17 @@ class Order extends Model implements Package
     protected $guarded = [];
 
     use LogsActivity;
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
     protected $casts = [
-       'cn23' => 'Array',
-       'order_date' => 'datetime',
-       'us_secondary_label_cost' => 'array',
+        'cn23' => 'array',
+        'order_date' => 'datetime',
+        'us_secondary_label_cost' => 'array',
     ];
 
     const STATUS_INVENTORY_PENDING = 1;
@@ -76,9 +82,9 @@ class Order extends Model implements Package
     public $user_profit = 0;
     public function scopeParcelReady(Builder $query)
     {
-        return $query->where(function($query){
+        return $query->where(function ($query) {
             $query->where('status', self::STATUS_PREALERT_READY)
-                    ->orWhere('status', self::STATUS_CONSOLIDATED);
+                ->orWhere('status', self::STATUS_CONSOLIDATED);
         });
     }
 
@@ -89,7 +95,7 @@ class Order extends Model implements Package
 
     public function getSenderFullName()
     {
-        return $this->sender_first_name.' '.$this->sender_last_name;
+        return $this->sender_first_name . ' ' . $this->sender_last_name;
     }
 
     public function paymentInvoices()
@@ -99,27 +105,27 @@ class Order extends Model implements Package
 
     public function recipient()
     {
-        return $this->hasOne(Recipient::class,'order_id');
+        return $this->hasOne(Recipient::class, 'order_id');
     }
 
     public function parentOrder()
     {
-        return $this->belongsToMany(Order::class,'order_orders','order_id','consolidated_with_id');
+        return $this->belongsToMany(Order::class, 'order_orders', 'order_id', 'consolidated_with_id');
     }
 
     public function subOrders()
     {
-        return $this->belongsToMany(Order::class,'order_orders','consolidated_with_id','order_id');
+        return $this->belongsToMany(Order::class, 'order_orders', 'consolidated_with_id', 'order_id');
     }
 
     public function shippingService()
     {
-        return $this->belongsTo(ShippingService::class,'shipping_service_id');
+        return $this->belongsTo(ShippingService::class, 'shipping_service_id');
     }
 
     public function affiliateSale()
     {
-        return $this->hasOne(AffiliateSale::class,'order_id');
+        return $this->hasOne(AffiliateSale::class, 'order_id');
     }
 
     public function items()
@@ -159,11 +165,11 @@ class Order extends Model implements Package
 
     public function isPaid()
     {
-        if ( !$this->getPaymentInvoice() ){
+        if (!$this->getPaymentInvoice()) {
             return $this->is_paid;
         }
 
-        if ( !$this->getPaymentInvoice()->isPrePaid() ){
+        if (!$this->getPaymentInvoice()->isPrePaid()) {
             return true;
         }
 
@@ -175,24 +181,24 @@ class Order extends Model implements Package
         return $this->status == self::STATUS_NEEDS_PROCESSING;
     }
 
-    public function isShipped()
+    public function getIsShippedAttribute()
     {
         return $this->status == self::STATUS_SHIPPED;
     }
 
-    public function isRefund()
+    public function getIsRefundAttribute()
     {
         return $this->status == self::STATUS_REFUND;
     }
 
-    public function isArrivedAtWarehouse()
+    public function getIsArrivedAtWarehouseAttribute()
     {
-        return $this->is_received_from_sender;
+        return $this->is_received_from_sender ?? false;
     }
 
     public function purchaseInvoice()
     {
-        return $this->belongsTo(Document::class,'purchase_invoice');
+        return $this->belongsTo(Document::class, 'purchase_invoice');
     }
 
     public function images()
@@ -231,10 +237,10 @@ class Order extends Model implements Package
     public function syncServices(array $services)
     {
         $this->services()->delete();
-        foreach($services as $serviceId){
+        foreach ($services as $serviceId) {
             $service = HandlingService::find($serviceId);
 
-            if (!$service ) continue;
+            if (!$service) continue;
 
             $this->services()->create([
                 'service_id' => $service->id,
@@ -245,69 +251,64 @@ class Order extends Model implements Package
         }
     }
 
-    public function isMeasurmentUnitCm()
+    public function getIsWeightInKgAttribute()
     {
         return $this->measurement_unit == 'kg/cm';
     }
 
-    public function isWeightInKg()
-    {
-        return $this->measurement_unit == 'kg/cm';
-    }
-
-    public function getOriginalWeight($unit='kg')
+    public function getOriginalWeight($unit = 'kg')
     {
         $weight = $this->weight;
 
-        if ( $unit == 'kg' && $this->isWeightInKg() ){
-            return round($weight,2);
+        if ($unit == 'kg' && $this->is_weight_in_kg) {
+            return round($weight, 2);
         }
 
-        if ( $unit == 'lbs' && !$this->isWeightInKg() ){
-            return round($weight,2);
+        if ($unit == 'lbs' && !$this->is_weight_in_kg) {
+            return round($weight, 2);
         }
 
-        if ( $unit == 'lbs' && $this->isWeightInKg() ){
-            return round(UnitsConverter::kgToPound($weight),2);
+        if ($unit == 'lbs' && $this->is_weight_in_kg) {
+            return round(UnitsConverter::kgToPound($weight), 2);
         }
 
-        if ( $unit == 'kg' && !$this->isWeightInKg() ){
-            return round(UnitsConverter::poundToKg($weight),2);
+        if ($unit == 'kg' && !$this->is_weight_in_kg) {
+            return round(UnitsConverter::poundToKg($weight), 2);
         }
     }
 
-    public function getWeight($unit='kg')
+    public function getWeight($unit = 'kg')
     {
-        $orignalWeight =   $this->weight; //$this->isWeightInKg() ? $this->weight : UnitsConverter::poundToKg($this->weight);
-        $volumnWeight = WeightCalculator::getVolumnWeight($this->length,$this->width,$this->height,$this->isWeightInKg()? 'cm' : 'in');
+        $orignalWeight =   $this->weight; //$this->is_weight_in_kg ? $this->weight : UnitsConverter::poundToKg($this->weight);
+        $volumnWeight = WeightCalculator::getVolumnWeight($this->length, $this->width, $this->height, $this->is_weight_in_kg ? 'cm' : 'in');
 
         $weight = $volumnWeight > $orignalWeight ? $volumnWeight : $orignalWeight;
 
-        if ( $unit == 'kg' && $this->isWeightInKg() ){
+        if ($unit == 'kg' && $this->is_weight_in_kg) {
             return $weight;
         }
 
-        if ( $unit == 'lbs' && !$this->isWeightInKg() ){
+        if ($unit == 'lbs' && !$this->is_weight_in_kg) {
             return $weight;
         }
 
-        if ( $unit == 'lbs' && $this->isWeightInKg() ){
+        if ($unit == 'lbs' && $this->is_weight_in_kg) {
             return UnitsConverter::kgToPound($weight);
         }
 
-        if ( $unit == 'kg' && !$this->isWeightInKg() ){
+        if ($unit == 'kg' && !$this->is_weight_in_kg) {
             return UnitsConverter::poundToKg($weight);
         }
     }
 
-    public function hasBattery()
+    public function getHasBatteryAttribute()
     {
-        return $this->items()->where('contains_battery',true)->count() > 0;
+        return $this->items()->where('contains_battery', true)->count() > 0;
     }
 
-    public function hasPerfume()
+    public function getHasPerfumeAttribute()
     {
-        return $this->items()->where('contains_perfume',true)->count() > 0;
+        return $this->items()->where('contains_perfume', true)->count() > 0;
     }
 
     public function setCN23(array $data)
@@ -320,22 +321,22 @@ class Order extends Model implements Package
 
     public function getCN23()
     {
-        return $this->cn23 ? new TempModel($this->cn23): null;
+        return $this->cn23 ? new TempModel($this->cn23) : null;
     }
 
     public function hasCN23()
     {
-        return $this->cn23 ? true: false;
+        return $this->cn23 ? true : false;
     }
 
-    public function hasSecondLabel()
+    public function getHasSecondLabelAttribute()
     {
-        return $this->us_api_response ? true: false;
+        return $this->us_api_response ? true : false;
     }
 
     public function usLabelService()
     {
-        return $this->hasSecondLabel() ? $this->us_api_service : null;
+        return $this->has_second_label ? $this->us_api_service : null;
     }
 
     public function getCarrierAttribute()
@@ -345,129 +346,97 @@ class Order extends Model implements Package
 
     public function carrierService()
     {
-        if ($this->shippingService()) {
-            if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GDE_PRIORITY_MAIL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GDE_FIRST_CLASS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_PMI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_CEP) {
-
-                return 'USPS';
-
-            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND){
-
-                return 'UPS';
-
-            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND){
-
-                return 'FEDEX';
-
-            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::SRP || optional($this->shippingService)->service_sub_class == ShippingService::SRM){
-
-                return 'Correios Chile';
-
-            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS || optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat || optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post){
-
-                return 'Global eParcel';
-
-            }
-            elseif(in_array(optional($this->shippingService)->service_sub_class,[ShippingService::Prime5,ShippingService::Prime5RIO,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia])){
-                return 'Prime5';
-
-            }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium || optional($this->shippingService)->service_sub_class == ShippingService::LT_PRIME || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_LT_Premium ||  optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_CO_EMS ||  optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_CO_REG){
-
-                return 'PostPlus';
-
-            }
-            elseif(optional($this->shippingService)->is_anjun_china_service_sub_class){
-                return 'Correios Brazil';
-            }
-            elseif(optional($this->shippingService)->isAnjunService()){
-                return 'Correios Brazil';
-            }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS ){
-
-                return 'Total Express';
-
-            }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::HD_Express){
-                return 'HD Express';
-            }
-            elseif(optional($this->shippingService)->is_bcn_service){
-                return 'Correios Brazil';
-            }
-            elseif(optional($this->shippingService)->is_hound_express){
-
-                return 'Hound Express';
-            }
-            return 'Correios Brazil';
-        }
-
-        return null;
+        return match ((int) optional($this->shippingService)->service_sub_class) {
+            ShippingService::AJ_Standard_CN,
+            ShippingService::AJ_Express_CN,
+            ShippingService::BCN_Packet_Standard,
+            ShippingService::BCN_Packet_Express,
+            ShippingService::Packet_Express,
+            ShippingService::Packet_Standard,
+            ShippingService::Packet_Mini, => 'Correios Brazil',
+            ShippingService::USPS_PRIORITY,
+            ShippingService::USPS_FIRSTCLASS,
+            ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+            ShippingService::USPS_GROUND,
+            ShippingService::GDE_PRIORITY_MAIL,
+            ShippingService::GDE_FIRST_CLASS,
+            ShippingService::GSS_PMI,
+            ShippingService::GSS_EPMEI,
+            ShippingService::GSS_EPMI,
+            ShippingService::GSS_FCM,
+            ShippingService::GSS_CEP,
+            ShippingService::GSS_EMS => 'USPS',
+            ShippingService::UPS_GROUND => 'UPS',
+            ShippingService::FEDEX_GROUND => 'FEDEX',
+            ShippingService::SRP,
+            ShippingService::SRM => 'Correios Chile',
+            ShippingService::GePS,
+            ShippingService::GePS_EFormat,
+            ShippingService::Parcel_Post => 'Global eParcel',
+            ShippingService::Prime5,
+            ShippingService::Prime5RIO,
+            ShippingService::DirectLinkCanada,
+            ShippingService::DirectLinkMexico,
+            ShippingService::DirectLinkChile,
+            ShippingService::DirectLinkAustralia => 'Prime5',
+            ShippingService::Post_Plus_Registered,
+            ShippingService::Post_Plus_EMS,
+            ShippingService::Post_Plus_Prime,
+            ShippingService::Post_Plus_Premium,
+            ShippingService::LT_PRIME,
+            ShippingService::Post_Plus_LT_Premium,
+            ShippingService::Post_Plus_CO_EMS,
+            ShippingService::Post_Plus_CO_REG => 'PostPlus',
+            ShippingService::HoundExpress => 'Hound Express',
+            ShippingService::TOTAL_EXPRESS => 'Total Express',
+            ShippingService::HD_Express => 'HD Express',
+            default => 'Correios Brazil',
+        };
     }
+
 
     public function carrierCost()
     {
-        if ($this->shippingService()) {
-            if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND ||
-                optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GePS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Prime5 ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Prime5RIO ||
-                optional($this->shippingService)->service_sub_class == ShippingService::HD_Express ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_PMI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ) {
-
-                return $this->user_declared_freight;
-            }
-
-            return $this->getValuePaidToCorreios();
-        }
-
-        return null;
+        return match ((int)optional($this->shippingService)->service_sub_class) {
+            ShippingService::USPS_PRIORITY,
+            ShippingService::USPS_FIRSTCLASS,
+            ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+            ShippingService::UPS_GROUND,
+            ShippingService::FEDEX_GROUND,
+            ShippingService::GePS,
+            ShippingService::GePS_EFormat,
+            ShippingService::Prime5,
+            ShippingService::USPS_GROUND,
+            ShippingService::Post_Plus_Registered,
+            ShippingService::Post_Plus_EMS,
+            ShippingService::Parcel_Post,
+            ShippingService::Post_Plus_Prime,
+            ShippingService::Post_Plus_Premium,
+            ShippingService::Prime5RIO,
+            ShippingService::HD_Express,
+            ShippingService::GSS_PMI,
+            ShippingService::GSS_EPMEI,
+            ShippingService::GSS_EPMI,
+            ShippingService::GSS_FCM,
+            ShippingService::GSS_EMS => $this->user_declared_freight,
+            default => $this->getValuePaidToCorreios(),
+        };
     }
-
     private function getValuePaidToCorreios()
     {
         $rateSlab = AccrualRate::getCarrierRate($this->getWeight('kg'), optional($this->shippingService)->service_sub_class);
-
         if (!$rateSlab) {
             return 0;
         }
-
         $container = $this->containers->first();
-
         if (!$container) {
             return $rateSlab->gru;
         }
-
-        switch ($container->getDestinationAriport()) {
+        switch ($container->destination_ariport) {
             case "GRU" || "Santiago":
                 return $rateSlab->gru;
-
             default:
                 return $rateSlab->cwb;
         }
@@ -477,7 +446,8 @@ class Order extends Model implements Package
      * Sinerlog modification
      * This function sets sinerlog tran id
      */
-    public function setSinerlogTrxId($trxId){
+    public function setSinerlogTrxId($trxId)
+    {
         $this->update([
             'sinerlog_tran_id' => $trxId
         ]);
@@ -487,7 +457,8 @@ class Order extends Model implements Package
      * Sinerlog modification
      * This function sets sinerlog freight price
      */
-    public function setSinerlogFreight($freight){
+    public function setSinerlogFreight($freight)
+    {
         $this->update([
             'sinerlog_freight' => $freight
         ]);
@@ -497,39 +468,41 @@ class Order extends Model implements Package
      * Sinerlog modification
      * This function sets sinerlog url label
      */
-    public function setSinerlogLabelURL($url){
+    public function setSinerlogLabelURL($url)
+    {
         $this->update([
             'sinerlog_url_label' => $url
         ]);
     }
-    public function getTempWhrNumber($api=false)
+    public function getTempWhrNumber($api = false)
     {
-        $tempWhr =  $this->change_id;        
-        switch(strlen($tempWhr)){
-            case(5):
-                $tempWhr = (str_pad($tempWhr, 10, '32023', STR_PAD_LEFT));
-                break;
-                case(6):
-                    $tempWhr = (str_pad($tempWhr, 10, '2023', STR_PAD_LEFT));
-                    break;
-                    case(7):
-                        $tempWhr = (str_pad($tempWhr, 10, '023', STR_PAD_LEFT));
-                        break;
-                        case(8):
-                                $tempWhr = (str_pad($tempWhr, 10, '23', STR_PAD_LEFT)); 
-                            break;
-                            case(9):
-                                $tempWhr = (str_pad($tempWhr, 10, '3', STR_PAD_LEFT));
-                                break;
-        }
-        return ($api?'TM':'HD')."{$tempWhr}".(optional($this->recipient)->country->code??"BR");
+        $tempWhr = $this->change_id;
+        $paddingLength = match (strlen($tempWhr)) {
+            5 => '32023',
+            6 => '2023',
+            7 => '023',
+            8 => '23',
+            9 => '3',
+            default => '',
+        };
+        $tempWhr = str_pad($tempWhr, 10, $paddingLength, STR_PAD_LEFT);
+        return ($api ? 'TM' : 'HD') . "{$tempWhr}" . (optional($this->recipient)->country->code ?? "BR");
     }
 
-    public function doCalculations($onVolumetricWeight=true, $isServices = false)
+
+    public function doCalculations($onVolumetricWeight = true, $isServices = false)
     {
         $shippingService = $this->shippingService;
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
-        if ($shippingService && in_array($shippingService->service_sub_class, $this->usShippingServicesSubClasses())) {
+        if ($shippingService && in_array($shippingService->service_sub_class, [
+            ShippingService::USPS_PRIORITY,
+            ShippingService::USPS_FIRSTCLASS,
+            ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+            ShippingService::UPS_GROUND,
+            ShippingService::FEDEX_GROUND,
+            ShippingService::USPS_GROUND,
+        ])) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
         }elseif ($shippingService && $shippingService->isGSSService()) {
@@ -539,18 +512,18 @@ class Order extends Model implements Package
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
 
-        $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() ? 1 : 0 );
-        $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() ? 1 : 0 );
+        $battriesExtra = $shippingService->contains_battery_charges * ($this->items()->batteries()->count() ? 1 : 0);
+        $pefumeExtra = $shippingService->contains_perfume_charges * ($this->items()->perfumes()->count() ? 1 : 0);
 
         // $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
-        
+
         $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
-        $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
+        $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES', 0, null, true) : 0;
 
         $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $this->user_profit;
 
         $discount = 0; // not implemented yet
-        $gross_total = $total - $discount;
+        $grossTotal = $total - $discount;
 
         $this->update([
             'consolidation' => $consolidation,
@@ -559,41 +532,48 @@ class Order extends Model implements Package
             'dangrous_goods' => $dangrousGoodsCost,
             'total' => $total,
             'discount' => $discount,
-            'gross_total' => $gross_total,
+            'gross_total' => $grossTotal,
             'user_declared_freight' => $this->user_declared_freight
-            // 'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
+        ]);
+        $taxAndDuty = (float)$this->calculate_tax_and_duty;
+        $feeForTaxAndDuty = (float)$this->calculate_fee_for_tax_and_duty;
+        $total = $grossTotal + $taxAndDuty + $feeForTaxAndDuty;        
+        $grossTotal = $total - $discount;
+        $this->update([
+            'tax_and_duty' =>  $taxAndDuty,
+            'fee_for_tax_and_duty' => $feeForTaxAndDuty,
+            'total' => $total,
+            'gross_total' => $grossTotal,
         ]);
     }
 
     public function calculateAdditionalServicesCost($services)
     {
-        if($this->user->insurance == false){
-            foreach ($services as $service){
-                if($service->name == 'Insurance' || $service->name == 'Seguro'){
-                    $order_value = $this->items()->sum(\DB::raw('quantity * value'));
-                    $total_insurance = (3/100) * $order_value;
-                    if ($total_insurance > 35){
-                        $service->price = $total_insurance;
-                    }
+        if ($this->user->insurance == false) {
+            foreach ($services as $service) {
+                if ($service->name == 'Insurance' || $service->name == 'Seguro') {
+                    $this->updateInsuranceServicePrice($service);
                 }
             }
         }
-
         return $services->sum('price');
     }
+    private function updateInsuranceServicePrice($service)
+    {
+        $orderValue = $this->items()->sum(\DB::raw('quantity * value'));
+        $totalInsurance = (3 / 100) * $orderValue;
+        if ($totalInsurance > 35) {
+            $service->price = $totalInsurance;
+        }
+    }
+
     public function calculateProfit($shippingCost, $shippingService)
     {
-        if ($shippingService->service_sub_class == ShippingService::UPS_GROUND) {
-
-            $profit_percentage = (setting('ups_profit', null, $this->user->id) != null &&  setting('ups_profit', null, $this->user->id) != 0) ?  setting('ups_profit', null, $this->user->id) : setting('ups_profit', null, User::ROLE_ADMIN);
-
-        }elseif ($shippingService->service_sub_class == ShippingService::FEDEX_GROUND) {
-
-            $profit_percentage = (setting('fedex_profit', null, $this->user->id) != null &&  setting('fedex_profit', null, $this->user->id) != 0) ?  setting('fedex_profit', null, $this->user->id) : setting('fedex_profit', null, User::ROLE_ADMIN);
-        }
-        else {
-            $profit_percentage = (setting('usps_profit', null, $this->user->id) != null &&  setting('usps_profit', null, $this->user->id) != 0) ?  setting('usps_profit', null, $this->user->id) : setting('usps_profit', null, User::ROLE_ADMIN);
-        }
+        $profit_percentage = match ((int)$shippingService->service_sub_class) {
+            ShippingService::UPS_GROUND => setting('ups_profit', null, $this->user->id) ?? setting('ups_profit', null, User::ROLE_ADMIN),
+            ShippingService::FEDEX_GROUND => setting('fedex_profit', null, $this->user->id) ?? setting('fedex_profit', null, User::ROLE_ADMIN),
+            default => setting('usps_profit', null, $this->user->id) ?? setting('usps_profit', null, User::ROLE_ADMIN),
+        };
 
         $profit = $profit_percentage / 100;
 
@@ -601,35 +581,15 @@ class Order extends Model implements Package
         return true;
     }
 
-    public function usShippingServicesSubClasses()
-    {
-        return [
-            ShippingService::USPS_PRIORITY,
-            ShippingService::USPS_FIRSTCLASS,
-            ShippingService::USPS_PRIORITY_INTERNATIONAL,
-            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
-            ShippingService::UPS_GROUND,
-            ShippingService::FEDEX_GROUND,
-            ShippingService::USPS_GROUND,
-        ];
-    }
-
-    private function getAdminProfit()
-    {
-        $admin = User::where('role_id',1)->first();
-
-        return $admin->api_profit;
-    }
-
     public function addAffiliateCommissionSale(User $referrer, $commissionCalculator)
     {
-        return $this->affiliateSale()->create( [
+        return $this->affiliateSale()->create([
             'value' => $commissionCalculator->getValue(),
             'type' => $commissionCalculator->getCommissionSetting()->type,
             'commission' => $commissionCalculator->getCommission(),
             'user_id' => $referrer->id,
             'referrer_id' => $this->user_id,
-            'detail' => 'Commission from order '. $this->warehouse_number,
+            'detail' => 'Commission from order ' . $this->warehouse_number,
         ]);
     }
     /**
@@ -637,81 +597,53 @@ class Order extends Model implements Package
      */
     public function getGrossTotalAttribute($value)
     {
-        return round($value,2);
+        return round($value, 2);
     }
 
     public function getTotalAttribute($value)
     {
-        return round($value,2);
+        return round($value, 2);
     }
 
     public function getShippingValueAttribute($value)
     {
-        return round($value,2);
+        return round($value, 2);
     }
 
     public function getStatusClass()
     {
-        $class = "";
-
-        if ( $this->status == Order::STATUS_INVENTORY_PENDING ){
-            $class = 'btn btn-sm btn-info';
-        }
-        if ( $this->status == Order::STATUS_INVENTORY_IN_PROGRESS ){
-            $class = 'btn btn-sm btn-warning';
-        }
-        if ( $this->status == Order::STATUS_INVENTORY_CANCELLED ){
-            $class = 'btn btn-sm btn-danger';
-        }
-        if ( $this->status == Order::STATUS_INVENTORY_REJECTED ){
-            $class = 'btn btn-sm btn-danger';
-        }
-        if ( $this->status == Order::STATUS_INVENTORY_FULFILLED ){
-            $class = 'btn btn-sm btn-success';
-        }
-        if ( $this->status == Order::STATUS_PREALERT_TRANSIT ){
-            $class = 'btn btn-sm btn-danger';
-        }
-        if ( $this->status == Order::STATUS_PREALERT_READY ){
-            $class = 'btn btn-sm btn-primary';
-        }
-        if ( $this->status == Order::STATUS_ORDER ){
-            $class = 'btn btn-sm btn-info';
-        }
-        if ( $this->status == Order::STATUS_NEEDS_PROCESSING ){
-            $class = 'btn btn-sm btn-warning text-dark';
-        }
-        if ( $this->status == Order::STATUS_CANCEL ){
-            $class = 'btn btn-sm btn-cancelled bg-cancelled';
-        }
-        if ( $this->status == Order::STATUS_REJECTED ){
-            $class = 'btn btn-sm btn-cancelled bg-cancelled';
-        }
-        if ( $this->status == Order::STATUS_RELEASE ){
-            $class = 'btn btn-sm btn-warning';
-        }
-        if ( $this->status == Order::STATUS_PAYMENT_PENDING ){
-            $class = 'btn btn-sm btn-danger';
-        }
-        if ( $this->status == Order::STATUS_PAYMENT_DONE ){
-            $class = 'btn btn-sm btn-success';
-        }
-        if ( $this->status == Order::STATUS_SHIPPED ){
-            $class = 'btn btn-sm bg-secondary text-white';
-        }
-        if ( $this->status == Order::STATUS_REFUND ){
-            $class = 'btn btn-sm btn-refund text-white';
-        }
-        return $class;
+        return match ((int)$this->status) {
+            Order::STATUS_INVENTORY_PENDING => 'btn btn-sm btn-info',
+            Order::STATUS_INVENTORY_IN_PROGRESS => 'btn btn-sm btn-warning',
+            Order::STATUS_INVENTORY_CANCELLED,
+            Order::STATUS_INVENTORY_REJECTED,
+            Order::STATUS_PREALERT_TRANSIT => 'btn btn-sm btn-danger',
+            Order::STATUS_INVENTORY_FULFILLED => 'btn btn-sm btn-success',
+            Order::STATUS_PREALERT_READY => 'btn btn-sm btn-primary',
+            Order::STATUS_ORDER => 'btn btn-sm btn-info',
+            Order::STATUS_NEEDS_PROCESSING => 'btn btn-sm btn-warning text-dark',
+            Order::STATUS_CANCEL,
+            Order::STATUS_REJECTED => 'btn btn-sm btn-cancelled bg-cancelled',
+            Order::STATUS_RELEASE => 'btn btn-sm btn-warning',
+            Order::STATUS_PAYMENT_PENDING => 'btn btn-sm btn-danger',
+            Order::STATUS_PAYMENT_DONE => 'btn btn-sm btn-success',
+            Order::STATUS_SHIPPED => 'btn btn-sm bg-secondary text-white',
+            Order::STATUS_REFUND => 'btn btn-sm btn-refund text-white',
+            default => '',
+        };
     }
+
 
 
     public function getDistributionModality(): int
     {
-                if ($this->shippingService && in_array($this->shippingService->service_sub_class, $this->anjunShippingServicesSubClasses())) {
+        if ($this->shippingService && in_array($this->shippingService->service_sub_class, [
+            ShippingService::AJ_Packet_Standard,
+            ShippingService::AJ_Packet_Express,
+        ])) {
             return __default($this->getCorrespondenceServiceCode($this->shippingService->service_sub_class), ModelsPackage::SERVICE_CLASS_STANDARD);
         }
-        return __default( optional($this->shippingService)->service_sub_class ,ModelsPackage::SERVICE_CLASS_STANDARD );
+        return __default(optional($this->shippingService)->service_sub_class, ModelsPackage::SERVICE_CLASS_STANDARD);
     }
 
     public function getService(): int
@@ -719,7 +651,7 @@ class Order extends Model implements Package
         return 2;
     }
 
-    public function getOrderValue()
+    public function getOrderItemsValueAttribute()
     {
         return $this->items()->sum(DB::raw('quantity * value'));
     }
@@ -754,14 +686,9 @@ class Order extends Model implements Package
         return $this->api_pickup_response ? json_decode($this->api_pickup_response) : null;
     }
 
-    public function isInternational()
+    public function getIsInternationalAttribute()
     {
         return $this->recipient->country->id != Country::US;
-    }
-
-    public function isTrashed()
-    {
-        return $this->deleted_at ? true : false;
     }
 
     public function discountCost($onVolumetricWeight = true)
@@ -769,16 +696,16 @@ class Order extends Model implements Package
         $shippingService = $this->shippingService;
 
         if ($this->weight_discount && $shippingService && !in_array($shippingService->service_sub_class, [
-            ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS,ShippingService::USPS_PRIORITY_INTERNATIONAL,
-            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,ShippingService::UPS_GROUND,ShippingService::FEDEX_GROUND, ShippingService::USPS_GROUND]))
-        {
+            ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS, ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, ShippingService::UPS_GROUND, ShippingService::FEDEX_GROUND, ShippingService::USPS_GROUND
+        ])) {
 
             $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
 
-            $battriesExtra = $shippingService->contains_battery_charges * ( $this->items()->batteries()->count() );
-            $pefumeExtra = $shippingService->contains_perfume_charges * ( $this->items()->perfumes()->count() );
+            $battriesExtra = $shippingService->contains_battery_charges * ($this->items()->batteries()->count());
+            $pefumeExtra = $shippingService->contains_perfume_charges * ($this->items()->perfumes()->count());
             $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
-            $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
+            $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES', 0, null, true) : 0;
 
             $otherTotal = $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation;
 
@@ -796,108 +723,79 @@ class Order extends Model implements Package
         return null;
     }
 
-    public function anjunShippingServicesSubClasses()
-    {
-        return [
-            ShippingService::AJ_Packet_Standard,
-            ShippingService::AJ_Packet_Express,
-        ];
-    }
+
 
     public function getCorrespondenceServiceCode($serviceCode)
     {
-        return ($serviceCode == ShippingService::AJ_Packet_Express) ? ShippingService::Packet_Express : ShippingService::Packet_Standard;
+        return in_array($serviceCode, ShippingService::EXPRESSES) ? ShippingService::Packet_Express : ShippingService::Packet_Standard;
     }
 
-    public function secondCarrierAervice()
+    public function getSecondCarrierServiceAttritube()
     {
-        if ( $this->us_api_service == ShippingService::USPS_PRIORITY ||
-            $this->us_api_service == ShippingService::USPS_FIRSTCLASS ||
-            $this->us_api_service == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-            $this->us_api_service == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
-            $this->us_api_service == ShippingService::USPS_GROUND )
-        {
-
-            return 'USPS';
-
-        }elseif( $this->us_api_service == ShippingService::UPS_GROUND ){
-
-            return 'UPS';
-
-        }elseif( $this->us_api_service == ShippingService::FEDEX_GROUND ){
-            
-            return 'FEDEX';
-        }
-
-        return null;
+        return match ((int)$this->us_api_service) {
+            ShippingService::USPS_PRIORITY,
+            ShippingService::USPS_FIRSTCLASS,
+            ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+            ShippingService::USPS_GROUND => 'USPS',
+            ShippingService::UPS_GROUND => 'UPS',
+            ShippingService::FEDEX_GROUND => 'FEDEX',
+            default => null,
+        };
     }
-    
-    public function getStatusNameAttribute()
-    {  
 
-        if($this->status == Order::STATUS_PREALERT_TRANSIT) {
-            return  "TRANSIT";
-        }elseif($this->status == Order::STATUS_PREALERT_READY){
-            return  "READY";
-        }elseif($this->status == Order::STATUS_REFUND){
-            return  "REFUND";
-        }elseif($this->status == Order::STATUS_ORDER){
-            return  "ORDER";
-        }elseif($this->status == Order::STATUS_NEEDS_PROCESSING){
-            return  "PROCESSING";
-        }elseif($this->status == Order::STATUS_PAYMENT_PENDING){
-            return  "PAYMENT PENDING";
-        }elseif($this->status == Order::STATUS_PAYMENT_DONE){
-            return  "PAYMENT DONE";
-        }elseif($this->status == Order::STATUS_CANCEL) {
-            return "CANCEL";
-        }elseif($this->status == Order::STATUS_REJECTED) {
-            return "REJECTED";
-        }elseif($this->status == Order::STATUS_RELEASE) {
-            return "RELEASE";
-        }
-        elseif($this->status == Order::STATUS_SHIPPED) {
-            return "SHIPPED";
-        }
+    public function getStatusNameAttribute()
+    {
+        return match ((int)$this->status) {
+            Order::STATUS_PREALERT_TRANSIT => 'TRANSIT',
+            Order::STATUS_PREALERT_READY => 'READY',
+            Order::STATUS_REFUND => 'REFUND',
+            Order::STATUS_ORDER => 'ORDER2',
+            Order::STATUS_NEEDS_PROCESSING => 'PROCESSING',
+            Order::STATUS_PAYMENT_PENDING => 'PAYMENT PENDING',
+            Order::STATUS_PAYMENT_DONE => 'PAYMENT DONE',
+            Order::STATUS_CANCEL => 'CANCEL',
+            Order::STATUS_REJECTED => 'REJECTED',
+            Order::STATUS_RELEASE => 'RELEASE',
+            Order::STATUS_SHIPPED => 'SHIPPED',
+            default => null,
+        };
     }
 
     public function getChangeIdAttribute()
-    { 
+    {
         $id = $this->id;
-        $date = explode(":",$this->created_at);
+        $date = explode(":", $this->created_at);
         $minute = $date[1];
         $sec = $date[2];
-        $changed='';
-        switch(true){
-            case (strlen($id)<=3):{
-                $changed = substr($id,0,3). $minute. $sec;
-                break;
-            }
-            case (strlen($id)<=6):{
-                $changed = substr($id,0,3) . $minute. substr($id,3,3). $sec;
-                break;
-             }
-             case (strlen($id)<=9):{
-                $changed = substr($id,0,3) . $minute .substr($id,3,3). $sec .substr($id,6,3);
-                break;
-             }
-             case(strlen($id)>=10):{
-                $changed = substr($id,0,3) . $minute .substr($id,3,6). $sec .substr($id,9);
-                break;
-            }
+        $changed = '';
+        switch (true) {
+            case (strlen($id) <= 3): {
+                    $changed = substr($id, 0, 3) . $minute . $sec;
+                    break;
+                }
+            case (strlen($id) <= 6): {
+                    $changed = substr($id, 0, 3) . $minute . substr($id, 3, 3) . $sec;
+                    break;
+                }
+            case (strlen($id) <= 9): {
+                    $changed = substr($id, 0, 3) . $minute . substr($id, 3, 3) . $sec . substr($id, 6, 3);
+                    break;
+                }
+            case (strlen($id) >= 10): {
+                    $changed = substr($id, 0, 3) . $minute . substr($id, 3, 6) . $sec . substr($id, 9);
+                    break;
+                }
         }
         return $changed;
     }
     public function resolveRouteBinding($encryptedId, $field = null)
     {
-        try{
+        try {
             return $this->withTrashed()->findOrFail(decrypt($encryptedId));
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return $this->withTrashed()->findOrFail($encryptedId);
-            
         }
-        
     }
 
     public function getEncryptedIdAttribute()
@@ -913,9 +811,9 @@ class Order extends Model implements Package
         $decode = json_decode($this->api_response);
         return $decode->labelResponse->data->download_url;
     }
-    function getCn23LabelUrlAttribute() {
-        if($this->shippingService->is_total_express)
-        {
+    function getCn23LabelUrlAttribute()
+    {
+        if ($this->shippingService->is_total_express) {
             return $this->totalExpressLabelUrl();
         }
         return null;
@@ -947,6 +845,67 @@ class Order extends Model implements Package
         }
         $this->user_declared_freight = $price;
         return true;
+    }
+    public function updateShippingServiceFromSetting()
+    {
+        if ($this->shippingService->is_anjun_service || $this->shippingService->is_bcn_service || $this->shippingService->is_correios_service) {
+            if ($this->corrios_tracking_code) {
+                return $this;
+            }
+            $serviceSubClass = $this->shippingService->service_sub_class;
+            $standard = in_array($serviceSubClass, ShippingService::STANDARDS);
+            $serviceSubClassMap = [
+                'china_anjun_api' => $standard ? ShippingService::AJ_Standard_CN : ShippingService::AJ_Express_CN,
+                'correios_api' => $standard ? ShippingService::Packet_Standard : ShippingService::Packet_Express,
+                'bcn_api' => $standard ? ShippingService::BCN_Packet_Standard : ShippingService::BCN_Packet_Express,
+                'anjun_api' => $standard ? ShippingService::AJ_Packet_Standard : ShippingService::AJ_Packet_Express,
+            ];
+            foreach ($serviceSubClassMap as $settingName => $subClass) {
+                if (setting($settingName, null, User::ROLE_ADMIN)) {
+                    $serviceSubClass = $subClass;
+                    break;
+                }
+            }
+            $this->update([
+                'shipping_service_id' => ShippingService::where('service_sub_class', $serviceSubClass)->first()->id,
+            ]);
+            return $this->refresh();
+        }
+        return $this;
+    }
+    public function getCalculateTaxAndDutyAttribute(){
+        $totalTaxAndDuty = 0;
+        if (strtolower($this->tax_modality) == "ddp") {
+            if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
+
+                $totalCost = $this->gross_total + $this->insurance_value + $this->carrierCost();
+                $duty = $totalCost > 50 ? $totalCost * .6 : 0;
+                $totalCostOfTheProduct = $totalCost + $duty;
+                $icms = .17;
+                $totalIcms = $icms * $totalCostOfTheProduct;
+                $totalTaxAndDuty = $duty + $totalIcms; 
+                \Log::info([
+                    'recipient country' => $this->recipient->country->code,
+                    'gross total' => $this->gross_total,
+                    'insurance value' => $this->insurance_value,
+                    'carrierCost' => $this->carrierCost(),
+                    'totalCost' => $totalCost,
+                    'duty' => $duty,
+                    'totalCostOfTheProduct' => $totalCostOfTheProduct,
+                    'icms' => $icms,
+                    'totalIcms' => $totalIcms,
+                    'totalTaxAndDuty' => $totalTaxAndDuty, 
+                ]);
+            }
+        }
+        return round($totalTaxAndDuty, 2);
+    }
+    public function getCalculateFeeForTaxAndDutyAttribute()
+    {
+        $percent = setting('pay_tax_service_percentage', null, $this->user_id) ?? 2;
+        $taxAndDuty = $this->calculate_tax_and_duty;
+        $fee = $taxAndDuty / 100 * $percent;
+        return $taxAndDuty >0 && $fee  < 0.5 ? 0.5: number_format($fee, 2);
     }
 
 }
