@@ -6,11 +6,11 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('warehouse.containers.Create Container')</h4>
-                        <a href="{{ route('warehouse.totalexpress_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
+                        <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>request('service_sub_class')]) }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('warehouse.totalexpress_containers.store') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('warehouse.containers_factory.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="controls row mb-1 align-items-center my-2">
@@ -54,7 +54,9 @@
                                     <div class="col-md-6">
                                         <select class="form-control" name="services_subclass_code">
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            <option value="{{App\Models\ShippingService::TOTAL_EXPRESS}}" {{ old('services_subclass_code') == App\Models\ShippingService::TOTAL_EXPRESS ? 'selected': '' }}>Total Express</option>
+                                            @foreach($shippingServices as $shippingService)
+                                            <option value="{{$shippingService->service_sub_class}}" {{ old('services_subclass_code') == $shippingService->service_sub_class ? 'selected': '' }}>Total Express</option>
+                                            @endforeach
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>
@@ -66,8 +68,7 @@
                                     <div class="col-md-9 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light btn-lg">
                                             @lang('warehouse.containers.Save')
-                                        </button>
-                                        {{-- <button type="reset" class="btn btn-outline-warning waves-effect waves-light">@lang('role.Reset')</button> --}}
+                                        </button> 
                                     </div>
                                 </div>
                             </form>

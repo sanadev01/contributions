@@ -9,7 +9,7 @@
                         <h4 class="mb-0">
                             @lang('warehouse.containers.Containers')
                         </h4>
-                        <a href="{{ route('warehouse.containers_factory.create',['service_sub_class'=>App\Models\ShippingService::PasarEx]) }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
+                        <a href="{{ route('warehouse.containers_factory.create',['service_sub_class'=>request('service_sub_class')]) }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
                         <div class="mt-1">
