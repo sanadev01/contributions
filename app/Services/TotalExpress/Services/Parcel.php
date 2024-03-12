@@ -23,9 +23,9 @@ class Parcel
       if (!$order->is_weight_in_kg) {
          $this->weight = UnitsConverter::poundToKg($order->getOriginalWeight('lbs'));
       }
-      $this->width = round($order->isMeasurmentUnitCm() ? $order->width : UnitsConverter::inToCm($order->width));
-      $this->height = round($order->isMeasurmentUnitCm() ? $order->height : UnitsConverter::inToCm($order->height));
-      $this->length = round($order->isMeasurmentUnitCm() ? $order->length : UnitsConverter::inToCm($order->length));
+      $this->width = round($order->is_weight_in_kg ? $order->width : UnitsConverter::inToCm($order->width));
+      $this->height = round($order->is_weight_in_kg ? $order->height : UnitsConverter::inToCm($order->height));
+      $this->length = round($order->is_weight_in_kg ? $order->length : UnitsConverter::inToCm($order->length));
    }
    public function getRequestBody()
    {
