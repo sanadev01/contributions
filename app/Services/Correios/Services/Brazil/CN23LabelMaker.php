@@ -40,7 +40,7 @@ class CN23LabelMaker implements HasLableExport
         $this->corriosLogo = \public_path('images/correios-1.png');
         $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
         $this->packetType = 'Packet Standard';
-        $this->contractNumber = 'Contract HERCO:  9912501576';
+        $this->contractNumber = 'H Contract:  9912501576';
         $this->packageSign = 'H';
         $this->service = 2;
         $this->returnAddress = 'Homedeliverybr <br>
@@ -63,11 +63,11 @@ class CN23LabelMaker implements HasLableExport
             $this->labelZipCodeGroup = getOrderGroupRange($this->order);
         }
         if ($this->order->shippingService->is_bcn_service) {
-            $this->contractNumber = 'Contract BCN Logistics: 0076204456';
+            $this->contractNumber = 'B Contract: 0076204456';
             $this->packageSign = 'B';
-        } 
-        if($this->order->shippingService->is_anjun_service){
-            $this->contractNumber = 'Contract ANJUN : 9912501700';
+        }
+        if($this->order->shippingService->isAnjunService()) {
+            $this->contractNumber = 'A Contract: 9912501700';
             $this->packageSign = 'A';
 
         }

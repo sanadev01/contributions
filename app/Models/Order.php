@@ -505,15 +505,11 @@ class Order extends Model implements Package
         ])) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
-        } elseif ($shippingService && $shippingService->is_gss_service) {
+        }elseif ($shippingService && $shippingService->isGSSService()) {
+            $this->calculateGSSProfit($shippingService);
             $shippingCost = $this->user_declared_freight;
-            if (!$isServices) {
-                $this->calculateGSSProfit($shippingCost, $shippingService);
-            } else {
-                $shippingCost = $this->shipping_value;
-            }
-        } else {
-            $shippingCost = $shippingService->getRateFor($this, true, $onVolumetricWeight);
+        }else {
+            $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
 
         $battriesExtra = $shippingService->contains_battery_charges * ($this->items()->batteries()->count() ? 1 : 0);
@@ -823,25 +819,31 @@ class Order extends Model implements Package
         return null;
     }
 
-    public function calculateGSSProfit($shippingCost, $shippingService)
+    public function calculateGSSProfit($shippingService)
     {
-        // $gssProfit = setting('gss_profit', null,  $this->user->id);
-        // if($gssProfit == null || $gssProfit == 0) { 
-        //     $gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
-        // }
-        $gssCost = 0;
         $gssProfit = ZoneCountry::where('shipping_service_id', $shippingService->id)
-            ->where('country_id', $this->recipient->country_id)
-            ->value('profit_percentage');
-        $profit = round($gssProfit / 100, 2);
-        $client = new Client();
-        $response = $client->getCostRates($this, $shippingService);
-        $data = optional($response)->getData();
-        if ($data->isSuccess && $data->output > 0){
-            $gssCost = $data->output;
+        ->where('country_id', $this->recipient->country_id)
+        ->value('profit_percentage');
+
+        if($gssProfit) {
+
+            $client = new Client();
+            $response = $client->getCostRates($this, $shippingService);
+            $data = optional($response)->getData();
+            if ($data->isSuccess && $data->output > 0){
+                $userDiscount =  setting('gss_profit', null, $this->user_id);
+                $userDiscount = ($userDiscount >= 0 && $userDiscount <= 100)?$userDiscount:0;
+                $totalProfit =   $gssProfit - ( $gssProfit / 100 * $userDiscount );
+                $profit = $data->output / 100 * ($totalProfit);
+                $price = round($data->output + $profit, 2);
+                // dd($price, $profit, $totalProfit, $this->shipping_value);
+                $this->update([
+                    'user_declared_freight' => $price,
+                ]);
+            }
+
         }
-        $addedProfit = round($gssCost * $profit, 2);
-        $this->user_declared_freight = $this->user_declared_freight - $addedProfit;
+        $this->user_declared_freight = $price;
         return true;
     }
     public function updateShippingServiceFromSetting()
