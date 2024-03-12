@@ -66,8 +66,7 @@ class OrderItemsController extends Controller
         if ( !$order->recipient ){
             abort(404);
         }
-
-        if($this->orderRepository->domesticService($request->shipping_service_id)){
+        if ($this->orderRepository->domesticService($request->shipping_service_id) || $order->shippingService->is_total_express) {
             $request->validate([
                 'user_declared_freight' => 'bail|required|gt:0',
             ], [
