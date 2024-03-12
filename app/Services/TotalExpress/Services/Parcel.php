@@ -36,7 +36,7 @@ class Parcel
          $contractId = config('total_express.test.contractId');
       }
       $streetNo=optional($this->order->recipient)->street_no;
-      if($streetNo=="0"){
+      if($streetNo == 0){
          $streetNo = null;
       }
       return [
