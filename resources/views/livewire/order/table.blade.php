@@ -155,6 +155,7 @@
                             <option value="Total Express">Total Express</option>
                             <option value="HD Express">HD Express</option>
                             <option value="Hound Express">Hound Express</option>
+                            <option value="PasarEx">Pasar Ex</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin

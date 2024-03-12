@@ -182,6 +182,11 @@ class OrderRepository
                     ShippingService::HD_Express
                 ];
             }
+            if($request->carrier == 'PasarEx'){
+                $service = [
+                    ShippingService::PasarEx
+                ];
+            }
             if($request->carrier == 'Correios AJ'){
                 $service = [
                     ShippingService::AJ_Standard_CN, 

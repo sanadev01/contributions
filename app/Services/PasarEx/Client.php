@@ -33,48 +33,48 @@ class Client{
 
     private function getHeaders()
     {
-        return [ 
-            'bearer' => $this->token,
+        return [
+            'Authorization' => 'Bearer ' . $this->token,
             'Content-Type' => 'application/json'
         ];
     }
     public function createPackage(Package $order)
     {  
         $shippingRequest = (new Parcel($order))->getRequestBody();
-        return dd($shippingRequest);
         try {
-            $response = Http::withHeaders($this->getHeaders())->put("$this->baseUri/customs/consignment/store", $shippingRequest);
-            $data = json_decode($response);
-            if(optional(optional($data)->references)->printId) {
-                $trackingNumber = $data->identifiers->parcelNr;
-                $printId = $data->prints[0]->id;
-                if($trackingNumber && $printId) {
-                    $getLabel = Http::withHeaders($this->getHeaders())->get("$this->baseUri/parcels/parcel-prints/get-many?ids=$printId&IncludeContents=true");
-                    $getLabelResponse = json_decode($getLabel);
-                    if(!$getLabelResponse->prints[0]->hasErrors) {
-                        $order->update([
-                            'corrios_tracking_code' => $trackingNumber,
-                            'api_response' => json_encode($getLabelResponse),
-                            'cn23' => [
-                                "tracking_code" => $trackingNumber,
-                                "stamp_url" => route('warehouse.cn23.download',$order->id),
-                                'leve' => false
-                            ],
-                        ]);
-                        // store order status in order tracking
-                        return $this->addOrderTracking($order);
-                    }
-                    if($getLabelResponse->prints[0]->hasErrors) {
-                        return new PackageError("Error while print label. Code: ".optional(optional($getLabelResponse)->prints)->errorDetails[0]);
-                    }
-                }
+            $response = Http::withHeaders($this->getHeaders())->post("$this->baseUri/customs/consignment/store", $shippingRequest);
+            $data = json_decode($response); 
+            if($data->success){
+                // $trackingNumber = $data->identifiers->parcelNr;
+                // $printId = $data->prints[0]->id;
+                // if($trackingNumber && $printId) {
+                //     $getLabel = Http::withHeaders($this->getHeaders())->get("$this->baseUri/parcels/parcel-prints/get-many?ids=$printId&IncludeContents=true");
+                //     $getLabelResponse = json_decode($getLabel);
+                //     if(!$getLabelResponse->prints[0]->hasErrors) {
+                //         $order->update([
+                //             'corrios_tracking_code' => $trackingNumber,
+                //             'api_response' => json_encode($getLabelResponse),
+                //             'cn23' => [
+                //                 "tracking_code" => $trackingNumber,
+                //                 "stamp_url" => route('warehouse.cn23.download',$order->id),
+                //                 'leve' => false
+                //             ],
+                //         ]);
+                //         // store order status in order tracking
+                //         return $this->addOrderTracking($order);
+                //     }
+                //     if($getLabelResponse->prints[0]->hasErrors) {
+                //         return new PackageError("Error while print label. Code: ".optional(optional($getLabelResponse)->prints)->errorDetails[0]);
+                //     }
+                // }
+                
+                return new PackageError("<br> Code : $data->code <br> Message: $data->message ");
+
+            } else{
+                return new PackageError("Error while creating parcel <br> Code : $data->code <br> Message: $data->message ");
+  
             }
-            else if (isset($data->status->hasErrors)){
-                return new PackageError("Error while creating parcel. Description: ".optional(optional($data)->status)->errorDetails[0]);
-            }
-            else {
-                return new PackageError("Error while creating parcel. Description: Server Error".optional(optional($data)->errorDetails[0])->detail);
-            }
+             
             return null;
         }catch (\Exception $exception){
             return new PackageError($exception->getMessage());

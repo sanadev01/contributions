@@ -221,7 +221,6 @@ class HandleCorreiosLabelsRepository
     }
     public function pasarExLabel()
     {
-        dd(3);
         $pasarExLabelRepository = new PasarExLabelRepository();
         $pasarExLabelRepository->run($this->order, $this->update); //by default consider false
         return $this->renderLabel($this->request, $this->order, $pasarExLabelRepository->getError());
