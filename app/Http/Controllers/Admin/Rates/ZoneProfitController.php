@@ -137,9 +137,31 @@ class ZoneProfitController extends Controller
         // }
     }
 
-    public function viewRates($serviceId, $zoneId) {
+    public function viewRates($serviceId, $zoneId, $type) {
+
+        $service = ShippingService::findOrFail($serviceId);
+        $rates = ZoneRate::where('shipping_service_id', $serviceId)->first();
+    
+        if ($type === "cost") {
+            $decodedRates = json_decode($rates->cost_rates, true); 
+        } elseif ($type === "package") {
+            $decodedRates = json_decode($rates->selling_rates, true); 
+        }
+    
+        $rate = null;
+    
+        foreach ($decodedRates as $zone => $zoneData) {
+
+            $zoneNumber = (int) filter_var($zone, FILTER_SANITIZE_NUMBER_INT);
+
+            if ($zoneNumber === (int)$zoneId) {
+                $rate = $zoneData;
+                break;
+            }
+        }
         
-        return view('admin.rates.zone-profit.view-rates', compact('services'));
+        return view('admin.rates.zone-profit.view-rates', compact('service', 'rate', 'type', 'zoneId'));
     }
+    
 
 }

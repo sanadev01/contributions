@@ -70,19 +70,6 @@
                                         <i class="feather icon-eye"></i> View
                                     </a>
                                     |
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                             View Rates
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            @foreach($rates as $rate)
-                                                @if($rate->shippingService->id == $serviceId)
-                                                    <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId]) }}">Cost Rates</a>
-                                                @endif
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                    |
                                     <a href="{{ route('admin.rates.downloadZoneProfit', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" class="btn btn-success btn-sm">
                                         <i class="feather icon-download"></i> Download
                                     </a>
@@ -94,6 +81,28 @@
                                             <i class="feather icon-trash px-1"></i>
                                         </button>
                                     </form>
+                                    @if($rates->contains('shippingService.id', $serviceId))
+                                    |
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 120px; height:27px; padding-top:3px;">
+                                             View Rates
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            @foreach($rates as $rate)
+                                                @if($rate->shippingService->id == $serviceId)
+                                                    @if(isset($rate->cost_rates))
+                                                        <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId, 'type' => 'cost']) }}">Cost Rate</a>
+                                                    @endif
+                                                    @if(isset($rate->selling_rates))
+                                                        <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId, 'type' => 'package']) }}">Selling Rate</a>
+                                                    @endif
+                                                @endif
+                                            @endforeach
+
+                                        </div>
+                                    </div>
+                                    
+                                    @endif
                                 </th>
                                 
                             </tr>

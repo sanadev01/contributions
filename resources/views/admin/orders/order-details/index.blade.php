@@ -240,7 +240,7 @@
         if (service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
-        } else if (service == 477 || service == 3674 || service == 37634 || service == 3326 || service == 4367) {
+        } else if (service == 477 || service == 3674 || service == 37634 || service == 3326 || service == 4367 || service == 237) {
             return getGSSRates();
         } else if (service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
