@@ -99,11 +99,19 @@
                                         <li>@lang('shipping-rates.* Upload only Excel files')</li>
                                         <li>@lang('shipping-rates.* Files larger than 15Mb are not allowed')</li>
                                         <li>@lang('shipping-rates.* Download and fill in the data in the sample file below to avoid errors')</li>
-                                        <li class="mt-2">Download Sample File <a href="{{ asset('uploads/GSS PME Intl Upload.xlsx') }}" class="btn btn-success btn-sm">@lang('shipping-rates.Download')</a></li>
+                                        <li class="mt-2 dropdown">
+                                            <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 120px;">
+                                                @lang('shipping-rates.Download')
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" href="{{ asset('uploads/Cost Rate Sample.xlsx') }}">Sample File Cost Rates</a>
+                                                <a class="dropdown-item" href="{{ asset('uploads/Sell Rate Sample.xlsx') }}">Sample File Selling Rates</a>
+                                            </div>
+                                        </li>
                                     </ol>
                                 </div>
                             </div>
-                        </div>
+                        </div>                        
                     </div>
 
                     <div class="form-actions pl-5">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Rates;
 use Exception;
 use App\Models\Rate;
 use App\Models\Country;
+use App\Models\ZoneRate;
 use App\Models\ZoneCountry;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
@@ -31,8 +32,8 @@ class ZoneProfitController extends Controller
         $groups = ZoneCountry::orderBy($sort, $order)
             ->get()
             ->groupBy(['group_id', 'shipping_service_id']);
-
-        return view('admin.rates.zone-profit.index', compact('groups'));
+        $rates = ZoneRate::orderBy('id')->get();
+        return view('admin.rates.zone-profit.index', compact('groups', 'rates'));
     }
 
     public function create()
@@ -134,6 +135,11 @@ class ZoneProfitController extends Controller
             // session()->flash('alert-danger','Error while Saving Rates: '.$exception->getMessage());
             // return back();
         // }
+    }
+
+    public function viewRates($serviceId, $zoneId) {
+        
+        return view('admin.rates.zone-profit.view-rates', compact('services'));
     }
 
 }

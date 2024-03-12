@@ -5,21 +5,20 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-                    <div class="">
-                        <h4 class="mb-0 mr-3">
-                            All Groups
-                        </h4>
-                        <hr>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0 mr-3">
+                        All Groups
+                    </h4>
+                    <div>
+                        @can('create', App\Models\Rate::class)
+                            <a href="{{ route('admin.rates.zone-cost-upload') }}" class="btn btn-primary">
+                                Upload Rates
+                            </a>
+                            <a href="{{ route('admin.rates.zone-profit.create') }}" class="btn btn-primary ml-2">
+                                Upload Profit
+                            </a>
+                        @endcan
                     </div>
-                    @can('create', App\Models\Rate::class)
-                        <a href="{{ route('admin.rates.zone-cost-upload') }}" class="pull-right btn btn-primary">
-                            Upload Rates
-                        </a>
-                        <a href="{{ route('admin.rates.zone-profit.create') }}" class="pull-right btn btn-primary">
-                            Upload Profit
-                        </a>
-                    @endcan
                 </div>
                 <hr>
                 <div class="card-content card-body">
@@ -65,22 +64,38 @@
                                 <th>
                                     {{$groupService->first()->shippingService->name}}
                                 </th>
+
                                 <th>
                                     <a href="{{ route('admin.rates.zone-profit-show', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" class="btn btn-primary btn-sm">
                                         <i class="feather icon-eye"></i> View
                                     </a>
                                     |
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                             View Rates
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            @foreach($rates as $rate)
+                                                @if($rate->shippingService->id == $serviceId)
+                                                    <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId]) }}">Cost Rates</a>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    |
                                     <a href="{{ route('admin.rates.downloadZoneProfit', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" class="btn btn-success btn-sm">
                                         <i class="feather icon-download"></i> Download
                                     </a>
-                                    | <form action="{{ route('admin.rates.destroyZoneProfit', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" method="POST" style="display: inline;">
+                                    |
+                                    <form action="{{ route('admin.rates.destroyZoneProfit', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" method="POST" style="display: inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn  btn-danger btn-md">
+                                        <button type="submit" class="btn btn-danger btn-md">
                                             <i class="feather icon-trash px-1"></i>
                                         </button>
                                     </form>
                                 </th>
+                                
                             </tr>
                             @endforeach
                             @endforeach
