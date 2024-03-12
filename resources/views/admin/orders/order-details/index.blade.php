@@ -440,8 +440,13 @@
             order_id: order_id,
         }).then(function(response) {
             if (response.success == true) {
-                $('#user_declared_freight').val(response.total_amount);
-                $('#user_declared_freight').prop('readonly', true);
+                has_corrios_tracking_code = <?php echo json_encode($order->corrios_tracking_code); ?>;
+                if ((has_corrios_tracking_code && service !== 283) || !has_corrios_tracking_code) {
+                    $('#user_declared_freight').val(response.total_amount);
+                }
+                if (service !== 283) {
+                    $('#user_declared_freight').prop('readonly', true);
+                }
             } else {
                 if (service == 3674) {
                     $('#gssRateModal').modal('show');
