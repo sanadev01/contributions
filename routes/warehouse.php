@@ -35,6 +35,7 @@ use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
 use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
 use App\Http\Controllers\Warehouse\CombineManifestDownloadController;
+use App\Http\Controllers\Warehouse\ContainerFactoryController;
 use App\Http\Controllers\Warehouse\GePSContainerController;
 use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
@@ -186,6 +187,22 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('hound_container.packages', HoundContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('hound_container/{id}/create', [HoundUnitRegisterController::class, 'createMasterBox'])->name('hound_container.createRequest');
     Route::get('hound_container/{container}/download', HoundCN35DownloadController::class)->name('hound_container.download');
+    // Routes for any Container
+    Route::resource('items', ContainerFactoryController::class)->parameters(['items' => 'id'])->names([
+        'index' => 'containers_factory.index',
+        'create' => 'containers_factory.create',
+        'store' => 'containers_factory.store',
+        'show' => 'containers_factory.show',
+        'edit' => 'containers_factory.edit',
+        'update' => 'containers_factory.update',
+        'destroy' => 'containers_factory.destroy',
+    ]);
+    Route::get('containers_factory/{service_sub_class}', [ContainerFactoryController::class,'index'])->name('containers_factory.index');
+    Route::create('containers_factory/{service_sub_class}', [ContainerFactoryController::class,'create'])->name('containers_factory.create');
+    Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('totalexpress_container/{id}/create', [TotalExpressUnitRegisterController::class, 'createMasterBox'])->name('totalexpress_container.createRequest');
+    Route::get('totalexpress_container/{id}/register', [TotalExpressUnitRegisterController::class, 'consultMasterBox'])->name('totalexpress_container.registerBox');
+    Route::get('totalexpress_container/{container}/download', TotalExpressCN35DownloadController::class)->name('totalexpress_container.download');
     // Routes for Total Express Container
     Route::resource('totalexpress_containers', TotalExpressContainerController::class);
     Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
