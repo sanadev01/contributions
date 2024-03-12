@@ -421,7 +421,7 @@ function getValidShCode($shCode, $service)
         '970600',
         '490700',
     ];
-    if($service->is_total_express) {
+    if(optional($service)->is_total_express) {
         $type = 'Courier';
     }else {
         $type = 'Postal (Correios)';
