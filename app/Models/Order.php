@@ -840,10 +840,10 @@ class Order extends Model implements Package
                 $this->update([
                     'user_declared_freight' => $price,
                 ]);
+                $this->user_declared_freight = $price;
             }
 
         }
-        $this->user_declared_freight = $price;
         return true;
     }
     public function updateShippingServiceFromSetting()
