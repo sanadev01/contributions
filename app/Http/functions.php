@@ -224,7 +224,15 @@ function isActiveService($user,$shippingService){
        return setting('sweden_post', null, $user->id)?true:false; 
     return true; 
 }
-
+function getVolumetricDiscountPercentage(Order $order){
+    $user_id    = $order->user->id;
+    $percentage = setting('discount_percentage', null, $user_id);
+    if(optional($order->shippingService)->is_total_express)
+        $percentage= setting('postal_discount_percentage', null, $user_id);
+    elseif(optional($order->shippingService)->is_hd_express_service)
+        $percentage= setting('hd_express_discount_percentage', null, $user_id);
+    return $percentage??setting('discount_percentage', null, $user_id);
+}
 function responseUnprocessable($message)
 {
     return response()->json([
@@ -422,7 +430,7 @@ function getValidShCode($shCode, $service)
         '970600',
         '490700',
     ];
-    if($service->is_total_express) {
+    if(optional($service)->is_total_express) {
         $type = 'Courier';
     }else {
         $type = 'Postal (Correios)';
@@ -450,6 +458,9 @@ function getValidShCode($shCode, $service)
 
     }
     return $shCode;
+}
+function currentActiveApiName() {
+    return  setting('correios_api', null, User::ROLE_ADMIN) ? 'Correios Api' : (setting('anjun_api', null,  User::ROLE_ADMIN) ? 'Correios Anjun Api' : (setting('bcn_api', null,User::ROLE_ADMIN) ? 'BCN Setting' : 'Anjun China Api'));
 }
 
 function getZoneRate($order, $service, $zoneId)

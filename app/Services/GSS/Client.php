@@ -11,14 +11,14 @@ use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Http;
 use App\Models\Warehouse\DeliveryBill;
-use App\Services\GSS\Services\Parcel; 
+use App\Services\GSS\Services\Parcel;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Models\PackageError;
-use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
 
-class Client{
+class Client
+{
 
     protected $userId;
     protected $password;
@@ -30,14 +30,14 @@ class Client{
     protected $client;
 
     public function __construct()
-    {   
-        if(app()->isProduction()){
+    {
+        if (app()->isProduction()) {
             $this->userId = config('gss.production.userId');
             $this->password = config('gss.production.password');
             $this->locationId = config('gss.production.locationId');
             $this->workStationId = config('gss.production.workStationId');
             $this->baseUrl = config('gss.production.baseUrl');
-        }else{ 
+        } else {
             $this->userId = config('gss.test.userId');
             $this->password = config('gss.test.password');
             $this->locationId = config('gss.test.locationId');
@@ -52,19 +52,18 @@ class Client{
             'locationId' => $this->locationId,
             'workStationId' => $this->workStationId,
         ];
-        $response = $this->client->post("$this->baseUrl/Authentication/login",['json' => $authParams ]);
+        $response = $this->client->post("$this->baseUrl/Authentication/login", ['json' => $authParams]);
         $data = json_decode($response->getBody()->getContents());
-        if($data->accessToken) {
+        if ($data->accessToken) {
             $this->token = $data->accessToken;
         }
 
         $this->gssProfit = '';
-
-    } 
+    }
 
     private function getHeaders()
     {
-        return [ 
+        return [
             'Authorization' => "Bearer {$this->token}",
             'Accept' => 'application/json'
         ];
@@ -74,35 +73,32 @@ class Client{
     {
         $shippingRequest = (new Parcel())->getRequestBody($order);
         try {
-                        $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
+            $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/Package/LabelAndProcessPackage", $shippingRequest);
             $response = json_decode($request);
             if($response->success) {
-                $label = $this->makePDFLabel($response);
                 $order->update([
                     'corrios_tracking_code' => $response->trackingNumber,
-                    'api_response' => $label,
+                    'api_response' => $request,
                     'cn23' => [
                         "tracking_code" => $response->trackingNumber,
-                        "stamp_url" => route('warehouse.cn23.download',$order->id),
+                        "stamp_url" => route('warehouse.cn23.download', $order->id),
                         'leve' => false
                     ],
                 ]);
                 // store order status in order tracking
                 return $this->addOrderTracking($order);
-            }
-            else {
-                return new PackageError("Error while creating parcel. <br> Error Code: ".$response->statusCode.". <br> Error Description: ".$response->message);
+            } else {
+                return new PackageError("Error while creating parcel. <br> Error Code: " . $response->statusCode . ". <br> Error Description: " . $response->message);
             }
             return null;
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
     }
 
     public function addOrderTracking($order)
     {
-        if($order->trackings->isEmpty())
-        {
+        if ($order->trackings->isEmpty()) {
             OrderTracking::create([
                 'order_id' => $order->id,
                 'status_code' => Order::STATUS_PAYMENT_DONE,
@@ -111,7 +107,7 @@ class Client{
                 'country' => ($order->user->country != null) ? $order->user->country->code : 'US',
                 'city' => 'Miami',
             ]);
-        }    
+        }
 
         return true;
     }
@@ -122,16 +118,16 @@ class Client{
         $url = "$this->baseUrl/Receptacle/CreateReceptacleForRateTypeToDestination";
         $weight = 0;
         $piecesCount = 0;
-        if($container->services_subclass_code == ShippingService::GSS_PMI) {
+        if ($container->services_subclass_code == ShippingService::GSS_PMI) {
             $rateType = "IPA";
             $foreignOECode = "CWB";
-        } elseif($container->services_subclass_code == ShippingService::GSS_EPMEI) {
+        } elseif ($container->services_subclass_code == ShippingService::GSS_EPMEI) {
             $rateType = 'EPMEI';
             $foreignOECode = "SAO";
-        } elseif($container->services_subclass_code == ShippingService::GSS_EPMI) {
+        } elseif ($container->services_subclass_code == ShippingService::GSS_EPMI) {
             $rateType = 'EPMI';
             $foreignOECode = "RIO";
-        } elseif($container->services_subclass_code == ShippingService::GSS_FCM) {
+        } elseif ($container->services_subclass_code == ShippingService::GSS_FCM) {
             $rateType = 'EFCM';
             $foreignOECode = "CWB";
         }elseif($container->services_subclass_code == ShippingService::GSS_EMS || $container->services_subclass_code == ShippingService::GSS_CEP) {
@@ -140,30 +136,29 @@ class Client{
         }
         // if($containers[0]->awb) {
         //     foreach($containers as $package) {
-                $weight = UnitsConverter::kgToPound($container->getWeight());
-                $piecesCount = $container->getPiecesCount();
-            // }
+        $weight = UnitsConverter::kgToPound($container->total_weight);
+        $piecesCount = $container->total_orders;
+        // }
 
-            $body = [
-                "rateType" => $rateType,
-                "dutiable" => true,
-                "receptacleType" => "E",
-                "foreignOECode" => $foreignOECode,
-                "countryCode" => "BR",
-                "dateOfMailing" => Carbon::now(),
-                "pieceCount" => $piecesCount,
-                "weightInLbs" => $weight,
-            ];
-            $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-            $data= json_decode($response);
-    
-            if ($response->successful() && $data->success == true) { 
-                
-                return $this->addPackagesToReceptacle($data->receptacleID, $container);
+        $body = [
+            "rateType" => $rateType,
+            "dutiable" => true,
+            "receptacleType" => "E",
+            "foreignOECode" => $foreignOECode,
+            "countryCode" => "BR",
+            "dateOfMailing" => Carbon::now(),
+            "pieceCount" => $piecesCount,
+            "weightInLbs" => $weight,
+        ];
+        $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+        $data = json_decode($response);
 
-            } else {
-                return $this->responseUnprocessable($data->message);
-            }
+        if ($response->successful() && $data->success == true) {
+
+            return $this->addPackagesToReceptacle($data->receptacleID, $container);
+        } else {
+            return $this->responseUnprocessable($data->message);
+        }
         // }
         // else {
         //     return $this->responseUnprocessable("Airway Bill Number is Required for Processing.");
@@ -174,12 +169,12 @@ class Client{
     {
         $codes = [];
         // foreach ($containers as $key => $container) {
-            foreach ($container->orders as $key => $item) {
-                $codesToPush = [
-                    $item->corrios_tracking_code,
-                ];
-                array_push($codes, $codesToPush);
-            }
+        foreach ($container->orders as $key => $item) {
+            $codesToPush = [
+                $item->corrios_tracking_code,
+            ];
+            array_push($codes, $codesToPush);
+        }
         // }
         $parcels = implode(",", array_merge(...$codes));
         $url = $this->baseUrl . '/Package/AddPackagesToReceptacle';
@@ -188,7 +183,7 @@ class Client{
             "receptacleID" => $id,
         ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        $data= json_decode($response);
+        $data = json_decode($response);
         if ($response->successful() && $data->success == true) {
             return $this->moveReceptacleToOpenDispatch($id, $container);
         } else {
@@ -216,7 +211,7 @@ class Client{
             "arrivalDateTime" => Carbon::now()->addDays(1),
         ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        $data= json_decode($response);
+        $data = json_decode($response);
         if ($response->successful() && $data->success == true) {
             return $this->getReceptacleLabel($id, $container, $data->dispatchID);
         } else {
@@ -224,7 +219,8 @@ class Client{
         }
     }
 
-    public function getReceptacleLabel($id, $container, $dispatchID) {
+    public function getReceptacleLabel($id, $container, $dispatchID)
+    {
 
         $url = $this->baseUrl . '/Receptacle/GetReceptacleLabel';
         $body = [
@@ -232,23 +228,24 @@ class Client{
             "labelFormat" => "PDF",
         ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        $data= json_decode($response);
+        $data = json_decode($response);
         $reportsUrl = $this->baseUrl . "/Dispatch/GetRequiredReportsForDispatch/$dispatchID";
         $reportsResponse = Http::withHeaders($this->getHeaders())->get($reportsUrl);
         $reportData = json_decode($reportsResponse);
-        if ($response->successful() && $data->success == true) {  
+        if ($response->successful() && $data->success == true) {
             $container->update([
-                'unit_response_list' => json_encode(['cn35'=>$data, 'manifest' => $reportData, 'dispatchID' => $dispatchID]),
+                'unit_response_list' => json_encode(['cn35' => $data, 'manifest' => $reportData, 'dispatchID' => $dispatchID]),
                 'unit_code' => $id,
                 'response' => 1
-            ]); 
+            ]);
             return $this->responseSuccessful($data, 'Container registration is successfull. You can download CN35 label');
         } else {
             return $this->responseUnprocessable($data->message);
         }
     }
 
-    public function generateDispatchReport($report, $dispatchID) {
+    public function generateDispatchReport($report, $dispatchID)
+    {
 
         $permitNumber = '';
         if (strpos($report, '_') !== false) {
@@ -384,7 +381,8 @@ class Client{
         ]);
     }
 
-    private function makePDFLabel($response) {
+    private function makePDFLabel($response)
+    {
         $pdf = PDFMerger::init();
         $label = "app/labels/{$response->trackingNumber}";
         foreach ($response->labels as $index => $labelBase64) {
@@ -394,7 +392,7 @@ class Client{
             $pdf->addPDF($pagePath);
         }
         $pdf->merge();
-        
+
         // Remove individual pages
         foreach ($response->labels as $index => $labelBase64) {
             $pagePath = storage_path("{$label}_{$index}.pdf");
@@ -465,5 +463,4 @@ class Client{
             }
         }
     }
-    
 }

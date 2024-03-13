@@ -23,88 +23,91 @@ class OrderRepository
     protected $chargeID;
     public $shippingServiceError;
 
-    public function get(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc', $trashed = false)
+    public function get(Request $request, $paginate = true, $pageSize = 50, $orderBy = 'id', $orderType = 'asc', $trashed = false)
     {
         $query = Order::query();
         if ($trashed) {
-           $query = $query->onlyTrashed();
+            $query = $query->onlyTrashed();
         }
 
-        $query = $query->where('status','>=',Order::STATUS_ORDER)
-                        ->has('user')
-                        ->with([
-                            'paymentInvoices',
-                            'user',
-                            'subOrders',
-                            'parentOrder'
-                        ]);
+        $query = $query->where('status', '>=', Order::STATUS_ORDER)
+            ->has('user')
+            ->with([
+                'paymentInvoices',
+                'user',
+                'subOrders',
+                'parentOrder'
+            ]);
         if (Auth::user()->isUser()) {
             $query->where('user_id', Auth::id());
         }
 
-        if($request->userType == 'domestic')
-        {
+        if ($request->userType == 'domestic') {
             $query->where('sender_country_id', Country::US);
+        }
+        if($request->taxAndDutyOnly)
+        {
+            $query->where('tax_and_duty','!=',0);
         }
 
         if ($request->userType == 'pickups') {
-            $query->where('api_pickup_response' , '!=', null);
+            $query->where('api_pickup_response', '!=', null);
         }
-        
-        if($request->userType){
-            $query->whereHas('user', function ($queryUser) use($request) {
-                $queryUser->whereHas('role', function ($queryRole) use($request) {
+
+        if ($request->userType) {
+            $query->whereHas('user', function ($queryUser) use ($request) {
+                $queryUser->whereHas('role', function ($queryRole) use ($request) {
                     return $queryRole->where('name', $request->userType);
                 });
             });
         }
 
-        if($request->order_date){
+        if ($request->order_date) {
             $query->where('order_date', 'LIKE', "%{$request->order_date}%");
-        }  
-        if($request->name){
-            $query->whereHas('user', function ($query) use($request) {
+        }
+        if ($request->name) {
+            $query->whereHas('user', function ($query) use ($request) {
                 return $query->where('name', 'LIKE', "%{$request->name}%");
             });
         }
-        if($request->pobox_number){
-            $query->whereHas('user', function ($query) use($request) {
+        if ($request->pobox_number) {
+            $query->whereHas('user', function ($query) use ($request) {
                 return $query->where('pobox_number', 'LIKE', "%{$request->pobox_number}%");
             });
         }
-        if($request->warehouse_number){
+        if ($request->warehouse_number) {
             $query->where('warehouse_number', 'LIKE', "%{$request->warehouse_number}%");
         }
-        if($request->merchant){
+        if ($request->merchant) {
             $query->where('merchant', 'LIKE', "%{$request->merchant}%");
         }
-        if($request->carrier){
-            if($request->carrier == 'Brazil'){
+        if ($request->carrier) {
+            if ($request->carrier == 'Brazil') {
                 $service = [
                     ShippingService::Packet_Standard,
                     ShippingService::Packet_Express,
                     ShippingService::Packet_Mini
                 ];
             }
-            if($request->carrier == 'Anjun'){
+            if ($request->carrier == 'Anjun') {
                 $service = [
                     ShippingService::AJ_Packet_Standard,
-                    ShippingService::AJ_Packet_Express, 
+                    ShippingService::AJ_Packet_Express,
                 ];
             }
-            if($request->carrier == 'AnjunChina'){
+            if ($request->carrier == 'AnjunChina') {
                 $service = [
                     ShippingService::AJ_Express_CN,
                     ShippingService::AJ_Standard_CN,
                 ];
             }
-            if($request->carrier == 'BCN'){
+            if ($request->carrier == 'BCN') {
                 $service = [
                     ShippingService::BCN_Packet_Standard,
                     ShippingService::BCN_Packet_Express
                 ];
             }
-            if($request->carrier == 'USPS'){
+            if ($request->carrier == 'USPS') {
                 $service = [
                     ShippingService::USPS_PRIORITY,
                     ShippingService::USPS_FIRSTCLASS,
@@ -119,24 +122,24 @@ class OrderRepository
                     ShippingService::GSS_CEP
                 ];
             }
-            if($request->carrier == 'UPS'){
+            if ($request->carrier == 'UPS') {
                 $service = [
                     ShippingService::UPS_GROUND,
                 ];
             }
-            if($request->carrier == 'FEDEX'){
+            if ($request->carrier == 'FEDEX') {
                 $service = [
                     ShippingService::FEDEX_GROUND
                 ];
             }
-            if($request->carrier == 'Chile'){
+            if ($request->carrier == 'Chile') {
                 $service = [
                     ShippingService::SRP,
                     ShippingService::SRM,
                     ShippingService::Courier_Express
                 ];
             }
-            if($request->carrier == 'Global eParcel'){
+            if ($request->carrier == 'Global eParcel') {
                 $service = [
                     ShippingService::GePS,
                     ShippingService::GePS_EFormat,
@@ -145,22 +148,22 @@ class OrderRepository
                     ShippingService::Japan_EMS,
                 ];
             }
-            if($request->carrier == 'Prime5'){
+            if ($request->carrier == 'Prime5') {
                 $service = [
                     ShippingService::Prime5,
-                    ShippingService::Prime5RIO, 
-                    ShippingService::DirectLinkAustralia, 
-                    ShippingService::DirectLinkCanada, 
-                    ShippingService::DirectLinkChile, 
-                    ShippingService::DirectLinkMexico, 
+                    ShippingService::Prime5RIO,
+                    ShippingService::DirectLinkAustralia,
+                    ShippingService::DirectLinkCanada,
+                    ShippingService::DirectLinkChile,
+                    ShippingService::DirectLinkMexico,
                 ];
             }
-            if($request->carrier == 'Hound Express'){
+            if ($request->carrier == 'Hound Express') {
                 $service = [
-                    ShippingService::HoundExpress 
+                    ShippingService::HoundExpress
                 ];
             }
-            if($request->carrier == 'Post Plus'){
+            if ($request->carrier == 'Post Plus') {
                 $service = [
                     ShippingService::Post_Plus_Registered,
                     ShippingService::Post_Plus_EMS,
@@ -172,66 +175,66 @@ class OrderRepository
                     ShippingService::Post_Plus_CO_REG,
                 ];
             }
-            if($request->carrier == 'Total Express'){
+            if ($request->carrier == 'Total Express') {
                 $service = [
-                    ShippingService::TOTAL_EXPRESS, 
+                    ShippingService::TOTAL_EXPRESS,
                 ];
             }
-            if($request->carrier == 'HD Express'){
+            if ($request->carrier == 'HD Express') {
                 $service = [
                     ShippingService::HD_Express
                 ];
             }
-            if($request->carrier == 'Correios AJ'){
+            if ($request->carrier == 'Correios AJ') {
                 $service = [
-                    ShippingService::AJ_Standard_CN, 
-                    ShippingService::AJ_Express_CN, 
+                    ShippingService::AJ_Standard_CN,
+                    ShippingService::AJ_Express_CN,
                 ];
             }
-            if($request->carrier == 'Correios A'){
+            if ($request->carrier == 'Correios A') {
                 $service = [
-                    ShippingService::AJ_Packet_Standard, 
-                    ShippingService::AJ_Packet_Express, 
+                    ShippingService::AJ_Packet_Standard,
+                    ShippingService::AJ_Packet_Express,
                 ];
             }
-            $query->whereHas('shippingService', function ($query) use($service) {
+            $query->whereHas('shippingService', function ($query) use ($service) {
                 return $query->whereIn('service_sub_class', $service);
             });
         }
-        if($request->gross_total){
+        if ($request->gross_total) {
             $query->where('gross_total', 'LIKE', "%{$request->gross_total}%");
         }
-        if($request->tracking_id){
+        if ($request->tracking_id) {
             $query->where('tracking_id', 'LIKE', "%{$request->tracking_id}%");
         }
-        if($request->customer_reference){
+        if ($request->customer_reference) {
             $query->where('customer_reference', 'LIKE', "%{$request->customer_reference}%");
         }
-        if($request->corrios_tracking_code){
+        if ($request->corrios_tracking_code) {
             $query->where('corrios_tracking_code', 'LIKE', "%{$request->corrios_tracking_code}%");
         }
-        if($request->status){
-            $query->where('status',$request->status);
+        if ($request->status) {
+            $query->where('status', $request->status);
         }
-        if($request->orderType){
+        if ($request->orderType) {
             if ($request->orderType === 'consolidated') {
-                $query->where('is_consolidated',true);
+                $query->where('is_consolidated', true);
             }
 
             if ($request->orderType === 'non-consolidated') {
-                $query->where('is_consolidated',false);
+                $query->where('is_consolidated', false);
             }
         }
-        if($request->paymentStatus){
+        if ($request->paymentStatus) {
             if ($request->paymentStatus === 'paid') {
-                $query->where('is_paid',true);
+                $query->where('is_paid', true);
             }
 
             if ($request->paymentStatus === 'unpaid') {
-                $query->where('is_paid',false);
+                $query->where('is_paid', false);
             }
         }
-        $query->orderBy($orderBy,$orderType);
+        $query->orderBy($orderBy, $orderType);
 
         return $paginate ? $query->paginate($pageSize) : $query->get();
     }
@@ -240,11 +243,11 @@ class OrderRepository
     {
         $query = Order::query();
 
-        if ( Auth::user()->isUser() ){
-            $query->where('user_id',Auth::id());
+        if (Auth::user()->isUser()) {
+            $query->where('user_id', Auth::id());
         }
 
-        return $query->whereIn('id',$ids)->get();
+        return $query->whereIn('id', $ids)->get();
     }
 
     public function updateSenderAddress(Request $request, Order $order)
@@ -271,19 +274,19 @@ class OrderRepository
             'recipient_address_id' => $request->address_id
         ]);
 
-        if ( $request->has('save_address') && !$request->address_id){
+        if ($request->has('save_address') && !$request->address_id) {
             (new AddressRepository)->store($request);
         }
 
-        if ( $request->has('save_address') && $request->address_id ){
-            session()->flash('alert-danger',__('address.duplicate_error'));
+        if ($request->has('save_address') && $request->address_id) {
+            session()->flash('alert-danger', __('address.duplicate_error'));
         }
 
         $request->merge([
-            'phone' => "+".cleanString($request->phone)
+            'phone' => "+" . cleanString($request->phone)
         ]);
-        
-        if ( $order->recipient ){
+
+        if ($order->recipient) {
 
             $order->recipient()->update([
                 'first_name' => $request->first_name,
@@ -304,7 +307,6 @@ class OrderRepository
             ]);
 
             return $order->recipient;
-
         }
 
         $order->recipient()->create([
@@ -332,57 +334,41 @@ class OrderRepository
 
     public function updateHandelingServices(Request $request, Order $order)
     {
-        $order->syncServices($request->get('services',[]));
+        $order->syncServices($request->get('services', []));
 
-        $order->doCalculations(true,true);
+        $order->doCalculations(true, true);
         return true;
     }
 
     public function GePSService($shippingServiceId)
     {
-        $shippingService =  ShippingService::find($shippingServiceId);
-
-        if ($shippingService->isGePSService()) {
-            return true;
-        }
-
-        return false;
+        return (ShippingService::find($shippingServiceId))->is_geps_service;
     }
 
-    public function GePSeFormatService($shippingServiceId)
-    {
-        $shippingService =  ShippingService::find($shippingServiceId);
-
-        if ($shippingService->isGePSeFormatService()) {
-            return true;
-        }
-
-        return false;
-    }
 
     public function domesticService($shippingServiceId)
     {
         $shippingService =  ShippingService::find($shippingServiceId);
 
-        if ($shippingService->isDomesticService()) {
+        if ($shippingService->is_domestic_service) {
             return true;
         }
 
         return false;
     }
-    
+
     public function updateShippingAndItems(Request $request, Order $order)
     {
         DB::beginTransaction();
 
         try {
-            
+
             // if ($order->products->isEmpty()) {
-                
+
             //     $order->items()->delete();
-                
+
             //     foreach ($request->get('items',[]) as $item) {
-                    
+
             //         $order->items()->create([
             //             'sh_code' => optional($item)['sh_code'],
             //             'description' => optional($item)['description'],
@@ -398,10 +384,9 @@ class OrderRepository
             $shippingService = ShippingService::find($request->shipping_service_id);
 
             if ($shippingService->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||  $shippingService->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL) {
-                if(!$this->getUSPSInternationServiceRates($request, $order, $shippingService->service_sub_class))
-                {
+                if (!$this->getUSPSInternationServiceRates($request, $order, $shippingService->service_sub_class)) {
                     DB::rollback();
-                    session()->flash('alert-danger','orders.Error While placing Order '.$this->error);
+                    session()->flash('alert-danger', 'orders.Error While placing Order ' . $this->error);
                     return false;
                 }
             }
@@ -417,37 +402,36 @@ class OrderRepository
                 'insurance_value' => 0,
                 'status' => $order->isPaid() ? ($order->status < Order::STATUS_ORDER ? Order::STATUS_ORDER : $order->status) : Order::STATUS_ORDER
             ]);
-            
-            if(request()->has('return_origin')) {
-                $order->update([ 'sinerlog_tran_id' => "1" ]);
+
+            if (request()->has('return_origin')) {
+                $order->update(['sinerlog_tran_id' => "1"]);
             }
-            if(request()->has('dispose_all')) {
-                $order->update([ 'sinerlog_tran_id' => "2" ]);
+            if (request()->has('dispose_all')) {
+                $order->update(['sinerlog_tran_id' => "2"]);
             }
-            if(request()->has('individual_parcel')) {
-                $order->update([ 'sinerlog_tran_id' => "3" ]);
+            if (request()->has('individual_parcel')) {
+                $order->update(['sinerlog_tran_id' => "3"]);
             }
-            if(!request()->has('return_origin') && !request()->has('dispose_all') && !request()->has('individual_parcel')) {
-                $order->update([ 'sinerlog_tran_id' => null ]);
+            if (!request()->has('return_origin') && !request()->has('dispose_all') && !request()->has('individual_parcel')) {
+                $order->update(['sinerlog_tran_id' => null]);
             }
-                             
-            
+
+
             $order->doCalculations();
 
-            if ($order->isPaid() && $order->getPaymentInvoice()) 
-            {
+            if ($order->isPaid() && $order->getPaymentInvoice()) {
                 $orderInvoice = $order->getPaymentInvoice();
-               
+
                 $orderInvoice->update([
                     'total_amount' => $orderInvoice->orders()->sum('gross_total'),
                 ]);
 
                 if ($orderInvoice->total_amount > $orderInvoice->paid_amount) {
-                    
+
                     $orderInvoice->update([
                         'is_paid' => 0,
                     ]);
-                    
+
                     $order->update([
                         'status' => Order::STATUS_PAYMENT_PENDING,
                         'is_paid' => 0,
@@ -456,12 +440,12 @@ class OrderRepository
             }
 
             DB::commit();
-            session()->flash('alert-success','orders.Sender Updated');
+            session()->flash('alert-success', 'orders.Sender Updated');
             return true;
         } catch (\Exception $ex) {
             DB::rollback();
             $this->error = $ex->getMessage();
-             session()->flash('alert-danger','orders.Error While placing Order'." ".$this->error);
+            session()->flash('alert-danger', 'orders.Error While placing Order' . " " . $this->error);
             return false;
         }
     }
@@ -470,7 +454,7 @@ class OrderRepository
     {
         return $this->error;
     }
-    
+
     public function getOrdersForExport($request, $user)
     {
         $orders = Order::where('status', '>=', Order::STATUS_ORDER)->has('user');
@@ -495,7 +479,7 @@ class OrderRepository
             $orders->where(function ($query) {
                 $query->whereHas('shippingService', function ($query) {
                     $query->whereIn('service_sub_class', [
-                        ShippingService::GSS_PMI, 
+                        ShippingService::GSS_PMI,
                         ShippingService::GSS_EPMEI,
                         ShippingService::GSS_EPMI,
                         ShippingService::GSS_FCM, 
@@ -531,20 +515,20 @@ class OrderRepository
         $totalDiscountPercentage = 0;
         $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
         $discountPercentage = setting('discount_percentage', null, $order->user->id);
-        
+
         if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
             return false;
         }
-        if ( $order->measurement_unit == 'kg/cm' ){
-            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'cm');
-        }else {
-            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length,$order->width,$order->height,'in');
+        if ($order->measurement_unit == 'kg/cm') {
+            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length, $order->width, $order->height, 'cm');
+        } else {
+            $volumetricWeight = WeightCalculator::getVolumnWeight($order->length, $order->width, $order->height, 'in');
         }
-        $volumeWeight = round($volumetricWeight > $order->weight ? $volumetricWeight : $order->weight,2);
-        $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage/100 : 0;
-        
+        $volumeWeight = round($volumetricWeight > $order->weight ? $volumetricWeight : $order->weight, 2);
+        $totalDiscountPercentage = ($discountPercentage) ? $discountPercentage / 100 : 0;
+
         if ($volumeWeight > $order->weight) {
-            
+
             $consideredWeight = $volumeWeight - $order->weight;
             $volumeWeight = round($consideredWeight - ($consideredWeight * $totalDiscountPercentage), 2);
             $totalDiscountedWeight = $consideredWeight - $volumeWeight;
@@ -555,19 +539,17 @@ class OrderRepository
 
         return true;
     }
-    
+
     public function getShippingServices($order)
     {
-        $shippingServices = collect() ;
+        $shippingServices = collect();
 
-        if(optional($order->recipient)->country_id == Order::US)
-        {
+        if (optional($order->recipient)->country_id == Order::US) {
             $uspsShippingService = new USPSShippingService($order);
             $upsShippingService = new UPSShippingService($order);
             $fedExShippingService = new FedExShippingService($order);
-            
-            foreach (ShippingService::where('active',true)->get() as $shippingService) 
-            {
+
+            foreach (ShippingService::where('active', true)->get() as $shippingService) {
                 if ($uspsShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
                 }
@@ -580,44 +562,39 @@ class OrderRepository
                     $shippingServices->push($shippingService);
                 }
             }
-        } else
-        {
+        } else {
             $gssShippingService = new GSSShippingService($order);
             foreach (ShippingService::whereIn('service_sub_class', [ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS, ShippingService::GSS_CEP])->where('active',true)->get() as $shippingService) 
             {
                 if ($gssShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
                 }
-            } 
-            foreach (ShippingService::where('active',true)->has('rates')->get() as $shippingService) 
-            {
+            }
+            foreach (ShippingService::where('active', true)->has('rates')->get() as $shippingService) {
                 if ($shippingService->isAvailableFor($order)) {
 
                     $shippingServices->push($shippingService);
-                }elseif($shippingService->getCalculator($order)->getErrors() != null && $shippingServices->isEmpty()){
-                    $this->shippingServiceError = 'Shipping Service not Available Error: {'.$shippingService->getCalculator($order)->getErrors().'}';
+                } elseif ($shippingService->getCalculator($order)->getErrors() != null && $shippingServices->isEmpty()) {
+                    $this->shippingServiceError = 'Shipping Service not Available Error: {' . $shippingService->getCalculator($order)->getErrors() . '}';
                 }
-            } 
+            }
             // USPS Intenrational Services
             if (optional($order->recipient)->country_id != Order::US && setting('usps', null, auth()->user()->id)) 
             {
                 $uspsShippingService = new USPSShippingService($order);
 
-                foreach (ShippingService::where('active',true)->get() as $shippingService)
-                {
+                foreach (ShippingService::where('active', true)->get() as $shippingService) {
                     if ($uspsShippingService->isAvailableForInternational($shippingService)) {
                         $shippingServices->push($shippingService);
                     }
                 }
             }
             // GePS Service
-            if (optional($order->recipient)->country_id != Order::US && setting('geps_service', null, User::ROLE_ADMIN) && setting('geps_service', null, auth()->user()->id))
-            {
+            if (optional($order->recipient)->country_id != Order::US && setting('geps_service', null, User::ROLE_ADMIN) && setting('geps_service', null, auth()->user()->id)) {
 
                 $gepsShippingService = new GePSShippingService($order);
 
-                foreach ($gepsShippingService as $shippingService)
-                {
+                foreach ($gepsShippingService as $shippingService) {
                     if ($gepsShippingService->isAvailableForInternational($shippingService)) {
                         $shippingServices->push($shippingService);
                     }
@@ -628,9 +605,9 @@ class OrderRepository
                 $this->shippingServiceError = ($order->recipient->commune_id != null) ? 'Shipping Service not Available for the Region you have selected' : 'Shipping Service not Available for the Country you have selected';
             }
         }
-        
+
         if ($shippingServices->isNotEmpty()) {
-           $shippingServices = $this->filterShippingServices($shippingServices, $order);
+            $shippingServices = $this->filterShippingServices($shippingServices, $order);
         }
 
         return $shippingServices;
@@ -643,7 +620,8 @@ class OrderRepository
 
     private function filterShippingServices($shippingServices, $order)
     {
-        if($shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY) 
+        if (
+            $shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_PRIORITY_INTERNATIONAL)
             || $shippingServices->contains('service_sub_class', ShippingService::USPS_FIRSTCLASS_INTERNATIONAL)
@@ -668,7 +646,7 @@ class OrderRepository
             {
                 $this->shippingServiceError = 'USPS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                    return $shippingService->service_sub_class != ShippingService::USPS_PRIORITY 
+                    return $shippingService->service_sub_class != ShippingService::USPS_PRIORITY
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS
                         && $shippingService->service_sub_class != ShippingService::USPS_PRIORITY_INTERNATIONAL
                         && $shippingService->service_sub_class != ShippingService::USPS_FIRSTCLASS_INTERNATIONAL
@@ -677,8 +655,7 @@ class OrderRepository
                         && $shippingService->service_sub_class != ShippingService::GDE_FIRST_CLASS;
                 });
             }
-            if(!setting('ups', null, User::ROLE_ADMIN))
-            {
+            if (!setting('ups', null, User::ROLE_ADMIN)) {
                 $this->shippingServiceError = 'UPS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::UPS_GROUND;
@@ -699,52 +676,50 @@ class OrderRepository
                 });
             }
 
-            if (!setting('gss', null, auth()->user()->id)){
+            if (!setting('gss', null, auth()->user()->id)) {
                 $this->shippingServiceError = 'GSS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                    return !$shippingService->isGSSService();
+                    return !$shippingService->is_gss_service;
                 });
             }
 
-            if($shippingServices->isNotEmpty()){
+            if ($shippingServices->isNotEmpty()) {
                 $this->shippingServiceError = null;
             }
         }
 
-        if($order->recipient->country_id == Order::BRAZIL)
-        {
+        if ($order->recipient->country_id == Order::BRAZIL) {
             // If sinerlog is enabled for the user, then remove the Correios services
-             if(!setting('correios_api', null, User::ROLE_ADMIN))
-            {
-                $shippingServices = $shippingServices->filter(function ($item, $key)  {
-                    return !$item->isCorreiosService();
+            if (!setting('correios_api', null, User::ROLE_ADMIN)) {
+                $shippingServices = $shippingServices->filter(function ($item, $key) {
+                    return !$item->is_correios_service;
                 });
             }
-            if(!setting('anjun_api', null, User::ROLE_ADMIN)){
-                    $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                        return !$shippingService->isAnjunService();
-                    });
-            }
-            if(Auth::id()!="1233"){
+            if (!setting('anjun_api', null, User::ROLE_ADMIN)) {
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                return !$shippingService->isAnjunChinaService();
-            });
+                    return !$shippingService->is_anjun_service;
+                });
+            }
+            if (Auth::id() != "1137") {
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return !$shippingService->is_anjun_china_service;
+                });
             }
 
-            if(!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
+            if (!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)) {
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return !$shippingService->is_bcn_service;
                 });
             }
-            
-            if($shippingServices->isEmpty()){
+
+            if ($shippingServices->isEmpty()) {
                 $this->shippingServiceError = 'Please check your parcel dimensions';
             }
         }
-            
-            if($shippingServices->isEmpty()){
-                $this->shippingServiceError = 'Please check your parcel dimensions';
-            }
+
+        if ($shippingServices->isEmpty()) {
+            $this->shippingServiceError = 'Please check your parcel dimensions';
+        }
         return $shippingServices;
     }
 
@@ -762,5 +737,4 @@ class OrderRepository
         $this->error = $response->message;
         return false;
     }
-
 }
