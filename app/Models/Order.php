@@ -924,26 +924,36 @@ class Order extends Model implements Package
     public function calculateGSSProfit($shippingService)
     {
         $gssProfit = ZoneCountry::where('shipping_service_id', $shippingService->id)
-        ->where('country_id', $this->recipient->country_id)
-        ->value('profit_percentage');
+            ->where('country_id', $this->recipient->country_id)
+            ->value('profit_percentage');
 
-        if($gssProfit) {
+        $client = new Client();
+        $response = $client->getCostRates($this, $shippingService);
+        $data = optional($response)->getData();
 
-            $client = new Client();
-            $response = $client->getCostRates($this, $shippingService);
-            $data = optional($response)->getData();
-            if ($data->isSuccess && $data->output > 0){
-                $userGssProfit =  setting('gss_profit', null, $this->user_id);
-                $userProfit = ($userGssProfit >= 0 && $userGssProfit <= 100)?$userGssProfit:0;
-                $totalProfit =   $gssProfit + ( $gssProfit / 100 * $userProfit );
-                $profit = $data->output / 100 * ($totalProfit);
-                $price = round($data->output + $profit, 2);
-                $this->update([
-                    'user_declared_freight' => $price,
-                ]);
-                $this->user_declared_freight = $price;
+        if($this->shippingService->service_sub_class == ShippingService::GSS_CEP) {
+            $this->update([
+                'user_declared_freight' => $data->output,
+            ]);
+            $this->user_declared_freight = $data->output;
+
+        } else {
+            if($gssProfit) {
+
+                if ($data->isSuccess && $data->output > 0){
+                    $userGssProfit =  setting('gss_profit', null, $this->user_id);
+                    $userProfit = ($userGssProfit >= 0 && $userGssProfit <= 100)?$userGssProfit:0;
+                    $totalProfit =   $gssProfit + ( $gssProfit / 100 * $userProfit );
+                    $profit = $data->output / 100 * ($totalProfit);
+                    $price = round($data->output + $profit, 2);
+                    // dd($price, $profit, $totalProfit, $this->shipping_value);
+                    $this->update([
+                        'user_declared_freight' => $price,
+                    ]);
+                    $this->user_declared_freight = $price;
+                }
+    
             }
-
         }
         return true;
     }

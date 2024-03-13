@@ -272,80 +272,99 @@ class Client{
 
     
     public function getServiceRates($request) {
-       
-        $rateType = '';
+
         $service = $request->service;
         $order = Order::find($request->order_id);
-        if($order->is_paid){ 
-            return $this->responseSuccessful($order->gross_total, 'Rate Calculation Successful');
-        }
-        if($service == ShippingService::GSS_PMI) {
-            $rateType = 'PMI';
-        } elseif($service == ShippingService::GSS_EPMEI) {
-            $rateType = 'EPMEI';
-        } elseif($service == ShippingService::GSS_EPMI) {
-            $rateType = 'EPMI';
-        } elseif($service == ShippingService::GSS_FCM) {
-            $rateType = 'FCM';
-        } elseif($service == ShippingService::GSS_EMS) {
-            $rateType = 'EMS';
-        } elseif($service == ShippingService::GSS_CEP) {
-            $rateType = 'CEP';
-        }
 
-        $url = $this->baseUrl . '/Utility/CalculatePostage';
-        $body = [
-            "countryCode" => "BR",
-            "postalCode" => $order->recipient->zipcode,
-            "rateType" => $rateType,
-            "serviceType" => "LBL",
-            "packageWeight" => $order->weight,
-            "unitOfWeight" => $order->measurement_unit == "lbs/in" ? 'LB' : 'KG',
-            "packageLength" => $order->length,
-            "packageWidth" => $order->width,
-            "packageHeight" => $order->height,
-            "unitOfMeasurement" => $order->measurement_unit == "lbs/in" ? 'IN' : 'CM',
-            "rateAdjustmentCode" => "NORMAL RATE",
-            "nonRectangular" => "0",
-            "extraServiceCode" => "",
-            "entryFacilityZip" => "",
-            "customerReferenceID" => ""
-        ];
-        $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        $data= json_decode($response);
-        if ($response->successful() && $data->success == true) {
-            
+        if($service == ShippingService::GSS_CEP) {
 
-            $serviceId = ShippingService::where('service_sub_class', $service)->value('id');
-            $this->gssProfit = ZoneCountry::where('shipping_service_id', $serviceId)
-                                ->where('country_id', $order->recipient->country_id)
-                                ->value('profit_percentage');
-                if($this->gssProfit) {                
-                $userGssProfit =  setting('gss_profit', null, $order->user_id);
-                $userProfit = ($userGssProfit >= 0 && $userGssProfit <= 100)?$userGssProfit:0;
-                $totalProfit =   $this->gssProfit + ( $this->gssProfit / 100 * $userProfit );
-                $profit = $data->calculatedPostage / 100 * ($totalProfit);
-                $price = round($data->calculatedPostage + $profit, 2);
-                \Log::info([
-                    'service sub class'=> $service,
-                    'user id'=> $order->user_id,
-                    'user discount'=> $userProfit,
-                    'gss profit percentage '=> $this->gssProfit,
-                    'totalProfit =  profit minus discount'=> $totalProfit,
-                    'calculatedPostage' => $data->calculatedPostage,
-                    'calculatedPostage plus totalProfit'=> $price,
-                ]);
-                return $this->responseSuccessful($price, 'Rate Calculation Successful');
+            $shippingService = ShippingService::where('service_sub_class', $service)->first();
+            $zoneId = ZoneCountry::where('shipping_service_id', $shippingService->id)
+            ->where('country_id', $order->recipient->country_id)
+            ->value('group_id');
+
+            $rate = getZoneRate($order, $shippingService, $zoneId);
+
+            if ($rate > 0) {
+                return $this->responseSuccessful($rate, 'Rate Calculation Successful');
+                
             } else {
-                \Log::info([
-                    'service sub class'=> $service, 
-                    'recipinet country'=>$order->recipient->country_id,
-                    'message'=> 'zone rate not uploaded for recipient country'
-                ]);
-                return $this->responseUnprocessable("Server Error! Rates Not Found");
+                return $this->responseUnprocessable("No Rates Found on Server");
             }
+
         } else {
-            return $this->responseUnprocessable($data->message);
+            $rateType = '';
+            if($order->is_paid){ 
+                return $this->responseSuccessful($order->gross_total, 'Rate Calculation Successful');
+            }
+            if($service == ShippingService::GSS_PMI) {
+                $rateType = 'PMI';
+            } elseif($service == ShippingService::GSS_EPMEI) {
+                $rateType = 'EPMEI';
+            } elseif($service == ShippingService::GSS_EPMI) {
+                $rateType = 'EPMI';
+            } elseif($service == ShippingService::GSS_FCM) {
+                $rateType = 'FCM';
+            } elseif($service == ShippingService::GSS_EMS) {
+                $rateType = 'EMS';
+            } elseif($service == ShippingService::GSS_CEP) {
+                $rateType = 'CEP';
+            }
+
+            $url = $this->baseUrl . '/Utility/CalculatePostage';
+            $body = [
+                "countryCode" => "BR",
+                "postalCode" => $order->recipient->zipcode,
+                "rateType" => $rateType,
+                "serviceType" => "LBL",
+                "packageWeight" => $order->weight,
+                "unitOfWeight" => $order->measurement_unit == "lbs/in" ? 'LB' : 'KG',
+                "packageLength" => $order->length,
+                "packageWidth" => $order->width,
+                "packageHeight" => $order->height,
+                "unitOfMeasurement" => $order->measurement_unit == "lbs/in" ? 'IN' : 'CM',
+                "rateAdjustmentCode" => "NORMAL RATE",
+                "nonRectangular" => "0",
+                "extraServiceCode" => "",
+                "entryFacilityZip" => "",
+                "customerReferenceID" => ""
+            ];
+            $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+            $data= json_decode($response);
+            if ($response->successful() && $data->success == true) {
+                
+
+                $serviceId = ShippingService::where('service_sub_class', $service)->value('id');
+                $this->gssProfit = ZoneCountry::where('shipping_service_id', $serviceId)
+                                    ->where('country_id', $order->recipient->country_id)
+                                    ->value('profit_percentage');
+                    if($this->gssProfit) {                
+                    $userGssProfit =  setting('gss_profit', null, $order->user_id);
+                    $userProfit = ($userGssProfit >= 0 && $userGssProfit <= 100)?$userGssProfit:0;
+                    $totalProfit =   $this->gssProfit + ( $this->gssProfit / 100 * $userProfit );
+                    $profit = $data->calculatedPostage / 100 * ($totalProfit);
+                    $price = round($data->calculatedPostage + $profit, 2);
+                    \Log::info([
+                        'service sub class'=> $service,
+                        'user id'=> $order->user_id,
+                        'calculatedPostage initial value' => $data->calculatedPostage,
+                        'user profit in setting'=> $userProfit,
+                        'gss profit from file '=> $this->gssProfit,
+                        'totalProfit =  gss-profit plus user-profit'=> $totalProfit,
+                        'initial value plus totalProfit'=> $price,
+                    ]);
+                    return $this->responseSuccessful($price, 'Rate Calculation Successful');
+                } else {
+                    \Log::info([
+                        'service sub class'=> $service, 
+                        'recipinet country'=>$order->recipient->country_id,
+                        'message'=> 'zone rate not uploaded for recipient country'
+                    ]);
+                    return $this->responseUnprocessable("Server Error! Rates Not Found");
+                }
+            } else {
+                return $this->responseUnprocessable($data->message);
+            }
         }
     }
 
@@ -387,48 +406,63 @@ class Client{
 
     public function getCostRates($order, $service) {
         
-        $rateType = '';
-        if($service->service_sub_class == ShippingService::GSS_PMI) {
-            $rateType = 'PMI';
-        } elseif($service->service_sub_class == ShippingService::GSS_EPMEI) {
-            $rateType = 'EPMEI';
-        } elseif($service->service_sub_class == ShippingService::GSS_EPMI) {
-            $rateType = 'EPMI';
-        } elseif($service->service_sub_class == ShippingService::GSS_FCM) {
-            $rateType = 'FCM';
-        } elseif($service->service_sub_class == ShippingService::GSS_EMS) {
-            $rateType = 'EMS';
-        } elseif($service->service_sub_class == ShippingService::GSS_CEP) {
-            $rateType = 'CEP';
-        }
+        if($service->service_sub_class == ShippingService::GSS_CEP) {
 
-        $url = $this->baseUrl . '/Utility/CalculatePostage';
-        $body = [
-            "countryCode" => "BR",
-            "postalCode" => $order->recipient->zipcode,
-            "rateType" => $rateType,
-            "serviceType" => "LBL",
-            "packageWeight" => $order->weight,
-            "unitOfWeight" => $order->measurement_unit == "lbs/in" ? 'LB' : 'KG',
-            "packageLength" => $order->length,
-            "packageWidth" => $order->width,
-            "packageHeight" => $order->height,
-            "unitOfMeasurement" => $order->measurement_unit == "lbs/in" ? 'IN' : 'CM',
-            "rateAdjustmentCode" => "NORMAL RATE",
-            "nonRectangular" => "0",
-            "extraServiceCode" => "",
-            "entryFacilityZip" => "",
-            "customerReferenceID" => ""
-        ];
-        $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        $data= json_decode($response);
-        if ($response->successful() && $data->success == true) {
-            if($data->calculatedPostage > 0) {
-                return $this->responseSuccessful($data->calculatedPostage, 'Rate Calculation Successful');
-            } 
-            
+            $zoneId = ZoneCountry::where('shipping_service_id', $service->id)
+            ->where('country_id', $order->recipient->country_id)
+            ->value('group_id');
+
+            $rate = getZoneRate($order, $service, $zoneId);
+
+            if ($rate > 0) {
+                return $this->responseSuccessful($rate, 'Rate Calculation Successful');
+                
+            } else {
+                return $this->responseUnprocessable("No Rates Found on Server");
+            }
+
         } else {
-            return $this->responseUnprocessable($data->message);
+            $rateType = '';
+            if($service->service_sub_class == ShippingService::GSS_PMI) {
+                $rateType = 'PMI';
+            } elseif($service->service_sub_class == ShippingService::GSS_EPMEI) {
+                $rateType = 'EPMEI';
+            } elseif($service->service_sub_class == ShippingService::GSS_EPMI) {
+                $rateType = 'EPMI';
+            } elseif($service->service_sub_class == ShippingService::GSS_FCM) {
+                $rateType = 'FCM';
+            } elseif($service->service_sub_class == ShippingService::GSS_EMS) {
+                $rateType = 'EMS';
+            }
+    
+            $url = $this->baseUrl . '/Utility/CalculatePostage';
+            $body = [
+                "countryCode" => "BR",
+                "postalCode" => $order->recipient->zipcode,
+                "rateType" => $rateType,
+                "serviceType" => "LBL",
+                "packageWeight" => $order->weight,
+                "unitOfWeight" => $order->measurement_unit == "lbs/in" ? 'LB' : 'KG',
+                "packageLength" => $order->length,
+                "packageWidth" => $order->width,
+                "packageHeight" => $order->height,
+                "unitOfMeasurement" => $order->measurement_unit == "lbs/in" ? 'IN' : 'CM',
+                "rateAdjustmentCode" => "NORMAL RATE",
+                "nonRectangular" => "0",
+                "extraServiceCode" => "",
+                "entryFacilityZip" => "",
+                "customerReferenceID" => ""
+            ];
+            $response = Http::withHeaders($this->getHeaders())->post($url, $body);
+            $data= json_decode($response);
+            if ($response->successful() && $data->success == true) {
+                if($data->calculatedPostage > 0) {
+                    return $this->responseSuccessful($data->calculatedPostage, 'Rate Calculation Successful');
+                } 
+                
+            } else {
+                return $this->responseUnprocessable($data->message);
+            }
         }
     }
     
