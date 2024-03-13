@@ -941,9 +941,9 @@ class Order extends Model implements Package
             if($gssProfit) {
 
                 if ($data->isSuccess && $data->output > 0){
-                    $userDiscount =  setting('gss_profit', null, $this->user_id);
-                    $userDiscount = ($userDiscount >= 0 && $userDiscount <= 100)?$userDiscount:0;
-                    $totalProfit =   $gssProfit - ( $gssProfit / 100 * $userDiscount );
+                    $userGssProfit =  setting('gss_profit', null, $this->user_id);
+                    $userProfit = ($userGssProfit >= 0 && $userGssProfit <= 100)?$userGssProfit:0;
+                    $totalProfit =   $gssProfit + ( $gssProfit / 100 * $userProfit );
                     $profit = $data->output / 100 * ($totalProfit);
                     $price = round($data->output + $profit, 2);
                     // dd($price, $profit, $totalProfit, $this->shipping_value);

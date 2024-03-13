@@ -339,19 +339,19 @@ class Client{
                                     ->where('country_id', $order->recipient->country_id)
                                     ->value('profit_percentage');
                     if($this->gssProfit) {                
-                    $userDiscount =  setting('gss_profit', null, $order->user_id);
-                    $userDiscount = ($userDiscount >= 0 && $userDiscount <= 100)?$userDiscount:0;
-                    $totalProfit =   $this->gssProfit - ( $this->gssProfit / 100 * $userDiscount );
+                    $userGssProfit =  setting('gss_profit', null, $order->user_id);
+                    $userProfit = ($userGssProfit >= 0 && $userGssProfit <= 100)?$userGssProfit:0;
+                    $totalProfit =   $this->gssProfit + ( $this->gssProfit / 100 * $userProfit );
                     $profit = $data->calculatedPostage / 100 * ($totalProfit);
                     $price = round($data->calculatedPostage + $profit, 2);
                     \Log::info([
                         'service sub class'=> $service,
                         'user id'=> $order->user_id,
-                        'user discount'=> $userDiscount,
-                        'gss profit percentage '=> $this->gssProfit,
-                        'totalProfit =  profit minus discount'=> $totalProfit,
-                        'calculatedPostage' => $data->calculatedPostage,
-                        'calculatedPostage plus totalProfit'=> $price,
+                        'calculatedPostage initial value' => $data->calculatedPostage,
+                        'user profit in setting'=> $userProfit,
+                        'gss profit from file '=> $this->gssProfit,
+                        'totalProfit =  gss-profit plus user-profit'=> $totalProfit,
+                        'initial value plus totalProfit'=> $price,
                     ]);
                     return $this->responseSuccessful($price, 'Rate Calculation Successful');
                 } else {
