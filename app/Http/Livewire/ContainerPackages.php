@@ -159,7 +159,7 @@ class ContainerPackages extends Component
             return true;
         }
 
-        if($this->containerService == 'Anjun-Container' && $order->shippingService->isAnjunService()){
+        if($this->containerService == 'Anjun-Container' && $order->shippingService->is_anjun_service){
             return true;
         }
 
