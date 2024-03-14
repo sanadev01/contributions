@@ -310,7 +310,7 @@ class Client
 
             $url = $this->baseUrl . '/Utility/CalculatePostage';
             $body = [
-                "countryCode" => "BR",
+                "countryCode" => optional(optional($order->recipient)->country)->code,
                 "postalCode" => $order->recipient->zipcode,
                 "rateType" => $rateType,
                 "serviceType" => "LBL",
@@ -326,6 +326,8 @@ class Client
                 "entryFacilityZip" => "",
                 "customerReferenceID" => ""
             ];
+            \Log::info("GSS RATE Request Body");
+            \Log::info($body);
             $response = Http::withHeaders($this->getHeaders())->post($url, $body);
             $data= json_decode($response);
             if ($response->successful() && $data->success == true) {
@@ -435,7 +437,7 @@ class Client
     
             $url = $this->baseUrl . '/Utility/CalculatePostage';
             $body = [
-                "countryCode" => "BR",
+                "countryCode" => optional(optional($order->recipient)->country)->code,
                 "postalCode" => $order->recipient->zipcode,
                 "rateType" => $rateType,
                 "serviceType" => "LBL",
