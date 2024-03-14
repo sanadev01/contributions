@@ -313,7 +313,7 @@ class Client{
 
             $url = $this->baseUrl . '/Utility/CalculatePostage';
             $body = [
-                "countryCode" => "BR",
+                "countryCode" => optional(optional($order->recipient)->country)->code,
                 "postalCode" => $order->recipient->zipcode,
                 "rateType" => $rateType,
                 "serviceType" => "LBL",
