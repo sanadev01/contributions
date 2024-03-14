@@ -9,7 +9,7 @@
                         <h4 class="mb-0">
                             @lang('warehouse.containers.Containers')
                         </h4>
-                        <a href="{{ route('warehouse.containers_factory.create',['service_sub_class'=>request('service_sub_class')]) }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
+                        <a href="{{ route('warehouse.totalexpress_containers.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
                         <div class="mt-1">
@@ -69,7 +69,7 @@
                                             {{ $container->getContainerType() }}
                                         </td>
                                         <td>
-                                            {{ $container->getServiceSubClass()  }}
+                                            {{ $container->getServiceSubClass() }}
                                         </td>
                                         <td>{{ $container->getUnitCode() }}</td>
                                         <td>
@@ -103,11 +103,11 @@
                                                         @lang('user.Action')
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right dropright">
-                                                        <a href="{{ route('warehouse.container_factory.packages.index',$container) }}" class="dropdown-item w-100">
+                                                        <a href="{{ route('warehouse.totalexpress_container.packages.index',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
                                                         </a>
                                                         @if( !$container->isRegistered() )
-                                                            <a href="{{ route('warehouse.containers_factory.edit',$container) }}" class="dropdown-item w-100">
+                                                            <a href="{{ route('warehouse.totalexpress_containers.edit',$container) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
                                                             @if( !$container->isRegistered() && $container->hasOrders())
@@ -120,7 +120,7 @@
                                                                     <i class="feather icon-box"></i> Register MasterBox
                                                                 </a>
                                                             @endif
-                                                            <form action="{{ route('warehouse.containers_factory.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
+                                                            <form action="{{ route('warehouse.totalexpress_containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button class="dropdown-item w-100 text-danger">

@@ -5,20 +5,18 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">@lang('warehouse.containers.Edit Container')</h4>
-                        <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>$container->services_subclass_code]) }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
+                        <h4 class="mb-0">@lang('warehouse.containers.Create Container')</h4>
+                        <a href="{{ route('warehouse.totalexpress_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
                     </div>
-                    <hr>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('warehouse.containers_factory.update',$container) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('warehouse.totalexpress_containers.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                @method('PUT')
-                                <input hidden type="text" name="id" value="{{$container->id}}">
+
                                 <div class="controls row mb-1 align-items-center my-2">
                                     <label class="col-md-3 text-md-right">@lang('warehouse.containers.Seal No')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" name="seal_no" required value="{{ old('seal_no',$container->seal_no) }}">
+                                        <input type="text" class="form-control" name="seal_no" required value="{{ old('seal_no') }}">
                                         @error('seal_no')
                                         <div class="help-block text-danger"> {{ $message }} </div>
                                         @enderror
@@ -28,10 +26,10 @@
                                 <div class="controls row mb-1 align-items-center my-2">
                                     <label class="col-md-3 text-md-right">@lang('warehouse.containers.Container Type')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="unit_type">
+                                        <select class="form-control" name="unit_type" value="{{ old('unit_type') }}">
                                             <option value="">@lang('warehouse.containers.Container Type')</option>
-                                            <option value="1" {{ old('unit_type',$container->unit_type) == '1' ? 'selected' : '' }}>BAG</option>
-                                            <option value="2" {{ old('unit_type',$container->unit_type) == '2' ? 'selected' : '' }}>BOX</option>
+                                            <option value="1" {{ old('unit_type') == '1' ? 'selected' : '' }}>BAG</option>
+                                            <option value="2" {{ old('unit_type') == '2' ? 'selected' : '' }}>BOX</option>
                                         </select>
                                         @error('unit_type')
                                             <div class="help-block text-danger"> {{ $message }} </div>
@@ -39,12 +37,12 @@
                                     </div>
                                 </div>
                                 <div class="controls row mb-1 align-items-center my-2">
-                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Sorting')<span class="text-danger">*</span></label>
+                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Destination Airport')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
                                         <select class="form-control" name="destination_operator_name">
-                                            <option value="">@lang('warehouse.containers.Sorting')</option>
-                                            <option value="SAOD" {{ old('destination_operator_name', $container->destination_operator_name) == 'SAOD' ? 'selected' : '' }}>GRU</option>
-                                            <option value="CRBA" {{ old('destination_operator_name', $container->destination_operator_name) == 'CRBA' ? 'selected' : '' }}>CWB</option>
+                                            <option value="">@lang('warehouse.containers.Destination Airport')</option>
+                                            <option value="SAOD" {{ old('destination_operator_name') == 'SAOD' ? 'selected' : '' }}>GRU</option>
+                                            <option value="CRBA" {{ old('destination_operator_name') == 'CRBA' ? 'selecte' : '' }}>CWB</option>
                                         </select>
                                         @error('destination_operator_name')
                                             <div class="help-block text-danger"> {{ $message }} </div>
@@ -54,9 +52,9 @@
                                 <div class="controls row mb-1 align-items-center my-2">
                                     <label class="col-md-3 text-md-right">@lang('warehouse.containers.Distribution Service Class')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="services_subclass_code" disabled>
+                                        <select class="form-control" name="services_subclass_code">
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
-                                            <option value="{{App\Models\ShippingService::TOTAL_EXPRESS}}" {{ old('services_subclass_code',$container->services_subclass_code) == App\Models\ShippingService::TOTAL_EXPRESS ? 'selected': '' }}>Total Express</option>
+                                            <option value="{{App\Models\ShippingService::TOTAL_EXPRESS}}" {{ old('services_subclass_code') == App\Models\ShippingService::TOTAL_EXPRESS ? 'selected': '' }}>Total Express</option>
                                         </select>
                                         @error('services_subclass_code')
                                             <div class="help-block text-danger"> {{ $message }} </div>

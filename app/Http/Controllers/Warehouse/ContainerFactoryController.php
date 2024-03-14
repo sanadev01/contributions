@@ -7,6 +7,7 @@ use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Repositories\Warehouse\TotalExpressContainerRepository;
 use App\Http\Requests\Warehouse\Container\CreateContainerRequest;
+use App\Http\Requests\Warehouse\Container\UpdateContainerFactoryRequest;
 use App\Http\Requests\Warehouse\Container\UpdateContainerRequest;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
@@ -21,12 +22,14 @@ class ContainerFactoryController extends Controller
     public function index()
     {
         $serviceSubClass = request('service_sub_class');
-        $containers = Container::when(!Auth::user()->isAdmin(),function($query){
-            $query->where('user_id',Auth::id());
-        })->where('services_subclass_code', $serviceSubClass)
-        ->latest()->paginate();
-        
-        return view('admin.warehouse.containers_factory.index', compact('containers','serviceSubClass'));
+        $containers = Container::when(!Auth::user()->isAdmin(), function ($query) {
+            $query->where('user_id', Auth::id());
+        })->where('services_subclass_code', $serviceSubClass)->latest()->paginate();
+        $shippingServiceNotExists = config("shippingServices.correios.sub_classess.$serviceSubClass") == null;
+        if ($shippingServiceNotExists) {
+            abort(404);
+        }
+        return view('admin.warehouse.containers_factory.index', compact('containers', 'serviceSubClass'));
     }
 
     /**
@@ -36,10 +39,12 @@ class ContainerFactoryController extends Controller
      */
     public function create()
     {
-        $serviceSubClass = request('service_sub_class');
+        $serviceSubClass = request('service_sub_class'); 
         $shippingServices = ShippingService::where('service_sub_class', $serviceSubClass)->get();
-         
-        return view('admin.warehouse.containers_factory.create',compact('shippingServices'));
+        if ($shippingServices->isEmpty()){
+            abort(404);
+        }
+        return view('admin.warehouse.containers_factory.create', compact('shippingServices'));
     }
 
     /**
@@ -48,14 +53,39 @@ class ContainerFactoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateContainerRequest $createContainerRequest, TotalExpressContainerRepository $totalExpressContainerRepository)
-    {
-        if ( $container = $totalExpressContainerRepository->store($createContainerRequest) ){
+    public function store(CreateContainerRequest $request)
+    { 
+        try {
+            $shippingServices = ShippingService::where('service_sub_class',  $request->services_subclass_code)->get();
+           
+            if ($shippingServices->isEmpty()){
+                abort(404);
+            }
+            $container =  Container::create([
+                'user_id' => Auth::id(),
+                'dispatch_number' => 0,
+                'origin_country' => 'US',
+                'origin_operator_name' => 'HERC',
+                'postal_category_code' => 'A',
+                // 'seal_no' => $request->seal_no,
+                // 'destination_operator_name' => $request->destination_operator_name,
+                // 'unit_type' => $request->unit_type,
+                // 'services_subclass_code' => $request->services_subclass_code
+            ]+request()->all());
+
+            $container->update([
+                'dispatch_number' => $container->id
+            ]);
+
             session()->flash('alert-success', 'Container Saved Please Scan Packages');
-            return redirect()->route('warehouse.totalexpress_containers.index');
+            return redirect()->route('warehouse.containers_factory.index',['service_sub_class'=>$request->services_subclass_code]); 
+
+        } catch (\Exception $ex) { 
+            session()->flash('alert-danger', $ex->getMessage());
+            return back()->withInput();
         }
-        session()->flash('alert-danger', $totalExpressContainerRepository->getError());
-        return back()->withInput();
+
+         
     }
 
     /**
@@ -77,12 +107,11 @@ class ContainerFactoryController extends Controller
      */
     public function edit($container)
     {
-        $container = Container::find($container);
-        if ( $container->response != 0 ){
+        $container = Container::find($container); 
+        if ($container->response != 0) {
             abort(405);
         }
-        
-        return view('admin.warehouse.containers_factory.edit',compact('container'));
+        return view('admin.warehouse.containers_factory.edit', compact('container'));
     }
 
     /**
@@ -92,20 +121,24 @@ class ContainerFactoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateContainerRequest $updateContainerRequest, TotalExpressContainerRepository $totalExpressContainerRepository)
+    public function update(UpdateContainerFactoryRequest $request)
     {
-        $container = Container::find($updateContainerRequest->id);
+        $container = Container::find($request->id);
 
-        if ( $container->response != 0 ){
+        if ($container->response != 0) {
             abort(405);
         }
-        
-        if ( $container = $totalExpressContainerRepository->update($container, $updateContainerRequest) ){
-            session()->flash('alert-success', 'Container Saved Please Scan Packages');
-            return redirect()->route('warehouse.containers_factory.index');
+        try {
+            $container->update([
+                'seal_no' => $request->seal_no,
+                'unit_type' => $request->unit_type
+            ]);
+            session()->flash('alert-success', 'Container Saved Please Scan Packages'); 
+            return redirect()->route('warehouse.containers_factory.index',['service_sub_class'=>$container->services_subclass_code]); 
+        } catch (\Exception $ex) { 
+            session()->flash('alert-danger',$ex->getMessage() );
+            return back()->withInput();
         }
-        session()->flash('alert-danger', $totalExpressContainerRepository->getError());
-        return back()->withInput();
     }
 
     /**
@@ -114,19 +147,22 @@ class ContainerFactoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($container, TotalExpressContainerRepository $totalExpressContainerRepository)
+    public function destroy($container)
     {
         $container = Container::find($container);
-        if ( $container->respone != 0 ){
-            abort(403,'Cannot Delete Container registered on Correios Chile.');
+        if ($container->respone != 0) {
+            abort(403, 'Cannot Delete Container registered on Correios Chile.');
         }
-        if ( $container = $totalExpressContainerRepository->delete($container) ){
+        try {
+            $subClass=$container->services_subclass_code;
+            $container->deliveryBills()->delete();
+            $container->orders()->sync([]);
+            $container->delete();
             session()->flash('alert-success', 'Container Deleted');
-            return redirect()->route('warehouse.containers_factory.index');
+            return redirect()->route('warehouse.containers_factory.index',['service_sub_class'=>$subClass]);
+        } catch (\Exception $ex){
+            session()->flash('alert-danger', $ex->getMessage());
+            return back()->withInput();
         }
-
-        session()->flash('alert-danger', $totalExpressContainerRepository->getError());
-        return back()->withInput();        
     }
-
 }

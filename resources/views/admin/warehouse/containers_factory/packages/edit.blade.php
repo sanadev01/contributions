@@ -6,12 +6,12 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">@lang('warehouse.containers.Edit Container')</h4>
-                        <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>$container->services_subclass_code]) }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
+                        <a href="{{ route('warehouse.totalexpress_containers.index') }}" class="pull-right btn btn-primary">@lang('warehouse.containers.List Containers')</a>
                     </div>
                     <hr>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('warehouse.containers_factory.update',$container) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('warehouse.totalexpress_containers.update',$container) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <input hidden type="text" name="id" value="{{$container->id}}">

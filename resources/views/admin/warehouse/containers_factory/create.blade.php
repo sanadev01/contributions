@@ -55,7 +55,7 @@
                                         <select class="form-control" name="services_subclass_code">
                                             <option value="">@lang('warehouse.containers.Distribution Service Class')</option>
                                             @foreach($shippingServices as $shippingService)
-                                            <option value="{{$shippingService->service_sub_class}}" {{ old('services_subclass_code') == $shippingService->service_sub_class ? 'selected': '' }}>Total Express</option>
+                                            <option value="{{$shippingService->service_sub_class}}" {{ old('services_subclass_code') == $shippingService->service_sub_class ? 'selected': '' }}>{{ $shippingService->name}}</option>
                                             @endforeach
                                         </select>
                                         @error('services_subclass_code')
