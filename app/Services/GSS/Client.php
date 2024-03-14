@@ -329,6 +329,8 @@ class Client{
                 "entryFacilityZip" => "",
                 "customerReferenceID" => ""
             ];
+            \Log::info("GSS RATE Request Body");
+            \Log::info($body);
             $response = Http::withHeaders($this->getHeaders())->post($url, $body);
             $data= json_decode($response);
             if ($response->successful() && $data->success == true) {
