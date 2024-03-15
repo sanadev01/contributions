@@ -511,7 +511,7 @@
                                     <div class="input-group">
                                         <div class="col-2"> <span class="offset-2 mr-2 mt-2">Flat Fee :</span></div>
                                         <div class="col-1"> <input type="radio" name="prc_user_fee" value="flat_fee" @if(setting('prc_user_fee', null, $user->id)=="flat_fee") checked @endif></div>
-                                        <div class="col-6"> <input type="number" name="prc_user_fee_percent" class="form-control col-5" step="0.01" min="0" value="{{ setting('prc_user_fee_percent', null, $user->id) }}"></div>
+                                        <div class="col-6"> <input type="number" name="prc_user_fee_flat" class="form-control col-5" step="0.01" min="0" value="{{ setting('prc_user_fee_flat', null, $user->id) }}"></div>
                                     </div>
                                 </div>
                             </div>
