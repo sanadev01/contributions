@@ -46,7 +46,7 @@ class UserSettingRepository {
             'length'=> setting('length', null, $user->id),
             'width'=> setting('width', null, $user->id),
             'height'=> setting('height', null, $user->id),
-        ];
+            ];
 
         try {
             \Mail::send(new SettingUpdate($user, $request, $userData, false));
@@ -72,6 +72,22 @@ class UserSettingRepository {
         $request->has('pay_tax_service') ? saveSetting('pay_tax_service', true,$user->id) : saveSetting('pay_tax_service', false, $user->id);
         $request->has('gde') ? saveSetting('gde', true, $user->id) : saveSetting('gde', false, $user->id);
         $request->has('amazon_sp') ? saveSetting('amazon_sp', true, $user->id) : saveSetting('amazon_sp', false, $user->id);
+        $request->has('is_prc_user') ? saveSetting('is_prc_user', $request->is_prc_user == "true", $user->id) : saveSetting('is_prc_user', false, $user->id);
+        $request->has('prc_user_fee') ? saveSetting('prc_user_fee', $request->prc_user_fee, $user->id) : saveSetting('prc_user_fee', 'variable_fee', $user->id);
+
+        ($request->prc_user_fee_percent != null) ? saveSetting('prc_user_fee_percent', $request->prc_user_fee_percent, $user->id) : saveSetting('prc_user_fee_percent', 0, $user->id);
+        ($request->prc_user_fee_variable != null) ? saveSetting('prc_user_fee_variable', $request->prc_user_fee_variable, $user->id) : saveSetting('prc_user_fee_variable', 0, $user->id);
+        ($request->usps_profit != null) ? saveSetting('usps_profit', $request->usps_profit, $user->id) : saveSetting('usps_profit', 0, $user->id);
+        ($request->ups_profit != null) ? saveSetting('ups_profit', $request->ups_profit, $user->id) : saveSetting('ups_profit', 0, $user->id);
+        ($request->discount_percentage != null) ? saveSetting('discount_percentage', $request->discount_percentage, $user->id) : saveSetting('discount_percentage', 0, $user->id);
+        ($request->postal_discount_percentage != null) ? saveSetting('postal_discount_percentage', $request->postal_discount_percentage, $user->id) : saveSetting('postal_discount_percentage', 0, $user->id);
+        ($request->hd_express_discount_percentage != null) ? saveSetting('hd_express_discount_percentage', $request->hd_express_discount_percentage, $user->id) : saveSetting('hd_express_discount_percentage', 0, $user->id);
+        ($request->marketplace != null) ? saveSetting('marketplace', $request->marketplace, $user->id) : saveSetting('marketplace', 0, $user->id);
+        ($request->fedex_profit != null) ? saveSetting('fedex_profit', $request->fedex_profit, $user->id) : saveSetting('fedex_profit', 0, $user->id);
+        ($request->gss_profit != null) ? saveSetting('gss_profit', $request->gss_profit, $user->id) : saveSetting('gss_profit', 0, $user->id);
+        ($request->gde_pm_profit != null) ? saveSetting('gde_pm_profit', $request->gde_pm_profit, $user->id) : saveSetting('gde_pm_profit', 0, $user->id);
+        ($request->gde_fc_profit != null) ? saveSetting('gde_fc_profit', $request->gde_fc_profit, $user->id) : saveSetting('gde_fc_profit', 0, $user->id);
+        ($request->pay_tax_service_percentage != null) ? saveSetting('pay_tax_service_percentage', $request->pay_tax_service_percentage, $user->id) : saveSetting('pay_tax_service_percentage', 0, $user->id);
 
         ($request->usps_profit != null ) ? saveSetting('usps_profit', $request->usps_profit, $user->id) : saveSetting('usps_profit', 0, $user->id);
         ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $user->id) : saveSetting('ups_profit', 0, $user->id);
@@ -110,7 +126,7 @@ class UserSettingRepository {
                 }
             }
         }
-        
+
         $diffence = array_diff($ids,$newIds);
         foreach($diffence as $id){
             User::find($id)->update([

@@ -42,7 +42,9 @@ class ExportDepositReport extends AbstractExportService
             if($order == null && !$deposit->is_credit){
                 $order = $deposit->getOrder($deposit->order_id);
             }
-
+            if (!$order) {
+                continue;
+            }
             $this->setCellValue('A'.$row, $deposit->uuid);
             $this->setCellValue('B'.$row, optional($order)->warehouse_number);
             $this->setCellValue('C'.$row, optional(optional($order)->recipient)->fullName());
@@ -52,7 +54,7 @@ class ExportDepositReport extends AbstractExportService
             $this->setCellValue('G'.$row, $deposit->amount);
             $this->setCellValue('H'.$row, $order->tax_and_duty);
             $this->setCellValue('I'.$row, $order->fee_for_tax_and_duty);
-            
+
             $this->setCellValue('J'.$row, $this->getShippingCarrier($depositFirstOrder, $order));
             if (auth()->user()->isAdmin()) {
                 $this->setCellValue('K'.$row, '');
@@ -95,9 +97,9 @@ class ExportDepositReport extends AbstractExportService
         $this->setColumnWidth('H', 20);
         $this->setCellValue('H1', 'T&D Taxes');
 
-        $this->setColumnWidth('I', 20); 
+        $this->setColumnWidth('I', 20);
         $this->setCellValue('I1', 'Convenience Fee');
-        
+
 
         $this->setColumnWidth('J', 20);
         $this->setCellValue('J1', 'Carrier');
