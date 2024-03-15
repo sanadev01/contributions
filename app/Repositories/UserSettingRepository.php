@@ -81,7 +81,7 @@ class UserSettingRepository {
         $request->has('is_prc_user') ? saveSetting('is_prc_user', $request->is_prc_user == "true", $user->id) : saveSetting('is_prc_user', false, $user->id);
         $request->has('prc_user_fee') ? saveSetting('prc_user_fee', $request->prc_user_fee, $user->id) : saveSetting('prc_user_fee', 'variable_fee', $user->id);
 
-        ($request->prc_user_fee_percent != null) ? saveSetting('prc_user_fee_percent', $request->prc_user_fee_percent, $user->id) : saveSetting('prc_user_fee_percent', 0, $user->id);
+        ($request->prc_user_fee_flat != null) ? saveSetting('prc_user_fee_flat', $request->prc_user_fee_flat, $user->id) : saveSetting('prc_user_fee_flat', 0, $user->id);
         ($request->prc_user_fee_variable != null) ? saveSetting('prc_user_fee_variable', $request->prc_user_fee_variable, $user->id) : saveSetting('prc_user_fee_variable', 0, $user->id);
         ($request->usps_profit != null) ? saveSetting('usps_profit', $request->usps_profit, $user->id) : saveSetting('usps_profit', 0, $user->id);
         ($request->ups_profit != null) ? saveSetting('ups_profit', $request->ups_profit, $user->id) : saveSetting('ups_profit', 0, $user->id);

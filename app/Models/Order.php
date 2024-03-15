@@ -943,7 +943,7 @@ class Order extends Model implements Package
         $fee=0;
         if(setting('pay_tax_service', null, $this->user_id)&&setting('is_prc_user', null, $this->user_id)){
             if(setting('prc_user_fee', null, $this->user_id)=="flat_fee"){
-                $fee = setting('prc_user_fee_percent', null, $this->user_id);
+                $fee = setting('prc_user_fee_flat', null, $this->user_id);
                 \Log::info([
                     'fee type'=>'flat fee',
                     'fee'=>$fee,
