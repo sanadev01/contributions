@@ -141,6 +141,7 @@ class CreateRequest extends FormRequest
         if ($shippingService && $shippingService->is_total_express) {
 
             $rules['products.*.description'] = 'required|max:60';
+            $rules['parcel.tax_modality'] = 'required|in:DDU,DDP';
         }
 
         if ($request->recipient['country_id'] == 'UK' || $request->recipient['country_id'] == Country::UK) {
