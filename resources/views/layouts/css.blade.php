@@ -42,9 +42,9 @@
         display: inline-block;
     }
 
-    .custom-tooltip .tooltip-text {
+    .custom-tooltip .tooltip-text { 
         visibility: hidden;
-        width: 220px;
+        width: 260px;
         background-color: #333;
         color: #fff;
         text-align: center;
@@ -52,9 +52,10 @@
         padding: 5px;
         position: absolute;
         z-index: 1;
-        margin-left: -100px;
+        margin-left: -200px;
         opacity: 0;
         transition: opacity 0.3s;
+
     }
 
     .custom-tooltip:hover .tooltip-text {

@@ -871,22 +871,51 @@ class Order extends Model implements Package
         }
         return $this;
     }
+    // public function getCalculateTaxAndDutyAttribute(){
+    //     $totalTaxAndDuty = 0;
+    //     if (strtolower($this->tax_modality) == "ddp") {
+    //         if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
+
+    //             $totalCost = $this->gross_total + $this->insurance_value + $this->carrierCost();
+    //             $duty = $totalCost > 50 ? $totalCost * .6 : 0;
+    //             $totalCostOfTheProduct = $totalCost + $duty;
+    //             $icms = .17;
+    //             $totalIcms = $icms * $totalCostOfTheProduct;
+    //             $totalTaxAndDuty = $duty + $totalIcms; 
+    //             \Log::info([
+    //                 'recipient country' => $this->recipient->country->code,
+    //                 'gross total' => $this->gross_total,
+    //                 'insurance value' => $this->insurance_value,
+    //                 'carrierCost' => $this->carrierCost(),
+    //                 'totalCost' => $totalCost,
+    //                 'duty' => $duty,
+    //                 'totalCostOfTheProduct' => $totalCostOfTheProduct,
+    //                 'icms' => $icms,
+    //                 'totalIcms' => $totalIcms,
+    //                 'totalTaxAndDuty' => $totalTaxAndDuty, 
+    //             ]);
+    //         }
+    //     }
+    //     return round($totalTaxAndDuty, 2);
+    // }
     public function getCalculateTaxAndDutyAttribute(){
         $totalTaxAndDuty = 0;
-        if (strtolower($this->tax_modality) == "ddp") {
+        if (strtolower($this->tax_modality) == "ddp" && setting('is_prc_user', null, $this->user_id)) {
             if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
 
-                $totalCost = $this->gross_total + $this->insurance_value + $this->carrierCost();
-                $duty = $totalCost > 50 ? $totalCost * .6 : 0;
+                $totalCost = $this->shipping_value + $this->user_declared_freight + $this->insurance_value;
+            
+                $duty = $totalCost > 50 ? $totalCost * .60 :0; 
                 $totalCostOfTheProduct = $totalCost + $duty;
                 $icms = .17;
                 $totalIcms = $icms * $totalCostOfTheProduct;
-                $totalTaxAndDuty = $duty + $totalIcms; 
+                $totalTaxAndDuty = $duty + $totalIcms;
                 \Log::info([
                     'recipient country' => $this->recipient->country->code,
-                    'gross total' => $this->gross_total,
+                    'user_declared_freight' => $this->user_declared_freight,
                     'insurance value' => $this->insurance_value,
-                    'carrierCost' => $this->carrierCost(),
+                    'shipping_value' => $this->shipping_value,
+                    'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
                     'totalCost' => $totalCost,
                     'duty' => $duty,
                     'totalCostOfTheProduct' => $totalCostOfTheProduct,
@@ -900,10 +929,25 @@ class Order extends Model implements Package
     }
     public function getCalculateFeeForTaxAndDutyAttribute()
     {
-        $percent = setting('pay_tax_service_percentage', null, $this->user_id) ?? 2;
-        $taxAndDuty = $this->calculate_tax_and_duty;
-        $fee = $taxAndDuty / 100 * $percent;
-        return $taxAndDuty >0 && $fee  < 0.5 ? 0.5: number_format($fee, 2);
+        $fee=0;
+        if(setting('pay_tax_service', null, $this->user_id)&&setting('is_prc_user', null, $this->user_id)){
+            if(setting('prc_user_fee', null, $this->user_id)=="flat_fee"){
+                $fee = setting('prc_user_fee_percent', null, $this->user_id);
+                \Log::info([
+                    'fee type'=>'flat fee',
+                    'fee'=>$fee,
+                ]);
+            }
+            if(setting('prc_user_fee', null, $this->user_id)=="variable_fee"){
+               $percent = setting('prc_user_fee_variable', null, $this->user_id);
+                $fee= $this->tax_and_duty/100 * $percent;
+               \Log::info([
+                'fee type'=>'variable fee',
+                'fee'=>$fee,
+            ]);
+            }
+        } 
+        return $fee;
     }
 
 }
