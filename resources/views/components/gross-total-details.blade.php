@@ -42,8 +42,10 @@
                     <td colspan="2">{{number_format($order->fee_for_tax_and_duty , 2)." $"}} </td>
                 </tr>@endif
                 <tr>
-                    <td> Total Amount</td>
-                    <td colspan="2">{{number_format($order->gross_total , 2)." $"}} </td>
+                    
+                    <td> &nbsp; &nbsp; Total Amount &nbsp; &nbsp; &nbsp;</td>
+                    <td> &nbsp; &nbsp; {{number_format($order->gross_total , 2)." $"}}  &nbsp; &nbsp; </td>
+                    <td></td> 
                 </tr>
                 @else
                 <tr>
