@@ -29,9 +29,9 @@ class Parcel
    }
    public function getRequestBody()
    {
-      if ($this->order->tax_modality == "DDU") {
+      if (strcasecmp($this->order->tax_modality, "DDU") === 0) {
          $incoterm = "DDU";
-      } elseif ($this->order->tax_modality == "DDP") {
+      } elseif (strcasecmp($this->order->tax_modality, "DDP") === 0) {
             $incoterm = "DDP";
       }
 
