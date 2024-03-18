@@ -83,7 +83,7 @@
                 </div>
             </div>
             <hr>
-            <div class="col-md-8">
+            {{-- <div class="col-md-8">
                 @if($order->sinerlog_tran_id)
                 <div class="controls row mb-1">
                     <div class="form-check form-check-inline mr-5">
@@ -157,7 +157,7 @@
                     </div>
                 </div>
                 @endif
-            </div>
+            </div> --}}
             <div class="row col-12" id="itemLimit">
                 <h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5>
             </div>
