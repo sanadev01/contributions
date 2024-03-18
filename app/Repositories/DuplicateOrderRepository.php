@@ -47,6 +47,10 @@ class DuplicateOrderRepository extends Model
 
         $this->makeRecipientCopy($order,$copy);
         $this->makeServicesCopy($order,$copy);
+        $copy->update([
+            'shipping_service_id' => null,
+            'user_declared_freight' => 0,
+        ]);
         return $copy;
     }
     
