@@ -941,6 +941,7 @@ class Order extends Model implements Package
             if(setting('prc_user_fee', null, $this->user_id)=="variable_fee"){
                $percent = setting('prc_user_fee_variable', null, $this->user_id);
                 $fee= $this->tax_and_duty/100 * $percent;
+                $fee= $fee <0.5? 0.5:$fee;
                \Log::info([
                 'fee type'=>'variable fee',
                 'fee'=>$fee,
