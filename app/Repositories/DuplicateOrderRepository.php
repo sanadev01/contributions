@@ -50,6 +50,8 @@ class DuplicateOrderRepository extends Model
         $copy->update([
             'shipping_service_id' => null,
             'user_declared_freight' => 0,
+            'total' => 0,
+            'gross_total' => 0,
         ]);
         return $copy;
     }
