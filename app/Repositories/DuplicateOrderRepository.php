@@ -49,9 +49,14 @@ class DuplicateOrderRepository extends Model
         $this->makeServicesCopy($order,$copy);
         $copy->update([
             'shipping_service_id' => null,
-            'user_declared_freight' => 0,
+            'consolidation' => 0,
+            'order_value' => 0,
+            'shipping_value' => 0,
+            'dangrous_goods' => 0,
             'total' => 0,
-            'gross_total' => 0,
+            'discount' => 0,
+            'gross_total' =>0,
+            'user_declared_freight' => 0,
         ]);
         return $copy;
     }
