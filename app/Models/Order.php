@@ -539,12 +539,6 @@ class Order extends Model implements Package
         $feeForTaxAndDuty = (float)$this->calculate_fee_for_tax_and_duty;
         $total = $grossTotal + $taxAndDuty + $feeForTaxAndDuty;        
         $grossTotal = $total - $discount;
-        dd([
-            'tax_and_duty' =>  $taxAndDuty,
-            'fee_for_tax_and_duty' => $feeForTaxAndDuty,
-            'total' => $total,
-            'gross_total' => $grossTotal
-        ]);
         $this->update([
             'tax_and_duty' =>  $taxAndDuty,
             'fee_for_tax_and_duty' => $feeForTaxAndDuty,
