@@ -40,6 +40,17 @@ class DuplicateOrderRepository extends Model
         $copy->status = Order::STATUS_ORDER;
         $copy->is_consolidated = false;
         $copy->cn23 = null;
+
+        $copy->shipping_service_id = null;
+        $copy->consolidation = 0;
+        $copy->order_value = 0;
+        $copy->shipping_value = 0;
+        $copy->dangrous_goods = 0;
+        $copy->total = 0;
+        $copy->discount = 0;
+        $copy->gross_total = 0;
+        $copy->user_declared_freight = 0;
+
         // $copy->weight_discount = null;
         $copy->save();
         $copy->warehouse_number = $copy->getTempWhrNumber(false);
@@ -47,17 +58,6 @@ class DuplicateOrderRepository extends Model
 
         $this->makeRecipientCopy($order,$copy);
         $this->makeServicesCopy($order,$copy);
-        $copy->update([
-            'shipping_service_id' => null,
-            'consolidation' => 0,
-            'order_value' => 0,
-            'shipping_value' => 0,
-            'dangrous_goods' => 0,
-            'total' => 0,
-            'discount' => 0,
-            'gross_total' =>0,
-            'user_declared_freight' => 0,
-        ]);
         return $copy;
     }
     
