@@ -281,25 +281,6 @@
                                     </div>
                                 </div>
                             </div>
-                            @if(setting('post_plus', null, \App\Models\User::ROLE_ADMIN))
-                            <div class="controls row mb-1 align-items-center">
-                                <label class="col-md-3 text-md-right">Post Plus<span class="text-danger"></span></label>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Post Plus">
-                                            <input type="checkbox" name="post_plus" id="post_plus" @if(setting('post_plus', null, $user->id)) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
-                                            </span>
-                                        </div>
-                                        <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
-                                        <input type="number" name="discount_percentage" class="form-control col-2" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
-                                    </div>
-                                </div>
-                            </div>
-                            @endif
                             <hr>
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">USPS Int'l<span class="text-danger"></span></label>
@@ -319,7 +300,7 @@
                                         <div class="col-md-3">
                                             <input type="number" name="usps_profit" step="0.01" min="0" class="form-control" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
                                         </div>
-                                     </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="controls row mb-1 align-items-center">
@@ -406,6 +387,29 @@
                                     </div>
                                 </div>
                             </div>
+                            @if(setting('post_plus', null, \App\Models\User::ROLE_ADMIN))
+                            <div class="controls row mb-1 align-items-center">
+                                <label class="col-md-3 text-md-right">Post Plus<span class="text-danger"></span></label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Post Plus">
+                                            <input type="checkbox" name="post_plus" id="post_plus" @if(setting('post_plus', null, $user->id)) checked @endif>
+                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="offset-md-2 mt-2 col-md-3"> <!-- Adjusted offset class -->
+                                            <span>Discount Percentage (%) :</span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="number" name="discount_percentage" class="form-control" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">Postal Discount<span class="text-danger"></span></label>
                                 <div class="col-md-9">
@@ -611,7 +615,7 @@
                                                 </span>
                                             </span>
                                         </div>
-                                        <div class="offset-md-2 mt-2 col-md-3"> <span >PRC :</span>
+                                        <div class="offset-md-2 mt-2 col-md-3"> <span>PRC :</span>
                                             <input type="radio" name="is_prc_user" value="true" @if(setting('is_prc_user', null, $user->id)) checked @endif>
                                         </div>
                                         <div class="col-md-3">
