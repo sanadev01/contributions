@@ -319,9 +319,7 @@
                                         <div class="col-md-3">
                                             <input type="number" name="usps_profit" step="0.01" min="0" class="form-control" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
                                         </div>
-                                        <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
-                                        <input type="number" name="postal_discount_percentage" class="form-control col-2" id="postal_discount_percentage" value="{{ setting('postal_discount_percentage', null, $user->id) }}">
-                                    </div>
+                                     </div>
                                 </div>
                             </div>
                             <div class="controls row mb-1 align-items-center">
@@ -600,6 +598,75 @@
                                     </div>
                                 </div>
                             </div>
+                            <hr>
+                            <div class="controls row mb-1 align-items-center">
+                                <label class="col-md-3 text-md-right">Home Pay Convenience Fee <span class="text-danger"></span></label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="pay_tax_service">
+                                            <input type="checkbox" name="pay_tax_service" id="pay_tax_service" @if(setting('pay_tax_service', null, $user->id)) checked @endif>
+                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="offset-md-2 mt-2 col-md-3"> <span >PRC :</span>
+                                            <input type="radio" name="is_prc_user" value="true" @if(setting('is_prc_user', null, $user->id)) checked @endif>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <span>Not PRC : </span>
+                                            <input type="radio" name="is_prc_user" value="false" @if(!setting('is_prc_user', null, $user->id)) checked @endif>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="controls row mb-1 align-items-center">
+                                <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <div>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </div>
+                                        <div class="offset-md-2  col-md-3">
+                                            <span> Flat Fee :&nbsp;
+                                                <input type="radio" name="prc_user_fee" value="flat_fee" @if(setting('prc_user_fee', null, $user->id)=="flat_fee") checked @endif>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="number" name="prc_user_fee_flat" class="form-control" step="0.01" min="0" value="{{ setting('prc_user_fee_flat', null, $user->id) }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="controls row mb-1 align-items-center">
+                                <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <div>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </div>
+                                        <div class="offset-md-2 mt-2 col-md-3">
+                                            <span>
+                                                Variable Fee :&nbsp; <input type="radio" name="prc_user_fee" value="variable_fee" @if(setting('prc_user_fee', null, $user->id)=="variable_fee") checked @endif></span>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-3"> <span class="offset-md-2 col-md-2 mt-2"> <input type="number" name="prc_user_fee_variable" class="form-control" step="0.01" min="0" max="100" value="{{ setting('prc_user_fee_variable', null, $user->id) }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="controls row mb-2 align-items-center prc_user_fee">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <span class="offset-md-2 col-md-2 mt-2">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row mt-1">
                                 <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                     <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
@@ -622,6 +689,6 @@
 <script>
     $(function() {
         $('.selectpicker').selectpicker();
-    }); 
+    });
 </script>
 @endsection
