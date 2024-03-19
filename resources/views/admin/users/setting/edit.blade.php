@@ -2,7 +2,8 @@
 @section('css')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 <style>
-    .dropdown .btn:not(.btn-sm):not(.btn-lg), .dropdown .btn:not(.btn-sm):not(.btn-lg).dropdown-toggle {
+    .dropdown .btn:not(.btn-sm):not(.btn-lg),
+    .dropdown .btn:not(.btn-sm):not(.btn-lg).dropdown-toggle {
         background-color: white !important;
         border: 1px solid #ced4da;
         color: #495057 !important;
@@ -47,7 +48,7 @@
                                     <div class="help-block"></div>
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-3 align-items-center">
                                 <label class="col-md-3 text-md-right">@lang('user.Role')<span class="text-danger"></span></label>
                                 <div class="col-md-6">
                                     <select name="role_id" class="form-control">
@@ -72,28 +73,43 @@
                                 </div>
                             </div>
 
-                            <h3>Profit Package Settings</h3>
                             <hr>
+                            <h3 class="text-center my-3">Profit Package Settings</h3>
                             <h4 class="ml-5">Multi Profit Services Settings</h4>
-                            <livewire:profit.profit-setting :user_id="$user->id"  />
+                            <livewire:profit.profit-setting :user_id="$user->id" />
 
-                            <h3>Api Settings</h3>
                             <hr>
-
+                            <h3 class="text-center my-3">Api Settings</h3>
+                            <h4 class="ml-4">Application</h4>
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">Enable API<span class="text-danger"></span></label>
                                 <div class="col-md-6">
-                                    <input type="checkbox" name="api_enabled" id="api_enabled" @if( $user->api_enabled == 1 ) checked @endif>
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                        <input type="checkbox" name="api_enabled" id="api_enabled" @if( $user->api_enabled == 1 ) checked @endif>
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
+                                            </span>
+                                        </span>
+                                    </div>
                                     <div class="help-block"></div>
                                 </div>
                             </div>
                             <livewire:token-generator :user_id="$user->id" />
+                            <h4 class="ml-4">Amazon</h4>
 
-                            <hr>
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">Enable Amazon API<span class="text-danger"></span></label>
                                 <div class="col-md-6">
-                                    <input type="checkbox" name="amazon_api_enabled" id="api_enabled" @if( $user->amazon_api_enabled == 1 ) checked @endif>
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                        <input type="checkbox" name="amazon_api_enabled" id="api_enabled" @if( $user->amazon_api_enabled == 1 ) checked @endif >
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
+                                            </span>
+                                        </span>
+                                    </div>
+
                                     <div class="help-block"></div>
                                 </div>
                             </div>
@@ -105,9 +121,8 @@
                                     <div class="help-block"></div>
                                 </div>
                             </div>
-                            <h3>Leve Settings</h3>
                             <hr>
-
+                            <h4 class="ml-5">Leve Settings</h4>
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">Market Place Name<span class="text-danger"></span></label>
                                 <div class="col-md-6">
@@ -115,9 +130,8 @@
                                     <div class="help-block"></div>
                                 </div>
                             </div>
-
-                            <h3>Profile Settings</h3>
                             <hr>
+                            <h4 class="ml-5">Profile Settings</h4>
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">Email<span class="text-danger"></span></label>
                                 <div class="col-md-6">
@@ -127,8 +141,7 @@
                                     @enderror
                                 </div>
                             </div>
-
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row my-3 align-items-center">
                                 <label class="col-md-3 text-md-right">Update Password<span class="text-danger"></span></label>
                                 <div class="col-md-6">
                                     <input type="password" name="password" class="form-control" value="">
@@ -137,12 +150,10 @@
                                     @enderror
                                 </div>
                             </div>
-
-                            <h3>Affiliate Settings</h3>
                             <hr>
-
+                            <h3 class="text-center my-2">Affiliate Settings</h3>
                             <h4 class="ml-5">Referrer Settings</h4>
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row my-2 align-items-center">
                                 <label class="col-md-3 text-md-right">@lang('user.Referrer')<span class="text-danger"></span></label>
                                 <div class="col-md-6">
                                     <select name="referrer_id[]" class="form-control selectpicker" multiple data-live-search="true">
@@ -154,13 +165,11 @@
                                     <div class="help-block"></div>
                                 </div>
                             </div>
-                            <hr>
-
                             <h4 class="ml-5">Commission Settings</h4>
-                            <livewire:affiliate.commision-setting :user_id="$user->id"  />
-
-                            <h3>Waiver Fee Settings</h3>
-                            <hr> <div class="controls row mb-1 align-items-center">
+                            <livewire:affiliate.commision-setting :user_id="$user->id" />
+                            <hr>
+                            <h3 class="text-center my-3">Waiver Fee Settings</h3>
+                            <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right" for="battery">Waive battery fee<span class="text-danger"></span></label>
                                 <div class="col-md-2">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="Waive battery fee">
@@ -654,6 +663,6 @@
 <script>
     $(function() {
         $('.selectpicker').selectpicker();
-    }); 
+    });
 </script>
 @endsection
