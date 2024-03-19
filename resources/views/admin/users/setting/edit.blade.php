@@ -453,28 +453,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center">
-                                <label class="col-md-3 text-md-right">Convenience Fee for Tax Services<span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="pay_tax_service">
-                                            <input type="checkbox" name="pay_tax_service" id="pay_tax_service" @if(setting('pay_tax_service', null, $user->id)) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
-                                            </span>
-                                        </div>
-
-                                        <div class="offset-md-2 mt-2 col-md-3">
-                                            <span> Percentage:</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="pay_tax_service_percentage" class="form-control" step="0.01" min="0" max="100" id="pay_tax_service_percentage" value="{{ setting('pay_tax_service_percentage', null, $user->id) }}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <hr>
 
                             <div class="controls row mb-1 align-items-center">
