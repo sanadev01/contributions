@@ -641,14 +641,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="controls row mb-2 align-items-center prc_user_fee">
-                                <div class="col-md-4"></div>
-                                <div class="col-md-4">
-                                    <div class="input-group">
-                                        <span class="offset-md-2 col-md-2 mt-2">
-                                    </div>
-                                </div>
-                            </div>
                             <div class="row mt-1">
                                 <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                     <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
