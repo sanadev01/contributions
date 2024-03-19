@@ -958,8 +958,9 @@ class Order extends Model implements Package
                     'fee'=>$fee,
                 ]);
                 }
+          $fee = $fee<0.5?0.5:$fee;
         }
-        return $fee??0.5;
+        return $fee;
     }
 
 }
