@@ -911,7 +911,7 @@ class Order extends Model implements Package
     // }
     public function getCalculateTaxAndDutyAttribute(){
         $totalTaxAndDuty = 0;
-        if (strtolower($this->tax_modality) == "ddp" && setting('is_prc_user', null, $this->user_id)) {
+        if (strtolower($this->tax_modality) == "ddp" || setting('is_prc_user', null, $this->user_id)) {
             if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
 
                 $totalCost = $this->shipping_value + $this->user_declared_freight + $this->insurance_value;
@@ -942,24 +942,29 @@ class Order extends Model implements Package
     {
         $fee=0;
         if($this->calculate_tax_and_duty){
-            if(setting('pay_tax_service', null, $this->user_id)&&setting('is_prc_user', null, $this->user_id)){
+            $flag=true;
                 if(setting('prc_user_fee', null, $this->user_id)=="flat_fee"){
-                    $fee = setting('prc_user_fee_flat', null, $this->user_id);
+                    $fee = setting('prc_user_fee_flat', null, $this->user_id)??2;
                     \Log::info([
                         'fee type'=>'flat fee',
                         'fee'=>$fee,
                     ]);
+                    $flag=false;
                 }
                 if(setting('prc_user_fee', null, $this->user_id)=="variable_fee"){
-                $percent = setting('prc_user_fee_variable', null, $this->user_id);
+                    $percent = setting('prc_user_fee_variable', null, $this->user_id)??1;
                     $fee= $this->calculate_tax_and_duty/100 * $percent;
                     $fee= $fee <0.5? 0.5:$fee;
-                \Log::info([
-                    'fee type'=>'variable fee',
-                    'fee'=>$fee,
-                ]);
+                    \Log::info([
+                        'fee type'=>'variable fee',
+                        'fee'=>$fee,
+                    ]); 
+                    $flag=false;
                 }
-            }
+                if($flag){
+                $fee = $this->calculate_tax_and_duty*.01;
+                $fee = $fee<0.5?0.5:$fee;
+                }
         }
         return $fee;
     }
