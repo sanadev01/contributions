@@ -942,24 +942,29 @@ class Order extends Model implements Package
     {
         $fee=0;
         if($this->calculate_tax_and_duty){
+            $flag=true;
                 if(setting('prc_user_fee', null, $this->user_id)=="flat_fee"){
                     $fee = setting('prc_user_fee_flat', null, $this->user_id)??2;
                     \Log::info([
                         'fee type'=>'flat fee',
                         'fee'=>$fee,
                     ]);
+                    $flag=false;
                 }
                 if(setting('prc_user_fee', null, $this->user_id)=="variable_fee"){
-                $percent = setting('prc_user_fee_variable', null, $this->user_id)??1;
+                    $percent = setting('prc_user_fee_variable', null, $this->user_id)??1;
                     $fee= $this->calculate_tax_and_duty/100 * $percent;
                     $fee= $fee <0.5? 0.5:$fee;
-                \Log::info([
-                    'fee type'=>'variable fee',
-                    'fee'=>$fee,
-                ]);
+                    \Log::info([
+                        'fee type'=>'variable fee',
+                        'fee'=>$fee,
+                    ]); 
+                    $flag=false;
                 }
-           $fee = $this->calculate_tax_and_duty*.01;
-          $fee = $fee<0.5?0.5:$fee;
+                if($flag){
+                $fee = $this->calculate_tax_and_duty*.01;
+                $fee = $fee<0.5?0.5:$fee;
+                }
         }
         return $fee;
     }
