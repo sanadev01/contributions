@@ -294,6 +294,8 @@
                                                 </span>
                                             </span>
                                         </div>
+                                        <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
+                                        <input type="number" name="discount_percentage" class="form-control col-2" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
                                     </div>
                                 </div>
                             </div>
@@ -317,6 +319,8 @@
                                         <div class="col-md-3">
                                             <input type="number" name="usps_profit" step="0.01" min="0" class="form-control" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
                                         </div>
+                                        <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
+                                        <input type="number" name="postal_discount_percentage" class="form-control col-2" id="postal_discount_percentage" value="{{ setting('postal_discount_percentage', null, $user->id) }}">
                                     </div>
                                 </div>
                             </div>
@@ -618,6 +622,6 @@
 <script>
     $(function() {
         $('.selectpicker').selectpicker();
-    });
+    }); 
 </script>
 @endsection
