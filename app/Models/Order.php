@@ -942,7 +942,6 @@ class Order extends Model implements Package
     {
         $fee=0;
         if($this->calculate_tax_and_duty){
-            if(setting('pay_tax_service', null, $this->user_id)&&setting('is_prc_user', null, $this->user_id)){
                 if(setting('prc_user_fee', null, $this->user_id)=="flat_fee"){
                     $fee = setting('prc_user_fee_flat', null, $this->user_id)??2;
                     \Log::info([
@@ -959,7 +958,6 @@ class Order extends Model implements Package
                     'fee'=>$fee,
                 ]);
                 }
-            }
         }
         return $fee;
     }
