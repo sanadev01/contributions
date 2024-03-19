@@ -959,7 +959,7 @@ class Order extends Model implements Package
                 ]);
                 }
         }
-        return $fee;
+        return $fee??0.5;
     }
 
 }
