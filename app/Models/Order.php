@@ -911,7 +911,7 @@ class Order extends Model implements Package
     // }
     public function getCalculateTaxAndDutyAttribute(){
         $totalTaxAndDuty = 0;
-        if (strtolower($this->tax_modality) == "ddp" && setting('is_prc_user', null, $this->user_id)) {
+        if (strtolower($this->tax_modality) == "ddp" || setting('is_prc_user', null, $this->user_id)) {
             if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
 
                 $totalCost = $this->shipping_value + $this->user_declared_freight + $this->insurance_value;
