@@ -2,7 +2,8 @@
 @section('css')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 <style>
-    .dropdown .btn:not(.btn-sm):not(.btn-lg), .dropdown .btn:not(.btn-sm):not(.btn-lg).dropdown-toggle {
+    .dropdown .btn:not(.btn-sm):not(.btn-lg),
+    .dropdown .btn:not(.btn-sm):not(.btn-lg).dropdown-toggle {
         background-color: white !important;
         border: 1px solid #ced4da;
         color: #495057 !important;
@@ -75,7 +76,7 @@
                             <h3>Profit Package Settings</h3>
                             <hr>
                             <h4 class="ml-5">Multi Profit Services Settings</h4>
-                            <livewire:profit.profit-setting :user_id="$user->id"  />
+                            <livewire:profit.profit-setting :user_id="$user->id" />
 
                             <h3>Api Settings</h3>
                             <hr>
@@ -157,13 +158,13 @@
                             <hr>
 
                             <h4 class="ml-5">Commission Settings</h4>
-                            <livewire:affiliate.commision-setting :user_id="$user->id"  />
+                            <livewire:affiliate.commision-setting :user_id="$user->id" />
 
-                            <h3>Waiver Fee Settings</h3> 
+                            <h3>Waiver Fee Settings</h3>
                             <hr>
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right" for="battery">Waive battery fee<span class="text-danger"></span></label>
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="Waive battery fee">
                                         <input type="checkbox" name="battery" id="battery" @if(setting('battery', null, $user->id)) checked @endif>
                                         <span class="vs-checkbox vs-checkbox-lg">
@@ -174,6 +175,7 @@
                                         <span class="h3 mx-2 text-primary my-0 py-0"></span>
                                     </div>
                                 </div>
+                                <div class="col-md-2"></div>
                                 <label class="col-md-3 text-md-right">Waive perfume/aerosol/nail polish fee<span class="text-danger"></span></label>
                                 <div class="col-md-3">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="Waive perfume/aerosol/nail polish fee">
@@ -189,7 +191,7 @@
                             </div>
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">Amazon Selling Partner<span class="text-danger"></span></label>
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                     <div class="input-group">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Amazon Selling Partner">
                                             <input type="checkbox" name="amazon_sp" id="amazon_sp" @if(setting('amazon_sp', null, $user->id)) checked @endif>
@@ -201,6 +203,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-2"></div>
                                 <label class="col-md-3 text-md-right">SinerLog<span class="text-danger"></span></label>
                                 <div class="col-md-3">
                                     <div class="input-group">
@@ -218,7 +221,7 @@
                             <div class="controls row mb-1 align-items-center">
                                 @if(setting('geps_service', null, \App\Models\User::ROLE_ADMIN))
                                 <label class="col-md-3 text-md-right">GePS Prime<span class="text-danger"></span></label>
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                     <div class="input-group">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Global E Parcel">
                                             <input type="checkbox" name="geps_service" id="geps_service" @if(setting('geps_service', null, $user->id)) checked @endif>
@@ -230,6 +233,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-2"></div>
                                 @endif
                                 @if(setting('sweden_post', null, \App\Models\User::ROLE_ADMIN))
                                 <label class="col-md-3 text-md-right">Prime5<span class="text-danger"></span></label>
@@ -249,7 +253,7 @@
                             </div>
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">Insurance<span class="text-danger"></span></label>
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="Insurance">
                                         <input type="checkbox" name="insurance" id="perfume" @if(setting('insurance', null, $user->id)) checked @endif>
                                         <span class="vs-checkbox vs-checkbox-lg">
@@ -260,6 +264,7 @@
                                         <span class="h3 mx-2 text-primary my-0 py-0"></span>
                                     </div>
                                 </div>
+                                <div class="col-md-2"></div>
                                 <label class="col-md-3 text-md-right" for="tax">Tax Payment<span class="text-danger"></span></label>
                                 <div class="col-md-3">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="Tax Payment">
@@ -274,365 +279,316 @@
                                 </div>
                             </div>
                             <hr>
-                            <div class="controls row mb-1 align-items-center">
+
+
+
+
+
+
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right">USPS Int'l<span class="text-danger"></span></label>
-                                <div class="col-md-9"> 
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="USPS International">
-                                            <input type="checkbox" name="usps" id="usps" @if(setting('usps', null, $user->id)) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
+                                <div class="col-md-1">
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="USPS International">
+                                        <input type="checkbox" name="usps" id="usps" @if(setting('usps', null, $user->id)) checked @endif>
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
                                             </span>
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3"> 
-                                            <span>Profit Percentage (%) :</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="usps_profit" step="0.01" min="0" class="form-control" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <span>Profit Percentage (%) :</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="usps_profit" step="0.01" min="0" class="form-control" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
+                                </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right">UPS<span class="text-danger"></span></label>
-                                <div class="col-md-9"> 
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
-                                            <input type="checkbox" name="ups" id="ups" @if(setting('ups', null, $user->id)) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
+                                <div class="col-md-1">
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
+                                        <input type="checkbox" name="ups" id="ups" @if(setting('ups', null, $user->id)) checked @endif>
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
                                             </span>
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3"> 
-                                            <span>Profit Percentage (%) :</span>
-                                        </div>
-                                        <div class="col-md-3"> 
-                                            <input type="number" name="ups_profit" step="0.01" min="0" class="form-control  " id="ups_profit" value="{{ setting('ups_profit', null, $user->id) }}">
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <span>Profit Percentage (%) :</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="ups_profit" step="0.01" min="0" class="form-control  " id="ups_profit" value="{{ setting('ups_profit', null, $user->id) }}">
+                                </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right">FedEx<span class="text-danger"></span></label>
-                                <div class="col-md-9"> 
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
-                                            <input type="checkbox" name="fedex" id="fedex" @if(setting('fedex', null, $user->id)) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
+                                <div class="col-md-1">
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
+                                        <input type="checkbox" name="fedex" id="fedex" @if(setting('fedex', null, $user->id)) checked @endif>
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
                                             </span>
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3"> 
-                                            <span>Profit Percentage (%) :</span>
-                                        </div>
-                                        <div class="col-md-3"> 
-                                            <input type="number" name="fedex_profit" step="0.01" min="0" class="form-control" id="fedex_profit" value="{{ setting('fedex_profit', null, $user->id) }}">
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <span>Profit Percentage (%) :</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="fedex_profit" step="0.01" min="0" class="form-control" id="fedex_profit" value="{{ setting('fedex_profit', null, $user->id) }}">
+                                </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right">USPS GSS Int'l<span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="GSS">
-                                            <input type="checkbox" name="gss" id="gss" @if(setting('gss', null, $user->id)) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
+                                <div class="col-md-1">
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="GSS">
+                                        <input type="checkbox" name="gss" id="gss" @if(setting('gss', null, $user->id)) checked @endif>
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
                                             </span>
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3"> 
-                                            <span>Profit Percentage (%) :</span>
-                                        </div>
-                                        <div class="col-md-3"> 
-                                            <input type="number" pattern="/^\d+(\.\d{2})?$/" name="gss_profit" step="0.01" min="0" max="100" class="form-control" id="gss_profit" value="{{ setting('gss_profit', null, $user->id) }}">
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <span>Profit Percentage (%) :</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" pattern="/^\d+(\.\d{2})?$/" name="gss_profit" step="0.01" min="0" max="100" class="form-control" id="gss_profit" value="{{ setting('gss_profit', null, $user->id) }}">
+                                </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right">Volumetric Discount<span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
-                                            <input type="checkbox" name="volumetric_discount" id="volumetric_discount" @if(setting('volumetric_discount', null, $user->id)) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
+                                <div class="col-md-1">
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                        <input type="checkbox" name="volumetric_discount" id="volumetric_discount" @if(setting('volumetric_discount', null, $user->id)) checked @endif>
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
                                             </span>
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3"> 
-                                            <span>Discount Percentage (%) :</span>
-                                        </div>
-                                        <div class="col-md-3"> 
-                                            <input type="number" name="discount_percentage" class="form-control" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
-                                        </div>
+                                        </span>
                                     </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <span>Discount Percentage (%) :</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="discount_percentage" class="form-control" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
                                 </div>
                             </div>
                             @if(setting('post_plus', null, \App\Models\User::ROLE_ADMIN))
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right">Post Plus<span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Post Plus">
-                                            <input type="checkbox" name="post_plus" id="post_plus" @if(setting('post_plus', null, $user->id)) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
+                                <div class="col-md-1">
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="Post Plus">
+                                        <input type="checkbox" name="post_plus" id="post_plus" @if(setting('post_plus', null, $user->id)) checked @endif>
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
                                             </span>
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3"> 
-                                            <span>Discount Percentage (%) :</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="discount_percentage" class="form-control" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
-                                        </div>
+                                        </span>
                                     </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <span>Discount Percentage (%) :</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="discount_percentage" class="form-control" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
                                 </div>
                             </div>
                             @endif
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right">Postal Discount<span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
-                                            <input type="checkbox" name="postal_volumetric_discount" id="postal_volumetric_discount" @if(setting('postal_volumetric_discount', null, $user->id)) checked @endif>
+                                <div class="col-md-1">
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                        <input type="checkbox" name="postal_volumetric_discount" id="postal_volumetric_discount" @if(setting('postal_volumetric_discount', null, $user->id)) checked @endif>
 
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
                                             </span>
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3">
-                                            <span>Discount Percentage (%) :</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="postal_discount_percentage" class="form-control" id="postal_discount_percentage" value="{{ setting('postal_discount_percentage', null, $user->id) }}">
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <span>Discount Percentage (%) :</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="postal_discount_percentage" class="form-control" id="postal_discount_percentage" value="{{ setting('postal_discount_percentage', null, $user->id) }}">
+                                </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right">Marketplace<span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="marketplace_checked">
-                                            <input type="checkbox" name="marketplace_checked" id="marketplace" @if(setting('marketplace_checked', null, $user->id)) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
+                                <div class="col-md-1">
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="marketplace_checked">
+                                        <input type="checkbox" name="marketplace_checked" id="marketplace" @if(setting('marketplace_checked', null, $user->id)) checked @endif>
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
                                             </span>
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3">
-                                            <span>Marketplace:</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="text" name="marketplace" class="form-control" id="marketplace" value="{{ setting('marketplace', null, $user->id) }}">
-                                        </div>
+                                        </span>
                                     </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <span>Marketplace:</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" name="marketplace" class="form-control" id="marketplace" value="{{ setting('marketplace', null, $user->id) }}">
                                 </div>
                             </div>
                             <hr>
 
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right">Hd Express Discount<span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
-                                            <input type="checkbox" name="hd_express_volumetric_discount" id="hd_express_volumetric_discount" @if(setting('hd_express_volumetric_discount', null, $user->id)) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
+                                <div class="col-md-1">
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                        <input type="checkbox" name="hd_express_volumetric_discount" id="hd_express_volumetric_discount" @if(setting('hd_express_volumetric_discount', null, $user->id)) checked @endif>
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
                                             </span>
-                                        </div>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <span>Discount Percentage (%) :</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="hd_express_discount_percentage" class="form-control" id="hd_express_discount_percentage" value="{{ setting('hd_express_discount_percentage', null, $user->id) }}">
+                                </div>
+                            </div>
+                            <div class="controls row mb-1 align-items-center input-group">
+                                <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
 
-                                        <div class="offset-md-2 mt-2 col-md-3">
-                                            <span>Discount Percentage (%) :</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="hd_express_discount_percentage" class="form-control" id="hd_express_discount_percentage" value="{{ setting('hd_express_discount_percentage', null, $user->id) }}">
-                                        </div>
-                                    </div>
+
+                                <div class="col-md-1">
+                                </div>
+                                <div class="col-md-3">
+                                    <span>Weight (%):</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" step="0.01" min=0 type="number" name="weight" value="{{ setting('weight', null, $user->id) }}">
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3">
-                                            <span>Weight (%):</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input class="form-control" step="0.01" min=0 type="number" name="weight" value="{{ setting('weight', null, $user->id) }}">
-                                        </div>
-                                    </div>
+                                <div class="col-md-1">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <span> Length (%):</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="length" class="form-control" id="length" step="0.01" min=0 type="number" value="{{ setting('length', null, $user->id) }}">
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3">
-                                            <span> Length (%):</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="length" class="form-control" id="length" step="0.01" min=0 type="number" value="{{ setting('length', null, $user->id) }}">
-                                        </div>
-                                    </div>
+                                <div class="col-md-1">
+                                </div>
+                                <div class="col-md-3">
+                                    <span> Width (%):</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="width" class="form-control" id="width" step="0.01" min=0 type="number" value="{{ setting('width', null, $user->id) }}">
+
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3">
-                                            <span>Width (%):</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="width" class="form-control" id="width" step="0.01" min=0 type="number" value="{{ setting('width', null, $user->id) }}">
-                                        </div>
-                                    </div>
+                                <div class="col-md-1">
                                 </div>
-                            </div>
-                            <div class="controls row mb-1 align-items-center">
-                                <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3">
-                                            <span> Height (%):</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="height" class="form-control" id="height" step="0.01" min=0 type="number" value="{{ setting('height', null, $user->id) }}">
-                                        </div>
-                                    </div>
+                                <div class="col-md-3">
+                                    <span> Height (%)</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="height" class="form-control" id="height" step="0.01" min=0 type="number" value="{{ setting('height', null, $user->id) }}">
                                 </div>
                             </div>
                             <hr>
-                            <div class="controls row mb-1 align-items-center">
+                            <div class="controls row mb-1 align-items-center input-group">
                                 <label class="col-md-3 text-md-right">GDE<span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="GDE">
-                                            <input type="checkbox" name="gde" id="gde" @if(setting('gde', null, $user->id)) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
+                                <div class="col-md-1">
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="GDE">
+                                        <input type="checkbox" name="gde" id="gde" @if(setting('gde', null, $user->id)) checked @endif>
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
                                             </span>
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3">
-                                            <span> Priority Mail (%):</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="gde_pm_profit" step="0.01" min=0 class="form-control" id="gde_pm_profit" value="{{ setting('gde_pm_profit', null, $user->id) }}">
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <span>Priority Mail (%):</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="gde_pm_profit" step="0.01" min=0 class="form-control" id="gde_pm_profit" value="{{ setting('gde_pm_profit', null, $user->id) }}">
+                                </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center">
-                                <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3">
-                                            <span class="">First Class (%):</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="gde_fc_profit" step="0.01" min=0 class="form-control" id="gde_fc_profit" value="{{ setting('gde_fc_profit', null, $user->id) }}">
 
-                                        </div>
-                                    </div>
+                            <div class="controls row mb-1 align-items-center input-group">
+                                <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
+                                <div class="col-md-1">
+                                </div>
+                                <div class="col-md-3">
+                                    <span>First Class (%):</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="gde_fc_profit" step="0.01" min=0 class="form-control" id="gde_fc_profit" value="{{ setting('gde_fc_profit', null, $user->id) }}">
                                 </div>
                             </div>
                             <hr>
-                            <div class="controls row mb-1 align-items-center">
-                                <label class="col-md-3 text-md-right">Home Pay Convenience Fee <span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="pay_tax_service">
-                                            <input type="checkbox" name="pay_tax_service" id="pay_tax_service" @if(setting('pay_tax_service', null, $user->id)) checked @endif>
-                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                <span class="vs-checkbox--check">
-                                                    <i class="vs-icon feather icon-check"></i>
-                                                </span>
+                            <div class="controls row mb-1 align-items-center input-group">
+                                <label class="col-md-3 text-md-right"> Home Pay Convenience Fee <span class="text-danger"></span></label>
+                                <div class="col-md-1">
+                                    <div class="vs-checkbox-con vs-checkbox-primary" title="pay_tax_service">
+                                        <input type="checkbox" name="pay_tax_service" id="pay_tax_service" @if(setting('pay_tax_service', null, $user->id)) checked @endif>
+                                        <span class="vs-checkbox vs-checkbox-lg">
+                                            <span class="vs-checkbox--check">
+                                                <i class="vs-icon feather icon-check"></i>
                                             </span>
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3"> <span>PRC :</span>
-                                            <input type="radio" name="is_prc_user" value="true" @if(setting('is_prc_user', null, $user->id)) checked @endif>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <span>Not PRC : </span>
-                                            <input type="radio" name="is_prc_user" value="false" @if(!setting('is_prc_user', null, $user->id)) checked @endif>
-                                        </div>
-
+                                        </span>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="col-md-3">
+                                    <span>PRC :</span>
+                                    <input type="radio" name="is_prc_user" value="true" @if(setting('is_prc_user', null, $user->id)) checked @endif>
+                                </div>
+                                <div class="col-md-3">
+                                    <span>Not PRC : </span>
+                                    <input type="radio" name="is_prc_user" value="false" @if(!setting('is_prc_user', null, $user->id)) checked @endif>
 
-                            <div class="controls row mb-1 align-items-center">
+                                </div>
+                            </div>
+                            <div class="controls row mb-1 align-items-center input-group mt-2">
                                 <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </div>
-                                        <div class="offset-md-2  col-md-3">
-                                            <span> Flat Fee :&nbsp;
-                                                <input type="radio" name="prc_user_fee" value="flat_fee" @if(setting('prc_user_fee', null, $user->id)=="flat_fee") checked @endif>
-                                            </span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="prc_user_fee_flat" class="form-control" step="0.01" min="0" value="{{ setting('prc_user_fee_flat', null, $user->id) }}">
-                                        </div>
-                                    </div>
+                                <div class="col-md-1">
+                                </div>
+                                <div class="col-md-3">
+                                    Flat Fee : <input type="radio" name="prc_user_fee" value="flat_fee" @if(setting('prc_user_fee', null, $user->id)=="flat_fee") checked @endif>
+                                </div>
+                                <div class="col-md-3"> <input type="number" name="prc_user_fee_flat" class="form-control" step="0.01" min="0" value="{{ setting('prc_user_fee_flat', null, $user->id) }}">
+
+                                </div>
+                            </div>
+                            <div class="controls row mb-1 align-items-center input-group">
+                                <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
+                                <div class="col-md-1">
+                                </div>
+                                <div class="col-md-3"> <span>
+                                        Variable Fee :&nbsp; <input type="radio" name="prc_user_fee" value="variable_fee" @if(setting('prc_user_fee', null, $user->id)=="variable_fee") checked @endif></span>
+                                    </span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="prc_user_fee_variable" class="form-control" step="0.01" min="0" max="100" value="{{ setting('prc_user_fee_variable', null, $user->id) }}">
+
                                 </div>
                             </div>
 
-                            <div class="controls row mb-1 align-items-center">
-                                <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
-                                <div class="col-md-9">
-                                    <div class="input-group">
-                                        <div>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </div>
-                                        <div class="offset-md-2 mt-2 col-md-3">
-                                            <span>
-                                                Variable Fee :&nbsp; <input type="radio" name="prc_user_fee" value="variable_fee" @if(setting('prc_user_fee', null, $user->id)=="variable_fee") checked @endif></span>
-                                            </span>
-                                        </div>
-                                        <div class="col-md-3"> <span class="offset-md-2 col-md-2 mt-2"> <input type="number" name="prc_user_fee_variable" class="form-control" step="0.01" min="0" max="100" value="{{ setting('prc_user_fee_variable', null, $user->id) }}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="row mt-1">
                                 <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                     <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
