@@ -182,6 +182,22 @@
         </ul>
     </div>
 </form>
+
+<div class="modal fade" id="checkOptionsModal" tabindex="-1" role="dialog" aria-labelledby="checkOptionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background: red;">
+                <h5 class="modal-title" id="checkOptionsModalLabel" style="color:white;">Please Check Disposal Option</h5>
+            </div>
+            <div class="modal-body">
+                You must check at least one disposal option before saving order.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!--USPS PRIORITY INTERNATIONAL RATE ALERT MODAL-->
 <div class="modal fade" id="uspsModal" role="dialog">
     <div class="modal-dialog modal-md">
@@ -535,5 +551,20 @@
         var button = document.getElementById('submitButton');
         button.removeAttribute('disabled');
     })
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var orderForm = document.getElementById('order-form');
+        var returnParcelCheckbox = document.getElementById('returnParcel');
+        var disposeAllCheckbox = document.getElementById('disposeAll');
+        var checkOptionsModal = document.getElementById('checkOptionsModal');
+
+        orderForm.addEventListener('submit', function(event) {
+            // Check if both checkboxes are unchecked
+            if (!returnParcelCheckbox.checked && !disposeAllCheckbox.checked) {
+                event.preventDefault(); // Prevent form submission
+                $('#checkOptionsModal').modal('show'); // Show the modal
+            }
+        });
+    });
 </script>
 @endsection
