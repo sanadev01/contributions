@@ -83,7 +83,7 @@
                 </div>
             </div>
             <hr>
-            {{-- <div class="col-md-8">
+            <div class="col-md-8">
                 @if($order->sinerlog_tran_id)
                 <div class="controls row mb-1">
                     <div class="form-check form-check-inline mr-5">
@@ -108,7 +108,7 @@
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
                     </div>
-                    <div class="form-check form-check-inline mr-5">
+                    {{-- <div class="form-check form-check-inline mr-5">
                         <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
                             <input type="checkbox" name="individual_parcel" id="returnIndividual" @if($order->sinerlog_tran_id == 3) checked @endif>
                             <span class="vs-checkbox vs-checkbox-lg">
@@ -118,7 +118,7 @@
                             </span>
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                    </div>
+                    </div> --}}
                 </div>
                 @else
                 <div class="controls row mb-1">
@@ -144,7 +144,7 @@
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
                     </div>
-                    <div class="form-check form-check-inline mr-5">
+                    {{-- <div class="form-check form-check-inline mr-5">
                         <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
                             <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
                             <span class="vs-checkbox vs-checkbox-lg">
@@ -154,10 +154,10 @@
                             </span>
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                    </div>
+                    </div> --}}
                 </div>
                 @endif
-            </div> --}}
+            </div>
             <div class="row col-12" id="itemLimit">
                 <h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5>
             </div>
