@@ -112,6 +112,9 @@ class AccrualRate extends Model
         if ( $this->service == Package::SERVICE_CLASS_Japan_EMS ){
             return "Japan JerseyPost EMS";
         }
+        if ( $this->service == Package::SERVICE_CLASS_Hound_Express ){
+            return "Hound Express";
+        }
         return '';
     }
 
