@@ -930,8 +930,8 @@ class Order extends Model implements Package
         $client = new Client();
         $response = $client->getCostRates($this, $shippingService);
         $data = optional($response)->getData();
-
-        if($this->shippingService->service_sub_class == ShippingService::GSS_CEP) {
+        
+        if($this->shippingService->service_sub_class == ShippingService::GSS_CEP && $data->isSuccess && $data->output > 0) {
             $this->update([
                 'user_declared_freight' => $data->output,
             ]);
