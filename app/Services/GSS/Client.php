@@ -285,7 +285,7 @@ class Client{
 
             $rate = getZoneRate($order, $shippingService, $zoneId);
 
-            if ($rate > 0) {
+            if (isset($rate) && ($rate > 0)) {
                 return $this->responseSuccessful($rate, 'Rate Calculation Successful');
                 
             } else {
@@ -416,7 +416,7 @@ class Client{
 
             $rate = getZoneRate($order, $service, $zoneId);
 
-            if ($rate > 0) {
+            if (isset($rate) && ($rate > 0)) {
                 return $this->responseSuccessful($rate, 'Rate Calculation Successful');
                 
             } else {
