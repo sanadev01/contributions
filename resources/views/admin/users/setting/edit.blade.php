@@ -162,6 +162,9 @@
 
                             <h3>Waiver Fee Settings</h3>
                             <hr>
+
+
+
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right" for="battery">Waive battery fee<span class="text-danger"></span></label>
                                 <div class="col-md-1">
@@ -175,9 +178,10 @@
                                         <span class="h3 mx-2 text-primary my-0 py-0"></span>
                                     </div>
                                 </div>
-                                <div class="col-md-2"></div>
+                            </div>
+                            <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">Waive perfume/aerosol/nail polish fee<span class="text-danger"></span></label>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="Waive perfume/aerosol/nail polish fee">
                                         <input type="checkbox" name="perfume" id="perfume" @if(setting('perfume', null, $user->id)) checked @endif>
                                         <span class="vs-checkbox vs-checkbox-lg">
@@ -203,9 +207,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2"></div>
+                            </div>
+                            <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">SinerLog<span class="text-danger"></span></label>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="input-group">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="sinerlog">
                                             <input type="checkbox" name="sinerlog" id="sinerlog" @if(setting('sinerlog', null, $user->id)) checked @endif>
@@ -218,8 +223,8 @@
                                     </div>
                                 </div>
                             </div>
+                            @if(setting('geps_service', null, \App\Models\User::ROLE_ADMIN))
                             <div class="controls row mb-1 align-items-center">
-                                @if(setting('geps_service', null, \App\Models\User::ROLE_ADMIN))
                                 <label class="col-md-3 text-md-right">GePS Prime<span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                     <div class="input-group">
@@ -233,11 +238,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2"></div>
-                                @endif
-                                @if(setting('sweden_post', null, \App\Models\User::ROLE_ADMIN))
+
+                            </div>
+                            @endif
+                            @if(setting('sweden_post', null, \App\Models\User::ROLE_ADMIN))
+                            <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">Prime5<span class="text-danger"></span></label>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="input-group">
                                         <div class="vs-checkbox-con vs-checkbox-primary" title="Sweden Post - Prime5">
                                             <input type="checkbox" name="sweden_post" id="sweden_post" @if(setting('sweden_post', null, $user->id)) checked @endif>
@@ -249,8 +256,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endif
                             </div>
+                            @endif
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">Insurance<span class="text-danger"></span></label>
                                 <div class="col-md-1">
@@ -264,9 +271,11 @@
                                         <span class="h3 mx-2 text-primary my-0 py-0"></span>
                                     </div>
                                 </div>
-                                <div class="col-md-2"></div>
+
+                            </div>
+                            <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right" for="tax">Tax Payment<span class="text-danger"></span></label>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="Tax Payment">
                                         <input type="checkbox" name="tax" id="tax" @if(setting('tax', null, $user->id)) checked @endif>
                                         <span class="vs-checkbox vs-checkbox-lg">
@@ -279,13 +288,7 @@
                                 </div>
                             </div>
                             <hr>
-
-
-
-
-
-
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right">USPS Int'l<span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="USPS International">
@@ -297,14 +300,14 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span>Profit Percentage (%) :</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" name="usps_profit" step="0.01" min="0" class="form-control" id="usps_profit" value="{{ setting('usps_profit', null, $user->id) }}">
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right">UPS<span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
@@ -316,14 +319,14 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span>Profit Percentage (%) :</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" name="ups_profit" step="0.01" min="0" class="form-control  " id="ups_profit" value="{{ setting('ups_profit', null, $user->id) }}">
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right">FedEx<span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="ups">
@@ -335,14 +338,14 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span>Profit Percentage (%) :</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" name="fedex_profit" step="0.01" min="0" class="form-control" id="fedex_profit" value="{{ setting('fedex_profit', null, $user->id) }}">
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right">USPS GSS Int'l<span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="GSS">
@@ -354,14 +357,14 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span>Profit Percentage (%) :</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" pattern="/^\d+(\.\d{2})?$/" name="gss_profit" step="0.01" min="0" max="100" class="form-control" id="gss_profit" value="{{ setting('gss_profit', null, $user->id) }}">
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right">Volumetric Discount<span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
@@ -373,15 +376,15 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span>Discount Percentage (%) :</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" name="discount_percentage" class="form-control" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
                                 </div>
                             </div>
                             @if(setting('post_plus', null, \App\Models\User::ROLE_ADMIN))
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right">Post Plus<span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="Post Plus">
@@ -393,15 +396,15 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span>Discount Percentage (%) :</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" name="discount_percentage" class="form-control" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
                                 </div>
                             </div>
                             @endif
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right">Postal Discount<span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
@@ -414,14 +417,14 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span>Discount Percentage (%) :</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" name="postal_discount_percentage" class="form-control" id="postal_discount_percentage" value="{{ setting('postal_discount_percentage', null, $user->id) }}">
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right">Marketplace<span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="marketplace_checked">
@@ -433,16 +436,16 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span>Marketplace:</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="text" name="marketplace" class="form-control" id="marketplace" value="{{ setting('marketplace', null, $user->id) }}">
                                 </div>
                             </div>
                             <hr>
 
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right">Hd Express Discount<span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
@@ -454,63 +457,63 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span>Discount Percentage (%) :</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" name="hd_express_discount_percentage" class="form-control" id="hd_express_discount_percentage" value="{{ setting('hd_express_discount_percentage', null, $user->id) }}">
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
 
 
                                 <div class="col-md-1">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span>Weight (%):</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input class="form-control" step="0.01" min=0 type="number" name="weight" value="{{ setting('weight', null, $user->id) }}">
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span> Length (%):</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" name="length" class="form-control" id="length" step="0.01" min=0 type="number" value="{{ setting('length', null, $user->id) }}">
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span> Width (%):</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" name="width" class="form-control" id="width" step="0.01" min=0 type="number" value="{{ setting('width', null, $user->id) }}">
 
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span> Height (%)</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" name="height" class="form-control" id="height" step="0.01" min=0 type="number" value="{{ setting('height', null, $user->id) }}">
                                 </div>
                             </div>
                             <hr>
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right">GDE<span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="GDE">
@@ -522,27 +525,27 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span>Priority Mail (%):</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" name="gde_pm_profit" step="0.01" min=0 class="form-control" id="gde_pm_profit" value="{{ setting('gde_pm_profit', null, $user->id) }}">
                                 </div>
                             </div>
 
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <span>First Class (%):</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="number" name="gde_fc_profit" step="0.01" min=0 class="form-control" id="gde_fc_profit" value="{{ setting('gde_fc_profit', null, $user->id) }}">
                                 </div>
                             </div>
                             <hr>
-                            <div class="controls row mb-1 align-items-center input-group">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right"> Home Pay Convenience Fee <span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                     <div class="vs-checkbox-con vs-checkbox-primary" title="pay_tax_service">
@@ -554,40 +557,58 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <span>PRC :</span>
+                                <div class="col-md-2">
                                     <input type="radio" name="is_prc_user" value="true" @if(setting('is_prc_user', null, $user->id)) checked @endif>
-                                </div>
-                                <div class="col-md-3">
-                                    <span>Not PRC : </span>
-                                    <input type="radio" name="is_prc_user" value="false" @if(!setting('is_prc_user', null, $user->id)) checked @endif>
-
+                                    &nbsp;
+                                    <span>PRC</span>
                                 </div>
                             </div>
-                            <div class="controls row mb-1 align-items-center input-group mt-2">
+                            <div class="controls row mb-1 align-items-center ">
                                 <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
                                 <div class="col-md-1">
                                 </div>
-                                <div class="col-md-3">
-                                    Flat Fee : <input type="radio" name="prc_user_fee" value="flat_fee" @if(setting('prc_user_fee', null, $user->id)=="flat_fee") checked @endif>
-                                </div>
-                                <div class="col-md-3"> <input type="number" name="prc_user_fee_flat" class="form-control" step="0.01" min="0" value="{{ setting('prc_user_fee_flat', null, $user->id) }}">
-
-                                </div>
-                            </div>
-                            <div class="controls row mb-1 align-items-center input-group">
-                                <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
-                                <div class="col-md-1">
-                                </div>
-                                <div class="col-md-3"> <span>
-                                        Variable Fee :&nbsp; <input type="radio" name="prc_user_fee" value="variable_fee" @if(setting('prc_user_fee', null, $user->id)=="variable_fee") checked @endif></span>
-                                    </span>
-                                </div>
-                                <div class="col-md-3">
-                                    <input type="number" name="prc_user_fee_variable" class="form-control" step="0.01" min="0" max="100" value="{{ setting('prc_user_fee_variable', null, $user->id) }}">
-
+                                <div class="col-md-2">
+                                    <input type="radio" name="is_prc_user" value="0" @if(!setting('is_prc_user', null, $user->id)) checked @endif>
+                                    &nbsp;
+                                    <span>Not PRC </span>
                                 </div>
                             </div>
+                            <div class="prc_user_fee" @if(!setting('is_prc_user', null, $user->id)) style="display: none;"@endif>
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4">
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center  mt-2">
+                                    <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="radio" name="prc_user_fee" value="flat_fee" @if(setting('prc_user_fee', null, $user->id)=="flat_fee") checked @endif>
+                                        &nbsp;
+                                        Flat Fee :
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="number" name="prc_user_fee_flat" class="form-control" step="0.01" min="0" value="{{ setting('prc_user_fee_flat', null, $user->id) }}">
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center ">
+                                    <label class="col-md-3 text-md-right"> <span class="text-danger"></span></label>
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="radio" name="prc_user_fee" value="variable_fee" @if(setting('prc_user_fee', null, $user->id)=="variable_fee") checked @endif>
+                                        &nbsp;
+                                        Variable Fee :
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="number" name="prc_user_fee_variable" class="form-control" step="0.01" min="0" max="100" value="{{ setting('prc_user_fee_variable', null, $user->id) }}">
+
+                                    </div>
+                                </div>
+
+                            </div> 
 
                             <div class="row mt-1">
                                 <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
@@ -609,6 +630,16 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 <script>
+    $(document).ready(function() {
+        $('input[type="radio"][name="is_prc_user"]').change(function() {
+            if ($(this).val() == "true") {
+                $(".prc_user_fee").show();
+            } else {
+                $(".prc_user_fee").hide();
+            }
+        });
+   
+    });
     $(function() {
         $('.selectpicker').selectpicker();
     });
