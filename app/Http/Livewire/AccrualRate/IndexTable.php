@@ -127,7 +127,7 @@ class IndexTable extends Component
             'value' => Package::SERVICE_CLASS_Japan_EMS,
         ];
         $this->services[27] = [
-            'name' => 'Hound Express',
+            'name' => 'MEXICO Hound Express',
             'value' => Package::SERVICE_CLASS_Hound_Express,
         ];   
         return $this->services;

@@ -80,7 +80,7 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Post_Plus_CO_REG}}">PostPlus Colombia REG</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Japan_Prime}}">Japan Prime JerseyPost</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Japan_EMS}}">Japan EMS JerseyPost</option>
-                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Hound_Express}}">Hound Express</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Hound_Express}}">MEXICO Hound Express</option>
 
                                         </select>
                                         <div class="help-block"></div>
