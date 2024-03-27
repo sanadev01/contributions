@@ -10,10 +10,9 @@ use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
 use Illuminate\Support\Facades\Route;
 
-class CorreiosCalculation extends Component
+class UsCalculation extends Component
 {
     protected $orderId;
-
     public $weight;
     public $weightOther;
     public $length;
@@ -39,16 +38,14 @@ class CorreiosCalculation extends Component
         $this->order = optional($order)->toArray();
         $this->fillData();
         $this->checkUser();
-
         if ($this->userId && $this->cc != 'US') {
             $this->setVolumetricDiscount();
         }
-
     }
 
     public function render()
     {
-        return view('livewire.calculator.correios-calculation');
+       return view('livewire.calculator.us-calculation'); 
     }
 
     public function updatedUnit()

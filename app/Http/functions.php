@@ -11,6 +11,7 @@ use App\Models\Setting;
 use App\Models\ZoneRate;
 use App\Models\ShippingService;
 use App\Services\Calculators\AbstractRateCalculator;
+use Illuminate\Support\Facades\Cache;
 
 function countries()
 {
@@ -35,6 +36,13 @@ function states($countryId=null){
     $states =  State::all();
     return $states;
 }
+function us_states(){
+    return Cache::remember('states', Carbon::now()->addDay(), function () {
+        return State::query()->where('country_id', Country::US)->get(['name','code','id']);
+    });
+}
+
+
 
 function saveSetting($key, $value, $userId = null, $admin = false)
 {
