@@ -10,6 +10,7 @@
         border-radius: 3px;
         border: 1px solid #dcdcdc;
     }
+
     .breadcrumb-bg {
         background-color: #f8f8f8;
     }
@@ -27,7 +28,6 @@
 </style>
 @endsection
 @section('page')
-
 <section>
     <nav>
         <ol class="breadcrumb breadcrumb-bg">
@@ -36,7 +36,6 @@
             <li class="breadcrumb-item active" aria-current="page">Correios</li>
         </ol>
     </nav>
-
 </section>
 @if ($errors->any())
 <div class="alert alert-danger">
@@ -50,20 +49,18 @@
 
 <section>
     <div class="row mt-4">
-        <div class="col-12 mx-2">
-            <div class="ml-3">
-                <dl>
-                    <dt class="font-weight-bold dt">Calculator </dt>
-                </dl>
-            </div>
+        <div class="col-12">
+            <dl>
+                <dt class="font-weight-bold dt">Calculator</dt>
+            </dl>
         </div>
     </div>
 </section>
 <!-- Dashboard Analytics Start -->
 <section id="vue-calculator">
     <div class="mx-3">
-        <div class="row mx-3">
-                <livewire:calculator.correios-calculation>
+        <div class="row">
+            <livewire:calculator.correios-calculation>
         </div>
     </div>
 </section>

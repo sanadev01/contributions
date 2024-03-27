@@ -10,6 +10,7 @@
         border-radius: 3px;
         border: 1px solid #dcdcdc;
     }
+
     .breadcrumb-bg {
         background-color: #f8f8f8;
     }
@@ -39,8 +40,8 @@
 
 <section>
     <div class="row mt-4">
-        <div class="col-12 mx-2">
-            <div class="ml-3">
+        <div class="col-12 mx-3">
+            <div class="ml-3 mx-3">
                 <dl>
                     <dt class="font-weight-bold dt">Calculator </dt>
                 </dl>
@@ -52,7 +53,7 @@
 <section id="vue-calculator">
     <div class="mx-3">
         <div class="row mx-3">
-                <livewire:calculator.correios-calculation>
+            <livewire:calculator.correios-calculation>
         </div>
     </div>
 </section>
