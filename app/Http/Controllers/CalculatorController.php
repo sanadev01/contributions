@@ -22,7 +22,6 @@ class CalculatorController extends Controller
         $shippingServices =  $calculatorRepository->getShippingService();
         $chargableWeight = $calculatorRepository->getChargableWeight();
         $weightInOtherUnit = $calculatorRepository->getWeightInOtherUnit($request);
-        dd(compact('order', 'shippingServices', 'weightInOtherUnit', 'chargableWeight'));
         if(Auth::check())
             return view('calculator.show', compact('order', 'shippingServices', 'weightInOtherUnit', 'chargableWeight'));
         else
