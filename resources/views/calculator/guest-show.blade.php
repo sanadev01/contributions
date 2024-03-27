@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.app')
 @section('css')
 
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/kpi.css') }}">
@@ -25,7 +25,7 @@
     }
 </style>
 @endsection
-@section('page')
+@section('content')
 <section>
     <nav>
         <ol class="breadcrumb breadcrumb-bg">
@@ -94,7 +94,7 @@
 </section>
 <!-- Dashboard Analytics end -->
 @endsection
-@section('js')
+@section('jquery')
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const priceTags = document.querySelectorAll(".price-tag");
