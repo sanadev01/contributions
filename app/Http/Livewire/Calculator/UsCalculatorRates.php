@@ -41,20 +41,21 @@ class UsCalculatorRates extends Component
         return view('livewire.calculator.us-calculator-rates');
     }
 
-    public function getLabel(USCalculatorRepository $usCalculatorRepository)
+    public function getLabel($subClass)
     {
-        if (!$this->selectedService) {
+        $this->selectedService = $subClass;
+        $usCalculatorRepository = new  USCalculatorRepository();
+        if (!$this->selectedService){
             $this->addError('selectedService', 'select service please.');
             return false;
         }
 
         if (!$this->userLoggedIn) {
-            $this->addError('serviceError', 'please login to continue.');
+            $this->addError('serviceError', 'Please login to continue.');
             return false;
         }
-        
-        if ($this->getCostOfSelectedService() > getBalance())
-        {
+
+        if ($this->getCostOfSelectedService() > getBalance()) {
             $this->addError('serviceError', 'insufficient balance, please recharge your account.');
             return false;
         }
@@ -76,30 +77,28 @@ class UsCalculatorRates extends Component
 
             return $usCalculatorRepository->download($this->ratesWithProfit, $this->tempOrder, $this->chargableWeight, $this->weightInOtherUnit);
         }
-        
     }
 
     private function selectedServiceEnabledForUser()
     {
         if ($this->userLoggedIn) {
             $serviceTitle = $this->getServiceTitle();
-            
+
             if (setting($serviceTitle, null, auth()->user()->id)) {
                 return true;
             }
 
-            $this->addError('serviceError', $serviceTitle.' service is not enabled for your account, contact admin please');
-            return false; 
+            $this->addError('serviceError', $serviceTitle . ' service is not enabled for your account, contact admin please');
+            return false;
         }
         $this->addError('serviceError', 'Please login to continue');
-        return false; 
+        return false;
     }
 
     private function getCostOfSelectedService()
     {
         Arr::where($this->ratesWithProfit, function ($value, $key) {
-            if($value['service_sub_class'] == $this->selectedService)
-            {
+            if ($value['service_sub_class'] == $this->selectedService) {
                 $this->selectedServiceCost = $value['rate'];
             }
         });
@@ -125,10 +124,10 @@ class UsCalculatorRates extends Component
     private function uspsServices()
     {
         return [
-            ShippingService::USPS_PRIORITY, 
-            ShippingService::USPS_FIRSTCLASS, 
-            ShippingService::USPS_PRIORITY_INTERNATIONAL, 
-            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, 
+            ShippingService::USPS_PRIORITY,
+            ShippingService::USPS_FIRSTCLASS,
+            ShippingService::USPS_PRIORITY_INTERNATIONAL,
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
         ];
     }
 
