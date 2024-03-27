@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.master')
 @section('css')
 <link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
 <style>
@@ -27,7 +27,16 @@
     }
 </style>
 @endsection
-@section('content')
+@section('page')
+<section>
+    <nav>
+        <ol class="breadcrumb breadcrumb-bg">
+            <li class="breadcrumb-item"><a href="/dashboard"><i class="fas fa-home"></i> Home</a></li>
+            <li class="breadcrumb-item"><a href="/calculator">Calculator</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Correios</li>
+        </ol>
+    </nav>
+</section>
 @if ($errors->any())
 <div class="alert alert-danger">
     <ul>
@@ -40,19 +49,17 @@
 
 <section>
     <div class="row mt-4">
-        <div class="col-12 mx-3">
-            <div class="ml-3 mx-3">
-                <dl>
-                    <dt class="font-weight-bold dt">Calculator </dt>
-                </dl>
-            </div>
+        <div class="col-12">
+            <dl>
+                <dt class="font-weight-bold dt">Calculator</dt>
+            </dl>
         </div>
     </div>
 </section>
 <!-- Dashboard Analytics Start -->
 <section id="vue-calculator">
     <div class="mx-3">
-        <div class="row mx-3">
+        <div class="row">
             <livewire:calculator.correios-calculation>
         </div>
     </div>
@@ -61,7 +68,7 @@
 
 <!-- Dashboard Analytics end -->
 @endsection
-@section('jquery')
+@section('js')
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 @include('layouts.states-ajax')
 @endsection
