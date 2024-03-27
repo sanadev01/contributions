@@ -27,6 +27,17 @@
 </style>
 @endsection
 @section('page')
+
+<section>
+    <nav>
+        <ol class="breadcrumb breadcrumb-bg">
+            <li class="breadcrumb-item"><a href="/dashboard"><i class="fas fa-home"></i> Home</a></li>
+            <li class="breadcrumb-item"><a href="/calculator">Calculator</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Correios</li>
+        </ol>
+    </nav>
+
+</section>
 @if ($errors->any())
 <div class="alert alert-danger">
     <ul>

@@ -27,16 +27,6 @@
 @endsection
 @section('content')
 <section>
-    <nav>
-        <ol class="breadcrumb breadcrumb-bg">
-            <li class="breadcrumb-item"><a href="/dashboard"><i class="fas fa-home"></i> Home</a></li>
-            <li class="breadcrumb-item"><a href="/calculator">Calculator</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Correios</li>
-        </ol>
-    </nav>
-
-</section>
-<section>
     <div class="row mt-4">
         <div class="col-12 mx-2">
             <h4 class="font-weight-bold dt">Rate Calculated</h4>
