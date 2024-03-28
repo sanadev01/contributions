@@ -195,6 +195,13 @@ class OrderRepository
                     ShippingService::AJ_Packet_Express, 
                 ];
             }
+            if($request->carrier == 'Colombia-472'){
+                $service = [
+                    ShippingService::COLOMBIA_NACIONAL, 
+                    ShippingService::COLOMBIA_TRAYETOS,
+                    ShippingService::COLOMBIA_URBANO, 
+                ];
+            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });

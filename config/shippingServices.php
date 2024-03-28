@@ -22,7 +22,7 @@ return [
             33172 => 'AJ Packet Express',
             44162 => 'Colombia Urbano',
             44163 => 'Colombia Nacional',
-            44164 => 'Colombia Trayetos',
+            44165 => 'Colombia Trayetos',
             100 => 'Brazil Redispatch',
             537 => 'Global eParcel Prime',
             540 => 'Global eParcel Untracked Packet',

@@ -70,7 +70,6 @@ class Order extends Model implements Package
     const US = 250;
     const COLOMBIA = 50;
     const PORTUGAL = 188;
-    const COLOMBIA = 50;
     const Japan = 114;
     const UK = 249;
 
@@ -383,10 +382,6 @@ class Order extends Model implements Package
             elseif(in_array(optional($this->shippingService)->service_sub_class,[ShippingService::Prime5,ShippingService::Prime5RIO,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia])){
                 return 'Prime5';
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_NACIONAL || optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_TRAYETOS || optional($this->shippingService)->service_sub_class == ShippingService::COLOMBIA_URBANO){
-
-                return 'Colombia Service';
-            }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium || optional($this->shippingService)->service_sub_class == ShippingService::LT_PRIME || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_LT_Premium ||  optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_CO_EMS ||  optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_CO_REG){
 
                 return 'PostPlus';
@@ -405,6 +400,13 @@ class Order extends Model implements Package
             }
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::HD_Express){
                 return 'HD Express';
+            }
+            if (in_array(optional($this->shippingService)->service_sub_class, [
+                ShippingService::COLOMBIA_NACIONAL,
+                ShippingService::COLOMBIA_URBANO,
+                ShippingService::COLOMBIA_TRAYETOS
+            ])) {
+                return 'Colombia-472';
             }
             elseif(optional($this->shippingService)->is_bcn_service){
                 return 'Correios Brazil';

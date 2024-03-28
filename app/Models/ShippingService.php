@@ -38,7 +38,7 @@ class ShippingService extends Model
     const AJ_Packet_Express = 33172;
     const COLOMBIA_URBANO = 44162;
     const COLOMBIA_NACIONAL = 44163;
-    const COLOMBIA_TRAYETOS = 44164;
+    const COLOMBIA_TRAYETOS = 44165;
     const BCN_Packet_Standard = 44164;
     const BCN_Packet_Express = 44172;
     const Brazil_Redispatch = 100;
