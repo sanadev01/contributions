@@ -2,7 +2,9 @@
     <form action="{{action('CalculatorController@store')}}" method="POST">
         @csrf
         <div class="row">
-            <div class="controls col-md-4" wire:ignore>
+                <input type="hidden" name="country_id" value="30">
+                <input type="hidden" name="state_id" value="526">
+            <!-- <div class="controls col-md-4" wire:ignore>
                 <label>Destination Country</label>
                 <select id="country" name="country_id" class="form-control selectpicker show-tick m-0 p-0" data-live-search="true">
                     <option value="">Select @lang('address.Country')</option>
@@ -13,12 +15,13 @@
             </div>
             <div class="controls col-md-4" wire:ignore>
                 <label>Destination State</label>
+
                 <option value="" selected disabled hidden>Select State</option>
                 <select name="state_id" id="state" class="form-control selectpicker show-tick m-0 p-0" data-live-search="true">
                     <option value="">Select @lang('address.State')</option>
                 </select>
-            </div>
-            <div class="form-group col-md-4">
+            </div> -->
+            <div class="form-group col-md-3">
                 <div class="controls">
                     <label>@lang('parcel.Measuring Units') <span class="text-danger">*</span></label>
                     <div class="row mt-3">
@@ -36,7 +39,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-12 col-sm-6 col-md-3">
+            <div class="col-12 col-sm-6 col-md-2">
                 <div class="controls">
                     <label>@lang('parcel.Weight') ({{ $unit == 'kg/cm'? 'kg': 'lbs' }})<span class="text-danger">*</span></label>
                     <input step="0.001" type="number" class="form-control" autocomplete="off" required name="weight" wire:model.debounce.500ms="weight" placeholder="">
@@ -56,7 +59,7 @@
                 <input type="hidden" name="weight_discount" value="{{ $totalDiscountedWeight }}">
                 <input type="hidden" name="discount_volume_weight" value="{{ $volumeWeight }}">
             </div>
-            <div class="col-12 col-sm-6 col-md-3">
+            <div class="col-12 col-sm-6 col-md-2">
                 <div class="controls">
                     <label>@lang('parcel.Length') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }})<span class="text-danger">*</span></label>
                     <input step="0.001" name="length" type="number" class="form-control" autocomplete="off" required name="length" wire:model.debounce.500ms="length" placeholder="" />
@@ -73,7 +76,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-sm-6 col-md-3">
+            <div class="col-12 col-sm-6 col-md-2">
                 <div class="controls">
                     <label>@lang('parcel.Width') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }}) <span class="text-danger">*</span></label>
                     <input step="0.001" type="number" name="width" class="form-control" autocomplete="off" required name="width" wire:model.debounce.500ms="width" placeholder="" />
@@ -90,7 +93,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-sm-6 col-md-3">
+            <div class="col-12 col-sm-6 col-md-2">
                 <div class="controls">
                     <label>@lang('parcel.Height') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }}) <span class="text-danger">*</span></label>
                     <input step="0.001" type="number" name="height" class="form-control" autocomplete="off" required name="height" wire:model.debounce.500ms="height" placeholder="" />
