@@ -48,7 +48,7 @@ class ProfitPackageImportService extends AbstractImportService
             $weight = preg_replace("/[^0-9.]/", "", $this->getValue("A{$row}"));
             $value = preg_replace("/[^0-9.]/", "", $this->getValue("C{$row}"));
             
-            \Log::info("weight : {$weight}, Value: {$value}");
+            
             if($arrayCounter == 0){
                 $data[ $arrayCounter ]['min_weight'] = 0;
             }else{

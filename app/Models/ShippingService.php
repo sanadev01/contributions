@@ -68,6 +68,11 @@ class ShippingService extends Model
     const HD_Express = 33173;
     const LT_PRIME = 776;
     const Post_Plus_LT_Premium = 587;
+    const Post_Plus_CO_EMS = 588;
+    const Post_Plus_CO_REG = 582;
+    const Japan_Prime = 5537;
+    const Japan_EMS = 5541;
+    const GSS_CEP = 237;
 
     protected $guarded = [];
 
@@ -90,7 +95,20 @@ class ShippingService extends Model
     {
         return $builder->where('active',true);
     }
-
+    public function getSubNameAttribute()
+    {
+        $serviceSubClass = $this->service_sub_class;
+        $serviceMapping = [
+            ShippingService::AJ_Standard_CN => 'Packet Standard', 
+            ShippingService::BCN_Packet_Standard => 'Packet Standard', 
+            ShippingService::AJ_Packet_Express => 'Packet Express', 
+            ShippingService::BCN_Packet_Express => 'Packet Express', 
+        ]; 
+        if (array_key_exists($serviceSubClass, $serviceMapping)) { 
+            return $serviceMapping[$serviceSubClass];
+        }
+        return  $this->name;
+    }
     public function isAvailableFor(Order $order)
     {
         return $this->getCalculator($order)->isAvailable();
@@ -228,7 +246,7 @@ class ShippingService extends Model
 
     public function isPostPlusService()
     {
-        if($this->service_sub_class == self::Post_Plus_Registered|| $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime || $this->service_sub_class == self::Post_Plus_Premium || $this->service_sub_class == self::LT_PRIME || $this->service_sub_class == self::Post_Plus_LT_Premium){
+        if($this->service_sub_class == self::Post_Plus_Registered || $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime || $this->service_sub_class == self::Post_Plus_Premium || $this->service_sub_class == self::LT_PRIME || $this->service_sub_class == self::Post_Plus_LT_Premium || $this->service_sub_class == self::Post_Plus_CO_EMS || $this->service_sub_class == self::Post_Plus_CO_REG){
             return true;
         }
         return false;
@@ -279,7 +297,7 @@ class ShippingService extends Model
 
     public function isGSSService()
     {
-        if($this->service_sub_class == self::GSS_PMI || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_FCM || $this->service_sub_class == self::GSS_EMS){
+        if($this->service_sub_class == self::GSS_PMI || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_FCM || $this->service_sub_class == self::GSS_EMS || $this->service_sub_class == self::GSS_CEP){
             return true;
         }
         return false;
@@ -349,6 +367,8 @@ class ShippingService extends Model
             self::GePS,
             self::GePS_EFormat,
             self::Parcel_Post,
+            self::Japan_Prime,
+            self::Japan_EMS,
         ];
     }
 
@@ -470,5 +490,20 @@ class ShippingService extends Model
     public function zones()
     {
         return $this->hasMany(ZoneCountry::class);
+    }
+    public function getIsCorreiosAttribute()
+    {
+        return in_array(
+            $this->service_sub_class,
+            [
+                self::BCN_Packet_Standard,
+                self::BCN_Packet_Express,
+                self::Packet_Standard,
+                self::Packet_Express,
+                self::AJ_Packet_Standard,
+                self::AJ_Packet_Express,
+                self::Packet_Mini,
+            ]
+        );
     }
 }

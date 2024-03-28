@@ -116,7 +116,8 @@ class OrderRepository
                     ShippingService::GSS_EPMEI,
                     ShippingService::GSS_EPMI,
                     ShippingService::GSS_FCM,
-                    ShippingService::GSS_EMS
+                    ShippingService::GSS_EMS,
+                    ShippingService::GSS_CEP
                 ];
             }
             if($request->carrier == 'UPS'){
@@ -141,6 +142,8 @@ class OrderRepository
                     ShippingService::GePS,
                     ShippingService::GePS_EFormat,
                     ShippingService::Parcel_Post,
+                    ShippingService::Japan_Prime,
+                    ShippingService::Japan_EMS,
                 ];
             }
             if($request->carrier == 'Prime5'){
@@ -166,6 +169,8 @@ class OrderRepository
                     ShippingService::Post_Plus_Premium,
                     ShippingService::LT_PRIME,
                     ShippingService::Post_Plus_LT_Premium,
+                    ShippingService::Post_Plus_CO_EMS,
+                    ShippingService::Post_Plus_CO_REG,
                 ];
             }
             if($request->carrier == 'Total Express'){
@@ -298,7 +303,7 @@ class OrderRepository
                 'account_type' => $request->account_type,
                 'tax_id' => cleanString($request->tax_id),
                 'zipcode' => cleanString($request->zipcode),
-                'state_id' => $request->state_id,
+                'state_id' => ($request->country_id == Country::UK) ? null : $request->state_id,
                 'country_id' => $request->country_id,
                 'region' => $request->region,
             ]);
@@ -320,7 +325,7 @@ class OrderRepository
             'account_type' => $request->account_type,
             'tax_id' => $request->tax_id,
             'zipcode' => $request->zipcode,
-            'state_id' => $request->state_id,
+            'state_id' => ($request->country_id == Country::UK) ? null : $request->state_id,
             'country_id' => $request->country_id,
             'region' => $request->region,
         ]);
@@ -377,23 +382,23 @@ class OrderRepository
 
         try {
             
-            if ($order->products->isEmpty()) {
+            // if ($order->products->isEmpty()) {
                 
-                $order->items()->delete();
+            //     $order->items()->delete();
                 
-                foreach ($request->get('items',[]) as $item) {
+            //     foreach ($request->get('items',[]) as $item) {
                     
-                    $order->items()->create([
-                        'sh_code' => optional($item)['sh_code'],
-                        'description' => optional($item)['description'],
-                        'quantity' => optional($item)['quantity'],
-                        'value' => optional($item)['value'],
-                        'contains_battery' => optional($item)['dangrous_item'] == 'contains_battery' ? true: false,
-                        'contains_perfume' => optional($item)['dangrous_item'] == 'contains_perfume' ? true: false,
-                        'contains_flammable_liquid' => optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? true: false,
-                    ]);
-                }
-            }
+            //         $order->items()->create([
+            //             'sh_code' => optional($item)['sh_code'],
+            //             'description' => optional($item)['description'],
+            //             'quantity' => optional($item)['quantity'],
+            //             'value' => optional($item)['value'],
+            //             'contains_battery' => optional($item)['dangrous_item'] == 'contains_battery' ? true: false,
+            //             'contains_perfume' => optional($item)['dangrous_item'] == 'contains_perfume' ? true: false,
+            //             'contains_flammable_liquid' => optional($item)['dangrous_item'] == 'contains_flammable_liquid' ? true: false,
+            //         ]);
+            //     }
+            // }
 
             $shippingService = ShippingService::find($request->shipping_service_id);
 
@@ -499,7 +504,8 @@ class OrderRepository
                         ShippingService::GSS_EPMEI,
                         ShippingService::GSS_EPMI,
                         ShippingService::GSS_FCM, 
-                        ShippingService::GSS_EMS
+                        ShippingService::GSS_EMS,
+                        ShippingService::GSS_CEP
                     ]);
                 });
             });
@@ -582,7 +588,7 @@ class OrderRepository
         } else
         {
             $gssShippingService = new GSSShippingService($order);
-            foreach (ShippingService::whereIn('service_sub_class', [ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS])->where('active',true)->get() as $shippingService) 
+            foreach (ShippingService::whereIn('service_sub_class', [ShippingService::GSS_PMI, ShippingService::GSS_EPMEI, ShippingService::GSS_EPMI, ShippingService::GSS_FCM, ShippingService::GSS_EMS, ShippingService::GSS_CEP])->where('active',true)->get() as $shippingService) 
             {
                 if ($gssShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
@@ -598,7 +604,7 @@ class OrderRepository
                 }
             } 
             // USPS Intenrational Services
-            if (optional($order->recipient)->country_id != Order::US && setting('usps', null, User::ROLE_ADMIN)) 
+            if (optional($order->recipient)->country_id != Order::US && setting('usps', null, auth()->user()->id)) 
             {
                 $uspsShippingService = new USPSShippingService($order);
 
@@ -657,7 +663,11 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::GSS_FCM)
             || $shippingServices->contains('service_sub_class', ShippingService::GSS_EMS)
             || $shippingServices->contains('service_sub_class', ShippingService::GDE_PRIORITY_MAIL)
-            || $shippingServices->contains('service_sub_class', ShippingService::GDE_FIRST_CLASS))
+            || $shippingServices->contains('service_sub_class', ShippingService::GDE_FIRST_CLASS)
+            || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS)
+            || $shippingServices->contains('service_sub_class', ShippingService::Japan_Prime)
+            || $shippingServices->contains('service_sub_class', ShippingService::Japan_EMS)
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_CEP))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {
@@ -708,53 +718,25 @@ class OrderRepository
 
         if($order->recipient->country_id == Order::BRAZIL)
         {
-            $bcns = $shippingServices->filter(function ($shippingService, $key) {
-                return $shippingService->is_bcn_service;
-            });
-            foreach($bcns as $bcn)
-            {
-                \Log::info(['bcn service name'=>$bcn->name,'bcn service code'=>$bcn->service_sub_class]);
-            }
             // If sinerlog is enabled for the user, then remove the Correios services
-            \Log::info([
-                'correise is active'=>setting('correios_api', null, User::ROLE_ADMIN),
-                'anjun api is active'=>setting('anjun_api', null, User::ROLE_ADMIN),
-                'bcn is active '=>setting('bcn_api', null, \App\Models\User::ROLE_ADMIN),
-                'auth Id'=>Auth::id(),
-                'services'=>[
-                 
-                ]
-            ]);
              if(!setting('correios_api', null, User::ROLE_ADMIN))
             {
-                \Log::info([
-                    'deactivating correios_api'
-                ]);
                 $shippingServices = $shippingServices->filter(function ($item, $key)  {
                     return !$item->isCorreiosService();
                 });
             }
             if(!setting('anjun_api', null, User::ROLE_ADMIN)){
-                \Log::info([
-                    'deactivating anjun'
-                ]);
                     $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                         return !$shippingService->isAnjunService();
                     });
             }
             if(Auth::id()!="1233"){
-                \Log::info([
-                    'deactivating anjun china'
-                ]);
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                 return !$shippingService->isAnjunChinaService();
             });
             }
 
             if(!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
-                \Log::info([
-                    'deactivating bcn'
-                ]);
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return !$shippingService->is_bcn_service;
                 });

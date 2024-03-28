@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\DashboardRepository;
 
 class HomeController extends Controller
 {
@@ -12,10 +11,10 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(DashboardRepository $dashboard)
+    public function __invoke()
     {
-        $orders = $dashboard->getDashboardStats();
-        return view('home',compact('orders'));   
+        // $orders = $dashboard->getDashboardStats();
+        return view('home');   
     }
     
 }

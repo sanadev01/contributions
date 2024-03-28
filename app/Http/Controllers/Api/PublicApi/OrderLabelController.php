@@ -192,7 +192,7 @@ class OrderLabelController extends Controller
                 }
             }
 
-            if ($order->recipient->country_id == Order::PORTUGAL) {
+            if ($order->recipient->country_id == Order::PORTUGAL || $order->recipient->country_id == Order::COLOMBIA) {
                 if ($order->shippingService->isPostPlusService()) {
                     $postPlusLabelRepository = new PostPlusLabelRepository();
                     $postPlusLabelRepository->get($order);

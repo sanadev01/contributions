@@ -96,7 +96,9 @@ class PrintLabelController extends Controller
                 }
 
                 $zip->close();
-                return response()->download($tempFileUri);
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename="' . basename($tempFileUri) . '"');
+                echo file_get_contents($tempFileUri); 
             } else {
                 return 'Could not open ZIP file.';
             }

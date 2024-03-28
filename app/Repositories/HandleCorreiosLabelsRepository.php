@@ -63,7 +63,7 @@ class HandleCorreiosLabelsRepository
             //     return $this->mileExpressLabel();
             // }
         }
-        if ($this->order->recipient->country_id == Order::PORTUGAL) {
+        if (in_array($this->order->recipient->country_id, [Order::PORTUGAL, Order::COLOMBIA])) {
             if ($this->order->shippingService->isPostPlusService()) {
                 return $this->postPlusLabel();
             }
@@ -74,6 +74,10 @@ class HandleCorreiosLabelsRepository
         if ($this->order->recipient->country_id == Order::CHILE) {
 
             return $this->corrieosChileLabel();
+        }
+        if ($this->order->shippingService->isGePSService() && $this->order->recipient->country_id == Order::Japan) {
+
+            return $this->gepsLabel();
         }
 
         if ($this->order->recipient->country_id == Order::COLOMBIA && $this->order->shippingService->isColombiaService()) {

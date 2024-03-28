@@ -46,9 +46,9 @@ class UpdateCN23Label
         $this->pdfi->SetFont("Arial", "", 6);
         $this->pdfi->RotatedText(29.9, 66.7, "Paulista CEP 04602-001 - Sao Paulo - SP- Brasil", 90);
         $this->pdfi->SetFont("Arial", "", 6);
-        if($this->order->shippingService->service_sub_class == ShippingService::GePS){
+        if($this->order->shippingService->service_sub_class == ShippingService::GePS || $this->order->shippingService->service_sub_class == ShippingService::Japan_Prime){
             $this->pdfi->RotatedText(99.7, 14, "- LX (Prime)", 90);
-        }elseif($this->order->shippingService->service_sub_class == ShippingService::Parcel_Post) {
+        }elseif($this->order->shippingService->service_sub_class == ShippingService::Parcel_Post || $this->order->shippingService->service_sub_class == ShippingService::Japan_EMS) {
             $this->pdfi->RotatedText(99.7, 14.5, "- CA Service", 90);
         }
 

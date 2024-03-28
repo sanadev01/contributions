@@ -77,9 +77,15 @@
             font-weight: bold;
             font-size: 10pt;
         }
+        .service-contract-code{
+            position: absolute;
+            right: 5mm;
+            top: 27mm;
+            width: 5cm;
+        }
         .contract-code{
             font-size: 8pt;
-            text-align: center;
+            text-align: right;
         }
 
         .tracking_code{
@@ -299,6 +305,15 @@
             box-sizing: border-box;
             text-align: center;
         }
+        .package-sign{
+            top: 93mm;
+            position:absolute;
+            right: 14mm;
+            font-weight: bold;
+            display: block;
+            box-sizing: border-box;
+            text-align: center;
+        }
         .bottom-block{
             position: absolute;
             top: 11mm;
@@ -384,6 +399,8 @@
         <div class="service-name">
             {!! $packetType !!}
         </div>
+    </div>
+    <div class="service-contract-code"> 
         <div class="contract-code">
             {!! $contractNumber !!}
         </div>
@@ -407,6 +424,7 @@
             CPF: {{ $recipient->tax_id }}
         </div>
     </div>
+    <div class="package-sign">{{$packageSign}}</div>
     @if($order->hasBattery())
     <div class="battery">B</div>
     @endif
@@ -425,18 +443,24 @@
                 <strong>DEVOLUCÃO:</strong> <br>
                 {!! $returnAddress !!}
             </div>
-            @if($order->getOriginalWeight('kg') > 3)
+            @if(!empty($labelZipCodeGroup))
                 <div class="bottom-block">
-                    <div class="box-g">    </div>
-                    <div class="box-text">G</div>
+                    <div class="box-text" style="font-size: 24px !important; font-weight: bold; ">{{ optional($labelZipCodeGroup)['group'] }}</div>
                 </div>
             @else
-                <div class="bottom-block">
-                    <div class="box-p1">    </div>
-                    <div class="box-p2">    </div>
-                    <div class="box-p3">    </div>
-                    <div class="box-text">P</div>
-                </div>
+                @if($order->getOriginalWeight('kg') > 3)
+                    <div class="bottom-block">
+                        <div class="box-g">    </div>
+                        <div class="box-text">G</div>
+                    </div>
+                @else
+                    <div class="bottom-block">
+                        <div class="box-p1">    </div>
+                        <div class="box-p2">    </div>
+                        <div class="box-p3">    </div>
+                        <div class="box-text">P</div>
+                    </div>
+                @endif
             @endif
             <br>
         </div>

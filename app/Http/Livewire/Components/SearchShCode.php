@@ -4,13 +4,14 @@ namespace App\Http\Livewire\Components;
 
 use App\Models\ShCode;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 class SearchShCode extends Component
 {
     public $search;
     public $name;
-    public $type=null;
+    public $type='Postal (Correios)';
     public $orderInventory = false; 
     protected $listeners = ['reloadSHCodes' => 'reloadSHCodes'];
 
@@ -19,9 +20,9 @@ class SearchShCode extends Component
         $service = optional($data)['service'];
         $shippingService = ShippingService::where('service_sub_class',$service)->first();
         if(optional($shippingService)->is_total_express){
-            $this->type = 'total';
+            $this->type = 'Courier';
         }else{
-            $this->type= null;
+            $this->type= 'Postal (Correios)';
         }
   
         $this->render();
@@ -47,11 +48,10 @@ class SearchShCode extends Component
     public function render()
     {
         return view('livewire.components.search-sh-code',[
-            'codes' => ShCode::when($this->type!=null,function($query){
-                $query->where('type',$this->type);
-            })->when($this->type==null,function($query){
-                $query->where('type',null);
-            })->orderBy('description','ASC')->get()
+             'codes' => Cache::remember($this->type,120,function(){ 
+                return ShCode::where('type',$this->type)->orderBy('description','ASC')->get();
+            })
+
         ]);
     }
 

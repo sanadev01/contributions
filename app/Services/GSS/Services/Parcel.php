@@ -2,6 +2,7 @@
 namespace App\Services\GSS\Services;
 
 use Carbon\Carbon;
+use App\Models\Country;
 use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
  
@@ -21,6 +22,8 @@ class Parcel {
          $type = 'FCM';
       } elseif($order->shippingService->service_sub_class == ShippingService::GSS_EMS) {
          $type = 'EMS';
+      } elseif($order->shippingService->service_sub_class == ShippingService::GSS_CEP) {
+         $type = 'CEP';
       } 
 
       $refNo = $order->customer_reference;
@@ -30,7 +33,7 @@ class Parcel {
                'senderAddress' => [
                   'firstName' => $order->sender_first_name,
                   'lastName' => $order->sender_last_name,
-                  'addressLine1' => ($order->sender_address) ? $order->sender_address: '2200 NW 129TH AVE',
+                  'addressLine1' => ($order->sender_address) ? $order->sender_address: '2200 NW 129TH AVE Suite# 100',
                   // 'addressIsPOBox' => true,
                   'city' => ($order->sender_city) ? $order->sender_city: 'Miami',
                   'province' => ($order->sender_state_id) ? $order->senderState->code: 'FL',
@@ -50,7 +53,7 @@ class Parcel {
                   // 'addressLine3' => optional($order->recipient)->street_no,
                   // 'addressIsPOBox' => true,
                   'city' => $order->recipient->city,
-                  'province' => $order->recipient->State->code,
+                  'province' => ($order->recipient->country->code == Country::UK) ? $order->recipient->region : $order->recipient->State->code,
                   'postalCode' => cleanString($order->recipient->zipcode),
                   'countryCode' => $order->recipient->country->code,
                   'phone' => ($order->recipient->phone) ? $order->recipient->phone: '',

@@ -3,8 +3,6 @@
 namespace App\Services\TotalExpress\Services;
 
 use App\Models\Order;
-use Carbon\Carbon;
-use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
 use DateTime;
 
@@ -31,18 +29,27 @@ class Parcel
    }
    public function getRequestBody()
    {
-      
+      if (strcasecmp($this->order->tax_modality, "DDU") === 0) {
+         $incoterm = "DDU";
+      } elseif (strcasecmp($this->order->tax_modality, "DDP") === 0) {
+            $incoterm = "DDP";
+      }
+
       if (app()->isProduction()) {
          $contractId = config('total_express.production.contractId');
       } else {
          $contractId = config('total_express.test.contractId');
+      }
+      $streetNo=optional($this->order->recipient)->street_no;
+      if($streetNo == 0 || $streetNo == '0'){
+         $streetNo = null;
       }
       return [
          "order_number" => $this->order->warehouse_number,
          "contract_id" => $contractId,
          "sales_channel_id" => null,
          // "sales_channel_order_number" => null,
-         "incoterm" => "DDP",
+         "incoterm" => $incoterm,
          "is_landed_cost" => false,
          "observations" => " ",
          "return_insurance" => false,
@@ -54,7 +61,7 @@ class Parcel
          'customer_document_type' => $this->order->recipient->account_type == "business"? "CNPJ":"CPF",
          'customer_address' => $this->order->recipient->address,
          'customer_address_complement' => optional($this->order->recipient)->address2,
-         'customer_address_number' => optional($this->order->recipient)->street_no,
+         'customer_address_number' => $streetNo,
          'customer_city' => $this->order->recipient->city,
          'customer_state' => $this->order->recipient->State->code,
          'customer_postal_code' => cleanString($this->order->recipient->zipcode),
@@ -62,7 +69,7 @@ class Parcel
          'customer_phone' => ($this->order->recipient->phone) ? substr($this->order->recipient->phone, -11) : '',
          'customer_email' => ($this->order->recipient->email) ? $this->order->recipient->email : '',
          'customer_document_number' => ($this->order->recipient->tax_id) ? $this->order->recipient->tax_id : '',
-         "customer_address_reference" => optional($this->order->recipient)->street_no,
+         "customer_address_reference" => $streetNo,
          "customer_phone_country_code" => substr($this->order->recipient->phone, 0, 3),
          'is_commercial_destination' => $this->order->recipient->account_type == "business" ? true: false,
 
@@ -88,7 +95,7 @@ class Parcel
                "length" => $this->length,
                "width" => $this->width,
                "weight" => $this->weight,
-               "freight_value" => $this->order->gross_total,
+               "freight_value" =>  ((float)$this->order->insurance_value)+((float)$this->order->user_declared_freight),
                "order_items_attributes" => $this->setItemsDetails()
 
             ]

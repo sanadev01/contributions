@@ -20,7 +20,7 @@ class ProfitPackageUploadController extends Controller
     {
         $this->authorize('create',ProfitPackage::class);
         
-        $shipping_services = ShippingService::all();
+        $shipping_services = ShippingService::orderBy('name', 'asc')->get();
         return view('admin.rates.profit-packages.upload' ,compact('shipping_services'));
     }
 

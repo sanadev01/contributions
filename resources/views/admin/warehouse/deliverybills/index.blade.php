@@ -119,6 +119,8 @@
                                                 <span class="badge badge-secondary text-black">GSS</span>
                                                 @elseif($deliveryBill->isTotalExpress())
                                                 <span class="badge badge-warning text-black">T</span>
+                                                @elseif($deliveryBill->isBCN())
+                                                <span class="badge">B</span>
                                                 @elseif($deliveryBill->isHoundExpress())
                                                 <span class="badge text-dark" style="background-color:#b4e2ef">HE</span>
                                                 @else
@@ -230,15 +232,20 @@
                                                             </a>
                                                         @endif
                                                         
-
                                                         @if( !$deliveryBill->isRegistered() )
                                                             <a href="{{ route('warehouse.delivery_bill.edit',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
+                                                        
+                                                        @endif
+                                                        {{-- @if( !$deliveryBill->isRegistered() ) --}}
+                                                            {{-- <a href="{{ route('warehouse.delivery_bill.edit',$deliveryBill) }}" class="dropdown-item w-100">
+                                                                <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
+                                                            </a> --}}
                                                             <a href="{{ route('warehouse.delivery_bill.register',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Register Delivery Bill
                                                             </a>
-                                                        @endif
+                                                        {{-- @endif --}}
 
                                                         @if(!$deliveryBill->isReady())
                                                             <form action="{{ route('warehouse.delivery_bill.destroy',$deliveryBill) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">

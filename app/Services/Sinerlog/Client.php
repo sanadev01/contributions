@@ -335,8 +335,6 @@ class Client
 
                     $data = json_decode($response->getBody()->getContents());
 
-                    Log::info('label url');
-                    Log::info($data->data->file);
                     $order->setSinerlogLabelURL($data->data->file);
 
                     return (Object)[

@@ -54,6 +54,11 @@ return [
             34166 => "AJ China Standard",
             33174 => "AJ China Express",
             587 => "PostPlus Portugal",
+            588 => "PostPlus Colombia EMS",
+            582 => "PostPlus Colombia Reg",
+            5537 => 'Japan Prime JerseyPost',
+            5541 => 'Japan EMS JerseyPost',
+            237 => 'GSS CEP',
         ]
     ]
 ];

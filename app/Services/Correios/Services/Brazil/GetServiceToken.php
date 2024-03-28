@@ -2,33 +2,47 @@
 
 namespace App\Services\Correios\Services\Brazil;
 
-use GuzzleHttp\Client as GuzzleClient;
 use Carbon\Carbon;
 use App\Models\Order;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use GuzzleHttp\Client as GuzzleClient;
 
 class GetServiceToken
 {
 
     private $order;
+    private $username = '';
+    private $password = '';
+    private $numero = '';
 
-    private $username = 'hercofreight';
-    private $password = '150495ca';
-    private $numero = '0075745313';
+    private $anjun_username = '';
+    private $anjun_password = '';
+    private $anjun_numero = '';
 
-    private $anjun_username = 'anjun2020';
-    private $anjun_password = 'anjun';
-    private $anjun_numero = '0077053850';
-
-    private $bcn_username = '37148594000192';
-    private $bcn_password = '9wdkSYsvk2FkqNbojC1CLlUhN1RY3HqqmmADFBPa';
-    private $bcn_numero = '0076204456';
-    private $baseUri = 'https://api.correios.com.br';
+    private $bcn_username = '';
+    private $bcn_password = '';
+    private $bcn_numero = '';
+    private $baseUri = '';
 
     protected $client;
 
     function __construct($order = null, $trackingNumber = null)
-    {
+    { 
+        $this->baseUri = 'https://api.correios.com.br'; 
+        $this->username = 'hercofreight';
+        $this->password = '150495ca';
+        $this->numero = '0075745313';                
+        //anjun credentilas
+        $this->anjun_username = 'anjun2020';
+        $this->anjun_password = 'anjun';
+        $this->anjun_numero = '0077053850';                
+        //bcn credentials
+        $this->bcn_username = '37148594000192';
+        $this->bcn_password = '9wdkSYsvk2FkqNbojC1CLlUhN1RY3HqqmmADFBPa';
+        $this->bcn_numero = '0076204456'; 
+         
+
         if ($order != null)
             $this->order = $order;
         if ($trackingNumber != null)
@@ -36,6 +50,7 @@ class GetServiceToken
         $this->client = new GuzzleClient([
             'base_uri' => $this->baseUri
         ]);
+
     }
 
     public function getToken()
@@ -73,7 +88,7 @@ class GetServiceToken
     }
     public function getBCNToken()
     {
-        return Cache::remember('bcn_token_t', Carbon::now()->addHours(0), function () {
+        return Cache::remember('bcn_token', Carbon::now()->addHours(0), function () {
             $response = $this->client->post('/token/v1/autentica/cartaopostagem', [
                 'auth' => [
                     $this->bcn_username,
@@ -89,22 +104,19 @@ class GetServiceToken
     }
     public function getBearerToken()
     {
-        if ($this->order instanceof Order) {
-            if ($this->order->shippingService->isAnjunService()) {
-                return $this->getAnjunToken();
-            } elseif ($this->order->shippingService->is_bcn_service) {
-                return $this->getBCNToken();
-            } else {
-                return $this->getToken();
-            }
-        } else {
-            if ($this->order->hasAnjunService()) {
-                return $this->getAnjunToken();
-            } elseif ($this->order->hasBCNService()) {
-                return $this->getBCNToken();
-            } else {
-                return $this->getToken();
-            }
+        $this->order = $this->order->refresh();
+        if ($this->order->shippingService->isAnjunService()) {
+            Log::info('getAnjunToken');
+            return $this->getAnjunToken();
         }
+        if ($this->order->shippingService->is_bcn_service) {
+            Log::info('getBCNToken');
+            return $this->getBCNToken();
+        }
+        if($this->order->shippingService->isCorreiosService()){
+            Log::info('getToken');
+            return $this->getToken();
+        }
+       
     }
 }

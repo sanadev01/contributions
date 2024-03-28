@@ -43,7 +43,6 @@ class getBrazilTrackings extends Command
         $brazil_tracking_repository = new BrazilTrackingRepository();
 
         $brazil_tracking_repository->handle();
-        Log::info("Coreos Brazil Trackings is working fine!");
         
         return 0;
     }

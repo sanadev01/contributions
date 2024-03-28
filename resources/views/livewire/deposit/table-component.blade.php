@@ -151,11 +151,11 @@
                     @if( $deposit->isCredit() )
                         <i class="fa fa-arrow-up text-success"></i>
                         <br>
-                         <span class="text-success">$ {{ $deposit->amount }}</span>
+                         <span class="text-success">$ {{ number_format($deposit->amount, 2) }}</span>
                     @else
                         <i class="fa fa-arrow-down text-danger"></i>
                         <br>
-                         <span class="text-danger">$ {{ $deposit->amount }}</span>
+                         <span class="text-danger">$ {{ number_format($deposit->amount, 2) }}</span>
                     @endif
                 </th>
                 <td>

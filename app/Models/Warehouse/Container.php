@@ -131,6 +131,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'DirectLink Mexico';
         }elseif($this->services_subclass_code == ShippingService::DirectLinkChile){
             return 'DirectLink Chile';
+        }elseif($this->services_subclass_code == ShippingService::GSS_CEP){
+            return 'GSS Commercial E-Packet';
         }else {
             return 'FirstClass';
         }
@@ -310,7 +312,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function hasGSSService()
     {
-        return $this->services_subclass_code == ShippingService::GSS_PMI || $this->services_subclass_code == ShippingService::GSS_EPMEI || $this->services_subclass_code == ShippingService::GSS_EPMI || $this->services_subclass_code == ShippingService::GSS_FCM || $this->services_subclass_code == ShippingService::GSS_EMS;
+        return $this->services_subclass_code == ShippingService::GSS_PMI || $this->services_subclass_code == ShippingService::GSS_EPMEI || $this->services_subclass_code == ShippingService::GSS_EPMI || $this->services_subclass_code == ShippingService::GSS_FCM || $this->services_subclass_code == ShippingService::GSS_EMS || $this->services_subclass_code == ShippingService::GSS_CEP;
     }
 
     public function getHasTotalExpressServiceAttribute()
@@ -326,7 +328,15 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         return $this->services_subclass_code == ShippingService::HD_Express;
     }
-    
+
+    public function getGroup($container) {
+        
+        $containerOrder = $container->orders->first();
+        $firstOrderGroupRange = getOrderGroupRange($containerOrder);
+        
+        return $firstOrderGroupRange['group'];
+    }
+
     public function hasColombiaService()
     {
         return $this->services_subclass_code == 'CO-NX';

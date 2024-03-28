@@ -1,21 +1,13 @@
 <?php
 
 namespace App\Services\TotalExpress;
-
-use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\OrderTracking;
-use App\Models\ShippingService;
-use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Http;
-use App\Models\Warehouse\DeliveryBill;
 use App\Services\TotalExpress\Services\Parcel;
 use GuzzleHttp\Client as GuzzleClient;
-use App\Services\Converters\UnitsConverter;
-use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Models\PackageError;
 use App\Services\TotalExpress\Services\Overpack;
-use Illuminate\Support\Facades\Log;
 
 class Client
 {
@@ -60,19 +52,47 @@ class Client
             'Accept' => 'application/json'
         ];
     }
+    
+    public function labelUrlUpdate(Order $order) {
+
+        $apiResponse = json_decode($order->api_response); 
+        $response = $apiResponse->orderResponse; 
+        $id = $response->data->id;
+        $getLabel = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/orders/$id/cn23-merged");
+        $getLabelResponse = json_decode($getLabel);
+
+        if ($getLabelResponse->status=="SUCCESS"){
+            $mergedResponse = [
+            'orderResponse' => $response,
+            'labelResponse' => $getLabelResponse,
+            ];
+
+            $order->update([
+                'corrios_tracking_code' => optional(optional($getLabelResponse->data)->cn23_numbers)[0],
+                'api_response' => json_encode($mergedResponse),
+                'cn23' => [
+                    "tracking_code" =>  optional(optional($getLabelResponse->data)->cn23_numbers)[0],
+                    "stamp_url" => route('warehouse.cn23.download',$order->id),
+                    'leve' => false
+                ],
+            ]);
+        }
+        else{
+            return new PackageError("Server Error: ".new HandleError($getLabel));
+        }
+    }
 
     public function createPackage(Order $order)
     {
         $shippingRequest = (new Parcel($order))->getRequestBody();
-        Log::info('TotalExpress::createPackage shippingRequest');
-        Log::info([$shippingRequest]);
+        \Log::info('total express');
+        \Log::info($shippingRequest);
         $apiResponse = json_decode($order->api_response); 
         try {
                 if(!$order->api_response){
                     $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/orders", $shippingRequest);
                     $response = json_decode($request);
-                    Log::info('TotalExpress::createPackage  response');
-                    Log::info([$response]);
+                    
                     if ($response->status=="SUCCESS" && $response->data && $response->data->id ) {
                 
                         $mergedResponse = [
@@ -93,12 +113,10 @@ class Client
                     $apiResponse = json_decode($order->api_response); 
                     $response = $apiResponse->orderResponse; 
                     $id = $response->data->id;  
-                    Log::info('TotalExpress::createPackage  put');
-                    Log::info("$this->baseUrl/v1/orders/$id/cn23-merged");
+                    
                     $getLabel = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/orders/$id/cn23-merged");
                     $getLabelResponse = json_decode($getLabel);
-                    Log::info('TotalExpress::createPackage  getLabel');
-                    Log::info([$getLabel]);
+                    
                     if ($getLabelResponse->status=="SUCCESS"){
                         $mergedResponse = [
                         'orderResponse' => $response,
@@ -152,8 +170,7 @@ class Client
                 $overpackRequest =  $overpack->getRequestBody();
                 $request = Http::withHeaders($this->getHeaders())->post("$this->baseUrl/v1/overpacks", $overpackRequest);
                 $response = json_decode($request);
-                \Log::info('over pack');
-                \Log::info([$response]);
+                
                 if($response->status=="SUCCESS"){
                     $container->update([
                     'unit_code' => $response->data->reference,
@@ -190,8 +207,7 @@ class Client
             $data =  $response->data;
             $request = Http::withHeaders($this->getHeaders())->put("$this->baseUrl/v1/overpacks/$data->id/label");
             $response = json_decode($request);
-            \Log::info('over pack label');
-            \Log::info([$response]);
+            
             if($response->status=="SUCCESS"){
             return [
                 'type'=>'alert-success',

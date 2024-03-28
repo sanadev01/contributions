@@ -3,12 +3,13 @@
 namespace App\Services\Correios\Services\Brazil;
 
 use Exception;
-use App\Models\Order;
-use Picqer\Barcode\BarcodeGeneratorPNG;
-use App\Services\Correios\Contracts\HasLableExport;
-use App\Services\Correios\Models\Package;
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\ShippingService;
+use Picqer\Barcode\BarcodeGeneratorPNG;
+use App\Services\Correios\Models\Package;
+use App\Services\Correios\Contracts\HasLableExport;
 
 class CN23LabelMaker implements HasLableExport
 {
@@ -29,6 +30,8 @@ class CN23LabelMaker implements HasLableExport
     private $hasSuplimentary;
     private $activeAddress;
     private $isReturn;
+    private $packageSign;
+    private $labelZipCodeGroup;
 
     public function __construct()
     {
@@ -37,13 +40,15 @@ class CN23LabelMaker implements HasLableExport
         $this->corriosLogo = \public_path('images/correios-1.png');
         $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
         $this->packetType = 'Packet Standard';
-        $this->contractNumber = 'Contrato:  9912501576';
+        $this->contractNumber = 'H Contract:  9912501576';
+        $this->packageSign = 'H';
         $this->service = 2;
         $this->returnAddress = 'Homedeliverybr <br>
         Rua Acaçá 47- Ipiranga <br>
         Sao Paulo CEP 04201-020';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
         $this->activeAddress = '';
+        $this->labelZipCodeGroup = '';
     }
 
     public function setOrder(Order $order)
@@ -54,13 +59,17 @@ class CN23LabelMaker implements HasLableExport
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
+        if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-01'))) {
+            $this->labelZipCodeGroup = getOrderGroupRange($this->order);
+        }
+        if ($this->order->shippingService->is_bcn_service) {
+            $this->contractNumber = 'B Contract: 0076204456';
+            $this->packageSign = 'B';
+        }
+        if($this->order->shippingService->isAnjunService()) {
+            $this->contractNumber = 'A Contract: 9912501700';
+            $this->packageSign = 'A';
 
-        if ($this->order->shippingService->isAnjunService() || $this->order->shippingService->is_bcn_service) {
-            if ($this->order->shippingService->is_bcn_service) {
-                $this->contractNumber = 'Contrato: 0076204456';
-            } else {
-                $this->contractNumber = 'Contrato: 9912501700';
-            }
         }
         return $this;
     }
@@ -140,19 +149,21 @@ class CN23LabelMaker implements HasLableExport
     }
     private function suplimentryAt()
     {
+        $suplimentryAt = 4;
         foreach ($this->order->items as  $key => $item) {
             if (strlen($item->description) > 65) {
                 try {
 
                     if (strlen($this->order->items[$key + 1]->description) <= 70  && $key < 2)
-                        return $key == 0 ? 2 : $key + 1;
+                        $suplimentryAt = $key == 0 ? 2 : $key + 1;
+                    else
+                        $suplimentryAt = $key == 0 ? 1 : $key;
                 } catch (Exception $e) {
-                    return $key == 0 ? 1 : $key;
+                    $suplimentryAt = $key == 0 ? 1 : $key;
                 }
-                return $key == 0 ? 1 : $key;
             }
         }
-        return 4;
+        return $suplimentryAt > 4 ? 4 : $suplimentryAt;
     }
 
     public function render()
@@ -197,6 +208,8 @@ class CN23LabelMaker implements HasLableExport
             'barcodeNew' => new BarcodeGeneratorPNG(),
             'activeAddress' => $this->activeAddress,
             'isReturn' => $this->isReturn,
+            'labelZipCodeGroup' => $this->labelZipCodeGroup,
+            'packageSign' => $this->packageSign
         ];
     }
 

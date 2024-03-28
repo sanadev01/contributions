@@ -40,7 +40,7 @@ return [
         'menu' => 'Relatórios',
         'Shipment Report' => 'Relatório de Remessa',
         'Tracking Report' => 'Relatório de Rastreamento',
-        'Orders Report' => 'Relatório de pedidos',
+        'Service Report' => 'Serviços Relatório',
         'Commission Report' => 'Relatório de Comissão',
         'Tax Report Scan' => 'Verificação de relatório fiscal',
         'Audit Report' => 'Relatório de Auditoria',

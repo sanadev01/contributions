@@ -42,8 +42,7 @@ class AnjunClient
     {
 
         $orderBody = (new Package($order))->requestBody(); 
-        Log::info('AnjunClient::createPackage orderBody'); 
-        Log::info([$orderBody]);
+        
         try {
             $response = $this->client->post('/logistics/order/api/create', [
                 'json'    =>  $orderBody,
@@ -52,8 +51,7 @@ class AnjunClient
                 ]
             ]);
             $responseContents = json_decode($response->getBody()->getContents());
-            Log::info('AnjunClient::createPackage responseContents'); 
-            Log::info([$responseContents]);
+            
             if ($responseContents->code == 200) {
                 $trackingNumber = $responseContents->data->trackNum;
                 if ($trackingNumber) {
@@ -94,9 +92,6 @@ class AnjunClient
             ]);
 
             $responseContents = json_decode($response->getBody()->getContents());
-            
-            Log::info('AnjunClient::createContainer responseContents'); 
-            Log::info([$responseContents]);
 
             if ($responseContents->status == 200) { 
                 return $this->getCN35BarCode($responseContents->data);
@@ -124,9 +119,7 @@ class AnjunClient
                 ],
             ]);
             $responseContents = json_decode($response->getBody()->getContents());
-            
-            Log::info('AnjunClient::getCN35BarCode responseContents'); 
-            Log::info([$responseContents]); 
+
             if ($responseContents->status == 200) {
 
                 return responseSuccessful($responseContents, 'Label Printer Success');

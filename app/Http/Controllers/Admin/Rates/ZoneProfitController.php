@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Rates;
 use Exception;
 use App\Models\Rate;
 use App\Models\Country;
+use App\Models\ZoneRate;
 use App\Models\ZoneCountry;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
@@ -13,6 +14,7 @@ use App\Repositories\RateRepository;
 use App\Models\Warehouse\AccrualRate;
 use App\Http\Requests\Admin\Rate\CreateRequest;
 use App\Services\Excel\Export\ZoneProfitExport;
+use App\Services\Excel\ImportCharges\ImportZoneRate;
 use App\Services\Excel\ImportCharges\ImportZoneProfit;
 
 class ZoneProfitController extends Controller
@@ -30,8 +32,8 @@ class ZoneProfitController extends Controller
         $groups = ZoneCountry::orderBy($sort, $order)
             ->get()
             ->groupBy(['group_id', 'shipping_service_id']);
-
-        return view('admin.rates.zone-profit.index', compact('groups'));
+        $rates = ZoneRate::orderBy('id')->get();
+        return view('admin.rates.zone-profit.index', compact('groups', 'rates'));
     }
 
     public function create()
@@ -43,8 +45,9 @@ class ZoneProfitController extends Controller
             ShippingService::GSS_EPMEI, 
             ShippingService::GSS_EPMI, 
             ShippingService::GSS_FCM, 
-            ShippingService::GSS_EMS, 
-            ])->get();
+            ShippingService::GSS_EMS,
+            ShippingService::GSS_CEP
+            ])->where('active',true)->get();
         
         return view('admin.rates.zone-profit.create', compact('services'));
     }
@@ -72,14 +75,19 @@ class ZoneProfitController extends Controller
     }
 
 
-    public function destroy(ZoneCountry $id)
+    public function destroy($id)
     {
-        $zone = ZoneCountry::where('group_id', $id)->delete();
-        
-        session()->flash('alert-success', 'Profit Deleted');
+         ZoneCountry::where('id', $id)->delete();
+         
+        session()->flash('alert-success', 'Group country deleted successfully');
         return redirect()->route('admin.rates.zone-profit.index');
     }
-    
+    public function destroyZoneProfit($groupId, $serviceId)
+    {
+        ZoneCountry::where('group_id', $groupId)->where('shipping_service_id', $serviceId)->delete();
+        session()->flash('alert-danger', 'Service Group deleted successfully!');
+        return redirect()->route('admin.rates.zone-profit.index');
+    }
     public function downloadZoneProfit($groupId, $serviceId)
     {
         $profitList = ZoneCountry::where('group_id', $groupId)->where('shipping_service_id', $serviceId)->get();
@@ -96,5 +104,64 @@ class ZoneProfitController extends Controller
             return back();
         }
     }
+
+    public function addCost()
+    {   
+        $this->authorizeResource(Rate::class);
+
+        $services = ShippingService::whereIn('service_sub_class', [
+            ShippingService::GSS_PMI,
+            ShippingService::GSS_EPMEI, 
+            ShippingService::GSS_EPMI, 
+            ShippingService::GSS_FCM, 
+            ShippingService::GSS_EMS,
+            ShippingService::GSS_CEP
+            ])->where('active',true)->get();
+        
+        return view('admin.rates.zone-profit.add-cost', compact('services'));
+    }
+
+    public function uploadRates(Request $request)
+    {
+        // try{
+            $file = $request->file('csv_file');
+            $importService = new ImportZoneRate($file, $request->service_id, $request->type);
+            $importService->handle();
+            session()->flash('alert-success', 'Rates Updated Successfully');
+
+            return  redirect()->route('admin.rates.zone-profit.index');
+
+        // }catch(Exception $exception){
+            // session()->flash('alert-danger','Error while Saving Rates: '.$exception->getMessage());
+            // return back();
+        // }
+    }
+
+    public function viewRates($serviceId, $zoneId, $type) {
+
+        $service = ShippingService::findOrFail($serviceId);
+        $rates = ZoneRate::where('shipping_service_id', $serviceId)->first();
+    
+        if ($type === "cost") {
+            $decodedRates = json_decode($rates->cost_rates, true); 
+        } elseif ($type === "package") {
+            $decodedRates = json_decode($rates->selling_rates, true); 
+        }
+    
+        $rate = null;
+    
+        foreach ($decodedRates as $zone => $zoneData) {
+
+            $zoneNumber = (int) filter_var($zone, FILTER_SANITIZE_NUMBER_INT);
+
+            if ($zoneNumber === (int)$zoneId) {
+                $rate = $zoneData;
+                break;
+            }
+        }
+        
+        return view('admin.rates.zone-profit.view-rates', compact('service', 'rate', 'type', 'zoneId'));
+    }
+    
 
 }

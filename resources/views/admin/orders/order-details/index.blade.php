@@ -51,7 +51,7 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="shipping_service_id" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
+                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->sub_name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->sub_name }}@endif</option>
                             @endforeach
                         </select>
                         @else
@@ -60,9 +60,9 @@
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
                             @if($shippingService->isInboundDomesticService())
-                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
+                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->sub_name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->sub_name }}@endif</option>
                             @else
-                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
+                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->sub_name}"}}</option>
                             @endif
                             @endforeach
                         </select>
@@ -108,7 +108,7 @@
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
                     </div>
-                    <div class="form-check form-check-inline mr-5">
+                    {{-- <div class="form-check form-check-inline mr-5">
                         <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
                             <input type="checkbox" name="individual_parcel" id="returnIndividual" @if($order->sinerlog_tran_id == 3) checked @endif>
                             <span class="vs-checkbox vs-checkbox-lg">
@@ -118,7 +118,7 @@
                             </span>
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                    </div>
+                    </div> --}}
                 </div>
                 @else
                 <div class="controls row mb-1">
@@ -144,7 +144,7 @@
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
                     </div>
-                    <div class="form-check form-check-inline mr-5">
+                    {{-- <div class="form-check form-check-inline mr-5">
                         <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
                             <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
                             <span class="vs-checkbox vs-checkbox-lg">
@@ -154,7 +154,7 @@
                             </span>
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                    </div>
+                    </div> --}}
                 </div>
                 @endif
             </div>
@@ -177,11 +177,27 @@
             </li>
             <li aria-hidden="false" aria-disabled="false">
                 <button type="button" class="btn btn-success" id="rateBtn" onClick="checkService()">Get Rate</button>
-                <button class="btn btn-primary">@lang('orders.order-details.Place Order')</button>
+                <button class="btn btn-primary" id="submitButton" @if($order->items->isEmpty()) title="Please add atleast one item !" disabled @endif >@lang('orders.order-details.Place Order')</button>
             </li>
         </ul>
     </div>
 </form>
+
+<div class="modal fade" id="checkOptionsModal" tabindex="-1" role="dialog" aria-labelledby="checkOptionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background: red;">
+                <h5 class="modal-title" id="checkOptionsModalLabel" style="color:white;">Please Check Disposal Option</h5>
+            </div>
+            <div class="modal-body">
+                You must check at least one disposal option before saving order.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!--USPS PRIORITY INTERNATIONAL RATE ALERT MODAL-->
 <div class="modal fade" id="uspsModal" role="dialog">
     <div class="modal-dialog modal-md">
@@ -236,13 +252,11 @@
             parseFloat($('option:selected', this).attr("data-cost"))
         );
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        emitSHCodes(service)
-
-
+        emitSHCodes()
         if (service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
-        } else if (service == 477 || service == 3674 || service == 37634 || service == 3326 || service == 4367) {
+        } else if (service == 477 || service == 3674 || service == 37634 || service == 3326 || service == 4367 || service == 237) {
             return getGSSRates();
         } else if (service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
@@ -442,8 +456,11 @@
             order_id: order_id,
         }).then(function(response) {
             if (response.success == true) {
-                $('#user_declared_freight').val(response.total_amount);
-                $('#user_declared_freight').prop('readonly', true);
+
+                if (service != 283) {
+                    $('#user_declared_freight').val(response.total_amount);
+                    $('#user_declared_freight').prop('readonly', true);
+                }
             } else {
                 if (service == 3674) {
                     $('#gssRateModal').modal('show');
@@ -481,22 +498,30 @@
     });
     //handle shcode
     $('#shipping_service_id').ready(function() {
-        const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        if (service) {
-            emitSHCodes(service)
-        }
+        emitSHCodes()
     })
 
     function emitSHCodes(serviceCode) {
-        $('.sh_code').selectpicker('destroy');
-        window.livewire.emit('reloadSHCodes', {
-            service: serviceCode
-        });
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        if (service) {
+            $('.sh_code').selectpicker('destroy');
+            window.livewire.emit('loadSHCodes', {
+                service: service
+            });
+        }
     }
 
 
-    window.addEventListener('shCodeReloaded', event => {
+    window.addEventListener('initializeSelectPicker', event => {
         initializeSelectpicker();
+    })
+    window.addEventListener('emitSHCodes', event => {
+        emitSHCodes();
+    })
+    window.addEventListener('emitSHCodesLazy', event => {
+        setTimeout(() => {
+            emitSHCodes();
+        }, 1500);
     })
 
     function initializeSelectpicker() {
@@ -510,9 +535,36 @@
             $('#loading').fadeOut();
         }, 2500);
     }
-    window.addEventListener('addItem', event => {
-        console.log('adding item')
-        initializeSelectpicker();
+    window.addEventListener('itemAdded', event => {
+        setTimeout(() => {
+            emitShCodePicker()
+            initializeSelectpicker()
+        }, 3000);
     })
+
+    window.addEventListener('disabledSubmitButton', event => {
+        var button = document.getElementById('submitButton');
+        button.setAttribute('disabled', 'disabled');
+    })
+
+    window.addEventListener('activateSubmitButton', event => {
+        var button = document.getElementById('submitButton');
+        button.removeAttribute('disabled');
+    })
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var orderForm = document.getElementById('order-form');
+        var returnParcelCheckbox = document.getElementById('returnParcel');
+        var disposeAllCheckbox = document.getElementById('disposeAll');
+        var checkOptionsModal = document.getElementById('checkOptionsModal');
+
+        orderForm.addEventListener('submit', function(event) {
+            // Check if both checkboxes are unchecked
+            if (!returnParcelCheckbox.checked && !disposeAllCheckbox.checked) {
+                event.preventDefault(); // Prevent form submission
+                $('#checkOptionsModal').modal('show'); // Show the modal
+            }
+        });
+    });
 </script>
 @endsection
