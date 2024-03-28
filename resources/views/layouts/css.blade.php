@@ -37,6 +37,9 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/pickadate/pickadate.css') }}">
 <style>
+    .height-100{
+        min-height: 100%; 
+    }
     .custom-tooltip {
         position: relative;
         display: inline-block;
