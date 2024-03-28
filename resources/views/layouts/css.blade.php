@@ -38,6 +38,9 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/pickadate/pickadate.css') }}">
 
 <style>
+    .height-100{
+        min-height: 100%; 
+    }
     .border-0 {
         border-width: 0px !important;
     }
