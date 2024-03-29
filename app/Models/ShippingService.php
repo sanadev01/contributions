@@ -438,7 +438,6 @@ class ShippingService extends Model
     }
 
     public function getCarrierServiceAttribute() {
-        {
             return match ((int) $this->service_sub_class) {
                 ShippingService::AJ_Standard_CN,
                 ShippingService::AJ_Express_CN,
@@ -486,6 +485,5 @@ class ShippingService extends Model
                 ShippingService::HD_Express => 'HD Express',
                 default => 'Correios Brazil',
             };
-        }
     }
 }
