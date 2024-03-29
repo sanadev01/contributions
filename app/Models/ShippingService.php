@@ -98,9 +98,13 @@ class ShippingService extends Model
         $serviceMapping = [
             ShippingService::AJ_Standard_CN => 'Packet Standard', 
             ShippingService::BCN_Packet_Standard => 'Packet Standard', 
-            ShippingService::AJ_Packet_Express => 'Packet Express', 
+            ShippingService::AJ_Packet_Standard => 'Packet Standard', 
+            ShippingService::Packet_Standard => 'Packet Standard', 
+            ShippingService::AJ_Express_CN => 'Packet Express', 
             ShippingService::BCN_Packet_Express => 'Packet Express', 
-        ]; 
+            ShippingService::AJ_Packet_Express => 'Packet Express', 
+            ShippingService::Packet_Express => 'Packet Express', 
+        ];
         if (array_key_exists($serviceSubClass, $serviceMapping)) { 
             return $serviceMapping[$serviceSubClass];
         }
@@ -484,4 +488,74 @@ class ShippingService extends Model
             ]
         );
     }
+
+    public function getCarrierServiceAttribute()
+    {
+        $serviceSubClass = optional($this->shippingService)->service_sub_class;
+
+        switch ($serviceSubClass) {
+            case ShippingService::USPS_PRIORITY:
+            case ShippingService::USPS_FIRSTCLASS:
+            case ShippingService::USPS_PRIORITY_INTERNATIONAL:
+            case ShippingService::USPS_FIRSTCLASS_INTERNATIONAL:
+            case ShippingService::USPS_GROUND:
+            case ShippingService::GDE_PRIORITY_MAIL:
+            case ShippingService::GDE_FIRST_CLASS:
+            case ShippingService::GSS_PMI:
+            case ShippingService::GSS_EPMEI:
+            case ShippingService::GSS_EPMI:
+            case ShippingService::GSS_FCM:
+            case ShippingService::GSS_EMS:
+            case ShippingService::GSS_CEP:
+                return 'USPS';
+
+            case ShippingService::UPS_GROUND:
+                return 'UPS';
+
+            case ShippingService::FEDEX_GROUND:
+                return 'FEDEX';
+
+            case ShippingService::SRP:
+            case ShippingService::SRM:
+                return 'Correios Chile';
+
+            case ShippingService::GePS:
+            case ShippingService::GePS_EFormat:
+            case ShippingService::Parcel_Post:
+                return 'Global eParcel';
+
+            case ShippingService::Prime5:
+            case ShippingService::Prime5RIO:
+            case ShippingService::DirectLinkCanada:
+            case ShippingService::DirectLinkMexico:
+            case ShippingService::DirectLinkChile:
+            case ShippingService::DirectLinkAustralia:
+                return 'Prime5';
+
+            case ShippingService::Post_Plus_Registered:
+            case ShippingService::Post_Plus_EMS:
+            case ShippingService::Post_Plus_Prime:
+            case ShippingService::Post_Plus_Premium:
+            case ShippingService::LT_PRIME:
+            case ShippingService::Post_Plus_LT_Premium:
+            case ShippingService::Post_Plus_CO_EMS:
+            case ShippingService::Post_Plus_CO_REG:
+                return 'PostPlus';
+
+            case ShippingService::TOTAL_EXPRESS:
+                return 'Total Express';
+
+            case ShippingService::HD_Express:
+                return 'HD Express';
+
+            default:
+                if ($this->is_anjun_china_service_sub_class || $this->isAnjunService() || $this->is_bcn_service) {
+                    return 'Correios Brazil';
+                } elseif ($this->is_hound_express) {
+                    return 'Hound Express';
+                }
+                return 'Correios Brazil';
+        }
+    }
+
 }
