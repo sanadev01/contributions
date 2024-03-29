@@ -398,7 +398,7 @@ class Order extends Model implements Package
 
     public function carrierCost()
     {
-        return $this->shippingService->carrier_service;
+        return $this->shippingService->carrier_service??'Correios Brazil';
     }
     private function getValuePaidToCorreios()
     {
