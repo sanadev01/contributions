@@ -199,7 +199,8 @@ class OrderRepository
                 $service = [
                     ShippingService::COLOMBIA_NACIONAL, 
                     ShippingService::COLOMBIA_TRAYETOS,
-                    ShippingService::COLOMBIA_URBANO, 
+                    ShippingService::COLOMBIA_URBANO,
+                    ShippingService::COLOMBIA_ONEZONE
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
@@ -756,7 +757,8 @@ class OrderRepository
 
         if($shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_URBANO)
             || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_NACIONAL)
-            || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_TRAYETOS)) {
+            || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_TRAYETOS)
+            || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_ONEZONE)) {
 
             $colombiaPostalCodeService = new ColombiaPostalCodes();
             $service = $colombiaPostalCodeService->getServiceByPostalCode($order->recipient->zipcode);
@@ -769,7 +771,8 @@ class OrderRepository
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return $shippingService->service_sub_class != ShippingService::COLOMBIA_URBANO
                         && $shippingService->service_sub_class != ShippingService::COLOMBIA_NACIONAL
-                        && $shippingService->service_sub_class != ShippingService::COLOMBIA_TRAYETOS;
+                        && $shippingService->service_sub_class != ShippingService::COLOMBIA_TRAYETOS
+                        && $shippingService->service_sub_class != ShippingService::COLOMBIA_ONEZONE;
                 });
             }
 

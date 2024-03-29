@@ -404,7 +404,9 @@ class Order extends Model implements Package
             if (in_array(optional($this->shippingService)->service_sub_class, [
                 ShippingService::COLOMBIA_NACIONAL,
                 ShippingService::COLOMBIA_URBANO,
-                ShippingService::COLOMBIA_TRAYETOS
+                ShippingService::COLOMBIA_TRAYETOS,
+                ShippingService::COLOMBIA_TRAYETOS,
+                ShippingService::COLOMBIA_ONEZONE
             ])) {
                 return 'Colombia-472';
             }

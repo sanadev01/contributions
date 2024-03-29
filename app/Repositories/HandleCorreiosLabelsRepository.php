@@ -63,6 +63,11 @@ class HandleCorreiosLabelsRepository
             //     return $this->mileExpressLabel();
             // }
         }
+
+        if ($this->order->recipient->country_id == Order::COLOMBIA && $this->order->shippingService->isColombiaService()) {
+            return $this->colombiaLabel();
+        }
+
         if (in_array($this->order->recipient->country_id, [Order::PORTUGAL, Order::COLOMBIA])) {
             if ($this->order->shippingService->isPostPlusService()) {
                 return $this->postPlusLabel();
@@ -79,11 +84,6 @@ class HandleCorreiosLabelsRepository
 
             return $this->gepsLabel();
         }
-
-        if ($this->order->recipient->country_id == Order::COLOMBIA && $this->order->shippingService->isColombiaService()) {
-            return $this->colombiaLabel();
-        }
-
 
         if ($this->order->recipient->country_id == Order::US) {
             if ($this->order->shippingService->is_usps_priority || $this->order->shippingService->is_usps_firstclass || $this->order->shippingService->is_usps_ground || $this->order->shippingService->is_gde_priority || $this->order->shippingService->is_gde_first_class) {

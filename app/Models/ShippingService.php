@@ -73,6 +73,7 @@ class ShippingService extends Model
     const Japan_Prime = 5537;
     const Japan_EMS = 5541;
     const GSS_CEP = 237;
+    const COLOMBIA_ONEZONE = 44166;
 
     protected $guarded = [];
 
@@ -358,6 +359,7 @@ class ShippingService extends Model
             self::COLOMBIA_URBANO,
             self::COLOMBIA_NACIONAL,
             self::COLOMBIA_TRAYETOS,
+            self::COLOMBIA_ONEZONE,
         ];
     }
 
