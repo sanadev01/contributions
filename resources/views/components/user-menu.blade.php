@@ -290,13 +290,13 @@
                 </a>
                 <ul class="menu-content">
                     <li class="nav-item {{ $isActive(['calculator.index']) }} ml-2">
-                        <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
+                        <a class="nav-link" href="{{ route('calculator.index') }}">
                             <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
                             <span data-i18n="Apps">@lang('menu.calculator')</span>
                         </a>
                     </li>
                     <li class="nav-item {{ $isActive(['us-calculator.index']) }} ml-2">
-                        <a class="nav-link" href="{{ route('us-calculator.index') }}" target="_blank">
+                        <a class="nav-link" href="{{ route('us-calculator.index') }}">
                             <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
                             <span data-i18n="Apps">@lang('menu.uscalculator')</span>
                         </a>

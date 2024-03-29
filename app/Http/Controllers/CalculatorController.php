@@ -10,10 +10,8 @@ class CalculatorController extends Controller
 {
     public function index()
     {
-        if(Auth::check())
+            session()->flash('alert-danger',null);
             return view('calculator.index');
-        else
-            return view('calculator.guest-index');
     }
 
     public function store(CalculatorRequest $request, CalculatorRepository $calculatorRepository)
@@ -22,10 +20,7 @@ class CalculatorController extends Controller
         $shippingServices =  $calculatorRepository->getShippingService();
         $chargableWeight = $calculatorRepository->getChargableWeight();
         $weightInOtherUnit = $calculatorRepository->getWeightInOtherUnit($request);
-        if(Auth::check())
-            return view('calculator.show', compact('order', 'shippingServices', 'weightInOtherUnit', 'chargableWeight'));
-        else
-            return view('calculator.guest-show', compact('order', 'shippingServices', 'weightInOtherUnit', 'chargableWeight'));
+        return view('calculator.show', compact('order', 'shippingServices', 'weightInOtherUnit', 'chargableWeight'));
     }
 
 }

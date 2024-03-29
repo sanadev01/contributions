@@ -398,31 +398,7 @@ class Order extends Model implements Package
 
     public function carrierCost()
     {
-        return match ((int)optional($this->shippingService)->service_sub_class) {
-            ShippingService::USPS_PRIORITY,
-            ShippingService::USPS_FIRSTCLASS,
-            ShippingService::USPS_PRIORITY_INTERNATIONAL,
-            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
-            ShippingService::UPS_GROUND,
-            ShippingService::FEDEX_GROUND,
-            ShippingService::GePS,
-            ShippingService::GePS_EFormat,
-            ShippingService::Prime5,
-            ShippingService::USPS_GROUND,
-            ShippingService::Post_Plus_Registered,
-            ShippingService::Post_Plus_EMS,
-            ShippingService::Parcel_Post,
-            ShippingService::Post_Plus_Prime,
-            ShippingService::Post_Plus_Premium,
-            ShippingService::Prime5RIO,
-            ShippingService::HD_Express,
-            ShippingService::GSS_PMI,
-            ShippingService::GSS_EPMEI,
-            ShippingService::GSS_EPMI,
-            ShippingService::GSS_FCM,
-            ShippingService::GSS_EMS => $this->user_declared_freight,
-            default => $this->getValuePaidToCorreios(),
-        };
+        return $this->shippingService->carrier_service;
     }
     private function getValuePaidToCorreios()
     {

@@ -26,6 +26,11 @@
 </style>
 @endsection
 @section('page')
+<div class="float-right">
+    <a href="{{route('calculator.index')}}" class="btn btn-blue btn-md rounded px-5 my-3">
+        <i class="fas fa-arrow-left"></i>
+        Go Back</a>
+</div>
 <section>
     <nav>
         <ol class="breadcrumb breadcrumb-bg">
@@ -33,18 +38,19 @@
             <li class="breadcrumb-item"><a href="/calculator">Calculator</a></li>
             <li class="breadcrumb-item active" aria-current="page">Correios</li>
         </ol>
+
     </nav>
 
 </section>
 <section>
     <div class="row mt-4">
-        <div class="col-12 mx-2">
+        <div class="col-12">
             <h4 class="font-weight-bold dt">Rate Calculated</h4>
         </div>
     </div>
 </section>
 <section>
-    <table class="table  table-borderless p-0 table-responsive-md table-striped  " id="kpi-report">
+    <table class="table table-borderless p-0 table-responsive-md table-striped" id="kpi-report">
         <thead>
             <tr id="kpiHead">
                 <th class="py-3 font-black">@lang('orders.Courier')</th>
@@ -58,11 +64,14 @@
             </tr>
         </thead>
         <tbody>
-
+            @if($chargableWeight>0)
             @foreach ($shippingServices as $shippingService)
-
             <tr>
-                <td>{{$shippingService->name}}</td>
+                <td>
+                    <img width="30" height="30" class="corrioes-lable" src="{{ asset('images/tracking/' . $shippingService->carrier_service . '.png') }}">
+
+                    {{$shippingService->sub_name}}
+                </td>
                 <td class="category-tag"></td>
                 <td>{{ $shippingService->delivery_time}}</td>
                 <!-- <td></td> -->
@@ -73,22 +82,18 @@
                     @endif
                 </td>
                 <!-- <td></td>
-                <td></td> -->
+                    <td></td> -->
                 <td class="price-tag">
                     {{$shippingService->getRateFor($order,true,true)}} USD
                 </td>
             </tr>
             @endforeach
+            @endif
 
 
         </tbody>
     </table>
     <br>
-    <div class="row ml-1 mt-3">
-        <a href="{{route('calculator.index')}}" class="btn btn-blue btn-md rounded px-5 my-3">
-            Go Back
-        </a>
-    </div>
 
 
 </section>
