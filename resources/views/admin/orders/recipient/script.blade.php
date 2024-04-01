@@ -155,14 +155,6 @@
             }else{
                 window.inactiveChileFields();
             }
-
-            if(val == '50'){
-                window.activeColombiaFields();
-                return getStatesFromDB();
-                $('#loading').fadeIn();
-            }else{
-                window.inactiveColombiaFields();
-            }
         });
 
         $('#country').on('change', function(){
@@ -191,12 +183,6 @@
                 window.inactiveChileFields();
                 window.activeGuatmalaFields();
                 return;
-            }
-
-            if (val == '50') {
-                activeColombiaFields();
-                return getStatesFromDB();
-                //return getColombiaRegionsFromDB();
             }
 
             if(val != '46' && window.service == 'courier_express')
@@ -246,7 +232,6 @@
 
             }else {
                 window.inactiveChileFields();
-                window.inactiveColombiaFields();
             }
         });
 
@@ -636,18 +621,6 @@
 
         $('#city').on('change', function() {
             window.validate_us_address();
-        });
-
-        $('#cocity').on('change', function(){
-            let country = $('#country').val();
-
-            if (country == '50') {
-
-                if ( $(this).val() == undefined || $(this).val() == '' ) return;
-                $('#loading').fadeIn();
-
-                addColombiaZipcode($(this).val());
-            }
         });
 
     })

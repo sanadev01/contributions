@@ -5,6 +5,7 @@ namespace App\Services\Colombia;
 use Exception;
 use App\Models\Region;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
@@ -79,7 +80,7 @@ class ColombiaService
     private function colombiaApiCallWithToken($url, $data)
     {
         try {
-            
+            Log::info('colombia request',['URL'=>$url,'data'=>$data,'token'=>$this->token]);
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
@@ -180,7 +181,7 @@ class ColombiaService
                     'placeSenderBe' => $this->setSenderPlace($order),
                     'strAditionalShipping' => '',
                     'strIdentification' => $order->warehouse_number,
-                    'strObservation' => '',
+                    'strObservation' => $order->warehouse_number.' '.implode(", ", $order->items()->pluck('description')->toArray()),
                     'strReference' => ($order->customer_reference) ? $order->customer_reference.' '.$order->user->pobox_number : $order->user->pobox_number,
                 ]
             ],

@@ -51,14 +51,6 @@ class CreateRequest extends FormRequest
             $rules['street_no'] = 'sometimes|numeric';
         }
 
-        if ($this->country_id == Country::COLOMBIA) {
-            $rules['city'] = 'nullable';
-            $rules['commune_id'] = 'nullable';
-            $rules['zipcode'] = 'nullable';
-            $rules['region'] = 'nullable';
-            $rules['phone'] = 'min:9|max:15';
-        }
-
         return $rules;
     }
 

@@ -170,7 +170,7 @@
                         </div>
                     </div>
                 </div> --}}
-                <div class="form-group col-12 col-sm-6 col-md-4" id="city_div">
+                <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls" id="div_city">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
                         <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control" placeholder="City"/>
@@ -187,18 +187,6 @@
                     <div class="controls">
                         <div class="help-block" id="communes_response" style="display: none">
                         </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-4 d-none" id="div_co_city">
-                    <div class="controls">
-                        <label>@lang('address.City') <span class="text-danger">*</span></label>
-                        <select name="cocity" id="cocity" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('city', optional($order->recipient)->city) }}">
-                            <option value="">Select @lang('address.City')</option>
-                            @if(!empty($order->recipient->city))
-                                <option value="{{$order->recipient->city}}" {{ old('city', optional($order->recipient)->city) ? 'selected' : '' }}>{{$order->recipient->city}}</option>
-                            @endif
-                        </select>
-                        <div class="help-block"></div>
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4" id="div_street_number">

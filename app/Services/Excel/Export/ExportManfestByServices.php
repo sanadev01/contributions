@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services\Excel\Export;
 
@@ -33,7 +33,7 @@ class ExportManfestByServices extends AbstractCsvExportService
         return $this->download();
     }
 
-    protected function prepareHeaders() : array
+    protected function prepareHeaders(): array
     {
         return [
             'HAWB',
@@ -82,7 +82,7 @@ class ExportManfestByServices extends AbstractCsvExportService
     protected function prePareDataForContainer(Container $container)
     {
         foreach ($container->orders as $package) {
-            
+
             $this->csvData[$this->row] = [
                 $package->corrios_tracking_code,
                 $this->date,
@@ -94,14 +94,14 @@ class ExportManfestByServices extends AbstractCsvExportService
                 $package->getWeight('kg'),
                 8 => 'contents',
                 9 => 'ncm',
-                $package->getOrderValue(),
+                $package->order_items_value,
                 $package->warehouse_number,
                 $package->gross_total,
-                $container->getDestinationAriport(),
-                $this->getValuePaidToCorrieos($container,$package)['airport'],
-                $this->getValuePaidToCorrieos($container,$package)['commission'],
+                $container->destination_ariport,
+                $this->getValuePaidToCorrieos($container, $package)['airport'],
+                $this->getValuePaidToCorrieos($container, $package)['commission'],
                 optional($package->affiliateSale)->commission,
-                optional(optional($package->affiliateSale)->user)->pobox_number  .' '.optional(optional($package->affiliateSale)->user)->name,
+                optional(optional($package->affiliateSale)->user)->pobox_number  . ' ' . optional(optional($package->affiliateSale)->user)->name,
                 $container->dispatch_number,
                 optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName(),
                 $package->carrierService() == 'Correios Brazil'? 'Correios Brazil': '',
@@ -114,31 +114,31 @@ class ExportManfestByServices extends AbstractCsvExportService
                 $package->carrierService() == 'Post Plus'? 'Post Plus': '',
                 $package->carrierService() == 'Colombia Service'? 'Colombia Service': '',
                 $package->tracking_id,
-                setting('marketplace_checked', null, $package->user->id)?  setting('marketplace', null, $package->user->id):''
+                setting('marketplace_checked', null, $package->user->id) ?  setting('marketplace', null, $package->user->id) : ''
             ];
 
-            $i=0;
+            $i = 0;
             foreach ($package->items as $item) {
-                if ( $i>0 ){
-                    $this->csvData[$this->row] = array_fill(0,14,'');
+                if ($i > 0) {
+                    $this->csvData[$this->row] = array_fill(0, 14, '');
                 }
 
                 $this->csvData[$this->row][8] = $item->description;
                 $this->csvData[$this->row][9] = $item->sh_code;
 
                 $this->row++;
-                
+
                 $i++;
             }
 
             $this->row++;
 
             $this->totalCustomerPaid +=  $package->gross_total;
-            $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package)['airport'];
+            $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container, $package)['airport'];
             $this->totalPieces++;
             $this->totalWeight += $package->getOriginalWeight('kg');
             $this->totalCommission += optional($package->affiliateSale)->commission;
-            $this->totalAnjunCommission += $this->getValuePaidToCorrieos($container,$package)['commission'];
+            $this->totalAnjunCommission += $this->getValuePaidToCorrieos($container, $package)['commission'];
         }
 
         $this->csvData[$this->row] = [
@@ -164,32 +164,31 @@ class ExportManfestByServices extends AbstractCsvExportService
             '',
             ''
         ];
-
     }
 
     protected function getValuePaidToCorrieos(Container $container, Order $order)
     {
         $commission = false;
         $service  = $order->shippingService->service_sub_class;
-        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
-        if ( !$rateSlab ){
+        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'), $service);
+        if (!$rateSlab) {
             return [
-                'airport'=> 0,
-                'commission'=> 0
+                'airport' => 0,
+                'commission' => 0
             ];
         }
-        if($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express){
+        if ($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express) {
             $commission = true;
         }
-        if ( $container->getDestinationAriport() ==  "GRU"){
+        if ($container->destination_ariport ==  "GRU") {
             return [
-                'airport'=> $rateSlab->gru,
-                'commission'=> $commission ? $rateSlab->commission : 0
+                'airport' => $rateSlab->gru,
+                'commission' => $commission ? $rateSlab->commission : 0
             ];
         }
         return [
-            'airport'=> $rateSlab->cwb,
-            'commission'=> $commission ? $rateSlab->commission : 0
+            'airport' => $rateSlab->cwb,
+            'commission' => $commission ? $rateSlab->commission : 0
         ];
     }
 }
