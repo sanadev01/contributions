@@ -66,6 +66,7 @@
         <tbody>
             @if($chargableWeight>0)
             @foreach ($shippingServices as $shippingService)
+            @if(checksSettingShippingService($shippingService))
             <tr>
                 <td>
                     <img width="30" height="30" class="corrioes-lable" src="{{ asset('images/tracking/' . $shippingService->carrier_service . '.png') }}">
@@ -87,6 +88,7 @@
                     {{$shippingService->getRateFor($order,true,true)}} USD
                 </td>
             </tr>
+            @endif
             @endforeach
             @endif
 
