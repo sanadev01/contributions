@@ -32,7 +32,7 @@ class ContainerRepository extends AbstractRepository
         if ($request->filled('startDate') || $request->filled('endDate')) {
             $query->whereBetween('created_at', [$request->startDate ?? date('2020-01-01'), $request->endDate ?? date('Y-m-d')]);
         }
-        $services = ['NX', 'IX', 'XP', 'AJ-NX', 'AJ-IX', 'BCN-NX', 'BCN-IX', 'AJC-NX', 'AJC-IX'];
+        $services = ['NX', 'IX', 'XP', 'AJ-NX', 'AJ-IX', 'BCN-NX', 'BCN-IX', 'AJC-NX', 'AJC-IX', 'CO-NX'];
         if ($request->filled('service')) {
             $services = json_decode($request->service);
         }

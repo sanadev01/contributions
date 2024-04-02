@@ -53,6 +53,12 @@ use App\Http\Controllers\Warehouse\PostPlusUnitRegisterController;
 use App\Http\Controllers\Warehouse\PostPlusCN35DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusCN38DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusManifestDownloadController;
+use App\Http\Controllers\Warehouse\ColombiaContainerController;
+use App\Http\Controllers\Warehouse\ColombiaCN35DownloadController;
+use App\Http\Controllers\Warehouse\ColombiaUnitRegisterController;
+use App\Http\Controllers\Warehouse\ColombiaContainerPackageController;
+use App\Http\Controllers\Warehouse\ColombiaContainerManifestController;
+
 use App\Http\Controllers\Warehouse\GSSContainerController;
 use App\Http\Controllers\Warehouse\GSSContainerPackageController;
 use App\Http\Controllers\Warehouse\GSSUnitRegisterController;
@@ -159,7 +165,6 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('swedenpost_container/{container}/register', SwedenPostUnitRegisterController::class)->name('swedenpost_container.register');
     Route::get('swedenpost_container/{container}/download', SwedenPostCN35DownloadController::class)->name('swedenpost_container.download');
     Route::get('swedenpost/{delivery_bill}/manifest', SwedenPostManifestDownloadController::class)->name('swedenpost.manifest.download');
-
     // Routes for Post Plus Container
     Route::resource('postplus_containers', PostPlusContainerController::class);
     Route::resource('postplus_container.packages', PostPlusContainerPackageController::class)->only('index','destroy', 'create');
@@ -168,6 +173,13 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('postplus_container/{container}/download/', PostPlusCN35DownloadController::class)->name('postplus_container.download');
     Route::get('postplus/{delivery_bill}/cn38', PostPlusCN38DownloadController::class)->name('postplus.cn38.download');
     Route::get('postplus/{delivery_bill}/manifest', PostPlusManifestDownloadController::class)->name('postplus.manifest.download');
+    
+    // Routes for Colombia Container
+    Route::resource('colombia-containers', ColombiaContainerController::class);
+    Route::resource('colombia-containers.packages', ColombiaContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('colombia-containers/{container}/register', ColombiaUnitRegisterController::class)->name('colombia-containers.register');
+    Route::get('colombia-containers/{container}/download', ColombiaCN35DownloadController::class)->name('colombia-containers.download');
+    Route::get('colombia-containers/{container}/manifest', ColombiaContainerManifestController::class)->name('colombia-containers.manifest');
 
     // Routes for GSS Container
     Route::resource('gss_containers', GSSContainerController::class);

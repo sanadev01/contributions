@@ -33,6 +33,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     const CONTAINER_ANJUNC_IX = 'AJC-IX';
     const CONTAINER_BCN_NX = 'BCN-NX';
     const CONTAINER_BCN_IX = 'BCN-IX';
+    const CONTAINER_COLOMBIA = 'CO-NX';
 
     public function user()
     {
@@ -129,6 +130,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             'BCN-NX' => 20,
             'BCN-IX' => 21,
             ShippingService::HoundExpress => 22,
+            'CO-NX' => 23,
             default => null,
         };
     }
@@ -287,5 +289,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         $firstOrderGroupRange = getOrderGroupRange($containerOrder);
         
         return $firstOrderGroupRange['group'];
+    }
+
+    public function hasColombiaService()
+    {
+        return $this->services_subclass_code == 'CO-NX';
     }
 }

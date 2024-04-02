@@ -69,6 +69,7 @@ class UserSettingRepository {
         $request->has('geps_service') ? saveSetting('geps_service', true, $user->id) : saveSetting('geps_service', false, $user->id);
         $request->has('sweden_post') ? saveSetting('sweden_post', true, $user->id) : saveSetting('sweden_post', false, $user->id);
         $request->has('post_plus') ? saveSetting('post_plus', true, $user->id) : saveSetting('post_plus', false, $user->id);
+        $request->has('colombia_service') ? saveSetting('colombia_service', true, $user->id) : saveSetting('colombia_service', false, $user->id);
         $request->has('gss') ? saveSetting('gss', true, $user->id) : saveSetting('gss', false, $user->id);
         $request->has('tax') ? saveSetting('tax', true, $user->id) : saveSetting('tax', false, $user->id);
         $request->has('volumetric_discount') ? saveSetting('volumetric_discount', true,$user->id) : saveSetting('volumetric_discount', false, $user->id);

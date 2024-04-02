@@ -64,6 +64,7 @@ class ExportManfestByServices extends AbstractCsvExportService
             'GePs',
             'Prime5',
             'Post Plus',
+            'Colombia Service',
             'Carrier Tracking',
             'Marketplace'
         ];
@@ -102,15 +103,16 @@ class ExportManfestByServices extends AbstractCsvExportService
                 optional($package->affiliateSale)->commission,
                 optional(optional($package->affiliateSale)->user)->pobox_number  . ' ' . optional(optional($package->affiliateSale)->user)->name,
                 $container->dispatch_number,
-                optional($package->user)->pobox_number . ' / ' . optional($package->user)->getFullName(),
-                $package->carrierService() == 'Correios Brazil' ? 'Correios Brazil' : '',
-                $package->carrierService() == 'Correios Chile' ? 'Correios Chile' : '',
-                $package->carrierService() == 'USPS' ? 'USPS' : '',
-                $package->carrierService() == 'UPS' ? 'UPS' : '',
-                $package->carrierService() == 'FEDEX' ? 'FEDEX' : '',
-                $package->carrierService() == 'GePS' ? 'GePS' : '',
-                $package->carrierService() == 'Prime5' ? 'Prime5' : '',
-                $package->carrierService() == 'Post Plus' ? 'Post Plus' : '',
+                optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName(),
+                $package->carrierService() == 'Correios Brazil'? 'Correios Brazil': '',
+                $package->carrierService() == 'Correios Chile'? 'Correios Chile': '',
+                $package->carrierService() == 'USPS'? 'USPS': '',
+                $package->carrierService() == 'UPS'? 'UPS': '',
+                $package->carrierService() == 'FEDEX'? 'FEDEX': '',
+                $package->carrierService() == 'GePS'? 'GePS': '',
+                $package->carrierService() == 'Prime5'? 'Prime5': '',
+                $package->carrierService() == 'Post Plus'? 'Post Plus': '',
+                $package->carrierService() == 'Colombia Service'? 'Colombia Service': '',
                 $package->tracking_id,
                 setting('marketplace_checked', null, $package->user->id) ?  setting('marketplace', null, $package->user->id) : ''
             ];

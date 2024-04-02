@@ -150,4 +150,13 @@ class DeliveryBill extends Model
     {
         return $this->containers->first()->has_bcn_service;
     }
+
+    public function hasColombiaService()
+    {
+        if ($this->containers->first()->services_subclass_code == 'CO-NX') {
+            return true;
+        }
+
+        return false;
+    }
 }

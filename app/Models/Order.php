@@ -74,8 +74,8 @@ class Order extends Model implements Package
     const CHILE = 46;
     const Guatemala = 94;
     const US = 250;
-    const PORTUGAL = 188;
     const COLOMBIA = 50;
+    const PORTUGAL = 188;
     const Japan = 114;
     const UK = 249;
 

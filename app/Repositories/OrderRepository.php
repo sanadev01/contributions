@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Country;
 use App\Facades\USPSFacade;
@@ -9,13 +10,13 @@ use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Services\UPS\UPSShippingService;
 use App\Services\GSS\GSSShippingService;
+use App\Services\UPS\UPSShippingService;
+use App\Services\GePS\GePSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
-use App\Services\GePS\GePSShippingService;
 use App\Services\Calculators\WeightCalculator;
-use App\Models\User;
+use App\Services\Colombia\ColombiaPostalCodes;
 
 class OrderRepository
 {
@@ -197,7 +198,15 @@ class OrderRepository
                     ShippingService::AJ_Packet_Express,
                 ];
             }
-            $query->whereHas('shippingService', function ($query) use ($service) {
+            if($request->carrier == 'Colombia-472'){
+                $service = [
+                    ShippingService::COLOMBIA_NACIONAL, 
+                    ShippingService::COLOMBIA_TRAYETOS,
+                    ShippingService::COLOMBIA_URBANO,
+                    ShippingService::COLOMBIA_ONEZONE
+                ];
+            }
+            $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });
         }
@@ -285,9 +294,13 @@ class OrderRepository
         $request->merge([
             'phone' => "+" . cleanString($request->phone)
         ]);
-
-        if ($order->recipient) {
-
+        
+        if ( $order->recipient ){
+            if($request->service == 'postal_service' && $request->country_id == Country::COLOMBIA) {
+                $city = $request->cocity;
+            }else {
+                $city = $request->city;
+            }
             $order->recipient()->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -717,9 +730,33 @@ class OrderRepository
             }
         }
 
-        if ($shippingServices->isEmpty()) {
-            $this->shippingServiceError = 'Please check your parcel dimensions';
-        }
+        if($shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_URBANO)
+            || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_NACIONAL)
+            || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_TRAYETOS)
+            || $shippingServices->contains('service_sub_class', ShippingService::COLOMBIA_ONEZONE)) {
+
+            $colombiaPostalCodeService = new ColombiaPostalCodes();
+            $service = $colombiaPostalCodeService->getServiceByPostalCode($order->recipient->zipcode);
+
+            if($service) {
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) use($service) {
+                    return $shippingService->service_sub_class == $service;
+                });
+            } else {
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::COLOMBIA_URBANO
+                        && $shippingService->service_sub_class != ShippingService::COLOMBIA_NACIONAL
+                        && $shippingService->service_sub_class != ShippingService::COLOMBIA_TRAYETOS
+                        && $shippingService->service_sub_class != ShippingService::COLOMBIA_ONEZONE;
+                });
+            }
+
+        } 
+
+            
+            if($shippingServices->isEmpty()){
+                $this->shippingServiceError = 'Please check your parcel dimensions';
+            }
         return $shippingServices;
     }
 

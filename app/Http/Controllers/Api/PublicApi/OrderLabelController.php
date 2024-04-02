@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\PostPlusLabelRepository;
+use App\Repositories\ColombiaLabelRepository;
 use App\Repositories\GSSLabelRepository;
 use App\Repositories\HDExpressLabelRepository;
 use App\Services\TotalExpress\TotalExpressLabelRepository;
@@ -177,17 +178,18 @@ class OrderLabelController extends Controller
                     }
                 }
             }
-            if ($order->recipient->country_id == Order::PORTUGAL) {
-                if ($order->shippingService->isPostPlusService()) {
-                    $postPlusLabelRepository = new PostPlusLabelRepository();
-                    $postPlusLabelRepository->get($order);
-                    $error = $postPlusLabelRepository->getError();
-                    if ($error) {
-                        return $this->rollback($error);
-                    }
+
+            if($order->recipient->country_id == Order::COLOMBIA && $order->shippingService->isColombiaService()){
+                $colombiaLabelRepository = new ColombiaLabelRepository();
+                $colombiaLabelRepository->run($order, null);
+                $error = $colombiaLabelRepository->getError();
+    
+                if($error)
+                {
+                    return apiResponse(false, $error);
                 }
             }
-
+            
             if ($order->recipient->country_id == Order::PORTUGAL || $order->recipient->country_id == Order::COLOMBIA) {
                 if ($order->shippingService->is_post_plus_service) {
                     $postPlusLabelRepository = new PostPlusLabelRepository();

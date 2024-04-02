@@ -15,6 +15,7 @@ use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\GSSLabelRepository;
 use App\Repositories\HDExpressLabelRepository;
 use App\Repositories\HoundExpressLabelRepository;
+use App\Repositories\ColombiaLabelRepository;
 use App\Services\TotalExpress\TotalExpressLabelRepository;
 
 class LabelRepositoryFactory
@@ -33,6 +34,7 @@ class LabelRepositoryFactory
             $order->recipient->country_id == Order::BRAZIL && $shippingService->is_post_plus_service => new PostPlusLabelRepository(),
             $order->recipient->country_id == Order::BRAZIL && $shippingService->is_gss_service => new GSSLabelRepository(),
             $order->recipient->country_id == Order::BRAZIL && $shippingService->is_total_express => new TotalExpressLabelRepository(),
+            $order->recipient->country_id == Order::COLOMBIA && $shippingService->isColombiaService() => new ColombiaLabelRepository(),
             in_array($order->recipient->country_id, [Order::PORTUGAL, Order::COLOMBIA]) && $shippingService->is_post_plus_service => new PostPlusLabelRepository(),
             $shippingService->is_hd_express_service => new HDExpressLabelRepository(),
             $order->recipient->country_id == Order::CHILE => new CorrieosChileLabelRepository(),

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Services\Calculators\RatesCalculator;
 use App\Services\Calculators\WeightCalculator;
+use COM;
 use Spatie\Activitylog\LogOptions;
 
 class ShippingService extends Model
@@ -39,6 +40,9 @@ class ShippingService extends Model
 
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
+    const COLOMBIA_URBANO = 44162;
+    const COLOMBIA_NACIONAL = 44163;
+    const COLOMBIA_TRAYETOS = 44165;
     const BCN_Packet_Standard = 44164;
     const BCN_Packet_Express = 44172;
     const Brazil_Redispatch = 100;
@@ -73,6 +77,7 @@ class ShippingService extends Model
     const Japan_Prime = 5537;
     const Japan_EMS = 5541;
     const GSS_CEP = 237;
+    const COLOMBIA_ONEZONE = 44166;
 
     const STANDARDS = [self::Packet_Standard, self::AJ_Packet_Standard, self::AJ_Standard_CN, self::BCN_Packet_Standard];
     const EXPRESSES = [self::Packet_Express, self::AJ_Packet_Express, self::AJ_Express_CN, self::BCN_Packet_Express];
@@ -157,6 +162,15 @@ class ShippingService extends Model
             self::UPS_GROUND,
             self::FEDEX_GROUND,
             self::USPS_GROUND,
+        ]);
+    }
+
+    public function isColombiaService() {
+        return in_array($this->service_sub_class, [
+            self::COLOMBIA_NACIONAL,
+            self::COLOMBIA_URBANO,
+            self::COLOMBIA_TRAYETOS,
+            self::COLOMBIA_ONEZONE,
         ]);
     }
 
@@ -483,6 +497,10 @@ class ShippingService extends Model
                 ShippingService::HoundExpress => 'Hound Express',
                 ShippingService::TOTAL_EXPRESS => 'Total Express',
                 ShippingService::HD_Express => 'HD Express',
+                ShippingService::COLOMBIA_NACIONAL,
+                ShippingService::COLOMBIA_URBANO,
+                ShippingService::COLOMBIA_TRAYETOS,
+                ShippingService::COLOMBIA_ONEZONE => 'Colombia-472',
                 default => 'Correios Brazil',
             };
     }

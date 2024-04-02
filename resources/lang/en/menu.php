@@ -60,6 +60,7 @@ return [
         'Prime5' => 'Prime5 ',
         'Sinerlog' => 'Sinerlog',
         'PostPlus' => 'Post Plus',
+        'Colombia' => 'Colombia',
         'HD Express' => 'HD Express',
     ],
     'Affiliate' => [
