@@ -345,11 +345,7 @@ class Order extends Model implements Package
 
     public function carrierService()
     {
-        if ($this->shippingService()) {
-            $this->shippingService->carrier_service;
-        }
-
-        return null;
+        return  $this->shippingService ? $this->shippingService->carrier_service : "null";
     }
 
     public function carrierCost()
