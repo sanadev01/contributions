@@ -95,6 +95,7 @@ class CalculatorRepository {
 
     public function getShippingService()
     {
+        $message="Shipping Service not found";
         $anjunSelected = setting('anjun_api', null, User::ROLE_ADMIN) ||setting('bcn_api', null, User::ROLE_ADMIN);  
         $shippingServices = collect();
         foreach (ShippingService::query()->active()->get() as $shippingService) {
