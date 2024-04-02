@@ -114,7 +114,8 @@ class ColombiaService
     private function colombiaApiCall($url, $data)
     {
         try {
-            $response = Http::withBasicAuth($this->userName, $this->password)->post($url, $data);     
+            $response = Http::withBasicAuth($this->userName, $this->password)->post($url, $data); 
+            // dd(json_decode($response));    
             if ($response->status() == 200) {
                 $responseJson = collect($response->json())->first();
                 if ($responseJson['intCodeError'] == 0  && $responseJson['strUrlGuide'] != null) {
