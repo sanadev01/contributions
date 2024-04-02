@@ -107,8 +107,11 @@ class CalculatorRepository {
                     $shippingServices->push($shippingService);
                 }
             }else{
-                session()->flash('alert-danger',"Shipping Service not Available Error:{$shippingService->getCalculator($this->order)->getErrors()}");
+                $message = "Shipping Service $shippingService->name not Available Error:{$shippingService->getCalculator($this->order)->getErrors()}";
             }
+        }
+        if($shippingServices->isEmpty()){
+                  session()->flash('alert-danger',$message);
         }
         return $shippingServices;
     }
