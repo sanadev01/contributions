@@ -24,6 +24,12 @@
 @endsection
 
 <section>
+    <div class="float-right">
+        <a href="@if($shippingServiceTitle == 'UPS') {{route('ups-calculator.index')}} @else {{route('us-calculator.index')}} @endif" class="btn btn-blue btn-md rounded px-5">
+            <i class="fas fa-arrow-left"></i>
+            Go Back
+        </a>
+    </div>
     <nav>
         <ol class="breadcrumb breadcrumb-bg">
             <li class="breadcrumb-item"><a href="/dashboard"><i class="fas fa-home"></i> Home</a></li>
@@ -62,7 +68,10 @@
         <tbody>
             @foreach ($ratesWithProfit as $key=>$profitRate)
             <tr>
-                <td>{{$profitRate['name']}}</td>
+                <td>
+                    <img width="30" height="30" class="corrioes-lable" src="{{ asset('images/tracking/' . (\App\Models\ShippingService::where('name',$profitRate['name'])->first())->carrier_service . '.png') }}">
+                    {{$profitRate['name']}}
+                </td>
                 <td class="category-tag"></td>
                 <td>
                     @if($tempOrder['measurement_unit'] == 'kg/cm')
@@ -94,7 +103,6 @@
                     @enderror
                     @error('selectedService')<div class="row mb-1 ml-4"> <span class="error text-danger">{{ $message }}</span> </div>@enderror
                     <button id="btn-submit" wire:click="getLabel('{{ $profitRate['service_sub_class'] }}')" type="submit" class="btn btn-success btn-sm  "><i class="fas fa-print text-print mx-2"></i>Buy Label</button>
-
                     @endif
                 </td>
             </tr>
@@ -104,12 +112,6 @@
         </tbody>
     </table>
 </section>
-
-<div class="row ml-1 mt-3">
-    <a href="@if($shippingServiceTitle == 'UPS') {{route('ups-calculator.index')}} @else {{route('us-calculator.index')}} @endif" class="btn btn-blue btn-md rounded px-5 my-3">
-        Go Back
-    </a>
-</div>
 <!-- Dashboard Analytics end -->
 @section('js')
 <script>

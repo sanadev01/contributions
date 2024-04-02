@@ -470,6 +470,26 @@ function getValidShCode($shCode, $service)
 function currentActiveApiName() {
     return  setting('correios_api', null, User::ROLE_ADMIN) ? 'Correios Api' : (setting('anjun_api', null,  User::ROLE_ADMIN) ? 'Correios Anjun Api' : (setting('bcn_api', null,User::ROLE_ADMIN) ? 'BCN Setting' : 'Anjun China Api'));
 }
+function checksSettingShippingService($shippingService){
+    $api = currentActiveApiName();
+    if(in_array($shippingService->service_sub_class,[ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard,ShippingService::Packet_Express, ShippingService::AJ_Packet_Express, ShippingService::AJ_Express_CN, ShippingService::BCN_Packet_Express]))
+    {
+        if($api=='Correios Anjun Api'){  
+        return in_array($shippingService->service_sub_class,[ShippingService::AJ_Packet_Standard,ShippingService::AJ_Packet_Express]);
+        }
+        if($api=='Correios Api'){ 
+        return in_array($shippingService->service_sub_class,[ShippingService::Packet_Express,ShippingService::Packet_Standard]);
+        }
+        if($api=='Correios Anjun Api'){  
+        return in_array($shippingService->service_sub_class,[ShippingService::AJ_Standard_CN,ShippingService::AJ_Express_CN]);
+        }
+        if($api=='BCN Setting'){  
+        return in_array($shippingService->service_sub_class,[ShippingService::BCN_Packet_Standard,ShippingService::BCN_Packet_Express]);
+        }
+    }
+    return true;
+
+}
 
 function getZoneRate($order, $service, $zoneId)
 {

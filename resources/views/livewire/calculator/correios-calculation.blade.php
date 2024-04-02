@@ -1,9 +1,9 @@
 <div class="col-12 card-bg rounded p-4">
     <form action="{{action('CalculatorController@store')}}" method="POST">
         @csrf
-        <div class="row">
-                <input type="hidden" name="country_id" value="30">
-                <input type="hidden" name="state_id" value="526">
+        <div class="row d-flex justify-content-between align-items-start">
+            <input type="hidden" name="country_id" value="30">
+            <input type="hidden" name="state_id" value="526">
             <!-- <div class="controls col-md-4" wire:ignore>
                 <label>Destination Country</label>
                 <select id="country" name="country_id" class="form-control selectpicker show-tick m-0 p-0" data-live-search="true">
@@ -21,17 +21,19 @@
                     <option value="">Select @lang('address.State')</option>
                 </select>
             </div> -->
-            <div class="form-group col-md-3">
+            <div class="col-12 col-sm-6 col-md-2">
                 <div class="controls">
                     <label>@lang('parcel.Measuring Units') <span class="text-danger">*</span></label>
                     <div class="row mt-3">
-                        <div class="col-4">
+                        <div class="col-6 d-flex justify-content-center align-items-center">
                             <input type="radio" value="ibs/in" name="unit" wire:model="unit" class="mr-1">
-                            ibs/in
+                            <span>
+                                ibs/in
+                            </span>
                         </div>
-                        <div class="col-4">
+                        <div class="col-6 d-flex justify-content-center align-items-center">
                             <input type="radio" value="kg/cm" name="unit" wire:model="unit" class="mr-1">
-                            kg/cm
+                            <label class="ml-1 mb-0" for="unit">kg/cm</label>
                         </div>
                     </div>
                     @error('unit')
