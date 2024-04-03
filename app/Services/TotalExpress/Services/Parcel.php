@@ -29,7 +29,12 @@ class Parcel
    }
    public function getRequestBody()
    {
-      
+      if (strcasecmp($this->order->tax_modality, "DDU") === 0) {
+         $incoterm = "DDU";
+      } elseif (strcasecmp($this->order->tax_modality, "DDP") === 0) {
+            $incoterm = "DDP";
+      }
+
       if (app()->isProduction()) {
          $contractId = config('total_express.production.contractId');
       } else {
@@ -44,7 +49,7 @@ class Parcel
          "contract_id" => $contractId,
          "sales_channel_id" => null,
          // "sales_channel_order_number" => null,
-         "incoterm" => "DDP",
+         "incoterm" => $incoterm,
          "is_landed_cost" => false,
          "observations" => " ",
          "return_insurance" => false,

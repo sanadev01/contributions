@@ -502,16 +502,19 @@ function getZoneRate($order, $service, $zoneId)
         }
     }
 
-    foreach ($rateData['data'] as $range => $value) {
-        $rangeValue = floatval($range);
-    
-        $keys = array_keys($rateData['data']);
-        $index = array_search($range, $keys);
-        $nextWeight = isset($keys[$index + 1]) ? floatval($keys[$index + 1]) : INF;
+    if(isset($rateData['data'])) {
 
-        if ($weight >= $rangeValue && $weight < $nextWeight) {
-            $rate = $value;
-            break;
+        foreach ($rateData['data'] as $range => $value) {
+            $rangeValue = floatval($range);
+        
+            $keys = array_keys($rateData['data']);
+            $index = array_search($range, $keys);
+            $nextWeight = isset($keys[$index + 1]) ? floatval($keys[$index + 1]) : INF;
+
+            if ($weight >= $rangeValue && $weight < $nextWeight) {
+                $rate = $value;
+                break;
+            }
         }
     }
 
