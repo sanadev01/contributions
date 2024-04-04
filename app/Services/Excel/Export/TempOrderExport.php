@@ -31,11 +31,12 @@ class TempOrderExport extends AbstractExportService
         $this->setExcelHeaderRow();
 
         $row = $this->currentRow;
+
         foreach ($this->orders as $order) {
             $totalAmount = $order->items->reduce(function ($carry, $orderItem) {
                 return $carry + ($orderItem->quantity * $orderItem->value);
             }, 0);
-
+    
             $this->setCellValue('A'.$row, $order->getSenderFullName());
             $this->setCellValue('B'.$row, $order->recipient->getFullName()); 
             $this->setCellValue('D'.$row, (string)$this->getOrderTrackingCodes($order)); 
@@ -43,12 +44,18 @@ class TempOrderExport extends AbstractExportService
             $this->setCellValue('F'.$row, $order->shipping_value); 
             $this->setCellValue('G'.$row, $order->user->pobox_number); 
             $this->setCellValue('H'.$row, $order->user_declared_freight); 
-            $this->setCellValue('I'.$row, number_format($totalAmount,2));
+            $this->setCellValue('I'.$row, number_format($totalAmount, 2));
+            $orderStatus = !empty($order->deleted_at) ? "Order is Deleted on " . date('Y-m-d', strtotime($order->deleted_at)) : '';
+            $this->setCellValue('K'.$row, $orderStatus);
+            $this->setColor('K', 'FF0000');
+            
             foreach($order->items as $item) { 
                 $this->setCellValue('J'.$row, $item->description);   
                 $this->setCellValue('C'.$row, $item->sh_code);   
                 $row++;
-            } 
+            }
+    
+            $row++;
         } 
 
     }
@@ -81,6 +88,9 @@ class TempOrderExport extends AbstractExportService
 
         $this->setColumnWidth('J', 30);
         $this->setCellValue('J1', 'Description of product');
+
+        $this->setColumnWidth('K', 30);
+        $this->setCellValue('K1', 'Status');
 
         $this->currentRow++;
     } 
