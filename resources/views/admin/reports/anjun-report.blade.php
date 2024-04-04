@@ -109,7 +109,7 @@
                                             </td>
                                             <td>{{ $order->user->name }}</td>
                                             <td>{{ $order->corrios_tracking_code }}</td>
-                                            <td>{{ $order->gross_total }}</td>
+                                            <td>{{ number_format($order->gross_total, 2) }}</td>
                                             <td><livewire:reports.anjun-report :order="$order" :isCommission="false"/></td>
                                             <td><livewire:reports.anjun-report :order="$order" :isCommission="true"/></td>
                                             <td>{{ $order->status_name }}</td>

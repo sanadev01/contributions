@@ -20,7 +20,7 @@
                             <div class="controls row mb-1 align-items-center">
                                 <label class="col-md-3 text-md-right">@lang('shipping-rates.consolidation Charges')<span class="text-danger">*</span></label>
                                 <div class="col-md-6">
-                                    <input type="text" required class="form-control" name="consolidation_charges" value="{{ old('consolidation_charges',setting('consolidation_charges')) }}" placeholder="@lang('shipping-rates.consolidation Charges')">
+                                    <input type="text" required class="form-control" name="consolidation_charges" value="{{ number_format(old('consolidation_charges',setting('consolidation_charges')), 2) }}" placeholder="@lang('shipping-rates.consolidation Charges')">
                                     @error('consolidation_charges')
                                     <div class="help-block text-danger"> {{ $message }} </div>
                                     @enderror
