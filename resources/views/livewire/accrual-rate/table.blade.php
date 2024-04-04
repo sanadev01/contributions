@@ -79,15 +79,15 @@
                     </th>
 
                     <th>
-                        ${{ $rate->cwb }}
+                        ${{ number_format($rate->cwb, 2) }}
                     </th>
 
                     <th>
-                        ${{ $rate->gru }}
+                        ${{ number_foramt($rate->gru, 2) }}
                     </th>
                     @if ($anjunService)
                         <th>
-                            ${{ $rate->commission }}
+                            ${{ number_format($rate->commission, 2) }}
                         </th>
                     @endif
                 </tr>
