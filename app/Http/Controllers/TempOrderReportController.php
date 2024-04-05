@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Services\Excel\Export\TempOrderExport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class TempOrderReportController extends Controller
@@ -17,7 +18,7 @@ class TempOrderReportController extends Controller
      */
     public function __invoke()
     { 
-        $orders = Order::withTrashed()->whereIn('corrios_tracking_code',[
+        $orders = [
             "NB263710316BR",
             "NB260259464BR",
             "NB255955025BR",
@@ -542,9 +543,29 @@ class TempOrderReportController extends Controller
             "NB390516717BR",
             "NB389013010BR",
             "NB387229353BR",
-        ])->get();
-        $export =  new TempOrderExport($orders,Auth::id());
-            $export->handle();
+        ];
+
+        $orderModels = Order::withTrashed()->whereIn('corrios_tracking_code', $orders)->get();
+
+        $orderData = collect($orders)->map(function ($orderCode) use ($orderModels) {
+            $order = $orderModels->firstWhere('corrios_tracking_code', $orderCode);
+            if ($order) {
+                return $order;
+            } else {
+                return (object) [
+                    'corrios_tracking_code' => $orderCode,
+                    'warehouse_number' => '',
+                    'user' => (object) ['pobox_number' => ''],
+                    'deleted_at' => null,
+                ];
+            }
+        });
+
+        $export = new TempOrderExport($orderData);
+        $export->handle();
+
         return $export->download();
     }
+
 }
+
