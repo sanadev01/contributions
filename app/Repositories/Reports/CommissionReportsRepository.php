@@ -37,7 +37,7 @@ class CommissionReportsRepository
             }else{
 
                 if ( $request->start_date ){
-                    $query->where('created_at','>',$request->start_date);
+                    $query->where('created_at','>=',$request->start_date);
                 }
                 
                 if ( $request->end_date ){
@@ -50,7 +50,7 @@ class CommissionReportsRepository
                 $query->where('created_at','LIKE',$request->year.'%');
             }else{
                 if ( $request->start_date ){
-                    $query->where('created_at','>',$request->start_date);
+                    $query->where('created_at','>=',$request->start_date);
                 }
                 
                 if ( $request->end_date ){
@@ -77,7 +77,7 @@ class CommissionReportsRepository
             }else{
 
                 if ( $request->start_date ){
-                    $query->where('created_at','>',$request->start_date);
+                    $query->where('created_at','>=',$request->start_date);
                 }
                 
                 if ( $request->end_date ){
@@ -90,7 +90,7 @@ class CommissionReportsRepository
                 $query->where('created_at','LIKE',$request->year.'%');
             }else{
                 if ( $request->start_date ){
-                    $query->where('created_at','>',$request->start_date);
+                    $query->where('created_at','>=',$request->start_date);
                 }
                 
                 if ( $request->end_date ){
