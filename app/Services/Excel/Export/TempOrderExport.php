@@ -27,55 +27,71 @@ class TempOrderExport extends AbstractExportService
         $this->setExcelHeaderRow();
 
         $row = $this->currentRow;
-        foreach ($this->orders as $order) {
-            $totalAmount = $order->items->reduce(function ($carry, $orderItem) {
-                return $carry + ($orderItem->quantity * $orderItem->value);
-            }, 0);
 
-            $this->setCellValue('A' . $row, $order->getSenderFullName());
-            $this->setCellValue('B' . $row, $order->recipient->getFullName());
-            $this->setCellValue('D' . $row, (string)$this->getOrderTrackingCodes($order));
-            $this->setCellValue('E' . $row, (string)$this->chargeWeight($order));
-            $this->setCellValue('F' . $row, $order->shipping_value);
-            $this->setCellValue('G' . $row, $order->user->pobox_number);
-            $this->setCellValue('H' . $row, $order->user_declared_freight);
-            $this->setCellValue('I' . $row, number_format($totalAmount, 2));
-            foreach ($order->items as $item) {
-                $this->setCellValue('J' . $row, $item->description);
-                $this->setCellValue('C' . $row, $item->sh_code);
+        foreach ($this->orders as $order) {
+
+            if ($order instanceof Order) {
+
+                $this->setCellValue('A'.$row, $order->corrios_tracking_code);
+                $this->setCellValue('B'.$row, $order->warehouse_number); 
+                $this->setCellValue('C'.$row, optional($order->user)->pobox_number); 
+                $this->setCellValue('D'.$row, !empty($order->deleted_at) ? "Order is Deleted on " . date('Y-m-d', strtotime($order->deleted_at)) : '');
+                $this->setCellValue('E'.$row, $order->getSenderFullName());
+                $this->setCellValue('F'.$row, optional($order->recipient)->getFullName());
+                $this->setCellValue('G'.$row, $this->chargeWeight($order));
+                $this->setCellValue('H'.$row, $order->shipping_value);
+                
+                foreach($order->items as $item) {
+                    $this->setCellValue('I'.$row, $item->sh_code);   
+                    $this->setCellValue('J'.$row, $item->description);
+                    $row++; 
+                }
+                $this->setColor('D', 'FF0000');
+            } else {
+
+                $this->setCellValue('A'.$row, $order->corrios_tracking_code);
+                $this->setCellValue('B'.$row, $order->warehouse_number); 
+                $this->setCellValue('C'.$row, optional($order->user)->pobox_number); 
+                $this->setCellValue('D'.$row, "Order Not Found");
+
+                $this->setCellValue('I'.$row, '');   
+                $this->setCellValue('J'.$row, '');
+                $this->setBackgroundColor("A{$row}:J{$row}", 'FF0000');
                 $row++;
             }
         }
     }
 
+
     private function setExcelHeaderRow()
     {
         $this->setColumnWidth('A', 30);
-        $this->setCellValue('A1', 'sender');
+        $this->setCellValue('A1', 'Tracking Code');
 
         $this->setColumnWidth('B', 30);
-        $this->setCellValue('B1', 'receiver#');
+        $this->setCellValue('B1', 'Warehouse No.');
 
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'NCM (HS#)');
+        $this->setCellValue('C1', 'POBOX');
         $this->setColumnWidth('D', 20);
-        $this->setCellValue('D1', 'Tracking');
+        $this->setCellValue('D1', 'Status');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'weight');
+        $this->setCellValue('E1', 'Sender');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'shipping paid');
+        $this->setCellValue('F1', 'Recepient');  
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'PO Box Number');
+        $this->setCellValue('G1', 'Weight');    
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'ttl declared value');
-
+        $this->setCellValue('H1', 'Shipping Paid');  
+        
         $this->setColumnWidth('I', 30);
-        $this->setCellValue('I1', 'Order Value');
+        $this->setCellValue('I1', 'NCM');
 
         $this->setColumnWidth('J', 30);
-        $this->setCellValue('J1', 'Description of product');
+        $this->setCellValue('J1', 'Description of Product');
+
 
         $this->currentRow++;
     }
