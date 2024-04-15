@@ -41,7 +41,7 @@ class SinerlogContainerController extends Controller
      */
     public function store(CreateContainerRequest  $createContainerRequest, SinerlogContainerRepository $sinerlog_containerRepository)
     {
-        if ( $container = $sinerlog_containerRepository->store($createContainerRequest) ){
+        if ($container = $sinerlog_containerRepository->store($createContainerRequest)) {
             session()->flash('alert-success', 'Container Saved Please Scan Packages');
             return redirect()->route('warehouse.sinerlog_containers.index');
         }
@@ -68,11 +68,11 @@ class SinerlogContainerController extends Controller
      */
     public function edit(Container $sinerlog_container)
     {
-        if ( $sinerlog_container->isRegistered() ){
+        if ($sinerlog_container->is_registered) {
             abort(405);
         }
-        
-        return view('admin.warehouse.sinerlogContainers.edit',compact('sinerlog_container'));
+
+        return view('admin.warehouse.sinerlogContainers.edit', compact('sinerlog_container'));
     }
 
     /**
@@ -84,11 +84,11 @@ class SinerlogContainerController extends Controller
      */
     public function update(UpdateContainerRequest $updateContainerRequest, Container $sinerlog_container, SinerlogContainerRepository $sinerlog_containerRepository)
     {
-        if ( $sinerlog_container->isRegistered() ){
+        if ($sinerlog_container->is_registered) {
             abort(405);
         }
-        
-        if ( $sinerlog_container = $sinerlog_containerRepository->update($sinerlog_container, $updateContainerRequest) ){
+
+        if ($sinerlog_container = $sinerlog_containerRepository->update($sinerlog_container, $updateContainerRequest)) {
             session()->flash('alert-success', 'Container Saved Please Scann Packages');
             return redirect()->route('warehouse.sinerlog_containers.index');
         }
@@ -104,10 +104,10 @@ class SinerlogContainerController extends Controller
      */
     public function destroy(Container $sinerlog_container, SinerlogContainerRepository $sinerlog_containerRepository)
     {
-        if ( $sinerlog_container->isRegistered() ){
-            abort(403,'Cannot Delete Container registered on Correios.');
+        if ($sinerlog_container->is_registered) {
+            abort(403, 'Cannot Delete Container registered on Correios.');
         }
-        if ( $sinerlog_container = $sinerlog_containerRepository->delete($container) ){
+        if ($sinerlog_container = $sinerlog_containerRepository->delete($container)) {
             session()->flash('alert-success', 'Container Deleted');
             return redirect()->route('warehouse.containers.index');
         }

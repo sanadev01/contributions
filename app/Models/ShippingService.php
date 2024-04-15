@@ -10,7 +10,10 @@ use LaravelJsonColumn\Traits\JsonColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Services\Calculators\RatesCalculator;
-use App\Services\Calculators\WeightCalculator; 
+use App\Services\Calculators\WeightCalculator;
+use COM;
+use Spatie\Activitylog\LogOptions;
+
 class ShippingService extends Model
 {
     use JsonColumn;
@@ -23,6 +26,7 @@ class ShippingService extends Model
     const USPS_FIRSTCLASS = 3441;
     const USPS_PRIORITY_INTERNATIONAL = 3442;
     const USPS_FIRSTCLASS_INTERNATIONAL = 3443;
+    
     const SRP = 28;
     const SRM = 32;
     const Courier_Express = 33;
@@ -36,6 +40,9 @@ class ShippingService extends Model
 
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
+    const COLOMBIA_URBANO = 44162;
+    const COLOMBIA_NACIONAL = 44163;
+    const COLOMBIA_TRAYETOS = 44165;
     const BCN_Packet_Standard = 44164;
     const BCN_Packet_Express = 44172;
     const Brazil_Redispatch = 100;
@@ -50,7 +57,7 @@ class ShippingService extends Model
     const Post_Plus_Prime = 777;
     const Post_Plus_Premium = 778;
     const Prime5RIO = 357;
-    const DirectLinkCanada = 779; 
+    const DirectLinkCanada = 779;
     const DirectLinkMexico = 780;
     const DirectLinkChile = 781;
     const DirectLinkAustralia = 782;
@@ -70,27 +77,33 @@ class ShippingService extends Model
     const Japan_Prime = 5537;
     const Japan_EMS = 5541;
     const GSS_CEP = 237;
+    const COLOMBIA_ONEZONE = 44166;
 
+    const STANDARDS = [self::Packet_Standard, self::AJ_Packet_Standard, self::AJ_Standard_CN, self::BCN_Packet_Standard];
+    const EXPRESSES = [self::Packet_Express, self::AJ_Packet_Express, self::AJ_Express_CN, self::BCN_Packet_Express];
     protected $guarded = [];
 
-    protected static $logAttributes = ['*'];
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
 
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
-
-    public $cacheCalculator = false; 
+    public $cacheCalculator = false;
 
 
     protected static $calculator;
 
     public function rates()
     {
-        return $this->hasMany(Rate::class,'shipping_service_id');
+        return $this->hasMany(Rate::class, 'shipping_service_id');
     }
 
     public function scopeActive(Builder $builder)
     {
-        return $builder->where('active',true);
+        return $builder->where('active', true);
     }
     public function getSubNameAttribute()
     {
@@ -98,9 +111,13 @@ class ShippingService extends Model
         $serviceMapping = [
             ShippingService::AJ_Standard_CN => 'Packet Standard', 
             ShippingService::BCN_Packet_Standard => 'Packet Standard', 
-            ShippingService::AJ_Packet_Express => 'Packet Express', 
+            ShippingService::AJ_Packet_Standard => 'Packet Standard', 
+            ShippingService::Packet_Standard => 'Packet Standard', 
+            ShippingService::AJ_Express_CN => 'Packet Express', 
             ShippingService::BCN_Packet_Express => 'Packet Express', 
-        ]; 
+            ShippingService::AJ_Packet_Express => 'Packet Express', 
+            ShippingService::Packet_Express => 'Packet Express', 
+        ];
         if (array_key_exists($serviceSubClass, $serviceMapping)) { 
             return $serviceMapping[$serviceSubClass];
         }
@@ -111,22 +128,18 @@ class ShippingService extends Model
         return $this->getCalculator($order)->isAvailable();
     }
 
-    public function getRateFor(Order $order,$withProfit=true, $calculateOnVolumeMetricWeight = true)
+    public function getRateFor(Order $order, $withProfit = true, $calculateOnVolumeMetricWeight = true)
     {
-        if($this->isGDEService() && $order){
+        if ($this->is_gde_service && $order) {
             return $this->getGDERate($order);
         }
-        $rate = round($this->getCalculator($order, $calculateOnVolumeMetricWeight)->getRate($withProfit),2);
+        $rate = round($this->getCalculator($order, $calculateOnVolumeMetricWeight)->getRate($withProfit), 2);
         return $rate;
     }
 
     public function getCalculator(Order $order, $calculateOnVolumeMetricWeight = true, $originalRate = false)
     {
-        // if ( self::$calculator && $this->cacheCalculator)
-        //     return self::$calculator;
-
-        self::$calculator = new RatesCalculator($order,$this, $calculateOnVolumeMetricWeight, $originalRate);
-
+        self::$calculator = new RatesCalculator($order, $this, $calculateOnVolumeMetricWeight, $originalRate);
         return self::$calculator;
     }
 
@@ -137,149 +150,161 @@ class ShippingService extends Model
 
     public function getOriginalRate(Order $order, $withProfit = true, $calculateOnVolumeMetricWeight = true, $originalRate = true)
     {
-        $rate = round($this->getCalculator($order, $calculateOnVolumeMetricWeight, $originalRate)->getRate($withProfit),2);
+        $rate = round($this->getCalculator($order, $calculateOnVolumeMetricWeight, $originalRate)->getRate($withProfit), 2);
         return $rate;
     }
-    
-    public function isOfUnitedStates()
-    {
-        if (collect($this->usShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
 
-        return false;
+    public function getIsOfUnitedStatesAttribute()
+    {
+        return in_array($this->service_sub_class, [
+            self::USPS_PRIORITY,
+            self::USPS_FIRSTCLASS,
+            self::UPS_GROUND,
+            self::FEDEX_GROUND,
+            self::USPS_GROUND,
+        ]);
     }
 
-    public function isDomesticService()
-    {
-        if (collect($this->domesticShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-        
-        return false;
+    public function isColombiaService() {
+        return in_array($this->service_sub_class, [
+            self::COLOMBIA_NACIONAL,
+            self::COLOMBIA_URBANO,
+            self::COLOMBIA_TRAYETOS,
+            self::COLOMBIA_ONEZONE,
+        ]);
     }
 
-    public function isInternationalService()
+    public function getIsDomesticServiceAttribute()
     {
-        if (collect($this->internationalShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-
-        return false;
+        return in_array($this->service_sub_class, [
+            self::USPS_PRIORITY,
+            self::USPS_FIRSTCLASS,
+            self::UPS_GROUND,
+            self::FEDEX_GROUND,
+            self::USPS_GROUND,
+        ]);
     }
 
-    public function isCorreiosService()
+    public function getIsInternationalServiceAttribute()
     {
-        if (collect($this->correiosShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-    
-        return false;
+        return in_array($this->service_sub_class, [
+            self::USPS_PRIORITY_INTERNATIONAL,
+            self::USPS_FIRSTCLASS_INTERNATIONAL,
+        ]);
     }
 
-    public function isAnjunService()
+    public function getIsCorreiosServiceAttribute()
     {
-        if (collect($this->anjunShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
+        return in_array($this->service_sub_class, [
+            self::Packet_Standard,
+            self::Packet_Express,
+            self::Packet_Mini,
+        ]);
+    }
 
-        return false;
-    }
-    public function isAnjunChinaService()
+    public function getIsAnjunServiceAttribute()
     {
-        return in_array($this->service_sub_class,[self::AJ_Standard_CN,self::AJ_Express_CN]);
+        return in_array($this->service_sub_class, [
+            self::AJ_Packet_Standard,
+            self::AJ_Packet_Express,
+        ]);
     }
-    public function isAnjunChinaExpressService()
+    public function getIsAnjunChinaServiceAttribute()
+    {
+        return in_array($this->service_sub_class, [
+            self::AJ_Standard_CN,
+            self::AJ_Express_CN
+        ]);
+    }
+    public function getIsAnjunChinaExpressServiceAttribute()
     {
         return self::AJ_Express_CN  == $this->service_sub_class;
     }
-    public function isAnjunChinaStandardService()
+    public function getIsAnjunChinaStandardServiceAttribute()
     {
         return self::AJ_Standard_CN == $this->service_sub_class;
     }
-    function getIsBcnServiceAttribute() {
-        return in_array($this->service_sub_class,[
-            self::BCN_Packet_Standard, 
-            self::BCN_Packet_Express,
-        ]);
-    }
-    
-    function getIsBcnExpressAttribute() {
-        return in_array($this->service_sub_class,[
+    function getIsBcnServiceAttribute()
+    {
+        return in_array($this->service_sub_class, [
+            self::BCN_Packet_Standard,
             self::BCN_Packet_Express,
         ]);
     }
 
-    function getIsBcnStandardAttribute() {
-        return in_array($this->service_sub_class,[
+    function getIsBcnExpressAttribute()
+    {
+        return in_array($this->service_sub_class, [
+            self::BCN_Packet_Express,
+        ]);
+    }
+
+    function getIsBcnStandardAttribute()
+    {
+        return in_array($this->service_sub_class, [
             self::BCN_Packet_Standard,
         ]);
-    }
-
-    public function isGePSService()
-    {
-        if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-
-        return false;
     }
     public function getIsTotalExpressAttribute()
     {
         return $this->service_sub_class == self::TOTAL_EXPRESS;
     }
-    public function isSwedenPostService()
+    public function getIsSwedenPostServiceAttribute()
     {
-        return in_array($this->service_sub_class,[self::Prime5,self::Prime5RIO,self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);
+        return in_array($this->service_sub_class, [self::Prime5, self::Prime5RIO, self::DirectLinkCanada, self::DirectLinkMexico, self::DirectLinkChile, self::DirectLinkAustralia]);
     }
 
-    function getIsHoundExpressAttribute(){
-        return in_array($this->service_sub_class,[self::HoundExpress]); 
-    }
-
-    function getIsDirectlinkCountryAttribute(){
-        return in_array($this->service_sub_class,[self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);
-    }
-
-    public function isPostPlusService()
+    function getIsHoundExpressAttribute()
     {
-        if($this->service_sub_class == self::Post_Plus_Registered || $this->service_sub_class == self::Post_Plus_EMS || $this->service_sub_class == self::Post_Plus_Prime || $this->service_sub_class == self::Post_Plus_Premium || $this->service_sub_class == self::LT_PRIME || $this->service_sub_class == self::Post_Plus_LT_Premium || $this->service_sub_class == self::Post_Plus_CO_EMS || $this->service_sub_class == self::Post_Plus_CO_REG){
-            return true;
-        }
-        return false;
+        return in_array($this->service_sub_class, [self::HoundExpress]);
     }
 
-    public function isGDEService()
+    function getIsDirectlinkCountryAttribute()
     {
-        if(in_array($this->service_sub_class, [self::GDE_PRIORITY_MAIL, self::GDE_FIRST_CLASS])){
-            return true;
-        }
-        return false;
+        return in_array($this->service_sub_class, [self::DirectLinkCanada, self::DirectLinkMexico, self::DirectLinkChile, self::DirectLinkAustralia]);
     }
 
-    public function isHDExpressService()
+    public function getIsPostPlusServiceAttribute()
     {
-        if($this->service_sub_class == ShippingService::HD_Express){
-            return true;
-        }
-        return false;
+        return in_array($this->service_sub_class, [
+            self::Post_Plus_Registered,
+            self::Post_Plus_EMS,
+            self::Post_Plus_Prime,
+            self::Post_Plus_Premium,
+            self::LT_PRIME,
+            self::Post_Plus_LT_Premium,
+            self::Post_Plus_CO_EMS,
+            self::Post_Plus_CO_REG
+        ]);
     }
 
-    public function isInboundDomesticService()
+    public function getIsGdeServiceAttribute()
     {
-        if (collect($this->inboundDomesticShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-        return false;
+        return in_array($this->service_sub_class, [self::GDE_PRIORITY_MAIL, self::GDE_FIRST_CLASS]);
     }
 
-    public function isGePSeFormatService()
+    public function getIsHdExpressServiceAttribute()
     {
-        if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
+        return $this->service_sub_class == ShippingService::HD_Express;
+    }
 
-        return false;
+    public function getIsInboundDomesticServiceAttribute()
+    {
+        return in_array($this->service_sub_class, [
+            self::GDE_PRIORITY_MAIL,
+            self::GDE_FIRST_CLASS,
+        ]);
+    }
+    public function getIsGssServiceAttribute()
+    {
+        return in_array($this->service_sub_class, [
+            self::GSS_PMI,
+            self::GSS_EPMEI,
+            self::GSS_EPMI,
+            self::GSS_FCM,
+            self::GSS_EMS,
+            self::GSS_CEP
+        ]);
     }
 
     public function isGSSService()
@@ -290,179 +315,120 @@ class ShippingService extends Model
         return false;
     }
 
-    private function anjunShippingServices()
-    {
-        return [
-            self::AJ_Packet_Standard, 
-            self::AJ_Packet_Express,
-        ];
-    }
-
-    private function correiosShippingServices()
-    {
-        return [
-            self::Packet_Standard, 
-            self::Packet_Express,
-            self::Packet_Mini,
-        ];
-    }
-
-    private function usShippingServices()
-    {
-        return [
-            self::USPS_PRIORITY, 
-            self::USPS_FIRSTCLASS, 
-            self::USPS_PRIORITY_INTERNATIONAL, 
-            self::USPS_FIRSTCLASS_INTERNATIONAL, 
-            self::UPS_GROUND, 
-            self::FEDEX_GROUND,
-            self::USPS_GROUND,
-        ];
-    }
-
-    private function domesticShippingServices()
-    {
-        return [
-            self::USPS_PRIORITY, 
-            self::USPS_FIRSTCLASS,
-            self::UPS_GROUND, 
-            self::FEDEX_GROUND,
-            self::USPS_GROUND,
-        ];
-    }
-
-    private function internationalShippingServices()
-    {
-        return [
-            self::USPS_PRIORITY_INTERNATIONAL, 
-            self::USPS_FIRSTCLASS_INTERNATIONAL,
-        ];
-    }
-
-    private function gepsShippingServices()
-    {
-        return [
-            self::GePS,
-            self::GePS_EFormat,
-            self::Parcel_Post,
-            self::Japan_Prime,
-            self::Japan_EMS,
-        ];
-    }
-
-    private function inboundDomesticShippingServices()
-    {
-        return [
-            self::GDE_PRIORITY_MAIL,
-            self::GDE_FIRST_CLASS,
-        ];
-    }
-
     public function getIsMilliExpressAttribute()
-    { 
+    {
         return $this->service_sub_class == ShippingService::HD_Express;
     }
     public function getIsUspsPriorityAttribute()
-    { 
+    {
         return $this->service_sub_class == ShippingService::USPS_PRIORITY;
     }
     public function getIsUspsFirstclassAttribute()
-    { 
+    {
         return $this->service_sub_class == ShippingService::USPS_FIRSTCLASS;
     }
 
     public function getIsUpsGroundAttribute()
-    {  
+    {
         return $this->service_sub_class == ShippingService::UPS_GROUND;
     }
     public function getIsFedexGroundAttribute()
-    { 
+    {
         return $this->service_sub_class == ShippingService::FEDEX_GROUND;
     }
     public function getIsUspsPriorityInternationalAttribute()
-    { 
+    {
         return $this->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL;
     }
     public function getIsUspsFirstclassInternationalAttribute()
-    { 
+    {
         return $this->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL;
     }
-    public function getIsgepsAttribute()
+    public function getIsGepsAttribute()
     {
-        if (collect($this->gepsShippingServices())->contains($this->service_sub_class)) {
-            return true;
-        }
-
-        return false;
+        return in_array($this->service_sub_class, [
+            self::GePS,
+            self::GePS_EFormat,
+            self::Parcel_Post,
+        ]);
     }
     public function getIsSwedenPostAttribute()
     {
-        if($this->service_sub_class == self::Prime5 || $this->service_sub_class == self::Prime5RIO){
-            return true;
-        }
-        return false;
+        return in_array($this->service_sub_class, [self::Prime5, self::Prime5RIO]);
     }
     public function getIsUspsGroundAttribute()
-    { 
+    {
         return $this->service_sub_class == self::USPS_GROUND;
     }
-    public function getIsAnjunChinaServiceSubClassAttribute()
-    {
-        return in_array($this->service_sub_class,[self::AJ_Standard_CN,self::AJ_Express_CN]);
-    }
     public function getIsGdePriorityAttribute()
-    { 
+    {
         return $this->service_sub_class == ShippingService::GDE_PRIORITY_MAIL;
     }
     public function getIsGdeFirstClassAttribute()
-    { 
+    {
         return $this->service_sub_class == ShippingService::GDE_FIRST_CLASS;
     }
-    function getIsBrazilRedispatchAttribute() {
+    function getIsBrazilRedispatchAttribute()
+    {
         return $this->service_sub_class == ShippingService::Brazil_Redispatch;
     }
 
-    public function getGDERate($order){
+    public function getGDERate($order)
+    {
         $zone = getUSAZone($order->recipient->state->code);
         $region = Region::where('country_id', $order->recipient->country_id)->where('code', $zone)->first();
         $weight = ceil(WeightCalculator::kgToGrams($order->weight));
-        if ( $weight<100 ){
+        if ($weight < 100) {
             $weight = 100;
         }
         $serviceRates = optional(optional($region)->rates())->first();
-        if($serviceRates){
-            $rate = collect($serviceRates->data)->where('weight','<=',$weight)->sortByDesc('weight')->take(1)->first();
-            if(($rate)['leve'] && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, $order->user_id)){
+        if ($serviceRates) {
+            $rate = collect($serviceRates->data)->where('weight', '<=', $weight)->sortByDesc('weight')->take(1)->first();
+            if (($rate)['leve'] && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, $order->user_id)) {
                 $type = 'gde_fc_profit';
-                if($this->service_sub_class == self::GDE_PRIORITY_MAIL){
+                if ($this->service_sub_class == self::GDE_PRIORITY_MAIL) {
                     $type = 'gde_pm_profit';
                 }
                 $userProfit = setting($type, null, $order->user_id);
                 $adminProfit = setting($type, null, User::ROLE_ADMIN);
-                $profit = $userProfit ? $userProfit : $adminProfit; 
+                $profit = $userProfit ? $userProfit : $adminProfit;
                 $rate = ($profit / 100) * $rate['leve'] + $rate['leve'];
-                return number_format($rate,2);
+                return number_format($rate, 2);
             }
         }
         return 0;
     }
-    function getUspsServiceSubClassAttribute() {
-        return in_array($this->service_sub_class,[self::USPS_PRIORITY ,self::USPS_FIRSTCLASS,self::USPS_PRIORITY_INTERNATIONAL,self::USPS_FIRSTCLASS_INTERNATIONAL,self::USPS_GROUND,self::GDE_PRIORITY_MAIL,self::GDE_FIRST_CLASS]);
+    function getUspsServiceSubClassAttribute()
+    {
+        return in_array($this->service_sub_class, [self::USPS_PRIORITY, self::USPS_FIRSTCLASS, self::USPS_PRIORITY_INTERNATIONAL, self::USPS_FIRSTCLASS_INTERNATIONAL, self::USPS_GROUND, self::GDE_PRIORITY_MAIL, self::GDE_FIRST_CLASS]);
     }
-    function getUpsServiceSubClassAttribute() {
-        return $this->service_sub_class == self::UPS_GROUND;        
+    function getUpsServiceSubClassAttribute()
+    {
+        return $this->service_sub_class == self::UPS_GROUND;
     }
-    function getFedexServiceSubClassAttribute() {
+    function getFedexServiceSubClassAttribute()
+    {
         return $this->service_sub_class == self::FEDEX_GROUND;
     }
-    function getGepsServiceSubClassAttribute() {
-       return $this->service_sub_class == self::GePS;
+    function getGepsServiceSubClassAttribute()
+    {
+        return $this->service_sub_class == self::GePS;
     }
-    function getGssServiceSubClassAttribute() {
+    function getGssServiceSubClassAttribute()
+    {
         return $this->service_sub_class == self::GSS_PMI;
     }
-    function getSwedenPostServiceSubClassAttribute() {
-        return in_array($this->service_sub_class,[self::Prime5,self::Prime5RIO,self::DirectLinkCanada,self::DirectLinkMexico,self::DirectLinkChile,self::DirectLinkAustralia]);        
+    function getSwedenPostServiceSubClassAttribute()
+    {
+        return in_array($this->service_sub_class, [self::Prime5, self::Prime5RIO, self::DirectLinkCanada, self::DirectLinkMexico, self::DirectLinkChile, self::DirectLinkAustralia]);
+    }
+
+    public function isGDEService()
+    {
+        if(in_array($this->service_sub_class, [self::GDE_PRIORITY_MAIL, self::GDE_FIRST_CLASS])){
+            return true;
+        }
+        return false;
     }
 
     public function zones()
@@ -483,5 +449,59 @@ class ShippingService extends Model
                 self::Packet_Mini,
             ]
         );
+    }
+
+    public function getCarrierServiceAttribute() {
+            return match ((int) $this->service_sub_class) {
+                ShippingService::AJ_Standard_CN,
+                ShippingService::AJ_Express_CN,
+                ShippingService::BCN_Packet_Standard,
+                ShippingService::BCN_Packet_Express,
+                ShippingService::Packet_Express,
+                ShippingService::Packet_Standard,
+                ShippingService::Packet_Mini, => 'Correios Brazil',
+                ShippingService::USPS_PRIORITY,
+                ShippingService::USPS_FIRSTCLASS,
+                ShippingService::USPS_PRIORITY_INTERNATIONAL,
+                ShippingService::USPS_FIRSTCLASS_INTERNATIONAL,
+                ShippingService::USPS_GROUND,
+                ShippingService::GDE_PRIORITY_MAIL,
+                ShippingService::GDE_FIRST_CLASS,
+                ShippingService::GSS_PMI,
+                ShippingService::GSS_EPMEI,
+                ShippingService::GSS_EPMI,
+                ShippingService::GSS_FCM,
+                ShippingService::GSS_CEP,
+                ShippingService::GSS_EMS => 'USPS',
+                ShippingService::UPS_GROUND => 'UPS',
+                ShippingService::FEDEX_GROUND => 'FEDEX',
+                ShippingService::SRP,
+                ShippingService::SRM => 'Correios Chile',
+                ShippingService::GePS,
+                ShippingService::GePS_EFormat,
+                ShippingService::Parcel_Post => 'Global eParcel',
+                ShippingService::Prime5,
+                ShippingService::Prime5RIO,
+                ShippingService::DirectLinkCanada,
+                ShippingService::DirectLinkMexico,
+                ShippingService::DirectLinkChile,
+                ShippingService::DirectLinkAustralia => 'Prime5',
+                ShippingService::Post_Plus_Registered,
+                ShippingService::Post_Plus_EMS,
+                ShippingService::Post_Plus_Prime,
+                ShippingService::Post_Plus_Premium,
+                ShippingService::LT_PRIME,
+                ShippingService::Post_Plus_LT_Premium,
+                ShippingService::Post_Plus_CO_EMS,
+                ShippingService::Post_Plus_CO_REG => 'PostPlus',
+                ShippingService::HoundExpress => 'Hound Express',
+                ShippingService::TOTAL_EXPRESS => 'Total Express',
+                ShippingService::HD_Express => 'HD Express',
+                ShippingService::COLOMBIA_NACIONAL,
+                ShippingService::COLOMBIA_URBANO,
+                ShippingService::COLOMBIA_TRAYETOS,
+                ShippingService::COLOMBIA_ONEZONE => 'Colombia-472',
+                default => 'Correios Brazil',
+            };
     }
 }
