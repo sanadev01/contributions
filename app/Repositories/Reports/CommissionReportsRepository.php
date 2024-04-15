@@ -72,25 +72,35 @@ class CommissionReportsRepository
         
         $query->withCount(['affiliateSales as sale_count'=> function($query) use ($request){
             
-            if ( $request->start_date ){
-                $query->where('created_at','>',$request->start_date);
-            }
+            if($request->yearReport){
+                $query->where('created_at','LIKE',$request->year.'%');
+            }else{
 
-            if ( $request->end_date ){
-                $query->where('created_at','<=',$request->end_date);
+                if ( $request->start_date ){
+                    $query->where('created_at','>',$request->start_date);
+                }
+                
+                if ( $request->end_date ){
+                    $query->where('created_at','<=',$request->end_date);
+                }
             }
 
         },'affiliateSales as commission' => function($query) use ($request) {
-            if ( $request->start_date ){
-                $query->where('created_at','>',$request->start_date);
-            }
-
-            if ( $request->end_date ){
-                $query->where('created_at','<=',$request->end_date);
+            if($request->yearReport){
+                $query->where('created_at','LIKE',$request->year.'%');
+            }else{
+                if ( $request->start_date ){
+                    $query->where('created_at','>',$request->start_date);
+                }
+                
+                if ( $request->end_date ){
+                    $query->where('created_at','<=',$request->end_date);
+                }
             }
 
             $query->select(DB::raw('sum(commission) as commission'));
-        }])->orderBy($orderBy,$orderType);
+        }])
+        ->orderBy($orderBy,$orderType);
 
         return $paginate ? $query->paginate($pageSize) : $query->get();
     }
