@@ -20,10 +20,16 @@
         border: 1px solid #ffffff;
         background-color: #ffffff;
     }
-
-    .btn-blue {
-        background-color: #1174b7;
-        color: white;
+     
+    .btn-purple {
+      font-weight: bold;
+      color: #fff; /* Text color */
+      background-color: #7367f0; /* Purple color */
+      border-color: #7367f0; /* Purple color */
+    }
+    .btn-purple:hover {  
+      background-color: #a06dff; /* Darker shade of purple on hover */
+      border-color: #a06dff; /* Darker shade of purple on hover */
     }
 </style>
 @endsection
