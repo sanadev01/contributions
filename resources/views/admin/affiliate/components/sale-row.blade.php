@@ -49,7 +49,7 @@
     </td>
     
     <td>
-        {{ $sale->value }}
+        {{ number_format($sale->value, 2) }}
         
     </td>
     <td>
