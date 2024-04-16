@@ -122,13 +122,13 @@
                                         </span>
                                     </td>
                                     <td>{{ optional($tax->order)->corrios_tracking_code }}</td>
-                                    <td>{{ $tax->tax_payment }}</td>
-                                    <td>{{ $tax->buying_br }}</td>
-                                    <td>{{ $tax->selling_br }}</td>
-                                    <td>{{ $tax->buying_usd }}</td>
-                                    <td>{{ $tax->selling_usd }}</td>
-                                    <td>{{ ( $tax->selling_usd - $tax->buying_usd ) }}</td>
-                                    <td>{{  $tax->adjustment }}</td>
+                                    <td>{{ number_format($tax->tax_payment, 2) }}</td>
+                                    <td>{{ number_format($tax->buying_br, 2) }}</td>
+                                    <td>{{ number_format($tax->selling_br, 2) }}</td>
+                                    <td>{{ number_format($tax->buying_usd, 2) }}</td>
+                                    <td>{{ number_format($tax->selling_usd, 2) }}</td>
+                                    <td>{{ number_format(( $tax->selling_usd - $tax->buying_usd ), 2) }}</td>
+                                    <td>{{ number_format($tax->adjustment, 2) }}</td>
                                     <td>
                                         @if(optional($tax->deposit)->depositAttchs)
                                             @foreach ($tax->deposit->depositAttchs as $attachedFile )
