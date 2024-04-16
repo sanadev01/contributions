@@ -467,6 +467,122 @@
         $('#region').prop('disabled', true);
         $('#commune').attr('disable', true);
     }
+
+    //Colombia Fields
+
+    function activeColombiaFields() {
+        $('#cpf').addClass('d-none');
+        $('#div_state').addClass('d-none');
+        $('#city_div').addClass('d-none');
+        $('#div_street_number').addClass('d-none');
+        $('#div_zipcode').addClass('d-block');
+        $('#zipcode').prop('disabled', false);
+
+        $('#div_co_city').removeClass('d-none');
+        $('#div_co_dept').removeClass('d-none');
+
+        //$('#div_regions').removeClass('d-none');
+        $('#state').prop('disabled', true);
+        $('#city').attr('disabled', true);
+
+        $('#region').prop('disabled', false);
+    }
+
+    function inactiveColombiaFields() {
+        $('#cpf').removeClass('d-none');
+        $('#div_state').removeClass('d-none');
+        $('#city_div').removeClass('d-none');
+        $('#div_street_number').removeClass('d-none');
+        $('#div_zipcode').removeClass('d-none');
+        $('#zipcode').prop('disabled', false);
+
+        $('#div_co_city').addClass('d-none');
+        $('#div_co_dept').addClass('d-none');
+
+        $('#div_regions').addClass('d-none');
+        $('#state').prop('disabled', false);
+        $('#city').attr('disabled', false);
+
+        $('#region').prop('disabled', true);
+    }
+
+    function addColombiaZipcode(zipcode) {
+        const old_dept = $('#codept').val();
+        $.ajax({
+            type: 'POST',
+            url: "{{route('api.orders.recipient.colombiaZipcode')}}",
+            data: {country_id:  $('#country').val(), city:  $('#cocity').val()},
+            success: function (data){
+                console.log(data);
+                if(data){
+                    $('#zipcode').val(data.zipCode);
+                    $.each(data.department,function(index, value){
+                        $("#codept").find('option').remove().end()
+                        $("#codept").html("<option value=''>No Data</option>");
+                        $("#codept").append('<option value="'+value+'">'+value+'</option>');
+                        $("#codept").selectpicker('refresh');
+                    });
+                    if(old_dept != undefined || old_dept != '')
+                    {
+                            $('#codept').val(old_dept);
+                            $('#codept').selectpicker('val', old_dept);
+                    }
+                    
+                }                
+                $('#loading').fadeOut();
+            },
+            error: function(e) {
+                    console.log(e);
+            }
+        });
+    }
+
+    function getStatesFromDB()
+    {
+        const old_state = $('#state').val();
+        const old_city = $('#cocity').val();
+        $.ajaxSetup({
+                headers: {
+                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+        });
+        $.ajax({
+            type: 'POST',
+            url: "{{route('admin.ajax.state')}}",
+            data: {country_id:  $('#country').val()},
+            success: function (data){
+                console.log(data);
+                if(data.cities){
+                    $("#cocity").html("<option value=''>No Data</option>");
+                    $("#codept").html("<option value=''>No Data</option>");
+                    $.each(data.cities,function(index,city){
+                        $('#cocity').append('<option value="'+city+'">'+city+'</option>');
+                    });
+                    $("#cocity").selectpicker('refresh');
+                    if(old_city != undefined || old_city != '')
+                    {
+                            $('#cocity').val(old_city);
+                            $('#cocity').selectpicker('val', old_city);
+                    }
+                }else {
+
+                    $("#state").html("<option value=''>No Data</option>")
+                    $.each(data,function(index,state){
+                            $("#state").append('<option value="'+state.id+'">'+state.code+'</option>');
+                    });
+                        $("#state").selectpicker('refresh');
+                    if(old_state != undefined || old_state != '')
+                    {
+                            $('#state').val(old_state);
+                            $('#state').selectpicker('val', old_state);
+                    }
+                }
+            },
+            error: function(e) {
+                    console.log(e);
+            }
+        });
+    }
         
     // USPS Logics
 

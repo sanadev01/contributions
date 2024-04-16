@@ -45,7 +45,15 @@ return [
     'From Date' => 'From Date',
     'To Date' => 'To Date',
     'Status' => 'Status',
-
+    'Courier' => 'Courier',
+    'Speciality' => 'Speciality',
+    'Delivery Time' => 'Delivery Time',
+    'Tracking' => 'Tracking',
+    'Weight' => 'Weight',
+    'Service Options' => 'Service Options',
+    'Import Tax' => 'Import Tax',
+    'Total Cost' => 'Total Cost',
+    'Actual Cost' => 'Actual Cost',
 
     'recipient' => [
         'slect-from-list' => 'Select Address From List',

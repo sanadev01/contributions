@@ -406,7 +406,6 @@
     {
         if(country == '250' && state != undefined && address.length > 4 && city.length >= 4)
         {
-            $('#loading').fadeIn();
             $.get('{{ route("api.orders.recipient.us_address") }}',{
                 address: address,
                 state: state,
