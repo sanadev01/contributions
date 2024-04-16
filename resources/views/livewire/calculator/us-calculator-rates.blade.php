@@ -20,12 +20,27 @@
         background-color: #e9f1ee;
         color: #347b87;
     }
+    .standard-font{
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .color-gray{
+        color: #6c757d;
+    }
+    .star-rating {
+      unicode-bidi: bidi-override;
+      font-size: 18px;
+      color: #ffd700;
+      margin-bottom: 10px;
+    }
+    .star-rating span {
+      padding-right: 2px;
+    }
 </style>
 @endsection
 
 <section>
     <div class="float-right">
-        <a href="@if($shippingServiceTitle == 'UPS') {{route('ups-calculator.index')}} @else {{route('us-calculator.index')}} @endif" class="btn btn-blue btn-md rounded px-5">
+        <a href="@if($shippingServiceTitle == 'UPS') {{route('ups-calculator.index')}} @else {{route('us-calculator.index')}} @endif" class="btn btn-md rounded px-5" style="background-color: #7367f0;color: #fff;">
             <i class="fas fa-arrow-left"></i>
             Go Back
         </a>
@@ -58,8 +73,9 @@
         <thead>
             <tr id="kpiHead">
                 <th class="py-3 font-black">@lang('orders.Courier')</th>
-                <th class="py-3 font-black">@lang('orders.Speciality')</th>
-                <th class="py-3 font-black">@lang('orders.Weight')</th>
+                <th class="py-3 font-black">@lang('orders.Rating')</th>
+                <th class="py-3 font-black">@lang('orders.Average Transit')</th>
+                <!-- <th class="py-3 font-black">@lang('orders.Weight')</th> -->
                 @if(auth()->user()->hasRole('admin')) <th>@lang('orders.Actual Cost')</th> @endif
                 <th class="py-3 font-black">@lang('orders.Total Cost')</th>
                 <th class="py-3 font-black">@lang('orders.actions.actions')</th>
@@ -70,17 +86,23 @@
             <tr>
                 <td>
                     <img width="30" height="30" class="corrioes-lable" src="{{ asset('images/tracking/' . (\App\Models\ShippingService::where('name',$profitRate['name'])->first())->carrier_service . '.png') }}">
-                    {{$profitRate['name']}}
+                    <span class="color-gray standard-font">
+                        {{$profitRate['name']}}
+                    </span>
                 </td>
-                <td class="category-tag"></td>
                 <td>
-                    @if($tempOrder['measurement_unit'] == 'kg/cm')
-                    {{$chargableWeight}} Kg ( {{$weightInOtherUnit}} lbs)
-                    @else
-                    {{$chargableWeight}} lbs ( {{$weightInOtherUnit}} kg)
-                    @endif
+                    <div class="star-rating">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= $profitRate['rating'])
+                                <i class="fas fa-star"></i>
+                            @else
+                                <i class="far fa-star"></i>
+                            @endif
+                        @endfor
+                    </div>
                 </td>
-
+                <td>7-10 business days</td>
+                <!-- <td class="category-tag"></td> -->
                 @if(auth()->user()->hasRole('admin')) <td>{{$apiRates[$key]['rate']}} USD</td> @endif
                 <!--<td></td> -->
                 <td class="price-tag">

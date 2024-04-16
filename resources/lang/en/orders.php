@@ -47,6 +47,8 @@ return [
     'Status' => 'Status',
     'Courier' => 'Courier',
     'Speciality' => 'Speciality',
+    'Rating' => 'Rating',
+    'Average Transit' => 'Average Transit',
     'Delivery Time' => 'Delivery Time',
     'Tracking' => 'Tracking',
     'Weight' => 'Weight',

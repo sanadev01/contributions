@@ -147,6 +147,10 @@ class USCalculatorRepository
         }
 
         foreach ($this->shippingRates as $serviceRate) {
+            
+            $shippingService = ShippingService::where('service_sub_class',$serviceRate['service_sub_class'])->first();
+            $orderCount = $shippingService->orders()->count();
+
             if ($serviceRate['service_sub_class'] == ShippingService::USPS_PRIORITY || 
                 $serviceRate['service_sub_class'] == ShippingService::USPS_FIRSTCLASS ||
                 $serviceRate['service_sub_class'] == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
@@ -156,8 +160,7 @@ class USCalculatorRepository
                 $profit = $serviceRate['rate'] * ($this->uspsProfit / 100);
 
                 $rate = $serviceRate['rate'] + $profit;
-
-                array_push($this->shippingRatesWithProfit, ['name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
+               array_push($this->shippingRatesWithProfit, [ "order_count" => $orderCount ,'name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
             }
 
             if($serviceRate['service_sub_class'] == ShippingService::UPS_GROUND){
@@ -165,21 +168,37 @@ class USCalculatorRepository
 
                 $rate = $serviceRate['rate'] + $profit;
 
-                array_push($this->shippingRatesWithProfit, ['name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
+                array_push($this->shippingRatesWithProfit, ["order_count" => $orderCount  ,'name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
             }
 
             if ($serviceRate['service_sub_class'] == ShippingService::FEDEX_GROUND) {
                 $profit = $serviceRate['rate'] * ($this->fedExProfit / 100);
 
                 $rate = $serviceRate['rate'] + $profit;
-
-                array_push($this->shippingRatesWithProfit, ['name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
+                array_push($this->shippingRatesWithProfit, [ "order_count" => $orderCount ,'name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
             }
         }
+        // Function to calculate rating based on order count
 
+
+        // Calculate rating for each shipping service and update the data structure
+        $maxOrderCount = PHP_INT_MIN; 
+        // Iterate over each shipping service to find the maximum order count
+        foreach ($this->shippingRatesWithProfit as $service) {
+            $order_count = $service['order_count'];
+            if ($order_count > $maxOrderCount) {
+                $maxOrderCount = $order_count;
+            }
+        }
+        foreach ($this->shippingRatesWithProfit as &$service) { 
+            $service['rating'] = $this->calculateRating($service['order_count'],$maxOrderCount);
+        }
         return $this->shippingRatesWithProfit;
     }
-
+    function calculateRating($orderCount, $maxOrderCount) {
+        $rating = ($orderCount / $maxOrderCount) * 5;
+        return round($rating, 1);
+    }
     public function getError()
     {
         return $this->error;

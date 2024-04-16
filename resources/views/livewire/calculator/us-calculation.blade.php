@@ -16,7 +16,7 @@
                                 </span>
                             </div>
                             <span class="mt-2">
-                                <label class="h3 text-primary" for="from_herco">From HERCO</label>
+                                <label class="h3 standard-font color-gray">International</label>
                             </span>
                         </div>
                     </div>
@@ -31,11 +31,11 @@
                                 </span>
                             </div>
                             <span class="mt-2">
-                                <label class="h3 text-primary" for="to_herco">To HERCO</label>
+                                <label class="h3 standard-font color-gray" for="to_herco">Domestic</label>
                             </span>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <!-- <div class="col-md-3">
                         <div class="input-group">
                             <div class="vs-checkbox-con vs-checkbox-primary" title="to_international">
                                 <input type="checkbox" name="to_international" id="to_international" @if(old('to_international')) checked @endif>
@@ -49,18 +49,18 @@
                                 <label class="h3 text-primary" for="to_international">To International</label>
                             </span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <input type="hidden" name="user_id" id="user_id" value="{{ ((auth()->check()) ? auth()->user()->id : null) }}">
                 <div class="row mb-1 mt-3 d-none" id="origin">
                     <div class="controls col-6">
-                        <h4 class="text-danger">Origin: Homedeliverybr MIA</h4>
+                        <h4 class="color-gray standard-font">Origin: Homedeliverybr MIA</h4>
                     </div>
                 </div>
                 <div class="d-none" id="sender_info">
                     <div class="row mb-1 mt-3">
                         <div class="controls col-6">
-                            <h4 class="text-danger">Sender Address</h4>
+                            <h4 class="color-gray standard-font bold">Sender Address</h4>
                         </div>
                     </div>
                     <div class="row mb-1">
@@ -103,7 +103,7 @@
                 <div class="d-none" id="recipient_info">
                     <div class="row mb-1 mt-3">
                         <div class="controls col-6">
-                            <h4 class="text-danger">Recipeint Address</h4>
+                            <h4 class="color-gray standard-font">Recipeint Address</h4>
                         </div>
                     </div>
                     <div class="d-none" id="recipient_personal_info">
@@ -178,13 +178,13 @@
                 </div>
                 <div class="row mb-1 mt-3 d-none" id="destination">
                     <div class="controls col-6">
-                        <h4 class="text-danger">Destination: Homedeliverybr MIA</h4>
+                        <h4 class="color-gray standard-font">Destination: Homedeliverybr MIA</h4>
                     </div>
                 </div>
 
                 <div class="row mb-1 mt-3">
                     <div class="controls col-6">
-                        <h4 class="text-danger">Shipment Info :</h4>
+                        <h4 class="standard-font color-gray">Shipment Info :</h4>
                     </div>
                 </div>
                 <div class="row d-none" id="calculator-items">
@@ -196,7 +196,7 @@
         <div class="row p-3">
             <div class="form-group col-md-2">
                 <div class="controls">
-                    <label>@lang('parcel.Measuring Units') <span class="text-danger">*</span></label>
+                    <label>@lang('parcel.Measuring Units') <span class="text-danger standard-font">*</span></label>
                     <div class="row mt-3">
                         <div class="col-6">
                             <input type="radio" value="ibs/in" name="unit" wire:model="unit" class="mr-1">
@@ -208,13 +208,13 @@
                         </div>
                     </div>
                     @error('unit')
-                    <div class="text-danger">{{ $message }}</div>
+                    <div class="text-danger standard-font">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-md-2">
                 <div class="controls">
-                    <label>@lang('parcel.Weight') ({{ $unit == 'kg/cm'? 'kg': 'lbs' }})<span class="text-danger">*</span></label>
+                    <label>@lang('parcel.Weight') ({{ $unit == 'kg/cm'? 'kg': 'lbs' }})<span class="text-danger standard-font">*</span></label>
                     <input step="0.001" type="number" class="form-control" autocomplete="off" required name="weight" wire:model.debounce.500ms="weight" placeholder="">
                     <div class="help-block">
                         <span>{{ $weightOther }}</span>
@@ -225,7 +225,7 @@
                         @endif
 
                         @error('weight')
-                        <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger standard-font">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -234,7 +234,7 @@
             </div>
             <div class="col-12 col-sm-6 col-md-2">
                 <div class="controls">
-                    <label>@lang('parcel.Length') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }})<span class="text-danger">*</span></label>
+                    <label>@lang('parcel.Length') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }})<span class="text-danger standard-font">*</span></label>
                     <input step="0.001" name="length" type="number" class="form-control" autocomplete="off" required name="length" wire:model.debounce.500ms="length" placeholder="" />
                     <div class="help-block">
                         <span>{{ $lengthOther }}</span>
@@ -244,14 +244,14 @@
                         <span>in</span>
                         @endif
                         @error('length')
-                        <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger standard-font">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-md-2">
                 <div class="controls">
-                    <label>@lang('parcel.Width') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }}) <span class="text-danger">*</span></label>
+                    <label>@lang('parcel.Width') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }}) <span class="text-danger standard-font">*</span></label>
                     <input step="0.001" type="number" name="width" class="form-control" autocomplete="off" required name="width" wire:model.debounce.500ms="width" placeholder="" />
                     <div class="help-block">
                         <span>{{ $widthOther }}</span>
@@ -261,14 +261,14 @@
                         <span>in</span>
                         @endif
                         @error('width')
-                        <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger standard-font">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-md-2">
                 <div class="controls">
-                    <label>@lang('parcel.Height') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }}) <span class="text-danger">*</span></label>
+                    <label>@lang('parcel.Height') ({{ $unit == 'kg/cm' ? 'cm' : 'in' }}) <span class="text-danger standard-font">*</span></label>
                     <input step="0.001" type="number" name="height" class="form-control" autocomplete="off" required name="height" wire:model.debounce.500ms="height" placeholder="" />
                     <div class="help-block">
                         <span>{{ $heightOther }}</span>
@@ -278,7 +278,7 @@
                         <span>in</span>
                         @endif
                         @error('height')
-                        <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger standard-font">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -297,7 +297,7 @@
                 </label>
             </div>
             <div class="row mt-3 mr-3">
-                <button type="submit" class="btn btn-blue btn-md rounded px-5 my-3">
+                <button type="submit" class="btn btn-purple btn-md rounded px-5 my-3 standard-font color-gray">
                     Get Rates
                 </button>
             </div>

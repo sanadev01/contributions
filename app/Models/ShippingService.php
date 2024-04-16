@@ -557,4 +557,7 @@ class ShippingService extends Model
             return 'Correios Brazil';
         }
     }
+    function orders() {
+        return $this->hasMany(Order::class);
+    }
 }
