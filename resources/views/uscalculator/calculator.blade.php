@@ -34,13 +34,13 @@
     }
     .btn-purple {
       font-weight: bold;
-      color: #fff; /* Text color */
-      background-color: #7367f0; /* Purple color */
-      border-color: #7367f0; /* Purple color */
+      color: #fff;  
+      background-color: #7367f0;  
+      border-color: #7367f0;  
     }
     .btn-purple:hover {  
-      background-color: #a06dff; /* Darker shade of purple on hover */
-      border-color: #a06dff; /* Darker shade of purple on hover */
+      background-color: #a06dff;  
+      border-color: #a06dff;  
     }
 </style>
 @endsection
@@ -69,7 +69,7 @@
         <div class="col-12 mx-2">
             <div class="ml-3">
                 <dl>
-                    <dt class="font-weight-bold dt">Shipping</dt>
+                    <dt class="font-weight-bold dt">Shipping Calculator</dt>
                 </dl>
             </div>
         </div>
