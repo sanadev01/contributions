@@ -21,9 +21,13 @@ class OrderInvoiceModalController extends Controller
 
         $volumeWeight = ($order->is_weight_in_kg) ? $order->getWeight('kg') : $order->getWeight('lbs');
 
-        $appliedVolumeWeight = ($order->weight_discount) ? $this->calculateDiscountedWeight($order->getOriginalWeight(), $volumeWeight, $order->weight_discount) : null;
-
-        if (!Auth::user()->isActive()) {
+        if($order->shippingService->is_total_express) {
+            $appliedVolumeWeight = $volumeWeight;
+        } else {
+            $appliedVolumeWeight = ($order->weight_discount) ? $this->calculateDiscountedWeight($order->getOriginalWeight(), $volumeWeight, $order->weight_discount) : null;
+        }
+        
+        if(!Auth::user()->isActive()){
             return redirect()->route('admin.modals.user.suspended');
         }
         return view('admin.modals.orders.invoice', compact('order', 'services', 'appliedVolumeWeight'));
