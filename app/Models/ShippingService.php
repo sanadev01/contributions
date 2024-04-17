@@ -504,4 +504,7 @@ class ShippingService extends Model
                 default => 'Correios Brazil',
             };
     }
+    function orders() {
+        return $this->hasMany(Order::class);
+    }
 }
