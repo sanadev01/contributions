@@ -36,6 +36,10 @@ class TempOrderExport extends AbstractExportService
 
             if ($order instanceof Order) {
 
+                $totalAmount = $order->items->reduce(function ($carry, $orderItem) {
+                    return $carry + ($orderItem->quantity * $orderItem->value);
+                }, 0);
+
                 $this->setCellValue('A'.$row, $order->corrios_tracking_code);
                 $this->setCellValue('B'.$row, $order->warehouse_number); 
                 $this->setCellValue('C'.$row, optional($order->user)->pobox_number); 
@@ -43,11 +47,13 @@ class TempOrderExport extends AbstractExportService
                 $this->setCellValue('E'.$row, $order->getSenderFullName());
                 $this->setCellValue('F'.$row, optional($order->recipient)->getFullName());
                 $this->setCellValue('G'.$row, $this->chargeWeight($order));
-                $this->setCellValue('H'.$row, $order->shipping_value);
+                $this->setCellValue('H'.$row, $order->length.'x'.$order->width.'x'.$order->height);
+                $this->setCellValue('I'.$row, $order->shipping_value);
+                $this->setCellValue('J'.$row, number_format($totalAmount,2));
                 
                 foreach($order->items as $item) {
-                    $this->setCellValue('I'.$row, $item->sh_code);   
-                    $this->setCellValue('J'.$row, $item->description);
+                    $this->setCellValue('K'.$row, $item->sh_code);   
+                    $this->setCellValue('L'.$row, $item->description);
                     $row++; 
                 }
                 $this->setColor('D', 'FF0000');
@@ -58,9 +64,9 @@ class TempOrderExport extends AbstractExportService
                 $this->setCellValue('C'.$row, optional($order->user)->pobox_number); 
                 $this->setCellValue('D'.$row, "Order Not Found");
 
-                $this->setCellValue('I'.$row, '');   
-                $this->setCellValue('J'.$row, '');
-                $this->setBackgroundColor("A{$row}:J{$row}", 'FF0000');
+                $this->setCellValue('K'.$row, '');   
+                $this->setCellValue('L'.$row, '');
+                $this->setBackgroundColor("A{$row}:L{$row}", 'FF0000');
                 $row++;
             }
         }
@@ -86,15 +92,21 @@ class TempOrderExport extends AbstractExportService
         $this->setColumnWidth('F', 20);
         $this->setCellValue('F1', 'Recepient');  
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Weight');    
+        $this->setCellValue('G1', 'Weight');
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Shipping Paid');  
-        
-        $this->setColumnWidth('I', 30);
-        $this->setCellValue('I1', 'NCM');
+        $this->setCellValue('H1', 'Dimensions');  
 
+        $this->setColumnWidth('I', 20);
+        $this->setCellValue('I1', 'Shipping Paid');  
+        
         $this->setColumnWidth('J', 30);
-        $this->setCellValue('J1', 'Description of Product');
+        $this->setCellValue('J1', 'Order Value');
+
+        $this->setColumnWidth('K', 30);
+        $this->setCellValue('K1', 'NCM');
+
+        $this->setColumnWidth('L', 30);
+        $this->setCellValue('L1', 'Description of Product');
 
 
         $this->currentRow++;
