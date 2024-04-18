@@ -179,7 +179,7 @@
                     {{-- Chile Communes --}}
                     <div class="controls" id="div_communes" style="display: none">
                         <label>Communes <span class="text-danger">*</span></label>
-                        <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control" placeholder="City"/>
+                        <input type="text" id="commune" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control" placeholder="City"/>
                        
                         <!-- <select name="city" id="commune" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('city', optional($order->recipient)->city) }}" data-commune="{{ old('commune_id', optional($order->recipient)->commune_id) }}">
                             <option value="">Select Commune</option>
