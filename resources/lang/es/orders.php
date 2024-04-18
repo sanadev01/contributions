@@ -42,6 +42,8 @@ return [
     'Status' => 'Estado',
     'Courier' => 'Mensajero',
     'Speciality' => 'Especialidad',
+    'Rating' => 'Valoración',
+    'Average Transit' => 'Tránsito Promedio',
     'Delivery Time' => 'Tiempo de Entrega',
     'Tracking' => 'Seguimiento',
     'Weight' => 'Peso',

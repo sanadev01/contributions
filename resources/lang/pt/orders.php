@@ -40,6 +40,8 @@ return [
     'Status' => 'Status',
     'Courier' => 'Transportadora',
     'Speciality' => 'Especialidade',
+    'Rating' => 'Classificação',
+    'Average Transit' => 'Tempo Médio de Trânsito',
     'Delivery Time' => 'Tempo de Entrega',
     'Tracking' => 'Rastreamento',
     'Weight' => 'Peso',

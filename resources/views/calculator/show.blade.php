@@ -23,11 +23,26 @@
         background-color: #e9f1ee;
         color: #347b87;
     }
+    .standard-font{
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .color-gray{
+        color: #6c757d;
+    }
+    .star-rating {
+      unicode-bidi: bidi-override;
+      font-size: 18px;
+      color: #ffd700;
+      margin-bottom: 10px;
+    }
+    .star-rating span {
+      padding-right: 2px;
+    }
 </style>
 @endsection
 @section('page')
 <div class="float-right">
-    <a href="{{route('calculator.index')}}" class="btn btn-blue btn-md rounded px-5 my-3">
+    <a href="{{route('calculator.index')}}" class="btn btn-md rounded px-5 my-3" style="background-color: #7367f0;color: #fff;">
         <i class="fas fa-arrow-left"></i>
         Go Back</a>
 </div>
@@ -54,10 +69,10 @@
         <thead>
             <tr id="kpiHead">
                 <th class="py-3 font-black">@lang('orders.Courier')</th>
-                <th class="py-3 font-black">@lang('orders.Speciality')</th>
-                <th class="py-3 font-black">@lang('orders.Delivery Time')</th>
+                <th class="py-3 font-black">@lang('orders.Rating')</th>
+                <th class="py-3 font-black">@lang('orders.Average Transit')</th>
                 <!-- <th class="py-3 font-black">@lang('orders.Tracking')</th> -->
-                <th class="py-3 font-black">@lang('orders.Weight')</th>
+                <!-- <th class="py-3 font-black">@lang('orders.Weight')</th> -->
                 <!-- <th class="py-3 font-black">@lang('orders.Service Options')</th> -->
                 <!-- <th class="py-3 font-black">@lang('orders.Import Tax')</th> -->
                 <th class="py-3 font-black">@lang('orders.Total Cost')</th>
@@ -70,18 +85,28 @@
             <tr>
                 <td>
                     <img width="30" height="30" class="corrioes-lable" src="{{ asset('images/tracking/' . $shippingService->carrier_service . '.png') }}">
-
                     {{$shippingService->sub_name}}
                 </td>
-                <td class="category-tag"></td>
+                <td>
+                    <div class="star-rating">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= $shippingService->rating)
+                                <i class="fas fa-star"></i>
+                            @else
+                                <i class="far fa-star"></i>
+                            @endif
+                        @endfor
+                    </div>
+                </td>
+                <!-- <td class="category-tag"></td> -->
                 <td>{{ $shippingService->delivery_time}}</td>
                 <!-- <td></td> -->
-                <td> @if($order->measurement_unit == 'kg/cm')
+                <!-- <td> @if($order->measurement_unit == 'kg/cm')
                     {{$chargableWeight}} Kg ( {{$weightInOtherUnit}} lbs)
                     @else
                     {{$chargableWeight}} lbs ( {{$weightInOtherUnit}} kg)
                     @endif
-                </td>
+                </td> -->
                 <!-- <td></td>
                     <td></td> -->
                 <td class="price-tag">
@@ -102,7 +127,7 @@
 <!-- Dashboard Analytics end -->
 @endsection
 @section('js')
-<script>
+<!-- <script>
     document.addEventListener("DOMContentLoaded", function() {
         const priceTags = document.querySelectorAll(".price-tag");
         const rates = Array.from(priceTags).map(tag => parseFloat(tag.textContent));
@@ -129,5 +154,5 @@
             categoryTags[index].innerHTML = category;
         });
     });
-</script>
+</script> -->
 @endsection

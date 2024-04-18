@@ -126,7 +126,7 @@
                 </label>
             </div>
             <div class="row mt-3 mr-1">
-                <button type="submit" class="btn btn-blue btn-md rounded px-5 my-3">
+                <button type="submit" class="btn btn-purple btn-md rounded px-5 my-3">
                     Get Rates
                 </button>
             </div>

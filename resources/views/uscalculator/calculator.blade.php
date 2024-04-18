@@ -26,6 +26,22 @@
         background-color: #1174b7;
         color: white;
     }
+    .standard-font{
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .color-gray{
+        color: #6c757d;
+    }
+    .btn-purple {
+      font-weight: bold;
+      color: #fff;  
+      background-color: #7367f0;  
+      border-color: #7367f0;  
+    }
+    .btn-purple:hover {  
+      background-color: #a06dff;  
+      border-color: #a06dff;  
+    }
 </style>
 @endsection
 @section('page')
@@ -53,7 +69,7 @@
         <div class="col-12 mx-2">
             <div class="ml-3">
                 <dl>
-                    <dt class="font-weight-bold dt">US Calculator </dt>
+                    <dt class="font-weight-bold dt">Shipping Calculator</dt>
                 </dl>
             </div>
         </div>
