@@ -97,6 +97,8 @@ class RatesCalculator
                 ShippingService::BCN_Packet_Express,
                 ShippingService::Packet_Standard,
                 ShippingService::Packet_Express,
+                ShippingService::Prime5,
+                ShippingService::Prime5RIO,
             ])
             && $this->order->weight_discount && $originalRate == false) 
         {
