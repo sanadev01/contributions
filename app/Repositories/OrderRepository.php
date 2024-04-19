@@ -64,7 +64,16 @@ class OrderRepository
         }  
         if($request->name){
             $query->whereHas('user', function ($query) use($request) {
-                return $query->where('name', 'LIKE', "%{$request->name}%");
+                $nameParts = explode(' ', $request->name);
+                if (count($nameParts) == 2) {
+                    $firstName = $nameParts[0];
+                    $lastName = $nameParts[1];
+                    return $query->where('name', 'LIKE', "%{$firstName}%")
+                                ->orWhere('last_name', 'LIKE', "%{$lastName}%");
+                } else {
+                    return $query->where('name', 'LIKE', "%{$request->name}%")
+                                ->orWhere('last_name', 'LIKE', "%{$request->name}%");
+                }
             });
         }
         if($request->pobox_number){
