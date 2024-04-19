@@ -668,6 +668,7 @@
                 if(response.success == true)
                 {
                     $('#region').attr('disabled', false);
+                    $('#region_input').attr('disabled', true);
                     $('#region').empty();
                     $.each(response.data,function(key, value)
                     {
@@ -701,6 +702,7 @@
                     if(response.success == true)
                     {
                         $('#region').attr('disabled', false);
+                        $('#region_input').attr('disabled', true);
                         $('#region').empty();
                         $.each(response.data,function(key, region)
                         {
