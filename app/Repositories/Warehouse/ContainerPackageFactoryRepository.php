@@ -27,9 +27,8 @@ class ContainerPackageFactoryRepository
 
             // $apiOrderId = json_decode($order->api_response)->orderResponse->data->id;
             // $totalClient = new Client();   
-            // $response = $totalClient->dispatchShipment($apiOrderId);
-            // dd($response);
-            if (false) {
+            // $response = $totalClient->dispatchShipment($apiOrderId); 
+            if (true) {
                 $success = true;
                 $message = 'added successfully';
                 $container->orders()->attach($order->id);

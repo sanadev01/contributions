@@ -23,10 +23,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
 
-    const CONTAINER_ANJUN_NX = 'AJ-NX';
-    const CONTAINER_ANJUN_IX = 'AJ-IX';
-    const CONTAINER_BCN_NX = 'BCN-NX';
-    const CONTAINER_BCN_IX = 'BCN-IX';
+    const CONTAINER_ANJUN_NX  = 'AJ-NX';
+    const CONTAINER_ANJUN_IX  = 'AJ-IX';
+    const CONTAINER_BCN_NX    = 'BCN-NX';
+    const CONTAINER_BCN_IX    = 'BCN-IX';
     const CONTAINER_ANJUNC_NX = 'AJC-NX';
     const CONTAINER_ANJUNC_IX = 'AJC-IX';
      
@@ -133,6 +133,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             'BCN-NX' => 20,
             'BCN-IX' => 21,
             ShippingService::HoundExpress => 22,
+            ShippingService::PasarEx => 23,
         ];
     
         // Check if the service subclass code exists in the array
@@ -270,6 +271,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasHDExpressService()
     {
         return $this->services_subclass_code == ShippingService::HD_Express;
+    } 
+    public function hasPasarExService()
+    {
+        return $this->services_subclass_code == ShippingService::PasarEx;
     }
 
     public function getGroup($container) {

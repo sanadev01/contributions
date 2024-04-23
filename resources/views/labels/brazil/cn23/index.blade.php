@@ -54,6 +54,14 @@
             height: 20mm;
             display: block;
         }
+        .service-type-pasar-ex{
+            position: absolute;
+            top: 7mm;
+            right: 2.5mm;
+            width: 25mm;
+            height: 12mm;
+            display: block;
+        }
         .cn23-text{
             right: 0.1cm;
             top: 0.1cm;
@@ -388,13 +396,18 @@
         CN23
     </div>
     <img class="partner-logo" src="{{ $partnerLogo }}">
-    <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
-    <p class="screening-code">CJA01</p>
-    <img src="{{ $serviceLogo }}" class="service-type"/>
+    @if(!$order->shippingService->is_pasar_ex)
+        <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
+        <p class="screening-code">CJA01</p>
+        <img src="{{ $serviceLogo }}" class="service-type"/>
+    @else
+        <img src="{{ $serviceLogo }}" class="service-type-pasar-ex"/>
+    @endif
     <div class="service-info-wrapper">
         <div class="order-infoline"></div>
         <strong>Service: </strong> {{ $service }} <br>
     </div>
+    @if(!$order->shippingService->is_pasar_ex)
     <div class="service-info">
         <div class="service-name">
             {!! $packetType !!}
@@ -405,6 +418,7 @@
             {!! $contractNumber !!}
         </div>
     </div>
+    @endif
     <div class="tracking_code">
         <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
         <span class="cn-label">US</span>
@@ -438,7 +452,9 @@
     <div class="serivce-zipcode">
         <div class="left-block">
             <div class="return-address">
-                <span class="return-box"> <i class="return-box-text">@if($isReturn) X @else  @endif</i></span> &nbsp; &nbsp; Retorno a origem  <span class="return-box">@if(!$isReturn) X @else   @endif</span> Tratar como abandono<br>
+                @if(!$order->shippingService->is_pasar_ex)
+                    <span class="return-box"> <i class="return-box-text">@if($isReturn) X @else  @endif</i></span> &nbsp; &nbsp; Retorno a origem  <span class="return-box">@if(!$isReturn) X @else   @endif</span> Tratar como abandono<br>
+                @endif
                 <span class="site-text" >Dúvidas e reclamações: homedeliverybr.com</span><br><br>
                 <strong>DEVOLUCÃO:</strong> <br>
                 {!! $returnAddress !!}

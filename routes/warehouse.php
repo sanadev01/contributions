@@ -16,6 +16,7 @@ use App\Http\Controllers\Warehouse\UnitRegisterController;
 
 use App\Http\Controllers\Warehouse\Anjun\AnjunUnitRegisterController;
 use App\Http\Controllers\Warehouse\Anjun\AnjunCN35DownloadController;
+use App\Http\Controllers\Warehouse\CN35DownloadFactoryController;
 use App\Http\Controllers\Warehouse\SearchPackageController;
 use App\Http\Controllers\Warehouse\USPSContainerController;
 use App\Http\Controllers\Warehouse\ChileContainerController;
@@ -80,6 +81,7 @@ use App\Http\Controllers\Warehouse\HoundCN35DownloadController;
 use App\Http\Controllers\Warehouse\HoundContainerController;
 use App\Http\Controllers\Warehouse\HoundContainerPackageController;
 use App\Http\Controllers\Warehouse\HoundUnitRegisterController;
+use App\Http\Controllers\Warehouse\UnitRegisterFactoryController;
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Export\OrderExportTemp;
 use Illuminate\Support\Facades\Auth;
@@ -198,6 +200,9 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
         'destroy' => 'containers_factory.destroy',
     ]); 
     Route::resource('container_factory.packages', ContainerPackageFactoryController::class)->only('index','destroy', 'create');
+    Route::get('container_factory/{id}/create', [UnitRegisterFactoryController::class, 'createMasterBox'])->name('container_factory.createRequest');
+    Route::get('container_factory/{container}/download', CN35DownloadFactoryController::class)->name('container_factory.download');
+
 
     Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('totalexpress_container/{id}/create', [TotalExpressUnitRegisterController::class, 'createMasterBox'])->name('totalexpress_container.createRequest');

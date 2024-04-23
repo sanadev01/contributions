@@ -111,15 +111,15 @@
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a>
                                                             @if( !$container->isRegistered() && $container->hasOrders())
-                                                                <a href="{{ route('warehouse.totalexpress_container.createRequest',$container) }}" class="dropdown-item w-100">
+                                                                <a href="{{ route('warehouse.container_factory.createRequest',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Create Unit
                                                                 </a>
                                                             @endif
-                                                            @if( $container->unit_response_list )
+                                                            <!-- @if( $container->unit_response_list )
                                                                 <a href="{{ route('warehouse.totalexpress_container.registerBox',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Register MasterBox
                                                                 </a>
-                                                            @endif
+                                                            @endif -->
                                                             <form action="{{ route('warehouse.containers_factory.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -128,13 +128,10 @@
                                                                 </button>
                                                             </form>
                                                         @endif
-                                                        @if( $container->isRegistered() )
-                                                        <a href="{{ optional(optional(json_decode($container->unit_response_list))->data)->pdf_label_url }}" class="dropdown-item w-100">
+                                                        @if( $container->isRegistered())                                                        
+                                                        <a href="{{ route('warehouse.container_factory.download',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> Get CN35
                                                         </a>
-                                                        {{-- <a href="{{ route('warehouse.totalexpress_container.download',['container'=>$container,'type'=>'hd']) }}" class="dropdown-item w-100">
-                                                            <i class="feather icon-box"></i> HD CN35
-                                                        </a> --}}
                                                         @endif
                                                     </div>
                                                 </div>

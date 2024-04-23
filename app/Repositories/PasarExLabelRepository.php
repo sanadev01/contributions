@@ -6,16 +6,17 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Services\PasarEx\Client;
 use Illuminate\Support\Facades\Storage; 
-use App\Services\Correios\Models\PackageError; 
-
-
+use App\Services\Correios\Models\PackageError;
+use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 
 class PasarExLabelRepository
 {
     protected $error;
+    protected $order;
 
     public function run(Order $order, $update)
     {
+        $this->order = $order;
         return $this->get($order);
     }
 
@@ -29,32 +30,54 @@ class PasarExLabelRepository
 
     public function update(Order $order)
     {
-        $cn23 = $this->generateLabel($order);
-        if ( $cn23 ){
+        if($this->generateLabel($order))
+        {
             $this->printLabel($order);
         }
         return null;
     }
-
-    private function printLabel(Order $order)
+    public function printLabel(Order $order)
     {
-        if($order->api_response)
-        {
-            $response = json_decode($order->api_response);
-            $base64_pdf = $response->prints[0]->content;
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64_pdf));
-        }
+        $labelPrinter = new CN23LabelMaker();
+        $labelPrinter->setOrder($order);
+        $labelPrinter->setService($order->getService());
+        $labelPrinter->setPacketType($order->getDistributionModality());
+        $labelPrinter->saveAs(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"));
     }
-
     protected function generateLabel(Order $order)
     {
-        $client = new Client();
-        $data = $client->createPackage($order);
-        if ( $data instanceof PackageError){
-            $this->error = $data->getErrors();
-            return null;
+
+        $order->update([
+            'corrios_tracking_code' => $this->getTrackingCode(),
+            'cn23' => [
+                "tracking_code" => $this->getTrackingCode(),
+                "stamp_url" => route('warehouse.cn23.download', $order->id),
+                'leve' => false
+            ],
+        ]);
+        return true;
+    }
+    public function getTrackingCode()
+    {
+        $tempWhr =  $this->order->change_id;        
+        switch(strlen($tempWhr)){
+            case(5):
+                $tempWhr = (str_pad($tempWhr, 10, '32023', STR_PAD_LEFT));
+                break;
+                case(6):
+                    $tempWhr = (str_pad($tempWhr, 10, '2023', STR_PAD_LEFT));
+                    break;
+                    case(7):
+                        $tempWhr = (str_pad($tempWhr, 10, '023', STR_PAD_LEFT));
+                        break;
+                        case(8):
+                                $tempWhr = (str_pad($tempWhr, 10, '23', STR_PAD_LEFT)); 
+                            break;
+                            case(9):
+                                $tempWhr = (str_pad($tempWhr, 10, '3', STR_PAD_LEFT));
+                                break;
         }
-        return $data;
+        return 'HD'."{$tempWhr}"."CO";
     }
 
     public function getError()

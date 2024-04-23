@@ -205,7 +205,7 @@
                                                             </form>
                                                         @endif
                                                         @if( $container->isRegistered() )
-                                                        <a href="{{$container->hasAnjunChinaService()?route('warehouse.anjun.container.download',$container):route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
+                                                        <a href="{{$container->hasAnjunChinaService()?route('warehouse.container_factory.container.download',$container):route('warehouse.container.download',$container) }}" class="dropdown-item w-100">
                                                             <i class="feather icon-box"></i> Get CN35
                                                         </a>
                                                         @endif

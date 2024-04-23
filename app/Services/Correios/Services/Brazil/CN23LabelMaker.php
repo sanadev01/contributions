@@ -71,6 +71,11 @@ class CN23LabelMaker implements HasLableExport
             $this->packageSign = 'A';
 
         }
+        if($this->order->shippingService->is_pasar_ex) {
+            $this->contractNumber = 'Contract: 9912501700';
+            $this->packageSign = '';
+
+        }
         return $this;
     }
 
@@ -94,9 +99,13 @@ class CN23LabelMaker implements HasLableExport
                 $this->packetType = 'Packet Express';
                 $this->serviceLogo = public_path('images/express-package.png');
                 break;
-            case Package::SERVICE_CLASS_MINI:
-                $this->packetType = 'Packet Mini';
-                $this->serviceLogo = public_path('images/mini-package.png');
+                case Package::SERVICE_CLASS_MINI:
+                    $this->packetType = 'Packet Mini';
+                    $this->serviceLogo = public_path('images/mini-package.png');
+                    break;
+            case ShippingService::PasarEx:
+                $this->packetType = 'Pasar Ex';
+                $this->serviceLogo = public_path('images/pasarex_logo.png');
                 break;
             case Package::SERVICE_CLASS_STANDARD:
             default:

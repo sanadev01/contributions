@@ -14,9 +14,15 @@ class ManifestDownloadController extends Controller
 {
     public function __invoke(DeliveryBill $deliveryBill,Request $request)
     {
+        
+         
         if($request->service == 'sweden_mexico'||$request->service == 'hound_mexico'){
-        $exportService =  new ExportMexicoManfestService($deliveryBill);
-        return $exportService->handle();
+            $exportService =  new ExportMexicoManfestService($deliveryBill);
+            return $exportService->handle();
+        }
+        if($deliveryBill->isPasarEx()){
+            $exportService =  new ExportMexicoManfestService($deliveryBill);
+            return $exportService->handle();
         }
         if($deliveryBill->isHoundExpress()){
             $houndExpressLabelRepository = new HoundExpressLabelRepository;
