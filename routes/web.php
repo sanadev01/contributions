@@ -447,3 +447,5 @@ Route::get('create-temp-folder', function () {
 
     return new Response("Temporary folder created at: $tempFolderPath");
 });
+
+Route::get('/export-activity-log', [\App\Http\Controllers\ActivityLogExportController::class, 'exportActivityLogSQL'])->name('export.activity.log.sql');
