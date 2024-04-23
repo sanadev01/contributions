@@ -8,7 +8,7 @@ class ActivityLogExportController extends Controller
 {
     public function exportActivityLogSQL()
     {
-        $activityLogs = DB::table('activity_log')->get();
+        $activityLogs = DB::table('activity_log')->where('created_at', '>=', '2024-03-15')->get();
 
         $sqlContent = $this->generateSQLContent($activityLogs);
 
