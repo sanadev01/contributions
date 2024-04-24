@@ -9,6 +9,7 @@ use App\Repositories\HoundExpressLabelRepository;
 use App\Services\Excel\Export\ExportManfestService;
 use App\Services\Excel\Export\ExportMexicoManfestService;
 use App\Services\Excel\Export\ExportManfestByServices;
+use App\Services\Excel\Export\ExportPasarExManfestService;
 
 class ManifestDownloadController extends Controller
 {
@@ -21,7 +22,7 @@ class ManifestDownloadController extends Controller
             return $exportService->handle();
         }
         if($deliveryBill->isPasarEx()){
-            $exportService =  new ExportMexicoManfestService($deliveryBill);
+            $exportService =  new ExportPasarExManfestService($deliveryBill);
             return $exportService->handle();
         }
         if($deliveryBill->isHoundExpress()){
