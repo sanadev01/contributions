@@ -289,26 +289,11 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     }
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
-
-Route::get('test-label/{id?}',function($id = null){
-
-    $order = Order::where('corrios_tracking_code', $id)->get();
-    // dd($order);
-    
-    $labelPrinter = new CN23LabelMaker();
-    $order = Order::find($id);
-    // dd($order->recipient->country->code);
-    $labelPrinter->setOrder($order);
-    $labelPrinter->setService(2);
-    
-    return $labelPrinter->download();
-});
-
+ 
 Route::get('permission',function($id = null){
     Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
     return Artisan::output();
 });
-
 Route::get('session-refresh/{slug?}', function($slug = null){
     if($slug){
         session()->forget('token');
@@ -319,133 +304,9 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     Cache::forget('anjun_token');
     return 'Anjun Token refresh';
 });
-
-Route::get('/temp-order-report',TempOrderReportController::class);
-
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
-
-Route::get('/to-express/{id?}',function($id = null){
-    
-    Order::whereIn('shipping_service_id',[ 
-       $id,])->update(['shipping_service_id'=>42]);
-
-    return 'shipping service updated to express sucessfully.'; 
-});
-
-Route::get('/cleared',function(){
-    ZoneCountry::truncate(); 
-    dump(ZoneCountry::get()); 
-    dd('done');
-});
-Route::get('/countries',function(){
-   
-    foreach(Country::pluck('name') as $name){
-        echo '<br>'.$name;
-    }
-});
-Route::get('/add-country/{country_name}/{code}',function($countryName,$code){
-    $country = Country::updateOrCreate([
-        'name'=>$countryName,
-        'code'=>$code,
-    ]);  
-    dd($country);
-});
-
-Route::get('/update-country/{country_name}/{new_country_name}/{code}', function ($countryName, $newCountryName, $code) {
-    $country = Country::where('name', $countryName)->first();
-    if (!$country) { return "Country '{$countryName}' not found."; }
-    $country->name = $newCountryName;
-    $country->code = $code;
-    $country->save();
-    return "Country '{$countryName}' updated to '{$newCountryName}' with code '{$code}'.";
-});
-
-Route::get('/get-packet-service',function($id = null){
-    $trackings = [
-        'NB885108064BR',
-        'NB859231434BR',
-        'NB885109453BR',
-        'NB885109135BR',
-        'NB859228925BR',
-        'NB885108413BR',
-        'NB859231329BR',
-        'NB859231403BR',
-        'NB885109229BR',
-        'NB885109467BR',
-        'NB885109440BR',
-        'NB885109334BR',
-        'NB859231394BR',
-        'NB859231522BR',
-        'NB859231244BR',
-        'NB859228109BR',
-        'NB859231425BR',
-        'NB885109294BR',
-        'NB859231377BR',
-        'NB885106063BR',
-        'NB859231332BR',
-        'NB859230558BR',
-        'NB885108427BR',
-        'NB896229488BR',
-        'NB859229705BR',
-        'NB885106032BR',
-        'NB896229491BR',
-        'NB885109365BR',
-    ];
-    
-    $result = Order::whereIn('corrios_tracking_code', $trackings)
-    ->with('shippingService') // Eager load the shippingService relationship
-    ->get();
-    $shippingServiceNames = [];
-
-    // Populate the associative array
-    foreach ($result as $order) {
-        $trackingCode = $order->corrios_tracking_code;
-        $shippingServiceName = optional($order->shippingService)->name;
-
-        $shippingServiceNames[$trackingCode] = $shippingServiceName;
-    }
-    dd($shippingServiceNames);
-});
-Route::get('make-sh-code-request',function(){
-$shcodes=[];
-foreach(ShCode::where('type', null)->get() as $code){
-    array_push($shcodes,[
-        "sh_code"=> "$code->code",
-        "description"=> optional(explode('-------',$code->description))[0],
-        "quantity"=> 3,
-        "value"=> 1,
-        "is_battery"=> 0,
-        "is_perfume"=> 0,
-        "is_flameable"=> 0  
-    ]);
-}
-dd(json_encode($shcodes));
-});
-// Route::get('sh-code-type', function () {
-//     $updated = ShCode::where(function ($query) {
-//                     $query->whereNull('type')->orWhere('type', '');
-//                 })->update(['type' => 'Postal (Correios)']);
-                
-//     $updated += ShCode::where('type', 'total')->update(['type' => 'Courier']);
-
-//     if ($updated > 0) {
-//         $message = "Type updated successfully for $updated records.";
-//     } else {
-//         $message = "No records updated.";
-//     }
-
-//     return $message;
-// });
-Route::get('create-temp-folder', function () {
-    // Path to the temporary folder
-    $tempFolderPath = storage_path('tmp');
-
-    // Create the temporary folder if it doesn't exist
-    if (!file_exists($tempFolderPath)) {
-        mkdir($tempFolderPath, 0777, true); // Recursive directory creation
-    }
-
-    return new Response("Temporary folder created at: $tempFolderPath");
-});
-
 Route::get('/export-activity-log', [\App\Http\Controllers\ActivityLogExportController::class, 'exportActivityLogSQL'])->name('export.activity.log.sql');
+Route::get('order-status-update/{order}/{status}', function(Order $order, $status) {
+    $order->update(['status' => $status]); 
+    return 'Status updated';
+});
