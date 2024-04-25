@@ -245,8 +245,6 @@ class Order extends Model implements Package
 
             if (!$service ) continue;
 
-
-
             $this->services()->create([
                 'service_id' => $service->id,
                 'name' => $service->name,
