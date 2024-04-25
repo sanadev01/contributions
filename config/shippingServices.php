@@ -20,6 +20,9 @@ return [
             33198 => 'SL Small Parcels',
             33164 => 'AJ Packet Standard',
             33172 => 'AJ Packet Express',
+            44162 => 'Colombia Urbano',
+            44163 => 'Colombia Nacional',
+            44165 => 'Colombia Trayetos',
             100 => 'Brazil Redispatch',
             537 => 'Global eParcel Prime',
             540 => 'Global eParcel Untracked Packet',
@@ -56,6 +59,8 @@ return [
             5537 => 'Japan Prime JerseyPost',
             5541 => 'Japan EMS JerseyPost',
             237 => 'GSS CEP',
+            44166 => 'Colombia One Zone',
+
         ]
     ]
 ];

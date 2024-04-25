@@ -11,10 +11,10 @@ use App\Models\Warehouse\DeliveryBill;
 class ExportWhiteLabelManifest extends AbstractExportService
 {
     private $currentRow = 1;
-    private $deliveryBill; 
+    private $deliveryBill;
     public function __construct(DeliveryBill $deliveryBill)
     {
-        $this->deliveryBill = $deliveryBill; 
+        $this->deliveryBill = $deliveryBill;
         parent::__construct();
     }
     public function handle()
@@ -58,14 +58,14 @@ class ExportWhiteLabelManifest extends AbstractExportService
                 $this->setCellValue('G' . $row, ($order->sender_zipcode) ? $order->sender_zipcode : '33182');
                 $this->setCellValue('H' . $row, count($order->items));
                 $this->setCellValue('I' . $row, $order->getWeight('kg'));
-                $this->setCellValue('J' . $row, $order->getOrderValue());
+                $this->setCellValue('J' . $row, $order->order_items_value);
                 $this->setCellValue('L' . $row, $order->recipient->country->code);
                 $this->setCellValue('M' . $row, $order->recipient->getFullName());
                 $this->setCellValue('N' . $row, $order->recipient->tax_id);
                 $this->setCellValue('O' . $row, $order->recipient->getAddress());
                 $this->setCellValue('P' . $row, '');
                 $this->setCellValue('Q' . $row, '');
-                foreach($order->items as $item){
+                foreach ($order->items as $item) {
                     $this->setCellValue('K' . $row, $item->description);
                     $row++;
                 }
@@ -152,5 +152,5 @@ class ExportWhiteLabelManifest extends AbstractExportService
         $this->setBackgroundColor('A' . $this->currentRow . ':Q' . $this->currentRow, "f2f2f2");
         $this->setColor('A' . $this->currentRow . ':Q' . $this->currentRow, "000");
         $this->currentRow = $this->currentRow + 3;
-    } 
+    }
 }

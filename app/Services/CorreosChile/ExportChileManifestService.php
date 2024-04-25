@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services\CorreosChile;
 
@@ -38,27 +38,27 @@ class ExportChileManifestService extends AbstractExportService
         $row = $this->currentRow;
 
         foreach ($this->container->orders as $order) {
-            $this->setCellFormat('A'.$row, '#');
-            $this->setAlignment('A'.$row, 'left');
-            $this->setCellValue('A'.$row, (string)$order->corrios_tracking_code);
-            $this->setCellValue('B'.$row, Carbon::now()->format('m/d/Y'));
-            $this->setCellValue('C'.$row, $order->getSenderFullName(),);
-            $this->setCellValue('D'.$row, ($order->recipient)->getRecipientInfo());
-            $this->setCellValue('E'.$row, ($order->recipient)->getAddress());
-            $this->setCellValue('F'.$row, 1);
-            $this->setCellValue('G'.$row, $order->getOriginalWeight('kg'));
-            $this->setCellValue('H'.$row, $this->getOrderItemDescription($order));
-            $this->setCellValue('I'.$row, $this->getOrderItemsSHCode($order));
-            $this->setCellValue('J'.$row, $order->getOrderValue());
-            $this->setCellValue('K'.$row, $order->warehouse_number);
-            $this->setCellValue('L'.$row, $order->gross_total);
-            $this->setCellValue('M'.$row, $this->container->getDestinationAriport());
-            $this->setCellValue('N'.$row, $this->getValuePaidToCorrieos($this->container,$order));
-            $this->setCellValue('O'.$row, $this->container->dispatch_number);
-            $this->setCellValue('P'.$row, optional($order->user)->pobox_number.' / '.optional($order->user)->getFullName());
+            $this->setCellFormat('A' . $row, '#');
+            $this->setAlignment('A' . $row, 'left');
+            $this->setCellValue('A' . $row, (string)$order->corrios_tracking_code);
+            $this->setCellValue('B' . $row, Carbon::now()->format('m/d/Y'));
+            $this->setCellValue('C' . $row, $order->getSenderFullName(),);
+            $this->setCellValue('D' . $row, ($order->recipient)->getRecipientInfo());
+            $this->setCellValue('E' . $row, ($order->recipient)->getAddress());
+            $this->setCellValue('F' . $row, 1);
+            $this->setCellValue('G' . $row, $order->getOriginalWeight('kg'));
+            $this->setCellValue('H' . $row, $this->getOrderItemDescription($order));
+            $this->setCellValue('I' . $row, $this->getOrderItemsSHCode($order));
+            $this->setCellValue('J' . $row, $order->order_items_value);
+            $this->setCellValue('K' . $row, $order->warehouse_number);
+            $this->setCellValue('L' . $row, $order->gross_total);
+            $this->setCellValue('M' . $row, $this->container->destination_ariport);
+            $this->setCellValue('N' . $row, $this->getValuePaidToCorrieos($this->container, $order));
+            $this->setCellValue('O' . $row, $this->container->dispatch_number);
+            $this->setCellValue('P' . $row, optional($order->user)->pobox_number . ' / ' . optional($order->user)->getFullName());
 
             $this->total_customerpaid +=  $order->gross_total;
-            $this->total_paid_to_correios += $this->getValuePaidToCorrieos($this->container,$order);
+            $this->total_paid_to_correios += $this->getValuePaidToCorrieos($this->container, $order);
 
             $row++;
         }
@@ -66,16 +66,16 @@ class ExportChileManifestService extends AbstractExportService
         $this->currentRow = $row;
         $this->currentRow++;
 
-        $this->setCellValue('K'.$this->currentRow, 'Total');
-        $this->setCellValue('L'.$this->currentRow, $this->total_customerpaid);
-        $this->setCellValue('N'.$this->currentRow, $this->total_paid_to_correios);
+        $this->setCellValue('K' . $this->currentRow, 'Total');
+        $this->setCellValue('L' . $this->currentRow, $this->total_customerpaid);
+        $this->setCellValue('N' . $this->currentRow, $this->total_paid_to_correios);
     }
 
     private function setExcelHeaderRow()
     {
         $this->setColumnWidth('A', 20);
         $this->setCellValue('A1', 'HAWB');
-       
+
         $this->setColumnWidth('B', 20);
         $this->setCellValue('B1', 'Date');
 
@@ -96,7 +96,7 @@ class ExportChileManifestService extends AbstractExportService
 
         $this->setColumnWidth('H', 20);
         $this->setCellValue('H1', 'Contents');
-        
+
         $this->setColumnWidth('I', 20);
         $this->setCellValue('I1', 'NCM');
 
@@ -120,7 +120,7 @@ class ExportChileManifestService extends AbstractExportService
 
         $this->setColumnWidth('P', 20);
         $this->setCellValue('P1', 'POBOX / NAME');
-        
+
         $this->setBackgroundColor('A1:P1', '2b5cab');
         $this->setColor('A1:P1', 'FFFFFF');
 
@@ -129,8 +129,7 @@ class ExportChileManifestService extends AbstractExportService
 
     private function getOrderItemDescription($order)
     {
-        foreach($order->items as $item)
-        {
+        foreach ($order->items as $item) {
             $itemDescription[] = $item->description;
         }
 
@@ -141,8 +140,7 @@ class ExportChileManifestService extends AbstractExportService
 
     private function getOrderItemsSHCode($order)
     {
-        foreach($order->items as $item)
-        {
+        foreach ($order->items as $item) {
             $itemSHCode[] = $item->sh_code;
         }
 
@@ -154,13 +152,13 @@ class ExportChileManifestService extends AbstractExportService
     private function getValuePaidToCorrieos(Container $container, Order $order)
     {
         $service  = $order->shippingService->service_sub_class;
-        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'),$service);
+        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'), $service);
 
-        if ( !$rateSlab ){
+        if (!$rateSlab) {
             return 0;
         }
 
-        if ( $container->getDestinationAriport() ==  "Santiago"){
+        if ($container->destination_ariport ==  "Santiago") {
             return $rateSlab->gru;
         }
 

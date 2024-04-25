@@ -1,5 +1,5 @@
-@extends('layouts.app')
-@section('content')
+@extends('layouts.master')
+@section('page')
     @livewire('calculator.us-calculator-rates', [
         'apiRates' => $apiRates, 
         'ratesWithProfit' => $ratesWithProfit,
