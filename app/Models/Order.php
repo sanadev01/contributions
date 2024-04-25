@@ -265,6 +265,11 @@ class Order extends Model implements Package
         return $this->measurement_unit == 'kg/cm';
     }
 
+    public function isWeightInKg()
+    {
+        return $this->measurement_unit == 'kg/cm';
+    }
+
     public function getOriginalWeight($unit = 'kg')
     {
         $weight = $this->weight;
