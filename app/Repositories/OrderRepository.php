@@ -8,6 +8,7 @@ use App\Facades\USPSFacade;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
+use App\Mail\User\PurchaseInsurance;
 use Illuminate\Support\Facades\Auth;
 use App\Services\UPS\UPSShippingService;
 use App\Services\GSS\GSSShippingService;
@@ -332,9 +333,19 @@ class OrderRepository
 
     public function updateHandelingServices(Request $request, Order $order)
     {
-        $order->syncServices($request->get('services',[]));
+        $services = $request->get('services', []);
+        $order->syncServices($services);
 
         $order->doCalculations(true,true);
+
+        if (!empty($services) && (in_array('1', $services) || in_array('7', $services))) {
+            try {
+                \Mail::send(new PurchaseInsurance($order));
+            } catch (\Exception $ex) {
+                \Log::info('Purchase Insurance email send error: '.$ex->getMessage());
+            }
+        }
+        
         return true;
     }
 

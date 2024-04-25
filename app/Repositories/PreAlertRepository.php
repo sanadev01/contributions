@@ -230,14 +230,6 @@ class PreAlertRepository
                 \Log::info('Consolidation email send error: '.$ex->getMessage());
             }
         }
-        
-        if($order->services) {
-            try {
-                \Mail::send(new PurchaseInsurance($order));
-            } catch (\Exception $ex) {
-                \Log::info('Purchase Insurance email send error: '.$ex->getMessage());
-            }
-        }
 
         if( $order->status == Order::STATUS_ORDER ){
             $order->doCalculations();

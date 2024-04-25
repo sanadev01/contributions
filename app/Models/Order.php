@@ -9,6 +9,7 @@ use App\Models\OrderTracking;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use App\Models\Warehouse\Container;
+use App\Mail\User\PurchaseInsurance;
 use App\Models\Warehouse\AccrualRate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -234,7 +235,17 @@ class Order extends Model implements Package
         foreach($services as $serviceId){
             $service = HandlingService::find($serviceId);
 
+            if ($service && ($service->id == 1 || $service->id == 7)) {
+                try {
+                    \Mail::send(new PurchaseInsurance($this));
+                } catch (\Exception $ex) {
+                    \Log::info('Purchase Insurance email send error: '.$ex->getMessage());
+                }
+            }
+
             if (!$service ) continue;
+
+
 
             $this->services()->create([
                 'service_id' => $service->id,

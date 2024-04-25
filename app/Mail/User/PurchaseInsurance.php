@@ -32,7 +32,7 @@ class PurchaseInsurance extends Mailable
     {
         app()->setLocale($this->order->user->locale);
         $subject = "Insurance Purchased - Warehouse Number: " . $this->order->warehouse_number;
-        return $this->markdown('emails.user.purchase-insurance')
+        return $this->markdown('emails.user.insurance-purchased')
                 ->subject($subject)
                 ->to('invoicing@hercoinc.com');
     }
