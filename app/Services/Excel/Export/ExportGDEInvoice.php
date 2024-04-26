@@ -27,8 +27,8 @@ class ExportGDEInvoice extends AbstractExportService
         $this->setCellValue('A2', 'Shipper/Exporter: (SENDER )');
         if($this->order->shippingService->is_total_express) {
             $senderName = $this->order->getSenderFullName();
-            $phone = ($this->order->sender_phone) ? $this->order->sender_phone : $this->order->user->phone;
-            $email = ($this->order->sender_email) ? $this->order->sender_email : $this->order->user->email;
+            $phone = (optional($this->order)->sender_phone) ? optional($this->order)->sender_phone : optional($this->order)->user->phone;
+            $email = (optional($this->order)->sender_email) ? optional($this->order)->sender_email : optional($this->order)->user->email;
             $this->setCellValue('A3', "$senderName \n$senderAddress \nPhone: $phone \nEmail: $email \nCEP:". $this->order->user->zipcode."\nCNPJ:".$this->order->user->tax_id
             );    
         } else {
