@@ -155,10 +155,6 @@ class USPSLabelRepository
     {
         return $this->uspsError;
     }
-    public function getError()
-    {
-        return $this->uspsError;
-    }
 
     public function addOrderTracking($order)
     {
