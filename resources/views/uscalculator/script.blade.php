@@ -4,8 +4,10 @@
     });
 
     $(document).ready(function(){
+        
+        $('.shipment-info').addClass('d-none');
         if ($('#from_herco').is(':checked')) {
-            
+            $('.shipment-info').removeClass('d-none');
             $('#to_herco').prop('checked', false);
             $('#to_international').prop('checked', false);
 
@@ -28,6 +30,7 @@
 
         if ($('#to_herco').is(':checked')) {
             
+            $('.shipment-info').removeClass('d-none');
             $('#from_herco').prop('checked', false);
             $('#to_international').prop('checked', false);
 
@@ -76,6 +79,7 @@
 
         $('#from_herco').change(function(){
             if($(this).is(':checked')){
+                $('.shipment-info').removeClass('d-none');
                 $('#to_herco').prop('checked', false);
                 $('#to_international').prop('checked', false);
 
@@ -104,6 +108,7 @@
 
         $('#to_herco').change(function(){
             if($(this).is(':checked')){
+                $('.shipment-info').removeClass('d-none');
                 $('#from_herco').prop('checked', false);
                 $('#to_international').prop('checked', false);
 
@@ -125,6 +130,7 @@
 
         $('#to_international').change(function(){
             if($(this).is(':checked')){
+                $('.shipment-info').removeClass('d-none');
                 $('#to_herco').prop('checked', false);
                 $('#from_herco').prop('checked', false);
 

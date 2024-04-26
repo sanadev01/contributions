@@ -65,6 +65,7 @@
     </div>
 </section>
 <section>
+    <input type="text" id="searchInput" class="form-control col-6 my-4" placeholder=" Search...">
     <table class="table table-borderless p-0 table-responsive-md table-striped" id="kpi-report">
         <thead>
             <tr id="kpiHead">
@@ -98,17 +99,7 @@
                         @endfor
                     </div>
                 </td>
-                <!-- <td class="category-tag"></td> -->
                 <td>{{ $shippingService->delivery_time}}</td>
-                <!-- <td></td> -->
-                <!-- <td> @if($order->measurement_unit == 'kg/cm')
-                    {{$chargableWeight}} Kg ( {{$weightInOtherUnit}} lbs)
-                    @else
-                    {{$chargableWeight}} lbs ( {{$weightInOtherUnit}} kg)
-                    @endif
-                </td> -->
-                <!-- <td></td>
-                    <td></td> -->
                 <td class="price-tag">
                     {{$shippingService->getRateFor($order,true,true)}} USD
                 </td>
@@ -123,36 +114,17 @@
     <br>
 
 
-</section>
-<!-- Dashboard Analytics end -->
+</section> 
 @endsection
 @section('js')
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const priceTags = document.querySelectorAll(".price-tag");
-        const rates = Array.from(priceTags).map(tag => parseFloat(tag.textContent));
-
-        const cheapestRate = Math.min(...rates);
-        const mostExpensiveRate = Math.max(...rates);
-        const middleRate = rates.sort((a, b) => a - b)[Math.floor(rates.length / 2)];
-
-        const categoryTags = document.querySelectorAll(".category-tag");
-        priceTags.forEach((tag, index) => {
-            const rate = parseFloat(tag.textContent);
-            let category = "";
-            if (rate === cheapestRate) {
-                category = "<span class='px-2 py-1 rate-category' style='font-size: 1.2em;'>Cheapest</span>";
-            } else if (rate === mostExpensiveRate) {
-                category = "<span class='px-2 py-1 rate-category' style='font-size: 1.2em;'>Most Expensive</span>";
-            } else if (rate === middleRate) {
-                category = "<span class='px-2 py-1 rate-category' style='font-size: 1.2em;'>Middle</span>";
-            } else if (rate < middleRate) {
-                category = "<span class='px-2 py-1 rate-category' style='font-size: 1.2em;'>Best</span>";
-            } else if (rate > middleRate) {
-                category = "<span class='px-2 py-1 rate-category' style='font-size: 1.2em;'>Expensive</span>";
-            }
-            categoryTags[index].innerHTML = category;
+<script>
+$(document).ready(function() {
+    $('#searchInput').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#kpi-report tbody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
-</script> -->
+});
+</script>
 @endsection
