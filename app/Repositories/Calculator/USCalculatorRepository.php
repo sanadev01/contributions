@@ -366,7 +366,8 @@ class USCalculatorRepository
     }
 
     private function getPrimaryLabel()
-    {
+    {        
+        $this->order = $this->order->refresh(); 
         $request = $this->createRequest();
         $request->merge([
             'service' => $this->order->shippingService->service_sub_class,
