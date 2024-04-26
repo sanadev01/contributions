@@ -98,6 +98,12 @@
                                 <span class="menu-title">Hound Express</span>
                             </a>
                         </li>
+                        <li class="{{ $isActive(['warehouse.colombia-containers.index','warehouse.colombia-containers.create','warehouse.colombia-containers.edit','warehouse.colombia-container.packages']) }}">
+                            <a href="{{ route('warehouse.colombia-containers.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('menu.Warehouse.Colombia')</span>
+                            </a>
+                        </li>
                         <li class="{{ $isActive(['warehouse.hd-express-containers.index','warehouse.hd-express-containers.create','warehouse.hd-express-containers.edit','warehouse.hd-express-containers.packages.index']) }}">
                             <a href="{{ route('warehouse.hd-express-containers.index') }}">
                                 <i class="feather icon-circle"></i>

@@ -159,7 +159,7 @@ class PreAlertRepository
         //CHECK VOL WEIGHT OF PARCEL AND SET DISCOUNT
         $totalDiscountPercentage = 0;
         $volumetricDiscount = setting('volumetric_discount', null, $order->user->id);
-        $discountPercentage = setting('discount_percentage', null, $order->user->id);
+        $discountPercentage = getVolumetricDiscountPercentage($order);
         
         if (!$volumetricDiscount || !$discountPercentage || $discountPercentage < 0 || $discountPercentage == 0) {
             return false;
@@ -230,6 +230,7 @@ class PreAlertRepository
                 \Log::info('Consolidation email send error: '.$ex->getMessage());
             }
         }
+
         if( $order->status == Order::STATUS_ORDER ){
             $order->doCalculations();
         }

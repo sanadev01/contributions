@@ -21,7 +21,7 @@ class OrderServicesController extends Controller
         
         $order->load('services');
         $services = HandlingService::query()->active()->get();
-        $services = $this->checkInsurance($services,$order);
+        // $services = $this->checkInsurance($services,$order);
 
         return view('admin.orders.services.index',compact('order','services'));
     }

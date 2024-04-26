@@ -70,7 +70,6 @@ class PaymentInvoiceRepository
     public function createInvoice(Request $request)
     {
         $orders = (new OrderRepository)->getOrderByIds($request->get('orders',[]));
-
         $orders = collect($orders->filter(function($order){
             return !$order->getPaymentInvoice();
         })->all());
@@ -94,7 +93,6 @@ class PaymentInvoiceRepository
                 'total_amount' => $invoice->orders()->sum('gross_total'),
                 'paid_amount' => $invoice->orders()->sum('gross_total'),
             ]);
-
             return $invoice;
            
         } catch (\Exception $ex) {
@@ -106,9 +104,7 @@ class PaymentInvoiceRepository
 
     public function updateInvoice(Request $request,PaymentInvoice $invoice)
     {
-        $orders = Order::find($request->get('orders',[]));
-        // dd($orders);
-
+        $orders = Order::find($request->get('orders',[])); 
         $orders = collect($orders->filter(function($order) use($invoice){
             return !$order->getPaymentInvoice() || $order->getPaymentInvoice()->id === $invoice->id;
         })->all());

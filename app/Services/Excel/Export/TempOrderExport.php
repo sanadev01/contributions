@@ -1,21 +1,17 @@
 <?php
 
 namespace App\Services\Excel\Export;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\ShippingService;
+
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class TempOrderExport extends AbstractExportService
 {
-    private $orders; 
+    private $orders;
     private $currentRow = 1;
 
     public function __construct(Collection $orders)
     {
-        $this->orders = $orders; 
+        $this->orders = $orders;
         parent::__construct();
     }
 
@@ -110,7 +106,7 @@ class TempOrderExport extends AbstractExportService
 
 
         $this->currentRow++;
-    } 
+    }
     public function isWeightInKg($measurement_unit)
     {
         return $measurement_unit == 'kg/cm' ? 'kg' : 'lbs';
@@ -121,21 +117,21 @@ class TempOrderExport extends AbstractExportService
         $getOriginalWeight = $order->getOriginalWeight('kg');
         $chargeWeight = $getOriginalWeight;
         $getWeight = $order->getWeight('kg');
-        if($getWeight > $getOriginalWeight && $order->weight_discount){
+        if ($getWeight > $getOriginalWeight && $order->weight_discount) {
             $discountWeight = $order->weight_discount;
-            if($order->measurement_unit == 'lbs/in'){
-                $discountWeight = $order->weight_discount/2.205;
+            if ($order->measurement_unit == 'lbs/in') {
+                $discountWeight = $order->weight_discount / 2.205;
             }
             $consideredWeight = $getWeight - $getOriginalWeight;
             $chargeWeight = ($consideredWeight - $discountWeight) + $getOriginalWeight;
         }
-        
-        return round($chargeWeight,2);
+
+        return round($chargeWeight, 2);
     }
 
     private function getOrderTrackingCodes($order)
     {
-        $trackingCodes = ($order->hasSecondLabel() ? $order->corrios_tracking_code.','.$order->us_api_tracking_code : $order->corrios_tracking_code);
+        $trackingCodes = ($order->has_second_label ? $order->corrios_tracking_code . ',' . $order->us_api_tracking_code : $order->corrios_tracking_code);
         return (string)$trackingCodes;
-    } 
+    }
 }

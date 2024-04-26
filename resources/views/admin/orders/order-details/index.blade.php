@@ -456,7 +456,6 @@
             order_id: order_id,
         }).then(function(response) {
             if (response.success == true) {
-
                 if (service != 283) {
                     $('#user_declared_freight').val(response.total_amount);
                     $('#user_declared_freight').prop('readonly', true);
