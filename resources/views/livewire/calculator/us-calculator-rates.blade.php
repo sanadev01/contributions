@@ -112,7 +112,7 @@
                 <td>
                     @if($userLoggedIn)
                         @if($selectedService!=$profitRate['service_sub_class'])  
-                            <button id="btn-submit" wire:click="getLabel('{{ $profitRate['service_sub_class'] }}')" type="submit" class="btn btn-success btn-sm  "><i class="fas fa-print text-print mx-2"></i>Buy Label</button>
+                            <button id="btn-submit" wire:click="getLabel('{{ $profitRate['service_sub_class'] }}')" type="submit" class="btn btn-success btn-sm btn-submit"><i class="fas fa-print text-print mx-2"></i>Buy Label</button>
                          @endif
                      @endif
                 </td>
@@ -147,6 +147,7 @@
 </section>
 @section('js')
 <script>
+
     $(document).ready(function() {
         $('#searchInput').on('keyup', function() {
             var value = $(this).val().toLowerCase();
@@ -155,5 +156,11 @@
             });
         });
     });
+    $('.btn-submit').click(function(){
+        $('#loading').fadeIn(); 
+    }); 
+    window.addEventListener('fadeOutLoading', event => {
+        $('#loading').fadeOut();
+    })
 </script>
 @endsection
