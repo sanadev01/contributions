@@ -47,27 +47,32 @@ class UsCalculatorRates extends Component
         $usCalculatorRepository = new  USCalculatorRepository();
         if (!$this->selectedService){
             $this->addError('selectedService', 'select service please.');
+            $this->dispatchBrowserEvent('fadeOutLoading');
             return false;
         }
 
         if (!$this->userLoggedIn) {
             $this->addError('serviceError', 'Please login to continue.');
+            $this->dispatchBrowserEvent('fadeOutLoading');
             return false;
         }
 
         if ($this->getCostOfSelectedService() > getBalance()) {
             $this->addError('serviceError', 'insufficient balance, please recharge your account.');
+            $this->dispatchBrowserEvent('fadeOutLoading');
             return false;
         }
 
         if ($this->selectedServiceEnabledForUser()) {
             $order = $usCalculatorRepository->executeForLabel($this->createRequest());
             $this->addError('serviceError', $usCalculatorRepository->getError());
-
+           
             if ($order) {
                 return redirect()->route('admin.orders.label.index', $order->id);
             }
+            $this->dispatchBrowserEvent('fadeOutLoading');
         }
+        $this->dispatchBrowserEvent('fadeOutLoading');
     }
 
     public function downloadRates()
