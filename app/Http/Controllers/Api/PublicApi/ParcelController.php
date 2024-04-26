@@ -137,12 +137,10 @@ class ParcelController extends Controller
             if($length+$width+$height > $shippingService->max_sum_of_all_sides) {
                 return apiResponse(false, "Maximun Pacakge Size: The sum of the length, width and height cannot not be greater than 90 cm (l + w + h <= 90). Please Update Your Parcel");
             }
-            $itemsValue = 0;
-            foreach ($request->get('products', []) as $product) {
-                $quantity = optional($product)['quantity'];
-                $value = optional($product)['value'];
-                $itemsValue += $quantity * $value;
-            }
+            $products = collect($request->get('products', []));
+            $itemsValue = $products->sum(function ($product) {
+                return optional($product)['quantity'] * optional($product)['value'];
+            });
             if($itemsValue > 400 ) {
                 return apiResponse(false, "Total Parcel Value cannot be more than $400");
             }
