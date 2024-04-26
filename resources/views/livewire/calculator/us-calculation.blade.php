@@ -23,7 +23,7 @@
                     <div class="col-md-3">
                         <div class="input-group">
                             <div class="vs-checkbox-con vs-checkbox-primary" title="to_herco">
-                                <input type="checkbox" name="to_herco" id="to_herco" @if(!old('from_herco') && !old('to_international')) checked @endif>
+                                <input type="checkbox" name="to_herco" id="to_herco"  @if(old('to_herco')) checked @endif>
                                 <span class="vs-checkbox vs-checkbox-lg">
                                     <span class="vs-checkbox--check">
                                         <i class="vs-icon feather icon-check"></i>
@@ -101,27 +101,7 @@
                     </div>
                 </div>
                 <div class="d-none" id="recipient_info">
-                    <div class="row mb-1 mt-3">
-                        <div class="controls col-6">
-                            <h4 class="color-gray standard-font">Recipeint Address</h4>
-                        </div>
-                    </div>
-                    <div class="d-none" id="recipient_personal_info">
-                        <div class="row mb-1">
-                            <div class="controls col-4">
-                                <label>Recipient Phone</label>
-                                @livewire('components.search-address', ['user_id' => ((auth()->check()) ? auth()->user()->id : null), 'from_calculator' => true ])
-                            </div>
-                            <div class="controls col-4">
-                                <label>Recipient First Name</label>
-                                <input type="text" id="recipient_first_name" name="recipient_first_name" value="{{old('recipient_first_name')}}" class="form-control" required placeholder="Recipient first name" />
-                            </div>
-                            <div class="controls col-4">
-                                <label>Recipient Last Name</label>
-                                <input type="text" id="recipient_last_name" name="recipient_last_name" value="{{old('recipient_last_name')}}" class="form-control" required placeholder="Recipient last name" />
-                            </div>
-                        </div>
-                    </div>
+                  
                     <div class="row mb-1">
                         <div class="controls col-4" id="all_destination_countries">
                             <label>Destination Country</label>
@@ -165,15 +145,19 @@
                         </div>
                     </div>
                     <div class="row mb-1">
-                        <div class="controls col-6">
+                        <div class="controls col-4">
                             <label>Recipient Address</label>
                             <input type="text" class="form-control" id="recipient_address" name="recipient_address" value="{{old('recipient_address')}}" required placeholder="Recipient Address" />
                         </div>
-                        <div class="controls col-6">
+                        <div class="controls col-4">
                             <label>Recipient ZipCode</label>
                             <input type="text" name="recipient_zipcode" id="recipient_zipcode" value="{{ cleanString(old('recipient_zipcode')) }}" required class="form-control" placeholder="Zip Code" />
                             <div id="recipient_zipcode_response"></div>
                         </div>
+                        <div class="controls col-4 d-none" id="recipient_personal_info">
+                                <label>Recipient Phone</label>
+                                @livewire('components.search-address', ['user_id' => ((auth()->check()) ? auth()->user()->id : null), 'from_calculator' => true ])
+                         </div>
                     </div>
                 </div>
                 <div class="row mb-1 mt-3 d-none" id="destination">
@@ -181,19 +165,21 @@
                         <h4 class="color-gray standard-font">Destination: Homedeliverybr MIA</h4>
                     </div>
                 </div>
-
-                <div class="row mb-1 mt-3">
+                <div class="shipment-info">
+                                    <div class="row mb-1 mt-3">
                     <div class="controls col-6">
                         <h4 class="standard-font color-gray">Shipment Info :</h4>
                     </div>
+                    </div>
+                    <div class="row d-none" id="calculator-items">
+                        <livewire:calculator.items>
+                    </div>
                 </div>
-                <div class="row d-none" id="calculator-items">
-                    <livewire:calculator.items>
-                </div>
+
 
             </div>
         </div>
-        <div class="row p-3">
+        <div class="row p-3 shipment-info" >
             <div class="form-group col-md-2">
                 <div class="controls">
                     <label>@lang('parcel.Measuring Units') <span class="text-danger standard-font">*</span></label>
@@ -284,17 +270,20 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-between">
-            <div class="controls h2 mt-3 ml-3">
-                <label> @lang('parcel.The Rate will be applied on')
-                    <br>
-                    <div class="mt-2">
-                        <strong class="text-success">{{ $volumeWeight }}
-                            <span class="mx-1"> {{ $currentWeightUnit }} </span>
-                            <span> ({{ $volumeWeightOther }} {{ $unitOther }}) </span>
-                        </strong>
-                    </div>
-                </label>
+        <div class="d-flex justify-content-between ">
+            <div class="controls h2 mt-3 ml-3 ">
+                <div class="shipment-info">
+                    <label> @lang('parcel.The Rate will be applied on')
+                        <br>
+                        <div class="mt-2">
+                            <strong class="text-success">{{ $volumeWeight }}
+                                <span class="mx-1"> {{ $currentWeightUnit }} </span>
+                                <span> ({{ $volumeWeightOther }} {{ $unitOther }}) </span>
+                            </strong>
+                        </div>
+                    </label>
+                </div>
+
             </div>
             <div class="row mt-3 mr-3">
                 <button type="submit" class="btn btn-purple btn-md rounded px-5 my-3 standard-font color-gray">

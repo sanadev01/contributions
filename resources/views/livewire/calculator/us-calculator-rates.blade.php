@@ -69,13 +69,14 @@
             </div>
         </div>
     </div>
+    <input type="text" id="searchInput" class="form-control col-6 my-4" placeholder=" Search...">
+
     <table class="table  table-borderless p-0 table-responsive-md table-striped" id="kpi-report">
         <thead>
             <tr id="kpiHead">
                 <th class="py-3 font-black">@lang('orders.Courier')</th>
                 <th class="py-3 font-black">@lang('orders.Rating')</th>
                 <th class="py-3 font-black">@lang('orders.Average Transit')</th>
-                <!-- <th class="py-3 font-black">@lang('orders.Weight')</th> -->
                 @if(auth()->user()->hasRole('admin')) <th>@lang('orders.Actual Cost')</th> @endif
                 <th class="py-3 font-black">@lang('orders.Total Cost')</th>
                 <th class="py-3 font-black">@lang('orders.actions.actions')</th>
@@ -110,57 +111,48 @@
                 </td>
                 <td>
                     @if($userLoggedIn)
-                    @if($serviceResponse)
-                    <div class="row mb-1 ml-4">
-                        <div class="controls col-12">
-                        </div>
-                    </div>
-                    @endif
-                    @error($serviceError)
-                    <div class="row mb-1 ml-4">
-                        <div class="controls col-12 text-danger">
-                            {{$message}}
-                        </div>
-                    </div>
-                    @enderror
-                    @error('selectedService')<div class="row mb-1 ml-4"> <span class="error text-danger">{{ $message }}</span> </div>@enderror
-                    <button id="btn-submit" wire:click="getLabel('{{ $profitRate['service_sub_class'] }}')" type="submit" class="btn btn-success btn-sm  "><i class="fas fa-print text-print mx-2"></i>Buy Label</button>
-                    @endif
+                        @if($selectedService!=$profitRate['service_sub_class'])  
+                            <button id="btn-submit" wire:click="getLabel('{{ $profitRate['service_sub_class'] }}')" type="submit" class="btn btn-success btn-sm  "><i class="fas fa-print text-print mx-2"></i>Buy Label</button>
+                         @endif
+                     @endif
                 </td>
-            </tr>
+
+            </tr> 
+            @if($userLoggedIn && $selectedService==$profitRate['service_sub_class'])
+                <tr>      
+                    <td colspan="3"></td>       
+                    <td colspan="3">
+                        @if($serviceResponse)
+                            <div class="row mb-1 ml-4">
+                                <div class="controls col-12">
+                                </div>
+                            </div>
+                        @endif
+                        @error($serviceError)
+                            <div class="row mb-1 ml-4">
+                                <div class="controls col-12 text-danger">
+                                    {{$message}}
+                                </div>
+                            </div>
+                        @enderror 
+                        @error('selectedService')<div class="row mb-1 ml-4"> <div class="error text-danger">{{ $message }}</div> </div>@enderror 
+                    </td>
+                </tr>
+            @endif
             @endforeach
 
 
         </tbody>
     </table>
 </section>
-<!-- Dashboard Analytics end -->
 @section('js')
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const priceTags = document.querySelectorAll(".price-tag");
-        const rates = Array.from(priceTags).map(tag => parseFloat(tag.textContent));
-
-        const cheapestRate = Math.min(...rates);
-        const mostExpensiveRate = Math.max(...rates);
-        const middleRate = rates.sort((a, b) => a - b)[Math.floor(rates.length / 2)];
-
-        const categoryTags = document.querySelectorAll(".category-tag");
-        priceTags.forEach((tag, index) => {
-            const rate = parseFloat(tag.textContent);
-            let category = "";
-            if (rate === cheapestRate) {
-                category = "<span class='px-2 py-1 rate-category' style='font-size: 1.2em;'>Cheapest</span>";
-            } else if (rate === mostExpensiveRate) {
-                category = "<span class='px-2 py-1 rate-category' style='font-size: 1.2em;'>Most Expensive</span>";
-            } else if (rate === middleRate) {
-                category = "<span class='px-2 py-1 rate-category' style='font-size: 1.2em;'>Middle</span>";
-            } else if (rate < middleRate) {
-                category = "<span class='px-2 py-1 rate-category' style='font-size: 1.2em;'>Best</span>";
-            } else if (rate > middleRate) {
-                category = "<span class='px-2 py-1 rate-category' style='font-size: 1.2em;'>Expensive</span>";
-            }
-            categoryTags[index].innerHTML = category;
+    $(document).ready(function() {
+        $('#searchInput').on('keyup', function() {
+            var value = $(this).val().toLowerCase();
+            $('#kpi-report tbody tr').filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
         });
     });
 </script>
