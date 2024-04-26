@@ -316,7 +316,6 @@ Route::get('clear-cache',function($id = null){
     dump('end');
     return Artisan::output();
 });
-
 Route::get('session-refresh/{slug?}', function($slug = null){
     if($slug){
         session()->forget('token');
@@ -327,9 +326,6 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     Cache::forget('anjun_token');
     return 'Anjun Token refresh';
 });
-
-Route::get('/temp-order-report',TempOrderReportController::class);
-
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
 
 Route::get('/to-express/{id?}',function($id = null){
