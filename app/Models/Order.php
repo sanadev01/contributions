@@ -407,7 +407,7 @@ class Order extends Model implements Package
             }
             elseif(optional($this->shippingService)->is_hound_express){
 
-                return 'Hound Express';
+                return 'MEXICO Hound Express';
             }
             return 'Correios Brazil';
         }
@@ -533,12 +533,8 @@ class Order extends Model implements Package
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
         }elseif ($shippingService && $shippingService->isGSSService()) {
+            $this->calculateGSSProfit($shippingService);
             $shippingCost = $this->user_declared_freight;
-            if(!$isServices){
-                $this->calculateGSSProfit($shippingCost, $shippingService);
-            }else{
-                $shippingCost = $this->shipping_value;
-            }
         }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
@@ -934,25 +930,40 @@ class Order extends Model implements Package
         return null;
     }
 
-    public function calculateGSSProfit($shippingCost, $shippingService)
+    public function calculateGSSProfit($shippingService)
     {
-        // $gssProfit = setting('gss_profit', null,  $this->user->id);
-        // if($gssProfit == null || $gssProfit == 0) { 
-        //     $gssProfit = setting('gss_profit', null, User::ROLE_ADMIN); 
-        // }
-        $gssCost = 0;
         $gssProfit = ZoneCountry::where('shipping_service_id', $shippingService->id)
-                    ->where('country_id', $this->recipient->country_id)
-                    ->value('profit_percentage');
-        $profit = round($gssProfit / 100, 2);
+            ->where('country_id', $this->recipient->country_id)
+            ->value('profit_percentage');
+
         $client = new Client();
         $response = $client->getCostRates($this, $shippingService);
         $data = optional($response)->getData();
-        if ($data->isSuccess && $data->output > 0){
-            $gssCost = $data->output;
+        
+        if($this->shippingService->service_sub_class == ShippingService::GSS_CEP && $data->isSuccess && $data->output > 0) {
+            $this->update([
+                'user_declared_freight' => $data->output,
+            ]);
+            $this->user_declared_freight = $data->output;
+
+        } else {
+            if($gssProfit) {
+
+                if ($data->isSuccess && $data->output > 0){
+                    $userGssProfit =  setting('gss_profit', null, $this->user_id);
+                    $userProfit = ($userGssProfit >= 0 && $userGssProfit <= 100)?$userGssProfit:0;
+                    $totalProfit =   $gssProfit + ( $gssProfit / 100 * $userProfit );
+                    $profit = $data->output / 100 * ($totalProfit);
+                    $price = round($data->output + $profit, 2);
+                    // dd($price, $profit, $totalProfit, $this->shipping_value);
+                    $this->update([
+                        'user_declared_freight' => $price,
+                    ]);
+                    $this->user_declared_freight = $price;
+                }
+    
+            }
         }
-        $addedProfit = round($gssCost * $profit, 2);
-        $this->user_declared_freight = $this->user_declared_freight - $addedProfit;
         return true;
     }
     // public function getCalculateTaxAndDutyAttribute(){

@@ -366,12 +366,78 @@
                                         </div>
                                     </div>
                                 </div> --}}
-                            <div class="controls row mb-1 align-items-center">
-                                <label class="col-md-3 text-md-right">Volumetric Discount<span class="text-danger"></span></label>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
-                                            <input type="checkbox" name="volumetric_discount" id="volumetric_discount" @if(setting('volumetric_discount', null, $user->id)) checked @endif>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Volumetric Discount Postal Service<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                                <input type="checkbox" name="volumetric_discount" id="volumetric_discount" @if(setting('volumetric_discount', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
+                                            <input type="number" name="discount_percentage" class="form-control col-2" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                {{-- <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Postal Discount<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                                <input type="checkbox" name="postal_volumetric_discount" id="postal_volumetric_discount" @if(setting('postal_volumetric_discount', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
+                                            <input type="number" name="postal_discount_percentage" class="form-control col-2" id="postal_discount_percentage" value="{{ setting('postal_discount_percentage', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div> --}}
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">Volumetric Discount Courier Service<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                                <input type="checkbox" name="hd_express_volumetric_discount" id="hd_express_volumetric_discount" @if(setting('hd_express_volumetric_discount', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <span class="offset-2 mr-2 mt-2">Discount Percentage (%) :</span>
+                                            <input type="number" name="hd_express_discount_percentage" class="form-control col-2" id="hd_express_discount_percentage" value="{{ setting('hd_express_discount_percentage', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row align-items-center mt-2">
+                                    <label class="col-md-3 text-md-right">Weight (%)<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div title="weight">
+                                                <input class="form-control" step="0.01" min=0 type="number" name="weight" value="{{ setting('weight', null, $user->id) }}">
+                                            </div>
+                                            <span class="ml-4 mr-2 mt-2">Length (%): </span>
+                                            <input type="number" name="length" class="form-control col-2" id="length" step="0.01" min=0 type="number" value="{{ setting('length', null, $user->id) }}">
+                                            <span class="ml-4 mr-2 mt-2">Width (%): </span>
+                                            <input type="number" name="width" class="form-control col-2" id="width" step="0.01" min=0 type="number" value="{{ setting('width', null, $user->id) }}">
+                                            <span class="ml-4 mr-2 mt-2">Height (%): </span>
+                                            <input type="number" name="height" class="form-control col-2" id="height" step="0.01" min=0 type="number" value="{{ setting('height', null, $user->id) }}">
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right" for="tax">Tax Payment<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Tax Payment">
+                                            <input type="checkbox" name="tax" id="tax" @if(setting('tax', null, $user->id)) checked @endif>
                                             <span class="vs-checkbox vs-checkbox-lg">
                                                 <span class="vs-checkbox--check">
                                                     <i class="vs-icon feather icon-check"></i>

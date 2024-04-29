@@ -8,6 +8,7 @@ use App\Models\ShCode;
 use App\Models\Country;
 use App\Models\Deposit;
 use App\Models\Setting;
+use App\Models\ZoneRate;
 use App\Models\ShippingService;
 use App\Services\Calculators\AbstractRateCalculator;
 
@@ -421,7 +422,7 @@ function getValidShCode($shCode, $service)
         '970600',
         '490700',
     ];
-    if($service->is_total_express) {
+    if(optional($service)->is_total_express) {
         $type = 'Courier';
     }else {
         $type = 'Postal (Correios)';
@@ -449,4 +450,42 @@ function getValidShCode($shCode, $service)
 
     }
     return $shCode;
+}
+
+function getZoneRate($order, $service, $zoneId)
+{
+    $rates = ZoneRate::where('shipping_service_id', $service->id)->first();
+    $weight = $order->getWeight();
+    $decodedRates = json_decode($rates->selling_rates, true); 
+
+    $rate = null;    
+    $rateData = $rates['data'];
+    
+    foreach ($decodedRates as $zone => $zoneData) {
+
+        $zoneNumber = (int) filter_var($zone, FILTER_SANITIZE_NUMBER_INT);
+
+        if ($zoneNumber === (int)$zoneId) {
+            $rateData = $zoneData;
+            break;
+        }
+    }
+
+    if(isset($rateData['data'])) {
+
+        foreach ($rateData['data'] as $range => $value) {
+            $rangeValue = floatval($range);
+        
+            $keys = array_keys($rateData['data']);
+            $index = array_search($range, $keys);
+            $nextWeight = isset($keys[$index + 1]) ? floatval($keys[$index + 1]) : INF;
+
+            if ($weight >= $rangeValue && $weight < $nextWeight) {
+                $rate = $value;
+                break;
+            }
+        }
+    }
+
+    return $rate;
 }

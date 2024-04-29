@@ -67,7 +67,7 @@
     </td>
     @admin
     <td>
-        {{ $order->carrierCost() }}
+        {{ number_format($order->carrierCost(), 2) }}
     </td>
     @endadmin
     <td>

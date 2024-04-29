@@ -108,7 +108,7 @@
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
                     </div>
-                    <div class="form-check form-check-inline mr-5">
+                    {{-- <div class="form-check form-check-inline mr-5">
                         <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
                             <input type="checkbox" name="individual_parcel" id="returnIndividual" @if($order->sinerlog_tran_id == 3) checked @endif>
                             <span class="vs-checkbox vs-checkbox-lg">
@@ -118,7 +118,7 @@
                             </span>
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                    </div>
+                    </div> --}}
                 </div>
                 @else
                 <div class="controls row mb-1">
@@ -144,7 +144,7 @@
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
                     </div>
-                    <div class="form-check form-check-inline mr-5">
+                    {{-- <div class="form-check form-check-inline mr-5">
                         <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
                             <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
                             <span class="vs-checkbox vs-checkbox-lg">
@@ -154,7 +154,7 @@
                             </span>
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                    </div>
+                    </div> --}}
                 </div>
                 @endif
             </div>
@@ -182,6 +182,22 @@
         </ul>
     </div>
 </form>
+
+<div class="modal fade" id="checkOptionsModal" tabindex="-1" role="dialog" aria-labelledby="checkOptionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background: red;">
+                <h5 class="modal-title" id="checkOptionsModalLabel" style="color:white;">Please Check Disposal Option</h5>
+            </div>
+            <div class="modal-body">
+                You must check at least one disposal option before saving order.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!--USPS PRIORITY INTERNATIONAL RATE ALERT MODAL-->
 <div class="modal fade" id="uspsModal" role="dialog">
     <div class="modal-dialog modal-md">
@@ -240,7 +256,7 @@
         if (service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
-        } else if (service == 477 || service == 3674 || service == 37634 || service == 3326 || service == 4367) {
+        } else if (service == 477 || service == 3674 || service == 37634 || service == 3326 || service == 4367 || service == 237) {
             return getGSSRates();
         } else if (service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
@@ -440,8 +456,11 @@
             order_id: order_id,
         }).then(function(response) {
             if (response.success == true) {
-                $('#user_declared_freight').val(response.total_amount);
-                $('#user_declared_freight').prop('readonly', true);
+
+                if (service != 283) {
+                    $('#user_declared_freight').val(response.total_amount);
+                    $('#user_declared_freight').prop('readonly', true);
+                }
             } else {
                 if (service == 3674) {
                     $('#gssRateModal').modal('show');
@@ -532,5 +551,20 @@
         var button = document.getElementById('submitButton');
         button.removeAttribute('disabled');
     })
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var orderForm = document.getElementById('order-form');
+        var returnParcelCheckbox = document.getElementById('returnParcel');
+        var disposeAllCheckbox = document.getElementById('disposeAll');
+        var checkOptionsModal = document.getElementById('checkOptionsModal');
+
+        orderForm.addEventListener('submit', function(event) {
+            // Check if both checkboxes are unchecked
+            if (!returnParcelCheckbox.checked && !disposeAllCheckbox.checked) {
+                event.preventDefault(); // Prevent form submission
+                $('#checkOptionsModal').modal('show'); // Show the modal
+            }
+        });
+    });
 </script>
 @endsection
