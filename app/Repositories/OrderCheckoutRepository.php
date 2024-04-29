@@ -74,6 +74,10 @@ class OrderCheckoutRepository
                 } catch (\Exception $ex) {
                     \Log::info('Pay Invoice Notify Transaction email send error: '.$ex->getMessage());
                 }
+
+                //Check for Insurance
+                checkParcelInsurance($deposit);
+
                 DB::commit();
                 AutoChargeAmountEvent::dispatch($this->invoice->orders()->first()->user);
             } catch (\Exception $ex) {
@@ -369,4 +373,5 @@ class OrderCheckoutRepository
             return $this->error = $ex->getMessage();
         }
     }
+
 }

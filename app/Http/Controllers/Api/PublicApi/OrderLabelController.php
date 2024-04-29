@@ -221,6 +221,8 @@ class OrderLabelController extends Controller
     private function commit($order)
     {
         DB::commit();
+        //Check for Insurance
+        checkParcelInsurance($order);
         return apiResponse(true, "Lable Generated successfully.", [
             'url' => $order->cn23_label_url ?? route('order.label.download',  encrypt($order->id)),
             'tracking_code' => $order->corrios_tracking_code

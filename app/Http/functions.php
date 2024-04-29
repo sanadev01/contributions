@@ -10,6 +10,7 @@ use App\Models\Deposit;
 use App\Models\Setting;
 use App\Models\ZoneRate;
 use App\Models\ShippingService;
+use App\Mail\User\PurchaseInsurance;
 use App\Services\Calculators\AbstractRateCalculator;
 
 function countries()
@@ -488,4 +489,28 @@ function getZoneRate($order, $service, $zoneId)
     }
 
     return $rate;
+}
+
+function checkParcelInsurance($data) {
+    if ($data instanceof Deposit) {
+        $order = Order::with('services')->find($data->order_id);
+    } elseif ($data instanceof Order) {
+        $order = $data;
+    } else {
+        \Log::error('Invalid parameter type passed to checkParcelInsurance. Expected Deposit or Order.');
+    }
+
+    if ($order) {
+        foreach ($order->services as $service) {
+            if (in_array($service->name, ['Insurance', 'Seguro'])) {
+                try {
+                    \Mail::send(new PurchaseInsurance($order));
+                } catch (\Exception $ex) {
+                    \Log::error('Failed to send Purchase Insurance email error: '.$ex->getMessage());
+                }
+            }
+        }
+    } else {
+        \Log::warning('Order not found for Deposit ID');
+    }
 }
