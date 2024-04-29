@@ -332,10 +332,9 @@ class OrderRepository
 
     public function updateHandelingServices(Request $request, Order $order)
     {
-        $order->syncServices($request->get('services', []));
+        $order->syncServices($request->get('services',[]));
 
         $order->doCalculations(true,true);
-        
         return true;
     }
 
