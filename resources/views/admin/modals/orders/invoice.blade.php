@@ -199,7 +199,7 @@
                             @if($order->tax_and_duty>0)
                             <tr>
                                 <td>
-                                    Taxes & Duties
+                                   Estimated Taxes & Duties
                                 </td>
                                 <td>
                                     {{$order->tax_and_duty}}
