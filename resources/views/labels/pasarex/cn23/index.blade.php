@@ -239,8 +239,8 @@
             margin: 0;
         }
 
-
-        .items-table {  
+        
+        .info-table {  
             position: absolute;
             top: 24mm;
             font-size: 7px;
@@ -248,7 +248,7 @@
             width: auto;
         }
 
-        .items-table table {
+        .info-table table {
             margin: 0.1cm; 
             border-collapse: collapse;
             width: 98%;
@@ -256,6 +256,31 @@
             text-align: center;
             border-collapse: separate;
             border-spacing: 0;
+        }
+
+        .items-table .table .td {
+            padding: 2px;
+            margin: 0px !important;
+            border: 1px solid black;
+            float: left;
+            height: 32px;
+            display: block;
+        }
+
+        .items-table{
+            position: absolute;
+            top: 11.90cm;
+            font-size: 7px;
+            font-weight: bold;
+            width: auto;
+        }
+
+        .items-table table{
+            margin: 0.1cm;
+            border-collapse: collapse;
+            width: 98%;
+            /* page-break-inside: auto; */
+            margin-bottom: 0.2cm;
         }
 
         .page-break-before {
@@ -452,7 +477,7 @@
         <div class="order-infoline"></div>
         <strong>Service: </strong> {{ $service }} <br>
     </div> -->
-    <div class="items-table">
+    <div class="info-table">
         <table border="1" style="width: 370px !important">
             <tbody>
                 <tr>
@@ -590,7 +615,17 @@
     <div class="complain_address">
         {{ $complainAddress }}
     </div>
-   
+    
+    @include('labels.pasarex.cn23.items')
+
+    @if ($hasSumplimentary)
+        @foreach ($suplimentaryItems as $items)
+            <div class="page-break-before"></div>
+            @include('labels.brazil.cn23.suplimentary',[
+                'items' => $items
+            ])
+        @endforeach
+    @endif
 
 </body>
 
