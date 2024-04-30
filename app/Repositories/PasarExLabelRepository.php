@@ -4,10 +4,7 @@
 namespace App\Repositories;
 
 use App\Models\Order;
-use App\Services\PasarEx\Client;
-use Illuminate\Support\Facades\Storage; 
-use App\Services\Correios\Models\PackageError;
-use App\Services\Correios\Services\Brazil\CN23LabelMaker;
+use App\Services\PasarEx\CN23LabelMaker;
 
 class PasarExLabelRepository
 {
@@ -41,7 +38,6 @@ class PasarExLabelRepository
         $labelPrinter = new CN23LabelMaker();
         $labelPrinter->setOrder($order);
         $labelPrinter->setService($order->getService());
-        $labelPrinter->setPacketType($order->getDistributionModality());
         $labelPrinter->saveAs(storage_path("app/labels/{$order->corrios_tracking_code}.pdf"));
     }
     protected function generateLabel(Order $order)
