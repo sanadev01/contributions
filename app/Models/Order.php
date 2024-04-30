@@ -841,39 +841,15 @@ class Order extends Model implements Package
         }
         return $this;
     }
-    // public function getCalculateTaxAndDutyAttribute(){
-    //     $totalTaxAndDuty = 0;
-    //     if (strtolower($this->tax_modality) == "ddp") {
-    //         if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
-
-    //             $totalCost = $this->gross_total + $this->insurance_value + $this->carrierCost();
-    //             $duty = $totalCost > 50 ? $totalCost * .6 : 0;
-    //             $totalCostOfTheProduct = $totalCost + $duty;
-    //             $icms = .17;
-    //             $totalIcms = $icms * $totalCostOfTheProduct;
-    //             $totalTaxAndDuty = $duty + $totalIcms; 
-    //             \Log::info([
-    //                 'recipient country' => $this->recipient->country->code,
-    //                 'gross total' => $this->gross_total,
-    //                 'insurance value' => $this->insurance_value,
-    //                 'carrierCost' => $this->carrierCost(),
-    //                 'totalCost' => $totalCost,
-    //                 'duty' => $duty,
-    //                 'totalCostOfTheProduct' => $totalCostOfTheProduct,
-    //                 'icms' => $icms,
-    //                 'totalIcms' => $totalIcms,
-    //                 'totalTaxAndDuty' => $totalTaxAndDuty, 
-    //             ]);
-    //         }
-    //     }
-    //     return round($totalTaxAndDuty, 2);
-    // }
+ 
     public function getCalculateTaxAndDutyAttribute(){
         $totalTaxAndDuty = 0;
         if (strtolower($this->tax_modality) == "ddp" || setting('is_prc_user', null, $this->user_id)) {
             if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
 
-                $totalCost = $this->shipping_value + $this->user_declared_freight + $this->insurance_value;
+                $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
+                
+                $totalCost = $this->shipping_value + $this->user_declared_freight + $additionalServicesCost;
             
                 $duty = $totalCost > 50 ? $totalCost * .60 :0; 
                 $totalCostOfTheProduct = $totalCost + $duty;
@@ -883,7 +859,7 @@ class Order extends Model implements Package
                 \Log::info([
                     'recipient country' => $this->recipient->country->code,
                     'user_declared_freight' => $this->user_declared_freight,
-                    'insurance value' => $this->insurance_value,
+                    'additionalServicesCost +   insurance_value ' => $additionalServicesCost,
                     'shipping_value' => $this->shipping_value,
                     'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
                     'totalCost' => $totalCost,
