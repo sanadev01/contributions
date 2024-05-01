@@ -166,6 +166,7 @@ class CreateRequest extends FormRequest
             'sender.sender_city.required_if' => __('validation.sender_city.required_if'),
             'recipient.phone.required' => 'The phone number field is required.',
             'recipient.phone.regex' => 'Please enter a valid phone number in international format. Example: +551234567890',
+            'parcel.return_option.required' => 'The return option is required. It should be 0 or 1.',
         ];
     }
 }
