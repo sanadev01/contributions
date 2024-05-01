@@ -91,15 +91,29 @@
                                             @foreach($rates as $rate)
                                                 @if($rate->shippingService->id == $serviceId)
                                                     @if(isset($rate->cost_rates))
-                                                        <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId, 'type' => 'cost']) }}">Cost Rate</a>
+                                                        @php
+                                                            $costRateLabel = $rate->user ? 'Cost Rate - ' . $rate->user->pobox_number : 'Cost Rate - All';
+                                                            $decodedCostRates = json_decode($rate->cost_rates, true);
+                                                            $zoneExists = isset($decodedCostRates["Zone $groupId"]);
+                                                        @endphp
+                                                        @if($zoneExists)
+                                                            <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId, 'type' => 'cost', 'user_id' => $rate->user ? $rate->user->id : null]) }}">{{ $costRateLabel }}</a>
+                                                        @endif
                                                     @endif
+                                        
                                                     @if(isset($rate->selling_rates))
-                                                        <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId, 'type' => 'package']) }}">Selling Rate</a>
+                                                        @php
+                                                            $sellingRateLabel = $rate->user ? 'Selling Rate - ' . $rate->user->pobox_number : 'Selling Rate - All';
+                                                            $decodedSellingRates = json_decode($rate->selling_rates, true);
+                                                            $zoneExists = isset($decodedSellingRates["Zone $groupId"]);
+                                                        @endphp
+                                                        @if($zoneExists)
+                                                            <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId, 'type' => 'package', 'user_id' => $rate->user ? $rate->user->id : null]) }}">{{ $sellingRateLabel }}</a>
+                                                        @endif
                                                     @endif
                                                 @endif
                                             @endforeach
-
-                                        </div>
+                                        </div>                                                                               
                                     </div>
                                     
                                     @endif
