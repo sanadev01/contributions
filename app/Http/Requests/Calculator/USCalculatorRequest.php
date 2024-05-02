@@ -25,6 +25,9 @@ class USCalculatorRequest extends FormRequest
     public function rules()
     {
         return [
+            
+            'from_herco' => 'required_without_all:to_herco',
+            'to_herco' => 'required_without_all:from_herco',
             'origin_country' => 'required|numeric|exists:countries,id',
             'destination_country' => 'required|numeric|exists:countries,id',
             'sender_state' => 'required|exists:states,code',
@@ -82,6 +85,8 @@ class USCalculatorRequest extends FormRequest
             'weight' => 'Please Enter weight',
             'weight.numeric' => 'Weight must be numeric',
             'weight.max' => 'weight exceed the delivery of UPS',
+            'to_herco.required_without_all'=>'Please select Domestic or International',
+            'from_herco.required_without_all'=>'',
         ];
     }
 

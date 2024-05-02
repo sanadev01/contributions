@@ -8,7 +8,7 @@
                     <div class="col-md-3">
                         <div class="input-group">
                             <div class="vs-checkbox-con vs-checkbox-primary" title="from_herco">
-                                <input type="checkbox" name="from_herco" id="from_herco" @if(old('from_herco')) checked @endif>
+                                <input type="checkbox" name="from_herco" id="from_herco"  >
                                 <span class="vs-checkbox vs-checkbox-lg">
                                     <span class="vs-checkbox--check">
                                         <i class="vs-icon feather icon-check"></i>
@@ -23,7 +23,7 @@
                     <div class="col-md-3">
                         <div class="input-group">
                             <div class="vs-checkbox-con vs-checkbox-primary" title="to_herco">
-                                <input type="checkbox" name="to_herco" id="to_herco"  @if(old('to_herco')) checked @endif>
+                                <input type="checkbox" name="to_herco" id="to_herco"  >
                                 <span class="vs-checkbox vs-checkbox-lg">
                                     <span class="vs-checkbox--check">
                                         <i class="vs-icon feather icon-check"></i>
@@ -87,16 +87,24 @@
                         </div>
                     </div>
                     <div class="row mb-1">
-                        <div class="controls col-6">
+                        <div class="controls col-4">
                             <label>Sender Address</label>
                             <input type="text" class="form-control" id="sender_address" name="sender_address" value="{{old('sender_address')}}" required placeholder="Sender Address" />
                         </div>
-                        <div class="controls col-6">
+                        <div class="controls col-4">
                             <label>Sender ZipCode</label>
                             <input type="text" name="sender_zipcode" id="sender_zipcode" value="{{ cleanString(old('sender_zipcode')) }}" required class="form-control" placeholder="Zip Code" />
                             <div id="sender_zipcode_response">
 
                             </div>
+                        </div> 
+                        <div class="controls col-4" id="tax_modality">
+                                <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
+                                <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality"  required placeholder="@lang('orders.order-details.Tax Modality')">
+                                    <option value="ddu" {{ 'ddu' == old('tax_modality') ? 'selected' : '' }}>DDU</option>
+                                    <option value="ddp" {{ 'ddp' == old('tax_modality') ? 'selected' : '' }}>DDP</option>
+                                </select>
+                                <div class="help-block"></div>
                         </div>
                     </div>
                 </div>
@@ -158,6 +166,16 @@
                                 <label>Recipient Phone</label>
                                 @livewire('components.search-address', ['user_id' => ((auth()->check()) ? auth()->user()->id : null), 'from_calculator' => true ])
                          </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="controls col-4" id="tax_modality">
+                                <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
+                                <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" required placeholder="@lang('orders.order-details.Tax Modality')">
+                                    <option value="ddu" {{ 'ddu' == old('tax_modality') ? 'selected' : '' }}>DDU</option>
+                                    <option value="ddp" {{ 'ddp' == old('tax_modality') ? 'selected' : '' }}>DDP</option>
+                                </select>
+                                <div class="help-block"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="row mb-1 mt-3 d-none" id="destination">

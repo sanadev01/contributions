@@ -80,7 +80,7 @@
     <div class="mx-3">
         <div class="row justify-content-center">
             <div class="col-12">
-                <livewire:calculator.us-calculation cc='US'>
+            <livewire:calculator.us-calculation cc='US'>
             </div>
         </div>
     </div>

@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use App\Repositories\Calculator\USCalculatorRepository;
+use Illuminate\Support\Facades\Auth;
 
 class UsCalculatorRates extends Component
 {
@@ -17,6 +18,7 @@ class UsCalculatorRates extends Component
     public $chargableWeight;
     public $userLoggedIn;
     public $shippingServiceTitle;
+    public $isInternational;
     public $serviceResponse = false;
 
     public $serviceError;
@@ -24,8 +26,9 @@ class UsCalculatorRates extends Component
     private $selectedServiceCost;
     private $order;
 
+    public $tax_modality;
 
-    public function mount($apiRates, $ratesWithProfit, $tempOrder, $weightInOtherUnit, $chargableWeight, $userLoggedIn, $shippingServiceTitle)
+    public function mount($apiRates, $ratesWithProfit, $tempOrder, $weightInOtherUnit, $chargableWeight, $userLoggedIn, $shippingServiceTitle, $isInternational)
     {
         $this->apiRates = $apiRates;
         $this->ratesWithProfit = $ratesWithProfit;
@@ -34,6 +37,8 @@ class UsCalculatorRates extends Component
         $this->chargableWeight = $chargableWeight;
         $this->userLoggedIn = $userLoggedIn;
         $this->shippingServiceTitle = $shippingServiceTitle;
+        $this->isInternational = $isInternational;
+        $this->tax_modality = strtolower($this->tempOrder['tax_modality']) == "ddp" ? 'DDP' : 'DDU';
     }
 
     public function render()
@@ -41,11 +46,12 @@ class UsCalculatorRates extends Component
         return view('livewire.calculator.us-calculator-rates');
     }
 
-    public function getLabel($subClass)
+    public function getLabel($subClass, $userDeclaredFreight)
     {
+        $this->tempOrder['user_declared_freight'] = $userDeclaredFreight;
         $this->selectedService = $subClass;
         $usCalculatorRepository = new  USCalculatorRepository();
-        if (!$this->selectedService){
+        if (!$this->selectedService) {
             $this->addError('selectedService', 'select service please.');
             $this->dispatchBrowserEvent('fadeOutLoading');
             return false;
@@ -74,6 +80,82 @@ class UsCalculatorRates extends Component
         }
         $this->dispatchBrowserEvent('fadeOutLoading');
     }
+    public function createOrder($subClass, $userDeclaredFreight)
+    {
+        $this->tempOrder['user_declared_freight'] = $userDeclaredFreight;
+        $this->selectedService = $subClass;
+        $usCalculatorRepository = new  USCalculatorRepository();
+        if (!$this->selectedService) {
+            $this->addError('selectedService', 'select service please.');
+            return false;
+        }
+
+        if (!$this->userLoggedIn) {
+            $this->addError('serviceError', 'Please login to continue.');
+            return false;
+        }
+
+        if ($this->selectedServiceEnabledForUser()) {
+            $order = $usCalculatorRepository->executeForPlaceOrder($this->createRequest());
+            $this->addError('serviceError', $usCalculatorRepository->getError());
+
+            if ($order) {
+                return redirect()->route('admin.orders.sender.index', $order);
+            }
+        }
+    }
+    public function calculateTotal($serviceSubClass, $profitRate)
+    {
+        $userProfit = $this->calculateProfit($profitRate, $serviceSubClass, Auth::id());
+
+        $totalCost = $profitRate + $profitRate;
+        if (strtolower($this->tax_modality) == "ddp") {
+
+            $duty = $totalCost > 50 ? $totalCost * .60 : 0;
+            $totalCostOfTheProduct = $totalCost + $duty;
+            $icms = .17;
+            $totalIcms = $icms * $totalCostOfTheProduct;
+            $totalTaxAndDuty = $duty + $totalIcms;
+
+        } else {
+            $totalTaxAndDuty = 0;
+        }
+        $feeForTaxAndDuty = $this->calculateFeeForTaxAndDuty($totalTaxAndDuty);
+
+        return number_format($feeForTaxAndDuty+number_format($totalTaxAndDuty, 2) + number_format(+$profitRate, 2) + $userProfit, 2);
+    }
+    function calculateProfit($shippingCost, $serviceSubClass,$user_id)
+    {
+        $profit_percentage = match ((int)$serviceSubClass) {
+            ShippingService::UPS_GROUND => setting('ups_profit', null, $user_id) ?? setting('ups_profit', null, User::ROLE_ADMIN),
+            ShippingService::FEDEX_GROUND => setting('fedex_profit', null, $user_id) ?? setting('fedex_profit', null, User::ROLE_ADMIN),
+            default => setting('usps_profit', null, $user_id) ?? setting('usps_profit', null, User::ROLE_ADMIN),
+        };
+
+        return number_format(($shippingCost * ($profit_percentage / 100)),2);
+    }
+    public function calculateFeeForTaxAndDuty($totalTaxAndDuty)
+    {
+        $fee=0;
+        if($totalTaxAndDuty>0){
+            $flag=true;
+                if(setting('prc_user_fee', null, Auth::id())=="flat_fee"){
+                    $fee = setting('prc_user_fee_flat', null, $this->user_id)??2; 
+                    $flag=false;
+                }
+                if(setting('prc_user_fee', null, Auth::id())=="variable_fee"){
+                    $percent = setting('prc_user_fee_variable', null, Auth::id())??1;
+                    $fee= $totalTaxAndDuty/100 * $percent;
+                    $fee= $fee <0.5? 0.5:$fee;
+                    $flag=false;
+                }
+                if($flag){
+                $fee = $totalTaxAndDuty *.01;
+                $fee = $fee<0.5?0.5:$fee;
+                }
+        }
+        return $fee;
+    }
 
     public function downloadRates()
     {
@@ -82,6 +164,18 @@ class UsCalculatorRates extends Component
 
             return $usCalculatorRepository->download($this->ratesWithProfit, $this->tempOrder, $this->chargableWeight, $this->weightInOtherUnit);
         }
+    }
+    public function getTaxAndDuty($userDeclaredFreight, $tax_modality)
+    {
+        if (strtolower($tax_modality) == "ddp") {
+            $total = $userDeclaredFreight * 2;
+            $tax = $total > 50 ? ($userDeclaredFreight * 0.6) : 0;
+            $subTotal = $tax + $total;
+            $totalIcms = $subTotal * 0.17;
+            $overAllTotal = $subTotal + $totalIcms;
+            return $overAllTotal;
+        }
+        return $userDeclaredFreight;
     }
 
     private function selectedServiceEnabledForUser()
