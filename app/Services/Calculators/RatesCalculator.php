@@ -88,7 +88,19 @@ class RatesCalculator
      */
     private function calculateWeight($originalRate)
     {
-        if ($this->order->weight_discount && $originalRate == false) 
+        if (in_array($this->shippingService->service_sub_class ,[
+                ShippingService::AJ_Packet_Standard,
+                ShippingService::AJ_Standard_CN,
+                ShippingService::BCN_Packet_Standard,
+                ShippingService::AJ_Packet_Express,
+                ShippingService::AJ_Express_CN,
+                ShippingService::BCN_Packet_Express,
+                ShippingService::Packet_Standard,
+                ShippingService::Packet_Express,
+                ShippingService::Prime5,
+                ShippingService::Prime5RIO,
+            ])
+            && $this->order->weight_discount && $originalRate == false) 
         {
             $unit = ($this->order->measurement_unit == 'lbs/in') ? 'in' : 'cm';
             

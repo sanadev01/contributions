@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Rates;
 
 use Exception;
+use App\Models\User;
 use App\Models\Rate;
 use App\Models\Country;
 use App\Models\ZoneRate;
@@ -110,11 +111,6 @@ class ZoneProfitController extends Controller
         $this->authorizeResource(Rate::class);
 
         $services = ShippingService::whereIn('service_sub_class', [
-            ShippingService::GSS_PMI,
-            ShippingService::GSS_EPMEI, 
-            ShippingService::GSS_EPMI, 
-            ShippingService::GSS_FCM, 
-            ShippingService::GSS_EMS,
             ShippingService::GSS_CEP
             ])->where('active',true)->get();
         
@@ -123,24 +119,31 @@ class ZoneProfitController extends Controller
 
     public function uploadRates(Request $request)
     {
-        // try{
+        try{
             $file = $request->file('csv_file');
-            $importService = new ImportZoneRate($file, $request->service_id, $request->type);
+            $importService = new ImportZoneRate($file, $request->service_id, $request->type, $request->user_id);
             $importService->handle();
             session()->flash('alert-success', 'Rates Updated Successfully');
 
             return  redirect()->route('admin.rates.zone-profit.index');
 
-        // }catch(Exception $exception){
-            // session()->flash('alert-danger','Error while Saving Rates: '.$exception->getMessage());
-            // return back();
-        // }
+        }catch(Exception $exception){
+            session()->flash('alert-danger','Error while Saving Rates: '.$exception->getMessage());
+            return back();
+        }
     }
 
-    public function viewRates($serviceId, $zoneId, $type) {
-
+    public function viewRates($serviceId, $zoneId, $type, $userId = null) {
+        $poboxNumber = '';
         $service = ShippingService::findOrFail($serviceId);
-        $rates = ZoneRate::where('shipping_service_id', $serviceId)->first();
+        $ratesQuery = ZoneRate::where('shipping_service_id', $serviceId);
+        
+        if ($userId !== null) {
+            $ratesQuery->where('user_id', $userId);
+            $poboxNumber = User::where('id', $userId)->value('pobox_number');
+        }
+    
+        $rates = $ratesQuery->first();
     
         if ($type === "cost") {
             $decodedRates = json_decode($rates->cost_rates, true); 
@@ -151,17 +154,15 @@ class ZoneProfitController extends Controller
         $rate = null;
     
         foreach ($decodedRates as $zone => $zoneData) {
-
             $zoneNumber = (int) filter_var($zone, FILTER_SANITIZE_NUMBER_INT);
-
+    
             if ($zoneNumber === (int)$zoneId) {
                 $rate = $zoneData;
                 break;
             }
         }
-        
-        return view('admin.rates.zone-profit.view-rates', compact('service', 'rate', 'type', 'zoneId'));
-    }
     
+        return view('admin.rates.zone-profit.view-rates', compact('service', 'rate', 'type', 'zoneId', 'poboxNumber'));
+    }       
 
 }

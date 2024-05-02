@@ -129,6 +129,24 @@ class ParcelController extends Controller
             }
         }
 
+        if ($shippingService->service_sub_class == ShippingService::GSS_CEP) {
+            
+            if(optional($request->parcel)['measurement_unit'] == "lbs/in" && $weight > 4.40 || optional($request->parcel)['measurement_unit'] == "kg/cm" && $weight > 2) {
+                return apiResponse(false, "Parcel Weight cannot be more than 4.40 LBS / 2 KG. Please Update Your Parcel");
+            }
+            if($length+$width+$height > $shippingService->max_sum_of_all_sides) {
+                return apiResponse(false, "Maximun Pacakge Size: The sum of the length, width and height cannot not be greater than 90 cm (l + w + h <= 90). Please Update Your Parcel");
+            }
+            $products = collect($request->get('products', []));
+            $itemsValue = $products->sum(function ($product) {
+                return optional($product)['quantity'] * optional($product)['value'];
+            });
+            if($itemsValue > 400 ) {
+                return apiResponse(false, "Total Parcel Value cannot be more than $400");
+            }
+
+        }
+
         $senderCountryID = $request->sender['sender_country_id'] ?? null;
         $senderStateID = $request->sender['sender_state_id'] ?? null;
 
@@ -195,7 +213,7 @@ class ParcelController extends Controller
                 "is_shipment_added" => true,
                 'status' => Order::STATUS_ORDER,
                 'user_declared_freight' => optional($request->parcel)['shipment_value'] ?? 0,
-                'sinerlog_tran_id' => optional($request->parcel)['is_disposal'] ?? 1,
+                'sinerlog_tran_id' => optional($request->parcel)['disposal'],
 
                 "sender_first_name" => optional($request->sender)['sender_first_name'],
                 "sender_last_name" => optional($request->sender)['sender_last_name'],

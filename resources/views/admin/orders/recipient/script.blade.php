@@ -122,32 +122,32 @@
                     {
                         $('#loading').fadeIn();
                         $('#communes_response').css('display', 'none');
-                        $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
-                            region_code: old_region,
-                        })
-                        .then(function(response){
-                            if(response.success == true)
-                            {
-                                $('#commune').attr('disabled', false);
-                                $.each(response.data,function(key, value)
-                                {
-                                    $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
-                                    $('#commune').selectpicker('refresh');
-                                    if(old_city != undefined || old_city != '')
-                                    {
-                                        $('#commune').val(old_city);
-                                    }
-                                });
-                                $('#loading').fadeOut();
-                            }else{
-                                $('#loading').fadeOut();
-                                $('#communes_response').css('display', 'block');
-                                $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
-                                toastr.error(response.message)
-                            }
-                        }).catch(function(error){
-                            console.log(error);
-                        })
+                        // $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
+                        //     region_code: old_region,
+                        // })
+                        // .then(function(response){
+                        //     if(response.success == true)
+                        //     {
+                        //         $('#commune').attr('disabled', false);
+                        //         $.each(response.data,function(key, value)
+                        //         {
+                        //             $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
+                        //             $('#commune').selectpicker('refresh');
+                        //             if(old_city != undefined || old_city != '')
+                        //             {
+                        //                 $('#commune').val(old_city);
+                        //             }
+                        //         });
+                        //         $('#loading').fadeOut();
+                        //     }else{
+                        //         $('#loading').fadeOut();
+                        //         $('#communes_response').css('display', 'block');
+                        //         $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                        //         toastr.error(response.message)
+                        //     }
+                        // }).catch(function(error){
+                        //     console.log(error);
+                        // })
                     } else {
                         window.inactiveChileFields();
                     }
@@ -202,32 +202,34 @@
                 {
                     $('#loading').fadeIn();
                     $('#communes_response').css('display', 'none');
-                    $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
-                        region_code: old_region,
-                    })
-                    .then(function(response){
-                        if(response.success == true)
-                        {
-                            $('#commune').attr('disabled', false);
-                            $.each(response.data,function(key, value)
-                            {
-                                $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
-                                $('#commune').selectpicker('refresh');
-                            });
-                            if(old_city != undefined || old_city != '')
-                            {
-                                $('#commune').val(old_city);
-                            }
-                            $('#loading').fadeOut();
-                        }else{
-                            $('#loading').fadeOut();
-                            $('#communes_response').css('display', 'block');
-                            $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
-                            toastr.error(response.message)
-                        }
-                    }).catch(function(error){
-                        console.log(error);
-                    })
+                    // $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
+                    //     region_code: old_region,
+                    // })
+                    // .then(function(response){
+                    //     if(response.success == true)
+                    //     {
+                    //         $('#commune').attr('disabled', false);
+                    //         $.each(response.data,function(key, value)
+                    //         {
+                    //             $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
+                    //             $('#commune').selectpicker('refresh');
+                    //         });
+                    //         if(old_city != undefined || old_city != '')
+                    //         {
+                    //             $('#commune').val(old_city);
+                    //         }
+                    //         $('#loading').fadeOut();
+                    //     }else{
+                    //         $('#loading').fadeOut();
+                    //         $('#communes_response').css('display', 'block');
+                    //         $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                    //         toastr.error(response.message)
+                    //     }
+                    // }).catch(function(error){
+                    //     console.log(error);
+                    // })
+                    $('#loading').fadeOut();
+
                 }
 
             }else {
@@ -251,36 +253,36 @@
                 if ( $(this).val() == undefined || $(this).val() == "" ) return;
                 let region_code = $('#region').val();
                 
-                $('#loading').fadeIn();
-                $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
-                    region_code: $(this).val(),
-                })
-                .then(function(response){
-                    if(response.success == true)
-                    {
-                        $('#commune').attr('disabled', false);
-                        $('#commune').empty();
-                        $.each(response.data,function(key, value)
-                        {
-                            $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
-                            $('#commune').selectpicker('refresh');
-                        });
-                        if((old_region != undefined || old_region != '') && (old_city != undefined || old_city != '') && region_code == old_region)
-                        {
-                            $('#commune').val(old_city);
-                        }else{
-                            $('#commune').val('');
-                        }
-                        $('#loading').fadeOut();
-                    }else{
-                        $('#loading').fadeOut();
-                        $('#communes_response').css('display', 'block');
-                        $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
-                        toastr.error(response.message)
-                    }
-                }).catch(function(error){
-                    console.log(error);
-                })
+                // $('#loading').fadeIn();
+                // $.get('{{ route("api.orders.recipient.chile_comunes") }}',{
+                //     region_code: $(this).val(),
+                // })
+                // .then(function(response){
+                //     if(response.success == true)
+                //     {
+                //         $('#commune').attr('disabled', false);
+                //         $('#commune').empty();
+                //         $.each(response.data,function(key, value)
+                //         {
+                //             $('#commune').append('<option value="'+value.NombreComuna+'">'+value.NombreComuna+'</option>');
+                //             $('#commune').selectpicker('refresh');
+                //         });
+                //         if((old_region != undefined || old_region != '') && (old_city != undefined || old_city != '') && region_code == old_region)
+                //         {
+                //             $('#commune').val(old_city);
+                //         }else{
+                //             $('#commune').val('');
+                //         }
+                //         $('#loading').fadeOut();
+                //     }else{
+                //         $('#loading').fadeOut();
+                //         $('#communes_response').css('display', 'block');
+                //         $('#communes_response').empty().append("<p style='color: red;'>"+response.message+"</p>");
+                //         toastr.error(response.message)
+                //     }
+                // }).catch(function(error){
+                //     console.log(error);
+                // })
             }    
         });
 
@@ -666,6 +668,7 @@
                 if(response.success == true)
                 {
                     $('#region').attr('disabled', false);
+                    $('#region_input').attr('disabled', true);
                     $('#region').empty();
                     $.each(response.data,function(key, value)
                     {
@@ -699,6 +702,7 @@
                     if(response.success == true)
                     {
                         $('#region').attr('disabled', false);
+                        $('#region_input').attr('disabled', true);
                         $('#region').empty();
                         $.each(response.data,function(key, region)
                         {

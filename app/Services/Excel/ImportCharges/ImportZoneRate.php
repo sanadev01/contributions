@@ -12,13 +12,15 @@ class ImportZoneRate extends AbstractImportService
     public $type;
     public $weightInKG;
     public $weightInLB;
+    public $userId;
 
-    public function __construct(UploadedFile $file, $serviceId, $type)
+    public function __construct(UploadedFile $file, $serviceId, $type, $userId = null)
     {
         $this->serviceId = $serviceId;
         $this->type = $type;
         $this->weightInKG = [];
         $this->weightInLB = [];
+        $this->userId = $userId;
 
         $filename = $this->importFile($file);
 
@@ -65,10 +67,11 @@ class ImportZoneRate extends AbstractImportService
 
         $rates[] = [
             'shipping_service_id' => $this->serviceId,
-            'rates' => json_encode($zoneData)
-            ];
+            'user_id' => $this->userId ?? null,
+            'rates' => json_encode($zoneData),
+        ];
 
-        return $this->storeRatesToDb($rates);
+        return $this->storeRatesToDB($rates);
     }
 
     private function getZoneData($col) {
@@ -88,22 +91,27 @@ class ImportZoneRate extends AbstractImportService
         return $cellValue !== null ? $cellValue : $default;
     }
 
-    private function storeRatesToDb(array $data)
+    private function storeRatesToDB(array $data)
     {
         foreach ($data as $rate) {
             $service = ['shipping_service_id' => $rate['shipping_service_id']];
 
-            if ($this->type === 'Cost') {
+            // Check if user_id is provided and exists
+            if ($this->userId !== null && $existingRate = ZoneRate::where(array_merge($service, ['user_id' => $this->userId]))->first()) {
+                $existingRate->update([
+                    $this->type === 'Cost' ? 'cost_rates' : 'selling_rates' => $rate['rates']
+                ]);
+            } else {
+                // Create a new row with user_id or update existing row without user_id
+                $attributes = $this->userId !== null ? array_merge($service, ['user_id' => $this->userId]) : $service;
                 ZoneRate::updateOrCreate(
-                    $service,
-                    ['cost_rates' => $rate['rates']]
-                );
-            } elseif ($this->type === 'Selling') {
-                ZoneRate::updateOrCreate(
-                    $service,
-                    ['selling_rates' => $rate['rates']]
+                    $attributes,
+                    [
+                        $this->type === 'Cost' ? 'cost_rates' : 'selling_rates' => $rate['rates']
+                    ]
                 );
             }
         }
     }
+
 }

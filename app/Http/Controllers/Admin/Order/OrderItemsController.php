@@ -74,7 +74,7 @@ class OrderItemsController extends Controller
                 'user_declared_freight.gt' => __('validation.gt', ['attribute' => 'shipping service rate not availaible for this service']),
             ]);
         }
-        if($this->orderRepository->GePSService($request->shipping_service_id)){
+        if($this->orderRepository->GePSService($request->shipping_service_id) || $shippingService->service_sub_class == ShippingService::GSS_CEP){
             $value = 0;
             if (count($order->items) >= 1) {
                 foreach ($order->items as $key => $item) {
@@ -93,7 +93,7 @@ class OrderItemsController extends Controller
                 return back()->withInput();
             }
         }
-        if(in_array($shippingService->service_sub_class, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Post_Plus_Registered])) {
+        if(in_array($shippingService->service_sub_class, [ShippingService::GePS, ShippingService::GePS_EFormat, ShippingService::Post_Plus_Registered, ShippingService::GSS_CEP])) {
             if($order->measurement_unit == "lbs/in" && $order->weight > 4.40 || $order->measurement_unit == "kg/cm" && $order->weight > 2) {
                 session()->flash('alert-danger', 'Parcel Weight cannot be more than 4.40 LBS / 2 KG. Please Update Your Parcel');
                 return back()->withInput();

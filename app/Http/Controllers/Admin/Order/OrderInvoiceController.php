@@ -26,11 +26,15 @@ class OrderInvoiceController extends Controller
             }
         }
 
-        $volumeWeight = ($order->is_weight_in_kg) ? $order->getWeight('kg') : $order->getWeight('lbs');
-
-        $appliedVolumeWeight = ($order->weight_discount) ? $this->calculateDiscountedWeight($order->getOriginalWeight(), $volumeWeight, $order->weight_discount) : null;
-
-        return view('admin.orders.invoice.index', compact('order', 'services', 'appliedVolumeWeight'));
+        $volumeWeight = ($order->isWeightInKg()) ? $order->getWeight('kg') : $order->getWeight('lbs');
+        
+        if($order->shippingService->is_total_express) {
+            $appliedVolumeWeight = $volumeWeight;
+        } else {
+            $appliedVolumeWeight = ($order->weight_discount) ? $this->calculateDiscountedWeight($order->getOriginalWeight(), $volumeWeight, $order->weight_discount) : null;
+        }
+        
+        return view('admin.orders.invoice.index',compact('order', 'services', 'appliedVolumeWeight'));
     }
 
     public function store(Request $request, Order $order)
