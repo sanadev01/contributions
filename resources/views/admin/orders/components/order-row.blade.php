@@ -57,9 +57,6 @@
         {{ str_limit(ucfirst($order->merchant), 30) }}
     </td>
     <td>
-        {{ ucfirst($order->tracking_id) }}
-    </td>
-    <td>
         {{ ucfirst($order->customer_reference) }}
     </td>
     <td>
@@ -95,17 +92,6 @@
             @endif
 
         </select>
-    </td>
-    <td style="zoom: 0.8">
-        @if ( $order->is_consolidated )
-            <span class="btn btn-primary">
-                Consolidated
-            </span>
-        @else
-            <span class="btn btn-primary">
-                Non-Consolidated
-            </span>
-        @endif
     </td>
     <td class="font-large-1">
         @if( $order->isPaid() )

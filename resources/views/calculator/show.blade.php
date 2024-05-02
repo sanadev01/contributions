@@ -65,7 +65,7 @@
     </div>
 </section>
 <section>
-    <input type="text" id="searchInput" class="form-control col-6 my-4" placeholder=" Search...">
+    <input type="text" id="searchInput" class="form-control col-4 col-md-6 col-sm-12 my-4" placeholder=" Search...">
     <table class="table table-borderless p-0 table-responsive-md table-striped" id="kpi-report">
         <thead>
             <tr id="kpiHead">

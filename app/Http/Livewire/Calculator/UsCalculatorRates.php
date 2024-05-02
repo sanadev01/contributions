@@ -38,7 +38,7 @@ class UsCalculatorRates extends Component
         $this->userLoggedIn = $userLoggedIn;
         $this->shippingServiceTitle = $shippingServiceTitle;
         $this->isInternational = $isInternational;
-        $this->tax_modality = strtolower($this->tempOrder['tax_modality']) == "ddp" ? 'DDP' : 'DDU';
+        $this->tax_modality = strtolower($this->tempOrder['tax_modality']) == "ddp" ? 'ddp' : 'ddu';
     }
 
     public function render()
@@ -87,11 +87,13 @@ class UsCalculatorRates extends Component
         $usCalculatorRepository = new  USCalculatorRepository();
         if (!$this->selectedService) {
             $this->addError('selectedService', 'select service please.');
+            $this->dispatchBrowserEvent('fadeOutLoading');
             return false;
         }
 
         if (!$this->userLoggedIn) {
             $this->addError('serviceError', 'Please login to continue.');
+            $this->dispatchBrowserEvent('fadeOutLoading');
             return false;
         }
 
@@ -103,24 +105,25 @@ class UsCalculatorRates extends Component
                 return redirect()->route('admin.orders.sender.index', $order);
             }
         }
+        $this->dispatchBrowserEvent('fadeOutLoading');
     }
     public function calculateTotal($serviceSubClass, $profitRate)
     {
         $userProfit = $this->calculateProfit($profitRate, $serviceSubClass, Auth::id());
 
         $totalCost = $profitRate + $profitRate;
-        if (strtolower($this->tax_modality) == "ddp") {
-
+        $isPRCUser = setting('is_prc_user', null, Auth::id());
+        if (strtolower($this->tax_modality) == "ddp" || $isPRCUser) {
             $duty = $totalCost > 50 ? $totalCost * .60 : 0;
             $totalCostOfTheProduct = $totalCost + $duty;
             $icms = .17;
             $totalIcms = $icms * $totalCostOfTheProduct;
             $totalTaxAndDuty = $duty + $totalIcms;
-
+            $feeForTaxAndDuty = $this->calculateFeeForTaxAndDuty($totalTaxAndDuty);
         } else {
             $totalTaxAndDuty = 0;
+            $feeForTaxAndDuty = 0;
         }
-        $feeForTaxAndDuty = $this->calculateFeeForTaxAndDuty($totalTaxAndDuty);
 
         return number_format($feeForTaxAndDuty+number_format($totalTaxAndDuty, 2) + number_format(+$profitRate, 2) + $userProfit, 2);
     }
@@ -140,7 +143,7 @@ class UsCalculatorRates extends Component
         if($totalTaxAndDuty>0){
             $flag=true;
                 if(setting('prc_user_fee', null, Auth::id())=="flat_fee"){
-                    $fee = setting('prc_user_fee_flat', null, $this->user_id)??2; 
+                    $fee = setting('prc_user_fee_flat', null, Auth::id())??2; 
                     $flag=false;
                 }
                 if(setting('prc_user_fee', null, Auth::id())=="variable_fee"){
