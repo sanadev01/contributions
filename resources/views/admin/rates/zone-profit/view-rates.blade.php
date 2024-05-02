@@ -9,9 +9,9 @@
                         <div class="">
                             <h4 class="mb-0 mr-3">
                                 @if($type=="cost")
-                                    Cost Rates of {{$service->name}} for Zone {{$zoneId}}
+                                    Cost Rates of {{$service->name}} for Zone {{$zoneId}} @if($poboxNumber) - {{$poboxNumber}} @endif
                                 @else
-                                    Selling Rates of {{$service->name}} for Zone {{$zoneId}}
+                                    Selling Rates of {{$service->name}} for Zone {{$zoneId}} @if($poboxNumber) - {{$poboxNumber}} @endif
                                 @endif
                             </h4>
                             <hr>
@@ -47,10 +47,10 @@
                                 @foreach($rate['data'] as $weight => $rate)
                                     <tr>
                                         <td>
-                                            {{ $weight }}
+                                            {{ number_format($weight, 2) }}
                                         </td>
                                         <td>
-                                            {{ $rate }}
+                                            {{ number_format($rate, 2) }}
                                         </td>
                                     </tr>
                                 @endforeach

@@ -19,6 +19,7 @@
                 <form class="form" action="{{ route('admin.rates.uploadRates') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-body">
+                        <input type="hidden" name="user_id" id="user_id" wire:model="userId">
                         <div class="row justify-content-center">
                             <div class="col-md-10">
                                 <h4 class="form-section">Import Service Vise Cost and Selling Rate Sheet</h4>
@@ -58,6 +59,15 @@
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Select User</label>
+                                    <livewire:components.search-user />
                                 </div>
                             </div>
                         </div>
