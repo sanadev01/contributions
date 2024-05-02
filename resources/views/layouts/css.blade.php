@@ -36,7 +36,6 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/toastr.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/pickers/pickadate/pickadate.css') }}">
-
 <style>
     .height-100{
         min-height: 100%; 
@@ -159,9 +158,11 @@
             display: block !important;
         }
     }
-      .apexcharts-legend{
-        right:-26px
+
+    .apexcharts-legend {
+        right: -26px
     }
+
     ::-webkit-scrollbar-track {
         -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
         border-radius: 10px;
@@ -284,20 +285,26 @@
     .search-header {
         display: table-header-group;
     }
-    .main-menu.menu-light .navigation > li.active > a {
-          background: #ebfafa !important;
-          box-shadow: 0px #ebfafa !important;
-          color: #000000 !important;  
-          font-weight: 200;
-          border-radius: 0px !important; 
-        }
-        .main-menu.menu-light .navigation > li .active {
-          background: #ebfafa !important; }
-          .main-menu.menu-light .navigation > li .active > a {
-            color: #565656 !important;
-            margin-bottom: 0; }
-          .main-menu.menu-light .navigation > li .active .hover > a {
-            background: whitesmoke; 
-            }
+
+    .main-menu.menu-light .navigation>li.active>a {
+        background: #ebfafa !important;
+        box-shadow: 0px #ebfafa !important;
+        color: #000000 !important;
+        font-weight: 200;
+        border-radius: 0px !important;
+    }
+
+    .main-menu.menu-light .navigation>li .active {
+        background: #ebfafa !important;
+    }
+
+    .main-menu.menu-light .navigation>li .active>a {
+        color: #565656 !important;
+        margin-bottom: 0;
+    }
+
+    .main-menu.menu-light .navigation>li .active .hover>a {
+        background: whitesmoke;
+    }
 </style>
 @yield('custom-css')

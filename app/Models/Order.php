@@ -899,33 +899,6 @@ class Order extends Model implements Package
         }
         return true;
     }
-    public function updateShippingServiceFromSetting()
-    {
-        if ($this->shippingService->is_anjun_service || $this->shippingService->is_bcn_service || $this->shippingService->is_correios_service) {
-            if ($this->corrios_tracking_code) {
-                return $this;
-            }
-            $serviceSubClass = $this->shippingService->service_sub_class;
-            $standard = in_array($serviceSubClass, ShippingService::STANDARDS);
-            $serviceSubClassMap = [
-                'china_anjun_api' => $standard ? ShippingService::AJ_Standard_CN : ShippingService::AJ_Express_CN,
-                'correios_api' => $standard ? ShippingService::Packet_Standard : ShippingService::Packet_Express,
-                'bcn_api' => $standard ? ShippingService::BCN_Packet_Standard : ShippingService::BCN_Packet_Express,
-                'anjun_api' => $standard ? ShippingService::AJ_Packet_Standard : ShippingService::AJ_Packet_Express,
-            ];
-            foreach ($serviceSubClassMap as $settingName => $subClass) {
-                if (setting($settingName, null, User::ROLE_ADMIN)) {
-                    $serviceSubClass = $subClass;
-                    break;
-                }
-            }
-            $this->update([
-                'shipping_service_id' => ShippingService::where('service_sub_class', $serviceSubClass)->first()->id,
-            ]);
-            return $this->refresh();
-        }
-        return $this;
-    }
  
     public function getCalculateTaxAndDutyAttribute(){
         $totalTaxAndDuty = 0;

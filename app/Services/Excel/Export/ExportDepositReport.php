@@ -42,7 +42,9 @@ class ExportDepositReport extends AbstractExportService
             if($order == null && !$deposit->is_credit){
                 $order = $deposit->getOrder($deposit->order_id);
             }
-
+            if (!$order) {
+                continue;
+            }
             $this->setCellValue('A'.$row, $deposit->uuid);
             $this->setCellValue('B'.$row, optional($order)->warehouse_number);
             $this->setCellValue('C'.$row, optional(optional($order)->recipient)->fullName());
@@ -50,16 +52,19 @@ class ExportDepositReport extends AbstractExportService
             $this->setCellValue('E'.$row, ($depositFirstOrder && $depositFirstOrder->hasSecondLabel()) ? optional($depositFirstOrder)->us_api_tracking_code : optional($order)->corrios_tracking_code);
             $this->setCellValue('F'.$row, $deposit->created_at->format('m/d/Y'));
             $this->setCellValue('G'.$row, $deposit->amount);
-            $this->setCellValue('H'.$row, $this->getShippingCarrier($depositFirstOrder, $order));
+            $this->setCellValue('H'.$row, $order->tax_and_duty);
+            $this->setCellValue('I'.$row, $order->fee_for_tax_and_duty);
+
+            $this->setCellValue('J'.$row, $this->getShippingCarrier($depositFirstOrder, $order));
             if (auth()->user()->isAdmin()) {
-                $this->setCellValue('I'.$row, '');
+                $this->setCellValue('K'.$row, '');
             }
-            $this->setCellValue('J'.$row, $order ? $order->length.'x'.$order->width.'x'.$order->height : '');
-            $this->setCellValue('K'.$row, $order ? $order->weight : '');
-            $this->setCellValue('L'.$row, '');
-            $this->setCellValue('M'.$row, $deposit->isCredit() ? 'Credit' : 'Debit');
-            $this->setCellValue('N'.$row, intval($deposit->last_four_digits) && strlen($deposit->last_four_digits)==4  ? 'Card':$deposit->last_four_digits );
-            $this->setCellValue('O'.$row, $deposit->description);
+            $this->setCellValue('L'.$row, $order ? $order->length.'x'.$order->width.'x'.$order->height : '');
+            $this->setCellValue('M'.$row, $order ? $order->weight : '');
+            $this->setCellValue('N'.$row, '');
+            $this->setCellValue('O'.$row, $deposit->isCredit() ? 'Credit' : 'Debit');
+            $this->setCellValue('P'.$row, intval($deposit->last_four_digits) && strlen($deposit->last_four_digits)==4  ? 'Card':$deposit->last_four_digits );
+            $this->setCellValue('Q'.$row, $deposit->description);
             $row++;
         }
 
@@ -90,34 +95,41 @@ class ExportDepositReport extends AbstractExportService
         $this->setCellValue('G1', 'Amount');
 
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Carrier');
+        $this->setCellValue('H1', 'T&D Taxes');
 
-        if (auth()->user()->isAdmin()) {
-            $this->setColumnWidth('I', 20);
-            $this->setCellValue('I1', 'Carrier Cost');
-        }
+        $this->setColumnWidth('I', 20);
+        $this->setCellValue('I1', 'Convenience Fee');
+
 
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', 'Order Dimensions');
+        $this->setCellValue('J1', 'Carrier');
 
-        $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Total Weight');
+        if (auth()->user()->isAdmin()) {
+            $this->setColumnWidth('K', 20);
+            $this->setCellValue('K1', 'Carrier Cost');
+        }
 
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'Volumetric Weight');
+        $this->setCellValue('L1', 'Order Dimensions');
 
         $this->setColumnWidth('M', 20);
-        $this->setCellValue('M1', 'Credit/Debit');
+        $this->setCellValue('M1', 'Total Weight');
+
+        $this->setColumnWidth('N', 20);
+        $this->setCellValue('N1', 'Volumetric Weight');
+
+        $this->setColumnWidth('O', 20);
+        $this->setCellValue('O1', 'Credit/Debit');
 
 
-        $this->setColumnWidth('N', 30);
-        $this->setCellValue('N1', 'Type');
+        $this->setColumnWidth('P', 30);
+        $this->setCellValue('P1', 'Type');
 
-        $this->setColumnWidth('O', 30);
-        $this->setCellValue('O1', 'Description');
+        $this->setColumnWidth('Q', 30);
+        $this->setCellValue('Q1', 'Description');
 
-        $this->setBackgroundColor('A1:O1', '2b5cab');
-        $this->setColor('A1:O1', 'FFFFFF');
+        $this->setBackgroundColor('A1:Q1', '2b5cab');
+        $this->setColor('A1:Q1', 'FFFFFF');
 
         $this->currentRow++;
     }

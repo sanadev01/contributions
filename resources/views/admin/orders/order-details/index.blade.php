@@ -7,7 +7,7 @@
 <div class="alert alert-danger" role="alert">
     {{$error}}
 </div>
-@endif
+@endif 
 <div class="alert alert-danger" role="alert" id="ups_response" style="display: none;"></div>
 <form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard" id="order-form">
     @csrf
