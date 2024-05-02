@@ -47,7 +47,7 @@
                                 @foreach($rate['data'] as $weight => $rate)
                                     <tr>
                                         <td>
-                                            {{ $weight }}
+                                            {{ number_format($weight, 2) }}
                                         </td>
                                         <td>
                                             {{ number_format($rate, 2) }}
