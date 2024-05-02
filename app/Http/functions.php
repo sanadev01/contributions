@@ -455,7 +455,14 @@ function getValidShCode($shCode, $service)
 
 function getZoneRate($order, $service, $zoneId)
 {
-    $rates = ZoneRate::where('shipping_service_id', $service->id)->first();
+    $rates = ZoneRate::where(function ($query) use ($order, $service) {
+        $query->where('user_id', $order->user_id)
+            ->where('shipping_service_id', $service->id);
+        })->orWhere(function ($query) use ($service) {
+            $query->whereNull('user_id')
+                ->where('shipping_service_id', $service->id);
+        })->first();
+
     $weight = $order->getWeight();
     $decodedRates = json_decode($rates->selling_rates, true); 
 

@@ -10,6 +10,7 @@ class ZoneRate extends Model
 
     protected $fillable = [
         'shipping_service_id',
+        'user_id',
         'cost_rates',
         'selling_rates',
     ];
@@ -22,5 +23,10 @@ class ZoneRate extends Model
     public function country()
     {
         return $this->belongsTo(Country::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
