@@ -20,20 +20,24 @@
         background-color: #e9f1ee;
         color: #347b87;
     }
-    .standard-font{
-         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    .standard-font {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
-    .color-gray{
+
+    .color-gray {
         color: #6c757d;
     }
+
     .star-rating {
-      unicode-bidi: bidi-override;
-      font-size: 18px;
-      color: #ffd700;
-      margin-bottom: 10px;
+        unicode-bidi: bidi-override;
+        font-size: 18px;
+        color: #ffd700;
+        margin-bottom: 10px;
     }
+
     .star-rating span {
-      padding-right: 2px;
+        padding-right: 2px;
     }
 </style>
 @endsection
@@ -93,51 +97,96 @@
                 </td>
                 <td>
                     <div class="star-rating">
-                        @for ($i = 1; $i <= 5; $i++)
-                            @if ($i <= $profitRate['rating'])
-                                <i class="fas fa-star"></i>
+                        @for ($i = 1; $i <= 5; $i++) @if ($i <=$profitRate['rating']) <i class="fas fa-star"></i>
                             @else
-                                <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
                             @endif
-                        @endfor
+                            @endfor
                     </div>
                 </td>
-                <td>7-10 business days</td>
-                <!-- <td class="category-tag"></td> -->
+                <td>7-10 business days {{$profitRate['rate']}}</td> 
                 @if(auth()->user()->hasRole('admin')) <td>{{$apiRates[$key]['rate']}} USD</td> @endif
+                
                 <!--<td></td> -->
                 <td class="price-tag">
-                    {{$profitRate['rate']}} USD
+                    <div class="custom-tooltip-calculator"> 
+                        {{  $this->calculateTotal($profitRate['service_sub_class'],$apiRates[$key]['rate']) }}  
+  
+                         USD
+                        <span>
+                            <i class="fa fa-info"></i>
+                            <div class="tooltip-text-calculator">
+                                <p>
+                                    <strong>
+                                        Amount included
+                                    </strong>
+                                    (DDP - Delivered Duty Paid)
+                                    Sender of the package pays for <strong> import taxes and duties. Import tax and duty  </strong>   charges will be included in the <strong> Total  Charge.  </strong>
+                                    </p>
+                                    <p> 
+                                    If customs determines that the actual
+                                    value of the goods in the package is
+                                    higher than declared,<strong> import tax and duty charges </strong> will increase.
+                                    </p>
+                                    <p>
+                                        
+                                    <strong> Amount to be paid by receiver  </strong>
+                                    (DDU- Delivered Duty Unpaid)
+                                    Receiver will have to pay indicated
+                                    amount for <strong>import taxes and duties </strong>. In
+                                    addition, a courier-specific handling fes
+                                    may apply.
+                                    </p>
+                                    <p>
+                                    The risk is that the receiver may reject
+                                    the package if hs/shs is unhappy with
+                                    the <strong>import taxes and duties </strong> charges.
+                                </p>
+                            </div>
+                        </span>
+                    </div>
                 </td>
+                @if($isInternational)
                 <td>
                     @if($userLoggedIn)
-                        @if($selectedService!=$profitRate['service_sub_class'])  
-                            <button id="btn-submit" wire:click="getLabel('{{ $profitRate['service_sub_class'] }}')" type="submit" class="btn btn-success btn-sm btn-submit"><i class="fas fa-print text-print mx-2"></i>Buy Label</button>
-                         @endif
-                     @endif
+                    @if($selectedService!=$profitRate['service_sub_class'])
+                    <button id="btn-submit" wire:click="createOrder('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}')" type="submit" class="btn btn-success btn-sm  "><i class="feather icon-shopping-cart mx-2"></i>Place Order</button>
+                    @endif
+                    @endif
                 </td>
+                @else
+                <td>
+                    @if($userLoggedIn)
+                    @if($selectedService!=$profitRate['service_sub_class'])
+                    <button id="btn-submit" wire:click="getLabel('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}')" type="submit" class="btn btn-success btn-sm  "><i class="fas fa-print text-print mx-2"></i>Buy Label</button>
+                    @endif
+                    @endif
+                </td>
+                @endif
 
-            </tr> 
+            </tr>
             @if($userLoggedIn && $selectedService==$profitRate['service_sub_class'])
-                <tr>      
-                    <td colspan="3"></td>       
-                    <td colspan="3">
-                        @if($serviceResponse)
-                            <div class="row mb-1 ml-4">
-                                <div class="controls col-12">
-                                </div>
-                            </div>
-                        @endif
-                        @error($serviceError)
-                            <div class="row mb-1 ml-4">
-                                <div class="controls col-12 text-danger">
-                                    {{$message}}
-                                </div>
-                            </div>
-                        @enderror 
-                        @error('selectedService')<div class="row mb-1 ml-4"> <div class="error text-danger">{{ $message }}</div> </div>@enderror 
-                    </td>
-                </tr>
+            <tr>
+                <td colspan="4"></td>
+                <td colspan="3">
+                    @if($serviceResponse)
+                    <div class="row mb-1 ml-4">
+                        <div class="controls col-12">
+                        </div>
+                    </div>
+                    @endif
+                    @error($serviceError)
+                    <div class="row mb-1 ml-4">
+                        <div class="controls col-12 text-danger">
+                            {{$message}}
+                        </div>
+                    </div>
+                    @enderror
+                    @error('selectedService')<div class="row mb-1 ml-4">
+                        <div class="error text-danger">{{ $message }}</div>
+                    </div>@enderror
+                </td>
+            </tr>
             @endif
             @endforeach
 

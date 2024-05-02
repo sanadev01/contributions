@@ -478,9 +478,8 @@ class Order extends Model implements Package
 
         $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES', 0, null, true) : 0;
-
-        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $this->user_profit;
-
+        $calculatedUserProfit = (float) number_format($this->user_profit,2);
+        $total = number_format($shippingCost,2) + number_format($additionalServicesCost,2) + number_format($this->insurance_value,2) + number_format($dangrousGoodsCost,2) + number_format($consolidation,2) + $calculatedUserProfit;
         $discount = 0; // not implemented yet
         $grossTotal = $total - $discount;
 
@@ -489,19 +488,28 @@ class Order extends Model implements Package
             'order_value' => $this->items()->sum(\DB::raw('quantity * value')),
             'shipping_value' => $shippingCost,
             'dangrous_goods' => $dangrousGoodsCost,
-            'total' => $total,
+            'total' => number_format($total,2),
             'discount' => $discount,
-            'gross_total' => $grossTotal,
+            'calculated_user_profit'=> $calculatedUserProfit,
+            'gross_total' => number_format($grossTotal,2) ,
             'user_declared_freight' => $this->user_declared_freight
         ]);
         $taxAndDuty = (float)$this->calculate_tax_and_duty;
         $feeForTaxAndDuty = (float)$this->calculate_fee_for_tax_and_duty;
-        $total = $grossTotal + $taxAndDuty + $feeForTaxAndDuty;        
+        $total =  $grossTotal  + $taxAndDuty + $feeForTaxAndDuty; 
         $grossTotal = $total - $discount;
         $this->update([
             'tax_and_duty' =>  $taxAndDuty,
             'fee_for_tax_and_duty' => $feeForTaxAndDuty,
             'total' => $total,
+            'gross_total' => $grossTotal,
+        ]); 
+
+        dd([
+            'tax_and_duty' =>  $taxAndDuty,
+            'fee_for_tax_and_duty' => $feeForTaxAndDuty,
+            'total' => $total,
+            'calculated_user_profit'=>$this->calculated_user_profit,
             'gross_total' => $grossTotal,
         ]);
     }
@@ -539,7 +547,6 @@ class Order extends Model implements Package
         $this->user_profit = $shippingCost * $profit;
         return true;
     }
-
     public function addAffiliateCommissionSale(User $referrer, $commissionCalculator)
     {
         return $this->affiliateSale()->create([
@@ -845,7 +852,7 @@ class Order extends Model implements Package
     public function getCalculateTaxAndDutyAttribute(){
         $totalTaxAndDuty = 0;
         if (strtolower($this->tax_modality) == "ddp" || setting('is_prc_user', null, $this->user_id)) {
-            if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
+            if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR"|| $this->recipient->country->code == "US") {
 
                 $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
                 

@@ -59,7 +59,7 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="us_shipping_service" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                            @if($shippingService->isInboundDomesticService())
+                            @if($shippingService->is_inbound_domestic_service)
                             <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->sub_name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->sub_name }}@endif</option>
                             @else
                             <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->sub_name}"}}</option>
@@ -75,8 +75,8 @@
                     <div class="controls">
                         <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
                         <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" readonly required placeholder="@lang('orders.order-details.Tax Modality')">
-                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }}>DDU</option>
-                            <option value="ddp" {{ 'ddp' == $order->tax_modality ? 'selected' : '' }}>DDP</option>
+                            <option value="ddu" {{ 'ddu' == strtolower($order->tax_modality) ? 'selected' : '' }}>DDU</option>
+                            <option value="ddp" {{ 'ddp' == strtolower($order->tax_modality) ? 'selected' : '' }}>DDP</option>
                         </select>
                         <div class="help-block"></div>
                     </div>
