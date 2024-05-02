@@ -305,7 +305,7 @@ class USCalculatorRepository
                 'shipping_service_id' => $this->shippingService->id,
                 'shipping_service_name' => $this->shippingService->name,
                 'status' => Order::STATUS_ORDER,
-                'tax_modality' => strtolower($this->tempOrder['tax_modality'])=="ddp"?'DDP':'DDU',
+                'tax_modality' => strtolower($this->tempOrder['tax_modality'])=="ddp"?'ddp':'ddu',
                 'user_declared_freight'=>$this->tempOrder['user_declared_freight'],
             ]);
             

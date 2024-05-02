@@ -503,14 +503,6 @@ class Order extends Model implements Package
             'fee_for_tax_and_duty' => $feeForTaxAndDuty,
             'total' => $total,
             'gross_total' => $grossTotal,
-        ]); 
-
-        dd([
-            'tax_and_duty' =>  $taxAndDuty,
-            'fee_for_tax_and_duty' => $feeForTaxAndDuty,
-            'total' => $total,
-            'calculated_user_profit'=>$this->calculated_user_profit,
-            'gross_total' => $grossTotal,
         ]);
     }
 

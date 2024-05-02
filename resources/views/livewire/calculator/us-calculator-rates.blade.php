@@ -73,7 +73,7 @@
             </div>
         </div>
     </div>
-    <input type="text" id="searchInput" class="form-control col-6 my-4" placeholder=" Search...">
+    <input type="text" id="searchInput" class="form-control col-3 col-md-4 col-sm-12 my-4" placeholder=" Search...">
 
     <table class="table  table-borderless p-0 table-responsive-md table-striped" id="kpi-report">
         <thead>
@@ -104,15 +104,15 @@
                             @endfor
                     </div>
                 </td>
-                <td>7-10 business days {{$profitRate['rate']}}</td> 
+                <td>7-10 business days {{$profitRate['rate']}}</td>
                 @if(auth()->user()->hasRole('admin')) <td>{{$apiRates[$key]['rate']}} USD</td> @endif
-                
+
                 <!--<td></td> -->
                 <td class="price-tag">
-                    <div class="custom-tooltip-calculator"> 
-                        {{  $this->calculateTotal($profitRate['service_sub_class'],$apiRates[$key]['rate']) }}  
-  
-                         USD
+                    <div class="custom-tooltip-calculator">
+                        {{ $this->calculateTotal($profitRate['service_sub_class'],$apiRates[$key]['rate']) }}
+
+                        USD
                         <span>
                             <i class="fa fa-info"></i>
                             <div class="tooltip-text-calculator">
@@ -121,23 +121,23 @@
                                         Amount included
                                     </strong>
                                     (DDP - Delivered Duty Paid)
-                                    Sender of the package pays for <strong> import taxes and duties. Import tax and duty  </strong>   charges will be included in the <strong> Total  Charge.  </strong>
-                                    </p>
-                                    <p> 
+                                    Sender of the package pays for <strong> import taxes and duties. Import tax and duty </strong> charges will be included in the <strong> Total Charge. </strong>
+                                </p>
+                                <p>
                                     If customs determines that the actual
                                     value of the goods in the package is
                                     higher than declared,<strong> import tax and duty charges </strong> will increase.
-                                    </p>
-                                    <p>
-                                        
-                                    <strong> Amount to be paid by receiver  </strong>
+                                </p>
+                                <p>
+
+                                    <strong> Amount to be paid by receiver </strong>
                                     (DDU- Delivered Duty Unpaid)
                                     Receiver will have to pay indicated
                                     amount for <strong>import taxes and duties </strong>. In
                                     addition, a courier-specific handling fes
                                     may apply.
-                                    </p>
-                                    <p>
+                                </p>
+                                <p>
                                     The risk is that the receiver may reject
                                     the package if hs/shs is unhappy with
                                     the <strong>import taxes and duties </strong> charges.
@@ -149,16 +149,15 @@
                 @if($isInternational)
                 <td>
                     @if($userLoggedIn)
-                    @if($selectedService!=$profitRate['service_sub_class'])
-                    <button id="btn-submit" wire:click="createOrder('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}')" type="submit" class="btn btn-success btn-sm  "><i class="feather icon-shopping-cart mx-2"></i>Place Order</button>
-                    @endif
+                    <button wire:click="createOrder('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}')" type="submit" class="btn btn-success btn-sm btn-submit"><i class="feather icon-shopping-cart mx-2"></i>Place Order</button>
+
                     @endif
                 </td>
                 @else
                 <td>
                     @if($userLoggedIn)
                     @if($selectedService!=$profitRate['service_sub_class'])
-                    <button id="btn-submit" wire:click="getLabel('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}')" type="submit" class="btn btn-success btn-sm  "><i class="fas fa-print text-print mx-2"></i>Buy Label</button>
+                    <button wire:click="getLabel('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}')" type="submit" class="btn btn-success btn-sm btn-submit "><i class="fas fa-print text-print mx-2"></i>Buy Label</button>
                     @endif
                     @endif
                 </td>
@@ -167,8 +166,7 @@
             </tr>
             @if($userLoggedIn && $selectedService==$profitRate['service_sub_class'])
             <tr>
-                <td colspan="4"></td>
-                <td colspan="3">
+                <td class="text-right" colspan="6">
                     @if($serviceResponse)
                     <div class="row mb-1 ml-4">
                         <div class="controls col-12">
@@ -196,7 +194,6 @@
 </section>
 @section('js')
 <script>
-
     $(document).ready(function() {
         $('#searchInput').on('keyup', function() {
             var value = $(this).val().toLowerCase();
@@ -205,9 +202,9 @@
             });
         });
     });
-    $('.btn-submit').click(function(){
-        $('#loading').fadeIn(); 
-    }); 
+    $('.btn-submit').click(function() {
+        $('#loading').fadeIn();
+    });
     window.addEventListener('fadeOutLoading', event => {
         $('#loading').fadeOut();
     })
