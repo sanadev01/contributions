@@ -8,10 +8,12 @@
                     <td>Shipping Cost</td>
                     <td colspan="2"> {{$order->shipping_value." $"}}</td>
                 </tr>
-                @if($order->insurance_value)<tr>
+                @if($order->insurance_value)
+                <tr>
                     <td> Insurance value </td>
                     <td colspan="2"> {{$order->insurance_value." $"}}</td>
-                </tr> @endif
+                </tr> 
+                @endif
                 @if($order->dangrous_goods)<tr>
                     <td> Dangrous Goods </td>
                     <td colspan="2"> {{ $order->dangrous_goods." $" }}</td>
@@ -20,9 +22,9 @@
                     <td>Consolidation </td>
                     <td colspan="2">{{$order->consolidation." $"}} </td>
                 </tr> @endif
-                @if($order->user_profit)<tr>
+                @if($order->calculated_user_profit)<tr>
                     <td> User Profit</td>
-                    <td colspan="2"> {{$order->user_profit." $"}}</td>
+                    <td colspan="2"> {{ $order->calculated_user_profit." $"}}</td>
                 </tr>
                 @endif
                 @foreach($order->services as $service)

@@ -8,5 +8,6 @@
         'chargableWeight' => $chargableWeight,
         'userLoggedIn' => $userLoggedIn,
         'shippingServiceTitle' => $shippingServiceTitle,
+        'isInternational' => $isInternational,
     ])
 @endsection

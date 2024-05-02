@@ -2,8 +2,11 @@
     $(document).on('click', 'input[type="checkbox"]', function() {      
         $('input[type="checkbox"]').not(this).prop('checked', false);      
     });
-
+    
     $(document).ready(function(){
+        
+        $('#from_herco').prop('checked', false);
+        $('#to_herco').prop('checked', false);
         
         $('.shipment-info').addClass('d-none');
         if ($('#from_herco').is(':checked')) {
@@ -22,6 +25,7 @@
 
             $('#recipient_personal_info').removeClass('d-none');
             $('#recipient_personal_info').addClass('d-block');
+            $('#tax_modality').removeClass('d-none');
 
             window.toggleSenderInputs();
 
@@ -42,6 +46,7 @@
 
             $('#recipient_personal_info').removeClass('d-block');
             $('#recipient_personal_info').addClass('d-none');
+            $('#tax_modality').removeClass('d-none');
 
             $('input[name^="items"]').prop('disabled', true);
             window.toggleRecipientInputs();
@@ -61,6 +66,7 @@
 
             $('#recipient_personal_info').removeClass('d-none');
             $('#recipient_personal_info').addClass('d-block');
+            $('#tax_modality').removeClass('d-none');
 
             $('#calculator-items').addClass('d-block');
             $('input[name^="items"]').prop('disabled', false);
@@ -97,6 +103,7 @@
 
                 $('#recipient_personal_info').removeClass('d-none');
                 $('#recipient_personal_info').addClass('d-block');
+                $('#tax_modality').removeClass('d-none');
 
                 window.toggleSenderInputs();
                 
@@ -120,6 +127,7 @@
 
                 $('#recipient_personal_info').removeClass('d-block');
                 $('#recipient_personal_info').addClass('d-none');
+                $('#tax_modality').removeClass('d-none');
 
                 $('input[name^="items"]').prop('disabled', true);
                 window.toggleRecipientInputs();
@@ -148,6 +156,7 @@
 
                 $('#recipient_personal_info').removeClass('d-none');
                 $('#recipient_personal_info').addClass('d-block');
+                $('#tax_modality').removeClass('d-none');
 
                 $('#calculator-items').addClass('d-block');
                 $('input[name^="items"]').prop('disabled', false);

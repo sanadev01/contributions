@@ -248,14 +248,25 @@ class USCalculatorRepository
     public function executeForLabel($request)
     {
         $this->request = $request;
-        $this->tempOrder = $request->temp_order;
-        
+        $this->tempOrder = $request->temp_order; 
         $this->shippingService = $this->getSippingService($request->service_sub_class);
         
         if ($this->createOrder() && $this->assignRecipient() && $this->getPrimaryLabel()) {
             return $this->order;
         }
-
+        $this->order->forcedelete();
+        return null;
+    }
+    
+    public function executeForPlaceOrder($request)
+    {
+        $this->request = $request;
+        $this->tempOrder = $request->temp_order;
+        $this->shippingService = $this->getSippingService($request->service_sub_class);
+        
+        if ($this->createOrder() && $this->assignRecipient()) {
+            return $this->order;
+        }
         $this->order->forcedelete();
         return null;
     }
@@ -294,6 +305,8 @@ class USCalculatorRepository
                 'shipping_service_id' => $this->shippingService->id,
                 'shipping_service_name' => $this->shippingService->name,
                 'status' => Order::STATUS_ORDER,
+                'tax_modality' => strtolower($this->tempOrder['tax_modality'])=="ddp"?'ddp':'ddu',
+                'user_declared_freight'=>$this->tempOrder['user_declared_freight'],
             ]);
             
             if (isset($this->tempOrder['items'])) {
@@ -357,10 +370,11 @@ class USCalculatorRepository
                 $this->error = $ex->getMessage();
                 return false;
             }
-
             return true;
         });
 
+        $order = $this->order->refresh(); 
+        $this->order->doCalculations();
         return true;
         
     }
@@ -417,6 +431,9 @@ class USCalculatorRepository
         }
 
         $order = $this->order->refresh();
+        $this->order->doCalculations();
+        $order = $this->order->refresh();
+
         chargeAmount($order->gross_total, $order);
         $this->createInvoice($order);
 

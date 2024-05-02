@@ -536,7 +536,6 @@ function getZoneRate($order, $service, $zoneId)
 
     return $rate;
 }
-
 function checkParcelInsurance($data) {
     if ($data instanceof Deposit) {
         $order = Order::with('services')->find($data->order_id);
@@ -559,4 +558,5 @@ function checkParcelInsurance($data) {
     } else {
         \Log::warning('Order not found for Deposit ID');
     }
+
 }
