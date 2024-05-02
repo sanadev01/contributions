@@ -129,12 +129,16 @@ class UsCalculatorRates extends Component
     }
     function calculateProfit($shippingCost, $serviceSubClass,$user_id)
     {
-        $profit_percentage = match ((int)$serviceSubClass) {
-            ShippingService::UPS_GROUND => setting('ups_profit', null, $user_id) ?? setting('ups_profit', null, User::ROLE_ADMIN),
-            ShippingService::FEDEX_GROUND => setting('fedex_profit', null, $user_id) ?? setting('fedex_profit', null, User::ROLE_ADMIN),
-            default => setting('usps_profit', null, $user_id) ?? setting('usps_profit', null, User::ROLE_ADMIN),
-        };
-
+        switch ((int)$serviceSubClass) {
+            case ShippingService::UPS_GROUND:
+                $profit_percentage = setting('ups_profit', null, $user_id) ?? setting('ups_profit', null, User::ROLE_ADMIN);
+                break;
+            case ShippingService::FEDEX_GROUND:
+                $profit_percentage = setting('fedex_profit', null, $user_id) ?? setting('fedex_profit', null, User::ROLE_ADMIN);
+                break;
+            default:
+                $profit_percentage = setting('usps_profit', null, $user_id) ?? setting('usps_profit', null, User::ROLE_ADMIN);
+        }
         return number_format(($shippingCost * ($profit_percentage / 100)),2);
     }
     public function calculateFeeForTaxAndDuty($totalTaxAndDuty)
