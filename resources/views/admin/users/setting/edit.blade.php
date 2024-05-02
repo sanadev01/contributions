@@ -367,7 +367,7 @@
                                     </div>
                                 </div> --}}
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Volumetric Discount<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">Volumetric Discount Postal Service<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
@@ -383,7 +383,7 @@
                                         </div>    
                                     </div>
                                 </div>
-                                <div class="controls row mb-1 align-items-center">
+                                {{-- <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Postal Discount<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
@@ -399,9 +399,9 @@
                                             <input type="number" name="postal_discount_percentage" class="form-control col-2" id="postal_discount_percentage" value="{{ setting('postal_discount_percentage', null, $user->id) }}">
                                         </div>    
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="controls row mb-1 align-items-center">
-                                    <label class="col-md-3 text-md-right">Hd Express Discount<span class="text-danger"></span></label>
+                                    <label class="col-md-3 text-md-right">Volumetric Discount Courier Service<span class="text-danger"></span></label>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">

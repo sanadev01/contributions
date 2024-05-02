@@ -25,9 +25,17 @@ class ExportGDEInvoice extends AbstractExportService
         
         $this->setCellValue('A1', 'COMMERCIAL INVOICE');
         $this->setCellValue('A2', 'Shipper/Exporter: (SENDER )');
-        $this->setCellValue('A3', "CORREIOS - EMPRESA BRASILEIRA DE CORREIOS E TELÉGRAFOS \n".$senderAddress
-            ." \n CEP:". $this->order->user->zipcode."\nCNPJ:".$this->order->user->tax_id
-        );
+        if($this->order->shippingService->is_total_express) {
+            $senderName = $this->order->getSenderFullName();
+            $phone = (optional($this->order)->sender_phone) ? optional($this->order)->sender_phone : optional($this->order)->user->phone;
+            $email = (optional($this->order)->sender_email) ? optional($this->order)->sender_email : optional($this->order)->user->email;
+            $this->setCellValue('A3', "$senderName \n$senderAddress \nPhone: $phone \nEmail: $email \nCEP:". $this->order->user->zipcode."\nCNPJ:".$this->order->user->tax_id
+            );    
+        } else {
+            $this->setCellValue('A3', "CORREIOS - EMPRESA BRASILEIRA DE CORREIOS E TELÉGRAFOS \n".$senderAddress
+                ." \n CEP:". $this->order->user->zipcode."\nCNPJ:".$this->order->user->tax_id
+            );
+        }
         $this->setCellValue('D2', 'Invoice Number and Date:');  
         $this->setCellValue('G2', optional($this->order->order_date)->format('m/d/Y')); 
         $this->setCellValue('D3', 'USER CUSTOMER REFERENCE'); 
