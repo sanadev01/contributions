@@ -21,6 +21,8 @@ use App\Models\ShippingService;
 use App\Models\ZoneCountry;
 use Illuminate\Http\Response;
 
+use Carbon\Carbon;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -309,4 +311,15 @@ Route::get('/export-activity-log', [\App\Http\Controllers\ActivityLogExportContr
 Route::get('order-status-update/{order}/{status}', function(Order $order, $status) {
     $order->update(['status' => $status]); 
     return 'Status updated';
+});
+
+Route::get('/cleanup-activity-log', function () {
+    $now = Carbon::now();
+    $yearAgo = Carbon::createFromDate($now->year - 1, $now->month, $now->day);
+    
+    $rowsRemoved = \DB::table('activity_log')
+        ->where('created_at', '<', $yearAgo)
+        ->delete();
+    
+    return 'Removed ' . $rowsRemoved . ' rows from activity_log table older than ' . $yearAgo->format('Y-m-d') . '.';
 });
