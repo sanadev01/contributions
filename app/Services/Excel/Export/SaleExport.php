@@ -37,6 +37,8 @@ class SaleExport extends AbstractExportService
         foreach ($this->sales as $sale) {
             $user = $sale->user;
             $commissionUser = $sale->order->user;
+            $isReferrerNow = $commissionUser->reffered_by==$user->id;
+
             if($checkUser && $checkUser != $commissionUser->pobox_number){
                 $this->setCellValue('H'.$row, "Due Amount : ");
                 $this->setCellValue('A'.$row, "Number Of Parcels Per Customer : ");
@@ -54,6 +56,7 @@ class SaleExport extends AbstractExportService
             }
             
             if ( Auth::user()->isAdmin() ){
+                
                 $this->setCellValue('A'.$row, $user->name . $user->pobox_number);
             }
             $this->setCellValue('B'.$row, optional($commissionUser)->name . optional($commissionUser)->pobox_number);
@@ -66,6 +69,9 @@ class SaleExport extends AbstractExportService
             $this->setCellValue('I'.$row, $sale->is_paid? 'paid': 'unpaid');
             $this->setCellValue('J'.$row, $sale->created_at->format('m/d/Y'));
             
+            if(Auth::user()->isAdmin()&&!$isReferrerNow){
+                $this->setBackgroundColor("A{$row}:J{$row}", 'fcf7b6');
+            }
             $row++;
             $checkUser = optional($commissionUser)->pobox_number;
         }
@@ -92,7 +98,7 @@ class SaleExport extends AbstractExportService
         
         $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
         $this->setAlignment('H'.$row,Alignment::HORIZONTAL_LEFT);
-        $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:J{$row}", '3cc4ff');
     }
 
     private function setExcelHeaderRow()

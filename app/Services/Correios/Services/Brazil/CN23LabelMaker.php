@@ -43,9 +43,10 @@ class CN23LabelMaker implements HasLableExport
         $this->contractNumber = 'H Contract:  9912501576';
         $this->packageSign = 'H';
         $this->service = 2;
-        $this->returnAddress = 'Homedeliverybr <br>
-        Rua Acaçá 47- Ipiranga <br>
-        Sao Paulo CEP 04201-020';
+        $this->returnAddress = 'Homedelivery BR (SMART RETURN) <br>
+        AV RUI BARBOSA, 2529 – ARMAZEM 14 <br>
+        IPE, JOSE DOS PINHAIS-PR <br>
+        CEP  83055-320';
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
         $this->activeAddress = '';
         $this->labelZipCodeGroup = '';

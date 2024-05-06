@@ -72,19 +72,19 @@ class Table extends Component
     {
         return (new OrderRepository)->get(request()->merge([
             'order_date' => $this->date,
-            'name' => $this->name,
-            'pobox_number' => $this->pobox,
-            'warehouse_number' => $this->whr_number,
-            'merchant' => $this->merchant,
-            'carrier' => $this->carrier,
-            'gross_total' => $this->amount,
-            'tracking_id' => $this->tracking_id,
-            'customer_reference' => $this->customer_reference,
-            'corrios_tracking_code' => $this->tracking_code,
-            'status' => $this->status,
-            'orderType' => $this->orderType,
-            'paymentStatus' => $this->paymentStatus,
-            'userType' => $this->userType,
+            'name' => trim($this->name),
+            'pobox_number' => trim($this->pobox),
+            'warehouse_number' => trim($this->whr_number),
+            'merchant' => trim($this->merchant),
+            'carrier' => trim($this->carrier),
+            'gross_total' => trim($this->amount),
+            'tracking_id' => trim($this->tracking_id),
+            'customer_reference' => trim($this->customer_reference),
+            'corrios_tracking_code' => trim($this->tracking_code),
+            'status' => trim($this->status),
+            'orderType' => trim($this->orderType),
+            'paymentStatus' => trim($this->paymentStatus),
+            'userType' => trim($this->userType),
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 
