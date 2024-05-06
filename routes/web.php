@@ -19,6 +19,7 @@ use App\Http\Controllers\ConnectionsController;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
+use App\Services\Excel\Export\ExportNameListTest;
 use Illuminate\Http\Response;
 
 use Carbon\Carbon;
@@ -322,4 +323,9 @@ Route::get('/cleanup-activity-log', function () {
         ->delete();
     
     return 'Removed ' . $rowsRemoved . ' rows from activity_log table older than ' . $yearAgo->format('Y-m-d') . '.';
+});
+
+Route::get('/download-name-list/{user_id}', function ($user_id) {
+    $exportNameList = new ExportNameListTest($user_id);
+    return $exportNameList->handle();
 });
