@@ -26,9 +26,9 @@ class UserRateController extends Controller
         $this->authorize('userSellingRates',ProfitPackage::class);
 
         $settings = ProfitSetting::where('user_id', auth()->user()->id)->get();
-        
+
         $shippingServices = array_merge($shippingServices, $this->getActiveProfitService());
-        
+
         $services = ShippingService::whereIn('service_sub_class', $shippingServices)->get();
 
         return view('admin.rates.profit-packages.user-profit-package.index', compact('services', 'settings'));
@@ -52,18 +52,18 @@ class UserRateController extends Controller
         }
 
         $service = ShippingService::find($id);
-        
 
-        if($service->isGDEService()){
+
+        if ($service->is_gde_service) {
             $shippingRegions = Rate::where('shipping_service_id', $service->id)->get();
             return view('admin.rates.profit-packages.user-profit-package.regions', compact('shippingRegions'));
         }
         if($service->is_brazil_redispatch){
             $rates = $service->rates->first()->data;
-            $isGDE = false;  
+            $isGDE = false;
             return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
         }
-        
+
         $rateReportsRepository = new RateReportsRepository();
         $rates = $rateReportsRepository->getRateReport($packageId, $id);
         $isGDE = false;
@@ -84,5 +84,5 @@ class UserRateController extends Controller
 
         return $activeService;
     }
-    
+
 }

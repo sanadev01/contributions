@@ -58,8 +58,7 @@ class ImportZoneProfit extends AbstractImportService
                 $countriesNotFound[] = '<br>'.$countryCode;
             }
             
-            if(count($countriesNotFound))
-                session()->flash('alert-danger','The following country not found: '.json_encode($countriesNotFound));
+            session()->flash('alert-danger','The following country not found: '.json_encode($countriesNotFound));
         }
         
         return $this->storeRatesToDb($rates);
