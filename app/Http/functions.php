@@ -463,7 +463,7 @@ function getZoneRate($order, $service, $zoneId)
                 ->where('shipping_service_id', $service->id);
         })->first();
 
-    $weight = $order->getWeight();
+    $weight = $order->getOriginalWeight();
     $decodedRates = json_decode($rates->selling_rates, true); 
 
     $rate = null;    
