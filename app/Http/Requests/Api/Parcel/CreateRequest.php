@@ -53,7 +53,7 @@ class CreateRequest extends FormRequest
             "parcel.width" => "required|numeric|gt:0",
             "parcel.height" => "required|numeric|gt:0",
             "parcel.shipment_value" => "nullable|numeric",
-            "parcel.return_option" => "required|numeric",
+            "parcel.return_option" => "nullable|numeric",
 
             "sender.sender_first_name" => "required|max:100",
             "sender.sender_last_name" => "required|max:100",

@@ -39,8 +39,10 @@ class ExportNameListTest extends AbstractExportService
             $this->setCellValue('B'.$row, $order->warehouse_number); 
             $this->setCellValue('C'.$row, $order->getSenderFullName());
             $this->setCellValue('D'.$row, $order->sender_email); 
-            $this->setCellValue('E'.$row, optional($order->recipient)->getFullName()); 
-            $this->setCellValue('F'.$row, optional($order->recipient)->email);   
+            $this->setCellValue('E'.$row, optional($order)->sender_phone); 
+            $this->setCellValue('F'.$row, optional($order->recipient)->getFullName()); 
+            $this->setCellValue('G'.$row, optional($order->recipient)->email);
+            $this->setCellValue('H'.$row, optional(optional($order)->recipient)->phone);   
             $row++;
         } 
         $this->setBackgroundColor("A{$row}:F{$row}", 'adfb84');
@@ -57,11 +59,15 @@ class ExportNameListTest extends AbstractExportService
         $this->setColumnWidth('D', 30);
         $this->setCellValue('D1', 'Sender Email');
         $this->setColumnWidth('E', 30);
-        $this->setCellValue('E1', 'Buyer Name');
+        $this->setCellValue('E1', 'Sender Phone');
         $this->setColumnWidth('F', 30);
-        $this->setCellValue('F1', 'Buyer Email'); 
-        $this->setBackgroundColor('A1:F1', '2b5cab');
-        $this->setColor('A1:F1', 'FFFFFF');
+        $this->setCellValue('F1', 'Buyer Name');
+        $this->setColumnWidth('G', 30);
+        $this->setCellValue('G1', 'Buyer Email');
+        $this->setColumnWidth('H', 30);
+        $this->setCellValue('H1', 'Buyer Phone');  
+        $this->setBackgroundColor('A1:H1', '2b5cab');
+        $this->setColor('A1:H1', 'FFFFFF');
 
 
         $this->currentRow++;
