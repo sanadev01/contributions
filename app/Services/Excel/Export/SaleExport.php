@@ -36,8 +36,8 @@ class SaleExport extends AbstractExportService
         $totalOrderRow = 'D1';
         foreach ($this->sales as $sale) {
             $user = $sale->user;
-            $commissionUser = $sale->order->user;
-            $isReferrerNow = $commissionUser->reffered_by==$user->id;
+            $commissionUser = $sale->order->user; 
+            $isReferrerNow = optional($commissionUser->referrer)->id==$user->id;
 
             if($checkUser && $checkUser != $commissionUser->pobox_number){
                 $this->setCellValue('H'.$row, "Due Amount : ");
@@ -70,6 +70,7 @@ class SaleExport extends AbstractExportService
             $this->setCellValue('J'.$row, $sale->created_at->format('m/d/Y'));
             
             if(Auth::user()->isAdmin()&&!$isReferrerNow){
+                $this->setCellValue('K'.$row,'Referrer Removed');
                 $this->setBackgroundColor("A{$row}:J{$row}", 'fcf7b6');
             }
             $row++;
