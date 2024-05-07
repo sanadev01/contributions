@@ -9,20 +9,15 @@ use Illuminate\Support\Facades\Auth;
 class AffiliateSaleRepository
 {
     public function get(Request $request,$paginate = true,$pageSize=50){
-        
-        $query = AffiliateSale::has('user')->with('order')->has('order');
 
-        if (Auth::user()->isUser()) {
-            $query->where('user_id', Auth::id());
-            if($request->user_id){
-                $query->where('referrer_id', $request->user_id);
-            }
-        }
+        $query = AffiliateSale::has('user')->with('order')->has('order');
         if ($request->orderIds) {
               $query->whereIn('id', json_decode($request->orderIds));
         }
-        if(Auth::user()->isAdmin() && $request->user_id){
+        if(Auth::user()->isAdmin() && $request->user_id){ 
             $query->where('user_id', $request->user_id);
+        }else{ 
+            $query->where('user_id', Auth::id());
         }
         if ( $request->status == 'paid' ){
             $query->where('is_paid', true);
@@ -33,14 +28,13 @@ class AffiliateSaleRepository
         }
         
         if ( $request->start ){
-            $startDate = $request->start . ' 00:00:00';
+            $startDate = $request->start . ' 00:00:00'; 
             $query->where(function($query) use($startDate){
                 return $query->where('created_at','>',$startDate);
             });
         }
-        
         if ( $request->end ){
-            $endDate = $request->end.' 23:59:59';
+            $endDate = $request->end.' 23:59:59'; 
             $query->where(function($query) use($endDate){
                 return $query->where('created_at','<=', $endDate);
             });
@@ -113,7 +107,9 @@ class AffiliateSaleRepository
         }
 
         $sales = $query->orderBy('id','desc');
-
+        
+        // dump($sales->count());
+        // dd($sales->sum('commission'));
         return $paginate ? $sales->paginate($pageSize) : $sales->get();
     }
 
