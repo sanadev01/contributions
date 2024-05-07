@@ -848,7 +848,7 @@ class Order extends Model implements Package
 
                 $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
                 
-                $totalCost = $this->shipping_value + $this->user_declared_freight + $additionalServicesCost;
+                $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
             
                 $duty = $totalCost > 50 ? $totalCost * .60 :0; 
                 $totalCostOfTheProduct = $totalCost + $duty;
@@ -857,7 +857,7 @@ class Order extends Model implements Package
                 $totalTaxAndDuty = $duty + $totalIcms;
                 \Log::info([
                     'recipient country' => $this->recipient->country->code,
-                    'user_declared_freight' => $this->user_declared_freight,
+                    'order_value ' => $this->order_value,
                     'additionalServicesCost +   insurance_value ' => $additionalServicesCost,
                     'shipping_value' => $this->shipping_value,
                     'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
