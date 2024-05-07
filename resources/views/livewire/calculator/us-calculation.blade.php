@@ -98,14 +98,6 @@
 
                             </div>
                         </div> 
-                        <div class="controls col-4" id="tax_modality">
-                                <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
-                                <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality"  required placeholder="@lang('orders.order-details.Tax Modality')">
-                                    <option value="ddu" {{ 'ddu' == old('tax_modality') ? 'selected' : '' }}>DDU</option>
-                                    <option value="ddp" {{ 'ddp' == old('tax_modality') ? 'selected' : '' }}>DDP</option>
-                                </select>
-                                <div class="help-block"></div>
-                        </div>
                     </div>
                 </div>
                 <div class="d-none" id="recipient_info">
@@ -166,16 +158,6 @@
                                 <label>Recipient Phone</label>
                                 @livewire('components.search-address', ['user_id' => ((auth()->check()) ? auth()->user()->id : null), 'from_calculator' => true ])
                          </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="controls col-4" id="tax_modality">
-                                <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
-                                <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" required placeholder="@lang('orders.order-details.Tax Modality')">
-                                    <option value="ddu" {{ 'ddu' == old('tax_modality') ? 'selected' : '' }}>DDU</option>
-                                    <option value="ddp" {{ 'ddp' == old('tax_modality') ? 'selected' : '' }}>DDP</option>
-                                </select>
-                                <div class="help-block"></div>
-                        </div>
                     </div>
                 </div>
                 <div class="row mb-1 mt-3 d-none" id="destination">
