@@ -127,9 +127,7 @@
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                @if(\Auth::user()->isAdmin())
-                
+            <tbody> 
                     @foreach($users as $user)
                         <tr>
                             <td class="details-control">
@@ -157,40 +155,7 @@
                                 </a>
                             </td>
                         </tr>
-                    @endforeach
-                @else
-                    @foreach($users as $commission)
-                        <tr>
-                            <td class="details-control">
-                                <input type="hidden" class="user_id" value="{{optional($commission->referrer)->id}}">
-                            </td>
-                            <td>
-                                {{ optional($commission->referrer)->name }} {{ optional($commission->referrer)->last_name }}
-                            </td>
-                            <td>
-                                {{ optional($commission->referrer)->pobox_number }} 
-                            </td>
-                            <td>
-                                {{ optional($commission->referrer)->email }} 
-                            </td>
-                            <td class="h4">
-                                {{ $commission->sale_count }} 
-                            </td>
-                            
-                            <td class="h4">
-                                {{ number_format($commission->commission,2) }} USD
-                            </td>
-                            @if($commission->referrer)
-                                <td class="h4">
-                                    <a href="{{ route('admin.reports.commission.show',$commission->referrer) }}">
-                                        <i class="fa fa-eye text-success"></i>
-                                    </a>
-                                </td>
-                            @endif 
-
-                        </tr>
-                    @endforeach
-                @endif
+                    @endforeach 
                 <tr>
                     <td colspan="3"></td>
                     <td><strong>Total<strong></td>
