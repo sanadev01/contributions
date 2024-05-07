@@ -19,10 +19,14 @@ class CommissionReportsRepository
         $query = User::query();
             $query->with(['affiliateSales']);
 
-        if ( $request->name ){
-            $query->where('name','LIKE',"%{$request->name}%")
-                    ->orWhere('last_name','LIKE',"%{$request->name}%");
-        } elseif ( $request->pobox_number ) 
+            if (!Auth::user()->isAdmin()){
+                $query->where('id','LIKE',Auth::id());
+            } 
+            
+            if ( $request->name ){
+                $query->where('name','LIKE',"%{$request->name}%")
+                        ->orWhere('last_name','LIKE',"%{$request->name}%");
+            }elseif ( $request->pobox_number ) 
         {
             $query->where('pobox_number','LIKE',"%{$request->pobox_number}%");
         } elseif ( $request->email)
