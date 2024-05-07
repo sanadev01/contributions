@@ -136,7 +136,7 @@ class User extends Authenticatable
 
     public function affiliateSales()
     {
-        return $this->hasMany(AffiliateSale::class, 'user_id');
+        return $this->hasMany(AffiliateSale::class, 'user_id')->has('order');
     }
     
     public function products()
