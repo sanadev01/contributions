@@ -24,10 +24,14 @@ class UsCalculatorRates extends Component
     public $serviceError;
     public $selectedService;
     private $selectedServiceCost;
-    private $order;
+    public $selectedTaxModality;
+    public $type;
+    public $listeners = ['acceptedAndContinue'];
 
-    public $tax_modality;
-
+    public function updatedSelectedTaxModality($value)
+    {
+      $this->tempOrder['tax_modality']  = strtolower($value) == "ddp" ? 'ddp' : 'ddu';
+    }
     public function mount($apiRates, $ratesWithProfit, $tempOrder, $weightInOtherUnit, $chargableWeight, $userLoggedIn, $shippingServiceTitle, $isInternational)
     {
         $this->apiRates = $apiRates;
@@ -38,7 +42,7 @@ class UsCalculatorRates extends Component
         $this->userLoggedIn = $userLoggedIn;
         $this->shippingServiceTitle = $shippingServiceTitle;
         $this->isInternational = $isInternational;
-        $this->tax_modality = strtolower($this->tempOrder['tax_modality']) == "ddp" ? 'ddp' : 'ddu';
+        $this->selectedTaxModality = strtolower($this->tempOrder['tax_modality']) == "ddp" ? 'ddp' : 'ddu';
     }
 
     public function render()
@@ -46,10 +50,8 @@ class UsCalculatorRates extends Component
         return view('livewire.calculator.us-calculator-rates');
     }
 
-    public function getLabel($subClass, $userDeclaredFreight)
+    public function getLabel()
     {
-        $this->tempOrder['user_declared_freight'] = $userDeclaredFreight;
-        $this->selectedService = $subClass;
         $usCalculatorRepository = new  USCalculatorRepository();
         if (!$this->selectedService) {
             $this->addError('selectedService', 'select service please.');
@@ -80,10 +82,26 @@ class UsCalculatorRates extends Component
         }
         $this->dispatchBrowserEvent('fadeOutLoading');
     }
-    public function createOrder($subClass, $userDeclaredFreight)
+    public function openModel($subClass, $userDeclaredFreight,$type)
     {
+
+        $this->type = $type;
         $this->tempOrder['user_declared_freight'] = $userDeclaredFreight;
-        $this->selectedService = $subClass;
+        $this->selectedService = $subClass; 
+        $this->dispatchBrowserEvent('termAndConditionOpen');
+   
+
+    }
+    public function acceptedAndContinue()
+    { 
+        if($this->type=='lable'){
+            return $this->getLabel();
+        }else{ 
+            return $this->createOrder();
+        }
+    }
+    public function createOrder()
+    {
         $usCalculatorRepository = new  USCalculatorRepository();
         if (!$this->selectedService) {
             $this->addError('selectedService', 'select service please.');
@@ -111,9 +129,9 @@ class UsCalculatorRates extends Component
     {
         $userProfit = $this->calculateProfit($profitRate, $serviceSubClass, Auth::id());
 
-        $totalCost = $profitRate + $profitRate;
+        $totalCost = $profitRate;
         $isPRCUser = setting('is_prc_user', null, Auth::id());
-        if (strtolower($this->tax_modality) == "ddp" || $isPRCUser) {
+        if (strtolower($this->selectedTaxModality) == "ddp" || $isPRCUser) {
             $duty = $totalCost > 50 ? $totalCost * .60 : 0;
             $totalCostOfTheProduct = $totalCost + $duty;
             $icms = .17;
