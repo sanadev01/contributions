@@ -308,7 +308,7 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     return 'Anjun Token refresh';
 });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
-Route::get('/export-activity-log', [\App\Http\Controllers\ActivityLogExportController::class, 'exportActivityLogSQL'])->name('export.activity.log.sql');
+Route::get('/export-db-table/{tbl_name}', [\App\Http\Controllers\TableExportController::class, 'exportSQLTable'])->name('export.table.sql');
 Route::get('order-status-update/{order}/{status}', function(Order $order, $status) {
     $order->update(['status' => $status]); 
     return 'Status updated';
