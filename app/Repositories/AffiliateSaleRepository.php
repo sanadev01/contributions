@@ -30,7 +30,7 @@ class AffiliateSaleRepository
         if ( $request->start ){
             $startDate = $request->start . ' 00:00:00'; 
             $query->where(function($query) use($startDate){
-                return $query->where('created_at','>',$startDate);
+                return $query->where('created_at','>=',$startDate);
             });
         }
         if ( $request->end ){
@@ -129,7 +129,7 @@ class AffiliateSaleRepository
         $endDate = $request->end_date.' 23:59:59';
         
         if ( $request->start_date ){
-            $query->where('created_at','>', $startDate);
+            $query->where('created_at','>=', $startDate);
         }
         
         if ( $request->end_date ){
