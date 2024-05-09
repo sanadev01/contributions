@@ -8,15 +8,15 @@ use Illuminate\Http\Response;
 
 class TableExportController extends Controller
 {
-    public function exportSQLTable($table)
+    public function exportSQLTable($table, $startDate = null, $endDate = null)
     {
         if (!$this->tableExists($table)) {
             return new Response('Table not found', 404);
         }
 
-        set_time_limit(180);
+        set_time_limit(300);
 
-        $tableData = DB::table($table)->get();
+        $tableData = $this->getTableData($table, $startDate, $endDate);
 
         $sqlContent = $this->generateSQLContent($table, $tableData);
 
@@ -40,6 +40,17 @@ class TableExportController extends Controller
         }
     }
 
+    private function getTableData($table, $startDate, $endDate)
+    {
+        $query = DB::table($table);
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        return $query->get();
+    }
+
     private function generateSQLContent($table, $data)
     {
         $sql = '';
@@ -55,4 +66,3 @@ class TableExportController extends Controller
         return $sql;
     }
 }
-
