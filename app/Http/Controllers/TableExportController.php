@@ -14,6 +14,8 @@ class TableExportController extends Controller
             return new Response('Table not found', 404);
         }
 
+        set_time_limit(180);
+
         $tableData = DB::table($table)->get();
 
         $sqlContent = $this->generateSQLContent($table, $tableData);
