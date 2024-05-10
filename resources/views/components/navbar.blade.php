@@ -1,7 +1,7 @@
 <nav class="{{ $navbarClass }}">
     <div class="row col-md-3">
         <span class="btn" data-toggle="modal" data-target="#popupModal">
-            <span style="font-weight: bold; font-size: 1.2em; color:#EA5455;">Disclaimer</span> <i class="fa fa-info" aria-hidden="true"></i>
+            <span class="text-danger font-weight-bold font-medium-2">Disclaimer</span> <i class="fa fa-info" aria-hidden="true"></i>
         </span>
     </div>
     <div class="navbar-header d-xl-block d-none">
