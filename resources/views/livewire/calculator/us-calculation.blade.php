@@ -269,6 +269,18 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="col-12 col-sm-6 col-md-2">
+                <div class="controls">
+                    <label>@lang('parcel.Order Value')  <span class="text-danger standard-font">*</span></label>
+                    <input step="0.001" type="number" name="order_value" class="form-control" autocomplete="off" required name="order_value" wire:model.debounce.500ms="order_value" placeholder="" />
+                    <div class="help-block"> 
+                        @error('order_value')
+                        <div class="text-danger standard-font">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="d-flex justify-content-between ">
             <div class="controls h2 mt-3 ml-3 ">

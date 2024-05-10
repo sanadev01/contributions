@@ -44,6 +44,7 @@ class USCalculatorRequest extends FormRequest
             'height' => 'sometimes|numeric',
             'width' => 'sometimes|numeric',
             'length' => 'sometimes|numeric',
+            'order_value' => 'sometimes|numeric',
             'unit' => 'required|in:lbs/in,kg/cm',
             'weight' => ($this->unit == 'kg/cm') ? 'sometimes|numeric|max:30' : 'sometimes|numeric|max:66.15',
         ];
