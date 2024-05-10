@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/kpi.css') }}">
 <style>
     .animated-value {
-    transition: opacity 0.3s ease-in-out; /* You can customize the transition effect */
+        transition: opacity 0.2s ease-in-out;
     }
 
     .popup-container {
@@ -148,7 +148,7 @@
     </div>
     <div class="my-3">
         <label for="">Tax And Duty</label>
-        
+
         <select class="form-control selectpicker show-tic col-4" wire:model="selectedTaxModality" placeholder="@lang('orders.order-details.Tax Modality')">
             <option value="ddu" {{ 'ddu' == old('tax_modality') ? 'selected' : '' }}>Apply DDU</option>
             <option value="ddp" {{ 'ddp' == old('tax_modality') ? 'selected' : '' }}>Apply DDP</option>
@@ -161,27 +161,37 @@
                 <th class="py-3 font-black">@lang('orders.Rating')</th>
                 <th class="py-3 font-black">@lang('orders.Average Transit')</th>
                 @if(auth()->user()->hasRole('admin')) <th>@lang('orders.Actual Cost')</th> @endif
-                <th  class="py-3 font-black">
+                <th class="py-3 font-black">
                     <div wire:loading.remove class="animated-value">
-                         @lang('orders.Total Cost') - ( {{ strtoupper($selectedTaxModality)}})
+                        @lang('orders.Total Cost') - ( {{ strtoupper($selectedTaxModality)}})
                     </div>
                 </th>
                 <th class="py-3 font-black">@lang('orders.actions.actions')</th>
             </tr>
             <tr>
-                <th><input type="text" id="searchInput" class="form-control" placeholder=" Search..."></th>
-                <td></td>
-                <td></td>
+                <th><input type="text" id="packageName" class="form-control" placeholder=" Search..."></th>
+                <th>
+                    <select class="form-control" id="stars" onchange="filterByRating(this.value)">
+                        <option value="">All Ratings</option>
+                        <option value="0">0 Star</option>
+                        <option value="1">1 Star</option>
+                        <option value="2">2 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="5">5 Stars</option>
+                    </select>
 
+                </th>
+                <th><input type="text" id="transit" class="form-control" placeholder=" Search..."></th>
                 <th><input type="text" id="actualRate" class="form-control" placeholder=" Actual Rate"></th>
                 <th><input type="text" id="totalRate" class="form-control" placeholder=" Rate"></th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($ratesWithProfit as $key=>$profitRate)
+            @foreach ($ratesWithProfit as $key=>$profitRate) 
             <tr>
-                <td>
+                <td class="package-name">
                     <img width="30" height="30" class="corrioes-lable" src="{{ asset('images/tracking/' . (\App\Models\ShippingService::where('name',$profitRate['name'])->first())->carrier_service . '.png') }}">
                     <span class="color-gray standard-font">
                         {{$profitRate['name']}}
@@ -189,21 +199,21 @@
                 </td>
                 <td>
                     <div class="star-rating">
-                        @for ($i = 1; $i <= 5; $i++) @if ($i <=$profitRate['rating']) <i class="fas fa-star"></i>
+                        @for ($i = 1; $i <= 5; $i++) @if ($i <=ceil($profitRate['rating'])) <i class="fas fa-star"></i>
                             @else
                             <i class="far fa-star"></i>
                             @endif
                             @endfor
                     </div>
                 </td>
-                <td>7-10 business days </td>
+                <td class="stars d-none"> {{ ceil($profitRate['rating']) }}</td>
+                <td class="transit">7-10 business days </td>
                 @if(auth()->user()->hasRole('admin')) <td class="actual-rate">{{$apiRates[$key]['rate']}} USD</td> @endif
 
                 <!--<td></td> -->
                 <td class="price-tag total-rate">
                     <div wire:loading.remove class="animated-value custom-tooltip-calculator">
-                           {{ $this->calculateTotal($profitRate['service_sub_class'],$apiRates[$key]['rate']) }} USD
-                       
+                        {{ $this->calculateTotal($profitRate['service_sub_class'],$apiRates[$key]['rate']) }} USD
                         <span>
 
                             <i class="fa fa-info"></i>
@@ -241,15 +251,15 @@
                 @if($isInternational)
                 <td>
                     @if($userLoggedIn)
-                     <button wire:click="openModel('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}','order')" type="submit" class="btn btn-success btn-sm btn-submit"><i class="feather icon-shopping-cart mx-2"></i>Place Order</button>
+                        <button wire:click="openModel('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}','order')" type="submit" class="btn btn-success btn-sm btn-submit"><i class="feather icon-shopping-cart mx-2"></i>Place Order</button>
                     @endif
                 </td>
                 @else
                 <td>
                     @if($userLoggedIn)
-                        @if($selectedService!=$profitRate['service_sub_class'])
+                    @if($selectedService!=$profitRate['service_sub_class'])
                         <button wire:click="openModel('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}','lable')" type="submit" class="btn btn-success btn-sm btn-submit"><i class="feather icon-shopping-cart mx-2"></i>Buy Label</button>
-                        @endif
+                    @endif
                     @endif
                 </td>
                 @endif
@@ -276,7 +286,7 @@
                     </div>@enderror
                 </td>
             </tr>
-            @endif
+            @endif 
             @endforeach
 
 
@@ -285,18 +295,48 @@
 </section>
 @section('js')
 <script>
-    $(document).ready(function() {
-        $('#searchInput').on('keyup', function() {
-            var value = $(this).val().toLowerCase();
-            $('#kpi-report tbody tr').filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
+    function filterByRating(selectedRating) {
+        // Here you can call your function to filter content based on the selected rating
+        console.log("Selected rating:", selectedRating);
+        $('#kpi-report tbody tr').each(function() {
+            var stars = $(this).find('.stars').text().toLowerCase();
+            if (stars.indexOf(selectedRating) > -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
         });
-        $('#totalRate').on('keyup', function() {
+    }
+    $(document).ready(function() {
+        $('#packageName').on('keyup', function() {
             var value = $(this).val().toLowerCase();
             $('#kpi-report tbody tr').each(function() {
-                var totalRate = $(this).find('.total-rate').text().toLowerCase();
-                if (totalRate.indexOf(value) > -1) {
+                var name = $(this).find('.package-name').text().toLowerCase();
+                if (name.indexOf(value) > -1) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        // $('#stars').on('keyup', function() {
+        //     var value = $(this).val().toLowerCase();
+        //     $('#kpi-report tbody tr').each(function() {
+        //         var stars = $(this).find('.stars').text().toLowerCase();
+        //         if (stars.indexOf(value) > -1) {
+        //             $(this).show();
+        //         } else {
+        //             $(this).hide();
+        //         }
+        //     });
+        // });
+
+        $('#transit').on('keyup', function() {
+            var value = $(this).val().toLowerCase();
+            $('#kpi-report tbody tr').each(function() {
+                var transit = $(this).find('.transit').text().toLowerCase();
+                if (transit.indexOf(value) > -1) {
                     $(this).show();
                 } else {
                     $(this).hide();
@@ -309,6 +349,18 @@
             $('#kpi-report tbody tr').each(function() {
                 var actualRate = $(this).find('.actual-rate').text().toLowerCase();
                 if (actualRate.indexOf(value) > -1) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        $('#totalRate').on('keyup', function() {
+            var value = $(this).val().toLowerCase();
+            $('#kpi-report tbody tr').each(function() {
+                var totalRate = $(this).find('.total-rate').text().toLowerCase();
+                if (totalRate.indexOf(value) > -1) {
                     $(this).show();
                 } else {
                     $(this).hide();
@@ -331,19 +383,15 @@
         });
 
         rejectBtn.addEventListener("click", function() {
-            // If the user rejects the agreement, handle it accordingly
             console.log("User rejected the agreement.");
             popupContainer.style.display = "none";
         });
 
-        // Show the popup when the page loads
-
-        // Function to create the order using Livewire
         function createOrder() {
             Livewire.emit('acceptedAndContinue');
         }
         popupContainer.style.display = "none";
-    }); 
+    });
     window.addEventListener('fadeOutLoading', event => {
         $('#loading').fadeOut();
     })
@@ -352,10 +400,15 @@
         popupContainer.style.display = "flex";
     });
     Livewire.hook('afterDomUpdate', () => {
-        gsap.from('.animated-value', { opacity: 0, y: -50, duration: 0.3, ease: "power2.out", stagger: 0.1 });
+        gsap.from('.animated-value', {
+            opacity: 0,
+            y: -50,
+            duration: 0.2,
+            ease: "power2.out",
+            stagger: 0.1
+        });
     });
-
-</script> 
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
 
 @endsection
