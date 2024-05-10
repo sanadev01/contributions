@@ -2,8 +2,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/kpi.css') }}">
 <style>
     .animated-value {
-        transition: opacity 0.3s ease-in-out;
-        /* You can customize the transition effect */
+        transition: opacity 0.2s ease-in-out;
     }
 
     .popup-container {
@@ -404,7 +403,7 @@
         gsap.from('.animated-value', {
             opacity: 0,
             y: -50,
-            duration: 0.3,
+            duration: 0.2,
             ease: "power2.out",
             stagger: 0.1
         });
