@@ -129,7 +129,7 @@ class UsCalculatorRates extends Component
     {
         $userProfit = $this->calculateProfit($profitRate, $serviceSubClass, Auth::id());
 
-        $totalCost = $profitRate;
+        $totalCost = $profitRate+$this->tempOrder['order_value'];
         $isPRCUser = setting('is_prc_user', null, Auth::id());
         if (strtolower($this->selectedTaxModality) == "ddp" || $isPRCUser) {
             $duty = $totalCost > 50 ? $totalCost * .60 : 0;
