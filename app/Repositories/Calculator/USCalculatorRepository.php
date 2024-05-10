@@ -147,6 +147,10 @@ class USCalculatorRepository
         }
 
         foreach ($this->shippingRates as $serviceRate) {
+            
+            $shippingService = ShippingService::where('service_sub_class',$serviceRate['service_sub_class'])->first();
+            $orderCount = $shippingService->orders()->count();
+
             if ($serviceRate['service_sub_class'] == ShippingService::USPS_PRIORITY || 
                 $serviceRate['service_sub_class'] == ShippingService::USPS_FIRSTCLASS ||
                 $serviceRate['service_sub_class'] == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
@@ -156,8 +160,7 @@ class USCalculatorRepository
                 $profit = $serviceRate['rate'] * ($this->uspsProfit / 100);
 
                 $rate = $serviceRate['rate'] + $profit;
-
-                array_push($this->shippingRatesWithProfit, ['name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
+               array_push($this->shippingRatesWithProfit, [ "order_count" => $orderCount ,'name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
             }
 
             if($serviceRate['service_sub_class'] == ShippingService::UPS_GROUND){
@@ -165,21 +168,37 @@ class USCalculatorRepository
 
                 $rate = $serviceRate['rate'] + $profit;
 
-                array_push($this->shippingRatesWithProfit, ['name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
+                array_push($this->shippingRatesWithProfit, ["order_count" => $orderCount  ,'name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
             }
 
             if ($serviceRate['service_sub_class'] == ShippingService::FEDEX_GROUND) {
                 $profit = $serviceRate['rate'] * ($this->fedExProfit / 100);
 
                 $rate = $serviceRate['rate'] + $profit;
-
-                array_push($this->shippingRatesWithProfit, ['name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
+                array_push($this->shippingRatesWithProfit, [ "order_count" => $orderCount ,'name'=> $serviceRate['name'], 'service_sub_class' => $serviceRate['service_sub_class'], 'rate'=> number_format($rate, 2)]);
             }
         }
+        // Function to calculate rating based on order count
 
+
+        // Calculate rating for each shipping service and update the data structure
+        $maxOrderCount = PHP_INT_MIN; 
+        // Iterate over each shipping service to find the maximum order count
+        foreach ($this->shippingRatesWithProfit as $service) {
+            $order_count = $service['order_count'];
+            if ($order_count > $maxOrderCount) {
+                $maxOrderCount = $order_count;
+            }
+        }
+        foreach ($this->shippingRatesWithProfit as &$service) { 
+            $service['rating'] = $this->calculateRating($service['order_count'],$maxOrderCount);
+        }
         return $this->shippingRatesWithProfit;
     }
-
+    function calculateRating($orderCount, $maxOrderCount) {
+        $rating = ($orderCount / $maxOrderCount) * 5;
+        return round($rating, 1);
+    }
     public function getError()
     {
         return $this->error;
@@ -229,15 +248,26 @@ class USCalculatorRepository
     public function executeForLabel($request)
     {
         $this->request = $request;
-        $this->tempOrder = $request->temp_order;
-        
+        $this->tempOrder = $request->temp_order; 
         $this->shippingService = $this->getSippingService($request->service_sub_class);
         
         if ($this->createOrder() && $this->assignRecipient() && $this->getPrimaryLabel()) {
             return $this->order;
         }
-
-        $this->order->forcedelete();
+        optional($this->order)->forcedelete();
+        return null;
+    }
+    
+    public function executeForPlaceOrder($request)
+    {
+        $this->request = $request;
+        $this->tempOrder = $request->temp_order;
+        $this->shippingService = $this->getSippingService($request->service_sub_class);
+        
+        if ($this->createOrder() && $this->assignRecipient()){
+            return $this->order;
+        }
+        optional($this->order)->forcedelete();
         return null;
     }
 
@@ -275,6 +305,8 @@ class USCalculatorRepository
                 'shipping_service_id' => $this->shippingService->id,
                 'shipping_service_name' => $this->shippingService->name,
                 'status' => Order::STATUS_ORDER,
+                'tax_modality' => strtolower($this->tempOrder['tax_modality'])=="ddp"?'ddp':'ddu',
+                'user_declared_freight'=>$this->tempOrder['user_declared_freight'],
             ]);
             
             if (isset($this->tempOrder['items'])) {
@@ -298,9 +330,13 @@ class USCalculatorRepository
                 $order->update([
                     'order_value' => $totalValue,
                 ]);
+            }elseif(isset($this->tempOrder['order_value'])){ 
+                $order->update([
+                    'order_value' => $this->tempOrder['order_value'],
+                ]);
             }
             
-            $this->order = $order;
+            $this->order = $order; 
             DB::commit();
             return true;
 
@@ -338,16 +374,18 @@ class USCalculatorRepository
                 $this->error = $ex->getMessage();
                 return false;
             }
-
             return true;
         });
 
+        $order = $this->order->refresh(); 
+        $this->order->doCalculations(true,false,true);
         return true;
         
     }
 
     private function getPrimaryLabel()
-    {
+    {        
+        $this->order = $this->order->refresh(); 
         $request = $this->createRequest();
         $request->merge([
             'service' => $this->order->shippingService->service_sub_class,
@@ -396,6 +434,8 @@ class USCalculatorRepository
             }
         }
 
+        $order = $this->order->refresh();
+        $this->order->doCalculations(true,false,true);
         $order = $this->order->refresh();
         chargeAmount($order->gross_total, $order);
         $this->createInvoice($order);

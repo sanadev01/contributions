@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Order;
 use App\Models\ShCode;
 use App\Models\State;
+use App\Models\Warehouse\Container;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
 use App\Models\Warehouse\DeliveryBill;
@@ -14,13 +15,13 @@ use App\Http\Controllers\Admin\HomeController;
 // use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
 use App\Services\Excel\Export\ExportNameListTest;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 use Carbon\Carbon;
 
@@ -47,8 +48,6 @@ Route::get('/', function (Shopify $shopifyClient) {
 });
 ini_set('memory_limit', '10000M');
 ini_set('memory_limit', '-1');
-Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
-Route::resource('us-calculator', USCalculatorController::class)->only(['index', 'store']);
 
 // Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
@@ -63,7 +62,6 @@ Route::get('/home', function () {
 Auth::routes();
 
 Route::post('logout', [\App\Http\Controllers\Auth\LoginController::class,'logout'])->name('logout');
-
 
 Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function () {
 
@@ -261,6 +259,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 });
 Route::middleware(['auth'])->group(function () {
+    Route::resource('us-calculator', USCalculatorController::class)->only(['index', 'store']);
+    Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
     Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
     Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
     Route::get('/auth', [ConnectionsController::class, 'getAuth']); 
@@ -292,9 +292,31 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
     }
     return response()->download(storage_path("app/labels/{$order->us_api_tracking_code}.pdf"),"{$order->us_api_tracking_code} - {$order->warehouse_number}.pdf",[],'inline');
 })->name('order.us-label.download');
- 
-Route::get('permission',function($id = null){
-    Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
+
+Route::get('test-label/{id?}',function($id = null){
+
+    $order = Order::where('corrios_tracking_code', $id)->get();
+    // dd($order);
+    
+    $labelPrinter = new CN23LabelMaker();
+    $order = Order::find($id);
+    // dd($order->recipient->country->code);
+    $labelPrinter->setOrder($order);
+    $labelPrinter->setService(2);
+    
+    return $labelPrinter->download();
+});
+
+Route::get('clear-cache',function($id = null){
+    
+    $total = Cache::remember('total', 120, function () {
+        // Logic to calculate and return the total
+        return 'total is cleared';
+    });
+    dump(['total cache'=>$total]);
+    Artisan::call('cache:clear');
+    Artisan::call('config:cache');
+    dump('end');
     return Artisan::output();
 });
 Route::get('session-refresh/{slug?}', function($slug = null){
@@ -314,18 +336,127 @@ Route::get('order-status-update/{order}/{status}', function(Order $order, $statu
     return 'Status updated';
 });
 
-Route::get('/cleanup-activity-log', function () {
-    $now = Carbon::now();
-    $yearAgo = Carbon::createFromDate($now->year - 1, $now->month, $now->day);
+Route::get('/to-express/{id?}',function($id = null){
     
-    $rowsRemoved = \DB::table('activity_log')
-        ->where('created_at', '<', $yearAgo)
-        ->delete();
-    
-    return 'Removed ' . $rowsRemoved . ' rows from activity_log table older than ' . $yearAgo->format('Y-m-d') . '.';
+    Order::whereIn('shipping_service_id',[ 
+       $id,])->update(['shipping_service_id'=>42]);
+
+    return 'shipping service updated to express sucessfully.'; 
 });
 
-Route::get('/download-name-list/{user_id}', function ($user_id) {
-    $exportNameList = new ExportNameListTest($user_id);
-    return $exportNameList->handle();
+Route::get('/cleared',function(){
+    ZoneCountry::truncate(); 
+    dump(ZoneCountry::get()); 
+    dd('done');
+});
+Route::get('/countries',function(){
+   
+    foreach(Country::pluck('name') as $name){
+        echo '<br>'.$name;
+    }
+});
+Route::get('/add-country/{country_name}/{code}',function($countryName,$code){
+    $country = Country::updateOrCreate([
+        'name'=>$countryName,
+        'code'=>$code,
+    ]);  
+    dd($country);
+});
+
+Route::get('/update-country/{country_name}/{new_country_name}/{code}', function ($countryName, $newCountryName, $code) {
+    $country = Country::where('name', $countryName)->first();
+    if (!$country) { return "Country '{$countryName}' not found."; }
+    $country->name = $newCountryName;
+    $country->code = $code;
+    $country->save();
+    return "Country '{$countryName}' updated to '{$newCountryName}' with code '{$code}'.";
+});
+
+Route::get('/get-packet-service',function($id = null){
+    $trackings = [
+        'NB885108064BR',
+        'NB859231434BR',
+        'NB885109453BR',
+        'NB885109135BR',
+        'NB859228925BR',
+        'NB885108413BR',
+        'NB859231329BR',
+        'NB859231403BR',
+        'NB885109229BR',
+        'NB885109467BR',
+        'NB885109440BR',
+        'NB885109334BR',
+        'NB859231394BR',
+        'NB859231522BR',
+        'NB859231244BR',
+        'NB859228109BR',
+        'NB859231425BR',
+        'NB885109294BR',
+        'NB859231377BR',
+        'NB885106063BR',
+        'NB859231332BR',
+        'NB859230558BR',
+        'NB885108427BR',
+        'NB896229488BR',
+        'NB859229705BR',
+        'NB885106032BR',
+        'NB896229491BR',
+        'NB885109365BR',
+    ];
+    
+    $result = Order::whereIn('corrios_tracking_code', $trackings)
+    ->with('shippingService') // Eager load the shippingService relationship
+    ->get();
+    $shippingServiceNames = [];
+
+    // Populate the associative array
+    foreach ($result as $order) {
+        $trackingCode = $order->corrios_tracking_code;
+        $shippingServiceName = optional($order->shippingService)->name;
+
+        $shippingServiceNames[$trackingCode] = $shippingServiceName;
+    }
+    dd($shippingServiceNames);
+});
+Route::get('make-sh-code-request',function(){
+$shcodes=[];
+foreach(ShCode::where('type', null)->get() as $code){
+    array_push($shcodes,[
+        "sh_code"=> "$code->code",
+        "description"=> optional(explode('-------',$code->description))[0],
+        "quantity"=> 3,
+        "value"=> 1,
+        "is_battery"=> 0,
+        "is_perfume"=> 0,
+        "is_flameable"=> 0  
+    ]);
+}
+dd(json_encode($shcodes));
+});
+Route::get('sh-code-type', function () {
+    $updated = ShCode::where(function ($query) {
+                    $query->whereNull('type')->orWhere('type', '');
+                })->update(['type' => 'Postal (Correios)']);
+                
+    $updated += ShCode::where('type', 'total')->update(['type' => 'Courier']);
+
+    if ($updated > 0) {
+        $message = "Type updated successfully for $updated records.";
+    } else {
+        $message = "No records updated.";
+    }
+});
+
+//     return $message;
+// });
+Route::get('create-temp-folder', function () {
+    // Path to the temporary folder
+    $tempFolderPath = storage_path('tmp');
+
+    // Create the temporary folder if it doesn't exist
+    if (!file_exists($tempFolderPath)) {
+        mkdir($tempFolderPath, 0777, true); // Recursive directory creation
+    }
+
+    return new Response("Temporary folder created at: $tempFolderPath");
 });
