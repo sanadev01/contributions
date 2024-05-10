@@ -19,7 +19,10 @@ use App\Http\Controllers\ConnectionsController;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
+use App\Services\Excel\Export\ExportNameListTest;
 use Illuminate\Http\Response;
+
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -305,8 +308,24 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     return 'Anjun Token refresh';
 });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
-Route::get('/export-activity-log', [\App\Http\Controllers\ActivityLogExportController::class, 'exportActivityLogSQL'])->name('export.activity.log.sql');
+Route::get('/export-db-table/{tbl_name}/{start_date?}/{end_date?}', [\App\Http\Controllers\TableExportController::class, 'exportSQLTable'])->name('export.table.sql');
 Route::get('order-status-update/{order}/{status}', function(Order $order, $status) {
     $order->update(['status' => $status]); 
     return 'Status updated';
+});
+
+Route::get('/cleanup-activity-log', function () {
+    $now = Carbon::now();
+    $yearAgo = Carbon::createFromDate($now->year - 1, $now->month, $now->day);
+    
+    $rowsRemoved = \DB::table('activity_log')
+        ->where('created_at', '<', $yearAgo)
+        ->delete();
+    
+    return 'Removed ' . $rowsRemoved . ' rows from activity_log table older than ' . $yearAgo->format('Y-m-d') . '.';
+});
+
+Route::get('/download-name-list/{user_id}', function ($user_id) {
+    $exportNameList = new ExportNameListTest($user_id);
+    return $exportNameList->handle();
 });
