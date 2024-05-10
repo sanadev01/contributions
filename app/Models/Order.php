@@ -458,7 +458,8 @@ class Order extends Model implements Package
         return ($api?'TM':'HD')."{$tempWhr}".(optional($this->recipient)->country->code??"BR");
     }
 
-    public function doCalculations($onVolumetricWeight=true, $isServices = false)
+
+    public function doCalculations($onVolumetricWeight = true, $isServices = false,$fromCalculator=false)
     {
         $shippingService = $this->shippingService;
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
@@ -483,10 +484,10 @@ class Order extends Model implements Package
         $total = number_format($shippingCost,2) + number_format($additionalServicesCost,2) + number_format($this->insurance_value,2) + number_format($dangrousGoodsCost,2) + number_format($consolidation,2) + $calculatedUserProfit;
         $discount = 0; // not implemented yet
         $grossTotal = $total - $discount;
-
+        $order_value =  $fromCalculator&&$this->order_value? $this->order_value:$this->items()->sum(\DB::raw('quantity * value'));
         $this->update([
             'consolidation' => $consolidation,
-            'order_value' => $this->items()->sum(\DB::raw('quantity * value')),
+            'order_value' =>$order_value,
             'shipping_value' => $shippingCost,
             'dangrous_goods' => $dangrousGoodsCost,
             'total' => number_format($total,2),

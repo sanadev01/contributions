@@ -23,6 +23,7 @@ class USCalculatorController extends Controller
     {
         $tempOrder = $usCalculatorRepository->handle($request);
         $tempOrder['tax_modality'] = $request->tax_modality;
+        $tempOrder['order_value'] = $request->order_value;
         $shippingServices = $usCalculatorRepository->getShippingServices();
 
         $apiRates = $usCalculatorRepository->getRates();

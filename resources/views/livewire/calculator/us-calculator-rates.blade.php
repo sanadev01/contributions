@@ -1,6 +1,10 @@
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/kpi.css') }}">
 <style>
+    .animated-value {
+    transition: opacity 0.3s ease-in-out; /* You can customize the transition effect */
+    }
+
     .popup-container {
         display: none;
         position: fixed;
@@ -144,6 +148,7 @@
     </div>
     <div class="my-3">
         <label for="">Tax And Duty</label>
+        
         <select class="form-control selectpicker show-tic col-4" wire:model="selectedTaxModality" placeholder="@lang('orders.order-details.Tax Modality')">
             <option value="ddu" {{ 'ddu' == old('tax_modality') ? 'selected' : '' }}>Apply DDU</option>
             <option value="ddp" {{ 'ddp' == old('tax_modality') ? 'selected' : '' }}>Apply DDP</option>
@@ -156,7 +161,11 @@
                 <th class="py-3 font-black">@lang('orders.Rating')</th>
                 <th class="py-3 font-black">@lang('orders.Average Transit')</th>
                 @if(auth()->user()->hasRole('admin')) <th>@lang('orders.Actual Cost')</th> @endif
-                <th class="py-3 font-black"> @lang('orders.Total Cost') - ( {{ strtoupper($selectedTaxModality)}} )</th>
+                <th  class="py-3 font-black">
+                    <div wire:loading.remove class="animated-value">
+                         @lang('orders.Total Cost') - ( {{ strtoupper($selectedTaxModality)}})
+                    </div>
+                </th>
                 <th class="py-3 font-black">@lang('orders.actions.actions')</th>
             </tr>
             <tr>
@@ -192,10 +201,9 @@
 
                 <!--<td></td> -->
                 <td class="price-tag total-rate">
-                    <div class="custom-tooltip-calculator">
-                        {{ $this->calculateTotal($profitRate['service_sub_class'],$apiRates[$key]['rate']) }}
-
-                        USD
+                    <div wire:loading.remove class="animated-value custom-tooltip-calculator">
+                           {{ $this->calculateTotal($profitRate['service_sub_class'],$apiRates[$key]['rate']) }} USD
+                       
                         <span>
 
                             <i class="fa fa-info"></i>
@@ -343,5 +351,11 @@
         var popupContainer = document.getElementById("popup-container");
         popupContainer.style.display = "flex";
     });
-</script>
+    Livewire.hook('afterDomUpdate', () => {
+        gsap.from('.animated-value', { opacity: 0, y: -50, duration: 0.3, ease: "power2.out", stagger: 0.1 });
+    });
+
+</script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+
 @endsection

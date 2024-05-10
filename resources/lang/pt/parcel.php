@@ -27,6 +27,7 @@ return [
     'Length' => 'comprimento',
     'Width' => 'Largura',
     'Height' => 'Altura',
+    "Order value"=>"valor do pedido",
     'The Rate will be applied on' => 'A taxa será aplicada em',
     'Shipment Images' => 'Imagens de Remessa',
     'Image 1' => 'Imagem 1',
