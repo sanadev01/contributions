@@ -88,7 +88,7 @@ class AccrualReport extends AbstractExportService
         $this->setColumnWidth('F', 20);
         $this->setCellValue('F1', 'Order Date');
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Order Date');
+        $this->setCellValue('G1', 'Payment');
 
         $this->setBackgroundColor('A1:G1', '2b5cab');
         $this->setColor('A1:G1', 'FFFFFF');
