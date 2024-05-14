@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 <div class="d-none" id="sender_info">
-                    <div class="row mb-1 mt-3">
+                    <div class="row mb-1 mt-3 d-none">
                         <div class="controls col-6">
                             <h4 class="color-gray standard-font bold">Sender Address</h4>
                         </div>
