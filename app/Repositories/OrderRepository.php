@@ -72,10 +72,7 @@ class OrderRepository
 
         if ($request->order_date) {
             $query->where('order_date', 'LIKE', "%{$request->order_date}%");
-        }   
-        if($request->tax_and_duty){
-            $query->where('tax_and_duty', 'LIKE', "%{$request->tax_and_duty}%");
-        }  
+        }
         if($request->name){
             $query->whereHas('user', function ($query) use($request) {
                 return $query->where('name', 'LIKE', "%{$request->name}%");
