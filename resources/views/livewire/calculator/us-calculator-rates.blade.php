@@ -165,7 +165,11 @@
                 @if(auth()->user()->hasRole('admin')) <th>@lang('orders.Actual Cost')</th> @endif
                 <th class="py-3 font-black">
                     <div wire:loading.remove class="animated-value">
-                        @lang('orders.Total Cost') - ( {{ strtoupper($selectedTaxModality)}})
+                        @if(strtoupper($selectedTaxModality)=="DDP")
+                         @lang('orders.Estimate tax & duty')
+                        @else
+                        @lang('orders.Total Cost')
+                        @endif
                     </div>
                 </th>
                 <th class="py-3 font-black">@lang('orders.actions.actions')</th>
@@ -208,7 +212,7 @@
                             @endfor
                     </div>
                 </td>
-                <td class="stars d-none" > {{ ceil($profitRate['rating']) }}</td>
+                <td class="stars d-none"> {{ ceil($profitRate['rating']) }}</td>
                 <td class="transit">7-10 business days </td>
                 @if(auth()->user()->hasRole('admin')) <td class="actual-rate" title="With profit {{ $profitRate['rate'] }}">{{$apiRates[$key]['rate']}} USD</td> @endif
 

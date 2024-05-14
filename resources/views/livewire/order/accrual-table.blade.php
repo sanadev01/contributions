@@ -30,7 +30,7 @@
                     <th>Tracking Code</th>
 
                     <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
-                    <th> Tax & Duty</th>
+                    <th> Estimated tax & duty</th>
                     <th> Fee for Tax & Duty</th>
                     <th>@lang('orders.payment-status')</th>
                     <!-- <th class="no-print">@lang('orders.actions.actions')</th> -->
@@ -74,9 +74,14 @@
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="amount">
                     </th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <th>
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="tax_and_duty">
+                    </th>
+                    <th>
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="fee_for_tax_and_duty">
+                    </th>
+                    <td> 
+                    </td>
                 </tr>
             </tfoot>
             </thead>
@@ -89,13 +94,13 @@
                 <tr>
             <tfoot class="search-header">
                 <tr id="kpiHeadSearch">
-                    
-                    @admin  <th> </th> @endadmin
+
+                    @admin <th> </th> @endadmin
                     <th colspan="3"> </th>
                     <th> Total</th>
-                    <th> {{$totalGrossTotal}}</th>
-                    <th>{{$totalTaxAndDuty}}</th>
-                    <th>{{$feeForTotalTaxAndDuty}}</th>
+                    <th>{{$orders->sum('gross_total')}}</th>
+                    <th>{{$orders->sum('tax_and_duty')}}</th>
+                    <th>{{$orders->sum('fee_for_tax_and_duty')}}</th>
                     <th></th>
                 </tr>
             </tfoot>
