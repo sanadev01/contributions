@@ -20,7 +20,6 @@ class UsCalculation extends Component
     public $width;
     public $widthOther;
     public $height;
-    public $order_value;
     public $heightOther;
     public $unit;
     public $cc;

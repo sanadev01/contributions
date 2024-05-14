@@ -3,7 +3,7 @@
     <div class="tooltip-text">
         <table>
             <tbody>
-                @if(setting('is_prc_user', null, $order->user_id)|| strtolower($order->tax_modality)=="ddp")
+                @if((setting('is_prc_user', null, $order->user_id)|| strtolower($order->tax_modality)=="ddp" ) &&!($order->shippingService->usps_service_sub_class??false)  )
                 <tr>
                     <td>Shipping Cost</td>
                     <td colspan="2"> {{$order->shipping_value." $"}}</td>
