@@ -45,7 +45,7 @@ class CN23LabelMaker implements HasLableExport
         $this->returnAddress = 'Homedeliverybr <br>
         Rua Acaçá 47- Ipiranga <br>
         Sao Paulo CEP 04201-020';
-        $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
+        $this->complainAddress = '';
         $this->activeAddress = '';
         $this->labelZipCodeGroup = '';
     }

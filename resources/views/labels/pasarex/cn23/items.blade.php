@@ -3,20 +3,20 @@
         <tbody>
             <tr>
                 <td colspan="4">
-                    DECLARACÃO PARA ALFÃNDEGA
+                    CUSTOMS DECLARATION
                 </td>
                 <td colspan="3">
-                    PODE SER ABERTO EX OFICIO 1/2
+                    CAN BE OPENED EX OFFICIO 1/2
                 </td>
             </tr>
             
-            @include('labels.brazil.cn23.items-header')
+            @include('labels.pasarex.cn23.items-header')
 
             @foreach ($items as $item)
-            @include('labels.brazil.cn23.single-item')
+            @include('labels.pasarex.cn23.single-item')
             @endforeach
 
-            @include('labels.brazil.cn23.items-footer',[
+            @include('labels.pasarex.cn23.items-footer',[
                 'totalQuantity' => $order->items->sum('quantity'),
                 'totalWeight' => $order->getOriginalWeight('kg'),
                 'totalValue' => $order->items()->sum(\DB::raw('quantity * value')),

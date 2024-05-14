@@ -105,7 +105,7 @@
         .tracking_code img {
             position: absolute;
             display: block;
-            left: 6.25mm;
+            left: 9.50mm;
             width: 79.5mm;
             height: 18mm;
         }
@@ -124,7 +124,17 @@
             width: 9.4cm;
             font-size: 10pt;
             text-align: center;
-            left: 0.2cm;
+            left: 0.35cm;
+            font-weight: bold;
+        }
+
+        .country-label {
+            position: absolute;
+            top: 5.7cm;
+            width: 9.4cm;
+            font-size: 10pt;
+            text-align: center;
+            left: 0.35cm;
             font-weight: bold;
         }
 
@@ -171,7 +181,7 @@
 
         .serivce-zipcode {
             font-size: 8px;
-            top: 97mm;
+            top: 90mm;
             position: absolute;
             left: 0.2cm;
             width: 9.6cm;
@@ -179,6 +189,13 @@
         }
 
         .serivce-zipcode .left-block {
+            width: 6cm;
+            display: inline-block;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 7pt;
+        }
+
+        .serivce-zipcode .left-block-sender {
             width: 6cm;
             display: inline-block;
             font-family: Arial, Helvetica, sans-serif;
@@ -540,9 +557,10 @@
      -->
     <div class="tracking_code">
         <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode" />
-        <span class="cn-label">US</span>
+        {{-- <span class="cn-label">CO</span> --}}
     </div>
     <p class="barcode-label">{{$order->corrios_tracking_code}}</p>
+    <p class="country-label">Colombia</p>
     <!-- <div class="empty-lines">
         Nome legível: _______________________________________________ <br>
         Documento: ___________________Rúbrica:______________________
@@ -569,42 +587,12 @@
     </div>
     <p class="zipcode-label">{{ cleanString($recipient->zipcode) }}</p>
     <div class="serivce-zipcode">
-        <div class="left-block">
-            <div class="return-address">
-                @if(!$order->shippingService->is_pasar_ex)
-                <span class="return-box"> <i class="return-box-text">@if($isReturn) X @else @endif</i></span> &nbsp; &nbsp; Retorno a origem <span class="return-box">@if(!$isReturn) X @else @endif</span> Tratar como abandono<br>
-                @endif
-                <span class="site-text">Dúvidas e reclamações: homedeliverybr.com</span><br><br>
-                <strong>DEVOLUCÃO:</strong> <br>
-                {!! $returnAddress !!}
-            </div>
-            @if(!empty($labelZipCodeGroup))
-            <div class="bottom-block">
-                <div class="box-text" style="font-size: 24px !important; font-weight: bold; ">{{ optional($labelZipCodeGroup)['group'] }}</div>
-            </div>
-            @else
-            @if($order->getOriginalWeight('kg') > 3)
-            <div class="bottom-block">
-                <div class="box-g"> </div>
-                <div class="box-text">G</div>
-            </div>
-            @else
-            <div class="bottom-block">
-                <div class="box-p1"> </div>
-                <div class="box-p2"> </div>
-                <div class="box-p3"> </div>
-                <div class="box-text">P</div>
-            </div>
-            @endif
-            @endif
-            <br>
-        </div>
-        <div class="right-block">
+        <div class="left-block-sender">
             <h2 style="margin-bottom: 0px !important">Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2>
             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
             {{ $order->sender_email }} <br>
             {{ $activeAddress }}
-            <div style="font-size: 6.5px !important">
+            <div style="font-size: 8.5px !important">
                 <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
                 <strong>CR#:</strong>{{ $order->customer_reference }} <br>
                 <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs
@@ -612,16 +600,16 @@
             </div>
         </div>
     </div>
-    <div class="complain_address">
+    {{-- <div class="complain_address">
         {{ $complainAddress }}
-    </div>
+    </div> --}}
     
     @include('labels.pasarex.cn23.items')
 
     @if ($hasSumplimentary)
         @foreach ($suplimentaryItems as $items)
             <div class="page-break-before"></div>
-            @include('labels.brazil.cn23.suplimentary',[
+            @include('labels.pasarex.cn23.suplimentary',[
                 'items' => $items
             ])
         @endforeach

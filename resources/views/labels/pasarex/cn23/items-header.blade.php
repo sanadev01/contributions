@@ -1,20 +1,20 @@
 <tr>
     <td>
-        COD SH
+        SH CODE
     </td>
     <td style="width: 15px;">
-        QTDE
+        QTY
     </td>
     <td colspan="2"  >
-        DESCRIÇÃO DO CON TEÚDO 
+        DESCRIPTION OF CONTENT
     </td>
     <td>
-        PESO (KG)
+        WEIGHT (KG)
     </td>
     <td style="25px;">
         UNIT USD
     </td>
     <td style="25px">
-        VALOR USD
+        VALUE USD
     </td>
 </tr>
