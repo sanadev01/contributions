@@ -39,12 +39,12 @@ class OrderItemsController extends Controller
         $usCountryId =  Order::US;
         $shippingServices = $this->orderRepository->getShippingServices($order);
         $error = $this->orderRepository->getShippingServicesError();
-
+        $uspsService = [ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS, ShippingService::USPS_PRIORITY_INTERNATIONAL, ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, ShippingService::USPS_GROUND, ShippingService::GDE_PRIORITY_MAIL, ShippingService::GDE_FIRST_CLASS];
         if ($error) {
             session()->flash($error);
         }
         
-        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error','chileCountryId', 'usCountryId'));
+        return view('admin.orders.order-details.index',compact('uspsService','order','shippingServices', 'error','chileCountryId', 'usCountryId'));
     }
 
     /**

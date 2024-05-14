@@ -238,6 +238,25 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="taxModalityModal" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title">Info</h5>
+            </div>
+            <div class="modal-body">
+                <h5>
+                    @lang('orders.DDP/PRC service not available')
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info text-white" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -257,7 +276,10 @@
             $("#rateBtn").show();
             $("#itemLimit").hide();
         } else if (service == 477 || service == 3674 || service == 37634 || service == 3326 || service == 4367 || service == 237) {
-            return getGSSRates();
+            if(!getGSSRates()){
+                return;
+            }
+            
         } else if (service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
             $("#rateBtn").hide();
@@ -265,19 +287,31 @@
             $("#itemLimit").hide();
             $("#rateBtn").hide();
         }
+        showTaxModalityMessage(service) 
+
     })
+    function showTaxModalityMessage(service){
+         serviceCode = Number(service)
+        const uspsService = @json($uspsService);
+        console.log(uspsService,serviceCode);
+        if(uspsService.includes(serviceCode)){
+            $('#taxModalityModal').modal('show');
+        }
+    }
 
     //USPS PRIORITY INTERNATIONAL SERVICE FOR RATES CALL 
     function checkService() {
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        showTaxModalityMessage(service)
         if (service == 3442) {
             return getUspsPriorityIntlRates();
         }
     }
 
     function getUspsPriorityIntlRates() {
+        flag = true;
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        var order_id = $('#order_id').val();
+         var order_id = $('#order_id').val();
         var descpall = [];
         var qtyall = [];
         var valueall = [];
@@ -324,12 +358,17 @@
             })
         } else {
             alert('Add items to get rates!');
+            flag = false;
         }
+        if(flag)
+            showTaxModalityMessage(service)
+       
     }
 
 
     $('#us_shipping_service').ready(function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        showTaxModalityMessage(service)
         if (service == 3440 || service == 3441) {
 
             return getUspsRates();
@@ -344,7 +383,8 @@
 
     $('#us_shipping_service').on('change', function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
-
+        showTaxModalityMessage(service)
+       
         if (service == 3440 || service == 3441 || service == 05) {
 
             return getUspsRates();
@@ -375,7 +415,7 @@
     function getUspsRates() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-
+        showTaxModalityMessage(service) 
         $('#loading').fadeIn();
         $.get('{{ route("api.usps_rates") }}', {
             service: service,
@@ -423,6 +463,7 @@
     function getFedExRates() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
+        showTaxModalityMessage(service)
 
         $('#loading').fadeIn();
         $.get('{{ route("api.fedExRates") }}', {
@@ -449,6 +490,7 @@
     function getGSSRates() {
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
+        showTaxModalityMessage(service)
 
         $('#loading').fadeIn();
         $.get('{{ route("api.gssRates") }}', {
@@ -460,6 +502,7 @@
                     $('#user_declared_freight').val(response.total_amount);
                     $('#user_declared_freight').prop('readonly', true);
                 }
+                return true;
             } else {
                 if (service == 3674) {
                     $('#gssRateModal').modal('show');
@@ -474,7 +517,7 @@
             console.log(error);
             $('#loading').fadeOut();
         })
-
+        return false;
     }
 
     $('#returnParcel').change(function() {
