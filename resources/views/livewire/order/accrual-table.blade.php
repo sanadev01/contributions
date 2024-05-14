@@ -98,9 +98,9 @@
                     @admin <th> </th> @endadmin
                     <th colspan="3"> </th>
                     <th> Total</th>
-                    <th>{{$totalGrossTotal}}</th>
-                    <th>{{$totalTaxAndDuty}}</th>
-                    <th>{{$feeForTotalTaxAndDuty}}</th>
+                    <th>{{$orders->sum('gross_total')}}</th>
+                    <th>{{$orders->sum('tax_and_duty')}}</th>
+                    <th>{{$orders->sum('fee_for_tax_and_duty')}}</th>
                     <th></th>
                 </tr>
             </tfoot>
