@@ -126,19 +126,19 @@ class UsCalculatorRates extends Component
     }
     public function calculateTotal($serviceSubClass, $profitRate)
     {
+        
         $shippingService = ShippingService::where('service_sub_class',$serviceSubClass)->first();
         
         $isUSPS = optional($shippingService)->usps_service_sub_class ?? false; 
         $userProfit = $this->calculateProfit($profitRate, $serviceSubClass, Auth::id());
 
-        $orderValue = array_reduce($this->tempOrder['items'], function ($carry, $item) {
+        $orderValue = array_reduce($this->tempOrder['items']??[], function ($carry, $item) {
     
             return $item['value'] * $item['quantity'] + $carry;
         }, 0);
         $totalCost = $profitRate + $orderValue;
-
         $isPRCUser = setting('is_prc_user', null, Auth::id());
-        if ((strtolower($this->selectedTaxModality) == "ddp" || $isPRCUser) && !$isUSPS) {
+        if ($this->isInternational && (strtolower($this->selectedTaxModality) == "ddp" || $isPRCUser) && !$isUSPS) {
             $duty = $totalCost > 50 ? $totalCost * .60 : 0;
             $totalCostOfTheProduct = $totalCost + $duty;
             $icms = .17;

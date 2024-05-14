@@ -147,7 +147,7 @@
         </div>
     </div>
 
-    @if((\Auth::user())->hasPermission('calculator-tax-modality'))
+    @if((\Auth::user())->hasPermission('calculator-tax-modality') && $isInternational)
     <div class="my-3">
         <label for="">Tax And Duty</label>
         <select class="form-control selectpicker show-tic col-4" wire:model="selectedTaxModality" placeholder="@lang('orders.order-details.Tax Modality')">
