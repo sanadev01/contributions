@@ -33,7 +33,6 @@ class AccrualTable extends Component
     public $tracking_code = '';
     public $amount = '';
     public $tax_and_duty = '';
-    public $is_paid = true;
     public $fee_for_tax_and_duty = '';
     public $status = '';
     public $orderType = null;
@@ -91,8 +90,7 @@ class AccrualTable extends Component
         return (new OrderRepository)->get(request()->merge([
             'order_date' => $this->date,
             'name' => $this->name,
-            'is_paid' => (boolean)($this->is_paid),
-            'fee_for_tax_and_duty' => trim($this->fee_for_tax_and_duty),
+            'tax_and_duty' => trim($this->tax_and_duty),
             'fee_for_tax_and_duty' => trim($this->fee_for_tax_and_duty),
             'pobox_number' => $this->pobox,
             'warehouse_number' => $this->whr_number,
