@@ -325,6 +325,56 @@ Route::get('/cleanup-activity-log', function () {
     return 'Removed ' . $rowsRemoved . ' rows from activity_log table older than ' . $yearAgo->format('Y-m-d') . '.';
 });
 
+Route::get('/service-id-update', function () {
+
+    $codes = [
+        'NC253044180BR',
+        'IX031011065BR',
+        'IX031016076BR',
+        'NC560917725BR',
+        'IX031016080BR',
+        'NC253044193BR',
+        'IX031011079BR',
+        'NC560917734BR',
+        'NC560917748BR',
+        'NC560917751BR',
+        'NC560917765BR',
+        'NC253044202BR',
+        'NC560917779BR',
+        'NC560917782BR',
+        'NC560917796BR',
+        'NC560917805BR',
+        'NC560917819BR',
+        'NC560917822BR',
+        'NC560917836BR',
+        'NC253044216BR',
+        'NC253044220BR',
+        'NC560917840BR',
+        'NC253044233BR',
+        'NC560917853BR',
+        'NC560917867BR',
+        'NC560917875BR',
+        'NC253044247BR',
+        'NC253044255BR',
+        'NC253044264BR',
+        'NC253044278BR',
+        'NC253044281BR',
+        'NC253044295BR',
+        'NC253044304BR',
+        'NC253044318BR',
+    ];
+    
+    $updatedRowsExp = Order::whereIn('corrios_tracking_code', $codes)
+        ->where('corrios_tracking_code', 'like', 'NC%')
+        ->update(['shipping_service_id' => 45]);
+
+    $updatedRowsStand = Order::whereIn('corrios_tracking_code', $codes)
+        ->where('corrios_tracking_code', 'like', 'IX%')
+        ->update(['shipping_service_id' => 46]);
+
+    return 'Updated ' . $updatedRowsExp . ' with Express Parcel and ' . $updatedRowsStand . ' with Standard Parcel';
+});
+
 Route::get('/download-name-list/{user_id}', function ($user_id) {
     $exportNameList = new ExportNameListTest($user_id);
     return $exportNameList->handle();
