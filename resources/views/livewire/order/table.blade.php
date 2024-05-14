@@ -98,6 +98,7 @@
                     @endadmin
                     <th>Tracking Code</th>
                     <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
+                    <th>@lang('orders.Estimate tax & duty')</th>
                     <th>@lang('orders.status')</th>
                     <th>@lang('orders.payment-status')</th>
                     <th class="no-print">@lang('orders.actions.actions')</th>
@@ -158,6 +159,9 @@
                     </th>
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="amount">
+                    </th>
+                    <th>
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="tax_and_duty">
                     </th>
                     <th>
                         <select class="form-control" wire:model="status">

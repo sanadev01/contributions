@@ -49,6 +49,9 @@ return [
     'Import Tax' => 'Imposto de Importação',
     'Total Cost' => 'Custo Total',
     'Actual Cost'=>'Custo Real',
+    "Estimate tax & duty"=>"Estimate tax & duty",
+    "DDP/PRC service not available"=>"Serviço DDP ou PRC não disponível para este método de envio.",
+
     'recipient' => [
         'slect-from-list' => 'Selecione o endereço da lista',
         'Previous' => 'Anterior', 

@@ -80,6 +80,9 @@
             <x-gross-total-details :order="$order" /> 
         </div>
     </td>
+    <td> 
+            {{ number_format($order->tax_and_duty, 2) }} USD  
+    </td>
     <td>
         <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin() && !$order->isTrashed()) wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled" @endif>
             <option class="bg-info" value="{{ App\Models\Order::STATUS_ORDER }}" {{ $order->status == App\Models\Order::STATUS_ORDER ? 'selected': '' }}>ORDER</option>

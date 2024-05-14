@@ -50,6 +50,13 @@ class OrderRepository
         {
             $query->where('tax_and_duty','!=',0);
         }
+       
+        $query->when($request->tax_and_duty,function($query,$tax){
+            return $query->where('tax_and_duty',  'LIKE', "%{$tax}%");
+        })->when($request->fee_for_tax_and_duty,function($query,$feeTax){
+            return $query->where('fee_for_tax_and_duty',  'LIKE', "%{$feeTax}%");
+        });
+        
 
         if ($request->userType == 'pickups') {
             $query->where('api_pickup_response' , '!=', null);
@@ -65,6 +72,9 @@ class OrderRepository
 
         if($request->order_date){
             $query->where('order_date', 'LIKE', "%{$request->order_date}%");
+        }   
+        if($request->tax_and_duty){
+            $query->where('tax_and_duty', 'LIKE', "%{$request->tax_and_duty}%");
         }  
         if($request->name){
             $query->whereHas('user', function ($query) use($request) {
