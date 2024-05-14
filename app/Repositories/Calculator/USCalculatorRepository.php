@@ -378,7 +378,7 @@ class USCalculatorRepository
         });
 
         $order = $this->order->refresh(); 
-        $this->order->doCalculations(true,false,true);
+        $this->order->doCalculations();
         return true;
         
     }
@@ -435,7 +435,7 @@ class USCalculatorRepository
         }
 
         $order = $this->order->refresh();
-        $this->order->doCalculations(true,false,true);
+        $this->order->doCalculations();
         $order = $this->order->refresh();
         chargeAmount($order->gross_total, $order);
         $this->createInvoice($order);

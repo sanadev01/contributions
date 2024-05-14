@@ -23,7 +23,6 @@ class USCalculatorController extends Controller
     {
         $tempOrder = $usCalculatorRepository->handle($request);
         $tempOrder['tax_modality'] = $request->tax_modality;
-        $tempOrder['order_value'] = $request->order_value;
         $shippingServices = $usCalculatorRepository->getShippingServices();
 
         $apiRates = $usCalculatorRepository->getRates();
@@ -47,7 +46,7 @@ class USCalculatorController extends Controller
         }else{
             $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);
         }
-        $isInternational  = $request->from_herco?true:false;
+        $isInternational  = $request->to_international?true:false;
         $shippingServiceTitle = 'US Services';
         $tempOrder = collect($tempOrder);
            return view('uscalculator.index', compact('isInternational','apiRates','ratesWithProfit','tempOrder', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn', 'shippingServiceTitle'));

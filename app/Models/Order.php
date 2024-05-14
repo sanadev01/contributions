@@ -449,7 +449,7 @@ class Order extends Model implements Package
     }
 
 
-    public function doCalculations($onVolumetricWeight = true, $isServices = false,$fromCalculator=false)
+    public function doCalculations($onVolumetricWeight = true, $isServices = false)
     {
         $shippingService = $this->shippingService;
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
@@ -482,10 +482,9 @@ class Order extends Model implements Package
         $total = number_format($shippingCost,2) + number_format($additionalServicesCost,2) + number_format($this->insurance_value,2) + number_format($dangrousGoodsCost,2) + number_format($consolidation,2) + $calculatedUserProfit;
         $discount = 0; // not implemented yet
         $grossTotal = $total - $discount;
-        $order_value =  $fromCalculator&&$this->order_value? $this->order_value:$this->items()->sum(\DB::raw('quantity * value'));
         $this->update([
             'consolidation' => $consolidation,
-            'order_value' =>$order_value,
+            'order_value' => $this->items()->sum(\DB::raw('quantity * value')),
             'shipping_value' => $shippingCost,
             'dangrous_goods' => $dangrousGoodsCost,
             'total' => number_format($total,2),
@@ -843,8 +842,9 @@ class Order extends Model implements Package
  
     public function getCalculateTaxAndDutyAttribute(){
         $totalTaxAndDuty = 0;
-        if (strtolower($this->tax_modality) == "ddp" || setting('is_prc_user', null, $this->user_id)) {
-            if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR"|| $this->recipient->country->code == "US") {
+        $isUSPS = optional($this->shippingService)->usps_service_sub_class ?? false;
+        if ((strtolower($this->tax_modality) == "ddp" || setting('is_prc_user', null, $this->user_id)) && !$isUSPS) {
+            if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
 
                 $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
                 
