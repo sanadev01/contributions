@@ -30,7 +30,7 @@ class UsCalculatorRates extends Component
 
     public function updatedSelectedTaxModality($value)
     {
-      $this->tempOrder['tax_modality']  = strtolower($value) == "ddp" ? 'ddp' : 'ddu';
+        $this->tempOrder['tax_modality']  = strtolower($value) == "ddp" ? 'ddp' : 'ddu';
     }
     public function mount($apiRates, $ratesWithProfit, $tempOrder, $weightInOtherUnit, $chargableWeight, $userLoggedIn, $shippingServiceTitle, $isInternational)
     {
@@ -74,7 +74,7 @@ class UsCalculatorRates extends Component
         if ($this->selectedServiceEnabledForUser()) {
             $order = $usCalculatorRepository->executeForLabel($this->createRequest());
             $this->addError('serviceError', $usCalculatorRepository->getError());
-           
+
             if ($order) {
                 return redirect()->route('admin.orders.label.index', $order->id);
             }
@@ -82,21 +82,19 @@ class UsCalculatorRates extends Component
         }
         $this->dispatchBrowserEvent('fadeOutLoading');
     }
-    public function openModel($subClass, $userDeclaredFreight,$type)
+    public function openModel($subClass, $userDeclaredFreight, $type)
     {
 
         $this->type = $type;
         $this->tempOrder['user_declared_freight'] = $userDeclaredFreight;
-        $this->selectedService = $subClass; 
+        $this->selectedService = $subClass;
         $this->dispatchBrowserEvent('termAndConditionOpen');
-   
-
     }
     public function acceptedAndContinue()
-    { 
-        if($this->type=='lable'){
+    {
+        if ($this->type == 'lable') {
             return $this->getLabel();
-        }else{ 
+        } else {
             return $this->createOrder();
         }
     }
@@ -127,11 +125,19 @@ class UsCalculatorRates extends Component
     }
     public function calculateTotal($serviceSubClass, $profitRate)
     {
+        $shippingService = ShippingService::where('service_sub_class',$serviceSubClass)->first();
+        
+        $isUSPS = optional($shippingService)->usps_service_sub_class ?? false; 
         $userProfit = $this->calculateProfit($profitRate, $serviceSubClass, Auth::id());
 
-        $totalCost = $profitRate+$this->tempOrder['order_value'];
+        $orderValue = array_reduce($this->tempOrder['items'], function ($carry, $item) {
+    
+            return $item['value'] * $item['quantity'] + $carry;
+        }, 0);
+        $totalCost = $profitRate + $orderValue;
+
         $isPRCUser = setting('is_prc_user', null, Auth::id());
-        if (strtolower($this->selectedTaxModality) == "ddp" || $isPRCUser) {
+        if ((strtolower($this->selectedTaxModality) == "ddp" || $isPRCUser) && !$isUSPS) {
             $duty = $totalCost > 50 ? $totalCost * .60 : 0;
             $totalCostOfTheProduct = $totalCost + $duty;
             $icms = .17;
@@ -143,9 +149,9 @@ class UsCalculatorRates extends Component
             $feeForTaxAndDuty = 0;
         }
 
-        return number_format($feeForTaxAndDuty+number_format($totalTaxAndDuty, 2) + number_format(+$profitRate, 2) + $userProfit, 2);
+        return number_format($feeForTaxAndDuty + number_format($totalTaxAndDuty, 2) + number_format(+$profitRate, 2) + $userProfit, 2);
     }
-    function calculateProfit($shippingCost, $serviceSubClass,$user_id)
+    function calculateProfit($shippingCost, $serviceSubClass, $user_id)
     {
         switch ((int)$serviceSubClass) {
             case ShippingService::UPS_GROUND:
@@ -157,27 +163,27 @@ class UsCalculatorRates extends Component
             default:
                 $profit_percentage = setting('usps_profit', null, $user_id) ?? setting('usps_profit', null, User::ROLE_ADMIN);
         }
-        return number_format(($shippingCost * ($profit_percentage / 100)),2);
+        return number_format(($shippingCost * ($profit_percentage / 100)), 2);
     }
     public function calculateFeeForTaxAndDuty($totalTaxAndDuty)
     {
-        $fee=0;
-        if($totalTaxAndDuty>0){
-            $flag=true;
-                if(setting('prc_user_fee', null, Auth::id())=="flat_fee"){
-                    $fee = setting('prc_user_fee_flat', null, Auth::id())??2; 
-                    $flag=false;
-                }
-                if(setting('prc_user_fee', null, Auth::id())=="variable_fee"){
-                    $percent = setting('prc_user_fee_variable', null, Auth::id())??1;
-                    $fee= $totalTaxAndDuty/100 * $percent;
-                    $fee= $fee <0.5? 0.5:$fee;
-                    $flag=false;
-                }
-                if($flag){
-                $fee = $totalTaxAndDuty *.01;
-                $fee = $fee<0.5?0.5:$fee;
-                }
+        $fee = 0;
+        if ($totalTaxAndDuty > 0) {
+            $flag = true;
+            if (setting('prc_user_fee', null, Auth::id()) == "flat_fee") {
+                $fee = setting('prc_user_fee_flat', null, Auth::id()) ?? 2;
+                $flag = false;
+            }
+            if (setting('prc_user_fee', null, Auth::id()) == "variable_fee") {
+                $percent = setting('prc_user_fee_variable', null, Auth::id()) ?? 1;
+                $fee = $totalTaxAndDuty / 100 * $percent;
+                $fee = $fee < 0.5 ? 0.5 : $fee;
+                $flag = false;
+            }
+            if ($flag) {
+                $fee = $totalTaxAndDuty * .01;
+                $fee = $fee < 0.5 ? 0.5 : $fee;
+            }
         }
         return $fee;
     }

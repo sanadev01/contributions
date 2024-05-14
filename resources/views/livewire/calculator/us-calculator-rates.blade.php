@@ -146,14 +146,16 @@
             </div>
         </div>
     </div>
+
+    @if((\Auth::user())->hasPermission('calculator-tax-modality'))
     <div class="my-3">
         <label for="">Tax And Duty</label>
-
         <select class="form-control selectpicker show-tic col-4" wire:model="selectedTaxModality" placeholder="@lang('orders.order-details.Tax Modality')">
             <option value="ddu" {{ 'ddu' == old('tax_modality') ? 'selected' : '' }}>Apply DDU</option>
             <option value="ddp" {{ 'ddp' == old('tax_modality') ? 'selected' : '' }}>Apply DDP</option>
         </select>
     </div>
+    @endif
     <table class="table  table-borderless p-0 table-responsive-md table-striped" id="kpi-report">
         <thead>
             <tr id="kpiHead">
@@ -189,7 +191,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($ratesWithProfit as $key=>$profitRate) 
+            @foreach ($ratesWithProfit as $key=>$profitRate)
             <tr>
                 <td class="package-name">
                     <img width="30" height="30" class="corrioes-lable" src="{{ asset('images/tracking/' . (\App\Models\ShippingService::where('name',$profitRate['name'])->first())->carrier_service . '.png') }}">
@@ -206,9 +208,9 @@
                             @endfor
                     </div>
                 </td>
-                <td class="stars d-none"> {{ ceil($profitRate['rating']) }}</td>
+                <td class="stars d-none" > {{ ceil($profitRate['rating']) }}</td>
                 <td class="transit">7-10 business days </td>
-                @if(auth()->user()->hasRole('admin')) <td class="actual-rate">{{$apiRates[$key]['rate']}} USD</td> @endif
+                @if(auth()->user()->hasRole('admin')) <td class="actual-rate" title="With profit {{ $profitRate['rate'] }}">{{$apiRates[$key]['rate']}} USD</td> @endif
 
                 <!--<td></td> -->
                 <td class="price-tag total-rate">
@@ -251,14 +253,14 @@
                 @if($isInternational)
                 <td>
                     @if($userLoggedIn)
-                        <button wire:click="openModel('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}','order')" type="submit" class="btn btn-success btn-sm btn-submit"><i class="feather icon-shopping-cart mx-2"></i>Place Order</button>
+                    <button wire:click="openModel('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}','order')" type="submit" class="btn btn-success btn-sm btn-submit"><i class="feather icon-shopping-cart mx-2"></i>Place Order</button>
                     @endif
                 </td>
                 @else
                 <td>
                     @if($userLoggedIn)
                     @if($selectedService!=$profitRate['service_sub_class'])
-                        <button wire:click="openModel('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}','lable')" type="submit" class="btn btn-success btn-sm btn-submit"><i class="feather icon-shopping-cart mx-2"></i>Buy Label</button>
+                    <button wire:click="openModel('{{ $profitRate['service_sub_class'] }}','{{ $apiRates[$key]['rate'] }}','lable')" type="submit" class="btn btn-success btn-sm btn-submit"><i class="feather icon-shopping-cart mx-2"></i>Buy Label</button>
                     @endif
                     @endif
                 </td>
@@ -286,7 +288,7 @@
                     </div>@enderror
                 </td>
             </tr>
-            @endif 
+            @endif
             @endforeach
 
 
