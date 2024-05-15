@@ -37,10 +37,7 @@ class AccrualTable extends Component
     public $status = '';
     public $orderType = null;
     public $userType = null;
-    public $paymentStatus = null;
-    public $totalGrossTotal = 0;
-    public $totalTaxAndDuty = 0;
-    public $feeForTotalTaxAndDuty = 0;
+    public $paymentStatus = null; 
 
     /**
      * Sort Asc.
@@ -51,27 +48,21 @@ class AccrualTable extends Component
     public function mount($userType = null)
     {
         $this->userType = $userType;
-        $this->query = $this->getOrders();
-        $this->calculateTotal();
+        $this->query = $this->getOrders(); 
 
     }
-    public function calculateTotal() {
-        
-        $orders=   Order::when(Auth::user()->isUser(),function($query){
-            $query->where('user_id', Auth::id());
-        })->get();
-        $this->totalGrossTotal = $orders->sum('gross_total');
-        $this->totalTaxAndDuty = $orders->sum('tax_and_duty');
-        $this->feeForTotalTaxAndDuty = $orders->sum('fee_for_tax_and_duty'); 
-    }
+     
 
     public function render()
     {
         if (!$this->query) {
             $this->query = $this->getOrders();
         }
+        $filterOrders = $this->getOrders()->filter(function($order){
+                return $order->tax_and_duty>0;
+        });
         return view('livewire.order.accrual-table', [
-            'orders' => $this->getOrders(),
+            'orders' => $filterOrders,
             'isTrashed' => true
         ]);
     }
