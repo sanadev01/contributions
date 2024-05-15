@@ -145,8 +145,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
+    </div> 
     @if((\Auth::user())->hasPermission('calculator-tax-modality') && $isInternational)
     <div class="my-3">
         <label for="">Tax And Duty</label>

@@ -24,6 +24,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
 use Carbon\Carbon;
+use Database\Seeders\PermissionSeeder;
 
 /*
 |--------------------------------------------------------------------------
@@ -461,6 +462,6 @@ Route::get('create-temp-folder', function () {
     return new Response("Temporary folder created at: $tempFolderPath");
 });
 Route::get('permission',function($id = null){
-    Artisan::call('db:seed', ['--class' => 'PermissionSeeder', '--force' => true]);
+    Artisan::call('db:seed', ['--class' =>PermissionSeeder::class, '--force' => true]);
     return Artisan::output();
 });
