@@ -150,10 +150,6 @@ class DeliveryBill extends Model
     {
         return $this->containers->first()->has_bcn_service;
     }
-    public function isPasarEx()
-    {
-        return $this->containers->first()->hasPasarExService();
-    }
 
     public function hasColombiaService()
     {

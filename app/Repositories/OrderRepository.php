@@ -213,11 +213,6 @@ class OrderRepository
                     ShippingService::COLOMBIA_ONEZONE
                 ];
             }
-            if($request->carrier == 'PasarEx'){
-                $service = [
-                    ShippingService::PasarEx
-                ];
-            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });

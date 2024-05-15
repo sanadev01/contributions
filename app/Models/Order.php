@@ -447,7 +447,6 @@ class Order extends Model implements Package
         $tempWhr = str_pad($tempWhr, 10, $paddingLength, STR_PAD_LEFT);
         return ($api ? 'TM' : 'HD') . "{$tempWhr}" . (optional($this->recipient)->country->code ?? "BR");
     }
-  
 
 
     public function doCalculations($onVolumetricWeight = true, $isServices = false)

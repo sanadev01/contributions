@@ -78,7 +78,6 @@ class ShippingService extends Model
     const Japan_EMS = 5541;
     const GSS_CEP = 237;
     const COLOMBIA_ONEZONE = 44166;
-    const PasarEx = 238;
 
     const STANDARDS = [self::Packet_Standard, self::AJ_Packet_Standard, self::AJ_Standard_CN, self::BCN_Packet_Standard];
     const EXPRESSES = [self::Packet_Express, self::AJ_Packet_Express, self::AJ_Express_CN, self::BCN_Packet_Express];
@@ -310,7 +309,7 @@ class ShippingService extends Model
 
     public function isGSSService()
     {
-        if ($this->service_sub_class == self::GSS_PMI || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_FCM || $this->service_sub_class == self::GSS_EMS || $this->service_sub_class == self::GSS_CEP) {
+        if($this->service_sub_class == self::GSS_PMI || $this->service_sub_class == self::GSS_EPMEI || $this->service_sub_class == self::GSS_EPMI || $this->service_sub_class == self::GSS_FCM || $this->service_sub_class == self::GSS_EMS || $this->service_sub_class == self::GSS_CEP){
             return true;
         }
         return false;
