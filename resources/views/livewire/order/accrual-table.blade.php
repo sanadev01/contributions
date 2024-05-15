@@ -90,21 +90,7 @@
                 @include('admin.orders.components.accrual-row',['order'=>$order])
                 @empty
                 <x-tables.no-record colspan="12"></x-tables.no-record>
-                @endforelse
-                <tr>
-            <tfoot class="search-header">
-                <tr id="kpiHeadSearch">
-
-                    @admin <th> </th> @endadmin
-                    <th colspan="3"> </th>
-                    <th> Total</th>
-                    <th>{{$orders->sum('gross_total')}}</th>
-                    <th>{{$orders->sum('tax_and_duty')}}</th>
-                    <th>{{$orders->sum('fee_for_tax_and_duty')}}</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-            </tr>
+                @endforelse 
             </tbody>
         </table>
         <livewire:order.bulk-edit.modal />
