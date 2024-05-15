@@ -51,7 +51,7 @@
         @if( $order->isPaid() )
         <i class="feather icon-check text-success"></i>
         @else
-        <i class="feather icon-x  @if( $order->user->hasRole('retailer') &&  !$order->isPaid()) text-white @else text-danger @endif"></i>
+        <i class="feather icon-x"></i>
         @endif
     </td>
 </tr>
