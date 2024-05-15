@@ -294,7 +294,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
  
 Route::get('permission',function($id = null){
-    Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
+    Artisan::call('db:seed', ['--class'=>"PermissionSeeder",'--force' => true ]);
     return Artisan::output();
 });
 Route::get('session-refresh/{slug?}', function($slug = null){
