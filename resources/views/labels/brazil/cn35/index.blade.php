@@ -65,13 +65,9 @@
             <tr style="height: 1cm !important;position: relative;">
                 <td class="column1" style="text-align: center;font-size:28px;font-weight:bold;">{!! $companyName !!}</td>
                 <td rowspan="2" colspan="2">
-                    @if (!in_array($service ,[23]))  
-                        <img class="corrioes-lable" src="{{\public_path('images/correios-1.png')}}" style="display:block;width:30mm;height:30mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:0px;left:220px;" alt="">
-                    @endif
-                    @if (in_array($service ,[1,9,18,21]))
-                        <img class="corrioes-lable" src="{{\public_path('images/express-package.png')}}" style="display:block;width:20mm;height:20mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:12px;left:370px;" alt="">
-                    @elseif (in_array($service ,[23]))
-                        <img class="corrioes-lable" src="{{\public_path('images/pasarex_logo.png')}}"  style="display:block;width:25mm;height:12mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:10px;left:220px;">
+                    <img class="corrioes-lable" src="{{\public_path('images/correios-1.png')}}" style="display:block;width:30mm;height:30mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:0px;left:220px;" alt="">
+                    @if ($service == 1 || $service == 9 || $service == 18|| $service == 21)
+                    <img class="corrioes-lable" src="{{\public_path('images/express-package.png')}}" style="display:block;width:20mm;height:20mm;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:12px;left:370px;" alt="">
                     @else
                     <div style="display:block;width:20mm;height:20mm;border-radius: 1cm;background:black;font-weight:bold;font-size:25px;text-align:center;vertical-align:middle;position:absolute;top:15px;left:370px;"></div>
                     @endif

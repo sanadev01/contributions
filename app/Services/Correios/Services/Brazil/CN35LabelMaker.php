@@ -72,9 +72,7 @@ class CN35LabelMaker implements HasLableExport
         if ($this->service == 3) {
             $this->packetType = 'PACKET MINI';
         }
-        if ( $this->service == 23 ){
-            $this->packetType = 'PasarEx';
-        }
+
         return $this;
     }
     public function setPacketType($packetType)
