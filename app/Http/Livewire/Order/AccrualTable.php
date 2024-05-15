@@ -58,9 +58,7 @@ class AccrualTable extends Component
         if (!$this->query) {
             $this->query = $this->getOrders();
         }
-        $filterOrders = $this->getOrders()->filter(function($order){
-                return $order->tax_and_duty>0;
-        });
+        $filterOrders = $this->getOrders();
         return view('livewire.order.accrual-table', [
             'orders' => $filterOrders,
             'isTrashed' => true

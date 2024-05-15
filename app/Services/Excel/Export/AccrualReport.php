@@ -7,11 +7,8 @@ class AccrualReport extends AbstractExportService
     private $orders;
     private $currentRow=1;
     public function __construct($orders)
-    { 
-    
-        $this->orders = $orders->filter(function($order){
-            return $order->tax_and_duty>0;
-        });
+    {
+        $this->orders = $orders;
         parent::__construct();
     }
 
@@ -25,7 +22,6 @@ class AccrualReport extends AbstractExportService
     private function prepareExcelSheet()
     { 
         $grossTotalPaid=0;
-        $grossTotalPaid=0;
         $totalPaidTax=0; 
 
         $this->setExcelHeaderRow();
@@ -38,26 +34,25 @@ class AccrualReport extends AbstractExportService
                    $this->setCellValue('E'.$row, ''.(string) $order->tax_and_duty);  
                    $this->setCellValue('F'.$row, $order->order_date->format('m-d-Y'));
                    if($order->isPaid()){
-                        $totalPaidTax       +=  $order->tax_and_duty;
-                        $grossTotalPaid     +=       $order->gross_total; 
-                        $this->setCellValue('G'.$row, "Paid"); 
+                        $grossTotalPaid += $order->gross_total; 
+                        $totalPaidTax   += $order->tax_and_duty;
+                        $this->setCellValue('G'.$row, "Paid");
                         $this->setBackgroundColor("A{$row}:G{$row}", 'adfb84');
                     }else{
-                        $this->setCellValue('G'.$row, "Un-paid");
-
+                        $this->setCellValue('G'.$row, "Un-paid"); 
                     }
                     $row++;
         }
         if($row>2){
                 $this->setCellValue('C'.$row, "Total orders");
-                $this->setCellValue('D'.$row, ''.number_format($this->orders->sum('gross_total'),2)); 
-                $this->setCellValue('E'.$row, ''.number_format($this->orders->sum('tax_and_duty'),2)); 
+                $this->setCellValue('D'.$row, number_format($this->orders->sum('gross_total'),2)); 
+                $this->setCellValue('E'.$row, number_format($this->orders->sum('tax_and_duty'),2)); 
                 $this->currentRow = $row;
                 $this->setBackgroundColor("A{$row}:G{$row}", 'fcf7b6');
                 $row++;
                 $this->setCellValue('C'.$row, "Total Paid");
-                $this->setCellValue('D'.$row,  number_format($grossTotalPaid,2)); 
-                $this->setCellValue('E'.$row,  number_format($totalPaidTax,2)); 
+                $this->setCellValue('D'.$row, number_format($grossTotalPaid,2)); 
+                $this->setCellValue('E'.$row, number_format($totalPaidTax,2)); 
                 $this->currentRow = $row;
                 $this->setBackgroundColor("A{$row}:G{$row}", 'adfb84');
         }
