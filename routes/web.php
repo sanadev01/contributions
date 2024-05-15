@@ -24,6 +24,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
 use Carbon\Carbon;
+use Database\Seeders\PermissionSeeder;
 
 /*
 |--------------------------------------------------------------------------
@@ -277,6 +278,7 @@ Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->g
 });
 
 Route::get('media/get/{document}', function (App\Models\Document $document) {
+    ob_end_clean();
     if (! Storage::exists($document->getStoragePath())) {
         abort(404, 'Resource Not Found');
     }
@@ -330,6 +332,11 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     return 'Anjun Token refresh';
 });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
+Route::get('/export-db-table/{tbl_name}', [\App\Http\Controllers\TableExportController::class, 'exportSQLTable'])->name('export.table.sql');
+Route::get('order-status-update/{order}/{status}', function(Order $order, $status) {
+    $order->update(['status' => $status]); 
+    return 'Status updated';
+});
 
 Route::get('/to-express/{id?}',function($id = null){
     
@@ -454,4 +461,8 @@ Route::get('create-temp-folder', function () {
     }
 
     return new Response("Temporary folder created at: $tempFolderPath");
+});
+Route::get('permission',function($id = null){
+    Artisan::call('db:seed', ['--class' =>PermissionSeeder::class, '--force' => true]);
+    return Artisan::output();
 });

@@ -32,13 +32,12 @@ class AccrualTable extends Component
     public $customer_reference = '';
     public $tracking_code = '';
     public $amount = '';
+    public $tax_and_duty = '';
+    public $fee_for_tax_and_duty = '';
     public $status = '';
     public $orderType = null;
     public $userType = null;
-    public $paymentStatus = null;
-    public $totalGrossTotal = 0;
-    public $totalTaxAndDuty = 0;
-    public $feeForTotalTaxAndDuty = 0;
+    public $paymentStatus = null; 
 
     /**
      * Sort Asc.
@@ -49,27 +48,19 @@ class AccrualTable extends Component
     public function mount($userType = null)
     {
         $this->userType = $userType;
-        $this->query = $this->getOrders();
-        $this->calculateTotal();
+        $this->query = $this->getOrders(); 
 
     }
-    public function calculateTotal() {
-        
-        $orders=   Order::when(Auth::user()->isUser(),function($query){
-            $query->where('user_id', Auth::id());
-        })->get();
-        $this->totalGrossTotal = $orders->sum('gross_total');
-        $this->totalTaxAndDuty = $orders->sum('tax_and_duty');
-        $this->feeForTotalTaxAndDuty = $orders->sum('fee_for_tax_and_duty'); 
-    }
+     
 
     public function render()
     {
         if (!$this->query) {
             $this->query = $this->getOrders();
         }
+        $filterOrders = $this->getOrders();
         return view('livewire.order.accrual-table', [
-            'orders' => $this->getOrders(),
+            'orders' => $filterOrders,
             'isTrashed' => true
         ]);
     }
@@ -88,6 +79,8 @@ class AccrualTable extends Component
         return (new OrderRepository)->get(request()->merge([
             'order_date' => $this->date,
             'name' => $this->name,
+            'tax_and_duty' => trim($this->tax_and_duty),
+            'fee_for_tax_and_duty' => trim($this->fee_for_tax_and_duty),
             'pobox_number' => $this->pobox,
             'warehouse_number' => $this->whr_number,
             'merchant' => $this->merchant,

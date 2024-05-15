@@ -56,9 +56,9 @@ class KPIReportController extends Controller
                 {
                     $start_date = $request->start_date.' 00:00:00';
                     $end_date = $request->end_date.' 23:59:59';
-                    $orders = Order::whereBetween('order_date', [$start_date, $end_date])->get();
+                    $orders = Order::whereBetween('order_date', [$start_date, $end_date])->where('tax_and_duty','!=',0)->get();
                 }else{ 
-                    $orders =  Order::all();
+                    $orders =  Order::where('tax_and_duty','!=',0)->get();
                 }
                 if(count($orders)<1){ 
                     session()->flash('alert-danger', 'No order found!');

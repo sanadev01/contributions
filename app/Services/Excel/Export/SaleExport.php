@@ -36,8 +36,8 @@ class SaleExport extends AbstractExportService
         $totalOrderRow = 'D1';
         foreach ($this->sales as $sale) {
             $user = $sale->user;
-            $commissionUser = $sale->order->user;
-            $isReferrerNow = $commissionUser->reffered_by==$user->id;
+            $commissionUser = $sale->order->user; 
+            $isReferrerNow = optional($commissionUser->referrer)->id==$user->id;
 
             if($checkUser && $checkUser != $commissionUser->pobox_number){
                 $this->setCellValue('H'.$row, "Due Amount : ");
@@ -56,9 +56,12 @@ class SaleExport extends AbstractExportService
             }
             
             if ( Auth::user()->isAdmin() ){
-                
-                $this->setCellValue('A'.$row, $user->name . $user->pobox_number);
+                if(!$isReferrerNow){
+                    $this->setCellValue('K'.$row,'Referrer Removed');
+                    $this->setBackgroundColor("A{$row}:J{$row}", 'fcf7b6');
+                }
             }
+            $this->setCellValue('A'.$row, $user->name . $user->pobox_number);
             $this->setCellValue('B'.$row, optional($commissionUser)->name . optional($commissionUser)->pobox_number);
             $this->setCellValue('C'.$row, 'HD-'.$sale->order_id);
             $this->setCellValue('D'.$row, $sale->order->corrios_tracking_code);
@@ -69,9 +72,7 @@ class SaleExport extends AbstractExportService
             $this->setCellValue('I'.$row, $sale->is_paid? 'paid': 'unpaid');
             $this->setCellValue('J'.$row, $sale->created_at->format('m/d/Y'));
             
-            if(Auth::user()->isAdmin()&&!$isReferrerNow){
-                $this->setBackgroundColor("A{$row}:J{$row}", 'fcf7b6');
-            }
+         
             $row++;
             $checkUser = optional($commissionUser)->pobox_number;
         }

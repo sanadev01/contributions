@@ -30,7 +30,7 @@
                     <th>Tracking Code</th>
 
                     <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
-                    <th> Tax & Duty</th>
+                    <th> Estimated tax & duty</th>
                     <th> Fee for Tax & Duty</th>
                     <th>@lang('orders.payment-status')</th>
                     <!-- <th class="no-print">@lang('orders.actions.actions')</th> -->
@@ -39,7 +39,6 @@
             <tfoot class="search-header">
                 <tr id="kpiHeadSearch">
                     <th>
-
                         <input type="search" class="form-control" wire:model.debounce.1000ms="date">
                     </th>
                     <th>
@@ -74,9 +73,14 @@
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="amount">
                     </th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <th>
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="tax_and_duty">
+                    </th>
+                    <th>
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="fee_for_tax_and_duty">
+                    </th>
+                    <td> 
+                    </td>
                 </tr>
             </tfoot>
             </thead>
@@ -85,21 +89,7 @@
                 @include('admin.orders.components.accrual-row',['order'=>$order])
                 @empty
                 <x-tables.no-record colspan="12"></x-tables.no-record>
-                @endforelse
-                <tr>
-            <tfoot class="search-header">
-                <tr id="kpiHeadSearch">
-                    
-                    @admin  <th> </th> @endadmin
-                    <th colspan="3"> </th>
-                    <th> Total</th>
-                    <th> {{$totalGrossTotal}}</th>
-                    <th>{{$totalTaxAndDuty}}</th>
-                    <th>{{$feeForTotalTaxAndDuty}}</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-            </tr>
+                @endforelse 
             </tbody>
         </table>
         <livewire:order.bulk-edit.modal />

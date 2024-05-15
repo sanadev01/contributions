@@ -1,5 +1,6 @@
 <?php
 
+namespace Database\Seeders;
 use App\Models\Permission;
 use App\Models\User;
 use Carbon\Carbon;
@@ -563,6 +564,11 @@ class PermissionSeeder extends Seeder
                 'slug' => 'tax-and-duty-report',
                 'group' => 'Reports',
                 'description' => 'User can view tax and duty reports'
+            ],
+            [
+                'slug' => 'calculator-tax-modality',
+                'group' => 'Calculator',
+                'description' => 'User can change calculator tax modality !'
             ]
         ];
     }

@@ -254,7 +254,7 @@ class USCalculatorRepository
         if ($this->createOrder() && $this->assignRecipient() && $this->getPrimaryLabel()) {
             return $this->order;
         }
-        $this->order->forcedelete();
+        optional($this->order)->forcedelete();
         return null;
     }
     
@@ -264,10 +264,10 @@ class USCalculatorRepository
         $this->tempOrder = $request->temp_order;
         $this->shippingService = $this->getSippingService($request->service_sub_class);
         
-        if ($this->createOrder() && $this->assignRecipient()) {
+        if ($this->createOrder() && $this->assignRecipient()){
             return $this->order;
         }
-        $this->order->forcedelete();
+        optional($this->order)->forcedelete();
         return null;
     }
 
@@ -330,9 +330,13 @@ class USCalculatorRepository
                 $order->update([
                     'order_value' => $totalValue,
                 ]);
+            }elseif(isset($this->tempOrder['order_value'])){ 
+                $order->update([
+                    'order_value' => $this->tempOrder['order_value'],
+                ]);
             }
             
-            $this->order = $order;
+            $this->order = $order; 
             DB::commit();
             return true;
 
@@ -433,7 +437,6 @@ class USCalculatorRepository
         $order = $this->order->refresh();
         $this->order->doCalculations();
         $order = $this->order->refresh();
-
         chargeAmount($order->gross_total, $order);
         $this->createInvoice($order);
 

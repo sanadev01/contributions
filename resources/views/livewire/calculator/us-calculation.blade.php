@@ -16,11 +16,11 @@
                                 </span>
                             </div>
                             <span class="mt-2">
-                                <label class="h3 standard-font color-gray">International</label>
+                                <label class="h3 standard-font color-gray">Domestic</label>
                             </span>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <!-- <div class="col-md-3">
                         <div class="input-group">
                             <div class="vs-checkbox-con vs-checkbox-primary" title="to_herco">
                                 <input type="checkbox" name="to_herco" id="to_herco"  >
@@ -34,11 +34,11 @@
                                 <label class="h3 standard-font color-gray" for="to_herco">Domestic</label>
                             </span>
                         </div>
-                    </div>
-                    <!-- <div class="col-md-3">
+                    </div> -->
+                    <div class="col-md-3">
                         <div class="input-group">
                             <div class="vs-checkbox-con vs-checkbox-primary" title="to_international">
-                                <input type="checkbox" name="to_international" id="to_international" @if(old('to_international')) checked @endif>
+                                <input type="checkbox" name="to_international" id="to_international">
                                 <span class="vs-checkbox vs-checkbox-lg">
                                     <span class="vs-checkbox--check">
                                         <i class="vs-icon feather icon-check"></i>
@@ -46,10 +46,10 @@
                                 </span>
                             </div>
                             <span class="mt-2">
-                                <label class="h3 text-primary" for="to_international">To International</label>
+                                <label class="h3 standard-font color-gray">International</label>
                             </span>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
                 <input type="hidden" name="user_id" id="user_id" value="{{ ((auth()->check()) ? auth()->user()->id : null) }}">
                 <div class="row mb-1 mt-3 d-none" id="origin">
@@ -58,12 +58,12 @@
                     </div>
                 </div>
                 <div class="d-none" id="sender_info">
-                    <div class="row mb-1 mt-3">
+                    <div class="row mb-1 mt-3 d-none">
                         <div class="controls col-6">
                             <h4 class="color-gray standard-font bold">Sender Address</h4>
                         </div>
                     </div>
-                    <div class="row mb-1">
+                    <div class="row mb-1 d-none">
                         <div class="controls col-4">
                             <label>Origin Country</label>
                             <select id="origin_country" name="origin_country" class="form-control selectpicker show-tick" data-live-search="true" required>
@@ -77,35 +77,27 @@
                             <select name="sender_state" id="sender_state" class="form-control selectpicker show-tick" data-live-search="true" required>
                                 <option value="">Select @lang('address.State')</option>
                                 @foreach (us_states() as $state)
-                                <option {{ old('sender_state') == $state->code ? 'selected' : '' }} value="{{ $state->code }}">{{ $state->code }}</option>
+                            <option {{ 'FL' == $state->code ? 'selected' : '' }} value="{{ $state->code }}">{{ $state->code }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="controls col-4">
                             <label>Sender City</label>
-                            <input type="text" id="sender_city" name="sender_city" value="{{old('sender_city')}}" class="form-control" required placeholder="Sender City" />
+                            <input type="text" id="sender_city" name="sender_city" value="Miami" class="form-control" required placeholder="Sender City" />
                         </div>
                     </div>
-                    <div class="row mb-1">
+                    <div class="row mb-1 d-none">
                         <div class="controls col-4">
                             <label>Sender Address</label>
-                            <input type="text" class="form-control" id="sender_address" name="sender_address" value="{{old('sender_address')}}" required placeholder="Sender Address" />
+                            <input type="text" class="form-control" id="sender_address" name="sender_address" value="2200 NW 129TH AVE Suite# 100" required placeholder="Sender Address" />
                         </div>
                         <div class="controls col-4">
                             <label>Sender ZipCode</label>
-                            <input type="text" name="sender_zipcode" id="sender_zipcode" value="{{ cleanString(old('sender_zipcode')) }}" required class="form-control" placeholder="Zip Code" />
+                            <input type="text" name="sender_zipcode" id="sender_zipcode" value="33182" required class="form-control" placeholder="Zip Code" />
                             <div id="sender_zipcode_response">
 
                             </div>
                         </div> 
-                        <div class="controls col-4" id="tax_modality">
-                                <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
-                                <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality"  required placeholder="@lang('orders.order-details.Tax Modality')">
-                                    <option value="ddu" {{ 'ddu' == old('tax_modality') ? 'selected' : '' }}>DDU</option>
-                                    <option value="ddp" {{ 'ddp' == old('tax_modality') ? 'selected' : '' }}>DDP</option>
-                                </select>
-                                <div class="help-block"></div>
-                        </div>
                     </div>
                 </div>
                 <div class="d-none" id="recipient_info">
@@ -166,16 +158,6 @@
                                 <label>Recipient Phone</label>
                                 @livewire('components.search-address', ['user_id' => ((auth()->check()) ? auth()->user()->id : null), 'from_calculator' => true ])
                          </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="controls col-4" id="tax_modality">
-                                <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
-                                <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" required placeholder="@lang('orders.order-details.Tax Modality')">
-                                    <option value="ddu" {{ 'ddu' == old('tax_modality') ? 'selected' : '' }}>DDU</option>
-                                    <option value="ddp" {{ 'ddp' == old('tax_modality') ? 'selected' : '' }}>DDP</option>
-                                </select>
-                                <div class="help-block"></div>
-                        </div>
                     </div>
                 </div>
                 <div class="row mb-1 mt-3 d-none" id="destination">
@@ -287,6 +269,18 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- <div class="col-12 col-sm-6 col-md-2">
+                <div class="controls">
+                    <label>@lang('parcel.Order Value')  <span class="text-danger standard-font">*</span></label>
+                    <input step="0.001" type="number" name="order_value" class="form-control" autocomplete="off" required name="order_value" wire:model.debounce.500ms="order_value" placeholder="" />
+                    <div class="help-block"> 
+                        @error('order_value')
+                        <div class="text-danger standard-font">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div> -->
         </div>
         <div class="d-flex justify-content-between ">
             <div class="controls h2 mt-3 ml-3 ">
