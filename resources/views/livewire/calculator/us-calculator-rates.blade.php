@@ -147,8 +147,6 @@
         </div>
     </div> 
     @if((\Auth::user())->hasPermission('calculator-tax-modality') && $isInternational)
-    
-    @endif
     <div class="my-3">
         <label for="">Tax And Duty</label>
         <select class="form-control selectpicker show-tic col-4" wire:model="selectedTaxModality" placeholder="@lang('orders.order-details.Tax Modality')">
@@ -156,6 +154,7 @@
             <option value="ddp" {{ 'ddp' == old('tax_modality') ? 'selected' : '' }}>Apply DDP</option>
         </select>
     </div>
+    @endif
     <table class="table  table-borderless p-0 table-responsive-md table-striped" id="kpi-report">
         <thead>
             <tr id="kpiHead">
