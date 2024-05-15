@@ -25,6 +25,9 @@ class USCalculatorRequest extends FormRequest
     public function rules()
     {
         return [
+            
+            'from_herco' => 'required_without_all:to_international',
+            'to_international' => 'required_without_all:from_herco',
             'origin_country' => 'required|numeric|exists:countries,id',
             'destination_country' => 'required|numeric|exists:countries,id',
             'sender_state' => 'required|exists:states,code',
@@ -36,11 +39,12 @@ class USCalculatorRequest extends FormRequest
             'recipient_city' => 'required',
             'recipient_zipcode' => 'required',
             'recipient_phone' => ($this->has('to_international') || $this->has('from_herco')) ? 'required' : 'sometimes',
-            'recipient_first_name' => ($this->has('to_international') || $this->has('from_herco')) ? 'required' : 'sometimes',
-            'recipient_last_name' => ($this->has('to_international') || $this->has('from_herco')) ? 'required' : 'sometimes',
+            // 'recipient_first_name' => ($this->has('to_international') || $this->has('from_herco')) ? 'required' : 'sometimes',
+            // 'recipient_last_name' => ($this->has('to_international') || $this->has('from_herco')) ? 'required' : 'sometimes',
             'height' => 'sometimes|numeric',
             'width' => 'sometimes|numeric',
             'length' => 'sometimes|numeric',
+            'order_value' => 'sometimes|numeric',
             'unit' => 'required|in:lbs/in,kg/cm',
             'weight' => ($this->unit == 'kg/cm') ? 'sometimes|numeric|max:30' : 'sometimes|numeric|max:66.15',
         ];
@@ -82,6 +86,8 @@ class USCalculatorRequest extends FormRequest
             'weight' => 'Please Enter weight',
             'weight.numeric' => 'Weight must be numeric',
             'weight.max' => 'weight exceed the delivery of UPS',
+            'to_international.required_without_all'=>'Please select Domestic or International',
+            'from_herco.required_without_all'=>'',
         ];
     }
 

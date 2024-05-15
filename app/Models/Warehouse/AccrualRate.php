@@ -7,13 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use App\Services\Correios\Models\Package;
 use App\Services\Converters\UnitsConverter;
 use Spatie\Activitylog\Traits\LogsActivity;
-
+use Spatie\Activitylog\LogOptions;
 class AccrualRate extends Model
 {
     use LogsActivity;
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
+    
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logAll()
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
+    }
     
     public function getServiceName()
     {
@@ -106,6 +111,9 @@ class AccrualRate extends Model
         }
         if ( $this->service == Package::SERVICE_CLASS_Japan_EMS ){
             return "Japan JerseyPost EMS";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_Hound_Express ){
+            return "MEXICO Hound Express";
         }
         return '';
     }

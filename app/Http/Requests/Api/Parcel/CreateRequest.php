@@ -32,27 +32,29 @@ class CreateRequest extends FormRequest
     public function rules(Request $request)
     {
         $order = Order::where([
-                    ['user_id', auth()->user()->id],
-                    ['tracking_id', $request->parcel['tracking_id']]
-                ])
-                ->orWhere([
-                    ['user_id', auth()->user()->id],
-                    ['customer_reference', $request->parcel['customer_reference']]
-                ])
-                ->first();
-                
+            ['user_id', auth()->user()->id],
+            ['tracking_id', $request->parcel['tracking_id']]
+        ])
+            ->orWhere([
+                ['user_id', auth()->user()->id],
+                ['customer_reference', $request->parcel['customer_reference']]
+            ])
+            ->first();
+
         $rules = [
             "parcel.service_id" => "bail|required|exists:shipping_services,id",
             "parcel.merchant" => "required",
             "parcel.carrier" => "required",
+            "parcel.tax_modality" => "in:ddu,ddp",
             'parcel.tracking_id' => 'required|max:22',
             'parcel.customer_reference' => 'required|max:22',
             "parcel.measurement_unit" => "required|in:kg/cm,lbs/in",
-            
+
             "parcel.length" => "required|numeric|gt:0",
             "parcel.width" => "required|numeric|gt:0",
             "parcel.height" => "required|numeric|gt:0",
             "parcel.shipment_value" => "nullable|numeric",
+            "parcel.return_option" => "nullable|numeric",
 
             "sender.sender_first_name" => "required|max:100",
             "sender.sender_last_name" => "required|max:100",
@@ -72,7 +74,7 @@ class CreateRequest extends FormRequest
             "recipient.zipcode" => "required",
             "recipient.state_id" => "required|exists:states,id",
             "recipient.country_id" => "required|exists:countries,id",
-            
+
             "products" => "required|array|min:1",
 
             "products.*.sh_code" => [
@@ -92,25 +94,25 @@ class CreateRequest extends FormRequest
             $rules['parcel.customer_reference'] = 'required|unique:orders,customer_reference';
         }
 
-        if(optional($request->parcel)['measurement_unit'] == 'kg/cm'){
+        if (optional($request->parcel)['measurement_unit'] == 'kg/cm') {
             $rules["parcel.weight"] = "required|numeric|gt:0|max:60";
-        }else{
+        } else {
             $rules["parcel.weight"] = "required|numeric|gt:0|max:132.28";
         }
-        if (is_numeric( optional($request->recipient)['country_id'])){
+        if (is_numeric(optional($request->recipient)['country_id'])) {
             $rules["recipient.country_id"] = "required|exists:countries,id";
-        }else{
+        } else {
             $rules["recipient.country_id"] = "required|exists:countries,code";
         }
-        if (is_numeric( optional($request->recipient)['state_id'])){
+        if (is_numeric(optional($request->recipient)['state_id'])) {
             $rules["recipient.state_id"] = "required|exists:states,id";
-        }else{
+        } else {
             $rules["recipient.state_id"] = "required|exists:states,code";
         }
 
         $shippingService = ShippingService::find($request->parcel['service_id'] ?? null);
 
-        if ($shippingService && $shippingService->isOfUnitedStates()) {
+        if ($shippingService && $shippingService->is_of_united_states) {
 
             $rules['sender.sender_country_id'] = 'required';
             $rules['sender.sender_state_id'] = 'required';
@@ -133,9 +135,6 @@ class CreateRequest extends FormRequest
             }
             $rules['products.*.description'] = 'required|string|max:' . $limit;
         }
-
-
-
         if ($request->recipient['country_id'] == 'BR' || $request->recipient['country_id'] == 30) {
             $rules['recipient.phone'] = 'required|string|regex:/^\+55\d{8,12}$/';
         }
@@ -143,6 +142,7 @@ class CreateRequest extends FormRequest
         if ($shippingService && $shippingService->is_total_express) {
 
             $rules['products.*.description'] = 'required|max:60';
+            $rules['parcel.tax_modality'] = 'required|in:DDU,DDP';
         }
 
         if ($request->recipient['country_id'] == 'UK' || $request->recipient['country_id'] == Country::UK) {
@@ -157,13 +157,14 @@ class CreateRequest extends FormRequest
     public function messages()
     {
         return [
-            "products.*.sh_code.*" => __('validation.ncm.invalid')." (:input)",
+            "products.*.sh_code.*" => __('validation.ncm.invalid') . " (:input)",
             'sender.sender_address.required_if' => __('validation.sender_address.required_if'),
             'sender.sender_country_id.required_if' => __('validation.sender_country_id.required_if'),
             'sender.sender_state_id.required_if' => __('validation.sender_state_id.required_if'),
             'sender.sender_city.required_if' => __('validation.sender_city.required_if'),
             'recipient.phone.required' => 'The phone number field is required.',
             'recipient.phone.regex' => 'Please enter a valid phone number in international format. Example: +551234567890',
+            'parcel.return_option.required' => 'The return option is required. It should be 0 or 1.',
         ];
     }
 }

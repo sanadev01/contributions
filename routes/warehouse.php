@@ -9,16 +9,15 @@ use App\Http\Controllers\Warehouse\ScanLabelController;
 use App\Http\Controllers\Warehouse\UnitCancelContoller;
 use App\Http\Controllers\Warehouse\AuditReportController;
 use App\Http\Controllers\Warehouse\ScanPackageController;
+use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Warehouse\CN23DownloadController;
 use App\Http\Controllers\Warehouse\CN35DownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillController;
 use App\Http\Controllers\Warehouse\UnitRegisterController;
-
-use App\Http\Controllers\Warehouse\Anjun\AnjunUnitRegisterController;
-use App\Http\Controllers\Warehouse\Anjun\AnjunCN35DownloadController;
-use App\Http\Controllers\Warehouse\CN35DownloadFactoryController;
 use App\Http\Controllers\Warehouse\SearchPackageController;
 use App\Http\Controllers\Warehouse\USPSContainerController;
+use App\Http\Controllers\Warehouse\Anjun\AnjunUnitRegisterController;
+use App\Http\Controllers\Warehouse\Anjun\AnjunCN35DownloadController;
 use App\Http\Controllers\Warehouse\ChileContainerController;
 use App\Http\Controllers\Warehouse\ContainerPackageController;
 use App\Http\Controllers\Warehouse\ManifestDownloadController;
@@ -56,6 +55,12 @@ use App\Http\Controllers\Warehouse\PostPlusUnitRegisterController;
 use App\Http\Controllers\Warehouse\PostPlusCN35DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusCN38DownloadController;
 use App\Http\Controllers\Warehouse\PostPlusManifestDownloadController;
+use App\Http\Controllers\Warehouse\ColombiaContainerController;
+use App\Http\Controllers\Warehouse\ColombiaCN35DownloadController;
+use App\Http\Controllers\Warehouse\ColombiaUnitRegisterController;
+use App\Http\Controllers\Warehouse\ColombiaContainerPackageController;
+use App\Http\Controllers\Warehouse\ColombiaContainerManifestController;
+
 use App\Http\Controllers\Warehouse\GSSContainerController;
 use App\Http\Controllers\Warehouse\GSSContainerPackageController;
 use App\Http\Controllers\Warehouse\GSSUnitRegisterController;
@@ -93,9 +98,8 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('search_package', SearchPackageController::class)->only('index', 'show');
     Route::resource('scan', ScanPackageController::class)->only('index');
     Route::resource('scan-label', ScanLabelController::class)->only('index', 'store', 'create');
-
+    
     Route::resource('containers', ContainerController::class);
-
     Route::get('awb/', AwbController::class)->name('container.awb');
     Route::resource('containers.packages', ContainerPackageController::class)->only('index','destroy', 'create');
     Route::post('containers/{container}/packages/{barcode}', [ContainerPackageController::class,'store'])->name('containers.packages.store');
@@ -106,7 +110,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
 
      Route::get('container/{container}/register', UnitRegisterController::class)->name('container.register');
     Route::get('container/{container}/cancel', UnitCancelContoller::class)->name('container.cancel');
-    Route::get('container/{container}/download', CN35DownloadController::class)->name('container.download');
+    // Route::get('container/{container}/download', CN35DownloadController::class)->name('container.download');
+    Route::get('container/{container}/download', function ($containerId) {
+        ini_set('memory_limit', '10000M');
+        $container = Container::findOrFail($containerId);
+        return app()->call(CN35DownloadController::class, compact('container'));
+    })->name('container.download');
     
     Route::resource('delivery_bill', DeliveryBillController::class);
     Route::get('delivery_bill/{delivery_bill}/register', DeliveryBillRegisterController::class)->name('delivery_bill.register');
@@ -159,7 +168,6 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('swedenpost_container/{container}/register', SwedenPostUnitRegisterController::class)->name('swedenpost_container.register');
     Route::get('swedenpost_container/{container}/download', SwedenPostCN35DownloadController::class)->name('swedenpost_container.download');
     Route::get('swedenpost/{delivery_bill}/manifest', SwedenPostManifestDownloadController::class)->name('swedenpost.manifest.download');
-
     // Routes for Post Plus Container
     Route::resource('postplus_containers', PostPlusContainerController::class);
     Route::resource('postplus_container.packages', PostPlusContainerPackageController::class)->only('index','destroy', 'create');
@@ -168,6 +176,13 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('postplus_container/{container}/download/', PostPlusCN35DownloadController::class)->name('postplus_container.download');
     Route::get('postplus/{delivery_bill}/cn38', PostPlusCN38DownloadController::class)->name('postplus.cn38.download');
     Route::get('postplus/{delivery_bill}/manifest', PostPlusManifestDownloadController::class)->name('postplus.manifest.download');
+    
+    // Routes for Colombia Container
+    Route::resource('colombia-containers', ColombiaContainerController::class);
+    Route::resource('colombia-containers.packages', ColombiaContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('colombia-containers/{container}/register', ColombiaUnitRegisterController::class)->name('colombia-containers.register');
+    Route::get('colombia-containers/{container}/download', ColombiaCN35DownloadController::class)->name('colombia-containers.download');
+    Route::get('colombia-containers/{container}/manifest', ColombiaContainerManifestController::class)->name('colombia-containers.manifest');
 
     // Routes for GSS Container
     Route::resource('gss_containers', GSSContainerController::class);

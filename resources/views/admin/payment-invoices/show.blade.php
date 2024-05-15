@@ -82,16 +82,21 @@
                                             <td>{{ $order->warehouse_number }}</td>
                                             <td>{{ $order->customer_reference }}</td>
                                             <td>{{ optional($order->created_at)->format('Y-m-d') }}</td>
-                                            <td>@if($invoice->differnceAmount()) {{ $order->gross_total }}  @else {{ $order->shipping_value }} @endif USD</td>
+                                            <td> 
+                                                <div class="custom-tooltip">
+                                                    {{ number_format($order->gross_total, 2) }} USD
+                                                    <x-gross-total-details :order="$order" /> 
+                                                </div>
+                                            </td>
                                             @if ( auth()->user()->isAdmin() && $invoice->isPrePaid() )
-                                                <td>{{ $order->services()->sum( 'price' ) }} USD</td>
-                                                <td>{{ $order->consolidation }} USD</td>
+                                                <td>{{ number_format($order->services()->sum( 'price' ), 2) }} USD</td>
+                                                <td>{{ number_format($order->consolidation, 2) }} USD</td>
                                                 <td>{{ $order->dangrous_goods??0 }} USD</td>
-                                                <td>{{ $order->gross_total }} USD</td>
+                                                <td>{{ number_format($order->gross_total, 2) }} USD</td>
                                             @endif
                                             @if ($invoice->differnceAmount())
-                                                <td>{{ $invoice->paid_amount }} USD</td>
-                                                <td>{{ $invoice->differnceAmount() }} USD</td>
+                                                <td>{{ number_format($invoice->paid_amount, 2) }} USD</td>
+                                                <td>{{ number_format($invoice->differnceAmount(), 2) }} USD</td>
                                             @endif
                                         </tr>  
                                     @endforeach   
@@ -104,7 +109,7 @@
                                             <td colspan="2"> </td>
                                         @endif
                                         <td class="text-center h4" style="border-top: 1px solid !important;" colspan="5">@lang('orders.invoice.Total')</td>
-                                        <td class="h4" style="border-top: 1px solid !important;">{{ ($invoice->differnceAmount()) ? round($invoice->differnceAmount(), 2) : round($invoice->orders()->sum('gross_total'),2) }} USD</td>
+                                        <td class="h4" style="border-top: 1px solid !important;">{{ ($invoice->differnceAmount()) ? number_format($invoice->differnceAmount(), 2) : number_format($invoice->orders()->sum('gross_total'),2) }} USD</td>
                                     </tr>                            
                                 </tbody>
                             </table>

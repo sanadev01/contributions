@@ -29,7 +29,7 @@ Which has following Diffrence <br>
 | VALUE | {{ $userData['VALUE'] }} | {{$request->VALUE}}			|
 | AUTHORIZE_ID  | {{ substr($userData['AUTHORIZE_ID'],0,3) }} **** {{ substr($userData['AUTHORIZE_ID'],-3) }}| {{substr($request->AUTHORIZE_ID,0,3)}} **** {{substr($request->AUTHORIZE_ID,-3)}}  |
 | AUTHORIZE_KEY | {{ substr($userData['AUTHORIZE_KEY'],0,3) }} **** {{  substr($userData['AUTHORIZE_KEY'],-3) }}| {{substr($request->AUTHORIZE_KEY,0,3)}} **** {{substr($request->AUTHORIZE_KEY,-3)}}			|
-| API Active | {{ $userData['correios_setting'] }}| {{ ($request->correios_setting == 'anjun_api') ? 'Anjun API' : 'Correios API' }}			|
+| API Active | {{ $userData['correios_setting'] }}|  {{ currentActiveApiName() }}		|
 @endif
 | USPS			| {{ $userData['usps'] }} | {{$request->usps  ? 'Active':'Inactive'}}			|     
 | UPS			| {{ $userData['ups'] }} | {{$request->ups  ? 'Active':'Inactive'}}			|

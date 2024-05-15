@@ -21,24 +21,34 @@ class ExportGDEInvoice extends AbstractExportService
 
     private function prepareExcelSheet()
     {
-        $senderAddress = $this->order->sender_address. ' - '.$this->order->sender_city.' - '.optional($this->order->senderState)->code; 
-        
+        $senderAddress = $this->order->sender_address . ' - ' . $this->order->sender_city . ' - ' . optional($this->order->senderState)->code;
+
         $this->setCellValue('A1', 'COMMERCIAL INVOICE');
         $this->setCellValue('A2', 'Shipper/Exporter: (SENDER )');
-        $this->setCellValue('A3', "CORREIOS - EMPRESA BRASILEIRA DE CORREIOS E TELÉGRAFOS \n".$senderAddress
-            ." \n CEP:". $this->order->user->zipcode."\nCNPJ:".$this->order->user->tax_id
-        );
+        if($this->order->shippingService->is_total_express) {
+            $senderName = $this->order->getSenderFullName();
+            $phone = (optional($this->order)->sender_phone) ? optional($this->order)->sender_phone : optional($this->order)->user->phone;
+            $email = (optional($this->order)->sender_email) ? optional($this->order)->sender_email : optional($this->order)->user->email;
+            $this->setCellValue('A3', "$senderName \n$senderAddress \nPhone: $phone \nEmail: $email \nCEP:". $this->order->user->zipcode."\nCNPJ:".$this->order->user->tax_id
+            );    
+        } else {
+            $this->setCellValue('A3', "CORREIOS - EMPRESA BRASILEIRA DE CORREIOS E TELÉGRAFOS \n".$senderAddress
+                ." \n CEP:". $this->order->user->zipcode."\nCNPJ:".$this->order->user->tax_id
+            );
+        }
         $this->setCellValue('D2', 'Invoice Number and Date:');  
         $this->setCellValue('G2', optional($this->order->order_date)->format('m/d/Y')); 
         $this->setCellValue('D3', 'USER CUSTOMER REFERENCE'); 
         $this->setCellValue('G3',  $this->order->customer_reference);
-        $this->setCellValue('D5', 'Country of Origin:'); 
+        $this->setCellValue('D5', 'Country of Origin:');
         $this->setCellValue('G5', $this->order->senderCountry->name);
         $this->setCellValue('D6', 'Country of Destination:');
         $this->setCellValue('G6', $this->order->recipient->country->name);
         $this->setCellValue('A7', 'Consignee/Importer: (RECEIVER)');
-        $this->setCellValue('A8', $this->order->recipient->getFullName()."\n".$this->order->recipient->address."\n".
-            $this->order->recipient->country->name.', '.$this->order->recipient->state->code.', '.$this->order->recipient->zipcode
+        $this->setCellValue(
+            'A8',
+            $this->order->recipient->getFullName() . "\n" . $this->order->recipient->address . "\n" .
+                $this->order->recipient->country->name . ', ' . $this->order->recipient->state->code . ', ' . $this->order->recipient->zipcode
         );
         $this->setCellValue('D7', 'Payment Terms:');
         $this->setCellValue('D8', 'AT SIGHT');
@@ -72,7 +82,7 @@ class ExportGDEInvoice extends AbstractExportService
         $this->setBold('A13:I14', true);
 
         $this->mergeCells('A1:I1');
-        $this->mergeCells('A2:C2');        
+        $this->mergeCells('A2:C2');
         $this->mergeCells('A3:C6');
         $this->mergeCells('G2:I2');
         $this->mergeCells('G3:I3');
@@ -96,12 +106,12 @@ class ExportGDEInvoice extends AbstractExportService
         $this->mergeCells('H13:H14');
         $this->mergeCells('I13:I14');
 
-        $this->setAlignment('A1','center');
-        $this->setAlignment('A2','center');
-        $this->setAlignment('A13:I14','center');
+        $this->setAlignment('A1', 'center');
+        $this->setAlignment('A2', 'center');
+        $this->setAlignment('A13:I14', 'center');
 
-        $this->setTextWrap('A3:C6', true); 
-        $this->setTextWrap('A8:C11',true);
+        $this->setTextWrap('A3:C6', true);
+        $this->setTextWrap('A8:C11', true);
         $this->setTextWrap('A13:I14', true);
 
         $this->setColumnWidth('A', 10);
@@ -117,58 +127,58 @@ class ExportGDEInvoice extends AbstractExportService
     {
         $row =  15;
         foreach ($this->order->items as $key => $item) {
-            $totalValue = "$ ".number_format($this->order->order_value / count($this->order->items),2);
-            $this->setCellValue('A'.$row, $key + 1);
-            $this->setCellValue('B'.$row, $this->order->customer_reference);
-            $this->setCellValue('C'.$row, $item->description);
-            $this->setCellValue('D'.$row, $item->sh_code);
-            $this->setCellValue('E'.$row, $item->quantity);
-            $this->setCellValue('F'.$row, $this->order->getWeight() / count($this->order->items));
-            $this->setCellValue('G'.$row, "kg");
-            $this->setCellValue('H'.$row, $totalValue);
-            $this->setCellValue('I'.$row, $totalValue);
-            $this->setBorder(['A'.$row.':I'.$row], false);
+            $totalValue = "$ " . number_format($this->order->order_value / count($this->order->items), 2);
+            $this->setCellValue('A' . $row, $key + 1);
+            $this->setCellValue('B' . $row, $this->order->customer_reference);
+            $this->setCellValue('C' . $row, $item->description);
+            $this->setCellValue('D' . $row, $item->sh_code);
+            $this->setCellValue('E' . $row, $item->quantity);
+            $this->setCellValue('F' . $row, $this->order->total_weight / count($this->order->items));
+            $this->setCellValue('G' . $row, "kg");
+            $this->setCellValue('H' . $row, $totalValue);
+            $this->setCellValue('I' . $row, $totalValue);
+            $this->setBorder(['A' . $row . ':I' . $row], false);
             $row++;
         }
-        $orderValue = "$ ".number_format($this->order->order_value,2);
-        $this->setCellValue('E'.$row, $this->order->items->sum('quantity'));
-        $this->setCellValue('F'.$row, $this->order->getWeight());
-        $this->setCellValue('G'.$row, "kg");
-        $this->setCellValue('H'.$row, $orderValue);
-        $this->setCellValue('I'.$row, $orderValue);
+        $orderValue = "$ " . number_format($this->order->order_value, 2);
+        $this->setCellValue('E' . $row, $this->order->items->sum('quantity'));
+        $this->setCellValue('F' . $row, $this->order->total_weight);
+        $this->setCellValue('G' . $row, "kg");
+        $this->setCellValue('H' . $row, $orderValue);
+        $this->setCellValue('I' . $row, $orderValue);
         $this->setBackgroundColor("E{$row}:F{$row}", 'fff');
         $this->setBackgroundColor("I{$row}", 'fff');
-        $this->setBorder(['A'.$row.':I'.$row], false);
+        $this->setBorder(['A' . $row . ':I' . $row], false);
         $this->row = $row++;
     }
 
     public function setItemFooter()
     {
-        $row = $this->row+1;
-        $this->mergeCells('F'.$row.':H'.$row);
-        $this->mergeCells('F'.($row + 1).':H'.($row + 1));
-        $this->mergeCells('F'.($row + 2).':H'.($row + 2));
-        $this->mergeCells('F'.($row + 3).':H'.($row + 3));
+        $row = $this->row + 1;
+        $this->mergeCells('F' . $row . ':H' . $row);
+        $this->mergeCells('F' . ($row + 1) . ':H' . ($row + 1));
+        $this->mergeCells('F' . ($row + 2) . ':H' . ($row + 2));
+        $this->mergeCells('F' . ($row + 3) . ':H' . ($row + 3));
 
-        $this->setCellValue('F'.$row, 'Value of Goods: ');
-        $this->setCellValue('I'.($row), '$ 0.00');
-        $this->setCellValue('F'.($row + 1), 'International Freight: ');
-        $this->setCellValue('I'.($row + 1), '$ '. number_format($this->order->user_declared_freight,2) );
-        $this->setCellValue('F'.($row + 2), 'Other Charges: ');
-        $this->setCellValue('I'.($row + 2), '$ 0.00');
-        $this->setCellValue('F'.($row + 3), 'Total');
-        $this->setCellValue('I'.($row + 3), '$ '. number_format($this->order->order_value+$this->order->user_declared_freight,2));
-        $this->setBold('F'.$row.':H'.($row + 4).$row, true);
+        $this->setCellValue('F' . $row, 'Value of Goods: ');
+        $this->setCellValue('I' . ($row), '$ 0.00');
+        $this->setCellValue('F' . ($row + 1), 'International Freight: ');
+        $this->setCellValue('I' . ($row + 1), '$ ' . number_format($this->order->user_declared_freight, 2));
+        $this->setCellValue('F' . ($row + 2), 'Other Charges: ');
+        $this->setCellValue('I' . ($row + 2), '$ 0.00');
+        $this->setCellValue('F' . ($row + 3), 'Total');
+        $this->setCellValue('I' . ($row + 3), '$ ' . number_format($this->order->order_value + $this->order->user_declared_freight, 2));
+        $this->setBold('F' . $row . ':H' . ($row + 4) . $row, true);
         $this->row = $row + 4;
     }
 
     public function signatureRow()
     {
         $row = $this->row;
-        $this->setCellValue('D'.$row, 'Signature'); 
-        $this->mergeCells('F'.($row).':I'.$row);
-        $this->setBold('D'.$row, true);
-        $this->setBorder(['A'.($row - 5).':I'.($row)], false);
-        $this->setBorder(['F'.($row - 2).':I'.($row - 2), 'F'.($row).':I'.$row], true);
+        $this->setCellValue('D' . $row, 'Signature');
+        $this->mergeCells('F' . ($row) . ':I' . $row);
+        $this->setBold('D' . $row, true);
+        $this->setBorder(['A' . ($row - 5) . ':I' . ($row)], false);
+        $this->setBorder(['F' . ($row - 2) . ':I' . ($row - 2), 'F' . ($row) . ':I' . $row], true);
     }
 }

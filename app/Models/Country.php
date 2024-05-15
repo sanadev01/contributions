@@ -7,13 +7,17 @@ use App\Models\Commune;
 use App\Models\Warehouse\AccrualRate;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
-
+use Spatie\Activitylog\LogOptions;
 class Country extends Model
 {
     use LogsActivity;
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logAll()
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
+    }
     
     protected $fillable = [
         'name', 'code'
@@ -22,10 +26,11 @@ class Country extends Model
     const Chile = 46;
     const Brazil = 30;
     const US = 250;
+    const COLOMBIA = 50;
     const Portugal = 188;
-    const Colombia = 50;
     const Japan = 114;
     const UK = 249;
+    const Mexico = 146;
 
     public function states()
     {

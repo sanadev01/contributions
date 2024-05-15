@@ -15,14 +15,18 @@ class CommissionReportsRepository
     protected $error;
 
     public function getCommissionReportOfUsers(Request $request,$paginate = true,$pageSize=50,$orderBy = 'id',$orderType='asc')
-    {
+    { 
         $query = User::query();
             $query->with(['affiliateSales']);
 
-        if ( $request->name ){
-            $query->where('name','LIKE',"%{$request->name}%")
-                    ->orWhere('last_name','LIKE',"%{$request->name}%");
-        } elseif ( $request->pobox_number ) 
+            if (!Auth::user()->isAdmin()){
+                $query->where('id','LIKE',Auth::id());
+            } 
+            
+            if ( $request->name ){
+                $query->where('name','LIKE',"%{$request->name}%")
+                        ->orWhere('last_name','LIKE',"%{$request->name}%");
+            }elseif ( $request->pobox_number ) 
         {
             $query->where('pobox_number','LIKE',"%{$request->pobox_number}%");
         } elseif ( $request->email)
@@ -35,27 +39,30 @@ class CommissionReportsRepository
             if($request->yearReport){
                 $query->where('created_at','LIKE',$request->year.'%');
             }else{
-
+                $startDate = $request->start_date . ' 00:00:00';
+                $endDate = $request->end_date.' 23:59:59'; 
                 if ( $request->start_date ){
-                    $query->where('created_at','>',$request->start_date);
-                }
-                
+                    $query->where('created_at','>=', $startDate);
+                } 
                 if ( $request->end_date ){
-                    $query->where('created_at','<=',$request->end_date);
-                }
+                    $query->where('created_at','<=',$endDate);
+                } 
             }
 
         },'affiliateSales as commission' => function($query) use ($request) {
             if($request->yearReport){
                 $query->where('created_at','LIKE',$request->year.'%');
             }else{
+                $startDate = $request->start_date . ' 00:00:00';
+                $endDate = $request->end_date.' 23:59:59';
+                 
                 if ( $request->start_date ){
-                    $query->where('created_at','>',$request->start_date);
+                    $query->where('created_at','>=', $startDate);
                 }
                 
                 if ( $request->end_date ){
-                    $query->where('created_at','<=',$request->end_date);
-                }
+                    $query->where('created_at','<=',$endDate);
+                } 
             }
 
             $query->select(DB::raw('sum(commission) as commission'));
@@ -72,25 +79,38 @@ class CommissionReportsRepository
         
         $query->withCount(['affiliateSales as sale_count'=> function($query) use ($request){
             
-            if ( $request->start_date ){
-                $query->where('created_at','>',$request->start_date);
-            }
-
-            if ( $request->end_date ){
-                $query->where('created_at','<=',$request->end_date);
+            if($request->yearReport){ 
+                $query->where('created_at','LIKE',$request->year.'%');
+            }else{
+                $startDate = $request->start_date . ' 00:00:00';
+                $endDate = $request->end_date.' 23:59:59'; 
+                if ( $request->start_date ){
+                    $query->where('created_at','>=', $startDate);
+                }
+                
+                if ( $request->end_date ){
+                    $query->where('created_at','<=',$endDate);
+                } 
             }
 
         },'affiliateSales as commission' => function($query) use ($request) {
-            if ( $request->start_date ){
-                $query->where('created_at','>',$request->start_date);
-            }
-
-            if ( $request->end_date ){
-                $query->where('created_at','<=',$request->end_date);
+            if($request->yearReport){ 
+                $query->where('created_at','LIKE',$request->year.'%');
+            }else{
+                $startDate = $request->start_date . ' 00:00:00';
+                $endDate = $request->end_date.' 23:59:59'; 
+                if ( $request->start_date ){
+                    $query->where('created_at','>=', $startDate);
+                }
+                
+                if ( $request->end_date ){
+                    $query->where('created_at','<=',$endDate);
+                } 
             }
 
             $query->select(DB::raw('sum(commission) as commission'));
-        }])->orderBy($orderBy,$orderType);
+        }])
+        ->orderBy($orderBy,$orderType);
 
         return $paginate ? $query->paginate($pageSize) : $query->get();
     }

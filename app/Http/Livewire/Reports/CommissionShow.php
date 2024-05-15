@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\AffiliateSale;
 use App\Repositories\AffiliateSaleRepository;
+use Illuminate\Support\Facades\Auth;
 
 class CommissionShow extends Component
 {
@@ -35,18 +36,21 @@ class CommissionShow extends Component
     public $commission;
 
     public function mount(User $user)
-    {
+    { 
         $this->user = $user;
     }
     
     public function render()
     {
-        
+        if($this->user->id!=Auth::id()&&Auth::user()->isUser()){
+            abort(404);
+        }
         return view('livewire.reports.commission-show',[
-            'sales' => $this->getSales(),
+            'sales' => $this->getSales(true),
+            'saleReport' => $this->getSales(false),
         ]);
     }
-    public function getSales()
+    public function getSales($paginate)
     {
         return (new AffiliateSaleRepository)->get(request()->merge([
             'user_id' => $this->user->id,
@@ -63,7 +67,7 @@ class CommissionShow extends Component
             'weight' => $this->weight,
             'saleType' => $this->saleType,
             'commission' => $this->commission,
-        ]),true,$this->pageSize);
+        ]),$paginate,$this->pageSize);
     }
 
     public function updating()

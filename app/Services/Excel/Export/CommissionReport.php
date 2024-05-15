@@ -38,11 +38,11 @@ class CommissionReport extends AbstractExportService
 
             Auth::user()->isAdmin() ? $userInfo = $user : $userInfo = $user->referrer;
 
-            $this->setCellValue('A'.$row, $userInfo->pobox_number);
-            $this->setCellValue('B'.$row, $userInfo->name);
-            $this->setCellValue('C'.$row, $userInfo->email);
-            $this->setCellValue('D'.$row, $user->sale_count);
-            $this->setCellValue('E'.$row, round($user->commission,2));
+            $this->setCellValue('A'.$row, optional($userInfo)->pobox_number);
+            $this->setCellValue('B'.$row, optional($userInfo)->name);
+            $this->setCellValue('C'.$row, optional($userInfo)->email);
+            $this->setCellValue('D'.$row, optional($user)->sale_count);
+            $this->setCellValue('E'.$row, round(optional($user)->commission,2));
             
             if($this->request->yearReport){
                 $reportByMonth = $commissionReportsRepository->getCommissionReportOfUserByMonth($userInfo,$this->request);

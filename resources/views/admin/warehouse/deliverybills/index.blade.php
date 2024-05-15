@@ -1,24 +1,24 @@
 @extends('layouts.master')
 
 @section('page')
-    <section id="prealerts">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">
-                            @lang('warehouse.deliveryBill.Delivery Bills')
-                        </h4>
-                        <div>
-                            <a href="{{ route('warehouse.delivery_bill.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.deliveryBill.Create Delivery Bill') </a>
-                            <a class="mr-2 btn btn-success waves-effect waves-light" href="{{ route('warehouse.delivery_bill.index') }}"> Back to lists </a>
-                        </div>
-
+<section id="prealerts">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        @lang('warehouse.deliveryBill.Delivery Bills')
+                    </h4>
+                    <div>
+                        <a href="{{ route('warehouse.delivery_bill.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.deliveryBill.Create Delivery Bill') </a>
+                        <a class="mr-2 btn btn-success waves-effect waves-light" href="{{ route('warehouse.delivery_bill.index') }}"> Back to lists </a>
                     </div>
-                    <div class="card-content card-body" style="min-height: 100vh;">
-                        <div class="mt-1">
-                            <div class="row">
-                                <div class="col-md-12">
+
+                </div>
+                <div class="card-content card-body" style="min-height: 100vh;">
+                    <div class="mt-1">
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-1">
                                         <div class="col-md-1">
@@ -39,27 +39,27 @@
                                                 <div class="row">
                                                     <div class="col-md-1">
                                                     </div>
-                                                        <div class="col-md-3">
-                                                                <label>Start Date</label>
-                                                                <input type="date" class="form-control mb-2 mr-sm-2" value="{{ Request('startDate') }}" name="startDate">
-                                                    </div>
-                                                    <div class="col-md-3"> 
-                                                                <label>End Date</label>
-                                                                <input type="date" class="form-control" value="{{ Request('endDate') }}"  name="endDate">
-                                                    </div>
-                                                    
                                                     <div class="col-md-3">
-                                                                <label>Service</label>
-                                                                <select class="form-control mb-2 mr-sm-2" name="type">
-                                                                    <option value="">All</option>
-                                                                    <option value="{{json_encode(['NX','IX'])}}">Correios Brazil</option>
-                                                                    <option value="{{json_encode(['537','540'])}}">Global eParcel</option>
-                                                                    <option value="{{json_encode(['773','357'])}}">Prime5</option>
-                                                                    <option value="{{json_encode(['734','367','778','777'])}}">Post Plus</option>                                                           
-                                                                    <option value="{{json_encode(['PostNL'])}}">Post NL</option>                                                           
-                                                                    <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                    
-                                                                    <option value="{{json_encode(['BCN-IX','BCN-NX'])}}">Correios B </option>                                                                  
-                                                                </select>
+                                                        <label>Start Date</label>
+                                                        <input type="date" class="form-control mb-2 mr-sm-2" value="{{ Request('startDate') }}" name="startDate">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>End Date</label>
+                                                        <input type="date" class="form-control" value="{{ Request('endDate') }}" name="endDate">
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <label>Service</label>
+                                                        <select class="form-control mb-2 mr-sm-2" name="type">
+                                                            <option value="">All</option>
+                                                            <option value="{{json_encode(['NX','IX'])}}">Correios Brazil</option>
+                                                            <option value="{{json_encode(['537','540'])}}">Global eParcel</option>
+                                                            <option value="{{json_encode(['773','357'])}}">Prime5</option>
+                                                            <option value="{{json_encode(['734','367','778','777'])}}">Post Plus</option>
+                                                            <option value="{{json_encode(['PostNL'])}}">Post NL</option>
+                                                            <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>
+                                                            <option value="{{json_encode(['BCN-IX','BCN-NX'])}}">Correios B </option>
+                                                        </select>
                                                     </div>
                                                     <div class="col-md-2 mt-1">
                                                         <button class="btn btn-success waves-effect waves-light mt-4" type="submit" title="Search">
@@ -71,18 +71,18 @@
                                             <div class="col-md-1 d-flex mt-2">
                                                 <form action="{{ route('warehouse.download.create') }}" class="mt-4">
                                                     <input type="hidden" value="{{ Request('startDate') }}" name="startDate">
-                                                    <input type="hidden" value="{{ Request('endDate') }}"  name="endDate">
-                                                    <input type="hidden" value="{{ Request('type') }}"  name="type">
+                                                    <input type="hidden" value="{{ Request('endDate') }}" name="endDate">
+                                                    <input type="hidden" value="{{ Request('type') }}" name="type">
                                                     <button class="btn btn-success waves-effect waves-light" type="submit">Download</button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                </div>
                             </div>
-                            <table class="table mb-0">
-                                <thead>
+                        </div>
+                        <table class="table mb-0">
+                            <thead>
                                 <tr>
                                     <th></th>
                                     <th>@lang('warehouse.deliveryBill.Name')</th>
@@ -93,273 +93,271 @@
                                     </th> --}}
                                     <th>@lang('warehouse.actions.Action')</th>
                                 </tr>
-                                </thead>
-                                <tbody>
+                            </thead>
+                            <tbody>
                                 @foreach($deliveryBills as $deliveryBill)
-                                    <tr>
-                                        <td>
-                                            <input type="checkbox" name="deliveryBills[]" class="form-control container" value="{{$deliveryBill->id}}">
-                                        </td>
-                                        <td>
-                                            {{ $deliveryBill->name }}
-                                            @if ($deliveryBill->Containers->count() > 0)
-                                                @if(optional($deliveryBill->Containers->first()->orders->first())->shippingService && $deliveryBill->Containers->first()->orders->first()->shippingService->isAnjunService())
-                                                    <span class="badge badge-success">A</span>
-                                                @elseif($deliveryBill->isGePS())
-                                                    <span class="badge badge-secondary">G</span>
-                                                @elseif($deliveryBill->isSwedenPost())
-                                                    <span class="badge badge-info text-white">D</span>
-                                                @elseif($deliveryBill->isPostPlus())
-                                                <span class="badge badge-warning text-black">P</span>
-                                                @elseif($deliveryBill->isGDE())
-                                                    <span class="badge badge-secondary">GDE</span>
-                                                @elseif($deliveryBill->isGSS())
-                                                <span class="badge badge-secondary text-black">GSS</span>
-                                                @elseif($deliveryBill->isTotalExpress())
-                                                <span class="badge badge-warning text-black">T</span>
-                                                @elseif($deliveryBill->isBCN())
-                                                <span class="badge">B</span>
-                                                @elseif($deliveryBill->isHoundExpress())
-                                                <span class="badge text-dark" style="background-color:#b4e2ef">HE</span>
-                                                @elseif($deliveryBill->isPasarEx())
-                                                <span class="badge text-dark" style="background-color:#b4e2ef">PEx</span>
-                                                @else
-                                                    <span class="badge badge-primary">H</span>
-                                                @endif
-                                            @endif
-                                            @admin @if(optional($deliveryBill->user)->isUser()) <span class="badge badge-danger">GoBox</span> @endif @endadmin
-                                        </td>
-                                        <td>
-                                            {{ $deliveryBill->request_id }}
-                                        </td>
-                                        <td>{{ $deliveryBill->cnd38_code }}</td>
-                                        <td class="d-flex">
-                                            <div class="btn-group">
-                                                <div class="dropdown">
-                                                    <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-success dropdown-toggle waves-effect waves-light">
-                                                        @lang('user.Action')
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-right dropright">
-                                                        <a href="{{ route('warehouse.delivery_bill.show',$deliveryBill) }}" class="dropdown-item w-100">
-                                                            <i class="fa fa-list"></i> Show Containers
-                                                        </a>
-                                                        @if( $deliveryBill->isRegistered() && $deliveryBill->isReady())
-                                                            <a href="{{ route('warehouse.download.show',$deliveryBill) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-cloud-download"></i> GET CN38
-                                                            </a>
-                                                            <!-- @if($deliveryBill->isRegistered() && $deliveryBill->isPostPlus())
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="deliveryBills[]" class="form-control container" value="{{$deliveryBill->id}}">
+                                    </td>
+                                    <td>
+                                        {{ $deliveryBill->name }}
+                                        @if ($deliveryBill->Containers->count() > 0)
+                                        @if(optional($deliveryBill->Containers->first()->orders->first())->shippingService && $deliveryBill->Containers->first()->orders->first()->shippingService->is_anjun_service)
+                                        <span class="badge badge-success">A</span>
+                                        @elseif($deliveryBill->isGePS())
+                                        <span class="badge badge-secondary">G</span>
+                                        @elseif($deliveryBill->isSwedenPost())
+                                        <span class="badge badge-info text-white">D</span>
+                                        @elseif($deliveryBill->isPostPlus())
+                                        <span class="badge badge-warning text-black">P</span>
+                                        @elseif($deliveryBill->isGDE())
+                                        <span class="badge badge-secondary">GDE</span>
+                                        @elseif($deliveryBill->isGSS())
+                                        <span class="badge badge-secondary text-black">GSS</span>
+                                        @elseif($deliveryBill->isTotalExpress())
+                                        <span class="badge badge-warning text-black">T</span>
+                                        @elseif($deliveryBill->hasColombiaService())
+                                        <span class="badge badge-success">C</span>
+                                        @elseif($deliveryBill->isBCN())
+                                        <span class="badge">B</span>
+                                        @elseif($deliveryBill->isPasarEx())
+                                        <span class="badge text-dark" style="background-color:#b4e2ef">PEx</span>
+                                        @elseif($deliveryBill->isHoundExpress())
+                                        <span class="badge text-dark" style="background-color:#b4e2ef">HE</span>
+                                        @else
+                                        <span class="badge badge-primary">H</span>
+                                        @endif
+                                        @endif
+                                        @admin @if(optional($deliveryBill->user)->isUser()) <span class="badge badge-danger">GoBox</span> @endif @endadmin
+                                    </td>
+                                    <td>
+                                        {{ $deliveryBill->request_id }}
+                                    </td>
+                                    <td>{{ $deliveryBill->cnd38_code }}</td>
+                                    <td class="d-flex">
+                                        <div class="btn-group">
+                                            <div class="dropdown">
+                                                <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-success dropdown-toggle waves-effect waves-light">
+                                                    @lang('user.Action')
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right dropright">
+                                                    <a href="{{ route('warehouse.delivery_bill.show',$deliveryBill) }}" class="dropdown-item w-100">
+                                                        <i class="fa fa-list"></i> Show Containers
+                                                    </a>
+                                                    @if( $deliveryBill->is_registered && $deliveryBill->isReady())
+                                                    <a href="{{ route('warehouse.download.show',$deliveryBill) }}" class="dropdown-item w-100">
+                                                        <i class="fa fa-cloud-download"></i> GET CN38
+                                                    </a>
+                                                    <!-- @if($deliveryBill->is_registered && $deliveryBill->isPostPlus())
                                                                 <a href="{{ route('warehouse.postplus.cn38.download',$deliveryBill) }}" class="dropdown-item w-100">
                                                                     <i class="fa fa-cloud-download"></i> GET Post Plus CN38
                                                                 </a>
                                                             @endif -->
-                                                        @endif
-                                                        
+                                                    @endif
 
-                                                        @if(optional(optional($deliveryBill->containers->first()->orders->first())->shippingService)->is_hound_express)
-                                                            <a href="{{ route('warehouse.delivery_bill.manifest', [$deliveryBill, 'service'=> 'hound_mexico']) }}"
-                                                                class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Mexico Manifest 
-                                                            </a>
-                                                        @endif
 
-                                                        @if(optional(optional(optional($deliveryBill->containers->first()->orders->first())->recipient)->country)->code=="MX" 
-                                                        && optional($deliveryBill->containers->first()->orders->first())->shippingService->isSwedenPostService())
-                                                        <a href="{{ route('warehouse.delivery_bill.manifest', [$deliveryBill, 'service'=> 'sweden_mexico']) }}"
-                                                            class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Mexico Manifest 
-                                                        </a>
-                                                        @endif
-                                                        <a href="{{ route('warehouse.delivery_bill.manifest', $deliveryBill) }}"
-                                                        {{-- @dd(optional($deliveryBill->containers->first()->orders->first())->shippingService->service_sub_class) --}}
-                                                        class="dropdown-item w-100"><i class="fa fa-cloud-download"></i>Download Manifest
-                                                       </a>
-                                                        <!-- @if($deliveryBill->isRegistered() && $deliveryBill->isPostPlus())
+                                                    @if(optional(optional($deliveryBill->containers->first()->orders->first())->shippingService)->is_hound_express)
+                                                    <a href="{{ route('warehouse.delivery_bill.manifest', [$deliveryBill, 'service'=> 'hound_mexico']) }}" class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Mexico Manifest
+                                                    </a>
+                                                    @endif
+
+                                                    @if(optional(optional(optional($deliveryBill->containers->first()->orders->first())->recipient)->country)->code=="MX"
+                                                    && optional($deliveryBill->containers->first()->orders->first())->shippingService->is_sweden_post_service)
+                                                    <a href="{{ route('warehouse.delivery_bill.manifest', [$deliveryBill, 'service'=> 'sweden_mexico']) }}" class="dropdown-item w-100"><i class="fa fa-cloud-download"></i> Download Mexico Manifest
+                                                    </a>
+                                                    @endif
+                                                    <a href="{{ route('warehouse.delivery_bill.manifest', $deliveryBill) }}" {{-- @dd(optional($deliveryBill->containers->first()->orders->first())->shippingService->service_sub_class) --}} class="dropdown-item w-100"><i class="fa fa-cloud-download"></i>Download Manifest
+                                                    </a>
+                                                    <!-- @if($deliveryBill->is_registered && $deliveryBill->isPostPlus())
                                                             <a href="{{ route('warehouse.postplus.manifest.download',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> Download PostPlus Manifest
                                                             </a>
                                                         @endif -->
-                                                        @if(!$deliveryBill->isGDE()&&!$deliveryBill->isHoundExpress()&&!$deliveryBill->isPasarEx())
-                                                            <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-cloud-download"></i> Download Manifest By Service
-                                                            </a>
-                                                        @endif
-                                                        @if ($deliveryBill->isRegistered() && $deliveryBill->isGDE()) 
-                                                           <a href="{{ route('warehouse.gde.manifest.download',[$deliveryBill,'type'=>'us-customers']) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-cloud-download"></i>   Manifest to US Customs
-                                                            </a>
-                                                            <a href="{{ route('warehouse.gde.manifest.download',[$deliveryBill,'type'=>'brazil-customers']) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-cloud-download"></i>   Manifest to Brazilian Customs 
-                                                            </a>
-                                                        @endif
-                                                        
-                                                        @if($deliveryBill->isRegistered() && $deliveryBill->isGSS())
-                                                            @foreach (json_decode($deliveryBill->containers[0]->unit_response_list)->manifest->reports as $report)
-                                                                <a href="{{ route('warehouse.gss_container.reports.download',[explode(',', $report)[0], json_decode($deliveryBill->containers[0]->unit_response_list)->dispatchID]) }}" class="dropdown-item w-100">
-                                                                    <i class="fa fa-cloud-download"></i> {{ explode(',', $report)[0] }}
-                                                                </a>
-                                                            @endforeach
-                                                        @endif
+                                                    @if(!$deliveryBill->isGDE()&&!$deliveryBill->isHoundExpress()&&!$deliveryBill->isPasarEx())
+                                                    <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
+                                                        <i class="fa fa-cloud-download"></i> Download Manifest By Service
+                                                    </a>
+                                                    @endif
+                                                    @if ($deliveryBill->is_registered && $deliveryBill->isGDE())
+                                                    <a href="{{ route('warehouse.gde.manifest.download',[$deliveryBill,'type'=>'us-customers']) }}" class="dropdown-item w-100">
+                                                        <i class="fa fa-cloud-download"></i> Manifest to US Customs
+                                                    </a>
+                                                    <a href="{{ route('warehouse.gde.manifest.download',[$deliveryBill,'type'=>'brazil-customers']) }}" class="dropdown-item w-100">
+                                                        <i class="fa fa-cloud-download"></i> Manifest to Brazilian Customs
+                                                    </a>
+                                                    @endif
 
-                                                        <a href="{{ route('warehouse.audit-report.show',$deliveryBill) }}" class="dropdown-item w-100">
-                                                            <i class="fa fa-cloud-download"></i> Audit Report
-                                                        </a>
+                                                    @if($deliveryBill->is_registered && $deliveryBill->isGSS())
+                                                    @foreach (json_decode($deliveryBill->containers[0]->unit_response_list)->manifest->reports as $report)
+                                                    <a href="{{ route('warehouse.gss_container.reports.download',[explode(',', $report)[0], json_decode($deliveryBill->containers[0]->unit_response_list)->dispatchID]) }}" class="dropdown-item w-100">
+                                                        <i class="fa fa-cloud-download"></i> {{ explode(',', $report)[0] }}
+                                                    </a>
+                                                    @endforeach
+                                                    @endif
 
-                                                        @if( $deliveryBill->isRegistered() && !$deliveryBill->isReady())
-                                                            <a href="{{ route('warehouse.delivery_bill.status.refresh',$deliveryBill) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-refresh"></i> Update Status
-                                                            </a>
-                                                        @endif
+                                                    <a href="{{ route('warehouse.audit-report.show',$deliveryBill) }}" class="dropdown-item w-100">
+                                                        <i class="fa fa-cloud-download"></i> Audit Report
+                                                    </a>
 
-                                                        @if (!$deliveryBill->isReady() && $deliveryBill->isTotalExpress()) 
-                                                           <a href="{{ route('warehouse.totalexpress_manifest.createFlight',$deliveryBill) }}" type="button" class=" btn dropdown-item w-100">
-                                                                <i class="fa fa-plane"></i>   Create Flight
-                                                            </a>
-                                                        @endif
+                                                    @if( $deliveryBill->is_registered && !$deliveryBill->isReady())
+                                                    <a href="{{ route('warehouse.delivery_bill.status.refresh',$deliveryBill) }}" class="dropdown-item w-100">
+                                                        <i class="fa fa-refresh"></i> Update Status
+                                                    </a>
+                                                    @endif
 
-                                                        @if (!$deliveryBill->isRegistered() && $deliveryBill->isTotalExpress()) 
-                                                           <a href="javascript:void(0)" id="flightInfo" data-id="{{ $deliveryBill->id }}" type="button" class=" btn dropdown-item w-100">
-                                                                <i class="fa fa-plane"></i>   Update Flight Details
-                                                            </a>
-                                                        @endif
+                                                    @if (!$deliveryBill->isReady() && $deliveryBill->isTotalExpress())
+                                                    <a href="{{ route('warehouse.totalexpress_manifest.createFlight',$deliveryBill) }}" type="button" class=" btn dropdown-item w-100">
+                                                        <i class="fa fa-plane"></i> Create Flight
+                                                    </a>
+                                                    @endif
 
-                                                        @if ($deliveryBill->isReady() && $deliveryBill->isTotalExpress()) 
-                                                            <a href="{{ route('warehouse.totalexpress_manifest.closeManifest',$deliveryBill) }}"  type="button" class=" btn dropdown-item w-100">
-                                                                <i class="fa fa-plane"></i>   Close Manifest
-                                                            </a>
-                                                        @endif
+                                                    @if (!$deliveryBill->is_registered && $deliveryBill->isTotalExpress())
+                                                    <a href="javascript:void(0)" id="flightInfo" data-id="{{ $deliveryBill->id }}" type="button" class=" btn dropdown-item w-100">
+                                                        <i class="fa fa-plane"></i> Update Flight Details
+                                                    </a>
+                                                    @endif
 
-                                                        @if ($deliveryBill->isRegistered() && $deliveryBill->isTotalExpress()) 
-                                                            <a href="{{ route('warehouse.totalexpress_manifest.closeFlight',$deliveryBill) }}"  type="button" class=" btn dropdown-item w-100">
-                                                                <i class="fa fa-plane"></i>   Close Flight
-                                                            </a>
-                                                        @endif
-                                                        
-                                                        @if( !$deliveryBill->isRegistered() )
-                                                            <a href="{{ route('warehouse.delivery_bill.edit',$deliveryBill) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
-                                                            </a>
-                                                        
-                                                        @endif
-                                                        {{-- @if( !$deliveryBill->isRegistered() ) --}}
-                                                            {{-- <a href="{{ route('warehouse.delivery_bill.edit',$deliveryBill) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
-                                                            </a> --}}
-                                                            <a href="{{ route('warehouse.delivery_bill.register',$deliveryBill) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> Register Delivery Bill
-                                                            </a>
-                                                        {{-- @endif --}}
+                                                    @if ($deliveryBill->isReady() && $deliveryBill->isTotalExpress())
+                                                    <a href="{{ route('warehouse.totalexpress_manifest.closeManifest',$deliveryBill) }}" type="button" class=" btn dropdown-item w-100">
+                                                        <i class="fa fa-plane"></i> Close Manifest
+                                                    </a>
+                                                    @endif
 
-                                                        @if(!$deliveryBill->isReady())
-                                                            <form action="{{ route('warehouse.delivery_bill.destroy',$deliveryBill) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button class="dropdown-item w-100 text-danger">
-                                                                    <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
-                                                                </button>
-                                                            </form>
-                                                        @endif
+                                                    @if ($deliveryBill->is_registered && $deliveryBill->isTotalExpress())
+                                                    <a href="{{ route('warehouse.totalexpress_manifest.closeFlight',$deliveryBill) }}" type="button" class=" btn dropdown-item w-100">
+                                                        <i class="fa fa-plane"></i> Close Flight
+                                                    </a>
+                                                    @endif
 
-                                                    </div>
+                                                    @if( !$deliveryBill->is_registered )
+                                                    <a href="{{ route('warehouse.delivery_bill.edit',$deliveryBill) }}" class="dropdown-item w-100">
+                                                        <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
+                                                    </a>
+
+                                                    @endif
+                                                    {{-- @if( !$deliveryBill->is_registered ) --}}
+                                                    {{-- <a href="{{ route('warehouse.delivery_bill.edit',$deliveryBill) }}" class="dropdown-item w-100">
+                                                    <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
+                                                    </a> --}}
+                                                    <a href="{{ route('warehouse.delivery_bill.register',$deliveryBill) }}" class="dropdown-item w-100">
+                                                        <i class="feather icon-box"></i> Register Delivery Bill
+                                                    </a>
+                                                    {{-- @endif --}}
+
+                                                    @if(!$deliveryBill->isReady())
+                                                    <form action="{{ route('warehouse.delivery_bill.destroy',$deliveryBill) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="dropdown-item w-100 text-danger">
+                                                            <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
+                                                        </button>
+                                                    </form>
+                                                    @endif
+
                                                 </div>
                                             </div>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </td>
+                                </tr>
                                 @endforeach
-                                </tbody>
-                            </table>
-                            <div class="d-flex justify-content-end py-2 px-3">
-                                {{ $deliveryBills->links() }}
-                            </div>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-end py-2 px-3">
+                            {{ $deliveryBills->links() }}
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-    <!--Total Express Flight Information Modal-->
-    <div class="modal fade" id="flightModal" role="dialog" data-backdrop="static">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><b>Add Flight Information for Total Express Manifest</b></h5>
-                </div>
-                <form class="form" action="{{ route('warehouse.totalexpress_manifest.addFlight') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="id" value="">
-                    <div class="modal-body">
-                        <div class="container-fluid"> 
-                            <div class="row justify-content-center">
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <label for="departure_date">Departure Date</label>
-                                        <input type="date" class="form-control" name="departure_date" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="departure_time">Departure Time</label>
-                                        <input type="time" class="form-control" name="departure_time" required>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="airline">Airline</label>
-                                        <input type="text" class="form-control" name="airline" required>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="departure_airport">Departure Airport</label>
-                                        <input type="text" class="form-control" name="departure_airport" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="mawb_number">MAWB Number</label>
-                                        <input type="text" class="form-control" name="mawb_number" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="flight_freight">Flight Freight Value</label>
-                                        <input type="text" class="form-control" name="flight_freight" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <label for="arrival_date">Arrival Date</label>
-                                        <input type="date" class="form-control" name="arrival_date" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="arrival_time">Arrival Time</label>
-                                        <input type="time" class="form-control" name="arrival_time" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="flight_number">Flight Number (Min 4 Digits)</label>
-                                        <input type="text" class="form-control" name="flight_number" minlength="4" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="arrival_airport">Arrival Airport</label>
-                                        <input type="text" class="form-control" name="arrival_airport" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="mawb_file">MAWB File</label>
-                                        <input type="file" class="form-control-file" name="mawb_file" accept=".pdf" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Submit</button>
-                        <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
-    
+</section>
+<!--Total Express Flight Information Modal-->
+<div class="modal fade" id="flightModal" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><b>Add Flight Information for Total Express Manifest</b></h5>
+            </div>
+            <form class="form" action="{{ route('warehouse.totalexpress_manifest.addFlight') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="id" value="">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row justify-content-center">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="departure_date">Departure Date</label>
+                                    <input type="date" class="form-control" name="departure_date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="departure_time">Departure Time</label>
+                                    <input type="time" class="form-control" name="departure_time" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="airline">Airline</label>
+                                    <input type="text" class="form-control" name="airline" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="departure_airport">Departure Airport</label>
+                                    <input type="text" class="form-control" name="departure_airport" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="mawb_number">MAWB Number</label>
+                                    <input type="text" class="form-control" name="mawb_number" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="flight_freight">Flight Freight Value</label>
+                                    <input type="text" class="form-control" name="flight_freight" required>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="arrival_date">Arrival Date</label>
+                                    <input type="date" class="form-control" name="arrival_date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="arrival_time">Arrival Time</label>
+                                    <input type="time" class="form-control" name="arrival_time" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="flight_number">Flight Number (Min 4 Digits)</label>
+                                    <input type="text" class="form-control" name="flight_number" minlength="4" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="arrival_airport">Arrival Airport</label>
+                                    <input type="text" class="form-control" name="arrival_airport" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="mawb_file">MAWB File</label>
+                                    <input type="file" class="form-control-file" name="mawb_file" accept=".pdf" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 @push('js')
 <script>
     totalChecked = 0;
     deliveryBillIds = []
-    
-    $("[name='deliveryBills[]']").on('change', function(){
-        if($(this).is(':checked')){
+
+    $("[name='deliveryBills[]']").on('change', function() {
+        if ($(this).is(':checked')) {
             totalChecked++;
             deliveryBillIds.push($(this).val());
-        }else{
+        } else {
             if (totalChecked > 0) {
                 totalChecked--;
                 deliveryBillIds.splice(deliveryBillIds.indexOf($(this).val()), 1);
@@ -375,13 +373,13 @@
             $('#btn_combine').addClass('d-none');
         }
     });
-    $(document).ready(function(){
-        $("#flightInfo").click(function(){
+    $(document).ready(function() {
+        $("#flightInfo").click(function() {
             $("#flightModal").modal('show');
             var deliveryBillId = $(this).data('id');
             $("#flightModal input[name='id']").val(deliveryBillId);
         });
-        
+
     });
 </script>
 @endpush

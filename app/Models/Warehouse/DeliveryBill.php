@@ -8,14 +8,19 @@ use App\Models\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class DeliveryBill extends Model
 {
     use LogsActivity;
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
-    
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
+
     protected $guarded = [];
 
     public function containers()
@@ -23,9 +28,9 @@ class DeliveryBill extends Model
         return $this->belongsToMany(Container::class);
     }
 
-    public function isRegistered()
+    public function getIsRegisteredAttribute()
     {
-        return $this->request_id;
+        return $this->request_id?true:false;
     }
 
     public function isReady()
@@ -38,14 +43,14 @@ class DeliveryBill extends Model
         return $this->request_id;
     }
 
-    public function getWeight()
+    public function getTotalWeightAttribute()
     {
         $weight = 0;
-        foreach ($this->containers as $container){
-            $weight += round($container->orders()->sum(DB::raw('CASE WHEN orders.measurement_unit = "kg/cm" THEN orders.weight ELSE (orders.weight/2.205) END')),2);
+        foreach ($this->containers as $container) {
+            $weight += $container->total_weight;
         }
 
-        return $weight;
+        return round($weight,2);
     }
 
     /**
@@ -63,33 +68,34 @@ class DeliveryBill extends Model
      */
     public function setRandomRequestId()
     {
-        return str_random(8).'-'.str_random(4).'-'.str_random(4).'-'.str_random(4).'-'.str_random(12);
+        return str_random(8) . '-' . str_random(4) . '-' . str_random(4) . '-' . str_random(4) . '-' . str_random(12);
     }
 
     public function isGePS()
     {
-        if($this->containers->first()->services_subclass_code == ShippingService::GePS){
+        if ($this->containers->first()->services_subclass_code == ShippingService::GePS) {
             return true;
         }
     }
 
     public function isSwedenPost()
     {
-        if($this->containers->first()->is_directlink_country ||$this->containers->first()->services_subclass_code == ShippingService::Prime5 || $this->containers->first()->services_subclass_code == ShippingService::Prime5RIO){
+        if ($this->containers->first()->is_directlink_country || $this->containers->first()->services_subclass_code == ShippingService::Prime5 || $this->containers->first()->services_subclass_code == ShippingService::Prime5RIO) {
             return true;
         }
     }
 
     public function isPostPlus()
     {
-        if($this->containers->first()->services_subclass_code == ShippingService::Post_Plus_Registered){
+        if ($this->containers->first()->services_subclass_code == ShippingService::Post_Plus_Registered) {
             return true;
         }
     }
+    
 
     public function isGDE()
     {
-        if($this->containers->first()->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL || $this->containers->first()->services_subclass_code == ShippingService::GDE_FIRST_CLASS){
+        if ($this->containers->first()->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL || $this->containers->first()->services_subclass_code == ShippingService::GDE_FIRST_CLASS) {
             return true;
         }
         return false;
@@ -104,12 +110,12 @@ class DeliveryBill extends Model
 
     public function containerShippingService($subService)
     {
-       return $this->containers->first()->services_subclass_code == $subService;
+        return $this->containers->first()->services_subclass_code == $subService;
     }
 
     public function isHDExpress()
     {
-        if($this->containers->first()->services_subclass_code == ShippingService::HD_Express){
+        if ($this->containers->first()->services_subclass_code == ShippingService::HD_Express) {
             return true;
         }
         return false;
@@ -117,7 +123,7 @@ class DeliveryBill extends Model
 
     public function isHoundExpress()
     {
-        if($this->containers->first()->services_subclass_code == ShippingService::HoundExpress){
+        if ($this->containers->first()->services_subclass_code == ShippingService::HoundExpress) {
             return true;
         }
         return false;
@@ -125,7 +131,7 @@ class DeliveryBill extends Model
 
     public function isTotalExpress()
     {
-        if($this->containers->first()->services_subclass_code == ShippingService::TOTAL_EXPRESS){
+        if ($this->containers->first()->services_subclass_code == ShippingService::TOTAL_EXPRESS) {
             return true;
         }
         return false;
@@ -138,15 +144,23 @@ class DeliveryBill extends Model
 
     public function isAnjunChina()
     {
-        return $this->containers->first()->hasAnjunChinaService();
+        return $this->containers->first()->has_anjun_china_service;
     }
     public function isBCN()
     {
-        return $this->containers->first()->hasBCNService();
+        return $this->containers->first()->has_bcn_service;
     }
     public function isPasarEx()
     {
         return $this->containers->first()->hasPasarExService();
     }
 
+    public function hasColombiaService()
+    {
+        if ($this->containers->first()->services_subclass_code == 'CO-NX') {
+            return true;
+        }
+
+        return false;
+    }
 }

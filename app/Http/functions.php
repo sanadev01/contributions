@@ -8,8 +8,11 @@ use App\Models\ShCode;
 use App\Models\Country;
 use App\Models\Deposit;
 use App\Models\Setting;
+use App\Models\ZoneRate;
 use App\Models\ShippingService;
+use App\Mail\User\PurchaseInsurance;
 use App\Services\Calculators\AbstractRateCalculator;
+use Illuminate\Support\Facades\Cache;
 
 function countries()
 {
@@ -34,6 +37,13 @@ function states($countryId=null){
     $states =  State::all();
     return $states;
 }
+function us_states(){
+    return Cache::remember('states', Carbon::now()->addDay(), function () {
+        return State::query()->where('country_id', Country::US)->get(['name','code','id']);
+    });
+}
+
+
 
 function saveSetting($key, $value, $userId = null, $admin = false)
 {
@@ -223,7 +233,15 @@ function isActiveService($user,$shippingService){
        return setting('sweden_post', null, $user->id)?true:false; 
     return true; 
 }
-
+function getVolumetricDiscountPercentage(Order $order){
+    $user_id    = $order->user->id;
+    $percentage = setting('discount_percentage', null, $user_id);
+    if(optional($order->shippingService)->is_total_express)
+        $percentage= setting('postal_discount_percentage', null, $user_id);
+    elseif(optional($order->shippingService)->is_hd_express_service)
+        $percentage= setting('hd_express_discount_percentage', null, $user_id);
+    return $percentage??setting('discount_percentage', null, $user_id);
+}
 function responseUnprocessable($message)
 {
     return response()->json([
@@ -421,7 +439,7 @@ function getValidShCode($shCode, $service)
         '970600',
         '490700',
     ];
-    if($service->is_total_express) {
+    if(optional($service)->is_total_express) {
         $type = 'Courier';
     }else {
         $type = 'Postal (Correios)';
@@ -449,4 +467,96 @@ function getValidShCode($shCode, $service)
 
     }
     return $shCode;
+}
+function currentActiveApiName() {
+    return  setting('correios_api', null, User::ROLE_ADMIN) ? 'Correios Api' : (setting('anjun_api', null,  User::ROLE_ADMIN) ? 'Correios Anjun Api' : (setting('bcn_api', null,User::ROLE_ADMIN) ? 'BCN Setting' : 'Anjun China Api'));
+}
+function checksSettingShippingService($shippingService){
+    $api = currentActiveApiName();
+    if(in_array($shippingService->service_sub_class,[ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard,ShippingService::Packet_Express, ShippingService::AJ_Packet_Express, ShippingService::AJ_Express_CN, ShippingService::BCN_Packet_Express]))
+    {
+        if($api=='Correios Anjun Api'){  
+        return in_array($shippingService->service_sub_class,[ShippingService::AJ_Packet_Standard,ShippingService::AJ_Packet_Express]);
+        }
+        if($api=='Correios Api'){ 
+        return in_array($shippingService->service_sub_class,[ShippingService::Packet_Express,ShippingService::Packet_Standard]);
+        }
+        if($api=='Correios Anjun Api'){  
+        return in_array($shippingService->service_sub_class,[ShippingService::AJ_Standard_CN,ShippingService::AJ_Express_CN]);
+        }
+        if($api=='BCN Setting'){  
+        return in_array($shippingService->service_sub_class,[ShippingService::BCN_Packet_Standard,ShippingService::BCN_Packet_Express]);
+        }
+    }
+    return true;
+
+}
+
+function getZoneRate($order, $service, $zoneId)
+{
+    $rates = ZoneRate::where(function ($query) use ($order, $service) {
+        $query->where('user_id', $order->user_id)
+            ->where('shipping_service_id', $service->id);
+        })->orWhere(function ($query) use ($service) {
+            $query->whereNull('user_id')
+                ->where('shipping_service_id', $service->id);
+        })->first();
+
+    $weight = $order->getOriginalWeight();
+    $decodedRates = json_decode($rates->selling_rates, true); 
+
+    $rate = null;    
+    $rateData = $rates['data'];
+    
+    foreach ($decodedRates as $zone => $zoneData) {
+
+        $zoneNumber = (int) filter_var($zone, FILTER_SANITIZE_NUMBER_INT);
+
+        if ($zoneNumber === (int)$zoneId) {
+            $rateData = $zoneData;
+            break;
+        }
+    }
+
+    if(isset($rateData['data'])) {
+
+        foreach ($rateData['data'] as $range => $value) {
+            $rangeValue = floatval($range);
+        
+            $keys = array_keys($rateData['data']);
+            $index = array_search($range, $keys);
+            $nextWeight = isset($keys[$index + 1]) ? floatval($keys[$index + 1]) : INF;
+
+            if ($weight >= $rangeValue && $weight < $nextWeight) {
+                $rate = $value;
+                break;
+            }
+        }
+    }
+
+    return $rate;
+}
+function checkParcelInsurance($data) {
+    if ($data instanceof Deposit) {
+        $order = Order::with('services')->find($data->order_id);
+    } elseif ($data instanceof Order) {
+        $order = $data;
+    } else {
+        \Log::error('Invalid parameter type passed to checkParcelInsurance. Expected Deposit or Order.');
+    }
+
+    if ($order) {
+        foreach ($order->services as $service) {
+            if (in_array($service->name, ['Insurance', 'Seguro'])) {
+                try {
+                    \Mail::send(new PurchaseInsurance($order));
+                } catch (\Exception $ex) {
+                    \Log::error('Failed to send Purchase Insurance email error: '.$ex->getMessage());
+                }
+            }
+        }
+    } else {
+        \Log::warning('Order not found for Deposit ID');
+    }
+
 }

@@ -51,7 +51,7 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="shipping_service_id" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
+                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->sub_name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->sub_name }}@endif</option>
                             @endforeach
                         </select>
                         @else
@@ -59,10 +59,10 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="us_shipping_service" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                            @if($shippingService->isInboundDomesticService())
-                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->name }}@endif</option>
+                            @if($shippingService->is_inbound_domestic_service)
+                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->sub_name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->sub_name }}@endif</option>
                             @else
-                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
+                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->sub_name}"}}</option>
                             @endif
                             @endforeach
                         </select>
@@ -75,8 +75,8 @@
                     <div class="controls">
                         <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
                         <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" readonly required placeholder="@lang('orders.order-details.Tax Modality')">
-                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }}>DDU</option>
-                            <option value="ddp" {{ 'ddp' == $order->tax_modality ? 'selected' : '' }}>DDP</option>
+                            <option value="ddu" {{ 'ddu' == strtolower($order->tax_modality) ? 'selected' : '' }}>DDU</option>
+                            <option value="ddp" {{ 'ddp' == strtolower($order->tax_modality) ? 'selected' : '' }}>DDP</option>
                         </select>
                         <div class="help-block"></div>
                     </div>
@@ -108,7 +108,7 @@
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
                     </div>
-                    <div class="form-check form-check-inline mr-5">
+                    {{-- <div class="form-check form-check-inline mr-5">
                         <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
                             <input type="checkbox" name="individual_parcel" id="returnIndividual" @if($order->sinerlog_tran_id == 3) checked @endif>
                             <span class="vs-checkbox vs-checkbox-lg">
@@ -118,7 +118,7 @@
                             </span>
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                    </div>
+                    </div> --}}
                 </div>
                 @else
                 <div class="controls row mb-1">
@@ -144,7 +144,7 @@
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
                     </div>
-                    <div class="form-check form-check-inline mr-5">
+                    {{-- <div class="form-check form-check-inline mr-5">
                         <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
                             <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
                             <span class="vs-checkbox vs-checkbox-lg">
@@ -154,7 +154,7 @@
                             </span>
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                    </div>
+                    </div> --}}
                 </div>
                 @endif
             </div>
@@ -182,6 +182,22 @@
         </ul>
     </div>
 </form>
+
+<div class="modal fade" id="checkOptionsModal" tabindex="-1" role="dialog" aria-labelledby="checkOptionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background: red;">
+                <h5 class="modal-title" id="checkOptionsModalLabel" style="color:white;">Please Check Disposal Option</h5>
+            </div>
+            <div class="modal-body">
+                You must check at least one disposal option before saving order.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!--USPS PRIORITY INTERNATIONAL RATE ALERT MODAL-->
 <div class="modal fade" id="uspsModal" role="dialog">
     <div class="modal-dialog modal-md">
@@ -222,6 +238,25 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="taxModalityModal" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title">Info</h5>
+            </div>
+            <div class="modal-body">
+                <h5>
+                    @lang('orders.DDP/PRC service not available')
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info text-white" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -240,8 +275,11 @@
         if (service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
-        } else if (service == 477 || service == 3674 || service == 37634 || service == 3326 || service == 4367) {
-            return getGSSRates();
+        } else if (service == 477 || service == 3674 || service == 37634 || service == 3326 || service == 4367 || service == 237) {
+            if(!getGSSRates()){
+                return;
+            }
+            
         } else if (service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
             $("#rateBtn").hide();
@@ -249,19 +287,31 @@
             $("#itemLimit").hide();
             $("#rateBtn").hide();
         }
+        showTaxModalityMessage(service) 
+
     })
+    function showTaxModalityMessage(service){
+         serviceCode = Number(service)
+        const uspsService = @json($uspsService);
+        console.log(uspsService,serviceCode);
+        if(uspsService.includes(serviceCode)){
+            $('#taxModalityModal').modal('show');
+        }
+    }
 
     //USPS PRIORITY INTERNATIONAL SERVICE FOR RATES CALL 
     function checkService() {
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        showTaxModalityMessage(service)
         if (service == 3442) {
             return getUspsPriorityIntlRates();
         }
     }
 
     function getUspsPriorityIntlRates() {
+        flag = true;
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        var order_id = $('#order_id').val();
+         var order_id = $('#order_id').val();
         var descpall = [];
         var qtyall = [];
         var valueall = [];
@@ -308,12 +358,17 @@
             })
         } else {
             alert('Add items to get rates!');
+            flag = false;
         }
+        if(flag)
+            showTaxModalityMessage(service)
+       
     }
 
 
     $('#us_shipping_service').ready(function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        showTaxModalityMessage(service)
         if (service == 3440 || service == 3441) {
 
             return getUspsRates();
@@ -328,7 +383,8 @@
 
     $('#us_shipping_service').on('change', function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
-
+        showTaxModalityMessage(service)
+       
         if (service == 3440 || service == 3441 || service == 05) {
 
             return getUspsRates();
@@ -359,7 +415,7 @@
     function getUspsRates() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-
+        showTaxModalityMessage(service) 
         $('#loading').fadeIn();
         $.get('{{ route("api.usps_rates") }}', {
             service: service,
@@ -407,6 +463,7 @@
     function getFedExRates() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
+        showTaxModalityMessage(service)
 
         $('#loading').fadeIn();
         $.get('{{ route("api.fedExRates") }}', {
@@ -433,6 +490,7 @@
     function getGSSRates() {
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
+        showTaxModalityMessage(service)
 
         $('#loading').fadeIn();
         $.get('{{ route("api.gssRates") }}', {
@@ -440,8 +498,11 @@
             order_id: order_id,
         }).then(function(response) {
             if (response.success == true) {
-                $('#user_declared_freight').val(response.total_amount);
-                $('#user_declared_freight').prop('readonly', true);
+                if (service != 283) {
+                    $('#user_declared_freight').val(response.total_amount);
+                    $('#user_declared_freight').prop('readonly', true);
+                }
+                return true;
             } else {
                 if (service == 3674) {
                     $('#gssRateModal').modal('show');
@@ -456,7 +517,7 @@
             console.log(error);
             $('#loading').fadeOut();
         })
-
+        return false;
     }
 
     $('#returnParcel').change(function() {
@@ -532,5 +593,20 @@
         var button = document.getElementById('submitButton');
         button.removeAttribute('disabled');
     })
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var orderForm = document.getElementById('order-form');
+        var returnParcelCheckbox = document.getElementById('returnParcel');
+        var disposeAllCheckbox = document.getElementById('disposeAll');
+        var checkOptionsModal = document.getElementById('checkOptionsModal');
+
+        orderForm.addEventListener('submit', function(event) {
+            // Check if both checkboxes are unchecked
+            if (!returnParcelCheckbox.checked && !disposeAllCheckbox.checked) {
+                event.preventDefault(); // Prevent form submission
+                $('#checkOptionsModal').modal('show'); // Show the modal
+            }
+        });
+    });
 </script>
 @endsection
