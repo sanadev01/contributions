@@ -1,7 +1,6 @@
 <?php
 
-namespace App\Services\Correios\Services\Brazil;
-
+namespace App\Services\PasarEx;
 use Exception;
 use Carbon\Carbon;
 use App\Models\User;
@@ -43,11 +42,10 @@ class CN23LabelMaker implements HasLableExport
         $this->contractNumber = 'H Contract:  9912501576';
         $this->packageSign = 'H';
         $this->service = 2;
-        $this->returnAddress = 'Homedelivery BR (SMART RETURN) <br>
-        AV RUI BARBOSA, 2529 – ARMAZEM 14 <br>
-        IPE, JOSE DOS PINHAIS-PR <br>
-        CEP  83055-320';
-        $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
+        $this->returnAddress = 'Homedeliverybr <br>
+        Rua Acaçá 47- Ipiranga <br>
+        Sao Paulo CEP 04201-020';
+        $this->complainAddress = '';
         $this->activeAddress = '';
         $this->labelZipCodeGroup = '';
     }
@@ -60,23 +58,13 @@ class CN23LabelMaker implements HasLableExport
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
-        if (optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
+        if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-01'))) {
             $this->labelZipCodeGroup = getOrderGroupRange($this->order);
-        }
-        if ($this->order->shippingService->is_bcn_service) {
-            $this->contractNumber = 'B Contract: 0076204456';
-            $this->packageSign = 'B';
-        }
-        if($this->order->shippingService->is_anjun_service) {
-            $this->contractNumber = 'A Contract: 9912501700';
-            $this->packageSign = 'A';
-
-        }
-        if($this->order->shippingService->is_pasar_ex) {
-            $this->contractNumber = 'Contract: 9912501700';
-            $this->packageSign = '';
-
-        }
+        }  
+        $this->contractNumber = 'Contract: 9912501700';
+        $this->packageSign = ''; 
+        $this->packetType = 'Pasar Ex';
+        $this->serviceLogo = public_path('images/pasarex_logo.png'); 
         return $this;
     }
 
@@ -85,45 +73,11 @@ class CN23LabelMaker implements HasLableExport
         $this->corriosLogo = $logoPath;
         return $this;
     }
-
-    public function setPacketType(int $packetType)
-    {
-        switch ($packetType):
-            case Package::SERVICE_CLASS_EXPRESS:
-                $this->packetType = 'Packet Express';
-                $this->serviceLogo = public_path('images/express-package.png');
-                break;
-            case ShippingService::BCN_Packet_Express:
-                $this->packetType = 'Packet Express';
-                $this->serviceLogo = public_path('images/express-package.png');
-            case ShippingService::AJ_Express_CN:
-                $this->packetType = 'Packet Express';
-                $this->serviceLogo = public_path('images/express-package.png');
-                break;
-                case Package::SERVICE_CLASS_MINI:
-                    $this->packetType = 'Packet Mini';
-                    $this->serviceLogo = public_path('images/mini-package.png');
-                    break;
-            case ShippingService::PasarEx:
-                $this->packetType = 'Pasar Ex';
-                $this->serviceLogo = public_path('images/pasarex_logo.png');
-                break;
-            case Package::SERVICE_CLASS_STANDARD:
-            default:
-                $this->packetType = 'Packet Standard';
-                $this->serviceLogo = public_path('images/standard-package.png');
-                break;
-        endswitch;
-
-        return $this;
-    }
-
     public function setPartnerLogo($logoPath)
     {
         $this->partnerLogo = $logoPath;
         return $this;
     }
-
     public function setService(int $service)
     {
         $this->service = $service;
@@ -178,7 +132,7 @@ class CN23LabelMaker implements HasLableExport
 
     public function render()
     {
-        return view('labels.brazil.cn23.index', $this->getViewData());
+        return view('labels.pasarex.cn23.index', $this->getViewData());
     }
 
     public function download()
@@ -187,7 +141,7 @@ class CN23LabelMaker implements HasLableExport
             throw new Exception("Order not Set");
         }
 
-        return \PDF::loadView('labels.brazil.cn23.index', $this->getViewData())->stream();
+        return \PDF::loadView('labels.pasarex.cn23.index', $this->getViewData())->stream();
     }
 
     public function saveAs($path)
@@ -195,7 +149,7 @@ class CN23LabelMaker implements HasLableExport
         if (!file_exists(dirname($path))) {
             mkdir(dirname($path), 0775, true);
         }
-        return \PDF::loadView('labels.brazil.cn23.index', $this->getViewData())->save($path);
+        return \PDF::loadView('labels.pasarex.cn23.index', $this->getViewData())->save($path);
     }
 
     private function getViewData()

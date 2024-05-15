@@ -134,6 +134,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             default => null,
         };
     }
+    
 
     public function getDestinationAriportAttribute()
     {
@@ -281,6 +282,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function getHasHdExpressServiceAttribute()
     {
         return $this->services_subclass_code == ShippingService::HD_Express;
+    } 
+    public function hasPasarExService()
+    {
+        return $this->services_subclass_code == ShippingService::PasarEx;
     }
 
     public function getGroup($container) {

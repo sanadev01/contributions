@@ -121,6 +121,8 @@
                                         <span class="badge badge-success">C</span>
                                         @elseif($deliveryBill->isBCN())
                                         <span class="badge">B</span>
+                                        @elseif($deliveryBill->isPasarEx())
+                                        <span class="badge text-dark" style="background-color:#b4e2ef">PEx</span>
                                         @elseif($deliveryBill->isHoundExpress())
                                         <span class="badge text-dark" style="background-color:#b4e2ef">HE</span>
                                         @else
@@ -172,7 +174,7 @@
                                                                 <i class="fa fa-cloud-download"></i> Download PostPlus Manifest
                                                             </a>
                                                         @endif -->
-                                                    @if(!$deliveryBill->isGDE()&&!$deliveryBill->isHoundExpress())
+                                                    @if(!$deliveryBill->isGDE()&&!$deliveryBill->isHoundExpress()&&!$deliveryBill->isPasarEx())
                                                     <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                         <i class="fa fa-cloud-download"></i> Download Manifest By Service
                                                     </a>

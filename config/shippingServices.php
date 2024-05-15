@@ -59,6 +59,7 @@ return [
             5537 => 'Japan Prime JerseyPost',
             5541 => 'Japan EMS JerseyPost',
             237 => 'GSS CEP',
+            238 => 'PasarEX',
             44166 => 'Colombia One Zone',
 
         ]
