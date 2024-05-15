@@ -461,6 +461,6 @@ Route::get('create-temp-folder', function () {
     return new Response("Temporary folder created at: $tempFolderPath");
 });
 Route::get('permission',function($id = null){
-    Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
+    Artisan::call('db:seed', ['--class' => 'PermissionSeeder', '--force' => true]);
     return Artisan::output();
 });
