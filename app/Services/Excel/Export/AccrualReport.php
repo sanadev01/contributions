@@ -31,7 +31,6 @@ class AccrualReport extends AbstractExportService
         $this->setExcelHeaderRow();
         $row = $this->currentRow; 
         foreach ($this->orders as $order) {
-            if($order->tax_and_duty > 0) {
                    $this->setCellValue('A'.$row, $order->user->name);
                    $this->setCellValue('B'.$row, $order->warehouse_number);
                    $this->setCellValue('C'.$row, $order->carrier); 
@@ -48,11 +47,6 @@ class AccrualReport extends AbstractExportService
 
                     }
                     $row++;
-            }
-            else{
-                dd('else');
-            }
-
         }
         if($row>2){
                 $this->setCellValue('C'.$row, "Total orders");

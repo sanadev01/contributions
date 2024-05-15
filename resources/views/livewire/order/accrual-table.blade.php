@@ -39,7 +39,6 @@
             <tfoot class="search-header">
                 <tr id="kpiHeadSearch">
                     <th>
-
                         <input type="search" class="form-control" wire:model.debounce.1000ms="date">
                     </th>
                     <th>
