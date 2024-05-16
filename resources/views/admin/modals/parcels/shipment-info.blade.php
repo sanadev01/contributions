@@ -29,7 +29,10 @@
                     <td>{{ $parcel->length }} {{ $parcel->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                     <td>{{ $parcel->width }} {{ $parcel->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                     <td>{{ $parcel->height }} {{ $parcel->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
-                    <td>{{ $parcel->getWeight('kg') }} kg ( {{ $parcel->getWeight('lbs') }} lbs ) </td>
+                    <td>
+                        Gross Weight : {{ $parcel->getOriginalWeight('kg') }} kg ({{ $parcel->getOriginalWeight('lbs') }} lbs) <br>
+                        Vol. Weight : {{ $parcel->getWeight('kg') }} kg ({{ $parcel->getWeight('lbs') }} lbs) 
+                    </td>
                     <td colspan="2">{{ $parcel->measurement_unit }} </td>
                 </tr>
                 <tr>
