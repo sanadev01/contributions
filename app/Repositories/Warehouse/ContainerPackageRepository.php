@@ -48,20 +48,17 @@ class ContainerPackageRepository extends AbstractRepository{
         }
         if ($container->hasAnjunChinaService()) {
             return $this->toAnjunChinaContainer($container, $barcode);
-        }
-        $startTime = microtime(true);  
-        $containerOrder = $container->orders->first();
-        if ($containerOrder) {
-            $client = new Client();
-            $newResponse = $client->getModality($barcode);
-            $oldResponse = $client->getModality($containerOrder->corrios_tracking_code);
-            $endTime = microtime(true); 
-            $executionTime = $endTime - $startTime;  
-            \Log::info('Execution time of getModality:' . $executionTime . ' seconds'); 
-            if ($newResponse != $oldResponse) {
-                return $this->validationError404($barcode, 'Order Service is changed. Please Check Packet Service');
-            }
-        }  
+        } 
+        // $containerOrder = $container->orders->first();
+        // if ($containerOrder) {
+        //     $client = new Client();
+        //     $newResponse = $client->getModality($barcode);
+        //     $oldResponse = $client->getModality($containerOrder->corrios_tracking_code);
+        //     if ($newResponse != $oldResponse) {
+        //         return $this->validationError404($barcode, 'Order Service is changed. Please Check Packet Service');
+        //     } 
+        // } 
+   
         if (!$order) {
             return $this->validationError404($barcode, 'Order Not Found.');
         }
