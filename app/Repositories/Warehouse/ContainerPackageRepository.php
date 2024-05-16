@@ -54,31 +54,17 @@ class ContainerPackageRepository extends AbstractRepository
             $executionTime = $endTime - $startTime;  
             \Log::info('Execution time of getModality:' . $executionTime . ' seconds'); 
             if ($newResponse != $oldResponse) {
-<<<<<<< HEAD
-
-                return $this->validationError404($barcode, 'Order Service is changed. Please Check Packet Service');
-            }
-        }
-
-=======
                 return $this->validationError404($barcode, 'Order Service is changed. Please Check Packet Service');
             }
         }  
->>>>>>> ecf1299d6 (execution time)
         if (!$order) {
             return $this->validationError404($barcode, 'Order Not Found.');
         }
 
         if ($order->status < Order::STATUS_PAYMENT_DONE) {
             return $this->validationError404($barcode, 'Please check the Order Status, either the order has been canceled, refunded or not yet paid');
-        }
-        \Log::info([
-            'container' => $container->services_subclass_code,
-            'is anjun container' => $container->has_anjun_service,
-            'order subclass' => $order->shippingService->service_sub_class,
-            'is anjun order' => $order->shippingService->is_anjun_service
-        ]);
-        if (!$container->has_anjun_service || !$order->shippingService->is_anjun_service) {
+        }  
+        if (!$container->hasAnjunService() || !$order->shippingService->isAnjunService()) {
             return $this->validationError404($barcode, 'Order does not belongs to this container Service. Please Check Packet Service');
         }
 
