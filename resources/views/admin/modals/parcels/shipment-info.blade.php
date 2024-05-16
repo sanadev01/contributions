@@ -23,17 +23,16 @@
                     <th>@lang('orders.invoice.width')</th>
                     <th>@lang('orders.invoice.height')</th>
                     <th>@lang('orders.invoice.weight')</th>
-                    <th colspan="2">@lang('orders.invoice.unit')</th>
+                    <th>@lang('orders.invoice.vol-weight')</th>
+                    <th>@lang('orders.invoice.unit')</th>
                 </tr>
                 <tr>
                     <td>{{ $parcel->length }} {{ $parcel->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                     <td>{{ $parcel->width }} {{ $parcel->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
                     <td>{{ $parcel->height }} {{ $parcel->isMeasurmentUnitCm() ? 'cm' : 'in' }}</td>
-                    <td>
-                        Gross Weight : {{ $parcel->getOriginalWeight('kg') }} kg ({{ $parcel->getOriginalWeight('lbs') }} lbs) <br>
-                        Vol. Weight : {{ $parcel->getWeight('kg') }} kg ({{ $parcel->getWeight('lbs') }} lbs) 
-                    </td>
-                    <td colspan="2">{{ $parcel->measurement_unit }} </td>
+                    <td>{{ $parcel->getOriginalWeight('kg') }} kg ({{ $parcel->getOriginalWeight('lbs') }} lbs)</td>
+                    <td>{{ $parcel->getWeight('kg') }} kg ({{ $parcel->getWeight('lbs') }} lbs)</td>
+                    <td>{{ $parcel->measurement_unit }} </td>
                 </tr>
                 <tr>
                     <th colspan="6"> Invoice / Fatura </th>
