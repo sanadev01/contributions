@@ -55,14 +55,13 @@ class ContainerPackageRepository extends AbstractRepository{
             $client = new Client();
             $newResponse = $client->getModality($barcode);
             $oldResponse = $client->getModality($containerOrder->corrios_tracking_code);
+            $endTime = microtime(true); 
+            $executionTime = $endTime - $startTime;  
+            \Log::info('Execution time of getModality:' . $executionTime . ' seconds'); 
             if ($newResponse != $oldResponse) {
-                $endTime = microtime(true); 
-                $executionTime = $endTime - $startTime;  
-                \Log::info('Execution time of getModality:' . $executionTime . ' seconds'); 
                 return $this->validationError404($barcode, 'Order Service is changed. Please Check Packet Service');
             }
-        } 
-   
+        }  
         if (!$order) {
             return $this->validationError404($barcode, 'Order Not Found.');
         }
