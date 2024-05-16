@@ -336,6 +336,7 @@ return [
         'height' => 'Altura',
         'weight' => 'Peso',
         'unit' => 'Unidade',
+        'vol-weight' => 'Vol. Peso',
 
         'Discount' => 'Desconto',
     ],

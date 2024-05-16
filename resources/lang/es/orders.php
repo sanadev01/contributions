@@ -330,6 +330,7 @@ return [
         'height' => 'Altura',
         'weight' => 'Peso',
         'unit' => 'Unidad',
+        'vol-weight' => 'Vol. Peso',
         'Discount' => 'Descuento',
     ],
     'leve' => [
