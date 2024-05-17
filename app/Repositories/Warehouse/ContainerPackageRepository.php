@@ -52,8 +52,8 @@ class ContainerPackageRepository extends AbstractRepository{
         $containerOrder = $container->orders->first();
         if ($containerOrder) {
             $client = new Client();
-            $newResponse = $client->getModality($barcode);
             $oldResponse = $client->getModality($containerOrder->corrios_tracking_code);
+            $newResponse = $client->getModality($barcode);
             if ($newResponse != $oldResponse) {
 
                 return $this->validationError404($barcode, 'Order Service is changed. Please Check Packet Service');
