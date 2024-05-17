@@ -1,17 +1,11 @@
 <?php 
-
 namespace App\Repositories\Warehouse;
-
-use Carbon\Carbon;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\AbstractRepository;
-use App\Services\Correios\Services\Brazil\Client;
-use App\Http\Resources\Warehouse\Container\PackageResource;
-use App\Services\Correios\GetZipcodeGroup;
 
 class ContainerPackageRepository extends AbstractRepository{
     public function store(Request $request)
@@ -38,8 +32,6 @@ class ContainerPackageRepository extends AbstractRepository{
         return (new AddContainerPackageRepository($container,$barcode))->addOrderToContainer();
     }
   
-
-     
     public function removeOrderFromContainer(Container $container, Order $order)
     {
         $container->orders()->detach($order->id);
