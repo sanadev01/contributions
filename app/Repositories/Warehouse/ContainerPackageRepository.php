@@ -35,6 +35,7 @@ class ContainerPackageRepository extends AbstractRepository{
 
     public function addOrderToContainer(Container $container, string $barcode)
     {
+        $containerOrder = $container->orders->first();
         if ($containerOrder) {
             $client = new Client();
             $newResponse = $client->getModality($barcode);
@@ -57,7 +58,6 @@ class ContainerPackageRepository extends AbstractRepository{
         if ($container->hasAnjunChinaService()) {
             return $this->toAnjunChinaContainer($container, $barcode);
         } 
-        $containerOrder = $container->orders->first();
    
         if (!$order) {
             return $this->validationError404($barcode, 'Order Not Found.');
