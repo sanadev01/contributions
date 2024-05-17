@@ -12,7 +12,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Resources\Warehouse\Container\PackageResource;
 use App\Services\Correios\GetZipcodeGroup;
-
+use Spatie\Activitylog\LogOptions;
 class Container extends Model implements \App\Services\Correios\Contracts\Container
 {
     use SoftDeletes;
