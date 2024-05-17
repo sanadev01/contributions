@@ -1,4 +1,4 @@
-<?php
+<?php 
 namespace App\Repositories\Warehouse;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -21,8 +21,11 @@ class ContainerPackageRepository extends AbstractRepository{
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
-            
-        $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
+        } catch (\Exception $ex) {
+            $this->error = $ex->getMessage();
+            return null;
+        }
+    }
 
     public function addOrderToContainer(Container $container, string $barcode)
     { 
