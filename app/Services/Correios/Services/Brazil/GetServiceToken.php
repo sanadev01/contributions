@@ -111,11 +111,11 @@ class GetServiceToken
         }
         if ($this->order->shippingService->is_bcn_service) {
             Log::info('getBCNToken');
-            return $this->getBCNToken();
+            return $this->getAnjunToken();
         }
         if($this->order->shippingService->isCorreiosService()){
             Log::info('getCorreisToken');
-            return $this->getToken();
+            return $this->getAnjunToken();
         }
        
     }
