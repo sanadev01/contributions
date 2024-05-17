@@ -34,149 +34,19 @@ class ContainerPackageRepository extends AbstractRepository{
     }
 
     public function addOrderToContainer(Container $container, string $barcode)
-    {
-        $startTime = microtime(true);   
-        $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
-        if (!$order) {
-            return $this->validationError404($barcode, 'Order Not Found.');
-        }
-        if (!$order->containers->isEmpty()) {
-            return $this->validationError404($barcode, 'Order Already in Container.');
-        }
-        if ($order->status < Order::STATUS_PAYMENT_DONE) {
-            return $this->validationError404($barcode, 'Please check the Order Status, either the order has been canceled, refunded or not yet paid');
-        }
-        if(!$this->isValidContainerOrder($container,$order)) {
-             return $this->validationError404($barcode, 'Order Not Found. Please Check Packet Service.');
-        }
-        if ($container->hasBCNService()){
-            $output =$this->toBCNContainer($container, $barcode,$order);
-            $endTime = microtime(true); 
-            $executionTime = $endTime - $startTime;  
-            \Log::info('Execution time of toBCNContainer:' . $executionTime . ' seconds');
-            return $output;
-        }
-        if ($container->hasAnjunChinaService()) { 
-            $output = $this->toAnjunChinaContainer($container, $barcode,$order);
-            $endTime = microtime(true); 
-            $executionTime = $endTime - $startTime;  
-            \Log::info('Execution time of toAnjunChinaContainer:' . $executionTime . ' seconds'); 
-            return $output;  
-        }
-        // $containerFirstOrder = $container->orders->first();
-        // if ($containerFirstOrder) {
-        //     $client = new Client();
-        //     $newResponse = $client->getModality($barcode);
-        //     $oldResponse = $client->getModality($containerFirstOrder->corrios_tracking_code);
-        //     if ($newResponse != $oldResponse) {
-        //         return $this->validationError404($barcode, 'Order Service is changed. Please Check Packet Service');
-        //     } 
-        // }  
-        if (!$container->hasAnjunService() || !$order->shippingService->isAnjunService()) {
-            return $this->validationError404($barcode, 'Order does not belongs to this container Service. Please Check Packet Service');
-        }
-
-        $outputChina= $this->updateContainer($container, $order, $barcode);
-        
-        $endTimeChina = microtime(true); 
-        $executionTimeChina = $endTimeChina - $startTime;  
-        \Log::info('Execution time of hasAnjunService:' . $executionTimeChina . ' seconds');
-        return $outputChina;
+    { 
+        return (new AddContainerPackageRepository($container,$barcode))->addOrderToContainer();
     }
-    public function toAnjunChinaContainer(Container $container, string $barcode,$order)
-    {
-       $shippingService =  $order->shippingService;
-        if (!$shippingService->isAnjunChinaService()) {
-
-            return $this->validationError404($barcode, 'Order does not belongs to this container Service. Please Check Packet Service');
-        }
-        
-        if ($container->hasAnjunChinaStandardService() && !$shippingService->isAnjunChinaStandardService()){
-            return $this->validationError404($barcode, 'Order does not belongs to this standard container Service. Please Check Packet Service');
-        }
-        if ($container->hasAnjunChinaExpressService() && !$shippingService->isAnjunChinaExpressService()) {
-            return $this->validationError404($barcode, 'Order does not belongs to this container express Service. Please Check Packet Service');
-        }
-
-        return $this->updateContainer($container, $order, $barcode);
-    }
-    
-    public function toBCNContainer(Container $container, string $barcode,$order)
-    {
-       $shippingService =  $order->shippingService;
-
-        if (!$shippingService->is_bcn_service) {
-            return $this->validationError404($barcode, 'Order does not belongs to this container Service. Please Check Packet Service');
-        }
-
-        if ($container->hasBCNExpressService() && !$shippingService->is_bcn_express) {
-
-            return $this->validationError404($barcode, 'Order does not belongs to this standard container Service. Please Check Packet Service');
-        }
-        if ($container->hasBCNStandardService() && !$shippingService->is_bcn_standard) {
-
-            return $this->validationError404($barcode, 'Order does not belongs to this container express Service. Please Check Packet Service');
-        }
-
-        return $this->updateContainer($container, $order, $barcode);
-    } 
-    public function updateContainer($container, $order, $barcode)
-    {  
-        $startTime = microtime(true);   
-            $output = $this->updateContainerExecutionTime($container, $order, $barcode);
-        $endTime = microtime(true); 
-        $executionTime = $endTime - $startTime;  
-        \Log::info('Execution time of updateContainer:' . $executionTime . ' seconds');
-       return $output;
-    }
-
-    public function updateContainerExecutionTime($container, $order, $barcode)
-    {
-        $containerFirstOrder = $container->orders->first(); 
   
-        if ($containerFirstOrder) {
-                //make sure all orders belongs to same group.
-                $firstGroup  = (new GetZipcodeGroup($containerFirstOrder->recipient->zipcode))->getZipcodeGroup();
-                $currentGroup =  (new GetZipcodeGroup($order->recipient->zipcode))->getZipcodeGroup();
-                if ($currentGroup !== $firstGroup){
-                    return $this->validationError404($barcode, "Invalid Zipcode Group for container. Valid Group is {$firstGroup}");
-                }
-        }else{
-            //make sure tha container first order have valid group.
-            $currentGroup =  (new GetZipcodeGroup($order->recipient->zipcode))->getZipcodeGroup(); 
-            if ($currentGroup === null) {
-                return $this->validationError404($barcode, 'Invalid zipcode range for container');
-            }
-        }
-        $container->orders()->attach($order->id);
-        $this->addOrderTracking($order->id);
-        $order->error = null;
-        $order->code = 200;
-        return [
-            'order' => (new PackageResource($order))
-        ];
-    }
 
+     
     public function removeOrderFromContainer(Container $container, Order $order)
     {
         $container->orders()->detach($order->id);
 
         return $this->removeOrderTracking($order->id);
     }
-
-    public function addOrderTracking($id)
-    {
-        OrderTracking::create([
-            'order_id' => $id,
-            'status_code' => Order::STATUS_INSIDE_CONTAINER,
-            'type' => 'HD',
-            'description' => 'Parcel inside Homedelivery Container',
-            'country' => 'US',
-            'city' => 'Miami'
-        ]);
-
-        return true;
-    }
+ 
 
     public function removeOrderTracking($id)
     {
@@ -184,24 +54,6 @@ class ContainerPackageRepository extends AbstractRepository{
         $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
 
         return $order_tracking->delete();
-    }
-    public function isValidContainerOrder($container,$order) {
-        $barcode = $order->corrios_tracking_code;
-        $subString = strtolower(substr($barcode,0,2)); 
-        if(in_array($subString,['na' ,'xl','nc','nb'])){
-            $subString = 'nx';
-        }
-        return strtolower($container->getSubClassCode())  == $subString;
-    }
-    public function validationError404($barcode, $message)
-    {
-        return [
-            'order' => [
-                'corrios_tracking_code' => $barcode,
-                'error' => $message,
-                'code' => 404
-            ],
-        ];
-    }   
-
+    } 
+     
 }
