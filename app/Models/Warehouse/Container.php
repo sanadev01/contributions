@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Resources\Warehouse\Container\PackageResource;
+use App\Services\Correios\GetZipcodeGroup;
 
 class Container extends Model implements \App\Services\Correios\Contracts\Container
 {
@@ -325,9 +326,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getGroup($container) {
         
-        $containerOrder = $container->orders->first();
-        $firstOrderGroupRange = getOrderGroupRange($containerOrder);
-        
-        return $firstOrderGroupRange['group'];
+        $firstOrder = $container->orders->first();
+        return (new GetZipcodeGroup($firstOrder->recipient->zipcode))->getZipcodeGroup();
     }
 }
