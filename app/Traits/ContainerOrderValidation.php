@@ -27,7 +27,7 @@ trait ContainerOrderValidation
     }
     protected function orderValidateMessage($container, $shippingSubClass)
     {
-        $packageName = [
+        $packets = [
             ShippingService::Packet_Standard       => 'Packet_Standard',
             ShippingService::Packet_Express        => 'Packet_Express',
             ShippingService::Packet_Mini           => 'Packet_Mini',
@@ -38,7 +38,7 @@ trait ContainerOrderValidation
             ShippingService::AJ_Packet_Standard    => 'AJ_Packet_Standard',
             ShippingService::AJ_Packet_Express     => 'AJ_Packet_Express',
         ];
-        return $this->validationError404("Please Check Packet Service; Container is $container->service_subclass_name and you put ($packageName[$shippingSubClass]) Packet");
+        return $this->validationError404("Please Check Packet Service; Container is $container->service_subclass_name and you put ($packets[$shippingSubClass]) Packet");
     }
     public function isValidContainerOrder()
     {
