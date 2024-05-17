@@ -28,20 +28,7 @@ class ContainerPackageRepository extends AbstractRepository
                 'unit_type' => $request->unit_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
-        } catch (\Exception $ex) {
-            $this->error = $ex->getMessage();
-            return null;
-        }
-    }
-
-    public function addOrderToContainer(Container $container, string $barcode)
-    {
-        // if ($container->has_anjun_china_service) {
-        //     return $this->toAnjunChinaContainer($container, $barcode);
-        // }
-        if ($container->has_bcn_service) {
-            return $this->toBCNContainer($container, $barcode);
-        }
+            
         $order = Order::where('corrios_tracking_code', strtoupper($barcode))->first();
 
         if (!$this->isValidContainerOrder($container, $order)) {
