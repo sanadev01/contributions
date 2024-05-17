@@ -35,6 +35,14 @@ class ContainerPackageRepository extends AbstractRepository{
 
     public function addOrderToContainer(Container $container, string $barcode)
     {
+        if ($containerOrder) {
+            $client = new Client();
+            $newResponse = $client->getModality($barcode);
+            $oldResponse = $client->getModality($containerOrder->corrios_tracking_code);
+            if ($newResponse != $oldResponse) {
+                return $this->validationError404($barcode, 'Order Service is changed. Please Check Packet Service');
+            } 
+        } 
         // if ($container->hasAnjunChinaService()) {
         //     return $this->toAnjunChinaContainer($container, $barcode);
         // }
@@ -50,14 +58,6 @@ class ContainerPackageRepository extends AbstractRepository{
             return $this->toAnjunChinaContainer($container, $barcode);
         } 
         $containerOrder = $container->orders->first();
-        if ($containerOrder) {
-            $client = new Client();
-            $oldResponse = $client->getModality($containerOrder->corrios_tracking_code);
-            $newResponse = $client->getModality($barcode);
-            if ($newResponse != $oldResponse) {
-                return $this->validationError404($barcode, 'Order Service is changed. Please Check Packet Service');
-            } 
-        } 
    
         if (!$order) {
             return $this->validationError404($barcode, 'Order Not Found.');
