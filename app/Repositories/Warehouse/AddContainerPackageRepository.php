@@ -5,9 +5,12 @@ use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use App\Repositories\AbstractRepository;
 use App\Http\Resources\Warehouse\Container\PackageResource;
+use App\Models\ShippingService;
 use App\Services\Correios\GetZipcodeGroup;
-class AddContainerPackageRepository extends AbstractRepository{
+use App\Traits\ContainerOrderValidation;
 
+class AddContainerPackageRepository extends AbstractRepository{
+    use ContainerOrderValidation;
     private $container;
     private $barcode;
     private $order;
@@ -18,14 +21,17 @@ class AddContainerPackageRepository extends AbstractRepository{
         $this->container = $container;
         $this->barcode = strtoupper($barcode); 
         $this->order = Order::where('corrios_tracking_code',$barcode )->first();
-        $this->shippingService =  $this->order->shippingService;
-        $this->containerFirstOrder = $this->container->orders->first(); 
-    }
+        $this->shippingService =  optional($this->order)->shippingService;
+        $this->containerFirstOrder = $this->container->orders->first();   
+    } 
     public function addOrderToContainer()
-    {
+    { 
         $startTime = microtime(true);   
         if (!$this->order) {
             return $this->validationError404('Order Not Found.');
+        }
+        if(!$this->orderValidate()){
+            return $this->orderValidateMessage($this->container,$this->shippingService->service_sub_class);
         }
         if (!$this->order->containers->isEmpty()) {
             return $this->validationError404('Order Already in Container.');
@@ -33,83 +39,31 @@ class AddContainerPackageRepository extends AbstractRepository{
         if ($this->order->status < Order::STATUS_PAYMENT_DONE) {
             return $this->validationError404('Please check the Order Status, either the order has been canceled, refunded or not yet paid');
         }
-        if(!$this->isValidContainerOrder()) {
-             return $this->validationError404('Order Not Found. Please Check Packet Service.');
-        }
-        if ($this->container->has_bcn_service){
-            $output = $this->toBCNContainer();
-            $endTime = microtime(true); 
-            $executionTime = $endTime - $startTime;  
-            \Log::info('Execution time of toBCNContainer:' . $executionTime . ' seconds');
-            return $output;
-        }
-        if ($this->container->has_anjun_china_service) { 
-            $output = $this->toAnjunChinaContainer();
-            $endTime = microtime(true); 
-            $executionTime = $endTime - $startTime;  
-            \Log::info('Execution time of toAnjunChinaContainer:' . $executionTime . ' seconds'); 
-            return $output;  
-        }
-        // $this->containerFirstOrder = $this->container->orders->first();
-        // if ($this->containerFirstOrder) {
-        //     $client = new Client();
-        //     $newResponse = $client->getModality($this->barcode);
-        //     $oldResponse = $client->getModality($this->containerFirstOrder->corrios_tracking_code);
-        //     if ($newResponse != $oldResponse) {
-        //         return $this->validationError404('Order Service is changed. Please Check Packet Service');
-        //     } 
+        // if(!$this->isValidContainerOrder()) {
+        //     return $this->validationError404('Order Not Found. Please Check Packet Service.');
         // }
-        if (!$this->container->has_anjun_service || !$this->shippingService->is_anjun_service) {
-            return $this->validationError404('Order does not belongs to this container Service. Please Check Packet Service');
-        } 
+        // if (!$this->container->has_anjun_service || !$this->shippingService->is_anjun_service) {
+        //     return $this->validationError404('Order does not belongs to this container Service. Please Check Packet Service');
+        // } 
         $outputChina= $this->updateContainer();
         $endTimeChina = microtime(true); 
         $executionTimeChina = $endTimeChina - $startTime;  
-        \Log::info('Execution time of hasAnjunService:' . $executionTimeChina . ' seconds');
+        \Log::info('Execution time of uptoUpdateTime:' . $executionTimeChina . ' seconds');
         return $outputChina;
     }
-    public function toAnjunChinaContainer()
-    {
-        if (!$this->shippingService->is_anjun_china_service){
-            return $this->validationError404('Order does not belongs to this container Service. Please Check Packet Service');
-        }
-        
-        if ($this->container->has_anjun_china_standard_service && !$this->shippingService->is_anjun_china_standard_service){
-            return $this->validationError404('Order does not belongs to this standard container Service. Please Check Packet Service');
-        }
-        if ($this->container->has_anjun_china_express_service && !$this->shippingService->is_anjun_china_express_service) {
-            return $this->validationError404('Order does not belongs to this container express Service. Please Check Packet Service');
-        }
-        return $this->updateContainer();
-    }
     
-    public function toBCNContainer()
-    {
-        if (!$this->shippingService->is_bcn_service) {
-            return $this->validationError404('Order does not belongs to this container Service. Please Check Packet Service');
-        }
-
-        if ($this->container->has_bcn_express_service && !$this->shippingService->is_bcn_express) {
-
-            return $this->validationError404('Order does not belongs to this standard container Service. Please Check Packet Service');
-        }
-        if ($this->container->has_bcn_standard_service&& !$this->shippingService->is_bcn_standard) {
-
-            return $this->validationError404('Order does not belongs to this container express Service. Please Check Packet Service');
-        }
-
-        return $this->updateContainer();
-    } 
+  
+    
     public function updateContainer()
     {
         $startTime = microtime(true);   
-            $output = $this->updateContainerExecutionTime( );
+        $output = $this->updateContainerExecutionTime( );
         $endTime = microtime(true); 
         $executionTime = $endTime - $startTime;  
         \Log::info('Execution time of updateContainer:' . $executionTime . ' seconds');
        return $output;
     }
-
+ 
     public function updateContainerExecutionTime()
     {
         if ($this->containerFirstOrder) {
@@ -144,18 +98,8 @@ class AddContainerPackageRepository extends AbstractRepository{
             'description' => 'Parcel inside Homedelivery Container',
             'country' => 'US',
             'city' => 'Miami'
-        ]);
-
+        ]); 
         return true;
-    }
-
-     
-    public function isValidContainerOrder(){
-        $subString = strtolower(substr($this->barcode,0,2)); 
-        if(in_array($subString,['na' ,'xl','nc','nb'])){
-            $subString = 'nx';
-        }
-        return strtolower($this->container->subclass_code)  == $subString;
     }
     public function validationError404($message)
     {
@@ -166,6 +110,6 @@ class AddContainerPackageRepository extends AbstractRepository{
                 'code' => 404
             ],
         ];
-    }   
+    } 
 
 }
