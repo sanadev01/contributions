@@ -69,7 +69,7 @@ class AddContainerPackageRepository extends AbstractRepository{
         if (!$this->container->hasAnjunService() || !$this->order->shippingService->isAnjunService()) {
             return $this->validationError404('Order does not belongs to this container Service. Please Check Packet Service');
         } 
-        $outputChina= $this->updateContainer($this->container, $this->order, $this->barcode);
+        $outputChina= $this->updateContainer();
         
         $endTimeChina = microtime(true); 
         $executionTimeChina = $endTimeChina - $startTime;  
@@ -88,7 +88,7 @@ class AddContainerPackageRepository extends AbstractRepository{
         if ($this->container->hasAnjunChinaExpressService() && !$this->shippingService->isAnjunChinaExpressService()) {
             return $this->validationError404('Order does not belongs to this container express Service. Please Check Packet Service');
         }
-        return $this->updateContainer($this->container, $this->order, $this->barcode);
+        return $this->updateContainer();
     }
     
     public function toBCNContainer()
@@ -106,7 +106,7 @@ class AddContainerPackageRepository extends AbstractRepository{
             return $this->validationError404('Order does not belongs to this container express Service. Please Check Packet Service');
         }
 
-        return $this->updateContainer( );
+        return $this->updateContainer();
     } 
     public function updateContainer()
     {
