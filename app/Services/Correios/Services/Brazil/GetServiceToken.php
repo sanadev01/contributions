@@ -114,7 +114,7 @@ class GetServiceToken
             return $this->getBCNToken();
         }
         if($this->order->shippingService->isCorreiosService()){
-            Log::info('getToken');
+            Log::info('getCorreisToken');
             return $this->getToken();
         }
        
