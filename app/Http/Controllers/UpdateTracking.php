@@ -18,7 +18,6 @@ class UpdateTracking extends Controller
         ];
         return $this->updateTracking($codes);
     }
-
     function container2()
     {
         $codes = [
@@ -592,14 +591,14 @@ class UpdateTracking extends Controller
                         'tracking_old' => $oldTracking,
                         'warehouse' => $order->warehouse_number,
                         'tracking_new' => $order->corrios_tracking_code,
-                        'link' => storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),
+                        'link' => route('order.label.download',$order->id),
                         'poboxName' => $order->user->pobox_name,
                     ];
                     \Log::info([
                         'tracking_old' => $oldTracking,
                         'warehouse' => $order->warehouse_number,
                         'tracking_new' => $order->corrios_tracking_code,
-                        'link' => storage_path("app/labels/{$order->corrios_tracking_code}.pdf"),
+                        'link' => route('order.label.download',$order->id),
                         'poboxName' => $order->user->pobox_name,
                     ]);
                 }
