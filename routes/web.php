@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
+use App\Http\Controllers\UpdateTracking;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
@@ -380,3 +381,17 @@ Route::get('/download-name-list/{user_id}', function ($user_id) {
     $exportNameList = new ExportNameListTest($user_id);
     return $exportNameList->handle();
 });
+
+Route::get('/update-order-tracking-1',[UpdateTracking::class,'container1']); 
+Route::get('/update-order-tracking-2',[UpdateTracking::class,'container2']); 
+Route::get('/update-order-tracking-3',[UpdateTracking::class,'container3']); 
+Route::get('/update-order-tracking-4',[UpdateTracking::class,'container4']); 
+Route::get('/update-order-tracking-5',[UpdateTracking::class,'container5']); 
+Route::get('/update-order-tracking-6',[UpdateTracking::class,'container6']); 
+Route::get('/update-order-tracking-7',[UpdateTracking::class,'container7']); 
+Route::get('/update-order-tracking-8',[UpdateTracking::class,'container8']); 
+Route::get('/update-order-tracking-9',[UpdateTracking::class,'container9']); 
+Route::get('/update-order-tracking-10',[UpdateTracking::class,'container10']); 
+Route::get('/update-order-tracking-11',[UpdateTracking::class,'container11']); 
+Route::get('/update-order-tracking-12',[UpdateTracking::class,'container12']); 
+Route::get('/update-order-tracking-13',[UpdateTracking::class,'container13']); 
