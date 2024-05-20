@@ -591,14 +591,14 @@ class UpdateTracking extends Controller
                         'tracking_old' => $oldTracking,
                         'warehouse' => $order->warehouse_number,
                         'tracking_new' => $order->corrios_tracking_code,
-                        'link' => route('order.label.download',$order->id),
+                        'link' => route('order.label.download',encrypt($order->id)),
                         'poboxName' => $order->user->pobox_name,
                     ];
                     \Log::info([
                         'tracking_old' => $oldTracking,
                         'warehouse' => $order->warehouse_number,
                         'tracking_new' => $order->corrios_tracking_code,
-                        'link' => route('order.label.download',$order->id),
+                        'link' => route('order.label.download',encrypt($order->id)),
                         'poboxName' => $order->user->pobox_name,
                     ]);
                 }
