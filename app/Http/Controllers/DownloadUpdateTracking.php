@@ -9,7 +9,7 @@ use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Services\Excel\Export\OrderUpdateExport;
 use Exception;
 
-class UpdateTracking extends Controller
+class DownloadUpdateTracking extends Controller
 {
     function container1()
     {
@@ -555,24 +555,10 @@ class UpdateTracking extends Controller
         $ordersDetails = null;
         try {
             foreach ($codes as $code) {
-                $flag = false;
-
-                if (Order::where('warehouse_number', $code['warehouse'])
-                    ->where('corrios_tracking_code', 'like', 'IX%')
-                    ->update(['shipping_service_id' => 42])
-                ) {
-                    $flag = true;
-                }
-                if (Order::where('warehouse_number', $code['warehouse'])
-                    ->where('corrios_tracking_code', 'like', 'NC%')
-                    ->update(['shipping_service_id' => 16])
-                ) {
-                    $flag = true;
-                }
+                
 
                 $order = Order::where('warehouse_number',  $code['warehouse'])->first();
-
-                if (!$flag) {
+                if (!$order) {
                     $ordersDetails[] = [
                         'tracking_old' =>  $code['tracking'],
                         'warehouse' => $code['warehouse'],
@@ -581,11 +567,7 @@ class UpdateTracking extends Controller
                         'poboxName' => 'not found',
 
                     ];
-                } else { 
-                    if($code['tracking']==$order->corrios_tracking_code){
-                        $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
-                        $corrieosBrazilLabelRepository->run($order, true);
-                    }
+                } else {
                    $ordersDetails[] = [
                         'tracking_old' => $code['tracking'],
                         'warehouse' => $order->warehouse_number,
