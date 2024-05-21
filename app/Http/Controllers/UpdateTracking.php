@@ -582,9 +582,11 @@ class UpdateTracking extends Controller
 
                     ];
                 } else { 
-                    $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
-                    $corrieosBrazilLabelRepository->run($order, true); 
-                    $ordersDetails[] = [
+                    if($code['tracking']==$order->corrios_tracking_code){
+                        $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
+                        $corrieosBrazilLabelRepository->run($order, true);
+                    }
+                   $ordersDetails[] = [
                         'tracking_old' => $code['tracking'],
                         'warehouse' => $order->warehouse_number,
                         'tracking_new' => $order->corrios_tracking_code,
