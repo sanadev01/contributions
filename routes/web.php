@@ -382,48 +382,12 @@ Route::get('/download-name-list/{user_id}', function ($user_id) {
     $exportNameList = new ExportNameListTest($user_id);
     return $exportNameList->handle();
 });
- 
-$letterRange9 = range('a', 'k');
- 
-    foreach ($letterRange9 as $letter) {
-        $route = '/update-order-tracking-9'.$letter; 
-        $action = 'container9'.$letter; 
-        Route::get($route, [UpdateTracking::class, $action]);
-    } 
-$letterRange10 = range('a', 'h');
- 
-    foreach ($letterRange10 as $letter) {
-        $route = '/update-order-tracking-10'.$letter; 
-        $action = 'container10'.$letter; 
 
-        Route::get($route, [UpdateTracking::class, $action]);
-    } 
-$letterRange11 = range('a', 'w');
- 
-    foreach ($letterRange11 as $letter) {
-        $route = '/update-order-tracking-11'.$letter; 
-        $action = 'container11'.$letter; 
 
-        Route::get($route, [UpdateTracking::class, $action]);
-    } 
-$letterRange12 = range('a', 'g');
- 
-    foreach ($letterRange12 as $letter) {
-        $route = '/update-order-tracking-12'.$letter; 
-        $action = 'container12'.$letter; 
+Route::get('/update-order-bcn-to-anjun1',[UpdateTracking::class,'bCNToAnjunLabelsBatch1']);
+Route::get('/update-order-bcn-to-anjun2',[UpdateTracking::class,'bCNToAnjunLabelsBatch2']); 
+Route::get('/update-order-bcn-to-anjun3',[UpdateTracking::class,'bCNToAnjunLabelsBatch3']); 
 
-        Route::get($route, [UpdateTracking::class, $action]);
-    } 
-$letterRange13 = range('a', 'm');
- 
-    foreach ($letterRange13 as $letter) {
-        $route = '/update-order-tracking-13'.$letter; 
-        $action = 'container13'.$letter; 
-        Route::get($route, [UpdateTracking::class, $action]);
-    } 
-
-Route::get('/update-order-bcn-to-anjun',[UpdateTracking::class,'bCNToAnjunLabels']); 
-Route::get('/update-order-remaining-bcn-to-anjun',[UpdateTracking::class,'bCNToAnjunRemainingLabels']); 
 
 //Download Routes
 Route::get('/download-tracking-1',[DownloadUpdateTracking::class,'container1']); 
@@ -440,4 +404,3 @@ Route::get('/download-tracking-11',[DownloadUpdateTracking::class,'container11']
 Route::get('/download-tracking-12',[DownloadUpdateTracking::class,'container12']); 
 Route::get('/download-tracking-13',[DownloadUpdateTracking::class,'container13']); 
 Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']); 
-Route::get('/download-tracking-remaining-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunRemainingLabels']); 
