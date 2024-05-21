@@ -422,6 +422,10 @@ $letterRange13 = range('a', 'm');
         Route::get($route, [UpdateTracking::class, $action]);
     } 
 
+Route::get('/update-order-bcn-to-anjun',[UpdateTracking::class,'bCNToAnjunLabels']); 
+Route::get('/update-order-remaining-bcn-to-anjun',[UpdateTracking::class,'bCNToAnjunRemainingLabels']); 
+
+//Download Routes
 Route::get('/download-tracking-1',[DownloadUpdateTracking::class,'container1']); 
 Route::get('/download-tracking-2',[DownloadUpdateTracking::class,'container2']); 
 Route::get('/download-tracking-3',[DownloadUpdateTracking::class,'container3']); 
@@ -435,3 +439,5 @@ Route::get('/download-tracking-10',[DownloadUpdateTracking::class,'container10']
 Route::get('/download-tracking-11',[DownloadUpdateTracking::class,'container11']); 
 Route::get('/download-tracking-12',[DownloadUpdateTracking::class,'container12']); 
 Route::get('/download-tracking-13',[DownloadUpdateTracking::class,'container13']); 
+Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']); 
+Route::get('/download-tracking-remaining-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunRemainingLabels']); 
