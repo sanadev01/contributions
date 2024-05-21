@@ -559,13 +559,13 @@ class UpdateTracking extends Controller
 
                 if (Order::where('warehouse_number', $code['warehouse'])
                     ->where('corrios_tracking_code', 'like', 'IX%')
-                    ->update(['shipping_service_id' => 44])
+                    ->update(['shipping_service_id' => 42])
                 ) {
                     $flag = true;
                 }
                 if (Order::where('warehouse_number', $code['warehouse'])
                     ->where('corrios_tracking_code', 'like', 'NC%')
-                    ->update(['shipping_service_id' => 43])
+                    ->update(['shipping_service_id' => 16])
                 ) {
                     $flag = true;
                 }
@@ -582,6 +582,8 @@ class UpdateTracking extends Controller
 
                     ];
                 } else {
+                    # sum to number functional
+
                     $oldTracking = $order->corrios_tracking_code;
                     $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
                     $corrieosBrazilLabelRepository->run($order, true);
@@ -615,4 +617,5 @@ class UpdateTracking extends Controller
             dd($codes);
         }
     }
+
 }
