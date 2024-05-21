@@ -550,7 +550,7 @@ class UpdateTracking extends Controller
 
     function updateTracking($codes)
     {
-        set_time_limit(300);
+        set_time_limit(1500);
         //update standard
         $ordersDetails = null;
         try {
@@ -581,28 +581,16 @@ class UpdateTracking extends Controller
                         'poboxName' => 'not found',
 
                     ];
-                } else {
-                    # sum to number functional
-
-                    $oldTracking = $order->corrios_tracking_code;
+                } else { 
                     $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
-                    $corrieosBrazilLabelRepository->run($order, true);
-                    if ($order->corrios_tracking_code) {
-                        $ordersDetails[] = [
-                            'tracking_old' => $code['tracking'],
-                            'warehouse' => $order->warehouse_number,
-                            'tracking_new' => $order->corrios_tracking_code,
-                            'link' => route('order.label.download', encrypt($order->id)),
-                            'poboxName' => $order->user->pobox_name,
-                        ];
-                        \Log::info([
-                            'tracking_old' => $code['tracking'],
-                            'warehouse' => $order->warehouse_number,
-                            'tracking_new' => $order->corrios_tracking_code,
-                            'link' => route('order.label.download', encrypt($order->id)),
-                            'poboxName' => $order->user->pobox_name,
-                        ]);
-                    }
+                    $corrieosBrazilLabelRepository->run($order, true); 
+                    $ordersDetails[] = [
+                        'tracking_old' => $code['tracking'],
+                        'warehouse' => $order->warehouse_number,
+                        'tracking_new' => $order->corrios_tracking_code,
+                        'link' => route('order.label.download', encrypt($order->id)),
+                        'poboxName' => $order->user->pobox_name,
+                    ];  
                 }
             }
         } catch (Exception $e) {
