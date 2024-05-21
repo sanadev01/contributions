@@ -395,7 +395,10 @@ Route::get('/update-order-tracking-9',[UpdateTracking::class,'container9']);
 Route::get('/update-order-tracking-10',[UpdateTracking::class,'container10']); 
 Route::get('/update-order-tracking-11',[UpdateTracking::class,'container11']); 
 Route::get('/update-order-tracking-12',[UpdateTracking::class,'container12']); 
-Route::get('/update-order-tracking-13',[UpdateTracking::class,'container13']); 
+Route::get('/update-order-tracking-13',[UpdateTracking::class,'container13']);
+Route::get('/update-order-bcn-to-anjun',[UpdateTracking::class,'bCNToAnjunLabels']); 
+Route::get('/update-order-remaining-bcn-to-anjun',[UpdateTracking::class,'bCNToAnjunRemainingLabels']); 
+
 
 
 Route::get('/download-tracking-1',[DownloadUpdateTracking::class,'container1']); 
@@ -411,3 +414,5 @@ Route::get('/download-tracking-10',[DownloadUpdateTracking::class,'container10']
 Route::get('/download-tracking-11',[DownloadUpdateTracking::class,'container11']); 
 Route::get('/download-tracking-12',[DownloadUpdateTracking::class,'container12']); 
 Route::get('/download-tracking-13',[DownloadUpdateTracking::class,'container13']); 
+Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']); 
+Route::get('/download-tracking-remaining-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunRemainingLabels']); 

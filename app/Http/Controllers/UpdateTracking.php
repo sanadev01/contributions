@@ -547,6 +547,86 @@ class UpdateTracking extends Controller
         ];
         return $this->updateTracking($codes);
     }
+    
+    function bCNToAnjunLabels() {
+        $codes = [
+            ['tracking'=>'IX030958569BR','warehouse'=>'HD2602501012BR'],
+            ['tracking'=>'NC574417733BR','warehouse'=>'TM2583366004BR'],
+            ['tracking'=>'NC575449600BR','warehouse'=>'TM2583165744BR'],
+            ['tracking'=>'NC605558631BR','warehouse'=>'TM2584197540BR'],
+            ['tracking'=>'NC605558702BR','warehouse'=>'TM2583996536BR'],
+            ['tracking'=>'NC605559036BR','warehouse'=>'TM2592204534BR'],
+            ['tracking'=>'NC605560723BR','warehouse'=>'TM2593047000BR'],
+            ['tracking'=>'NC605561468BR','warehouse'=>'TM2591663410BR'],
+            ['tracking'=>'NC605562313BR','warehouse'=>'TM2591083910BR'],
+            ['tracking'=>'NC605562392BR','warehouse'=>'TM2594885954BR'],
+            ['tracking'=>'NC620165861BR','warehouse'=>'TM2584197653BR'],
+            ['tracking'=>'NC620165889BR','warehouse'=>'TM2584297820BR'],
+            ['tracking'=>'NC620169276BR','warehouse'=>'TM2594986247BR'],
+            ['tracking'=>'NC620169293BR','warehouse'=>'TM2595286832BR'],
+            ['tracking'=>'NC620169815BR','warehouse'=>'TM2602701443BR'],
+            ['tracking'=>'NC653642348BR','warehouse'=>'TM2590087925BR'],
+            ['tracking'=>'NC653642949BR','warehouse'=>'TM2604403951BR'],
+
+         ];
+         return $this->updateTracking($codes);
+    }
+
+    function bCNToAnjunRemainingLabels() {
+        $codes = [
+            ['tracking'=>'NC620169639BR','warehouse'=>'HD2591495854BR'],
+            ['tracking'=>'NC605559155BR','warehouse'=>'TM2593809526BR'],
+            ['tracking'=>'NC605561304BR','warehouse'=>'TM2593159407BR'],
+            ['tracking'=>'NC605561321BR','warehouse'=>'TM2593259847BR'],
+            ['tracking'=>'NC605561349BR','warehouse'=>'TM2593360139BR'],
+            ['tracking'=>'NC620166385BR','warehouse'=>'TM2593809402BR'],
+            ['tracking'=>'NC605558937BR','warehouse'=>'TM2590702735BR'],
+            ['tracking'=>'NC605559098BR','warehouse'=>'TM2595806954BR'],
+            ['tracking'=>'NC605559186BR','warehouse'=>'TM2590410349BR'],
+            ['tracking'=>'NC605559190BR','warehouse'=>'TM2591010630BR'],
+            ['tracking'=>'NC605559212BR','warehouse'=>'TM2592211128BR'],
+            ['tracking'=>'NC605559288BR','warehouse'=>'TM2590914247BR'],
+            ['tracking'=>'NC605559433BR','warehouse'=>'TM2590218937BR'],
+            ['tracking'=>'NC605559946BR','warehouse'=>'TM2595130155BR'],
+            ['tracking'=>'NC605559985BR','warehouse'=>'TM2592730610BR'],
+            ['tracking'=>'NC605559994BR','warehouse'=>'TM2592930821BR'],
+            ['tracking'=>'NC605560017BR','warehouse'=>'TM2593531148BR'],
+            ['tracking'=>'NC605560025BR','warehouse'=>'TM2594131318BR'],
+            ['tracking'=>'NC605560048BR','warehouse'=>'TM2595031755BR'],
+            ['tracking'=>'NC605560051BR','warehouse'=>'TM2595931808BR'],
+            ['tracking'=>'NC605560065BR','warehouse'=>'TM2590631923BR'],
+            ['tracking'=>'NC605560079BR','warehouse'=>'TM2591632157BR'],
+            ['tracking'=>'NC605560140BR','warehouse'=>'TM2590432904BR'],
+            ['tracking'=>'NC605560167BR','warehouse'=>'TM2591333409BR'],
+            ['tracking'=>'NC605560238BR','warehouse'=>'TM2592434449BR'],
+            ['tracking'=>'NC605560547BR','warehouse'=>'TM2594241358BR'],
+            ['tracking'=>'NC605560564BR','warehouse'=>'TM2594442243BR'],
+            ['tracking'=>'NC605560842BR','warehouse'=>'TM2591349603BR'],
+            ['tracking'=>'NC605560958BR','warehouse'=>'TM2591751721BR'],
+            ['tracking'=>'NC620166093BR','warehouse'=>'TM2591101453BR'],
+            ['tracking'=>'NC620166164BR','warehouse'=>'TM2590802932BR'],
+            ['tracking'=>'NC620166181BR','warehouse'=>'TM2591503508BR'],
+            ['tracking'=>'NC620166249BR','warehouse'=>'TM2593305437BR'],
+            ['tracking'=>'NC620166561BR','warehouse'=>'TM2591216444BR'],
+            ['tracking'=>'NC620166629BR','warehouse'=>'TM2590619028BR'],
+            ['tracking'=>'NC620166632BR','warehouse'=>'TM2593119148BR'],
+            ['tracking'=>'NC620166650BR','warehouse'=>'TM2595220119BR'],
+            ['tracking'=>'NC620166990BR','warehouse'=>'TM2595727954BR'],
+            ['tracking'=>'NC620167037BR','warehouse'=>'TM2593929008BR'],
+            ['tracking'=>'NC620167068BR','warehouse'=>'TM2594429513BR'],
+            ['tracking'=>'NC620167099BR','warehouse'=>'TM2592830729BR'],
+            ['tracking'=>'NC620167111BR','warehouse'=>'TM2593631245BR'],
+            ['tracking'=>'NC620167156BR','warehouse'=>'TM2591333559BR'],
+            ['tracking'=>'NC605560330BR','warehouse'=>'TM2591636859BR'],
+            ['tracking'=>'NC605560670BR','warehouse'=>'TM2593345829BR'],
+            ['tracking'=>'NC605560913BR','warehouse'=>'TM2595951113BR'],
+            ['tracking'=>'NC605561701BR','warehouse'=>'TM2590969649BR'],
+            ['tracking'=>'NC620167655BR','warehouse'=>'TM2591648047BR'],
+            ['tracking'=>'NC620168559BR','warehouse'=>'TM2594168947BR'],
+
+         ];
+         return $this->updateTracking($codes);
+    }
 
     function updateTracking($codes)
     {

@@ -548,6 +548,86 @@ class DownloadUpdateTracking extends Controller
         return $this->updateTracking($codes);
     }
 
+    function bCNToAnjunLabels() {
+        $codes = [
+            'HD2602501012BR',
+            'TM2583366004BR',
+            'TM2583165744BR',
+            'TM2584197540BR',
+            'TM2583996536BR',
+            'TM2592204534BR',
+            'TM2593047000BR',
+            'TM2591663410BR',
+            'TM2591083910BR',
+            'TM2594885954BR',
+            'TM2584197653BR',
+            'TM2584297820BR',
+            'TM2594986247BR',
+            'TM2595286832BR',
+            'TM2602701443BR',
+            'TM2590087925BR',
+            'TM2604403951BR',
+
+         ];
+         return $this->updateTracking($codes);
+    }
+
+    function bCNToAnjunRemainingLabels()
+    {
+        $codes =  [
+            'HD2591495854BR',
+            'TM2593809526BR',
+            'TM2593159407BR',
+            'TM2593259847BR',
+            'TM2593360139BR',
+            'TM2593809402BR',
+            'TM2590702735BR',
+            'TM2595806954BR',
+            'TM2590410349BR',
+            'TM2591010630BR',
+            'TM2592211128BR',
+            'TM2590914247BR',
+            'TM2590218937BR',
+            'TM2595130155BR',
+            'TM2592730610BR',
+            'TM2592930821BR',
+            'TM2593531148BR',
+            'TM2594131318BR',
+            'TM2595031755BR',
+            'TM2595931808BR',
+            'TM2590631923BR',
+            'TM2591632157BR',
+            'TM2590432904BR',
+            'TM2591333409BR',
+            'TM2592434449BR',
+            'TM2594241358BR',
+            'TM2594442243BR',
+            'TM2591349603BR',
+            'TM2591751721BR',
+            'TM2591101453BR',
+            'TM2590802932BR',
+            'TM2591503508BR',
+            'TM2593305437BR',
+            'TM2591216444BR',
+            'TM2590619028BR',
+            'TM2593119148BR',
+            'TM2595220119BR',
+            'TM2595727954BR',
+            'TM2593929008BR',
+            'TM2594429513BR',
+            'TM2592830729BR',
+            'TM2593631245BR',
+            'TM2591333559BR',
+            'TM2591636859BR',
+            'TM2593345829BR',
+            'TM2595951113BR',
+            'TM2590969649BR',
+            'TM2591648047BR',
+            'TM2594168947BR',
+        ];
+        return $this->updateTracking($codes);
+    }
+
     function updateTracking($codes)
     {
         set_time_limit(1500);
@@ -593,6 +673,6 @@ class DownloadUpdateTracking extends Controller
             dd($codes);
         }
     }
-    
+
 
 }
