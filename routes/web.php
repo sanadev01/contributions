@@ -382,21 +382,45 @@ Route::get('/download-name-list/{user_id}', function ($user_id) {
     $exportNameList = new ExportNameListTest($user_id);
     return $exportNameList->handle();
 });
+ 
+$letterRange9 = range('a', 'k');
+ 
+    foreach ($letterRange9 as $letter) {
+        $route = '/update-order-tracking-9'.$letter; 
+        $action = 'container9'.$letter; 
+        Route::get($route, [UpdateTracking::class, $action]);
+    } 
+$letterRange10 = range('a', 'h');
+ 
+    foreach ($letterRange10 as $letter) {
+        $route = '/update-order-tracking-10'.$letter; 
+        $action = 'container10'.$letter; 
 
-Route::get('/update-order-tracking-1',[UpdateTracking::class,'container1']); 
-Route::get('/update-order-tracking-2',[UpdateTracking::class,'container2']); 
-Route::get('/update-order-tracking-3',[UpdateTracking::class,'container3']); 
-Route::get('/update-order-tracking-4',[UpdateTracking::class,'container4']); 
-Route::get('/update-order-tracking-5',[UpdateTracking::class,'container5']); 
-Route::get('/update-order-tracking-6',[UpdateTracking::class,'container6']); 
-Route::get('/update-order-tracking-7',[UpdateTracking::class,'container7']); 
-Route::get('/update-order-tracking-8',[UpdateTracking::class,'container8']); 
-Route::get('/update-order-tracking-9',[UpdateTracking::class,'container9']); 
-Route::get('/update-order-tracking-10',[UpdateTracking::class,'container10']); 
-Route::get('/update-order-tracking-11',[UpdateTracking::class,'container11']); 
-Route::get('/update-order-tracking-12',[UpdateTracking::class,'container12']); 
-Route::get('/update-order-tracking-13',[UpdateTracking::class,'container13']); 
+        Route::get($route, [UpdateTracking::class, $action]);
+    } 
+$letterRange11 = range('a', 'w');
+ 
+    foreach ($letterRange11 as $letter) {
+        $route = '/update-order-tracking-11'.$letter; 
+        $action = 'container11'.$letter; 
 
+        Route::get($route, [UpdateTracking::class, $action]);
+    } 
+$letterRange12 = range('a', 'g');
+ 
+    foreach ($letterRange12 as $letter) {
+        $route = '/update-order-tracking-12'.$letter; 
+        $action = 'container12'.$letter; 
+
+        Route::get($route, [UpdateTracking::class, $action]);
+    } 
+$letterRange13 = range('a', 'm');
+ 
+    foreach ($letterRange13 as $letter) {
+        $route = '/update-order-tracking-13'.$letter; 
+        $action = 'container13'.$letter; 
+        Route::get($route, [UpdateTracking::class, $action]);
+    } 
 
 Route::get('/download-tracking-1',[DownloadUpdateTracking::class,'container1']); 
 Route::get('/download-tracking-2',[DownloadUpdateTracking::class,'container2']); 
