@@ -12,7 +12,7 @@ use Exception;
 class UpdateTracking extends Controller
 {
     
-    function bCNToAnjunLabels1() {
+    function bCNToAnjunLabelsBatch1() {
         $codes = [
             ['tracking'=>'IX030958569BR','warehouse'=>'HD2602501012BR'],
             ['tracking'=>'NC574417733BR','warehouse'=>'TM2583366004BR'],
@@ -25,7 +25,7 @@ class UpdateTracking extends Controller
          return $this->updateTracking($codes, 4, 1);
     }
 
-    function bCNToAnjunLabels2() {
+    function bCNToAnjunLabelsBatch2() {
         $codes = [
             
             ['tracking'=>'NC605560723BR','warehouse'=>'TM2593047000BR'],
@@ -39,7 +39,7 @@ class UpdateTracking extends Controller
          return $this->updateTracking($codes, 4, 1);
     }
 
-    function bCNToAnjunLabels3() {
+    function bCNToAnjunLabelsBatch3() {
         $codes = [
             ['tracking'=>'NC620169276BR','warehouse'=>'TM2594986247BR'],
             ['tracking'=>'NC620169293BR','warehouse'=>'TM2595286832BR'],
