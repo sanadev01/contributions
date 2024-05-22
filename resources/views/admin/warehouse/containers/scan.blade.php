@@ -8,6 +8,8 @@
                 <div class="card-header">
                     <h4 class="mb-0">
                         @lang('warehouse.containers.Packages Inside Container')
+                        <span class="badge">({{ $container->service_subclass_name}})</span>
+                       
                     </h4>
                     <div>
                         <a href="{{ route('warehouse.containers.index') }}" class="btn btn-primary"> @lang('warehouse.containers.List Containers') </a>
