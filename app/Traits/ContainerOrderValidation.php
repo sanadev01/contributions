@@ -47,6 +47,6 @@ trait ContainerOrderValidation
         if (in_array($subString, ['na', 'xl', 'nc', 'nb'])) {
             $subString = 'nx';
         }
-        return strtolower($this->container->getServiceSubClass())  == $subString;
+        return strtolower($this->container->getSubClassCode())  == $subString;
     }
 }
