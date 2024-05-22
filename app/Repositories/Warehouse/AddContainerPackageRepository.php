@@ -42,9 +42,11 @@ class AddContainerPackageRepository extends AbstractRepository{
         if(!$this->isValidContainerOrder()) {
             return $this->validationError404('Order Not Found. Please Check Packet Service.');
         }
-        if (!$this->container->has_anjun_service || !$this->shippingService->is_anjun_service) {
-            return $this->validationError404('Order does not belongs to this container Service. Please Check Packet Service');
-        } 
+        if (!$this->container->has_bcn_service && !$this->container->has_anjun_china_service) { 
+            if (!$this->container->has_anjun_service || !$this->shippingService->is_anjun_service) {
+                return $this->validationError404('Order does not belongs to this container Service. Please Check Packet Service');
+            }
+        }
         $outputChina= $this->updateContainer();
         $endTimeChina = microtime(true); 
         $executionTimeChina = $endTimeChina - $startTime;  
