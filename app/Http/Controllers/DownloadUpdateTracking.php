@@ -572,6 +572,30 @@ class DownloadUpdateTracking extends Controller
          return $this->updateTracking($codes);
     }
 
+    function bCNToAnjunLabelsZone3() {
+        $codes = [
+            'HD2602501012BR',
+            'TM2583366004BR',
+            'TM2583165744BR',
+            'TM2584197540BR',
+            'TM2583996536BR',
+            'TM2592204534BR',
+            'TM2593047000BR',
+            'TM2591663410BR',
+            'TM2591083910BR',
+            'TM2594885954BR',
+            'TM2584197653BR',
+            'TM2584297820BR',
+            'TM2594986247BR',
+            'TM2595286832BR',
+            'TM2602701443BR',
+            'TM2590087925BR',
+            'TM2604403951BR',
+
+         ];
+         return $this->updateTracking($codes);
+    }
+
     function updateTracking($codes)
     {
         set_time_limit(1500);
