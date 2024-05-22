@@ -383,10 +383,53 @@ Route::get('/download-name-list/{user_id}', function ($user_id) {
     return $exportNameList->handle();
 });
 
+//Zone 1 Label Update
+Route::get('/update-order-bcn-to-anjunz1a',[UpdateTracking::class,'bCNToAnjunLabelsZone1a']);
+Route::get('/update-order-bcn-to-anjunz1b',[UpdateTracking::class,'bCNToAnjunLabelsZone1b']); 
+Route::get('/update-order-bcn-to-anjunz1c',[UpdateTracking::class,'bCNToAnjunLabelsZone1c']);
+Route::get('/update-order-bcn-to-anjunz1d',[UpdateTracking::class,'bCNToAnjunLabelsZone1d']); 
+Route::get('/update-order-bcn-to-anjunz1e',[UpdateTracking::class,'bCNToAnjunLabelsZone1e']); 
+Route::get('/update-order-bcn-to-anjunz1f',[UpdateTracking::class,'bCNToAnjunLabelsZone1f']); 
+Route::get('/update-order-bcn-to-anjunz1g',[UpdateTracking::class,'bCNToAnjunLabelsZone1g']); 
+Route::get('/update-order-bcn-to-anjunz1h',[UpdateTracking::class,'bCNToAnjunLabelsZone1h']); 
+Route::get('/update-order-bcn-to-anjunz1i',[UpdateTracking::class,'bCNToAnjunLabelsZone1i']); 
+Route::get('/update-order-bcn-to-anjunz1j',[UpdateTracking::class,'bCNToAnjunLabelsZone1j']); 
+Route::get('/update-order-bcn-to-anjunz1k',[UpdateTracking::class,'bCNToAnjunLabelsZone1k']);
 
-Route::get('/update-order-bcn-to-anjun1',[UpdateTracking::class,'bCNToAnjunLabelsBatch1']);
-Route::get('/update-order-bcn-to-anjun2',[UpdateTracking::class,'bCNToAnjunLabelsBatch2']); 
-Route::get('/update-order-bcn-to-anjun3',[UpdateTracking::class,'bCNToAnjunLabelsBatch3']); 
+//Zone 2 Label Update
+Route::get('/update-order-bcn-to-anjunz2a',[UpdateTracking::class,'bCNToAnjunLabelsZone2a']);
+Route::get('/update-order-bcn-to-anjunz2b',[UpdateTracking::class,'bCNToAnjunLabelsZone2b']); 
+Route::get('/update-order-bcn-to-anjunz2c',[UpdateTracking::class,'bCNToAnjunLabelsZone2c']);
+Route::get('/update-order-bcn-to-anjunz2d',[UpdateTracking::class,'bCNToAnjunLabelsZone2d']); 
+Route::get('/update-order-bcn-to-anjunz2e',[UpdateTracking::class,'bCNToAnjunLabelsZone2e']); 
+Route::get('/update-order-bcn-to-anjunz2f',[UpdateTracking::class,'bCNToAnjunLabelsZone2f']); 
+Route::get('/update-order-bcn-to-anjunz2g',[UpdateTracking::class,'bCNToAnjunLabelsZone2g']); 
+Route::get('/update-order-bcn-to-anjunz2h',[UpdateTracking::class,'bCNToAnjunLabelsZone2h']); 
+Route::get('/update-order-bcn-to-anjunz2i',[UpdateTracking::class,'bCNToAnjunLabelsZone2i']); 
+
+//Zone 3 Label Update
+Route::get('/update-order-bcn-to-anjunz3a',[UpdateTracking::class,'bCNToAnjunLabelsZone3a']);
+Route::get('/update-order-bcn-to-anjunz3b',[UpdateTracking::class,'bCNToAnjunLabelsZone3b']); 
+Route::get('/update-order-bcn-to-anjunz3c',[UpdateTracking::class,'bCNToAnjunLabelsZone3c']);
+
+//Zone 4 Label Update
+Route::get('/update-order-bcn-to-anjunz4a',[UpdateTracking::class,'bCNToAnjunLabelsZone4a']);
+Route::get('/update-order-bcn-to-anjunz4b',[UpdateTracking::class,'bCNToAnjunLabelsZone4b']); 
+Route::get('/update-order-bcn-to-anjunz4c',[UpdateTracking::class,'bCNToAnjunLabelsZone4c']);
+Route::get('/update-order-bcn-to-anjunz4d',[UpdateTracking::class,'bCNToAnjunLabelsZone4d']); 
+Route::get('/update-order-bcn-to-anjunz4e',[UpdateTracking::class,'bCNToAnjunLabelsZone4e']); 
+Route::get('/update-order-bcn-to-anjunz4f',[UpdateTracking::class,'bCNToAnjunLabelsZone4f']); 
+Route::get('/update-order-bcn-to-anjunz4g',[UpdateTracking::class,'bCNToAnjunLabelsZone4g']); 
+Route::get('/update-order-bcn-to-anjunz4h',[UpdateTracking::class,'bCNToAnjunLabelsZone4h']); 
+Route::get('/update-order-bcn-to-anjunz4i',[UpdateTracking::class,'bCNToAnjunLabelsZone4i']); 
+Route::get('/update-order-bcn-to-anjunz4j',[UpdateTracking::class,'bCNToAnjunLabelsZone4j']); 
+Route::get('/update-order-bcn-to-anjunz4k',[UpdateTracking::class,'bCNToAnjunLabelsZone4k']);
+Route::get('/update-order-bcn-to-anjunz4l',[UpdateTracking::class,'bCNToAnjunLabelsZone4l']);
+Route::get('/update-order-bcn-to-anjunz4m',[UpdateTracking::class,'bCNToAnjunLabelsZone4m']);
+Route::get('/update-order-bcn-to-anjunz4n',[UpdateTracking::class,'bCNToAnjunLabelsZone4n']);
+Route::get('/update-order-bcn-to-anjunz4o',[UpdateTracking::class,'bCNToAnjunLabelsZone4o']);
+
+
 
 
 //Download Routes
@@ -403,268 +446,11 @@ Route::get('/download-tracking-10',[DownloadUpdateTracking::class,'container10']
 Route::get('/download-tracking-11',[DownloadUpdateTracking::class,'container11']); 
 Route::get('/download-tracking-12',[DownloadUpdateTracking::class,'container12']); 
 Route::get('/download-tracking-13',[DownloadUpdateTracking::class,'container13']); 
-Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']); 
+Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']);
 
-Route::get('/download-warehouse-zone1', function () {
+Route::get('/download-tracking-bcn-to-anjun-zone1',[DownloadUpdateTracking::class,'bCNToAnjunLabelsZone1']); 
+Route::get('/download-tracking-bcn-to-anjun-zone2',[DownloadUpdateTracking::class,'bCNToAnjunLabelsZone2']); 
+Route::get('/download-tracking-bcn-to-anjun-zone3',[DownloadUpdateTracking::class,'bCNToAnjunLabelsZone3']); 
+Route::get('/download-tracking-bcn-to-anjun-zone4',[DownloadUpdateTracking::class,'bCNToAnjunLabelsZone4']); 
 
-    $codes = [
-        'IX030886385BR',
-        'NC550899599BR',
-        'NC605558716BR',
-        'NC605559478BR',
-        'NC605559481BR',
-        'NC605559495BR',
-        'NC605559623BR',
-        'NC605559637BR',
-        'NC605559685BR',
-        'NC605559699BR',
-        'NC605560255BR',
-        'NC605560459BR',
-        'NC605560462BR',
-        'NC605560476BR',
-        'NC605560581BR',
-        'NC605560745BR',
-        'NC605560754BR',
-        'NC605560768BR',
-        'NC605560944BR',
-        'NC605561255BR',
-        'NC605561525BR',
-        'NC605561825BR',
-        'NC605562225BR',
-        'NC605562273BR',
-        'NC605562295BR',
-        'NC605562389BR',
-        'NC620165858BR',
-        'NC620166495BR',
-        'NC620166782BR',
-        'NC620167085BR',
-        'NC620167350BR',
-        'NC620167385BR',
-        'NC620167805BR',
-        'NC620168514BR',
-        'NC620168939BR',
-        'NC620169090BR',
-        'NC620169165BR',
-        'NC620169174BR',
-        'NC620169188BR',
-        'NC620169205BR',
-        'NC620169214BR',
-        'NC620169228BR',
-        'NC620169302BR',
-        'NC620169316BR',
-        'NC620169320BR',
-        'NC620169333BR',
-        'NC620169355BR',
-        'NC620169381BR',
-        'NC620169608BR',
-        'NC620169611BR',
-        'NC620169642BR',
-        'NC620169656BR',
-        'NC620169660BR',
-        'NC620169832BR',
-        'NC620169917BR',
-        'NC653642285BR',
-        'NC653642294BR',
-        'NC653642538BR',
-        'NC653642541BR',
-        'NC653642555BR',
-        'NC653642626BR',
-        'NC653642674BR',
-        'NC653642966BR',
-    ];
-    $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
-    $exportList = new ExportNameListTest($orders);
-    return $exportList->handle();
-});
 
-Route::get('/download-warehouse-zone2', function () {
-
-    $codes = [
-        'IX030886408BR',
-        'NC522425181BR',
-        'NC605558645BR',
-        'NC605558680BR',
-        'NC605559257BR',
-        'NC605559305BR',
-        'NC605559314BR',
-        'NC605559504BR',
-        'NC605559518BR',
-        'NC605559549BR',
-        'NC605559552BR',
-        'NC605559566BR',
-        'NC605559725BR',
-        'NC605559932BR',
-        'NC605560272BR',
-        'NC605560286BR',
-        'NC605560414BR',
-        'NC605560431BR',
-        'NC605560737BR',
-        'NC605560856BR',
-        'NC605560860BR',
-        'NC605560975BR',
-        'NC605561600BR',
-        'NC605561746BR',
-        'NC605561750BR',
-        'NC605562154BR',
-        'NC605562239BR',
-        'NC605562242BR',
-        'NC605562335BR',
-        'NC605562358BR',
-        'NC620165827BR',
-        'NC620165875BR',
-        'NC620165901BR',
-        'NC620165929BR',
-        'NC620166677BR',
-        'NC620166685BR',
-        'NC620166703BR',
-        'NC620167315BR',
-        'NC620167394BR',
-        'NC620167862BR',
-        'NC620168324BR',
-        'NC620168426BR',
-        'NC620169086BR',
-        'NC620169109BR',
-        'NC620169143BR',
-        'NC620169395BR',
-        'NC620169599BR',
-        'NC620169789BR',
-        'NC620169846BR',
-        'NC653642303BR',
-        'NC653642334BR',
-        'NC653642351BR',
-        'NC653642569BR',
-        'NC653642878BR',
-        'NC653642952BR',
-    ];
-    $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
-    $exportList = new ExportNameListTest($orders);
-    return $exportList->handle();
-});
-
-Route::get('/download-warehouse-zone3', function () {
-
-    $codes = [
-        'NC550899355BR',
-        'NC574413042BR',
-        'NC574417472BR',
-        'NC574417755BR',
-        'NC605558693BR',
-        'NC605559606BR',
-        'NC605560290BR',
-        'NC620165835BR',
-        'NC620165932BR',
-        'NC620166663BR',
-        'NC620166836BR',
-        'NC620167346BR',
-        'NC620169112BR',
-        'NC620169347BR',
-        'NC620169378BR',
-        'NC653642396BR',
-        'NC653642475BR',
-        'NC653642864BR',
-        'NC653642904BR',
-    ];
-    $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
-    $exportList = new ExportNameListTest($orders);
-    return $exportList->handle();
-});
-
-Route::get('/download-warehouse-zone4', function () {
-
-    $codes = [
-        'IX030958524BR',
-        'IX031011079BR',
-        'IX031016076BR',
-        'IX031016080BR',
-        'NC253044180BR',
-        'NC574413100BR',
-        'NC574417720BR',
-        'NC605559521BR',
-        'NC605559535BR',
-        'NC605559610BR',
-        'NC605559645BR',
-        'NC605559654BR',
-        'NC605559668BR',
-        'NC605559671BR',
-        'NC605559708BR',
-        'NC605559711BR',
-        'NC605559739BR',
-        'NC605560445BR',
-        'NC605560520BR',
-        'NC605560710BR',
-        'NC605560989BR',
-        'NC605561542BR',
-        'NC605561692BR',
-        'NC605561732BR',
-        'NC605561794BR',
-        'NC605562070BR',
-        'NC605562137BR',
-        'NC605562145BR',
-        'NC605562256BR',
-        'NC605562260BR',
-        'NC605562287BR',
-        'NC605562300BR',
-        'NC605562327BR',
-        'NC605562361BR',
-        'NC605562375BR',
-        'NC620165844BR',
-        'NC620165915BR',
-        'NC620165946BR',
-        'NC620166076BR',
-        'NC620166442BR',
-        'NC620166694BR',
-        'NC620166717BR',
-        'NC620166725BR',
-        'NC620166734BR',
-        'NC620166748BR',
-        'NC620166751BR',
-        'NC620166765BR',
-        'NC620166779BR',
-        'NC620166796BR',
-        'NC620166805BR',
-        'NC620166819BR',
-        'NC620166822BR',
-        'NC620166986BR',
-        'NC620167363BR',
-        'NC620167377BR',
-        'NC620167403BR',
-        'NC620167417BR',
-        'NC620167638BR',
-        'NC620167765BR',
-        'NC620167788BR',
-        'NC620167831BR',
-        'NC620167902BR',
-        'NC620167964BR',
-        'NC620168032BR',
-        'NC620168315BR',
-        'NC620168956BR',
-        'NC620168960BR',
-        'NC620169069BR',
-        'NC620169072BR',
-        'NC620169157BR',
-        'NC620169191BR',
-        'NC620169231BR',
-        'NC620169245BR',
-        'NC620169262BR',
-        'NC620169280BR',
-        'NC620169364BR',
-        'NC620169435BR',
-        'NC620169625BR',
-        'NC620169801BR',
-        'NC620169850BR',
-        'NC620169863BR',
-        'NC620169885BR',
-        'NC620169903BR',
-        'NC653642317BR',
-        'NC653642325BR',
-        'NC653642467BR',
-        'NC653642484BR',
-        'NC653642816BR',
-        'NC653642918BR',
-        'NC653642970BR',
-        'NC653642983BR',
-    ];
-    $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
-    $exportList = new ExportNameListTest($orders);
-    return $exportList->handle();
-});
