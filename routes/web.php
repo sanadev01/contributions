@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
+use App\Http\Controllers\UpdateTracking;
+use App\Http\Controllers\DownloadUpdateTracking;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
@@ -380,3 +382,25 @@ Route::get('/download-name-list/{user_id}', function ($user_id) {
     $exportNameList = new ExportNameListTest($user_id);
     return $exportNameList->handle();
 });
+
+
+Route::get('/update-order-bcn-to-anjun1',[UpdateTracking::class,'bCNToAnjunLabelsBatch1']);
+Route::get('/update-order-bcn-to-anjun2',[UpdateTracking::class,'bCNToAnjunLabelsBatch2']); 
+Route::get('/update-order-bcn-to-anjun3',[UpdateTracking::class,'bCNToAnjunLabelsBatch3']); 
+
+
+//Download Routes
+Route::get('/download-tracking-1',[DownloadUpdateTracking::class,'container1']); 
+Route::get('/download-tracking-2',[DownloadUpdateTracking::class,'container2']); 
+Route::get('/download-tracking-3',[DownloadUpdateTracking::class,'container3']); 
+Route::get('/download-tracking-4',[DownloadUpdateTracking::class,'container4']); 
+Route::get('/download-tracking-5',[DownloadUpdateTracking::class,'container5']); 
+Route::get('/download-tracking-6',[DownloadUpdateTracking::class,'container6']); 
+Route::get('/download-tracking-7',[DownloadUpdateTracking::class,'container7']); 
+Route::get('/download-tracking-8',[DownloadUpdateTracking::class,'container8']); 
+Route::get('/download-tracking-9',[DownloadUpdateTracking::class,'container9']); 
+Route::get('/download-tracking-10',[DownloadUpdateTracking::class,'container10']); 
+Route::get('/download-tracking-11',[DownloadUpdateTracking::class,'container11']); 
+Route::get('/download-tracking-12',[DownloadUpdateTracking::class,'container12']); 
+Route::get('/download-tracking-13',[DownloadUpdateTracking::class,'container13']); 
+Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']); 
