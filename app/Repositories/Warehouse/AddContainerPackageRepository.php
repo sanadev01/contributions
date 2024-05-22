@@ -45,7 +45,7 @@ class AddContainerPackageRepository extends AbstractRepository{
         }
         if (!$this->container->hasBCNService()&&!$this->container->hasAnjunChinaService()) { 
             if (!$this->container->has_anjun_service || !$this->shippingService->is_anjun_service) {
-                return $this->validationError404('2Order does not belongs to this container Service. Please Check Packet Service');
+                return $this->validationError404('Order does not belongs to this container Service. Please Check Packet Service');
             }
         }
         $outputChina= $this->updateContainer();
