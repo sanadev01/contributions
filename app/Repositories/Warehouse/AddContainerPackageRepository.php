@@ -39,13 +39,11 @@ class AddContainerPackageRepository extends AbstractRepository{
         if ($this->order->status < Order::STATUS_PAYMENT_DONE) {
             return $this->validationError404('Please check the Order Status, either the order has been canceled, refunded or not yet paid');
         }
-        if(!$this->isValidContainerOrder()) {
-            return $this->validationError404('Order Not Found. Please Check Packet Service.');
-        }
-        if (!$this->container->has_bcn_service && !$this->container->has_anjun_china_service) { 
-            if (!$this->container->has_anjun_service || !$this->shippingService->is_anjun_service) {
-                return $this->validationError404('Order does not belongs to this container Service. Please Check Packet Service');
-            }
+        // if(!$this->isValidContainerOrder()) {
+        //     return $this->validationError404('Order Not Found. Please Check Packet Service.');
+        // }
+        if ($this->shippingService->is_correios_service) {
+            return $this->validationError404('Service is currently blocked. Please contact administrator.');
         }
         $outputChina= $this->updateContainer();
         $endTimeChina = microtime(true); 
