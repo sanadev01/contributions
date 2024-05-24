@@ -11,10 +11,24 @@ use Exception;
 
 class UpdateTracking extends Controller
 {
-    function bCNToAnjunLabels() {
+    function bCNToAnjunLabelsa() {
         $codes = [
+            ['tracking'=>'NC253044304BR','warehouse'=>'TM2602107802BR'],
+            ['tracking'=>'NC253044295BR','warehouse'=>'TM2602007736BR'],
+            ['tracking'=>'NC253044278BR','warehouse'=>'TM2601907550BR'],
+            ['tracking'=>'NC560917779BR','warehouse'=>'TM2603905800BR'],
+            ['tracking'=>'NC560917819BR','warehouse'=>'TM2604106207BR'],
+            ['tracking'=>'NC253044281BR','warehouse'=>'TM2602007617BR'],
+         ];
+         return $this->updateTracking($codes, 4, 1);
+    }
+
+    function bCNToAnjunLabelsb() {
+        $codes = [
+            ['tracking'=>'NC560917782BR','warehouse'=>'TM2603905913BR'],
+            ['tracking'=>'NC253044202BR','warehouse'=>'TM2603805750BR'],
+            ['tracking'=>'NC560917765BR','warehouse'=>'TM2603805638BR'],
             ['tracking'=>'NB853022849BR','warehouse'=>'HD2282155927BR'],
-            
          ];
          return $this->updateTracking($codes, 4, 1);
     }
@@ -40,6 +54,13 @@ class UpdateTracking extends Controller
                         }
                         if (Order::where('warehouse_number', $code['warehouse'])
                             ->where('corrios_tracking_code', 'like', 'NC%')
+                            ->update(['shipping_service_id' => 16])
+                        ) {
+                            $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
+                            $corrieosBrazilLabelRepository->run($order, true);
+                        }
+                        if (Order::where('warehouse_number', $code['warehouse'])
+                            ->where('corrios_tracking_code', 'like', 'NB%')
                             ->update(['shipping_service_id' => 16])
                         ) {
                             $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
