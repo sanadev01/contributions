@@ -14,9 +14,6 @@ class UpdateTracking extends Controller
     function bCNToAnjunLabels() {
         $codes = [
             ['tracking'=>'NB853022849BR','warehouse'=>'HD2282155927BR'],
-            ['tracking'=>'NC620169571BR','warehouse'=>'TM2591393802BR'],
-            ['tracking'=>'NC574417849BR','warehouse'=>'TM2581668722BR'],
-            ['tracking'=>'NC605557675BR','warehouse'=>'TM2585570345BR'],
             
          ];
          return $this->updateTracking($codes, 4, 1);
