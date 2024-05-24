@@ -28,15 +28,15 @@ trait ContainerOrderValidation
     protected function orderValidateMessage($container, $shippingSubClass)
     {
         $packets = [
-            ShippingService::Packet_Standard       => 'Packet_Standard',
-            ShippingService::Packet_Express        => 'Packet_Express',
-            ShippingService::Packet_Mini           => 'Packet_Mini',
-            ShippingService::BCN_Packet_Standard   => 'BCN_Packet_Standard',
-            ShippingService::BCN_Packet_Express    => 'BCN_Packet_Express',
-            ShippingService::AJ_Standard_CN        => 'AJ_Standard_CN',
-            ShippingService::AJ_Express_CN         => 'AJ_Express_CN',
-            ShippingService::AJ_Packet_Standard    => 'AJ_Packet_Standard',
-            ShippingService::AJ_Packet_Express     => 'AJ_Packet_Express',
+            ShippingService::Packet_Standard       => 'Packet Standard',
+            ShippingService::Packet_Express        => 'Packet Express',
+            ShippingService::Packet_Mini           => 'Packet Mini',
+            ShippingService::BCN_Packet_Standard   => 'BCN Packet Standard',
+            ShippingService::BCN_Packet_Express    => 'BCN Packet Express',
+            ShippingService::AJ_Standard_CN        => 'AJ Standard CN',
+            ShippingService::AJ_Express_CN         => 'AJ Express CN',
+            ShippingService::AJ_Packet_Standard    => 'AJ Packet Standard',
+            ShippingService::AJ_Packet_Express     => 'AJ Packet Express',
         ];
         $subClass = $container->getServiceSubClass();
         return $this->validationError404("Please Check Packet Service; Container is $subClass and you put ($packets[$shippingSubClass]) Packet");
