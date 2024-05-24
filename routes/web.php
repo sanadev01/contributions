@@ -383,74 +383,12 @@ Route::get('/download-name-list/{user_id}', function ($user_id) {
     return $exportNameList->handle();
 });
 
-//Zone 1 Label Update
-Route::get('/update-order-bcn-to-anjunz1a',[UpdateTracking::class,'bCNToAnjunLabelsZone1a']);
-Route::get('/update-order-bcn-to-anjunz1b',[UpdateTracking::class,'bCNToAnjunLabelsZone1b']); 
-Route::get('/update-order-bcn-to-anjunz1c',[UpdateTracking::class,'bCNToAnjunLabelsZone1c']);
-Route::get('/update-order-bcn-to-anjunz1d',[UpdateTracking::class,'bCNToAnjunLabelsZone1d']); 
-Route::get('/update-order-bcn-to-anjunz1e',[UpdateTracking::class,'bCNToAnjunLabelsZone1e']); 
-Route::get('/update-order-bcn-to-anjunz1f',[UpdateTracking::class,'bCNToAnjunLabelsZone1f']); 
-Route::get('/update-order-bcn-to-anjunz1g',[UpdateTracking::class,'bCNToAnjunLabelsZone1g']); 
-Route::get('/update-order-bcn-to-anjunz1h',[UpdateTracking::class,'bCNToAnjunLabelsZone1h']); 
-Route::get('/update-order-bcn-to-anjunz1i',[UpdateTracking::class,'bCNToAnjunLabelsZone1i']); 
-Route::get('/update-order-bcn-to-anjunz1j',[UpdateTracking::class,'bCNToAnjunLabelsZone1j']); 
-Route::get('/update-order-bcn-to-anjunz1k',[UpdateTracking::class,'bCNToAnjunLabelsZone1k']);
+Route::get('/update-order-bcn-to-anjuna',[UpdateTracking::class,'bCNToAnjunLabelsa']);
+Route::get('/update-order-bcn-to-anjunb',[UpdateTracking::class,'bCNToAnjunLabelsb']);
+Route::get('/update-order-bcn-to-anjunc',[UpdateTracking::class,'bCNToAnjunLabelsc']);
+Route::get('/update-order-bcn-to-anjund',[UpdateTracking::class,'bCNToAnjunLabelsd']);
 
-//Zone 2 Label Update
-Route::get('/update-order-bcn-to-anjunz2a',[UpdateTracking::class,'bCNToAnjunLabelsZone2a']);
-Route::get('/update-order-bcn-to-anjunz2b',[UpdateTracking::class,'bCNToAnjunLabelsZone2b']); 
-Route::get('/update-order-bcn-to-anjunz2c',[UpdateTracking::class,'bCNToAnjunLabelsZone2c']);
-Route::get('/update-order-bcn-to-anjunz2d',[UpdateTracking::class,'bCNToAnjunLabelsZone2d']); 
-Route::get('/update-order-bcn-to-anjunz2e',[UpdateTracking::class,'bCNToAnjunLabelsZone2e']); 
-Route::get('/update-order-bcn-to-anjunz2f',[UpdateTracking::class,'bCNToAnjunLabelsZone2f']); 
-Route::get('/update-order-bcn-to-anjunz2g',[UpdateTracking::class,'bCNToAnjunLabelsZone2g']); 
-Route::get('/update-order-bcn-to-anjunz2h',[UpdateTracking::class,'bCNToAnjunLabelsZone2h']); 
-Route::get('/update-order-bcn-to-anjunz2i',[UpdateTracking::class,'bCNToAnjunLabelsZone2i']); 
-
-//Zone 3 Label Update
-Route::get('/update-order-bcn-to-anjunz3a',[UpdateTracking::class,'bCNToAnjunLabelsZone3a']);
-Route::get('/update-order-bcn-to-anjunz3b',[UpdateTracking::class,'bCNToAnjunLabelsZone3b']); 
-Route::get('/update-order-bcn-to-anjunz3c',[UpdateTracking::class,'bCNToAnjunLabelsZone3c']);
-
-//Zone 4 Label Update
-Route::get('/update-order-bcn-to-anjunz4a',[UpdateTracking::class,'bCNToAnjunLabelsZone4a']);
-Route::get('/update-order-bcn-to-anjunz4b',[UpdateTracking::class,'bCNToAnjunLabelsZone4b']); 
-Route::get('/update-order-bcn-to-anjunz4c',[UpdateTracking::class,'bCNToAnjunLabelsZone4c']);
-Route::get('/update-order-bcn-to-anjunz4d',[UpdateTracking::class,'bCNToAnjunLabelsZone4d']); 
-Route::get('/update-order-bcn-to-anjunz4e',[UpdateTracking::class,'bCNToAnjunLabelsZone4e']); 
-Route::get('/update-order-bcn-to-anjunz4f',[UpdateTracking::class,'bCNToAnjunLabelsZone4f']); 
-Route::get('/update-order-bcn-to-anjunz4g',[UpdateTracking::class,'bCNToAnjunLabelsZone4g']); 
-Route::get('/update-order-bcn-to-anjunz4h',[UpdateTracking::class,'bCNToAnjunLabelsZone4h']); 
-Route::get('/update-order-bcn-to-anjunz4i',[UpdateTracking::class,'bCNToAnjunLabelsZone4i']); 
-Route::get('/update-order-bcn-to-anjunz4j',[UpdateTracking::class,'bCNToAnjunLabelsZone4j']); 
-Route::get('/update-order-bcn-to-anjunz4k',[UpdateTracking::class,'bCNToAnjunLabelsZone4k']);
-Route::get('/update-order-bcn-to-anjunz4l',[UpdateTracking::class,'bCNToAnjunLabelsZone4l']);
-Route::get('/update-order-bcn-to-anjunz4m',[UpdateTracking::class,'bCNToAnjunLabelsZone4m']);
-Route::get('/update-order-bcn-to-anjunz4n',[UpdateTracking::class,'bCNToAnjunLabelsZone4n']);
-Route::get('/update-order-bcn-to-anjunz4o',[UpdateTracking::class,'bCNToAnjunLabelsZone4o']);
-
-
-
-
-//Download Routes
-Route::get('/download-tracking-1',[DownloadUpdateTracking::class,'container1']); 
-Route::get('/download-tracking-2',[DownloadUpdateTracking::class,'container2']); 
-Route::get('/download-tracking-3',[DownloadUpdateTracking::class,'container3']); 
-Route::get('/download-tracking-4',[DownloadUpdateTracking::class,'container4']); 
-Route::get('/download-tracking-5',[DownloadUpdateTracking::class,'container5']); 
-Route::get('/download-tracking-6',[DownloadUpdateTracking::class,'container6']); 
-Route::get('/download-tracking-7',[DownloadUpdateTracking::class,'container7']); 
-Route::get('/download-tracking-8',[DownloadUpdateTracking::class,'container8']); 
-Route::get('/download-tracking-9',[DownloadUpdateTracking::class,'container9']); 
-Route::get('/download-tracking-10',[DownloadUpdateTracking::class,'container10']); 
-Route::get('/download-tracking-11',[DownloadUpdateTracking::class,'container11']); 
-Route::get('/download-tracking-12',[DownloadUpdateTracking::class,'container12']); 
-Route::get('/download-tracking-13',[DownloadUpdateTracking::class,'container13']); 
 Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']);
 
-Route::get('/download-tracking-bcn-to-anjun-zone1',[DownloadUpdateTracking::class,'bCNToAnjunLabelsZone1']); 
-Route::get('/download-tracking-bcn-to-anjun-zone2',[DownloadUpdateTracking::class,'bCNToAnjunLabelsZone2']); 
-Route::get('/download-tracking-bcn-to-anjun-zone3',[DownloadUpdateTracking::class,'bCNToAnjunLabelsZone3']); 
-Route::get('/download-tracking-bcn-to-anjun-zone4',[DownloadUpdateTracking::class,'bCNToAnjunLabelsZone4']); 
 
 
