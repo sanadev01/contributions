@@ -9,10 +9,10 @@ class CorreiosOrder extends Package{
 
     function __construct($order){
         $serviceSubClassCode = $order->getDistributionModality();
-        if($order->getDistributionModality() == ShippingService::Packet_Standard || $order->getDistributionModality() == ShippingService::BCN_Packet_Standard){
+        if($serviceSubClassCode == ShippingService::BCN_Packet_Standard){
             $serviceSubClassCode = 33227;
         }
-        if($order->getDistributionModality() == ShippingService::BCN_Packet_Express){
+        elseif($serviceSubClassCode == ShippingService::BCN_Packet_Express){
             $serviceSubClassCode = ShippingService::Packet_Express; 
         }
         if($order->isWeightInKg()) {
@@ -20,8 +20,7 @@ class CorreiosOrder extends Package{
         }else{
             $kg = UnitsConverter::poundToKg($order->getOriginalWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
-        } 
-        
+        }
         $this->customerControlCode = $order->id;
         $this->senderName = $order->sender_first_name.' '.$order->sender_last_name;
         $this->recipientName = $order->recipient->getFullName();
