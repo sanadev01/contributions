@@ -9,10 +9,11 @@ class CorreiosOrder extends Package{
 
     function __construct($order){
         $serviceSubClassCode = $order->getDistributionModality();
-        if($serviceSubClassCode == ShippingService::BCN_Packet_Standard){
+        $getServiceSubClassCode = $serviceSubClassCode;
+        if($getServiceSubClassCode == ShippingService::BCN_Packet_Standard){
             $serviceSubClassCode = 33227;
         }
-        elseif($serviceSubClassCode == ShippingService::BCN_Packet_Express){
+        elseif($getServiceSubClassCode == ShippingService::BCN_Packet_Express){
             $serviceSubClassCode = ShippingService::Packet_Express; 
         }
         if($order->isWeightInKg()) {
