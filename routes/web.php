@@ -331,11 +331,11 @@ Route::get('/cleanup-activity-log', function () {
 Route::get('/service-id-update', function () {
 
     $codes = [
-        'NB853022849BR',
+        'HD2282155927BR',
     ];
-    
-    $updatedRows = Order::whereIn('corrios_tracking_code', $codes)
-        ->update(['status' => 70]);
+    $orderDate = Carbon::create(2024, 1, 23);
+    $updatedRows = Order::whereIn('warehouse_number', $codes)
+        ->update(['status' => 70, 'order_date' => $orderDate]);
 
     return 'Status Updated';
 });
