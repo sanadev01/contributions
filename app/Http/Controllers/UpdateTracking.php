@@ -13,22 +13,35 @@ class UpdateTracking extends Controller
 {
     function bCNToAnjunLabelsa() {
         $codes = [
-            ['tracking'=>'NC253044304BR','warehouse'=>'TM2602107802BR'],
-            ['tracking'=>'NC253044295BR','warehouse'=>'TM2602007736BR'],
-            ['tracking'=>'NC253044278BR','warehouse'=>'TM2601907550BR'],
-            ['tracking'=>'NC560917779BR','warehouse'=>'TM2603905800BR'],
-            ['tracking'=>'NC560917819BR','warehouse'=>'TM2604106207BR'],
-            ['tracking'=>'NC253044281BR','warehouse'=>'TM2602007617BR'],
+            ['tracking'=>'NC605562083BR','warehouse'=>'TM2594379025BR'],
+            ['tracking'=>'IX030958475BR','warehouse'=>'TM2591778926BR'],
+            ['tracking'=>'IX030958484BR','warehouse'=>'TM2595579229BR'],
+            ['tracking'=>'NC605562106BR','warehouse'=>'TM2591979658BR'],
+            ['tracking'=>'IX030886354BR','warehouse'=>'TM2591679517BR'],
+            ['tracking'=>'NC605562110BR','warehouse'=>'TM2593479735BR'],
          ];
          return $this->updateTracking($codes, 4, 1);
     }
 
     function bCNToAnjunLabelsb() {
         $codes = [
-            ['tracking'=>'NC560917782BR','warehouse'=>'TM2603905913BR'],
-            ['tracking'=>'NC253044202BR','warehouse'=>'TM2603805750BR'],
-            ['tracking'=>'NC560917765BR','warehouse'=>'TM2603805638BR'],
-            ['tracking'=>'NB853022849BR','warehouse'=>'HD2282155927BR'],
+            ['tracking'=>'NC620168925BR','warehouse'=>'TM2595079125BR'],
+            ['tracking'=>'NC605562097BR','warehouse'=>'TM2591179452BR'],
+            ['tracking'=>'NC605558628BR','warehouse'=>'TM2583996643BR'],
+            ['tracking'=>'NC550899276BR','warehouse'=>'TM2570848722BR'],
+            ['tracking'=>'NC620165725BR','warehouse'=>'HD2580494652BR'],
+            ['tracking'=>'NC620165892BR','warehouse'=>'TM2583896009BR'],
+         ];
+         return $this->updateTracking($codes, 4, 1);
+    }
+
+    function bCNToAnjunLabelsc() {
+        $codes = [
+            ['tracking'=>'NC605558614BR','warehouse'=>'TM2583795852BR'],
+            ['tracking'=>'NC605558659BR','warehouse'=>'TM2583896253BR'],
+            ['tracking'=>'NC605558662BR','warehouse'=>'TM2580695438BR'],
+            ['tracking'=>'NC605558676BR','warehouse'=>'TM2583996304BR'],
+            ['tracking'=>'NC695740346BR','warehouse'=>'HD2282155927BR'],
          ];
          return $this->updateTracking($codes, 4, 1);
     }
@@ -47,21 +60,21 @@ class UpdateTracking extends Controller
                     if ($order && $code['tracking'] == $order->corrios_tracking_code) {
                         if (Order::where('warehouse_number', $code['warehouse'])
                             ->where('corrios_tracking_code', 'like', 'IX%')
-                            ->update(['shipping_service_id' => 42])
+                            ->update(['shipping_service_id' => 3])
                         ) {
                             $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
                             $corrieosBrazilLabelRepository->run($order, true);
                         }
                         if (Order::where('warehouse_number', $code['warehouse'])
                             ->where('corrios_tracking_code', 'like', 'NC%')
-                            ->update(['shipping_service_id' => 16])
+                            ->update(['shipping_service_id' => 1])
                         ) {
                             $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
                             $corrieosBrazilLabelRepository->run($order, true);
                         }
                         if (Order::where('warehouse_number', $code['warehouse'])
                             ->where('corrios_tracking_code', 'like', 'NB%')
-                            ->update(['shipping_service_id' => 16])
+                            ->update(['shipping_service_id' => 1])
                         ) {
                             $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
                             $corrieosBrazilLabelRepository->run($order, true);
