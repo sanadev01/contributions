@@ -42,9 +42,9 @@ class AddContainerPackageRepository extends AbstractRepository{
         // if(!$this->isValidContainerOrder()) {
         //     return $this->validationError404('Order Not Found. Please Check Packet Service.');
         // }
-        if ($this->shippingService->isCorreiosService()) {
-            return $this->validationError404('Service is currently blocked. Please contact administrator.');
-        }
+        // if ($this->shippingService->isCorreiosService()) {
+        //     return $this->validationError404('Service is currently blocked. Please contact administrator.');
+        // }
         $outputChina= $this->updateContainer();
         $endTimeChina = microtime(true); 
         $executionTimeChina = $endTimeChina - $startTime;  
