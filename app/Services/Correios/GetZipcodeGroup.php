@@ -162,6 +162,8 @@ class GetZipcodeGroup
                             ["start" => 76800000, "end" => 79999999, "group" => 5],
                             ["start" => 90000000, "end" => 99999999, "group" => 4]
                         ];
-            return $this->binarySearchGroupRange($groupRanges, $this->zipcode)['group']; 
+                        $result = $this->binarySearchGroupRange($groupRanges, $this->zipcode); 
+                       return $result['group'] ?? null;
+
     }
 }
