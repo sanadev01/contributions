@@ -445,7 +445,7 @@
             </div>
             @if(!empty($labelZipCodeGroup))
                 <div class="bottom-block">
-                    <div class="box-text" style="font-size: 24px !important; font-weight: bold; ">{{ optional($labelZipCodeGroup)['group'] }}</div>
+                    <div class="box-text" style="font-size: 24px !important; font-weight: bold; ">{{ $labelZipCodeGroup }}</div>
                 </div>
             @else
                 @if($order->getOriginalWeight('kg') > 3)
