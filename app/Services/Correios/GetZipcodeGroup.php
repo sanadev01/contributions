@@ -7,39 +7,17 @@ class GetZipcodeGroup
     {
         $this->zipcode = str_replace('-', '', $zipcode);
     }
-    function binarySearchGroupRange($groupRanges, $orderZipcode)
-    {
-        $left = 0;
-        $right = count($groupRanges) - 1;
-        while ($left <= $right) {
-            $mid = floor(($left + $right) / 2);
-            $start = $groupRanges[$mid]['start'];
-            $end = $groupRanges[$mid]['end'];
-
-            if ($orderZipcode >= $start && $orderZipcode <= $end) {
-                return $groupRanges[$mid];
-            } elseif ($orderZipcode < $start) {
-                $right = $mid - 1;
-            } else {
-                $left = $mid + 1;
-            }
-        }
-        return null;
-    }
 
     function getZipcodeGroup()
     {  
         if (!$this->zipcode) {
             return null;
         }
-            $groupRanges = [
-                            ["start" => 1000000, "end" => 11599999, "group" => 1],
+            $groups = [
+                            ["start" => 01000000, "end" => 11599999, "group" => 1],
                             ["start" => 11600000, "end" => 19999999, "group" => 2],
-                            ["start" => 13172651, "end" => 13172651, "group" => 2],
                             ["start" => 20000000, "end" => 28999999, "group" => 3],
                             ["start" => 29000000, "end" => 29999999, "group" => 5],
-                            ["start" => 29164340, "end" => 29164340, "group" => 5],
-                            ["start" => 29166651, "end" => 29166651, "group" => 5],
                             ["start" => 30000000, "end" => 48999999, "group" => 4],
                             ["start" => 49000000, "end" => 49099999, "group" => 5],
                             ["start" => 49100000, "end" => 49139999, "group" => 4],
@@ -151,12 +129,19 @@ class GetZipcodeGroup
                             ["start" => 65080000, "end" => 65089999, "group" => 4],
                             ["start" => 65090000, "end" => 69999999, "group" => 5],
                             ["start" => 70000000, "end" => 76799999, "group" => 4],
-                            ["start" => 76799999, "end" => 89999999, "group" => 4],
+                            ["start" => 80000000, "end" => 89999999, "group" => 4],
                             ["start" => 76800000, "end" => 79999999, "group" => 5],
                             ["start" => 90000000, "end" => 99999999, "group" => 4]
-                        ];
-                        $result = $this->binarySearchGroupRange($groupRanges, $this->zipcode); 
-                       return $result['group'] ?? null;
+                        ]; 
+                    foreach ($groups as $group){
+                        if ($this->zipcode >= $group['start'] && $this->zipcode <= $group['end']) {
+                            return $group['group'];
+                        }
+                    }
 
+        return null;
     }
+
+    
+    
 }
