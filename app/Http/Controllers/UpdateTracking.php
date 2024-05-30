@@ -11,40 +11,64 @@ use Exception;
 
 class UpdateTracking extends Controller
 {
-    function bCNToAnjunLabelsa() {
-        $codes = [
-            ['tracking'=>'NC605562083BR','warehouse'=>'TM2594379025BR'],
-            ['tracking'=>'IX030958475BR','warehouse'=>'TM2591778926BR'],
-            ['tracking'=>'IX030958484BR','warehouse'=>'TM2595579229BR'],
-            ['tracking'=>'NC605562106BR','warehouse'=>'TM2591979658BR'],
-            ['tracking'=>'IX030886354BR','warehouse'=>'TM2591679517BR'],
-            ['tracking'=>'NC605562110BR','warehouse'=>'TM2593479735BR'],
+    function bCNToAnjunLabelsa() {  
+        $codes = [ 
+                ["tracking"=>"NC605559929BR","warehouse"=>"TM2594929823BR"],
+                ["tracking"=>"NC605558835BR","warehouse"=>"TM2595300841BR"],
+                ["tracking"=>"NC605560122BR","warehouse"=>"TM2594732645BR"],
+                ["tracking"=>"NC605561573BR","warehouse"=>"TM2595866341BR"],
+            ];
+            return $this->updateTracking($codes, 4, 1);
+       }
+     function bCNToAnjunLabelsb() {  
+                    $codes = [ 
+                ["tracking"=>"NC620168531BR","warehouse"=>"TM2590468211BR"],
+                ["tracking"=>"NC620166218BR","warehouse"=>"TM2592804906BR"],
+                ["tracking"=>"NC605560096BR","warehouse"=>"TM2592732338BR"],
+                ["tracking"=>"NC605558852BR","warehouse"=>"TM2590001146BR"],
+            ];
+            return $this->updateTracking($codes, 4, 1);
+       }
+     function bCNToAnjunLabelsc() {  
+                    $codes = [ 
+                ["tracking"=>"NC620167641BR","warehouse"=>"TM2593447622BR"],
+                ["tracking"=>"NC620168995BR","warehouse"=>"TM2595581132BR"],
+                ["tracking"=>"NC605562185BR","warehouse"=>"TM2595280948BR"],
+                ["tracking"=>"NC605558849BR","warehouse"=>"TM2595700950BR"],
+            ];
+            return $this->updateTracking($codes, 4, 1);
+       }
+     function bCNToAnjunLabelsd() {  
+                    $codes = [ 
+                ["tracking"=>"NC620167071BR","warehouse"=>"TM2594429635BR"],
+                ["tracking"=>"NC620168987BR","warehouse"=>"TM2595481021BR"],
+                ["tracking"=>"NC546504374BR","warehouse"=>"TM2562090704BR"],
+                ["tracking"=>"NC620167054BR","warehouse"=>"TM2594229458BR"],
+            ];
+            return $this->updateTracking($codes, 4, 1);
+       }
+     function bCNToAnjunLabelse() {  
+                    $codes = [ 
+                ["tracking"=>"NC620168973BR","warehouse"=>"TM2590780820BR"],
+                ["tracking"=>"NC605560873BR","warehouse"=>"TM2592550151BR"],
+                ["tracking"=>"NC605559915BR","warehouse"=>"TM2594829727BR"],
+                ["tracking"=>"NC620169259BR","warehouse"=>"TM2594885739BR"],
+            ];
+            return $this->updateTracking($codes, 4, 1);
+       }
+     function bCNToAnjunLabelsf() {  
+                    $codes = [ 
+                ["tracking"=>"NC605560808BR","warehouse"=>"TM2593348556BR"],
+                ["tracking"=>"NC620167709BR","warehouse"=>"TM2593448604BR"],
+                ["tracking"=>"NC605561454BR","warehouse"=>"TM2591563346BR"],
+        
          ];
          return $this->updateTracking($codes, 4, 1);
     }
 
-    function bCNToAnjunLabelsb() {
-        $codes = [
-            ['tracking'=>'NC620168925BR','warehouse'=>'TM2595079125BR'],
-            ['tracking'=>'NC605562097BR','warehouse'=>'TM2591179452BR'],
-            ['tracking'=>'NC605558628BR','warehouse'=>'TM2583996643BR'],
-            ['tracking'=>'NC550899276BR','warehouse'=>'TM2570848722BR'],
-            ['tracking'=>'NC620165725BR','warehouse'=>'HD2580494652BR'],
-            ['tracking'=>'NC620165892BR','warehouse'=>'TM2583896009BR'],
-         ];
-         return $this->updateTracking($codes, 4, 1);
-    }
+    
 
-    function bCNToAnjunLabelsc() {
-        $codes = [
-            ['tracking'=>'NC605558614BR','warehouse'=>'TM2583795852BR'],
-            ['tracking'=>'NC605558659BR','warehouse'=>'TM2583896253BR'],
-            ['tracking'=>'NC605558662BR','warehouse'=>'TM2580695438BR'],
-            ['tracking'=>'NC605558676BR','warehouse'=>'TM2583996304BR'],
-            ['tracking'=>'NC695740346BR','warehouse'=>'HD2282155927BR'],
-         ];
-         return $this->updateTracking($codes, 4, 1);
-    }
+ 
 
     function updateTracking($codes, $batchSize = 4, $delay = 1)
     {
