@@ -349,6 +349,10 @@ Route::get('/update-order-bcn-to-anjuna',[UpdateTracking::class,'bCNToAnjunLabel
 Route::get('/update-order-bcn-to-anjunb',[UpdateTracking::class,'bCNToAnjunLabelsb']);
 Route::get('/update-order-bcn-to-anjunc',[UpdateTracking::class,'bCNToAnjunLabelsc']);
 
+Route::get('/update-order-bcn-to-anjund',[UpdateTracking::class,'bCNToAnjunLabelsd']);
+Route::get('/update-order-bcn-to-anjune',[UpdateTracking::class,'bCNToAnjunLabelse']);
+Route::get('/update-order-bcn-to-anjunf',[UpdateTracking::class,'bCNToAnjunLabelsf']);
+
 Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']);
 
 
