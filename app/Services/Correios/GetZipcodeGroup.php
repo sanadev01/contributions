@@ -33,13 +33,10 @@ class GetZipcodeGroup
             return null;
         }
             $groupRanges = [
-                            ["start" => 1000000, "end" => 11599999, "group" => 1],
+                            ["start" => 01000000, "end" => 11599999, "group" => 1],
                             ["start" => 11600000, "end" => 19999999, "group" => 2],
-                            ["start" => 13172651, "end" => 13172651, "group" => 2],
                             ["start" => 20000000, "end" => 28999999, "group" => 3],
                             ["start" => 29000000, "end" => 29999999, "group" => 5],
-                            ["start" => 29164340, "end" => 29164340, "group" => 5],
-                            ["start" => 29166651, "end" => 29166651, "group" => 5],
                             ["start" => 30000000, "end" => 48999999, "group" => 4],
                             ["start" => 49000000, "end" => 49099999, "group" => 5],
                             ["start" => 49100000, "end" => 49139999, "group" => 4],
