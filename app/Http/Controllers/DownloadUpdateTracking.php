@@ -14,29 +14,15 @@ class DownloadUpdateTracking extends Controller
     function bCNToAnjunLabels()
     {
         $codes = [
-            "TM2594929823BR",
-            "TM2595300841BR",
-            "TM2594732645BR",
-            "TM2595866341BR",
-            "TM2590468211BR",
-            "TM2592804906BR",
-            "TM2592732338BR",
-            "TM2590001146BR",
-            "TM2593447622BR",
-            "TM2595581132BR",
-            "TM2595280948BR",
-            "TM2595700950BR",
-            "TM2594429635BR",
-            "TM2595481021BR",
-            "TM2562090704BR",
-            "TM2594229458BR",
-            "TM2590780820BR",
-            "TM2592550151BR",
-            "TM2594829727BR",
-            "TM2594885739BR",
-            "TM2593348556BR",
-            "TM2593448604BR",
-            "TM2591563346BR",
+            'TM2604706545BR',
+            'TM2605206945BR',
+            'TM2601407328BR',
+            'TM2601207139BR',
+            'TM2604906746BR',
+            'TM2601307247BR',
+            'TM2605106847BR',
+            'TM2581237648BR',
+            'TM2610331052BR',
         ];
         return $this->updateTracking($codes);
     }
