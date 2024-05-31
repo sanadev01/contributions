@@ -23,6 +23,7 @@ class DownloadUpdateTracking extends Controller
             'TM2605106847BR',
             'TM2581237648BR',
             'TM2610331052BR',
+            'TM2624317344BR',
         ];
         return $this->updateTracking($codes);
     }

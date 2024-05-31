@@ -34,6 +34,7 @@ class UpdateTracking extends Controller
      function bCNToAnjunLabelsc() {  
                     $codes = [ 
                 ["tracking"=>"IX031016495BR","warehouse"=>"TM2610331052BR"],
+                ["tracking"=>"NC695745017BR","warehouse"=>"TM2624317344BR"],
             ];
 
             return $this->updateTracking($codes, 4, 1);
