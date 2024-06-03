@@ -50,7 +50,7 @@ class AnjunReport extends AbstractExportService
                             $this->setCellValue('E'.$row, $order->getWeight());
                             $this->setCellValue(
                                 'F' . $row, 
-                                $service == ShippingService::AJ_Packet_Standard ? 'Packet Standard' : ($service == ShippingService::AJ_Packet_Express ? 'Packet Express' : '')
+                                 $order->sub_name
                             );
                             $this->setCellValue('G'.$row, optional(optional($order->containers)[0])->unit_code);
                             $this->setCellValue('H'.$row, round($order->gross_total,2));
