@@ -394,7 +394,7 @@ class Order extends Model implements Package
             elseif(optional($this->shippingService)->isAnjunService()){
                 return 'Correios Brazil';
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS ){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS || optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS_10KG){
 
                 return 'Total Express';
 
