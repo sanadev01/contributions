@@ -25,7 +25,7 @@ class OrderExportController extends Controller
 
         $report = Reports::create([
             'user_id' => Auth::id(),
-            'name' => $request->type == "anjun" ? "Anjun Report" : ( $request->type == "bcn" ? 'BCN Export':"Orders Export"),
+            'name' => $request->type == "anjun" ? "Anjun Report" : ( $request->type == "bcn" ? 'BCN Export':( $request->type == "correios" ? 'Correios Export':"Orders Export")),
             'start_date' => $startDate,
             'end_date' => $endDate,
         ]);
