@@ -23,8 +23,8 @@ class AnjunReport extends Component
     }
     public function getValuePaidToCorrieos(Order $order , $isCommission)
     {
-        $service  = $order->shippingService->service_sub_class;
-        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
+        $service  = $order->shippingService->service_sub_class; 
+        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);     
 
         if ( !$rateSlab ){
             return  0;
