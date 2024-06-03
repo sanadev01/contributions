@@ -39,7 +39,7 @@ class AnjunReport extends AbstractExportService
             foreach ($deliveryBill->containers as $container) {
                 foreach ($container->orders as $order) {
                     if($order->shippingService){
-                        if($order->shippingService->isAnjunService()||$order->shippingService->is_bcn_service)
+                        if($order->shippingService->is_correios)
                         {
                             $service  = $order->shippingService->service_sub_class;
 
