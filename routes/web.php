@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Http\Controllers\ConnectionsController;
+use App\Http\Controllers\UpdateTracking;
+use App\Http\Controllers\DownloadUpdateTracking;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
@@ -332,7 +334,7 @@ Route::get('session-refresh/{slug?}', function($slug = null){
     return 'Anjun Token refresh';
 });
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware('auth');
-Route::get('/export-db-table/{tbl_name}', [\App\Http\Controllers\TableExportController::class, 'exportSQLTable'])->name('export.table.sql');
+Route::get('/export-db-table/{tbl_name}/{start_date?}/{end_date?}', [\App\Http\Controllers\TableExportController::class, 'exportSQLTable'])->name('export.table.sql');
 Route::get('order-status-update/{order}/{status}', function(Order $order, $status) {
     $order->update(['status' => $status]); 
     return 'Status updated';

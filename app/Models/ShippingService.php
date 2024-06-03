@@ -77,6 +77,7 @@ class ShippingService extends Model
     const Japan_Prime = 5537;
     const Japan_EMS = 5541;
     const GSS_CEP = 237;
+    const TOTAL_EXPRESS_10KG = 284;
     const COLOMBIA_ONEZONE = 44166;
 
     const STANDARDS = [self::Packet_Standard, self::AJ_Packet_Standard, self::AJ_Standard_CN, self::BCN_Packet_Standard];
@@ -247,7 +248,7 @@ class ShippingService extends Model
     }
     public function getIsTotalExpressAttribute()
     {
-        return $this->service_sub_class == self::TOTAL_EXPRESS;
+        return in_array($this->service_sub_class,[self::TOTAL_EXPRESS, self::TOTAL_EXPRESS_10KG]); 
     }
     public function getIsSwedenPostServiceAttribute()
     {

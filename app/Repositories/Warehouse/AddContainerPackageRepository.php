@@ -30,21 +30,23 @@ class AddContainerPackageRepository extends AbstractRepository{
         if (!$this->order) {
             return $this->validationError404('Order Not Found.');
         }
-        if(!$this->orderValidate()){
-            return $this->orderValidateMessage($this->container,$this->shippingService->service_sub_class);
+        if ($this->order->status < Order::STATUS_PAYMENT_DONE) {
+            return $this->validationError404('Please check the Order Status, either the order has been canceled, refunded or not yet paid');
         }
         if (!$this->order->containers->isEmpty()) {
             return $this->validationError404('Order Already in Container.');
         }
+        if(!$this->orderValidate()){
+            return $this->orderValidateMessage($this->container,$this->shippingService->service_sub_class);
         if ($this->order->status < Order::STATUS_PAYMENT_DONE) {
             return $this->validationError404('Please check the Order Status, either the order has been canceled, refunded or not yet paid');
         }
         // if(!$this->isValidContainerOrder()) {
         //     return $this->validationError404('Order Not Found. Please Check Packet Service.');
         // }
-        if ($this->shippingService->is_correios_service) {
-            return $this->validationError404('Service is currently blocked. Please contact administrator.');
-        }
+        // if ($this->shippingService->isCorreiosService()) {
+        //     return $this->validationError404('Service is currently blocked. Please contact administrator.');
+        // }
         $outputChina= $this->updateContainer();
         $endTimeChina = microtime(true); 
         $executionTimeChina = $endTimeChina - $startTime;  

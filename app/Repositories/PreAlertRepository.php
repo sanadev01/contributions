@@ -158,8 +158,8 @@ class PreAlertRepository
         }
         //CHECK VOL WEIGHT OF PARCEL AND SET DISCOUNT
         $totalDiscountPercentage = 0;
-        $discountPercentage = getVolumetricDiscountPercentage($order)??0;
-
+        $discountPercentage = setting('discount_percentage', null, $order->user->id)??0;
+        
         if ( $request->measurement_unit == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
         }else {
