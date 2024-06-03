@@ -13,8 +13,7 @@ use App\Repositories\Reports\AnjunReportsRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class ExportAnjunReport 
-implements ShouldQueue
+class ExportAnjunReport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -42,13 +41,13 @@ implements ShouldQueue
     {
         $request = new Request($this->request);
         $deliveryBills = $this->reportRepository->getAnjunReport($request, $this->user);
-         
         $id = $this->user->id;
         $exportService = new AnjunReport($deliveryBills, $id);
         $url = $exportService->handle();
-        if ($url) {
+        if($url) {
             $report = Reports::find($request->report);
-            $report->update(['path' => $url, 'is_complete' => true]);
+            $report->update(['path'=> $url, 'is_complete' => true]);
         }
+        
     }
 }

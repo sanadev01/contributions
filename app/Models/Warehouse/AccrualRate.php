@@ -126,7 +126,7 @@ class AccrualRate extends Model
         $weightToGrams = UnitsConverter::kgToGrams($weight);
 
         return self::where('weight','<=',$weightToGrams)->where('service',$service)->orderBy('id','DESC')->take(1)->first();
-    }    
+    }
 
     public static function getCarrierRate($weight, $service)
     {
