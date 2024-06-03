@@ -14,15 +14,15 @@ class ChileCN35DownloadController extends Controller
     {
         $cn35Maker = new CorreosChileCN35LabelMaker();
         $cn35Maker->setDispatchNumber($container->dispatch_number)
-                    ->setService($container->getServiceCode())
-                    ->setDispatchDate(Carbon::now()->format('Y-m-d'))
-                    ->setSerialNumber(1)
-                    ->setOriginAirport($container->origin_operator_name ? $container->origin_operator_name :'MIA')
-                    ->setDestinationAirport($container->getDestinationAriport())
-                    ->setWeight($container->getWeight())
-                    ->setItemsCount($container->getPiecesCount())
-                    ->setsealNumber($container->seal_no)
-                    ->setAwbNumber($container->awb);
+            ->setService($container->service_code)
+            ->setDispatchDate(Carbon::now()->format('Y-m-d'))
+            ->setSerialNumber(1)
+            ->setOriginAirport($container->origin_operator_name ? $container->origin_operator_name : 'MIA')
+            ->setDestinationAirport($container->destination_ariport)
+            ->setWeight($container->total_weight)
+            ->setItemsCount($container->total_orders)
+            ->setsealNumber($container->seal_no)
+            ->setAwbNumber($container->awb);
 
         return $cn35Maker->download();
     }

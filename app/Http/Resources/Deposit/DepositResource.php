@@ -12,7 +12,7 @@ class DepositResource extends JsonResource
     {
         $trackingCode = null;
         $warehouseNumber = null;
-        if ($this->hasOrder() && $this->firstOrder()->hasSecondLabel()) {
+        if ($this->hasOrder() && $this->firstOrder()->has_second_label) {
             $order =   $this->firstOrder();
             $trackingCode = $order->us_api_tracking_code;
             $warehouseNumber =  $order->warehouse_number;

@@ -45,8 +45,19 @@ return [
     'From Date' => 'From Date',
     'To Date' => 'To Date',
     'Status' => 'Status',
-
-
+    'Courier' => 'Courier',
+    'Speciality' => 'Speciality',
+    'Rating' => 'Rating',
+    'Average Transit' => 'Average Transit',
+    'Delivery Time' => 'Delivery Time',
+    'Tracking' => 'Tracking',
+    'Weight' => 'Weight',
+    'Service Options' => 'Service Options',
+    'Import Tax' => 'Import Tax',
+    'Total Cost' => 'Total Cost',
+    'Actual Cost' => 'Actual Cost',
+    "Estimate tax & duty"=>"Estimate tax & duty",
+    "DDP/PRC service not available"=>"DDP or PRC service not available for this shipping method.",
     'recipient' => [
         'slect-from-list' => 'Select Address From List',
         'Previous' => 'Previous',

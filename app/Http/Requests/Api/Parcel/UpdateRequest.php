@@ -95,7 +95,7 @@ class UpdateRequest extends FormRequest
 
         $shippingService = ShippingService::find($request->parcel['service_id'] ?? null);
 
-        if ($shippingService && $shippingService->isOfUnitedStates()) {
+        if ($shippingService && $shippingService->is_of_united_states) {
             $rules['sender.sender_country_id'] = 'required|integer|exists:countries,id';
             $rules['sender.sender_state_id'] = 'required|integer|exists:states,id';
             $rules['sender.sender_city'] = 'required|string|max:100';

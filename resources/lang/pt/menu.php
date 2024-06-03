@@ -43,6 +43,7 @@ return [
         'Service Report' => 'Serviços Relatório',
         'Commission Report' => 'Relatório de Comissão',
         'Tax Report Scan' => 'Verificação de relatório fiscal',
+        'Tax Report Accrual' => 'Acréscimo de Relatórios Fiscais',
         'Audit Report' => 'Relatório de Auditoria',
     ],
     'Warehouse' => [

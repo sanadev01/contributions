@@ -29,8 +29,8 @@ class SwedenPostContainerPackageRepository
                 'message' => 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid'
             ];
         }
-        if ($this->isOrderBelongsToDLContainer($container, $shippingService, $order)){
-            $this->assignOrderToContainer($container,$order);
+        if ($this->isOrderBelongsToDLContainer($container, $shippingService, $order)) {
+            $this->assignOrderToContainer($container, $order);
             return [
                 'success' => true,
                 'message' => 'Added Successfully',
@@ -46,7 +46,7 @@ class SwedenPostContainerPackageRepository
         $response =  (new DirectLinkReceptacle($container))->scanItem($order->corrios_tracking_code);
         $data = $response->getData();
         if ($data->isSuccess) {
-            $this->assignOrderToContainer($container,$order);
+            $this->assignOrderToContainer($container, $order);
             return [
                 'success' => true,
                 'message' => $data->message,
@@ -56,7 +56,7 @@ class SwedenPostContainerPackageRepository
                 'success' => false,
                 'message' => $data->message
             ];
-        }  
+        }
     }
     public function removeOrderFromPackageContainer(Container $container, $id)
     {
@@ -78,19 +78,18 @@ class SwedenPostContainerPackageRepository
             return false;
         }
     }
-    protected function assignOrderToContainer($container,$order) {
+    protected function assignOrderToContainer($container, $order)
+    {
         $container->orders()->attach($order->id);
         $this->addOrderTracking($order);
     }
     protected function isOrderBelongToContainer($container, $shippingService)
     {
-        if($container->hasSwedenPostService()){
-            return $shippingService->isSwedenPostService(); 
-        }
-        elseif($container->is_directlink_country){
+        if ($container->has_sweden_post_service) {
+            return $shippingService->is_sweden_post_service;
+        } elseif ($container->is_directlink_country) {
             return $shippingService->is_directlink_country;
-        }
-        else
+        } else
             return false;
     }
     // Additional methods for conditions
@@ -101,7 +100,7 @@ class SwedenPostContainerPackageRepository
             $this->countryContainerMatched(optional(optional($order->recipient)->country)->code, $container->services_subclass_code);
     }
     function countryContainerMatched($countryCode, $subClassCode)
-    { 
+    {
         if ($countryCode == 'MX') {
             return  $subClassCode == ShippingService::DirectLinkMexico;
         }

@@ -7,49 +7,49 @@ use App\Repositories\AbstractRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ContainerRepository extends AbstractRepository{
+class ContainerRepository extends AbstractRepository
+{
 
     public function get(Request $request, $paginate)
     {
-
         $query = Container::query();
 
-        if ( !Auth::user()->isAdmin() ){
-            $query->where('user_id',Auth::id());
+        if (!Auth::user()->isAdmin()) {
+            $query->where('user_id', Auth::id());
         }
-        if($request->filled('dispatchNumber')){
+        if ($request->filled('dispatchNumber')) {
             $query->where('dispatch_number', 'LIKE', '%' . $request->dispatchNumber . '%');
         }
-        if($request->filled('sealNo')){
+        if ($request->filled('sealNo')) {
             $query->where('seal_no', 'LIKE', '%' . $request->sealNo . '%');
         }
-        if($request->filled('packetType')){
+        if ($request->filled('packetType')) {
             $query->where('services_subclass_code', 'LIKE', '%' . $request->packetType . '%');
         }
-        if($request->filled('unitCode')){
+        if ($request->filled('unitCode')) {
             $query->where('unit_code', 'LIKE', '%' . $request->unitCode . '%');
         }
-        if($request->filled('startDate')||$request->filled('endDate')){
-            $query->whereBetween('created_at', [$request->startDate??date('2020-01-01'), $request->endDate??date('Y-m-d')]);
+        if ($request->filled('startDate') || $request->filled('endDate')) {
+            $query->whereBetween('created_at', [$request->startDate ?? date('2020-01-01'), $request->endDate ?? date('Y-m-d')]);
         }
-        $services = ['NX', 'IX', 'XP', 'AJ-NX', 'AJ-IX', 'BCN-NX', 'BCN-IX', 'AJC-NX', 'AJC-IX'];
+        $services = ['NX', 'IX', 'XP', 'AJ-NX', 'AJ-IX', 'BCN-NX', 'BCN-IX', 'AJC-NX', 'AJC-IX', 'CO-NX'];
         if ($request->filled('service')) {
             $services = json_decode($request->service);
         }
         $query->whereIn('services_subclass_code', $services)->latest();
 
-        $query = $paginate ? $query->paginate(50) : $query->where('unit_code', '!=', null )->get();
+        $query = $paginate ? $query->paginate(50) : $query->where('unit_code', '!=', null)->get();
 
         return $query;
     }
 
     public function store(Request $request)
     {
-        try { 
+        try {
             $anjun = [Container::CONTAINER_ANJUN_NX, Container::CONTAINER_ANJUN_IX];
-            if (in_array($request->services_subclass_code,$anjun)){ 
-                    $latestAnujnContainer = Container::whereIn('services_subclass_code', $anjun)->latest()->first(); 
-                    $anjunDispatchNumber = ($latestAnujnContainer->dispatch_number ) ? $latestAnujnContainer->dispatch_number + 1 : 295000;
+            if (in_array($request->services_subclass_code, $anjun)) {
+                $latestAnujnContainer = Container::whereIn('services_subclass_code', $anjun)->latest()->first();
+                $anjunDispatchNumber = $latestAnujnContainer?->dispatch_number + 1 ?? 295000;
             }
 
             $container =  Container::create([
@@ -64,11 +64,10 @@ class ContainerRepository extends AbstractRepository{
                 'services_subclass_code' => $request->services_subclass_code
             ]);
             $container->update([
-                'dispatch_number' => ($container->hasAnjunService()) ? $anjunDispatchNumber : $container->id,
+                'dispatch_number' => ($container->has_anjun_service) ? $anjunDispatchNumber : $container->id,
             ]);
 
             return $container;
-
         } catch (\Exception $ex) {
             $this->error = $ex->getMessage();
             return null;
@@ -83,7 +82,6 @@ class ContainerRepository extends AbstractRepository{
                 'seal_no' => $request->seal_no,
                 'unit_type' => $request->unit_type
             ]);
-
         } catch (\Exception $ex) {
             $this->error = $ex->getMessage();
             return null;
@@ -93,7 +91,7 @@ class ContainerRepository extends AbstractRepository{
     public function delete(Container $container, bool $force = false)
     {
         try {
-            if ( $force ){
+            if ($force) {
                 $container->forceDelete();
             }
 

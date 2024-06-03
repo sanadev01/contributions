@@ -66,7 +66,7 @@ class ProductController extends Controller
                     $isPerfume = true;
                 }
                 $parcel->items()->create([
-                    "sh_code" => optional($product)['sh_code'],
+                    "sh_code" => substr(optional($product)['sh_code'],0,6),
                     "description" => optional($product)['description'],
                     "quantity" => optional($product)['quantity'],
                     "value" => optional($product)['value'],

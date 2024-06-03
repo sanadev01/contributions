@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services\Correios\Services\Brazil;
 
@@ -23,10 +23,11 @@ class CN35LabelMaker implements HasLableExport
     private $service;
     private $unitCode;
     private $OrderWeight;
+    private $containerGroup;
 
     public function __construct(Container $container)
     {
-        $this->companyName = '<img src="'.public_path('images/hd-1cm.png').'" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
+        $this->companyName = '<img src="' . public_path('images/hd-1cm.png') . '" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
         $this->packetType = 'PACKET STANDARD';
         $this->officeAddress = '';
         $this->serialNumber = 1;
@@ -35,20 +36,19 @@ class CN35LabelMaker implements HasLableExport
         $this->containerGroup = '';
 
         $order = $container->orders->first();
-        
-        if($order){ 
-              $this->setType($order->getOriginalWeight('kg')); 
+
+        if ($order) {
+            $this->setType($order->getOriginalWeight('kg'));
         }
-        
-        $this->weight =  $container->getWeight();
+        $this->weight =  $container->total_weight;
         $this->dispatchNumber = $container->dispatch_number;
         $this->originAirpot = 'MIA';
-        $this->setService($container->getServiceCode());
-        $this->destinationAirport = $container->getDestinationAriport();        
-        $this->itemsCount = $container->getPiecesCount();
-        $this->unitCode = $container->getUnitCode();
+        $this->setService($container->service_code);
+        $this->destinationAirport = $container->destination_ariport;
+        $this->itemsCount = $container->total_orders;
+        $this->unitCode = $container->unit_code;
         $firstOrderDate = optional($container->orders->first())->order_date;
-        if(optional($firstOrderDate)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
+        if (optional($firstOrderDate)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
             $this->containerGroup = $container->getGroup($container);
         }
     }
@@ -62,14 +62,14 @@ class CN35LabelMaker implements HasLableExport
     public function setService(int $service)
     {
         $this->service = $service;
- 
-        if (in_array($this->service ,[1,9,18,21]) ) {
+
+        if (in_array($this->service, [1, 9, 18, 21])) {
             $this->packetType = 'PACKET EXPRESS';
         }
-        if (in_array($this->service ,[2,8,19,20])) {
+        if (in_array($this->service, [2, 8, 19, 20])) {
             $this->packetType = 'PACKET STANDARD';
         }
-        if ( $this->service == 3 ){
+        if ($this->service == 3) {
             $this->packetType = 'PACKET MINI';
         }
 
@@ -120,8 +120,8 @@ class CN35LabelMaker implements HasLableExport
     public function setType(string $weight)
     {
         $this->OrderWeight = $weight;
-        if($weight > 3){
-            if($this->packetType == 'PACKET EXPRESS'){
+        if ($weight > 3) {
+            if ($this->packetType == 'PACKET EXPRESS') {
                 $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/>
                                         Centro Internacional de São Paulo – SE/SPM <br/>
                                         Rua Mergenthaler, 592 – Bloco III, 5 Mezanino <br/>
@@ -129,7 +129,7 @@ class CN35LabelMaker implements HasLableExport
                                         CNPJ 34.028.316/7105-85';
                 return $this;
             }
-            if($this->packetType == 'PACKET STANDARD'){
+            if ($this->packetType == 'PACKET STANDARD') {
                 $this->officeAddress = 'Empresa Brasileira de Correios e Telégrafos <br/> 
                                         Centro Internacional do Rio de Janeiro –SE/RJ <br/>
                                         Ponta do Galeão, s/n 2 andar TECA Correios Galeão, <br/>
@@ -172,17 +172,17 @@ class CN35LabelMaker implements HasLableExport
 
     public function render()
     {
-        return view('labels.brazil.cn35.index',$this->getViewData());
+        return view('labels.brazil.cn35.index', $this->getViewData());
     }
 
     public function download()
     {
-        return \PDF::loadView('labels.brazil.cn35.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.brazil.cn35.index', $this->getViewData())->stream();
     }
 
     public function saveAs($path)
     {
-        return \PDF::loadView('labels.brazil.cn35.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.brazil.cn35.index', $this->getViewData())->save($path);
     }
 
     private function getViewData()
@@ -205,5 +205,4 @@ class CN35LabelMaker implements HasLableExport
             'containerGroup' => $this->containerGroup
         ];
     }
-
 }

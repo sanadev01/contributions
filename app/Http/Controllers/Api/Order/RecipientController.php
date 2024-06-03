@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Order;
 
 use App\Facades\CorreosChileFacade;
+use App\Services\ZipCode\ZipCodeInfo;
 use App\Facades\USPSFacade;
 use Exception;
 use App\Models\Order;
@@ -10,7 +11,6 @@ use App\Models\Region;
 use App\Models\Address;
 use App\Models\Commune;
 use Illuminate\Http\Request;
-use FlyingLuscas\Correios\Client;
 use App\Http\Controllers\Controller;
 
 class RecipientController extends Controller
@@ -78,9 +78,8 @@ class RecipientController extends Controller
 
     public function zipcode(Request $request)
     {
-        $correios = new Client;
-        $response = $correios->zipcode()->find($request->zipcode);
-        
+        $correios = new ZipCodeInfo();
+        $response = $correios->find($request->zipcode);
         if(optional($response)['error']){
             return apiResponse(false,'zip code not found / CEP não encontrado');
         }

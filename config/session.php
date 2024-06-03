@@ -3,7 +3,9 @@
 use Illuminate\Support\Str;
 
 return [
-
+    'serialize' => [
+        'limit' => 1049876, // Increase this value as needed
+    ],
     /*
     |--------------------------------------------------------------------------
     | Default Session Driver

@@ -14,6 +14,7 @@ class Table extends Component
     public $pageSize = 50;
     public $date = '';
     public $name = '';
+    public $description = '';
     public $model = '';
     public $content = '';
     
@@ -37,8 +38,9 @@ class Table extends Component
         return (new ActivityRepository)->get(request()->merge([
             'date' => $this->date,
             'name' => $this->name,
+            'description' => $this->description,
             'model' => $this->model,
-            'content' => $this->content,
+            'content' => trim($this->content),
         ]),true,$this->pageSize,$this->sortBy,$this->sortDesc ? 'DESC' : 'asc');
     }
 

@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Events\OrderPaid;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
-
+use Spatie\Activitylog\LogOptions;
 class PaymentInvoice extends Model
 {
     protected $guarded = [];
@@ -13,9 +13,13 @@ class PaymentInvoice extends Model
     const TYPE_POSTPAID= 'postpaid';
 
     use LogsActivity;
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logAll()
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
+    }
     
     public function orders()
     {

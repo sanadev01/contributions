@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services\Excel\Export;
 
@@ -29,11 +29,11 @@ class ExportMexicoManfestService extends AbstractCsvExportService
     }
 
     public function handle()
-    { 
+    {
         return $this->download();
     }
 
-    protected function prepareHeaders() : array
+    protected function prepareHeaders(): array
     {
         return [
             'HAWB',
@@ -41,7 +41,7 @@ class ExportMexicoManfestService extends AbstractCsvExportService
             'Tracking Number (HAWB)',
             'SHIPPER',
             'SHIPPER ADDRESS',
-            'SHIPPER CITY NAME',  
+            'SHIPPER CITY NAME',
             'SHIPPERS CITY CODE',
             'SHIPPERS COUNTRY NAME',
             'SHIPPERS COUNTRY CODE',
@@ -76,14 +76,14 @@ class ExportMexicoManfestService extends AbstractCsvExportService
                 $package->corrios_tracking_code,
                 '',
                 '',
-                $package->getSenderFullName(), 
+                $package->getSenderFullName(),
                 $package->sender_address,
                 $package->sender_city,
                 $package->sender_city_zipcode,
                 $package->senderCountry->name,
-                $package->senderCountry->code, 
+                $package->senderCountry->code,
                 ($package->recipient)->fullName(),
-                ($package->recipient)->getAddress(), 
+                ($package->recipient)->getAddress(),
                 ($package->recipient)->city,
                 ($package->recipient)->zipcode,
                 ($package->recipient)->phone_number,
@@ -91,21 +91,21 @@ class ExportMexicoManfestService extends AbstractCsvExportService
                 $package->weight,
                 $package->measurement_unit,
                 '',
-                count($package->items), 
+                count($package->items),
                 'USD',
                 $package->gross_total,
             ];
 
-            $i=0;
+            $i = 0;
             foreach ($package->items as $item) {
-                if ( $i>0 ){
-                    $this->csvData[$this->row] = array_fill(0,20,'');
+                if ($i > 0) {
+                    $this->csvData[$this->row] = array_fill(0, 20, '');
                 }
                 $this->csvData[$this->row][17] = $item->description;
                 $this->row++;
                 $i++;
             }
-            
+
             $this->row++;
 
             $this->totalCustomerPaid +=  $package->gross_total;
@@ -144,32 +144,31 @@ class ExportMexicoManfestService extends AbstractCsvExportService
             'Total',
             $this->totalCustomerPaid,
         ];
-
-    } 
+    }
     protected function getValuePaidToCorrieos(Container $container, Order $order)
     {
         $commission = false;
         $service  = $order->shippingService->service_sub_class;
-        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
+        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'), $service);
 
-        if ( !$rateSlab ){
+        if (!$rateSlab) {
             return [
-                'airport'=> 0,
-                'commission'=> 0
+                'airport' => 0,
+                'commission' => 0
             ];
         }
-        if($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express){
+        if ($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express) {
             $commission = true;
         }
-        if ( $container->getDestinationAriport() ==  "GRU"){
+        if ($container->destination_ariport ==  "GRU") {
             return [
-                'airport'=> $rateSlab->gru,
-                'commission'=> $commission ? $rateSlab->commission : 0
+                'airport' => $rateSlab->gru,
+                'commission' => $commission ? $rateSlab->commission : 0
             ];
         }
         return [
-            'airport'=> $rateSlab->cwb,
-            'commission'=> $commission ? $rateSlab->commission : 0
+            'airport' => $rateSlab->cwb,
+            'commission' => $commission ? $rateSlab->commission : 0
         ];
     }
 }

@@ -6,13 +6,18 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
 use App\Services\Converters\UnitsConverter;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Product extends Model
 {
     use LogsActivity;
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logAll()
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
+    }
     
     const WEIGHT_PERCENTAGE = 0.1;
 

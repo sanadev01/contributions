@@ -11,20 +11,20 @@ class CN35LabelHandler
 
     public static function handle(Container $container)
     {
-        if (!$container->hasSwedenPostService()) {
-            return response()->json([ 'isSuccess' => false,  'message'  => "Only sweden container allowed!" ], 422);
+        if (!$container->has_sweden_post_service) {
+            return response()->json(['isSuccess' => false,  'message'  => "Only sweden container allowed!"], 422);
         }
 
         if ($container->unit_response_list) {
             $cn35_base64 = json_decode($container->unit_response_list)->cn35;
-            return response()->json(['isSuccess' => true, 'output'   => self::getLabelPath($container, $cn35_base64),'message'  => 'Label created successfully']);
+            return response()->json(['isSuccess' => true, 'output'   => self::getLabelPath($container, $cn35_base64), 'message'  => 'Label created successfully']);
         }
 
         $response =  (new DirectLinkReceptacle($container))->getLabel();
         $data = $response->getData();
 
         if ($data->isSuccess) {
-            return response()->json(['isSuccess' => true,'output'   => self::getLabelPath($container, $data->output), 'message'  => $data->message]);
+            return response()->json(['isSuccess' => true, 'output'   => self::getLabelPath($container, $data->output), 'message'  => $data->message]);
         } else {
             return response()->json(['isSuccess' => false, 'message'  => $data->message], 422);
         }

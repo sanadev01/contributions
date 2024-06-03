@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <div class="controls row mb-1 align-items-center">
+    <div class="controls row my-3 align-items-center">
         <label class="col-md-3 text-md-right">@lang('user.Package')<span class="text-danger"></span></label>
         <div class="col-md-6">
             <select class="form-control" data-live-search="true"  wire:model.defer="package_id">

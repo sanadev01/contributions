@@ -10,12 +10,12 @@ class PaymentStatusToggleController extends Controller
 {
     public function __invoke(PaymentInvoice $invoice)
     {
-        $this->authorize('canChnageStatus',$invoice);
+        $this->authorize('canChangeStatus', $invoice);
 
         $invoice->markPaid(
             !$invoice->isPaid()
         );
-        session()->flash('alert-success','Status Updated');
+        session()->flash('alert-success', 'Status Updated');
         return back();
     }
 }

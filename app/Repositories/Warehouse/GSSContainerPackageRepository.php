@@ -8,27 +8,29 @@ use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Session;
 
 
-class GSSContainerPackageRepository {
+class GSSContainerPackageRepository
+{
 
 
     public function addOrderToContainer($container, $order)
     {
         $error = null;
 
-        if($container->services_subclass_code != $order->shippingService->service_sub_class){
+        if ($container->services_subclass_code != $order->shippingService->service_sub_class) {
             $error = 'Container service does not match';
         }
-        if(!$order->containers->isEmpty()) {
+        if (!$order->containers->isEmpty()) {
             $error = "Order is already present in container";
         }
         if ($order->status != Order::STATUS_PAYMENT_DONE) {
             $error = 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid';
         }
-        if ( (!$container->hasGSSService() && $order->shippingService->isGSSService()) 
-            || ($container->hasGSSService() && !$order->shippingService->isGSSService())){
+        if ((!$container->has_gss_service && $order->shippingService->is_gss_service)
+            || ($container->has_gss_service && !$order->shippingService->is_gss_service)
+        ) {
             $error = 'Order does not belong to this container. Please Check Packet Service';
         }
-        if(!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
+        if (!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
             $container->orders()->attach($order->id);
             $this->addOrderTracking($order);
 
@@ -50,7 +52,7 @@ class GSSContainerPackageRepository {
     public function removeOrderFromContainer(Container $container, $id)
     {
         $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
-        if($order_tracking) {
+        if ($order_tracking) {
             $order_tracking->delete();
         }
         try {

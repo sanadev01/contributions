@@ -9,8 +9,8 @@ class CN35LabelHandler
 
     public static function handle(Container $container)
     {
-        if (!$container->hasGSSService()) {
-            return response()->json([ 'isSuccess' => false,  'message'  => "Only GSS container allowed!" ], 422);
+        if (!$container->has_gss_service) {
+            return response()->json(['isSuccess' => false,  'message'  => "Only GSS container allowed!"], 422);
         }
 
         $cn35Label = json_decode($container->unit_response_list)->cn35->labels[0];
@@ -20,5 +20,4 @@ class CN35LabelHandler
         file_put_contents($path, $cn35PDF); //Temp File
         return response()->download($path)->deleteFileAfterSend(true); //Delete File
     }
-
 }

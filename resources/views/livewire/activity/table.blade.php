@@ -14,14 +14,19 @@
             </div>
         </div>
         <div class="mb-2 row col-12 no-print">
-            <div class="col-3">
+            <div class="col-2">
                 <label>@lang('activity.Date')</label>
                 <input type="search" class="form-control" wire:model.defer="date">
             </div>
 
-            <div class="col-3">
+            <div class="col-2">
                 <label>@lang('activity.Name')</label>
                 <input type="search" class="form-control" wire:model.defer="name">
+            </div>
+
+            <div class="col-2">
+                <label>@lang('activity.Description')</label>
+                <input type="search" class="form-control" wire:model.defer="description">
             </div>
 
             <div class="col-2">

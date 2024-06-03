@@ -38,6 +38,8 @@ class AddContainerPackageRepository extends AbstractRepository{
         }
         if(!$this->orderValidate()){
             return $this->orderValidateMessage($this->container,$this->shippingService->service_sub_class);
+        if ($this->order->status < Order::STATUS_PAYMENT_DONE) {
+            return $this->validationError404('Please check the Order Status, either the order has been canceled, refunded or not yet paid');
         }
         // if(!$this->isValidContainerOrder()) {
         //     return $this->validationError404('Order Not Found. Please Check Packet Service.');

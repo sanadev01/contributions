@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use FlyingLuscas\Correios\Client;
+use App\Services\ZipCode\ZipCodeInfo;
 use Illuminate\Contracts\Validation\Rule;
 
 class CorreosAddresstValidator implements Rule
@@ -34,17 +34,16 @@ class CorreosAddresstValidator implements Rule
          // checking street no using zip code as according to corroes api
          if($this->country_id == '30')
          {
-             $correios = new Client;
-             $response = $correios->zipcode()->find($value);
+            $correios = new ZipCodeInfo();
+            $response = $correios->find($request->zipcode);             
+            $this->correos_api_street_address = optional($response)['street'];
              
-             $this->correos_api_street_address = optional($response)['street'];
-             
-             if(strtolower($this->address) != strtolower($this->correos_api_street_address))
-             {
-                 return false;
-             } else {
-                 return true;
-             }
+            if(strtolower($this->address) != strtolower($this->correos_api_street_address))
+            {
+                return false;
+            } else {
+                return true;
+            }
          } 
          
          return true;

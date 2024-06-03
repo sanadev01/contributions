@@ -1,13 +1,17 @@
 <?php
+
 namespace App\Services\Correios\Services\Brazil\cn23;
 
 use App\Services\Correios\Models\Package;
 use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Contracts\PacketItem;
-class CorreiosOrder extends Package{
 
-    function __construct($order){
+class CorreiosOrder extends Package
+{
+
+    function __construct($order)
+    {
         $serviceSubClassCode = $order->getDistributionModality();
         $getServiceSubClassCode = $serviceSubClassCode;
         if($getServiceSubClassCode == ShippingService::Packet_Standard || $getServiceSubClassCode == ShippingService::BCN_Packet_Standard){
@@ -19,14 +23,17 @@ class CorreiosOrder extends Package{
         if($getServiceSubClassCode == ShippingService::BCN_Packet_Express){
             $serviceSubClassCode = ShippingService::Packet_Express; 
         }
-        if($order->isWeightInKg()) {
+        if ($getServiceSubClassCode == ShippingService::BCN_Packet_Express) {
+            $serviceSubClassCode = ShippingService::Packet_Express;
+        }
+        if ($order->is_weight_in_kg) {
             $weight = UnitsConverter::kgToGrams($order->getOriginalWeight('kg'));
-        }else{
+        } else {
             $kg = UnitsConverter::poundToKg($order->getOriginalWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
         }
         $this->customerControlCode = $order->id;
-        $this->senderName = $order->sender_first_name.' '.$order->sender_last_name;
+        $this->senderName = $order->sender_first_name . ' ' . $order->sender_last_name;
         $this->recipientName = $order->recipient->getFullName();
         $this->recipientDocumentType = $order->recipient->getDocumentType();
         $this->recipientDocumentNumber = cleanString($order->recipient->tax_id);
@@ -41,20 +48,20 @@ class CorreiosOrder extends Package{
         $this->taxPaymentMethod = $order->getService() == 1 ? 'DDP' : 'DDU';
         $this->totalWeight =  ceil($weight);
 
-        $width = round($order->isMeasurmentUnitCm() ? $order->width : UnitsConverter::inToCm($order->width));
-        $height = round($order->isMeasurmentUnitCm() ? $order->height : UnitsConverter::inToCm($order->height));
-        $length = round($order->isMeasurmentUnitCm() ? $order->length : UnitsConverter::inToCm($order->length));
+        $width = round($order->is_weight_in_kg ? $order->width : UnitsConverter::inToCm($order->width));
+        $height = round($order->is_weight_in_kg ? $order->height : UnitsConverter::inToCm($order->height));
+        $length = round($order->is_weight_in_kg ? $order->length : UnitsConverter::inToCm($order->length));
 
         $this->packagingWidth =  $width > 11 ? $width : 11;
         $this->packagingHeight = $height > 2 ? $height : 2;
-        $this->packagingLength = $length > 16 ? $length : 16 ;
+        $this->packagingLength = $length > 16 ? $length : 16;
 
         $this->freightPaidValue = $order->user_declared_freight;
         $this->nonNationalizationInstruction = "RETURNTOORIGIN";
 
         $items = [];
 
-        foreach ($order->items as $item){
+        foreach ($order->items as $item) {
             $pItem = new PacketItem();
             $pItem->hsCode = $item->sh_code;
             $pItem->description = $item->description;
@@ -78,5 +85,4 @@ class CorreiosOrder extends Package{
     {
         return 2;
     }
-    
 }

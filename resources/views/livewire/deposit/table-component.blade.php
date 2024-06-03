@@ -3,7 +3,7 @@
         <div class="col-md-12 text-right">
             <strong>Statement From: </strong> {{ $dateFrom }} - {{ $dateTo }} <br>
             {{-- <strong>Total Deposit:</strong> {{ 0 }} <br>
-            <strong>Total Debit: </strong>  {{ 0 }} <br> --}}
+            <strong>Total Debit: </strong> {{ 0 }} <br> --}}
             <strong>Balance: <span style="font-size: 16px;">{{ number_format( getBalance(), 2 ) }} USD </span></strong>
         </div>
     </div>
@@ -18,7 +18,7 @@
             <div class="row justify-content-end">
                 <div class="col-md-9">
                     <label for="">Date From</label>
-                    <input type="date" class="form-control"  name="date" wire:model="dateFrom">
+                    <input type="date" class="form-control" name="date" wire:model="dateFrom">
                 </div>
             </div>
         </div>
@@ -48,55 +48,55 @@
     </div>
     <table class="table table-hover-animation mb-0">
         <thead>
-        <tr>
-            <td>ID</td>
-            @admin
-            <th>User</th>
-            @endadmin
-            <th>Tracking Code</th>
-            <th>WHR#</th>
-            <th>Card Last 4 Digits</th>
-            <th>Attachment</th>
-            <th>Description</th>
-            <th>Debit/Credit</th>
-            <th>Balance</th>
-            <th>Created At</th>
-        </tr>
-        <tr>
-            <th>
-                <input type="search" wire:model.debounce.500ms="uuid" class="form-control">
-            </th>
-            @admin
-            <th>
-                <input type="search" wire:model.debounce.500ms="user" class="form-control">
-            </th>
-            @endadmin
-            <th>
-                <input type="search" wire:model.debounce.500ms="trackingCode" class="form-control">
-            </th>
-            <th>
-                <input type="search" wire:model.debounce.500ms="warehouseNumber" class="form-control">
-            </th>
-            <th>
-                <input type="search" wire:model.debounce.500ms="card" class="form-control">
-            </th>
-            <th>
+            <tr>
+                <td>ID</td>
+                @admin
+                <th>User</th>
+                @endadmin
+                <th>Tracking Code</th>
+                <th>WHR#</th>
+                <th>Card Last 4 Digits</th>
+                <th>Attachment</th>
+                <th>Description</th>
+                <th>Debit/Credit</th>
+                <th>Balance</th>
+                <th>Created At</th>
+            </tr>
+            <tr>
+                <th>
+                    <input type="search" wire:model.debounce.500ms="uuid" class="form-control">
+                </th>
+                @admin
+                <th>
+                    <input type="search" wire:model.debounce.500ms="user" class="form-control">
+                </th>
+                @endadmin
+                <th>
+                    <input type="search" wire:model.debounce.500ms="trackingCode" class="form-control">
+                </th>
+                <th>
+                    <input type="search" wire:model.debounce.500ms="warehouseNumber" class="form-control">
+                </th>
+                <th>
+                    <input type="search" wire:model.debounce.500ms="card" class="form-control">
+                </th>
+                <th>
 
-            </th>
-            <th>
-                <input type="search" wire:model.debounce.500ms="description" class="form-control">
-            </th>
-            <th>
-                <select name="" class="form-control" wire:model="type">
-                    <option value="">All</option>
-                    <option value="1">Credit</option>
-                    <option value="0">Debit</option>
-                </select>
-            </th>
-            <th>
-                <input type="search" wire:model.debounce.500ms="balance" class="form-control">
-            </th>
-        </tr>
+                </th>
+                <th>
+                    <input type="search" wire:model.debounce.500ms="description" class="form-control">
+                </th>
+                <th>
+                    <select name="" class="form-control" wire:model="type">
+                        <option value="">All</option>
+                        <option value="1">Credit</option>
+                        <option value="0">Debit</option>
+                    </select>
+                </th>
+                <th>
+                    <input type="search" wire:model.debounce.500ms="balance" class="form-control">
+                </th>
+            </tr>
         </thead>
         <tbody>
             @foreach($deposits as $deposit)
@@ -106,25 +106,25 @@
                 <td>{{ optional($deposit->user)->name }}</td>
                 @endadmin
                 <td>
-                    @if($deposit->hasOrder() && $deposit->firstOrder()->hasSecondLabel())
-                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
-                            {{ $deposit->firstOrder()->us_api_tracking_code }}
-                        </a>
+                    @if($deposit->hasOrder() && $deposit->firstOrder()->has_second_label)
+                    <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->orders()->first()) }}" class="w-100" title="Show Order Details">
+                        {{ $deposit->firstOrder()->us_api_tracking_code }}
+                    </a>
                     @elseif($deposit->order_id)
-                        <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
-                            {{ optional($deposit->order)->corrios_tracking_code }}
-                        </a>
+                    <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
+                        {{ optional($deposit->order)->corrios_tracking_code }}
+                    </a>
                     @endif
                 </td>
                 <td>
                     @if($deposit->order_id)
-                        @if(optional($deposit->order)->warehouse_number)
-                            <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
-                                {{ optional($deposit->order)->warehouse_number }}
-                            </a>
-                        @else
-                            {{  "$deposit->order_id  Order Deleted "}}
-                        @endif
+                    @if(optional($deposit->order)->warehouse_number)
+                    <a data-toggle="modal" href="javascript:void(0)" data-target="#hd-modal" data-url="{{ route('admin.modals.order.invoice',$deposit->order_id) }}" class="w-100" title="Show Order Details">
+                        {{ optional($deposit->order)->warehouse_number }}
+                    </a>
+                    @else
+                    {{ "$deposit->order_id  Order Deleted "}}
+                    @endif
                     @endif
                 </td>
                 <td>
@@ -133,11 +133,11 @@
                 <td>
                     @if($deposit->depositAttchs)
                     @foreach ($deposit->depositAttchs as $attachedFile )
-                        <a target="_blank" href="{{ $attachedFile->getPath() }}">Download</a><br>
-                        {{-- <a target="_blank" href="{{route('admin.download_attachment', [$deposit->attachment])}}">Download</a> --}}
+                    <a target="_blank" href="{{ $attachedFile->getPath() }}">Download</a><br>
+                    {{-- <a target="_blank" href="{{route('admin.download_attachment', [$deposit->attachment])}}">Download</a> --}}
                     @endforeach
                     @else
-                        Not Found
+                    Not Found
                     @endif
                 </td>
                 <td>
@@ -149,13 +149,13 @@
                 </td>
                 <th>
                     @if( $deposit->isCredit() )
-                        <i class="fa fa-arrow-up text-success"></i>
-                        <br>
-                         <span class="text-success">$ {{ number_format($deposit->amount, 2) }}</span>
+                    <i class="fa fa-arrow-up text-success"></i>
+                    <br>
+                    <span class="text-success">$ {{ number_format($deposit->amount, 2) }}</span>
                     @else
-                        <i class="fa fa-arrow-down text-danger"></i>
-                        <br>
-                         <span class="text-danger">$ {{ number_format($deposit->amount, 2) }}</span>
+                    <i class="fa fa-arrow-down text-danger"></i>
+                    <br>
+                    <span class="text-danger">$ {{ number_format($deposit->amount, 2) }}</span>
                     @endif
                 </th>
                 <td>

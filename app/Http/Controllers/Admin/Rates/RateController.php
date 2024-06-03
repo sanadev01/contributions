@@ -11,11 +11,11 @@ use App\Http\Requests\Admin\Rate\CreateRequest;
 use App\Services\Excel\Export\ShippingServiceRateExport;
 
 class RateController extends Controller
-{   
+{
     public function __construct()
     {
         // $this->authorizeResource(Rate::class);
-    } 
+    }
 
     public function index(RateRepository $repository)
     {
@@ -25,26 +25,26 @@ class RateController extends Controller
     }
 
     public function create()
-    {   
+    {
         $this->authorizeResource(Rate::class);
         $shipping_services = ShippingService::all();
         return view('admin.rates.shipping-rates.create', compact('shipping_services'));
     }
 
     public function store(CreateRequest $request, RateRepository $repository)
-    {   
+    {
         $this->authorizeResource(Rate::class);
         if ( $repository->store($request) ){
             return  redirect()->route('admin.rates.shipping-rates.index');
         }
 
-        
+
         // session()->flash('alert-dange','Error while importing rates');
         return back()->withInput();
     }
-    
+
     public function show(ShippingService $shipping_rate, RateRepository $repository)
-    {   
+    {
         if ($shipping_rate->service_sub_class == ShippingService::Courier_Express) {
             $defaultRate = public_path('uploads/bps/chile_regions_rate.xlsx');
             return response()->download($defaultRate);
@@ -61,7 +61,7 @@ class RateController extends Controller
     }
 
     public function showShippingRates($id)
-    {   
+    {
         $this->authorizeResource(Rate::class);
 
         $shipping_rate = Rate::findorfail($id);
@@ -71,7 +71,7 @@ class RateController extends Controller
     public function downloadShippingRates($id)
     {
         $this->authorizeResource(Rate::class);
-        
+
         $shipping_rate = Rate::findorfail($id);
         $exportService = new ShippingServiceRateExport($shipping_rate->data);
         return $exportService->handle();
@@ -80,7 +80,7 @@ class RateController extends Controller
     public function shippingRegionRates(RateRepository $repository, ShippingService $shipping_service)
     {
         $isGDE = false;
-        if($shipping_service->isGDEService()) {
+        if ($shipping_service->is_gde_service) {
             $isGDE = true;
         }
         $this->authorizeResource(Rate::class);

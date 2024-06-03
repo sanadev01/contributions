@@ -171,7 +171,6 @@ class ImportOrderRepository
             "carrier" => $importedOrder->carrier,
             "tracking_id" => $importedOrder->tracking_id,
             "customer_reference" => $importedOrder->customer_reference,
-
             "weight" => $importedOrder->weight,
             "length" => $importedOrder->length,
             "width" => $importedOrder->width,
@@ -180,13 +179,13 @@ class ImportOrderRepository
             "is_invoice_created" => $importedOrder->is_invoice_created,
             "is_shipment_added" => $importedOrder->is_shipment_added,
             'status' => $importedOrder->status,
-            'order_date' => $importedOrder->order_date, 
-
+            'order_date' => $importedOrder->order_date,            
             "sender_first_name" => $importedOrder->sender_first_name ? $importedOrder->sender_first_name : optional($user)->name,
             "sender_last_name" => $importedOrder->sender_last_name ? $importedOrder->sender_last_name : optional($user)->last_name,
             "sender_email" => $importedOrder->sender_email ? $importedOrder->sender_email : optional($user)->email ,
             "sender_phone" => $importedOrder->sender_phone ? $importedOrder->sender_phone : optional($user)->phone,
             "user_declared_freight" => $importedOrder->user_declared_freight?$importedOrder->user_declared_freight:"0.01",
+            "tax_modality" => $importedOrder->tax_modality,
 
         ]);
         $orderRepository = new OrderRepository();

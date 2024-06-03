@@ -6,7 +6,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">Update ShCode</h4>
-                        <a href="{{ route('admin.roles.index') }}" class="pull-right btn btn-primary">@lang('role.Back to List') </a>
+                        <a href="{{ route('admin.shcode.index') }}" class="pull-right btn btn-primary">@lang('role.Back to List') </a>
                     </div>
                     <div class="card-content">
                         <div class="card-body">

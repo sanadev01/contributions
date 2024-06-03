@@ -4,9 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
-
+use Spatie\Activitylog\LogOptions;
 class ImportOrder extends Model
 {
+    use LogsActivity;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logAll()
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
+    }
     protected $fillable = [
         'user_id', 
         'file_name', 
@@ -14,14 +22,6 @@ class ImportOrder extends Model
         'total_orders', 
         'total_errors', 
     ];
-
-    
-
-    use LogsActivity;
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
-
     public function user()
     {
         return $this->belongsTo(User::class,'user_id');

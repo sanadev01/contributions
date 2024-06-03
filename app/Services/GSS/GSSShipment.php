@@ -19,13 +19,13 @@ class GSSShipment
 
     public function __construct(Container $container)
     {
-        if(app()->isProduction()){
+        if (app()->isProduction()) {
             $this->userId = config('gss.production.userId');
             $this->password = config('gss.production.password');
             $this->locationId = config('gss.production.locationId');
             $this->workStationId = config('gss.production.workStationId');
             $this->baseUrl = config('gss.production.baseUrl');
-        }else{ 
+        } else {
             $this->userId = config('gss.test.userId');
             $this->password = config('gss.test.password');
             $this->locationId = config('gss.test.locationId');
@@ -36,7 +36,6 @@ class GSSShipment
         $this->container = $container;
         $this->containers = Container::where('awb', $this->container->awb)->get();
         $this->client = new GuzzleClient(['verify' => false]);
-        
     }
 
     private function getHeaders()
@@ -47,10 +46,10 @@ class GSSShipment
             'locationId' => $this->locationId,
             'workStationId' => $this->workStationId,
         ];
-        $response = $this->client->post("$this->baseUrl/Authentication/login",['json' => $authParams ]);
+        $response = $this->client->post("$this->baseUrl/Authentication/login", ['json' => $authParams]);
         $data = json_decode($response->getBody()->getContents());
-        if($data->accessToken) {
-            return [ 
+        if ($data->accessToken) {
+            return [
                 'Authorization' => "Bearer {$data->accessToken}",
                 'Accept' => 'application/json'
             ];
@@ -61,9 +60,9 @@ class GSSShipment
     {
         $url = $this->baseUri . '/shipments';
         $weight = 0;
-        if($this->containers[0]->awb) {
-            foreach($this->containers as $package) {
-                $weight+= $package->getWeight();
+        if ($this->containers[0]->awb) {
+            foreach ($this->containers as $package) {
+                $weight += $package->total_weight;
             }
             $body = [
                 "type" => "IPA",
@@ -76,9 +75,9 @@ class GSSShipment
                 "weightInLbs" => '',
             ];
             $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-            $data= json_decode($response);
-    
-            if ($response->successful()) { 
+            $data = json_decode($response);
+
+            if ($response->successful()) {
                 if ($data->id) {
                     return $this->addParcels($data->id);
                 } else {
@@ -87,8 +86,7 @@ class GSSShipment
             } else {
                 return $this->responseUnprocessable($data->detail);
             }
-        }
-        else {
+        } else {
             return $this->responseUnprocessable("Airway Bill Number is Required for Processing.");
         }
     }
@@ -113,7 +111,7 @@ class GSSShipment
             "linkShipmentId" => $id
         ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        $data= json_decode($response);
+        $data = json_decode($response);
         if ($response->successful() && !is_null($data->parcels)) {
             return $this->prepareShipment($id);
         } else {
@@ -124,9 +122,9 @@ class GSSShipment
     public function prepareShipment($id)
     {
         $url = $this->baseUri . "/shipments/$id/prepare";
-        $body = [ "" => '', ];
+        $body = ["" => '',];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        $data= json_decode($response);
+        $data = json_decode($response);
         if ($response->successful() && optional($data)->shipmentSubmitToken) {
             return $this->submitShipment($data->shipmentSubmitToken, $id);
         } else {
@@ -142,7 +140,7 @@ class GSSShipment
             "shipmentSubmitToken" =>  $token,
         ];
         $response = Http::withHeaders($this->getHeaders())->post($url, $body);
-        $data= json_decode($response);
+        $data = json_decode($response);
         if ($response->successful()) {
             return $this->getShipmentDetails($id);
         } else {
@@ -153,7 +151,7 @@ class GSSShipment
     public function getShipmentDetails($id)
     {
         $url = $this->baseUri . "/shipments/$id?IncludeBags=true&IncludeDocuments=true&IncludeManifestFiles=true";
-        $response = $this->client->get($url,['headers' => $this->getHeaders()]);
+        $response = $this->client->get($url, ['headers' => $this->getHeaders()]);
         $data = json_decode($response->getBody()->getContents());
         if ($data->bags) {
             return $this->responseSuccessful($data, 'Container registration is successfull. Please donwload CN35 Label after 5 Mins');

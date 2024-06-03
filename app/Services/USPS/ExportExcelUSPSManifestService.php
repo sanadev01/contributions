@@ -28,7 +28,7 @@ class ExportExcelUSPSManifestService extends AbstractCsvExportService
         return $this->download();
     }
 
-    protected function prepareHeaders() : array
+    protected function prepareHeaders(): array
     {
         return [
             'HAWB',
@@ -52,7 +52,7 @@ class ExportExcelUSPSManifestService extends AbstractCsvExportService
 
     protected function prepareData(): array
     {
-        
+
         $this->prePareDataForContainer($this->container);
         return $this->csvData;
     }
@@ -70,26 +70,26 @@ class ExportExcelUSPSManifestService extends AbstractCsvExportService
                 $package->getOriginalWeight('kg'),
                 7 => 'contents',
                 8 => 'ncm',
-                $package->getOrderValue(),
+                $package->order_items_value,
                 $package->warehouse_number,
                 $package->gross_total,
-                $container->getDestinationAriport(),
+                $container->destination_ariport,
                 $this->getValuePaidToUSPS($package),
                 $container->dispatch_number,
-                optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName()
+                optional($package->user)->pobox_number . ' / ' . optional($package->user)->getFullName()
             ];
 
-            $i=0;
+            $i = 0;
             foreach ($package->items as $item) {
-                if ( $i>0 ){
-                    $this->csvData[$this->row] = array_fill(0,14,'');
+                if ($i > 0) {
+                    $this->csvData[$this->row] = array_fill(0, 14, '');
                 }
 
                 $this->csvData[$this->row][7] = $item->description;
                 $this->csvData[$this->row][8] = $item->sh_code;
 
                 $this->row++;
-                
+
                 $i++;
             }
 
@@ -117,12 +117,11 @@ class ExportExcelUSPSManifestService extends AbstractCsvExportService
             '',
             '',
         ];
-
     }
 
     protected function getValuePaidToUSPS($package)
     {
-        
+
         return $package->user_declared_freight;
     }
 }

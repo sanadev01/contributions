@@ -31,9 +31,9 @@ class DirectLinkReceptacle
 
     public function create($serviceCode)
     {
-        if($serviceCode == ShippingService::Prime5) {
+        if ($serviceCode == ShippingService::Prime5) {
             $contentCode = "006";
-        }else if($serviceCode == ShippingService::Prime5RIO) {
+        } else if ($serviceCode == ShippingService::Prime5RIO) {
             $contentCode = "002";
         }
 
@@ -47,9 +47,9 @@ class DirectLinkReceptacle
             "serviceCode" => "001"
         ];
         $response = $this->http->post($url, $body);
-        $data= json_decode($response);
+        $data = json_decode($response);
 
-        if ($response->successful() && $data->status == 0) { 
+        if ($response->successful() && $data->status == 0) {
             if ($data->receptacle && $data->receptacle->receptacleNo) {
                 return $this->responseSuccessful($data->receptacle->receptacleNo, $data->message);
             } else {
@@ -69,7 +69,7 @@ class DirectLinkReceptacle
             "receptacleNo" => $this->container->unit_code
         ];
         $response = $this->http->post($url, $body);
-        $data= json_decode($response);
+        $data = json_decode($response);
 
         if ($response->successful() && $data->status == 0) {
             return $this->responseSuccessful('', $data->message);
@@ -86,13 +86,13 @@ class DirectLinkReceptacle
             "receptacleNo" => $this->container->unit_code
         ];
         $response = $this->http->post($url, $body);
-        $data= json_decode($response);
- 
+        $data = json_decode($response);
+
         if ($response->successful() && $data->status == 0) {
             return $this->responseSuccessful('', $data->message);
         } else {
             return $this->responseUnprocessable($data->message);
-        } 
+        }
     }
 
     public function close()
@@ -100,15 +100,15 @@ class DirectLinkReceptacle
         $url = $this->baseURL . 'bagscan?op=closeReceptacle';
         $body = [
             "receptacleNo"              => $this->container->unit_code,
-            "receptacleWeight"          => $this->container->getWeight(),
+            "receptacleWeight"          => $this->container->total_weight,
             "receptacleCloseDatetime"   => date_format(new \DateTime(), 'YmdHi'),
         ];
-        $response = $this->http->post($url, $body); 
-        $data= json_decode($response);
+        $response = $this->http->post($url, $body);
+        $data = json_decode($response);
         if ($response->successful() && $data->status == 0) {
-            return $this->responseSuccessful( $data->pdfReceptacleLable,  $data->message); 
+            return $this->responseSuccessful($data->pdfReceptacleLable,  $data->message);
         } else {
-            return $this->responseUnprocessable( $data->message);
+            return $this->responseUnprocessable($data->message);
         }
     }
 
@@ -120,10 +120,10 @@ class DirectLinkReceptacle
         ];
 
         $response = $this->http->post($url, $body);
-        $data= json_decode($response);
+        $data = json_decode($response);
 
         if ($response->successful() && $data->status == 0) {
-            return $this->responseSuccessful($data->pdfReceptacleLable,$data->message);
+            return $this->responseSuccessful($data->pdfReceptacleLable, $data->message);
         } else {
             return $this->responseUnprocessable($data->message);
         }

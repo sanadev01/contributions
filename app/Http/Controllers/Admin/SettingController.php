@@ -11,15 +11,15 @@ use Illuminate\Support\Facades\Cache;
 
 
 class SettingController extends Controller
-{   
+{
     public $adminId;
 
     public function __construct()
     {
         $this->adminId = \App\Models\User::ROLE_ADMIN;
         $this->authorizeResource(Setting::class);
-    } 
-       /**
+    }
+    /**
      * @param Request $request
      */
     public function index(Request $request)
@@ -29,7 +29,7 @@ class SettingController extends Controller
             return view('admin.settings.edit', compact('adminId'));
         }
         abort(403, 'Unauthorized action.');
-    } 
+    }
 
     /**
      * @param Request $request
@@ -37,18 +37,26 @@ class SettingController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
+        $apiDeactivated = currentActiveApiName();
+        //switch 3 api for correies/anjun standerd/express api.
+        saveSetting('bcn_api', false, $this->adminId);
+        saveSetting('china_anjun_api', false, $this->adminId);
+        saveSetting('correios_api', false, $this->adminId);
+        saveSetting('anjun_api', false, $this->adminId);
+        saveSetting($request->correios_setting, true, $this->adminId);
+
         $userData = [
             'TYPE' => setting('TYPE'),
             'VALUE' => setting('VALUE'),
-            'usps' => setting('usps', null, $this->adminId)? 'Active': 'Inactive',
-            'ups' => setting('ups', null, $this->adminId)? 'Active': 'Inactive',
-            'fedex' => setting('fedex', null, $this->adminId)? 'Active': 'Inactive',
-            'usps_profit'=> setting('usps_profit', null, $this->adminId) ? setting('usps_profit', null, $this->adminId): 0,
-            'ups_profit'=> setting('ups_profit', null, $this->adminId) ?setting('ups_profit', null, $this->adminId) : 0,
-            'fedex_profit'=> setting('fedex_profit', null, $this->adminId)? setting('fedex_profit', null, $this->adminId): 0,
-            'AUTHORIZE_ID'=> setting('AUTHORIZE_ID'),
-            'AUTHORIZE_KEY'=> setting('AUTHORIZE_KEY'),
-            'correios_setting'=> setting('anjun_api', null, $this->adminId) ? 'Correios Anjun API' : (setting('china_anjun_api', null, $this->adminId)?'China Anjun':(setting('bcn_api', null, $this->adminId)?'BCN Setting':'Correios API')),
+            'usps' => setting('usps', null, $this->adminId) ? 'Active' : 'Inactive',
+            'ups' => setting('ups', null, $this->adminId) ? 'Active' : 'Inactive',
+            'fedex' => setting('fedex', null, $this->adminId) ? 'Active' : 'Inactive',
+            'usps_profit' => setting('usps_profit', null, $this->adminId) ? setting('usps_profit', null, $this->adminId) : 0,
+            'ups_profit' => setting('ups_profit', null, $this->adminId) ? setting('ups_profit', null, $this->adminId) : 0,
+            'fedex_profit' => setting('fedex_profit', null, $this->adminId) ? setting('fedex_profit', null, $this->adminId) : 0,
+            'AUTHORIZE_ID' => setting('AUTHORIZE_ID'),
+            'AUTHORIZE_KEY' => setting('AUTHORIZE_KEY'),
+            'correios_setting' => $apiDeactivated
         ];
         try {
             \Mail::send(new SettingUpdate($user, $request, $userData, true));
@@ -64,19 +72,13 @@ class SettingController extends Controller
         Setting::saveByKey('VALUE', $request->VALUE,null,true);
 
         
-        //switch 3 api for correies/anjun standerd/express api.
-        saveSetting('bcn_api', false, $this->adminId);
-        saveSetting('china_anjun_api', false, $this->adminId);
-        saveSetting('correios_api', false, $this->adminId);
-        saveSetting('anjun_api', false, $this->adminId);
-        saveSetting($request->correios_setting, true, $this->adminId);
-
         $request->has('usps') ? saveSetting('usps', true, $this->adminId) : saveSetting('usps', false, $this->adminId);
         $request->has('ups') ? saveSetting('ups', true, $this->adminId) : saveSetting('ups', false, $this->adminId);
         $request->has('fedex') ? saveSetting('fedex', true, $this->adminId) : saveSetting('fedex', false, $this->adminId);
         $request->has('geps_service') ? saveSetting('geps_service', true, $this->adminId) : saveSetting('geps_service', false, $this->adminId);
         $request->has('sweden_post') ? saveSetting('sweden_post', true, $this->adminId) : saveSetting('sweden_post', false, $this->adminId);
         $request->has('post_plus') ? saveSetting('post_plus', true, $this->adminId) : saveSetting('post_plus', false, $this->adminId);
+        $request->has('colombia_service') ? saveSetting('colombia_service', true, $this->adminId) : saveSetting('colombia_service', false, $this->adminId);
         $request->has('gss') ? saveSetting('gss', true, $this->adminId) : saveSetting('gss', false, $this->adminId);
         $request->has('gde') ? saveSetting('gde', true, $this->adminId) : saveSetting('gde', false, $this->adminId);
 

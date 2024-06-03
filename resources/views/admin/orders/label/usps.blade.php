@@ -4,7 +4,7 @@
 @endsection
 @section('page')
 
-@if($order->hasSecondLabel())
+@if($order->has_second_label)
 <div class="card pb-3">
     <div class="row mr-3">
         <div class="ml-auto mt-5">
@@ -56,12 +56,11 @@
                 <h4>Weight : {{ $order->getWeight('kg')  }} Kg</h4>
             </div>
             <div class="col-md-3">
-                <h4>POBOX # :  {{ $order->user->pobox_number }} </h4>
+                <h4>POBOX # : {{ $order->user->pobox_number }} </h4>
             </div>
         </div>
     </div>
-    @if ($order->getWeight('kg') < 31)
-    <form action="{{ route('admin.orders.usps-label.store', $order) }}" method="POST">
+    @if ($order->getWeight('kg') < 31) <form action="{{ route('admin.orders.usps-label.store', $order) }}" method="POST">
         @csrf
         <div class="ml-3 mt-3">
             <div class="row ml-3">
@@ -92,7 +91,7 @@
                         <select name="sender_state" id="sender_state" class="form-control selectpicker" data-live-search="true" required>
                             <option value="" disabled>Select @lang('address.State')</option>
                             @foreach ($states as $state)
-                                <option {{ old('sender_state') == $state->id ? 'selected' : '' }} value="{{ $state->code }}" data-state-code="{{$state->code}}">{{ $state->code }}</option>
+                            <option {{ old('sender_state') == $state->id ? 'selected' : '' }} value="{{ $state->code }}" data-state-code="{{$state->code}}">{{ $state->code }}</option>
                             @endforeach
                         </select>
                         <div id="state_error">
@@ -139,7 +138,7 @@
                         <select name="service" id="usps_shipping_service" class="form-control selectpicker dropup" data-dropup-auto="false" data-live-search="true" required>
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                                <option value="{{ $shippingService->service_sub_class }}" {{ old('service',$order->shipping_service_id) == $shippingService->service_sub_class ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
+                            <option value="{{ $shippingService->service_sub_class }}" {{ old('service',$order->shipping_service_id) == $shippingService->service_sub_class ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->name}"}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -154,16 +153,16 @@
                 <div class="ml-auto">
                     <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Buy USPS Label</button>
                 </div>
-            </div>    
+            </div>
         </div>
-    </form>
-    @else
-    <div class="container">
-        <div class="row mb-3 col-12 alert alert-danger">
-            <h5 class="text-danger">USPS is not available for more than 30 Kg</h5>
+        </form>
+        @else
+        <div class="container">
+            <div class="row mb-3 col-12 alert alert-danger">
+                <h5 class="text-danger">USPS is not available for more than 30 Kg</h5>
+            </div>
         </div>
-    </div>
-    @endif
+        @endif
 </div>
 @endif
 
@@ -172,10 +171,10 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 <script>
-    $(function () {
+    $(function() {
         $('.selectpicker').selectpicker();
     });
 </script>
-    @include('admin.orders.label.script')
+@include('admin.orders.label.script')
 
 @endsection

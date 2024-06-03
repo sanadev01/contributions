@@ -9,31 +9,32 @@ use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Session;
 
 
-class GDEContainerPackageRepository {
+class GDEContainerPackageRepository
+{
 
 
     public function addOrderToContainer($container, $order)
     {
         $error = null;
 
-        if($container->services_subclass_code != $order->shippingService->service_sub_class){
+        if ($container->services_subclass_code != $order->shippingService->service_sub_class) {
             $error = 'container service does not match';
         }
-        if(!$order->containers->isEmpty()) {
+        if (!$order->containers->isEmpty()) {
             $error = "Order is already present in Container";
         }
         if ($order->status != Order::STATUS_PAYMENT_DONE) {
             $error = 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid';
         }
-        if ( (!$container->hasGDEService() ||  !$order->shippingService->isGDEService())){
+        if ((!$container->has_gde_service ||  !$order->shippingService->is_gde_service)) {
 
             $error = 'Order does not belong to this container. Please Check Packet Service';
         }
-        if(!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
+        if (!$container->orders()->where('order_id', $order->id)->first() && $error == null && $order->containers->isEmpty()) {
             $container->orders()->attach($order->id);
             $this->addOrderTracking($order);
-                Session::flash('alert-class', 'alert-success');
-                $message = 'Order Added in the Container Successfully';
+            Session::flash('alert-class', 'alert-success');
+            $message = 'Order Added in the Container Successfully';
             return [
                 'success' => true,
                 'message' => $message
@@ -50,7 +51,7 @@ class GDEContainerPackageRepository {
     public function removeOrderFromContainer(Container $container, $id)
     {
         $order_tracking = OrderTracking::where('order_id', $id)->latest()->first();
-        if($order_tracking) {
+        if ($order_tracking) {
             $order_tracking->delete();
         }
         try {

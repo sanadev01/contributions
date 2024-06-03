@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <style>
-        @page{
+        @page {
             size: 21cm 29.7cm;
             margin: 0cm;
             padding: 0cm;
         }
-        *{
+
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        .page{
+        .page {
             padding: 0.5cm;
             position: absolute;
             top: 0cm;
@@ -28,27 +30,31 @@
             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px;
         }
-        .page table{
+
+        .page table {
             width: 20cm;
             /* height: 100%; */
             border-collapse: collapse;
         }
-        .page table td{
+
+        .page table td {
             padding: 5px;
         }
-        small{
+
+        small {
             font-size: 8px;
         }
 
-        strong{
+        strong {
             font-size: 13px;
         }
 
-        .data td{
+        .data td {
             height: 0.3cm;
         }
     </style>
 </head>
+
 <body>
     <div class="page">
         <table border="1">
@@ -74,10 +80,10 @@
                     <small><i>(Office of Origin)</i></small> <br>
                     @if(strpos($originLogo, ".png") !== false || strpos($originLogo, ".jpg") !== false || strpos($originLogo, "/") !== false)
                     <img src="{{ $originLogo }}" style="width: 3cm; height:0.8cm;display:block;position:relative;" alt="">
-                    @else 
+                    @else
 
-                    <div class="column1" style="text-align: center;font-size:15px;font-weight:bold;" >
-                                {!! $originLogo !!}
+                    <div class="column1" style="text-align: center;font-size:15px;font-weight:bold;">
+                        {!! $originLogo !!}
                     </div>
                     @endif
                 </td>
@@ -198,23 +204,23 @@
 
 
             @foreach ($containers as $container)
-                <tr class="data">
-                    <td style="width: 1cm;">
-                        <strong>
-                            {{ $container->dispatch_number }}
-                        </strong>
-                    </td>
-                    <td style="width: 5cm;">
-                        {{ $container->unit_code }}
-                    </td>
-                    <td>
-                        {{ number_format($container->getWeight(),2) }}
-                    </td>
-                    <td>
-                        {{ $container->seal_no }}
-                    </td>
-                    <td></td>
-                </tr>
+            <tr class="data">
+                <td style="width: 1cm;">
+                    <strong>
+                        {{ $container->dispatch_number }}
+                    </strong>
+                </td>
+                <td style="width: 5cm;">
+                    {{ $container->unit_code }}
+                </td>
+                <td>
+                    {{ number_format($container->total_weight,2) }}
+                </td>
+                <td>
+                    {{ $container->seal_no }}
+                </td>
+                <td></td>
+            </tr>
             @endforeach
             <tr>
                 <td>SUBTOTAL</td>
@@ -225,7 +231,7 @@
             <tr>
                 <td>TOTAL</td>
                 <td></td>
-                <td>{{ number_format($deliveryBill->getWeight(),2) }}</td>
+                <td>{{ number_format($deliveryBill->total_weight,2) }}</td>
             </tr>
             <tr>
                 <td colspan="5">
@@ -255,4 +261,5 @@
         </table>
     </div>
 </body>
+
 </html>

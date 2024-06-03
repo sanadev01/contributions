@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services\CorreosChile;
 
@@ -27,7 +27,7 @@ class ExportExcelChileManifestService extends AbstractCsvExportService
         return $this->download();
     }
 
-    protected function prepareHeaders() : array
+    protected function prepareHeaders(): array
     {
         return [
             'HAWB',
@@ -51,7 +51,7 @@ class ExportExcelChileManifestService extends AbstractCsvExportService
 
     protected function prepareData(): array
     {
-        
+
         $this->prePareDataForContainer($this->container);
         return $this->csvData;
     }
@@ -69,33 +69,33 @@ class ExportExcelChileManifestService extends AbstractCsvExportService
                 $package->getOriginalWeight('kg'),
                 7 => 'contents',
                 8 => 'ncm',
-                $package->getOrderValue(),
+                $package->order_items_value,
                 $package->warehouse_number,
                 $package->gross_total,
-                $container->getDestinationAriport(),
-                $this->getValuePaidToCorrieos($container,$package),
+                $container->destination_ariport,
+                $this->getValuePaidToCorrieos($container, $package),
                 $container->dispatch_number,
-                optional($package->user)->pobox_number.' / '.optional($package->user)->getFullName()
+                optional($package->user)->pobox_number . ' / ' . optional($package->user)->getFullName()
             ];
 
-            $i=0;
+            $i = 0;
             foreach ($package->items as $item) {
-                if ( $i>0 ){
-                    $this->csvData[$this->row] = array_fill(0,14,'');
+                if ($i > 0) {
+                    $this->csvData[$this->row] = array_fill(0, 14, '');
                 }
 
                 $this->csvData[$this->row][7] = $item->description;
                 $this->csvData[$this->row][8] = $item->sh_code;
 
                 $this->row++;
-                
+
                 $i++;
             }
 
             $this->row++;
 
             $this->total_customerpaid +=  $package->gross_total;
-            $this->total_paid_to_correios += $this->getValuePaidToCorrieos($container,$package);
+            $this->total_paid_to_correios += $this->getValuePaidToCorrieos($container, $package);
         }
 
         $this->csvData[$this->row] = [
@@ -116,19 +116,18 @@ class ExportExcelChileManifestService extends AbstractCsvExportService
             '',
             '',
         ];
-
     }
 
     protected function getValuePaidToCorrieos(Container $container, Order $order)
     {
         $service  = $order->shippingService->service_sub_class;
-        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'),$service);
+        $rateSlab = AccrualRate::getRateSlabFor($order->getWeight('kg'), $service);
 
-        if ( !$rateSlab ){
+        if (!$rateSlab) {
             return 0;
         }
 
-        if ( $container->getDestinationAriport() ==  "Santiago"){
+        if ($container->destination_ariport ==  "Santiago") {
             return $rateSlab->gru;
         }
 

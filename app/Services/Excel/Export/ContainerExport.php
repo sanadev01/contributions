@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Excel\Export; 
+namespace App\Services\Excel\Export;
 
 class ContainerExport extends AbstractExportService
 {
@@ -11,7 +11,6 @@ class ContainerExport extends AbstractExportService
     {
         $this->containers = $containers;
         parent::__construct();
-
     }
 
     public function handle()
@@ -24,14 +23,14 @@ class ContainerExport extends AbstractExportService
     {
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
-        foreach ($this->containers as $container) { 
-            foreach($container->orders as $order){
-                $this->setCellValue('A'.$row, $container->dispatch_number);
-                $this->setCellValue('B'.$row, $container->seal_no);
-                $this->setCellValue('C'.$row, $container->getServiceSubClass() );
-                $this->setCellValue('D'.$row, $container->getUnitCode());
-                $this->setCellValue('E'.$row, $order->corrios_tracking_code); 
-                $this->setCellValue('F'.$row, optional($container->updated_at)->format('m/d/Y')); 
+        foreach ($this->containers as $container) {
+            foreach ($container->orders as $order) {
+                $this->setCellValue('A' . $row, $container->dispatch_number);
+                $this->setCellValue('B' . $row, $container->seal_no);
+                $this->setCellValue('C' . $row, $container->service_subclass_name);
+                $this->setCellValue('D' . $row, $container->unit_code);
+                $this->setCellValue('E' . $row, $order->corrios_tracking_code);
+                $this->setCellValue('F' . $row, optional($container->updated_at)->format('m/d/Y'));
                 $row++;
             }
         }
@@ -56,10 +55,10 @@ class ContainerExport extends AbstractExportService
 
         $this->setColumnWidth('F', 20);
         $this->setCellValue('F1', 'Date');
- 
+
         $this->setBackgroundColor('A1:F1', '2b5cab');
         $this->setColor('A1:F1', 'FFFFFF');
 
         $this->currentRow++;
-    } 
+    }
 }

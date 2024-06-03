@@ -8,7 +8,7 @@
                 <div class="card-header">
                     <h4 class="mb-0">
                         @lang('warehouse.containers.Packages Inside Container')
-                        <span class="badge">({{ $container->getServiceSubClass()}})</span>
+                        <span class="badge">({{ $container->service_subclass_name}})</span>
                        
                     </h4>
                     <div>

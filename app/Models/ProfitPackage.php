@@ -6,19 +6,23 @@ use App\Models\ShippingService;
 use Illuminate\Database\Eloquent\Model;
 use LaravelJsonColumn\Traits\JsonColumn;
 use Spatie\Activitylog\Traits\LogsActivity;
-
+use Spatie\Activitylog\LogOptions;
 class ProfitPackage extends Model
 {
     use JsonColumn;
     protected $guarded = [];
 
     use LogsActivity;
-    protected static $logAttributes = ['*'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                            ->logAll()
+                            ->logOnlyDirty()
+                            ->dontSubmitEmptyLogs();
+    }
     
     protected $casts = [
-        'data' => 'Array'
+        'data' => 'array'
     ];
 
     const SERVICE_BPS = 'bps';

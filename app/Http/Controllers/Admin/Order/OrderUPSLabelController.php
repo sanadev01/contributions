@@ -18,21 +18,20 @@ class OrderUPSLabelController extends Controller
      */
     public function index(Order $order)
     {
-        
-        $this->authorize('canPrintLable',$order);
-        
+
+        $this->authorize('canPrintLable', $order);
+
         $ups_labelRepository = new UPSLabelRepository();
         $shippingServices = $ups_labelRepository->getShippingServices($order);
         $error = $ups_labelRepository->getUPSErrors();
 
-        if($error != null)
-        {
+        if ($error != null) {
             session()->flash('alert-danger', $error);
         }
 
-        $states = State::query()->where("country_id", 250)->get(["name","code","id"]);
+        $states = State::query()->where("country_id", 250)->get(["name", "code", "id"]);
 
-        return view('admin.orders.ups-label.index',compact('order', 'states', 'shippingServices', 'error'));
+        return view('admin.orders.ups-label.index', compact('order', 'states', 'shippingServices', 'error'));
     }
 
     public function ups_sender_rates(Request $request)
@@ -51,21 +50,19 @@ class OrderUPSLabelController extends Controller
     public function store(Request $request, Order $order)
     {
         /**
-            * Note...
-            * hasSecondLabel() is the second label against the order
-        */
-        $this->authorize('canPrintLable',$order);
-        
+         * Note...
+         * has_second_label is the second label against the order
+         */
+        $this->authorize('canPrintLable', $order);
+
         $ups_labelRepository = new UPSLabelRepository();
-        
-        if(!$order->hasSecondLabel())
-        {
+
+        if (!$order->has_second_label) {
             $ups_labelRepository->buyLabel($request, $order);
         }
 
         $error = $ups_labelRepository->getUPSErrors();
-        if($error != null)
-        {
+        if ($error != null) {
             session()->flash('alert-danger', $error);
             return \back()->withInput();
         }
@@ -73,19 +70,18 @@ class OrderUPSLabelController extends Controller
         $order->refresh();
 
         return redirect()->route('admin.orders.ups-label.index', $order->id);
-        
     }
 
     public function cancelUPSPickup($id)
     {
         $order = Order::findorfail($id);
-        
+
         if ($order->us_api_service != ShippingService::UPS_GROUND) {
             session()->flash('alert-danger', 'FedEx Pickup cannot be canceled');
             return \back()->withInput();
         }
 
-        $this->authorize('canPrintLable',$order);
+        $this->authorize('canPrintLable', $order);
 
         $ups_labelRepository = new UPSLabelRepository();
 
@@ -93,8 +89,7 @@ class OrderUPSLabelController extends Controller
 
         $error = $ups_labelRepository->getUPSErrors();
 
-        if($error != null)
-        {
+        if ($error != null) {
             session()->flash('alert-danger', $error);
             return \back()->withInput();
         }

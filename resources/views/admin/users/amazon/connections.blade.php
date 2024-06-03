@@ -40,7 +40,8 @@
                                         <tr>
                                             <th>Seller Id</th>
                                             <th>Marketplace</th>
-                                            <th>Last Updated At</th> 
+                                            <th>Last Updated At</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
