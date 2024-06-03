@@ -20,6 +20,8 @@ class AnjunReportsRepository
                 return $query->whereIn('service_sub_class', [ShippingService::BCN_Packet_Standard, ShippingService::BCN_Packet_Express]);
             if($request->type=="anjun")
                 return $query->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express]);
+            if($request->type=="correios")
+                return $query->whereIn('service_sub_class', [ShippingService::Packet_Standard,ShippingService::Packet_Express,ShippingService::Packet_Mini]);
         });
         if(Auth::user()->isUser()){
             $query->where('user_id', Auth::id());
@@ -45,6 +47,8 @@ class AnjunReportsRepository
                 return $query->whereIn('services_subclass_code', ['BCN-NX', 'BCN-IX']);
             if($request->type=="anjun")
                 return $query->whereIn('services_subclass_code', ["AJ-IX","AJ-NX"]);
+            if($request->type=="correios")
+                return $query->whereIn('services_subclass_code', ["IX","NX","XP"]);
         });
         
         $startDate  = $request['start_date'].' 00:00:00';
