@@ -39,7 +39,7 @@ class AnjunReport extends AbstractExportService
             foreach ($deliveryBill->containers as $container) {
                 foreach ($container->orders as $order) {
                     if ($order->shippingService) {
-                        if ($order->shippingService->is_anjun_service || $order->shippingService->is_bcn_service) {
+                        if ($order->shippingService->is_correios) {
                             $this->setCellValue('A' . $row, $order->order_date);
                             $this->setCellValue('B' . $row, $order->warehouse_number);
                             $this->setCellValue('C' . $row, $order->user->name);
@@ -62,7 +62,7 @@ class AnjunReport extends AbstractExportService
         $this->setCellValue('F' . $row, "=SUM(F1:F{$row})");
         $this->setCellValue('G' . $row, "=SUM(G1:G{$row})");
         $this->setCellValue('H' . $row, "=SUM(H1:H{$row})");
-        $this->setBackgroundColor("A{$row}:H{$row}", 'adfb84');
+        $this->setBackgroundColor("A{$row}:J{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()

@@ -25,7 +25,7 @@ class ExportAnjunReport implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($request, $user)
+    public function __construct(array $request, $user)
     {
         $this->user = $user;
         $this->request = $request;
