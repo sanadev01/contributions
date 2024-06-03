@@ -41,7 +41,7 @@ class AnjunReport extends AbstractExportService
                     if($order->shippingService){
                         if($order->shippingService->is_correios)
                         {
-                            $service  = $order->shippingService->service_sub_class;
+                            $service  = $order->shippingService;
 
                             $this->setCellValue('A'.$row, $order->order_date);
                             $this->setCellValue('B'.$row, $order->warehouse_number);
@@ -50,7 +50,7 @@ class AnjunReport extends AbstractExportService
                             $this->setCellValue('E'.$row, $order->getWeight());
                             $this->setCellValue(
                                 'F' . $row, 
-                                 $order->sub_name
+                                 $service->sub_name
                             );
                             $this->setCellValue('G'.$row, optional(optional($order->containers)[0])->unit_code);
                             $this->setCellValue('H'.$row, round($order->gross_total,2));
