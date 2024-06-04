@@ -23,7 +23,8 @@
                     <th>@lang('orders.invoice.width')</th>
                     <th>@lang('orders.invoice.height')</th>
                     <th>@lang('orders.invoice.weight')</th>
-                    <th colspan="2">@lang('orders.invoice.unit')</th>
+                    <th>@lang('orders.invoice.vol-weight')</th>
+                    <th>@lang('orders.invoice.unit')</th>
                 </tr>
                 <tr>
                     <td>{{ $parcel->length }} {{ $parcel->is_weight_in_kg ? 'cm' : 'in' }}</td>
