@@ -25,13 +25,13 @@ class OrderExportController extends Controller
 
         $report = Reports::create([
             'user_id' => Auth::id(),
-            'name' => $request->type == "anjun" ? "Anjun Report" : ( $request->type == "bcn" ? 'BCN Export':"Orders Export"),
+            'name' => $request->type == "anjun" ? "Anjun Report" : ( $request->type == "bcn" ? 'BCN Export':( $request->type == "correios" ? 'Correios Export':"Orders Export")),
             'start_date' => $startDate,
             'end_date' => $endDate,
         ]);
         
         $request->merge(['report' => $report->id]);
-        if(in_array($request->type ,["anjun",'bcn'])){
+        if(in_array($request->type ,["anjun",'bcn','correios'])){
             ExportAnjunReport::dispatch($request->all(), Auth::user());
         }else {
             ExportOrder::dispatch($request->all(), Auth::user());

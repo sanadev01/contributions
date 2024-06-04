@@ -116,7 +116,7 @@ class AccrualRate extends Model
         return '';
     }
 
-    public static function getRateSlabFor($weight, $service  = null): AccrualRate
+    public static function getRateSlabFor($weight, $service  = null): ?AccrualRate
     {
         if($weight < 0.1){
             $weight = 0.1;
