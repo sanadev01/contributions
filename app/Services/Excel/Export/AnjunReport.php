@@ -38,28 +38,22 @@ class AnjunReport extends AbstractExportService
         foreach ($this->deliveryBills as $deliveryBill) {
             foreach ($deliveryBill->containers as $container) {
                 foreach ($container->orders as $order) {
-                    if($order->shippingService){
-                        if($order->shippingService->isAnjunService()||$order->shippingService->is_bcn_service)
-                        {
-                            $service  = $order->shippingService->service_sub_class;
+                    $shippingService = $order->shippingService;
+                    if ($shippingService && $shippingService->is_correios) {
 
-                            $this->setCellValue('A'.$row, $order->order_date);
-                            $this->setCellValue('B'.$row, $order->warehouse_number);
-                            $this->setCellValue('C'.$row, $order->user->name);
-                            $this->setCellValue('D'.$row, $order->corrios_tracking_code);
-                            $this->setCellValue('E'.$row, $order->getWeight());
-                            $this->setCellValue(
-                                'F' . $row, 
-                                $service == ShippingService::AJ_Packet_Standard ? 'Packet Standard' : ($service == ShippingService::AJ_Packet_Express ? 'Packet Express' : '')
-                            );
-                            $this->setCellValue('G'.$row, optional(optional($order->containers)[0])->unit_code);
-                            $this->setCellValue('H'.$row, round($order->gross_total,2));
-                            $this->setCellValue('I'.$row, $this->getValuePaidToCorrieos($order)['airport']);
-                            $this->setCellValue('J'.$row, $this->getValuePaidToCorrieos($order)['commission']);
-                            $this->setCellValue('K'.$row, $order->status_name);
-                            $this->setCellValue('L'.$row, $deliveryBill->created_at);
-                            $row++;
-                        }
+                        $this->setCellValue('A' . $row, $order->order_date);
+                        $this->setCellValue('B' . $row, $order->warehouse_number);
+                        $this->setCellValue('C' . $row, $order->user->name);
+                        $this->setCellValue('D' . $row, $order->corrios_tracking_code);
+                        $this->setCellValue('E' . $row, $order->getOriginalWeight('kg').'kg');
+                        $this->setCellValue('F' . $row, $shippingService->sub_name);
+                        $this->setCellValue('G' . $row, optional(optional($order->containers)[0])->unit_code);
+                        $this->setCellValue('H' . $row, round($order->gross_total, 2));
+                        $this->setCellValue('I' . $row, $this->getValuePaidToCorrieos($order)['airport']);
+                        $this->setCellValue('J' . $row, $this->getValuePaidToCorrieos($order)['commission']);
+                        $this->setCellValue('K' . $row, $order->status_name);
+                        $this->setCellValue('L' . $row, $deliveryBill->created_at);
+                        $row++;
                     }
                 }
             }
@@ -67,9 +61,9 @@ class AnjunReport extends AbstractExportService
 
         $this->currentRow = $row;
 
-        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
-        $this->setCellValue('I'.$row, "=SUM(I1:I{$row})");
-        $this->setCellValue('J'.$row, "=SUM(J1:J{$row})");
+        $this->setCellValue('H' . $row, "=SUM(H1:H{$row})");
+        $this->setCellValue('I' . $row, "=SUM(I1:I{$row})");
+        $this->setCellValue('J' . $row, "=SUM(J1:J{$row})");
         $this->setBackgroundColor("A{$row}:L{$row}", 'adfb84');
     }
 
@@ -88,7 +82,7 @@ class AnjunReport extends AbstractExportService
         $this->setCellValue('D1', 'Tracking Code');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Weight');
+        $this->setCellValue('E1', 'Gross Weight');
 
         $this->setColumnWidth('F', 20);
         $this->setCellValue('F1', 'Service');
@@ -104,7 +98,7 @@ class AnjunReport extends AbstractExportService
 
         $this->setColumnWidth('J', 20);
         $this->setCellValue('J1', 'Anjun Commission');
-        
+
         $this->setColumnWidth('K', 20);
         $this->setCellValue('K1', 'Status');
 
