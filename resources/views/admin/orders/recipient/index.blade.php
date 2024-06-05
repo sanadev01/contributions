@@ -83,7 +83,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.First Name') <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="first_name" value="{{old('first_name',optional($order->recipient)->first_name)}}"  placeholder="@lang('address.First Name')">
+                        <input type="text" class="form-control" name="first_name" value="{{ authMaskWithStars(old('first_name',optional($order->recipient)->first_name),$order->user_id,'left')}}"  placeholder="@lang('address.First Name')">
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Last Name') <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="last_name" value="{{old('last_name',optional($order->recipient)->last_name)}}" placeholder="@lang('address.Last Name')">
+                        <input type="text" class="form-control" name="last_name" value="{{authMaskWithStars(old('last_name',optional($order->recipient)->last_name),$order->user_id,'left')}}" placeholder="@lang('address.Last Name')">
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -99,14 +99,14 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Email') <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="email" value="{{old('email',optional($order->recipient)->email)}}" required placeholder="@lang('address.Email')">
+                        <input type="text" class="form-control" name="email" value="{{authMaskWithStars(old('email',optional($order->recipient)->email),$order->user_id,'left')}}" required placeholder="@lang('address.Email')">
                         <div class="help-block"></div>
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Phone') <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="phone" value="{{old('phone',optional($order->recipient)->phone)}}" placeholder="+55123456789">
+                        <input type="text" class="form-control" name="phone" value="{{authMaskWithStars(old('phone',optional($order->recipient)->phone),$order->user_id,'left')}}" placeholder="+55123456789">
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -114,14 +114,14 @@
                     <div class="controls">
                         <label id="label_address">@lang('address.Address') <span class="text-danger">*</span></label>
                         <label id="label_chile_address" style="display: none;">@lang('address.Chile Address')<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="address" name="address" value="{{old('address',optional($order->recipient)->address)}}" maxlength="38" required placeholder="@lang('address.Address')"/>
+                        <input type="text" class="form-control" id="address" name="address" value="{{authMaskWithStars(old('address',optional($order->recipient)->address),$order->user_id,'left')}}" maxlength="38" required placeholder="@lang('address.Address')"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Address2')</label>
-                        <input type="text" class="form-control"  placeholder="@lang('address.Address2')" value="{{old('address2',optional($order->recipient)->address2)}}"  name="address2">
+                        <input type="text" class="form-control"  placeholder="@lang('address.Address2')" value="{{authMaskWithStars(old('address2',optional($order->recipient)->address2),$order->user_id,'left')}}"  name="address2">
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -173,7 +173,7 @@
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls" id="div_city">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
-                        <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control" placeholder="City"/>
+                        <input type="text" id="city" name="city" value="{{ authMaskWithStars(old('city',optional($order->recipient)->city),$order->user_id,'left')}}" class="form-control" placeholder="City"/>
                         <div class="help-block"></div>
                     </div>
                     {{-- Chile Communes --}}
@@ -192,14 +192,14 @@
                 <div class="form-group col-12 col-sm-6 col-md-4" id="div_street_number">
                     <div class="controls">
                         <label>@lang('address.Street No') <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" placeholder="@lang('address.Street No')" value="{{old('street_no',optional($order->recipient)->street_no)}}"  name="street_no" id="street_no">
+                        <input type="text" class="form-control" placeholder="@lang('address.Street No')" value="{{authMaskWithStars(old('street_no',optional($order->recipient)->street_no),$order->user_id,'all')}}"  name="street_no" id="street_no">
                         <div class="help-block"></div>
                     </div>
                 </div>
                 <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Zip Code') <span class="text-danger">*</span></label>
-                        <input type="text" name="zipcode"  id="zipcode" value="{{ cleanString(old('zipcode',optional($order->recipient)->zipcode)) }}" class="form-control" placeholder="Zip Code"/>
+                        <input type="text" name="zipcode"  id="zipcode" value="{{ authMaskWithStars(cleanString(old('zipcode',optional($order->recipient)->zipcode)),$order->user_id,'left') }}" class="form-control" placeholder="Zip Code"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
@@ -208,7 +208,7 @@
                     <div class="controls">
                             <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
                             <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
-                        <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id',optional($order->recipient)->tax_id)}}" class="form-control" placeholder="CNPJ"/>
+                        <input type="text" name="tax_id" id="tax_id" value="{{authMaskWithStars(old('tax_id',optional($order->recipient)->tax_id),$order->user_id,'left')}}" class="form-control" placeholder="CNPJ"/>
                         <div class="help-block"></div>
                     </div>
                 </div>
