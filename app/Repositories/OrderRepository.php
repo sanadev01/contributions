@@ -660,7 +660,8 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS)
             || $shippingServices->contains('service_sub_class', ShippingService::Japan_Prime)
             || $shippingServices->contains('service_sub_class', ShippingService::Japan_EMS)
-            || $shippingServices->contains('service_sub_class', ShippingService::GSS_CEP))
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_CEP)
+            || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS_10KG))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {

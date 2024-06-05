@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Resources\Warehouse\Container\PackageResource;
+use App\Services\Correios\GetZipcodeGroup;
 
 class Container extends Model implements \App\Services\Correios\Contracts\Container
 {
@@ -118,7 +119,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'First Class Package International';
         }elseif($this->services_subclass_code == ShippingService::GSS_EMS){
             return 'Priority Mail Express International (Nationwide)';
-        }elseif($this->services_subclass_code == ShippingService::TOTAL_EXPRESS){
+        }elseif($this->services_subclass_code == ShippingService::TOTAL_EXPRESS || $this->services_subclass_code == ShippingService::TOTAL_EXPRESS_10KG){
             return 'Total Express';
         }elseif($this->services_subclass_code == ShippingService::DirectLinkAustralia){
             return 'DirectLink Australia';
@@ -172,7 +173,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif( $this->services_subclass_code == ShippingService::GDE_FIRST_CLASS) {
             return 15;
-        }elseif( $this->services_subclass_code == ShippingService::TOTAL_EXPRESS) {
+        }elseif( $this->services_subclass_code == ShippingService::TOTAL_EXPRESS || $this->services_subclass_code == ShippingService::TOTAL_EXPRESS_10KG) {
             return 16;
         }
         elseif($this->services_subclass_code == ShippingService::HD_Express){
@@ -311,7 +312,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getHasTotalExpressServiceAttribute()
     {
-        return $this->services_subclass_code == ShippingService::TOTAL_EXPRESS;
+        return $this->services_subclass_code == ShippingService::TOTAL_EXPRESS || $this->services_subclass_code == ShippingService::TOTAL_EXPRESS_10KG;
     }
     public function getHasHoundExpressAttribute()
     {
@@ -325,9 +326,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getGroup($container) {
         
-        $containerOrder = $container->orders->first();
-        $firstOrderGroupRange = getOrderGroupRange($containerOrder);
-        
-        return $firstOrderGroupRange['group'];
+        $firstOrder = $container->orders->first();
+        return (new GetZipcodeGroup($firstOrder->recipient->zipcode))->getZipcodeGroup();
     }
 }

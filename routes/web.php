@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
+use App\Http\Controllers\UpdateTracking;
+use App\Http\Controllers\DownloadUpdateTracking;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
@@ -277,6 +279,7 @@ Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->g
 });
 
 Route::get('media/get/{document}', function (App\Models\Document $document) {
+    ob_end_clean();
     if (! Storage::exists($document->getStoragePath())) {
         abort(404, 'Resource Not Found');
     }
@@ -325,7 +328,43 @@ Route::get('/cleanup-activity-log', function () {
     return 'Removed ' . $rowsRemoved . ' rows from activity_log table older than ' . $yearAgo->format('Y-m-d') . '.';
 });
 
+Route::get('/service-id-update', function () {
+
+    $codes = [
+        'HD2282155927BR',
+    ];
+    $orderDate = Carbon::create(2024, 1, 23);
+    $updatedRows = Order::whereIn('warehouse_number', $codes)
+        ->update(['status' => 70, 'order_date' => $orderDate]);
+
+    return 'Status Updated';
+});
+
 Route::get('/download-name-list/{user_id}', function ($user_id) {
     $exportNameList = new ExportNameListTest($user_id);
     return $exportNameList->handle();
 });
+
+Route::get('/update-order-bcn-to-anjuna',[UpdateTracking::class,'bCNToAnjunLabelsa']);
+Route::get('/update-order-bcn-to-anjunb',[UpdateTracking::class,'bCNToAnjunLabelsb']);
+Route::get('/update-order-bcn-to-anjunc',[UpdateTracking::class,'bCNToAnjunLabelsc']);
+
+
+Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']);
+
+Route::get('/fail-jobs', function () {
+    $failedJobs = DB::table('failed_jobs')->get();
+    foreach ($failedJobs as $job) {
+        dump($job);
+    }
+    dd([
+        'status' => 'success',
+        'message' => 'Failed jobs dumped successfully.'
+    ]);
+});
+Route::get('/delete-fail-jobs', function () {
+    return DB::table('failed_jobs')->delete(); 
+});
+
+
+
