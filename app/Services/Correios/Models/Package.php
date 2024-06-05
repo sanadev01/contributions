@@ -38,7 +38,6 @@ class Package implements \App\Services\Correios\Contracts\Package
     const SERVICE_CLASS_Japan_Prime = ShippingService::Japan_Prime;
     const SERVICE_CLASS_Japan_EMS = ShippingService::Japan_EMS;
     const SERVICE_CLASS_Hound_Express = ShippingService::HoundExpress;
-    const SERVICE_CLASS_TOTAL_EXPRESS_10KG = ShippingService::TOTAL_EXPRESS_10KG;
 
 
     public $customerControlCode = "";

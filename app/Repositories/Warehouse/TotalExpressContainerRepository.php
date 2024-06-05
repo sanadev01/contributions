@@ -20,7 +20,7 @@ class TotalExpressContainerRepository {
         }
 
         return $query->where(function($query) {
-            $query->whereIn('services_subclass_code', [ShippingService::TOTAL_EXPRESS, ShippingService::TOTAL_EXPRESS_10KG]);
+            $query->where('services_subclass_code', ShippingService::TOTAL_EXPRESS);
         })->latest()->paginate();
 
     }

@@ -6,7 +6,6 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
-use App\Repositories\Warehouse\AddContainerPackageRepository;
 use App\Services\Excel\Export\ContainerOrderExport;
 use App\Repositories\Warehouse\ContainerPackageRepository;
 
@@ -40,14 +39,9 @@ class ContainerPackageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Container $container, string $barcode)
+    public function store(Container $container, string $barcode, ContainerPackageRepository $containerPackageRepository)
     {
-        $startTime = microtime(true); 
-        $output = (new AddContainerPackageRepository($container,$barcode))->addOrderToContainer();
-        $endTime = microtime(true); 
-        $executionTime = $endTime - $startTime;  
-        \Log::info('Execution time of addOrderToContainer:' . $executionTime . ' seconds');
-        return $output;
+       return $containerPackageRepository->addOrderToContainer($container,$barcode);
     }
 
     /**

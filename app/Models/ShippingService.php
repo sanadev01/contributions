@@ -71,7 +71,6 @@ class ShippingService extends Model
     const Japan_Prime = 5537;
     const Japan_EMS = 5541;
     const GSS_CEP = 237;
-    const TOTAL_EXPRESS_10KG = 284;
 
     protected $guarded = [];
 
@@ -235,7 +234,7 @@ class ShippingService extends Model
     }
     public function getIsTotalExpressAttribute()
     {
-        return in_array($this->service_sub_class,[self::TOTAL_EXPRESS, self::TOTAL_EXPRESS_10KG]); 
+        return $this->service_sub_class == self::TOTAL_EXPRESS;
     }
     public function isSwedenPostService()
     {
