@@ -912,8 +912,7 @@ class Order extends Model implements Package
             
                 $duty = $totalCost > 50 ? $totalCost * .60 :0; 
                 $totalCostOfTheProduct = $totalCost + $duty;
-                $icms = .17;
-                $totalIcms = $icms * $totalCostOfTheProduct;
+                $totalIcms = ($totalCostOfTheProduct/.83) * .17;
                 $totalTaxAndDuty = $duty + $totalIcms;
                 \Log::info([
                     'recipient country' => $this->recipient->country->code,
@@ -923,8 +922,7 @@ class Order extends Model implements Package
                     'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
                     'totalCost' => $totalCost,
                     'duty' => $duty,
-                    'totalCostOfTheProduct' => $totalCostOfTheProduct,
-                    'icms' => $icms,
+                    'totalCostOfTheProduct' => $totalCostOfTheProduct, 
                     'totalIcms' => $totalIcms,
                     'totalTaxAndDuty' => $totalTaxAndDuty, 
                 ]);
