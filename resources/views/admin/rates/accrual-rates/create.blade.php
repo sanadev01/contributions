@@ -39,6 +39,7 @@
                                             <option value="50">Colombia</option>
                                             <option value="114">Japan</option>
                                             <option value="146">Mexico</option>
+                                            <option value="205">Senegal</option>
                                         </select>
                                         <div class="help-block"></div>
                                     </div>
@@ -82,6 +83,7 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Japan_EMS}}">Japan EMS JerseyPost</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Hound_Express}}">MEXICO Hound Express</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_TOTAL_EXPRESS_10KG}}">Total Express 10KG</option>
+                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_DSS_SENEGAL}}">DSS Senegal</option>
 
                                         </select>
                                         <div class="help-block"></div>

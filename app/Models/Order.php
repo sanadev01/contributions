@@ -409,6 +409,9 @@ class Order extends Model implements Package
 
                 return 'MEXICO Hound Express';
             }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::DSS_SENEGAL){
+                return 'DSS Senegal';
+            }
             return 'Correios Brazil';
         }
 
