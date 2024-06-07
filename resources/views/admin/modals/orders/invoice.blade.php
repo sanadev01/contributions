@@ -41,7 +41,7 @@
             <div class="text-left w-50">
                 <h5>@lang('orders.invoice.Recipient')</h5>
                 <div class="recipient-info my-2">
-                    <p>{{ authMaskWithStars(optional($order->recipient)->first_name .' '. optional($order->recipient)->last_name,$order->user_id,'Right') }} </p>
+                    <p>{{ optional($order->recipient)->first_name .' '. optional($order->recipient)->last_name }} </p>
                     <p> {{ authMaskWithStars(optional($order->recipient)->address,$order->user_id,'Right') }} {{ authMaskWithStars(optional($order->recipient)->address2,$order->user_id,'All') }} {{ authMaskWithStars(optional($order->recipient)->street_no,$order->user_id,'Left') }}<br>
                         {{ authMaskWithStars(optional($order->recipient)->city,$order->user_id,"Right") }}, {{ authMaskWithStars(optional($order->recipient)->region,$order->user_id,"All") }}, {{  authMaskWithStars(optional(optional($order->recipient)->state)->code,$order->user_id,"All") }}, {{ authMaskWithStars(optional($order->recipient)->zipcode,$order->user_id,'All') }}<br>
                         {{  authMaskWithStars(optional(optional($order->recipient)->country)->name,$order->user_id,'Left') }}<br>
