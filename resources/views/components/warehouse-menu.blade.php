@@ -104,6 +104,12 @@
                                 <span class="menu-title">@lang('menu.Warehouse.HD Express')</span>
                             </a>
                         </li>
+                        <li class="{{ $isActive(['warehouse.hd-senegal-containers.index','warehouse.hd-senegal-containers.create','warehouse.hd-senegal-containers.edit','warehouse.hd-senegal-containers.packages.index']) }}">
+                            <a href="{{ route('warehouse.hd-senegal-containers.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">@lang('menu.Warehouse.DSS Senegal')</span>
+                            </a>
+                        </li>
 
                         <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
                             <a href="{{ route('warehouse.chile_containers.index') }}">

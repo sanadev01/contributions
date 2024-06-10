@@ -133,6 +133,10 @@ class IndexTable extends Component
         $this->services[18] = [
             'name' => 'Total Express 10KG',
             'value' => Package::SERVICE_CLASS_TOTAL_EXPRESS_10KG,
+        ];
+        $this->services[28] = [
+            'name' => 'DSS Senegal',
+            'value' => Package::SERVICE_CLASS_DSS_SENEGAL,
         ];   
         return $this->services;
     }
