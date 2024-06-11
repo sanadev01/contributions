@@ -2,7 +2,7 @@
     {{-- @dd(request()); --}}
     @if (strpos(request()->server('HTTP_REFERER'), 'reports/commission') !== false)
             <div class="col-12 row justify-content-between">
-                500 Server Error !
+                500 | Server Error
             </div>
         @else
             <div class="col-12 row justify-content-between">
