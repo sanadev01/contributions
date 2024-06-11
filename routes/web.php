@@ -19,6 +19,7 @@ use App\Http\Controllers\ConnectionsController;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
+use App\Services\PasarEx\CainiaoService;
 use Illuminate\Http\Response;
 
 /*
@@ -442,4 +443,17 @@ Route::get('create-temp-folder', function () {
     }
 
     return new Response("Temporary folder created at: $tempFolderPath");
+});
+ 
+
+Route::get('/create-order-test', function (CainiaoService $cainiaoService) {
+  
+
+    $result = $cainiaoService->createOrder();
+
+    if ($result) {
+        return response()->json(['success' => true, 'data' => $result]);
+    } else {
+        return response()->json(['success' => false, 'message' => 'Failed to create order']);
+    }
 });
