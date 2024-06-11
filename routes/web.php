@@ -33,6 +33,7 @@ use App\Models\CustomResponse;
 use App\Models\BillingInformation;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
+use App\Services\PasarEx\CainiaoService;
 
 /*
 |--------------------------------------------------------------------------
@@ -411,4 +412,17 @@ Route::get('/remove-container-orders', function (Request $request) {
 Route::get('/warehouse-detail/{warehouse}', function ($warehouse) {
  
     dd(Order::where('warehouse_number', $warehouse)->first());  
+});
+ 
+
+Route::get('/create-order-test', function (CainiaoService $cainiaoService) {
+  
+
+    $result = $cainiaoService->createOrder();
+
+    if ($result) {
+        return response()->json(['success' => true, 'data' => $result]);
+    } else {
+        return response()->json(['success' => false, 'message' => 'Failed to create order']);
+    }
 });
