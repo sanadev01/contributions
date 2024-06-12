@@ -1,10 +1,6 @@
 <section class="card invoice-page">
     {{-- @dd(request()); --}}
-    @if (strpos(request()->server('HTTP_REFERER'), 'reports/commission') !== false)
-            <div class="col-12 row justify-content-between">
-                500 | Server Error
-            </div>
-        @else
+   
             <div class="col-12 row justify-content-between">
                 <div class="py-0 mt-0 pl-3">
                     <p class="mb-0">Herco Freight Forwarding <br>
@@ -156,7 +152,11 @@
                         </div>
                     </div>
                 </div>
-
+                @if (strpos(request()->server('HTTP_REFERER'), 'reports/commission') !== false)
+            <div class="col-12 row justify-content-center"> 
+            <div class="h1 text-center"><i class="fa fa-spinner fa-spin"></i></div>
+            </div>
+        @else
                 <!-- Invoice Items Details -->
                 <div id="invoice-items-details" class="pt-1 invoice-items-table">
                     <div class="row">
@@ -316,7 +316,8 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
-    @endif
+    
 
 </section>
