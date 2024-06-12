@@ -45,26 +45,12 @@ class AddContainerPackageRepository extends AbstractRepository{
         // if ($this->shippingService->isCorreiosService()) {
         //     return $this->validationError404('Service is currently blocked. Please contact administrator.');
         // }
-        $outputChina= $this->updateContainer();
-        $endTimeChina = microtime(true); 
-        $executionTimeChina = $endTimeChina - $startTime;  
-        \Log::info('Execution time of uptoUpdateTime:' . $executionTimeChina . ' seconds');
-        return $outputChina;
+        return  $this->updateContainer();
     }
     
   
     
     public function updateContainer()
-    {
-        $startTime = microtime(true);   
-        $output = $this->updateContainerExecutionTime( );
-        $endTime = microtime(true); 
-        $executionTime = $endTime - $startTime;  
-        \Log::info('Execution time of updateContainer:' . $executionTime . ' seconds');
-       return $output;
-    }
- 
-    public function updateContainerExecutionTime()
     {
         if ($this->containerFirstOrder) {
                 //make sure container all order are belong to same gorup.
