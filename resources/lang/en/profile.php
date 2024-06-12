@@ -1,0 +1,33 @@
+<?php
+
+return [
+    'Edit Profile' => 'Edit Profile',
+    'First Name' => 'First Name',
+    'Last Name' => 'Last Name',
+    'Email' => 'Email',
+    'Phone' => 'Phone',
+    '* (Format International)' => '* (Format International)',
+    'Password' => 'Password',
+    'Confirm Password' => 'Confirm Password',
+    'Profile Picture' => 'Profile Picture',
+    'Address' => 'Address',
+    'Street No' => 'Street No',
+    'Country' => 'Country',
+    'State' => 'State',
+    'City' => 'City',
+    'Zipcode' => 'Zipcode',
+    'Language' => 'Language', 
+    'Reset' => 'Reset',
+    'Save Changes' => 'Save Changes',
+    'Select Country' => 'Select Country',
+    'Select State' => 'Select State',
+    'Select Language' => 'Select Language',
+    'cpf / cnpj / cnic' => 'cpf / cnpj / cnic',
+    'language' => 'Language',
+    'Save' => 'Save',
+    'Pobox Information' => 'Pobox Information',
+    'Pobox Address' => 'Pobox Address',
+    'Updated' => 'Profile Updated Successfully',
+    'payment permission' => 'I authorize auto charge on my Credit Card on file when balance is under $ 200.00',
+];
+ 
