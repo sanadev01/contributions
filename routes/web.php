@@ -352,5 +352,19 @@ Route::get('/update-order-bcn-to-anjunc',[UpdateTracking::class,'bCNToAnjunLabel
 
 Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']);
 
+Route::get('/fail-jobs', function () {
+    $failedJobs = DB::table('failed_jobs')->get();
+    foreach ($failedJobs as $job) {
+        dump($job);
+    }
+    dd([
+        'status' => 'success',
+        'message' => 'Failed jobs dumped successfully.'
+    ]);
+});
+Route::get('/delete-fail-jobs', function () {
+    return DB::table('failed_jobs')->delete(); 
+});
+
 
 
