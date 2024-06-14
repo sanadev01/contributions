@@ -95,7 +95,7 @@
                                 </span>
                             </span>
                         </div>
-                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return parcel, I'm responsible for cost dispose parcel<span class="text-danger"></span></label>
                     </div>
                     <div class="form-check form-check-inline mr-5">
                         <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
