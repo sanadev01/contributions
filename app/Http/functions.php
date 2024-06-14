@@ -13,6 +13,7 @@ use App\Models\ShippingService;
 use App\Mail\User\PurchaseInsurance;
 use App\Services\Calculators\AbstractRateCalculator;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 
 function countries()
 {
@@ -550,5 +551,38 @@ function checkParcelInsurance($data) {
     } else {
         \Log::warning('Order not found for Deposit ID');
     }
+}
+function authMaskWithStars($value, $owner_id,$fun="Mid") {
 
+    $fun = in_array(ucfirst(strtolower($fun)),['Mid','Left','Right','All'])?$fun:'Mid';
+    $function = 'maskWithStars'.$fun;
+    return (Auth::check() && Auth::id() == $owner_id) ? $value : $function($value);
+}
+function maskWithStarsLeft($value)
+{
+    $length = strlen($value);
+    if ($length <= 6) {
+        return ($length <= 2) ? $value : '******' . substr($value, -1);
+    }
+    return  '******' . substr($value, -3);
+}
+function maskWithStarsAll($value)
+{
+    return  '******';
+}
+function maskWithStarsRight($value)
+{
+    $length = strlen($value);
+    if ($length <= 6) {
+        return ($length <= 2) ? $value : substr($value, 0, 1) . '******';
+    }
+    return substr($value, 0, 3) . '******';
+}
+function maskWithStarsMid($value)
+{
+    $length = strlen($value);
+    if ($length <= 6) {
+        return ($length <= 2) ? $value : substr($value, 0, 1) . '******' . substr($value, -1);
+    }
+    return substr($value, 0, 3) . '******' . substr($value, -3);
 }
