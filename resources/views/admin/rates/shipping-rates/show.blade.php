@@ -38,7 +38,7 @@
                                         {{ isset($rate['weight'])?$rate['weight']:0 }} g
                                     </th>
                                     <th>
-                                        {{ isset($rate['leve'])?$rate['leve']:0 }}
+                                        {{ number_format(isset($rate['leve'])?$rate['leve']:0, 2) }}
                                     </th>
                                 </tr>
                                 @empty

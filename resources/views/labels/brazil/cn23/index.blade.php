@@ -36,6 +36,15 @@
             object-fit: contain;
         }
 
+        img.customs-logo{
+            position: absolute;
+            top: 7.mm;
+            left: 5.5cm;
+            width: 1.4cm;
+            height: 1.5cm;
+            object-fit: contain;
+        }
+
         p.screening-code{
             position: absolute;
             top: 5mm;
@@ -389,7 +398,12 @@
     </div>
     <img class="partner-logo" src="{{ $partnerLogo }}">
     <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
-    <p class="screening-code">CJA01</p>
+    
+    @if(setting('prc_label', null, $order->user_id) && $order->tax())
+        <img class="customs-logo" src="{{ $customsLogo }}" alt="">
+    @else
+        <p class="screening-code">CJA01</p>
+    @endif
     <img src="{{ $serviceLogo }}" class="service-type"/>
     <div class="service-info-wrapper">
         <div class="order-infoline"></div>
@@ -445,7 +459,7 @@
             </div>
             @if(!empty($labelZipCodeGroup))
                 <div class="bottom-block">
-                    <div class="box-text" style="font-size: 24px !important; font-weight: bold; ">{{ optional($labelZipCodeGroup)['group'] }}</div>
+                    <div class="box-text" style="font-size: 24px !important; font-weight: bold; ">{{ $labelZipCodeGroup }}</div>
                 </div>
             @else
                 @if($order->getOriginalWeight('kg') > 3)

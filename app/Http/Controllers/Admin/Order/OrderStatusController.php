@@ -85,6 +85,8 @@ class OrderStatusController extends Controller
                         $orders->push($order);
                         event(new OrderPaid($orders, true));
                         $this->sendTransactionMail($deposit, $preStatus, $user);
+                        //Check for Insurance
+                        checkParcelInsurance($deposit);
 
                         return $this->commit();
 

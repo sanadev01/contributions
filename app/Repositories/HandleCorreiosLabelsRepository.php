@@ -17,6 +17,7 @@ use App\Repositories\CorrieosBrazilLabelRepository;
 use App\Repositories\AnjunLabelRepository;
 use App\Services\TotalExpress\TotalExpressLabelRepository;
 use App\Repositories\HoundExpressLabelRepository;
+use App\Repositories\SenegalLabelRepository;
 use App\Models\ShippingService;
 
 class HandleCorreiosLabelsRepository
@@ -40,6 +41,9 @@ class HandleCorreiosLabelsRepository
         }
         if ($this->order->shippingService->is_hound_express) { 
             return $this->isHoundExpress();
+        }
+        if ($this->order->shippingService->isSenegalService()) {
+            return $this->senegalLabel();
         }
         if ($this->order->recipient->country_id == Order::BRAZIL) {
 
@@ -238,6 +242,14 @@ class HandleCorreiosLabelsRepository
         $buttonsOnly = $this->request->has('buttons_only');
         return view('admin.orders.label.label', compact('order', 'error', 'buttonsOnly'));
     }
+
+    public function senegalLabel()
+    {
+        $senegalLabelRepository = new SenegalLabelRepository();
+        $senegalLabelRepository->run($this->order, $this->update);
+        return $this->renderLabel($this->request, $this->order, $senegalLabelRepository->getError());
+    }
+
     public function updateShippingServiceFromSetting($order)
     {
         $service_sub_class = $order->shippingService->service_sub_class;

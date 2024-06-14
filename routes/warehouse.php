@@ -85,6 +85,11 @@ use App\Http\Controllers\Warehouse\UnitRegisterFactoryController;
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Export\OrderExportTemp;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Warehouse\SenegalContainerController;
+use App\Http\Controllers\Warehouse\SenegalUnitRegisterController;
+use App\Http\Controllers\Warehouse\SenegalCN35DownloadController;
+use App\Http\Controllers\Warehouse\SenegalContainerPackageController;
+
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
 
@@ -224,6 +229,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('hd-express-container.packages', HDExpressContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('hd-express-container/{container}/register', HDExpressUnitRegisterController::class)->name('hd-express-container.register');
     Route::get('hd-express-container/{container}/download', HDExpressCN35DownloadController::class)->name('hd-express-container.download');
+
+    // Routes for Senegal container
+    Route::resource('hd-senegal-containers', SenegalContainerController::class);
+    Route::resource('hd-senegal-container.packages', SenegalContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('hd-senegal-container/{container}/register', SenegalUnitRegisterController::class)->name('hd-senegal-container.register');
+    Route::get('hd-senegal-container/{container}/download', SenegalCN35DownloadController::class)->name('hd-senegal-container.download');
 });
 
 

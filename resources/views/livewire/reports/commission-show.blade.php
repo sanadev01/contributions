@@ -1,15 +1,15 @@
 <div>
     <div class="p-2">
-        @admin
             <div class="row">
                 <div class="col-12 text-right mb-3">
+        @admin
                     <p class="mr-2 h5">UserName:<span class="text-success h4"> {{ $user->name }}</span></p>
                     <p class="mr-2 h5">POBOX Number:<span class="text-success h4"> {{ $user->pobox_number }}</span></p>
+        @endadmin
                     <p class="mr-2 h5">Paid Commission:<span class="text-success h4"> $ {{ number_format($user->affiliateSales()->where('is_paid', true)->sum('commission'), 2) }}</span></p>
                     <p class="mr-2 h5">UnPaid Commission:<span class="text-danger h4"> $ {{ number_format($user->affiliateSales()->where('is_paid', false)->sum('commission'), 2) }}</span></p>
                 </div>
             </div>
-        @endadmin
         <div class="col-12 text-right">
             <a href="{{ route('admin.reports.commission.index') }}" class="btn btn-primary">
                 Back to list
@@ -36,13 +36,13 @@
                         <div class="form-group col-10 col-sm-6 col-md-3">
                             <div class="row">
                                 <label class="col-md-3 control-label">@lang('sales-commission.start date')</label>
-                                <input type="date" name="start_date" class="form-control col-md-8">
+                                <input type="date" name="start" class="form-control col-md-8">
                             </div>
                         </div>
                         <div class="form-group col-12 col-sm-6 col-md-3">
                             <div class="row">
                                 <label class="col-md-3 control-label">@lang('sales-commission.end date')</label>
-                                <input type="date" name="end_date" class="form-control col-md-8">
+                                <input type="date" name="end" class="form-control col-md-8">
                             </div>
                         </div>
                         <div class="form-group col-12 col-sm-6 col-md-3">
@@ -229,6 +229,24 @@
                     @empty
                         <x-tables.no-record colspan="15"></x-tables.no-record>
                     @endforelse
+                    <tr>
+                        <td></td>
+                         @admin <td></td> @endadmin
+                        <td colspan="2">
+                            Total No # {{$saleReport->count()}}
+                        </td>
+                        <td colspan="3">
+                        </td>
+                        <td>
+                            {{$saleReport->sum('value')}}
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+                            {{$saleReport->sum('commission')}}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

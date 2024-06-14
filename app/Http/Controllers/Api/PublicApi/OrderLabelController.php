@@ -27,6 +27,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Events\AutoChargeAmountEvent;
+use App\Repositories\SenegalLabelRepository;
 
 class OrderLabelController extends Controller
 {
@@ -200,6 +201,15 @@ class OrderLabelController extends Controller
                     return $this->rollback($error);
                 }
             }
+
+            if ($order->shippingService->isSenegalService()) {
+                $senegalLabelRepository = new SenegalLabelRepository();
+                $senegalLabelRepository->run($order, false);
+                $error = $senegalLabelRepository->getError();
+                if ($error) {
+                    return $this->rollback($error);
+                }
+            }
             return $this->commit($order);
         } catch (Exception $e) {
             return $this->rollback($e->getMessage());
@@ -221,6 +231,8 @@ class OrderLabelController extends Controller
     private function commit($order)
     {
         DB::commit();
+        //Check for Insurance
+        checkParcelInsurance($order);
         return apiResponse(true, "Lable Generated successfully.", [
             'url' => $order->cn23_label_url ?? route('order.label.download',  encrypt($order->id)),
             'tracking_code' => $order->corrios_tracking_code

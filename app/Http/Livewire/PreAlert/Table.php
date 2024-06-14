@@ -90,8 +90,8 @@ class Table extends Component
         if (strlen($this->whr_number) <= 0) {
             return $this->query = $this->getQuery();
         }
-
-        $this->query = $this->getQuery()->where('warehouse_number', 'LIKE', "%{$this->whr_number}%");
+        $whrNumber = trim($this->whr_number);
+        $this->query = $this->getQuery()->where('warehouse_number', 'LIKE', "%{$whrNumber}%");
     }
 
     public function updatedMerchant()

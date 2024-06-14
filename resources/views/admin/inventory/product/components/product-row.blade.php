@@ -15,13 +15,13 @@
         <td>{{ $product->user->name }}</td>
     @endadmin
     <td>{{ $product->name }}</td>
-    <td>{{ $product->price }}</td>
+    <td>{{ number_format($product->price, 2) }}</td>
     <td>{{ $product->quantity }}</td>
     <td>{{ $product->sku }}</td>
     <td>{{ $product->barcode }}</td>
     <td>{{ $product->weight }}</td>
     <td>{{ $product->measurement_unit }}</td>
-    <td class="text-right">{{ $product->quantity *  $product->price}}</td>
+    <td class="text-right">{{ number_format($product->quantity *  $product->price, 2) }}</td>
     <td class="text-right">{{ $product->exp_date ? date('Y-m-d', strtotime($product->exp_date)) : '' }}</td>
     <td>{{ $product->description }}</td>
     <td>

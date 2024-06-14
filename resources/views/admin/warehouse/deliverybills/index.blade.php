@@ -123,6 +123,8 @@
                                                 <span class="badge text-dark" style="background-color:#b4e2ef">HE</span>
                                                 @elseif($deliveryBill->isPasarEx())
                                                 <span class="badge text-dark" style="background-color:#b4e2ef">PEx</span>
+                                                @elseif($deliveryBill->isSenegal())
+                                                <span class="badge badge-secondary text-dark">SN</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif

@@ -51,10 +51,10 @@
                         {{ $order[0]->us_api_tracking_code }}
                     </td>
                     <td>
-                        {{ $order[0]->getUspsResponse()->total_amount }} USD
+                        {{ number_format($order[0]->getUspsResponse()->total_amount, 2) }} USD
                     </td>
                     <td>
-                        {{ $order[0]->usps_cost }} USD
+                        {{ number_format($order[0]->usps_cost, 2) }} USD
                     </td>
                     <td>
                         {{ $order[0]->getUspsResponse()->usps->mail_class }}

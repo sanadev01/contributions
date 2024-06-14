@@ -53,6 +53,7 @@ class CreateRequest extends FormRequest
             "parcel.width" => "required|numeric|gt:0",
             "parcel.height" => "required|numeric|gt:0",
             "parcel.shipment_value" => "nullable|numeric",
+            "parcel.return_option" => "nullable|numeric",
 
             "sender.sender_first_name" => "required|max:100",
             "sender.sender_last_name" => "required|max:100",
@@ -143,6 +144,7 @@ class CreateRequest extends FormRequest
         if ($shippingService && $shippingService->is_total_express) {
 
             $rules['products.*.description'] = 'required|max:60';
+            $rules['parcel.tax_modality'] = 'required|in:DDU,DDP';
         }
 
         if ($request->recipient['country_id'] == 'UK' || $request->recipient['country_id'] == Country::UK) {
@@ -164,6 +166,7 @@ class CreateRequest extends FormRequest
             'sender.sender_city.required_if' => __('validation.sender_city.required_if'),
             'recipient.phone.required' => 'The phone number field is required.',
             'recipient.phone.regex' => 'Please enter a valid phone number in international format. Example: +551234567890',
+            'parcel.return_option.required' => 'The return option is required. It should be 0 or 1.',
         ];
     }
 }

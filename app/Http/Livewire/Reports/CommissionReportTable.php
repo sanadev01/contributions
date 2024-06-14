@@ -48,11 +48,9 @@ class CommissionReportTable extends Component
 
     public function getReportData()
     {
-        if (auth()->user()->isAdmin()) {
-            return (new CommissionReportsRepository)->getCommissionReportOfUsers($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
-        }
-        
-        return (new CommissionReportsRepository)->getCommissionReportOfLoggedInUser($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
+          return (new CommissionReportsRepository)->getCommissionReportOfUsers($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
+         
+        // return (new CommissionReportsRepository)->getCommissionReportOfLoggedInUser($this->getRequestData(),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 
     public function getRequestData()
@@ -63,6 +61,8 @@ class CommissionReportTable extends Component
             'email' => $this->email,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
+            'start' => $this->start_date,
+            'end' => $this->end_date,
             'sort_by' => $this->sortBy, 
             'sort_order' => $this->sortAsc ? 'asc' : 'desc',
             'year' => $this->year,

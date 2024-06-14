@@ -125,7 +125,19 @@ class IndexTable extends Component
         $this->services[26] = [
             'name' => 'Japan EMS JerseyPost',
             'value' => Package::SERVICE_CLASS_Japan_EMS,
-        ];  
+        ];
+        $this->services[27] = [
+            'name' => 'MEXICO Hound Express',
+            'value' => Package::SERVICE_CLASS_Hound_Express,
+        ];
+        $this->services[18] = [
+            'name' => 'Total Express 10KG',
+            'value' => Package::SERVICE_CLASS_TOTAL_EXPRESS_10KG,
+        ];
+        $this->services[28] = [
+            'name' => 'DSS Senegal',
+            'value' => Package::SERVICE_CLASS_DSS_SENEGAL,
+        ];   
         return $this->services;
     }
 }

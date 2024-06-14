@@ -50,6 +50,7 @@
                                                     <select name="type"  class="form-control" id="searchType"   >
                                                         <option class="form-control" value="bcn" @if(request('type')=='bcn') selected @endif>BCN</option>
                                                         <option class="form-control" value="anjun"  @if(request('type')=='anjun') selected @endif>ANJUN</option>
+                                                        <option class="form-control" value="correios"  @if(request('type')=='correios') selected @endif>Correios</option>
                                                     </select>
                                                     </div>
                                                 </div>
@@ -109,7 +110,7 @@
                                             </td>
                                             <td>{{ $order->user->name }}</td>
                                             <td>{{ $order->corrios_tracking_code }}</td>
-                                            <td>{{ $order->gross_total }}</td>
+                                            <td>{{ number_format($order->gross_total, 2) }}</td>
                                             <td><livewire:reports.anjun-report :order="$order" :isCommission="false"/></td>
                                             <td><livewire:reports.anjun-report :order="$order" :isCommission="true"/></td>
                                             <td>{{ $order->status_name }}</td>
