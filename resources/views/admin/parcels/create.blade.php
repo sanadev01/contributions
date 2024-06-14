@@ -130,33 +130,30 @@
                                         <div class="col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('parcel.Image 1')<span class="text-danger">*</span></label>
-                                                <select id="uploadOption1" class="form-control">
-                                                    <option value="">select..</option>
-                                                    <option value="camera">Open Camera</option>
-                                                    <option value="browse">Browse from PC</option>
-                                                </select>
+                                                <div class="btn-group" role="group" aria-label="Upload options">
+                                                    <button type="button" class="btn btn-primary" data-option="browse" data-input="fileInput1">Browse from PC</button>
+                                                    <button type="button" class="btn btn-secondary" data-option="camera" data-input="fileInput1">Open Camera</button>
+                                                </div>
                                                 <input type="file" accept="image/*" name="images[]" id="fileInput1" class="d-none">
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('parcel.Image 2')<span class="text-danger">*</span></label>
-                                                <select id="uploadOption2" class="form-control">
-                                                    <option value="">select..</option>
-                                                    <option value="camera">Open Camera</option>
-                                                    <option value="browse">Browse from PC</option>
-                                                </select>
+                                                <div class="btn-group" role="group" aria-label="Upload options">
+                                                    <button type="button" class="btn btn-primary" data-option="browse" data-input="fileInput2">Browse from PC</button>
+                                                    <button type="button" class="btn btn-secondary" data-option="camera" data-input="fileInput2">Open Camera</button>
+                                                </div>
                                                 <input type="file" accept="image/*" name="images[]" id="fileInput2" class="d-none">
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('parcel.Image 3')<span class="text-danger">*</span></label>
-                                                <select id="uploadOption3" class="form-control">
-                                                    <option value="">select..</option>
-                                                    <option value="camera">Open Camera</option>
-                                                    <option value="browse">Browse from PC</option>
-                                                </select>
+                                                <div class="btn-group" role="group" aria-label="Upload options">
+                                                    <button type="button" class="btn btn-primary" data-option="browse" data-input="fileInput3">Browse from PC</button>
+                                                    <button type="button" class="btn btn-secondary" data-option="camera" data-input="fileInput3">Open Camera</button>
+                                                </div>
                                                 <input type="file" accept="image/*" name="images[]" id="fileInput3" class="d-none">
                                             </div>
                                         </div>
@@ -181,23 +178,24 @@
     </section>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            function setupInputSelector(optionId, fileInputId) {
-                const optionSelect = document.getElementById(optionId);
-                const fileInput = document.getElementById(fileInputId);
+            function setupButtonHandler() {
+                document.querySelectorAll('.btn-group button').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const option = this.getAttribute('data-option');
+                        const inputId = this.getAttribute('data-input');
+                        const fileInput = document.getElementById(inputId);
     
-                optionSelect.addEventListener('change', function () {
-                    if (this.value === 'camera') {
-                        fileInput.setAttribute('capture', 'environment');
-                    } else {
-                        fileInput.removeAttribute('capture');
-                    }
-                    fileInput.click();
+                        if (option === 'camera') {
+                            fileInput.setAttribute('capture', 'environment');
+                        } else {
+                            fileInput.removeAttribute('capture');
+                        }
+                        fileInput.click();
+                    });
                 });
             }
     
-            setupInputSelector('uploadOption1', 'fileInput1');
-            setupInputSelector('uploadOption2', 'fileInput2');
-            setupInputSelector('uploadOption3', 'fileInput3');
+            setupButtonHandler();
         });
     </script>
 @endsection
