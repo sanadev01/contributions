@@ -236,7 +236,7 @@ class ShippingService extends Model
     }
     public function getIsTotalExpressAttribute()
     {
-        return $this->service_sub_class == self::TOTAL_EXPRESS;
+        return in_array($this->service_sub_class,[self::TOTAL_EXPRESS, self::TOTAL_EXPRESS_10KG]); 
     }
     public function isSwedenPostService()
     {
