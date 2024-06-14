@@ -70,6 +70,9 @@ class ImportAccrualRates extends AbstractImportService
             if($this->service == ShippingService::TOTAL_EXPRESS){
                 $limit = 130;
             }
+            if($this->service == ShippingService::TOTAL_EXPRESS_10KG){
+                $limit = 30;
+            }
         }
 
         foreach (range(3, $limit) as $row) {

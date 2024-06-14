@@ -553,7 +553,9 @@ class ShippingService extends Model
             ShippingService::Post_Plus_CO_EMS => 'PostPlus',
             ShippingService::Post_Plus_CO_REG => 'PostPlus',
             ShippingService::TOTAL_EXPRESS => 'Total Express',
-            ShippingService::HD_Express => 'HD Express'
+            ShippingService::TOTAL_EXPRESS_10KG =>'Total Express',
+            ShippingService::HD_Express =>'HD Express',
+            ShippingService::DSS_SENEGAL=>'DSS Senegal',
         ];
 
         if (array_key_exists($serviceSubClass, $serviceMap)) {
@@ -562,7 +564,7 @@ class ShippingService extends Model
             if ($this->is_anjun_china_service_sub_class || $this->isAnjunService() || $this->is_bcn_service) {
                 return 'Correios Brazil';
             } elseif ($this->is_hound_express) {
-                return 'Hound Express';
+                return 'MEXICO Hound Express';
             }
             return 'Correios Brazil';
         }
