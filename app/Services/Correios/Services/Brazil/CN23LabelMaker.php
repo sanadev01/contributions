@@ -17,6 +17,7 @@ class CN23LabelMaker implements HasLableExport
     private $order;
     private $recipient;
     private $corriosLogo;
+    private $customsLogo;
     private $partnerLogo;
     private $packetType;
     private $contractNumber;
@@ -39,6 +40,7 @@ class CN23LabelMaker implements HasLableExport
         $this->hasAnjunLabel = false;
         $this->corriosLogo = \public_path('images/correios-1.png');
         $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
+        $this->customsLogo =  public_path('images/customs-br-logo.png');
         $this->packetType = 'Packet Standard';
         $this->contractNumber = 'H Contract:  9912501576';
         $this->packageSign = 'H';
@@ -210,7 +212,8 @@ class CN23LabelMaker implements HasLableExport
             'activeAddress' => $this->activeAddress,
             'isReturn' => $this->isReturn,
             'labelZipCodeGroup' => $this->labelZipCodeGroup,
-            'packageSign' => $this->packageSign
+            'packageSign' => $this->packageSign,
+            'customsLogo' => $this->customsLogo,
         ];
     }
 

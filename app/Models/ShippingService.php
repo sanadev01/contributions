@@ -71,6 +71,8 @@ class ShippingService extends Model
     const Japan_Prime = 5537;
     const Japan_EMS = 5541;
     const GSS_CEP = 237;
+    const TOTAL_EXPRESS_10KG = 284;
+    const DSS_SENEGAL = 735;
 
     protected $guarded = [];
 
@@ -366,6 +368,14 @@ class ShippingService extends Model
             self::GDE_PRIORITY_MAIL,
             self::GDE_FIRST_CLASS,
         ];
+    }
+
+    public function isSenegalService()
+    {
+        if($this->service_sub_class == self::DSS_SENEGAL){
+            return true;
+        }
+        return false;
     }
 
     public function getIsMilliExpressAttribute()

@@ -27,6 +27,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Events\AutoChargeAmountEvent;
+use App\Repositories\SenegalLabelRepository;
 
 class OrderLabelController extends Controller
 {
@@ -196,6 +197,15 @@ class OrderLabelController extends Controller
                 $hdExpressLabelRepository = new HDExpressLabelRepository();
                 $hdExpressLabelRepository->run($order, false);
                 $error = $hdExpressLabelRepository->getError();
+                if ($error) {
+                    return $this->rollback($error);
+                }
+            }
+
+            if ($order->shippingService->isSenegalService()) {
+                $senegalLabelRepository = new SenegalLabelRepository();
+                $senegalLabelRepository->run($order, false);
+                $error = $senegalLabelRepository->getError();
                 if ($error) {
                     return $this->rollback($error);
                 }

@@ -145,4 +145,12 @@ class DeliveryBill extends Model
         return $this->containers->first()->hasBCNService();
     }
 
+    public function isSenegal()
+    {
+        if($this->containers->first()->services_subclass_code == ShippingService::DSS_SENEGAL){
+            return true;
+        }
+        return false;
+    }
+
 }

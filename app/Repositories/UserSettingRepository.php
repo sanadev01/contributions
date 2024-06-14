@@ -46,7 +46,8 @@ class UserSettingRepository {
             'length'=> setting('length', null, $user->id),
             'width'=> setting('width', null, $user->id),
             'height'=> setting('height', null, $user->id),
-            ];
+            'prc_label' => setting('prc_label', null, $user->id)? 'Active': 'Inactive',
+        ];
 
         try {
             \Mail::send(new SettingUpdate($user, $request, $userData, false));
@@ -90,6 +91,8 @@ class UserSettingRepository {
         ($request->length != null ) ? saveSetting('length', $request->length, $user->id) : saveSetting('length', 0, $user->id);
         ($request->width != null ) ? saveSetting('width', $request->width, $user->id) : saveSetting('width', 0, $user->id);
         ($request->height != null ) ? saveSetting('height', $request->height, $user->id) : saveSetting('height', 0, $user->id);
+
+        $request->has('prc_label') ? saveSetting('prc_label', true, $user->id) : saveSetting('prc_label', false, $user->id);
 
         if ( $request->password ){
             $user->update([

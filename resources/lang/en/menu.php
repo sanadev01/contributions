@@ -61,6 +61,7 @@ return [
         'Sinerlog' => 'Sinerlog',
         'PostPlus' => 'Post Plus',
         'HD Express' => 'HD Express',
+        'DSS Senegal' => 'DSS Senegal',
     ],
     'Affiliate' => [
         'menu' => 'Affiliate',

@@ -206,6 +206,11 @@ class OrderRepository
                     ShippingService::AJ_Packet_Express, 
                 ];
             }
+            if($request->carrier == 'DSS Senegal'){
+                $service = [
+                    ShippingService::DSS_SENEGAL
+                ];
+            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });
@@ -675,7 +680,8 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::Japan_Prime)
             || $shippingServices->contains('service_sub_class', ShippingService::Japan_EMS)
             || $shippingServices->contains('service_sub_class', ShippingService::GSS_CEP)
-            || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS_10KG))
+            || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS_10KG)
+            || $shippingServices->contains('service_sub_class', ShippingService::DSS_SENEGAL))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {

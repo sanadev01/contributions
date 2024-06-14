@@ -130,6 +130,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'DirectLink Chile';
         }elseif($this->services_subclass_code == ShippingService::GSS_CEP){
             return 'GSS Commercial E-Packet';
+        }elseif($this->services_subclass_code == ShippingService::DSS_SENEGAL){
+            return 'DSS Senegal';
         }else {
             return 'FirstClass';
         }
@@ -191,6 +193,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif($this->services_subclass_code == ShippingService::HoundExpress){
             return 22;
+        }
+        elseif($this->services_subclass_code == ShippingService::DSS_SENEGAL){
+            return 23;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -329,5 +334,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         $firstOrderGroupRange = getOrderGroupRange($containerOrder);
         
         return $firstOrderGroupRange['group'];
+    }
+
+    public function hasSenegalService()
+    {
+        return $this->services_subclass_code == ShippingService::DSS_SENEGAL;
     }
 }

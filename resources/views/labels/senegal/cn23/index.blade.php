@@ -31,7 +31,7 @@
             transform: translateX(-50%);
             text-align: center;
             font-weight: bold;
-            font-size: 14pt;
+            font-size: 16pt;
             margin-bottom: 5px;
             text-transform: uppercase;
             white-space: nowrap; /* Prevent text wrapping */
@@ -232,7 +232,7 @@
     <body>
         <img class="partner-logo" src="{{ $partnerLogo }}"> 
         <div class="destination-country-name">
-            <h1>GUA-{{optional($recipient->country)->name}}</h1>
+            <h1>DSS-{{optional($recipient->country)->name}}</h1>
         </div>
         <div class="tracking_code">
             <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
