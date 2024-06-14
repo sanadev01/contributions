@@ -43,7 +43,6 @@ return [
         'Orders Report' => 'Orders Report',
         'Commission Report' => 'Commission Report',
         'Tax Report Scan' => 'Tax Report Scan',
-        'Tax Report Accrual' => 'Tax Report Accrual',
         'Audit Report' => 'Audit Report',
         'Service Report' => 'Service Report',
         'KPI Report' => 'KPI Report',

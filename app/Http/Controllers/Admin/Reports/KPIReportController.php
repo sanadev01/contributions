@@ -3,15 +3,13 @@
 namespace App\Http\Controllers\Admin\Reports;
 
 use App\Models\Reports;
-use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use App\Services\Excel\Export\KPIReport;
-use App\Services\Excel\Export\AccrualReport;
 use App\Repositories\Reports\KPIReportsRepository;
 use Exception;
-use App\Repositories\OrderRepository;
+
 class KPIReportController extends Controller
 {
     /**
@@ -70,6 +68,7 @@ class KPIReportController extends Controller
         }
 
         if($request->order){
+            
             $trackings = json_decode($request->order, true);
             $trackingCodeUsersName =json_decode($request->trackingCodeUsersName, true);
             $orderDates =json_decode($request->orderDates, true);
@@ -78,6 +77,6 @@ class KPIReportController extends Controller
             $exportService = new KPIReport($trackings,$trackingCodeUsersName, $orderDates, $request->type == 'scan' ?'Aguardando pagamento':null, $firstEventDate);
             return $exportService->handle();
         }
-    }  
+    } 
    
 }
