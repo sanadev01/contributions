@@ -345,77 +345,7 @@ class Order extends Model implements Package
 
     public function carrierService()
     {
-        if ($this->shippingService()) {
-            if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GDE_PRIORITY_MAIL ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GDE_FIRST_CLASS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_PMI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_CEP) {
-
-                return 'USPS';
-
-            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND){
-
-                return 'UPS';
-
-            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND){
-
-                return 'FEDEX';
-
-            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::SRP || optional($this->shippingService)->service_sub_class == ShippingService::SRM){
-
-                return 'Correios Chile';
-
-            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS || optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat || optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post){
-
-                return 'Global eParcel';
-
-            }
-            elseif(in_array(optional($this->shippingService)->service_sub_class,[ShippingService::Prime5,ShippingService::Prime5RIO,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia])){
-                return 'Prime5';
-
-            }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium || optional($this->shippingService)->service_sub_class == ShippingService::LT_PRIME || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_LT_Premium ||  optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_CO_EMS ||  optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_CO_REG){
-
-                return 'PostPlus';
-
-            }
-            elseif(optional($this->shippingService)->is_anjun_china_service_sub_class){
-                return 'Correios Brazil';
-            }
-            elseif(optional($this->shippingService)->isAnjunService()){
-                return 'Correios Brazil';
-            }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS || optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS_10KG){
-
-                return 'Total Express';
-
-            }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::HD_Express){
-                return 'HD Express';
-            }
-            elseif(optional($this->shippingService)->is_bcn_service){
-                return 'Correios Brazil';
-            }
-            elseif(optional($this->shippingService)->is_hound_express){
-
-                return 'MEXICO Hound Express';
-            }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::DSS_SENEGAL){
-                return 'DSS Senegal';
-            }
-            return 'Correios Brazil';
-        }
-
-        return null;
+        return  $this->shippingService ? $this->shippingService->carrier_service : "null";
     }
 
     public function carrierCost()
@@ -528,7 +458,8 @@ class Order extends Model implements Package
         return ($api?'TM':'HD')."{$tempWhr}".(optional($this->recipient)->country->code??"BR");
     }
 
-    public function doCalculations($onVolumetricWeight=true, $isServices = false)
+
+    public function doCalculations($onVolumetricWeight = true, $isServices = false)
     {
         $shippingService = $this->shippingService;
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
@@ -548,23 +479,31 @@ class Order extends Model implements Package
         // $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
         
         $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
-        $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
-
-        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $this->user_profit;
-
+        $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES', 0, null, true) : 0;
+        $calculatedUserProfit = (float) number_format($this->user_profit,2);
+        $total = number_format($shippingCost,2) + number_format($additionalServicesCost,2) + number_format($this->insurance_value,2) + number_format($dangrousGoodsCost,2) + number_format($consolidation,2) + $calculatedUserProfit;
         $discount = 0; // not implemented yet
-        $gross_total = $total - $discount;
-
+        $grossTotal = $total - $discount;
         $this->update([
             'consolidation' => $consolidation,
             'order_value' => $this->items()->sum(\DB::raw('quantity * value')),
             'shipping_value' => $shippingCost,
             'dangrous_goods' => $dangrousGoodsCost,
-            'total' => $total,
+            'total' => number_format($total,2),
             'discount' => $discount,
-            'gross_total' => $gross_total,
+            'calculated_user_profit'=> $calculatedUserProfit,
+            'gross_total' => number_format($grossTotal,2) ,
             'user_declared_freight' => $this->user_declared_freight
-            // 'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
+        ]);
+        $taxAndDuty = (float)$this->calculate_tax_and_duty;
+        $feeForTaxAndDuty = (float)$this->calculate_fee_for_tax_and_duty;
+        $total =  $grossTotal  + $taxAndDuty + $feeForTaxAndDuty; 
+        $grossTotal = $total - $discount;
+        $this->update([
+            'tax_and_duty' =>  $taxAndDuty,
+            'fee_for_tax_and_duty' => $feeForTaxAndDuty,
+            'total' => $total,
+            'gross_total' => $grossTotal,
         ]);
     }
 
@@ -959,6 +898,67 @@ class Order extends Model implements Package
             }
         }
         return true;
+    }
+ 
+    public function getCalculateTaxAndDutyAttribute(){
+        $totalTaxAndDuty = 0;
+        $isUSPS = optional($this->shippingService)->usps_service_sub_class ?? false;
+        if ((strtolower($this->tax_modality) == "ddp" || setting('is_prc_user', null, $this->user_id)) && !$isUSPS) {
+            if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
+
+                $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
+                
+                $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
+            
+                $duty = $totalCost > 50 ? $totalCost * .60 :0; 
+                $totalCostOfTheProduct = $totalCost + $duty;
+                $totalIcms = ($totalCostOfTheProduct/.83) * .17;
+                $totalTaxAndDuty = $duty + $totalIcms;
+                \Log::info([
+                    'recipient country' => $this->recipient->country->code,
+                    'order_value ' => $this->order_value,
+                    'additionalServicesCost +   insurance_value ' => $additionalServicesCost,
+                    'shipping_value' => $this->shipping_value,
+                    'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
+                    'totalCost' => $totalCost,
+                    'duty' => $duty,
+                    'totalCostOfTheProduct' => $totalCostOfTheProduct, 
+                    'totalIcms' => $totalIcms,
+                    'totalTaxAndDuty' => $totalTaxAndDuty, 
+                ]);
+            }
+        }
+        return round($totalTaxAndDuty, 2);
+    }
+    public function getCalculateFeeForTaxAndDutyAttribute()
+    {
+        $fee=0;
+        if($this->calculate_tax_and_duty){
+            $flag=true;
+                if(setting('prc_user_fee', null, $this->user_id)=="flat_fee"){
+                    $fee = setting('prc_user_fee_flat', null, $this->user_id)??2;
+                    \Log::info([
+                        'fee type'=>'flat fee',
+                        'fee'=>$fee,
+                    ]);
+                    $flag=false;
+                }
+                if(setting('prc_user_fee', null, $this->user_id)=="variable_fee"){
+                    $percent = setting('prc_user_fee_variable', null, $this->user_id)??1;
+                    $fee= $this->calculate_tax_and_duty/100 * $percent;
+                    $fee= $fee <0.5? 0.5:$fee;
+                    \Log::info([
+                        'fee type'=>'variable fee',
+                        'fee'=>$fee,
+                    ]); 
+                    $flag=false;
+                }
+                if($flag){
+                $fee = $this->calculate_tax_and_duty*.01;
+                $fee = $fee<0.5?0.5:$fee;
+                }
+        }
+        return $fee;
     }
 
 }
