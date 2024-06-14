@@ -130,28 +130,34 @@
                                         <div class="col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('parcel.Image 1')<span class="text-danger">*</span></label>
-                                                <input type="file" accept="image/*" name="images[]">
-                                                {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
+                                                <select id="uploadOption1" class="form-control">
+                                                    <option value="">select..</option>
+                                                    <option value="camera">Open Camera</option>
+                                                    <option value="browse">Browse from PC</option>
+                                                </select>
+                                                <input type="file" accept="image/*" name="images[]" id="fileInput1" class="d-none">
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('parcel.Image 2')<span class="text-danger">*</span></label>
-                                                <input type="file" accept="image/*" name="images[]">
-                                                {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
+                                                <select id="uploadOption2" class="form-control">
+                                                    <option value="">select..</option>
+                                                    <option value="camera">Open Camera</option>
+                                                    <option value="browse">Browse from PC</option>
+                                                </select>
+                                                <input type="file" accept="image/*" name="images[]" id="fileInput2" class="d-none">
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-6 col-md-4">
                                             <div class="controls">
                                                 <label>@lang('parcel.Image 3')<span class="text-danger">*</span></label>
-                                                <input type="file" accept="image/*" name="images[]">
-                                                {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
+                                                <select id="uploadOption3" class="form-control">
+                                                    <option value="">select..</option>
+                                                    <option value="camera">Open Camera</option>
+                                                    <option value="browse">Browse from PC</option>
+                                                </select>
+                                                <input type="file" accept="image/*" name="images[]" id="fileInput3" class="d-none">
                                             </div>
                                         </div>
                                     </div>
@@ -173,4 +179,25 @@
             </div>
         </div>
     </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function setupInputSelector(optionId, fileInputId) {
+                const optionSelect = document.getElementById(optionId);
+                const fileInput = document.getElementById(fileInputId);
+    
+                optionSelect.addEventListener('change', function () {
+                    if (this.value === 'camera') {
+                        fileInput.setAttribute('capture', 'environment');
+                    } else {
+                        fileInput.removeAttribute('capture');
+                    }
+                    fileInput.click();
+                });
+            }
+    
+            setupInputSelector('uploadOption1', 'fileInput1');
+            setupInputSelector('uploadOption2', 'fileInput2');
+            setupInputSelector('uploadOption3', 'fileInput3');
+        });
+    </script>
 @endsection
