@@ -1,8 +1,8 @@
 <section class="card invoice-page">
     {{-- @dd(request()); --}}
     @if (strpos(request()->server('HTTP_REFERER'), 'reports/commission') !== false)
-            <div class="col-12 row justify-content-between">
-                500 | Server Error
+            <div class="col-12 row justify-content-center"> 
+            <div class="h1 text-center"><i class="fa fa-spinner fa-spin"></i></div>
             </div>
         @else
             <div class="col-12 row justify-content-between">
@@ -156,7 +156,7 @@
                         </div>
                     </div>
                 </div>
-
+               
                 <!-- Invoice Items Details -->
                 <div id="invoice-items-details" class="pt-1 invoice-items-table">
                     <div class="row">
@@ -317,6 +317,7 @@
                     </div>
                 </div>
             </div>
-    @endif
+                @endif
+    
 
 </section>
