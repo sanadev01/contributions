@@ -200,9 +200,7 @@
         };
 
         takePhotoBtn.onclick = function() {
-            const whrNumberInput = document.querySelector('input[name="whr_number"]');
-            const whrNumberValue = whrNumberInput.value || 'prcl_img';
-
+            const randomString = getString(10);
             const canvas = document.createElement('canvas');
             canvas.width = 400;
             canvas.height = 400;
@@ -210,7 +208,7 @@
             ctx.drawImage(webcamVideo, 0, 0, canvas.width, canvas.height);
 
             canvas.toBlob(function(blob) {
-                const fileName = `${whrNumberValue}-${previewContainer.childElementCount + 1}.png`;
+                const fileName = `${randomString}-${previewContainer.childElementCount + 1}.png`;
                 const file = new File([blob], fileName, { type: 'image/png' });
                 addImageToPreview(file, canvas, fileName);
             });
@@ -245,43 +243,42 @@
         };
 
         function addImageToPreview(file, canvas, fileName) {
-        const img = new Image();
-        img.src = canvas.toDataURL('image/png');
-        img.style.width = '150px';
-        img.style.height = '150px';
-        img.classList.add('mr-2');
+            const img = new Image();
+            img.src = canvas.toDataURL('image/png');
+            img.style.width = '150px';
+            img.style.height = '150px';
+            img.classList.add('mr-2');
 
-        const previewDiv = document.createElement('div');
-        previewDiv.style.position = 'relative';
-        previewDiv.style.display = 'inline-block';
-        previewDiv.style.marginRight = '5px'; 
-        previewDiv.appendChild(img);
+            const previewDiv = document.createElement('div');
+            previewDiv.style.position = 'relative';
+            previewDiv.style.display = 'inline-block';
+            previewDiv.style.marginRight = '5px'; 
+            previewDiv.appendChild(img);
 
-        const deleteBtn = document.createElement('button');
-        deleteBtn.style.position = 'absolute';
-        deleteBtn.style.top = '-10px';
-        deleteBtn.style.right = '-1px';
-        deleteBtn.style.backgroundColor = '#ff0000'; // Red color for the button
-        deleteBtn.style.color = '#fff';
-        deleteBtn.style.border = 'none';
-        deleteBtn.style.borderRadius = '50%';
-        deleteBtn.style.width = '25px';
-        deleteBtn.style.height = '25px';
-        deleteBtn.style.fontSize = '14px';
-        deleteBtn.style.lineHeight = '1';
-        deleteBtn.style.cursor = 'pointer';
-        deleteBtn.innerHTML = '&times;';
-        deleteBtn.onclick = function() {
-            previewDiv.remove();
+            const deleteBtn = document.createElement('button');
+            deleteBtn.style.position = 'absolute';
+            deleteBtn.style.top = '-10px';
+            deleteBtn.style.right = '-1px';
+            deleteBtn.style.backgroundColor = '#ff0000'; // Red color for the button
+            deleteBtn.style.color = '#fff';
+            deleteBtn.style.border = 'none';
+            deleteBtn.style.borderRadius = '50%';
+            deleteBtn.style.width = '25px';
+            deleteBtn.style.height = '25px';
+            deleteBtn.style.fontSize = '14px';
+            deleteBtn.style.lineHeight = '1';
+            deleteBtn.style.cursor = 'pointer';
+            deleteBtn.innerHTML = '&times;';
+            deleteBtn.onclick = function() {
+                previewDiv.remove();
+                updateFileInput();
+            };
+
+            previewDiv.appendChild(deleteBtn);
+            previewContainer.appendChild(previewDiv);
+
             updateFileInput();
-        };
-
-        previewDiv.appendChild(deleteBtn);
-        previewContainer.appendChild(previewDiv);
-
-        updateFileInput();
-    }
-
+        }
 
         function updateFileInput() {
             const dataTransfer = new DataTransfer();
@@ -296,9 +293,8 @@
                 image.onload = function() {
                     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
                     canvas.toBlob(function(blob) {
-                        const whrNumberInput = document.querySelector('input[name="whr_number"]');
-                        const whrNumberValue = whrNumberInput.value || 'default_whr_number_value';
-                        const fileName = `${whrNumberValue}-${index + 1}.png`;
+                        const randomString = getString(10);
+                        const fileName = `${randomString}.png`;
                         const file = new File([blob], fileName, { type: 'image/png' });
                         dataTransfer.items.add(file);
                         fileInput.files = dataTransfer.files;
@@ -315,6 +311,15 @@
             }
             webcamContainer.style.display = 'none';
         });
+
+        function getString(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
 
     </script>
 
