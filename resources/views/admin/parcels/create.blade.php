@@ -169,7 +169,7 @@
             </div>
         </div>
     </section>
-    
+
     <script>
         document.getElementById('openUploadModalBtn').addEventListener('click', function(event) {
             event.preventDefault();
@@ -245,32 +245,43 @@
         };
 
         function addImageToPreview(file, canvas, fileName) {
-            const img = new Image();
-            img.src = canvas.toDataURL('image/png');
-            img.style.width = '150px';
-            img.style.height = '150px';
-            img.classList.add('mr-2');
+        const img = new Image();
+        img.src = canvas.toDataURL('image/png');
+        img.style.width = '150px';
+        img.style.height = '150px';
+        img.classList.add('mr-2');
 
-            const previewDiv = document.createElement('div');
-            previewDiv.classList.add('position-relative');
-            previewDiv.style.display = 'inline-block';
-            previewDiv.appendChild(img);
+        const previewDiv = document.createElement('div');
+        previewDiv.style.position = 'relative';
+        previewDiv.style.display = 'inline-block';
+        previewDiv.style.marginRight = '5px'; 
+        previewDiv.appendChild(img);
 
-            const deleteBtn = document.createElement('button');
-            deleteBtn.classList.add('btn', 'btn-danger', 'position-absolute');
-            deleteBtn.style.top = '5px';
-            deleteBtn.style.right = '5px';
-            deleteBtn.innerHTML = '&times;';
-            deleteBtn.onclick = function() {
-                previewDiv.remove();
-                updateFileInput();
-            };
-
-            previewDiv.appendChild(deleteBtn);
-            previewContainer.appendChild(previewDiv);
-
+        const deleteBtn = document.createElement('button');
+        deleteBtn.style.position = 'absolute';
+        deleteBtn.style.top = '-10px';
+        deleteBtn.style.right = '-1px';
+        deleteBtn.style.backgroundColor = '#ff0000'; // Red color for the button
+        deleteBtn.style.color = '#fff';
+        deleteBtn.style.border = 'none';
+        deleteBtn.style.borderRadius = '50%';
+        deleteBtn.style.width = '25px';
+        deleteBtn.style.height = '25px';
+        deleteBtn.style.fontSize = '14px';
+        deleteBtn.style.lineHeight = '1';
+        deleteBtn.style.cursor = 'pointer';
+        deleteBtn.innerHTML = '&times;';
+        deleteBtn.onclick = function() {
+            previewDiv.remove();
             updateFileInput();
-        }
+        };
+
+        previewDiv.appendChild(deleteBtn);
+        previewContainer.appendChild(previewDiv);
+
+        updateFileInput();
+    }
+
 
         function updateFileInput() {
             const dataTransfer = new DataTransfer();
