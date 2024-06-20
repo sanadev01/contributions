@@ -1,17 +1,4 @@
 @extends('layouts.master')
-<style>
-    .preview {
-        width: 500px;
-        height: 500px;
-        border: 1px solid #ddd;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    #webcam-video {
-        display: none;
-    }
-</style>
 @section('page')
     <section id="prealerts">
         <div class="row">
@@ -155,8 +142,8 @@
                                                 <div class="modal-body">
                                                     <button id="webcamBtn" class="btn btn-secondary mb-3 text-dark" type="button">Upload via Webcam</button>
                                                     <button id="fileBtn" class="btn btn-secondary mb-3 text-dark" type="button">Upload from PC</button>
-                                                    <div class="preview" id="preview">
-                                                        <video id="webcam-video" width="500" height="500" autoplay></video>
+                                                    <div class="image-preview" id="preview">
+                                                        <video id="webcam-video" width="500" height="500" autoplay style="display:none;"></video>
                                                         <canvas id="canvas" width="400" height="400" style="display:none;"></canvas>
                                                     </div>
                                                     <input type="file" accept="image/*" name="images[]" id="fileInput" class="d-none">
