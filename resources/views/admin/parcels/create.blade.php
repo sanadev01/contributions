@@ -121,7 +121,6 @@
                                         </div>
                                     </div>
                                 @endcan
-                                <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
                                 @can('addShipmentDetails', App\Models\Order::class)
                                     <livewire:order.shipment-info />
                                     <h4 class="mt-2">@lang('parcel.Shipment Images') </h4>
@@ -130,12 +129,12 @@
                                     <button class="btn btn-primary" id="openUploadModalBtn" type="button">Upload Image</button>
 
                                     <!-- Modal -->
-                                    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="uploadModal" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
                                                 <div class="modal-header" style="background: #b8c2cc;">
                                                     <h5 class="modal-title" id="uploadModalLabel">Shipment Images</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <button type="button" id="closeModal" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
@@ -148,45 +147,11 @@
                                                     </div>
                                                     <input type="file" accept="image/*" name="images[]" id="fileInput" class="d-none">
                                                     <button id="takePhotoBtn" class="btn btn-secondary mt-3" style="display:none;" type="button">Take Photo</button>
-                                                    {{-- <button id="uploadImageBtn" class="btn btn-primary mt-3" style="display:none;" type="button">Upload Image</button> --}}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    {{-- <div class="row mt-1">
-                                        <div class="col-12 col-sm-6 col-md-4">
-                                            <div class="controls">
-                                                <label>@lang('parcel.Image 1')<span class="text-danger">*</span></label>
-                                                <div class="btn-group" role="group" aria-label="Upload options">
-                                                    <button type="button" class="btn btn-primary" id="uploadBtn1" data-input="fileInput1">Upload via Webcam</button>
-                                                    <input type="file" accept="image/*" name="images[]" id="fileInput1" class="d-none">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-md-4">
-                                            <div class="controls">
-                                                <label>@lang('parcel.Image 2')<span class="text-danger">*</span></label>
-                                                <div class="btn-group" role="group" aria-label="Upload options">
-                                                    <button type="button" class="btn btn-primary" id="uploadBtn2" data-input="fileInput2">Upload via Webcam</button>
-                                                    <input type="file" accept="image/*" name="images[]" id="fileInput2" class="d-none">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-md-4">
-                                            <div class="controls">
-                                                <label>@lang('parcel.Image 3')<span class="text-danger">*</span></label>
-                                                <div class="btn-group" role="group" aria-label="Upload options">
-                                                    <button type="button" class="btn btn-primary" id="uploadBtn3" data-input="fileInput3">Upload via Webcam</button>
-                                                    <input type="file" accept="image/*" name="images[]" id="fileInput3" class="d-none">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
-                                    
-
                                 @endcan
-
 
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
@@ -208,7 +173,7 @@
             event.preventDefault();
             $('#uploadModal').modal('show');
         });
-    
+        
         const webcamBtn = document.getElementById('webcamBtn');
         const fileBtn = document.getElementById('fileBtn');
         const fileInput = document.getElementById('fileInput');
@@ -216,7 +181,6 @@
         const webcamVideo = document.getElementById('webcam-video');
         const canvas = document.getElementById('canvas');
         const takePhotoBtn = document.getElementById('takePhotoBtn');
-        const uploadImageBtn = document.getElementById('uploadImageBtn');
         let stream;
     
         webcamBtn.onclick = async function() {
@@ -227,10 +191,9 @@
                     webcamVideo.style.display = 'block';
                     canvas.style.display = 'none';
                     takePhotoBtn.style.display = 'block';
-                    uploadImageBtn.style.display = 'none';
                 } catch (error) {
                     console.error('Error accessing webcam:', error);
-                    alert('Unable to access the webcam. Please check your browser settings.');
+                    // alert('Unable to access the webcam. Please check your browser settings.');
                 }
             } else {
                 alert('Your browser does not support the webcam feature.');
@@ -238,15 +201,24 @@
         };
     
         takePhotoBtn.onclick = function() {
-            canvas.style.display = 'block';
-            canvas.getContext('2d').drawImage(webcamVideo, 0, 0, canvas.width, canvas.height);
-            webcamVideo.style.display = 'none';
-            takePhotoBtn.style.display = 'none';
-            uploadImageBtn.style.display = 'block';
-        };
+                canvas.style.display = 'block';
+                canvas.getContext('2d').drawImage(webcamVideo, 0, 0, canvas.width, canvas.height);
+                webcamVideo.style.display = 'none';
+                takePhotoBtn.style.display = 'none';
+
+                canvas.toBlob(function(blob) {
+                    const file = new File([blob], 'webcam-photo.png', { type: 'image/png' });
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    fileInput.files = dataTransfer.files;
+                });
+            };
     
         fileBtn.onclick = function() {
             fileInput.click();
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
         };
     
         fileInput.onchange = function(event) {
@@ -259,42 +231,18 @@
                     canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
                     webcamVideo.style.display = 'none';
                     takePhotoBtn.style.display = 'none';
-                    uploadImageBtn.style.display = 'block';
                 };
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         };
-    
-        // uploadImageBtn.onclick = function() {
-        //     const dataUrl = canvas.toDataURL('image/png');
-        //     // Here you can add your AJAX request to send dataUrl to the server.
-        //     console.log(dataUrl); // for demonstration
-        //     alert('Image uploaded!'); // replace this with actual upload logic
-        // };
-    </script>
 
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            function setupButtonHandler() {
-                document.querySelectorAll('.btn-group button').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const option = this.getAttribute('data-option');
-                        const inputId = this.getAttribute('data-input');
-                        const fileInput = document.getElementById(inputId);
-    
-                        if (option === 'camera') {
-                            fileInput.setAttribute('capture', 'environment');
-                        } else {
-                            fileInput.removeAttribute('capture');
-                        }
-                        fileInput.click();
-                    });
-                });
+        document.getElementById('closeModal').addEventListener('click', function(event) {
+            event.preventDefault();
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
             }
-    
-            setupButtonHandler();
         });
-    </script> --}}
+    </script>
 
 @endsection
