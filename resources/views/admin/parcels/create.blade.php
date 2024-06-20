@@ -126,7 +126,7 @@
                                     <h4 class="mt-2">@lang('parcel.Shipment Images') </h4>
 
                                     <!-- Button to trigger the modal -->
-                                    <button class="btn btn-primary" id="openUploadModalBtn" type="button">Upload Image</button>
+                                    <button class="btn btn-primary" id="openUploadModalBtn" type="button">Upload Images</button>
 
                                     <!-- Modal -->
                                     <div class="modal fade" id="uploadModal" aria-labelledby="uploadModalLabel" aria-hidden="true">
@@ -141,16 +141,17 @@
                                                 <div class="modal-body">
                                                     <button id="webcamBtn" class="btn btn-secondary mb-3 text-dark" type="button">Upload via Webcam</button>
                                                     <button id="fileBtn" class="btn btn-secondary mb-3 text-dark" type="button">Upload from PC</button>
-                                                    <div class="image-preview" id="preview">
-                                                        <video id="webcam-video" width="500" height="500" autoplay style="display:none;"></video>
-                                                        <canvas id="canvas" width="400" height="400" style="display:none;"></canvas>
+                                                    <div id="previewContainer" class="d-flex flex-wrap"></div>
+                                                    <div class="webcam-container" style="display:none;">
+                                                        <video id="webcam-video" width="400" height="400" autoplay></video>
+                                                        <button id="takePhotoBtn" class="btn btn-secondary mt-1" type="button">Take Photo</button>
                                                     </div>
-                                                    <input type="file" accept="image/*" name="images[]" id="fileInput" class="d-none">
-                                                    <button id="takePhotoBtn" class="btn btn-secondary mt-3" style="display:none;" type="button">Take Photo</button>
+                                                    <input type="file" accept="image/*" name="images[]" id="fileInput" class="d-none" multiple>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    
                                 @endcan
 
                                 <div class="row mt-1">
@@ -168,81 +169,142 @@
             </div>
         </div>
     </section>
+    
     <script>
         document.getElementById('openUploadModalBtn').addEventListener('click', function(event) {
             event.preventDefault();
             $('#uploadModal').modal('show');
         });
-        
+
         const webcamBtn = document.getElementById('webcamBtn');
         const fileBtn = document.getElementById('fileBtn');
         const fileInput = document.getElementById('fileInput');
-        const preview = document.getElementById('preview');
+        const previewContainer = document.getElementById('previewContainer');
+        const webcamContainer = document.querySelector('.webcam-container');
         const webcamVideo = document.getElementById('webcam-video');
-        const canvas = document.getElementById('canvas');
         const takePhotoBtn = document.getElementById('takePhotoBtn');
         let stream;
-    
+
         webcamBtn.onclick = async function() {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 try {
                     stream = await navigator.mediaDevices.getUserMedia({ video: true });
                     webcamVideo.srcObject = stream;
-                    webcamVideo.style.display = 'block';
-                    canvas.style.display = 'none';
-                    takePhotoBtn.style.display = 'block';
+                    webcamContainer.style.display = 'block';
                 } catch (error) {
                     console.error('Error accessing webcam:', error);
-                    // alert('Unable to access the webcam. Please check your browser settings.');
                 }
             } else {
                 alert('Your browser does not support the webcam feature.');
             }
         };
-    
-        takePhotoBtn.onclick = function() {
-                canvas.style.display = 'block';
-                canvas.getContext('2d').drawImage(webcamVideo, 0, 0, canvas.width, canvas.height);
-                webcamVideo.style.display = 'none';
-                takePhotoBtn.style.display = 'none';
 
-                canvas.toBlob(function(blob) {
-                    const file = new File([blob], 'webcam-photo.png', { type: 'image/png' });
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(file);
-                    fileInput.files = dataTransfer.files;
-                });
-            };
-    
+        takePhotoBtn.onclick = function() {
+            const whrNumberInput = document.querySelector('input[name="whr_number"]');
+            const whrNumberValue = whrNumberInput.value || 'prcl_img';
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 400;
+            canvas.height = 400;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(webcamVideo, 0, 0, canvas.width, canvas.height);
+
+            canvas.toBlob(function(blob) {
+                const fileName = `${whrNumberValue}-${previewContainer.childElementCount + 1}.png`;
+                const file = new File([blob], fileName, { type: 'image/png' });
+                addImageToPreview(file, canvas, fileName);
+            });
+        };
+
         fileBtn.onclick = function() {
             fileInput.click();
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
             }
+            webcamContainer.style.display = 'none';
         };
-    
+
         fileInput.onchange = function(event) {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    canvas.style.display = 'block';
-                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-                    webcamVideo.style.display = 'none';
-                    takePhotoBtn.style.display = 'none';
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 400;
+                        canvas.height = 400;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        addImageToPreview(file, canvas, file.name);
+                    };
+                    img.src = e.target.result;
                 };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
+                reader.readAsDataURL(file);
+            });
         };
+
+        function addImageToPreview(file, canvas, fileName) {
+            const img = new Image();
+            img.src = canvas.toDataURL('image/png');
+            img.style.width = '150px';
+            img.style.height = '150px';
+            img.classList.add('mr-2');
+
+            const previewDiv = document.createElement('div');
+            previewDiv.classList.add('position-relative');
+            previewDiv.style.display = 'inline-block';
+            previewDiv.appendChild(img);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('btn', 'btn-danger', 'position-absolute');
+            deleteBtn.style.top = '5px';
+            deleteBtn.style.right = '5px';
+            deleteBtn.innerHTML = '&times;';
+            deleteBtn.onclick = function() {
+                previewDiv.remove();
+                updateFileInput();
+            };
+
+            previewDiv.appendChild(deleteBtn);
+            previewContainer.appendChild(previewDiv);
+
+            updateFileInput();
+        }
+
+        function updateFileInput() {
+            const dataTransfer = new DataTransfer();
+            const previews = previewContainer.querySelectorAll('img');
+            previews.forEach((img, index) => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 400;
+                canvas.height = 400;
+                const ctx = canvas.getContext('2d');
+                const src = img.src;
+                const image = new Image();
+                image.onload = function() {
+                    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+                    canvas.toBlob(function(blob) {
+                        const whrNumberInput = document.querySelector('input[name="whr_number"]');
+                        const whrNumberValue = whrNumberInput.value || 'default_whr_number_value';
+                        const fileName = `${whrNumberValue}-${index + 1}.png`;
+                        const file = new File([blob], fileName, { type: 'image/png' });
+                        dataTransfer.items.add(file);
+                        fileInput.files = dataTransfer.files;
+                    });
+                };
+                image.src = src;
+            });
+        }
 
         document.getElementById('closeModal').addEventListener('click', function(event) {
             event.preventDefault();
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
             }
+            webcamContainer.style.display = 'none';
         });
+
     </script>
 
 @endsection
