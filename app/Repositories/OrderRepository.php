@@ -733,10 +733,10 @@ class OrderRepository
                         return !$shippingService->isAnjunService();
                     });
             }
-            if(Auth::id()!="1233"){
+            if(!Auth::user()->isAdmin()){
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                return !$shippingService->isAnjunChinaService();
-            });
+                    return !$shippingService->isAnjunChinaService();
+                });
             }
 
             if(!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){
