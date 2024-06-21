@@ -32,6 +32,12 @@ class RateDownloadController extends Controller
             }
             $exportService = new ShippingServiceRegionRateExport($service->rates, $profit);
             return $exportService->handle(); 
+        } 
+
+        if($service->is_brazil_redispatch){
+            $rates = collect($service->rates->first()->data);
+            $exportService = new ProfitPackageRateExport($rates);
+            return $exportService->handle();
         }
 
         if($packageId == 0 ){
