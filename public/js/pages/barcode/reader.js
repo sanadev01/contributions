@@ -23994,7 +23994,7 @@ function assertType (value, type) {
     }
   } else if (expectedType === 'Object') {
     valid = isPlainObject(value);
-  } else if (expectedType === 'Array') {
+  } else if (expectedType === 'array') {
     valid = Array.isArray(value);
   } else {
     valid = value instanceof type;
