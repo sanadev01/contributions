@@ -15,6 +15,14 @@ class RateDownloadController extends Controller
 {
     public function __invoke($packageId,$id,Request $request, RateReportsRepository $rateReportsRepository)
     {
+        // if($request->service){
+        //     $ServiceId = $request->service;
+        //     $rates = $rateReportsRepository->getRateSample($ServiceId);
+        //     if($rates){
+        //         $exportService = new ProfitSampleRateExport($rates);
+        //         return $exportService->handle();
+        //     }
+        // }
         $service = ShippingService::find($id); 
         if(optional($service)->rates && $service->isGDEService()){
             if($service->rates && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
@@ -32,6 +40,14 @@ class RateDownloadController extends Controller
         
         $rateReportsRepository = new RateReportsRepository();
         $rates = $rateReportsRepository->getRateReport($packageId, $id);
+        $exportService = new ProfitPackageRateExport($rates);
+        return $exportService->handle();
+        if($packageId == 0 ){
+            $service = ShippingService::where('service_sub_class', ShippingService::Brazil_Redispatch)->first();
+            $rates = collect($service->rates[0]->data);         
+        }else{
+            $rates = $rateReportsRepository->getRateReport($packageId);
+        }
         $exportService = new ProfitPackageRateExport($rates);
         return $exportService->handle();
     }
