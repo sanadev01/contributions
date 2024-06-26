@@ -10,6 +10,7 @@ use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
 use App\Repositories\FedExLabelRepository;
 use App\Repositories\PostPlusLabelRepository;
+use App\Repositories\PasarExLabelRepository;
 use App\Repositories\SwedenPostLabelRepository;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
@@ -70,6 +71,11 @@ class HandleCorreiosLabelsRepository
         if (in_array($this->order->recipient->country_id, [Order::PORTUGAL, Order::COLOMBIA])) {
             if ($this->order->shippingService->isPostPlusService()) {
                 return $this->postPlusLabel();
+            }
+        }
+        if ($this->order->recipient->country_id ==Order::COLOMBIA){ 
+            if ($this->order->shippingService->is_pasar_ex) {
+                return $this->pasarExLabel();
             }
         }
         if ($this->order->shippingService->isHDExpressService()) {
@@ -216,6 +222,12 @@ class HandleCorreiosLabelsRepository
         $postPlusLabelRepository = new PostPlusLabelRepository();
         $postPlusLabelRepository->run($this->order, $this->update); //by default consider false
         return $this->renderLabel($this->request, $this->order, $postPlusLabelRepository->getError());
+    }
+    public function pasarExLabel()
+    {
+        $pasarExLabelRepository = new PasarExLabelRepository();
+        $pasarExLabelRepository->run($this->order, $this->update); //by default consider false
+        return $this->renderLabel($this->request, $this->order, $pasarExLabelRepository->getError());
     }
 
     public function uspsGSSLabel()

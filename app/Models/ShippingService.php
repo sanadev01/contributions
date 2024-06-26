@@ -71,6 +71,7 @@ class ShippingService extends Model
     const Japan_Prime = 5537;
     const Japan_EMS = 5541;
     const GSS_CEP = 237;
+    const PasarEx = 238;
     const TOTAL_EXPRESS_10KG = 284;
     const DSS_SENEGAL = 735;
 
@@ -569,5 +570,8 @@ class ShippingService extends Model
     }
     function orders() {
         return $this->hasMany(Order::class);
+    function getIsPasarExAttribute()
+    {
+        return $this->service_sub_class == self::PasarEx;
     }
 }
