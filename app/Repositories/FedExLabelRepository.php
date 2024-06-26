@@ -111,7 +111,7 @@ class FedExLabelRepository
         
         
         if($order instanceof SecondaryLabelError){
-            $this->uspsError = $order->getError();
+            $this->fedExError = $order->getError();
             return false;
         }
 
@@ -187,6 +187,10 @@ class FedExLabelRepository
     }
 
     public function getFedExErrors()
+    {
+        return $this->fedExError;
+    }
+    public function getError()
     {
         return $this->fedExError;
     }

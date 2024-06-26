@@ -49,8 +49,7 @@ class UserRateController extends Controller
                 return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
             }
 
-        }
-
+        } 
         $service = ShippingService::find($id);
         
 
