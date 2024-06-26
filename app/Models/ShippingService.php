@@ -570,6 +570,7 @@ class ShippingService extends Model
     }
     function orders() {
         return $this->hasMany(Order::class);
+    }
     function getIsPasarExAttribute()
     {
         return $this->service_sub_class == self::PasarEx;
