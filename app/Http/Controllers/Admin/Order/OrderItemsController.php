@@ -39,7 +39,7 @@ class OrderItemsController extends Controller
         $usCountryId =  Order::US;
         $shippingServices = $this->orderRepository->getShippingServices($order);
         $error = $this->orderRepository->getShippingServicesError();
-        $uspsService = [ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS, ShippingService::USPS_PRIORITY_INTERNATIONAL, ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, ShippingService::USPS_GROUND, ShippingService::GDE_PRIORITY_MAIL, ShippingService::GDE_FIRST_CLASS];
+        $uspsService = [ShippingService::GSS_PMI,ShippingService::GSS_EPMEI,ShippingService::GSS_EPMI,ShippingService::GSS_FCM,ShippingService::GSS_EMS,ShippingService::GSS_CEP,ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS, ShippingService::USPS_PRIORITY_INTERNATIONAL, ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, ShippingService::USPS_GROUND, ShippingService::GDE_PRIORITY_MAIL, ShippingService::GDE_FIRST_CLASS];
         if ($error) {
             session()->flash($error);
         }
