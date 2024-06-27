@@ -57,7 +57,7 @@ return [
     'Total Cost' => 'Total Cost',
     'Actual Cost' => 'Actual Cost',
     "Estimate tax & duty"=>"Estimate tax & duty",
-    "DDP/PRC service not available"=>"DDP or PRC service not available for this shipping method.",
+    "DDP/PRC service not available"=>"DDP or PRC service not available for this shipping service.",
     'recipient' => [
         'slect-from-list' => 'Select Address From List',
         'Previous' => 'Previous',
