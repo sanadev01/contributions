@@ -11,7 +11,7 @@ use Exception;
 
 class DownloadUpdateTracking extends Controller
 {
-    function bCNToAnjunLabels()
+    function download()
     {
         $codes = [
             'HD2433905516BR'

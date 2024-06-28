@@ -345,10 +345,10 @@ Route::get('/download-name-list/{user_id}', function ($user_id) {
     return $exportNameList->handle();
 });
 
-Route::get('/update-order-bcn-to-anjuna',[UpdateTracking::class,'update']); 
+Route::get('/update-order-tracking',[UpdateTracking::class,'update']); 
 
 
-Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']);
+Route::get('/download-updated-tracking',[DownloadUpdateTracking::class,'download']);
 
 Route::get('/fail-jobs', function () {
     $failedJobs = DB::table('failed_jobs')->get();
