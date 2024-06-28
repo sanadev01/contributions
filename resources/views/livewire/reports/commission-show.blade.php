@@ -35,7 +35,7 @@
                     <div class="row mt-1">
                         <div class="form-group col-10 col-sm-6 col-md-3">
                             <div class="row">
-                                <label class="col-md-3 control-label">@lang('sales-commission.start date')</label>
+                                <label class="col-md-3 control-label">@lang('sales-commission.start date')3</label>
                                 <input type="date" name="start" class="form-control col-md-8">
                             </div>
                         </div>
