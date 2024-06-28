@@ -13,28 +13,10 @@ class UpdateTracking extends Controller
 {
 
 
-    function bCNToAnjunLabelsa() {  
-        $codes = [ 
-                ["tracking"=>"NC253044216BR","warehouse"=>"TM2604706545BR"],
-                ["tracking"=>"NC560917853BR","warehouse"=>"TM2605206945BR"],
-                ["tracking"=>"NC253044255BR","warehouse"=>"TM2601407328BR"],
-                ["tracking"=>"NC560917875BR","warehouse"=>"TM2601207139BR"],
-            ];
-            return $this->updateTracking($codes, 4, 1);
-       }
-     function bCNToAnjunLabelsb() {  
+ 
+     function update() {  
                     $codes = [ 
-                ["tracking"=>"NC560917840BR","warehouse"=>"TM2604906746BR"],
-                ["tracking"=>"NC253044247BR","warehouse"=>"TM2601307247BR"],
-                ["tracking"=>"NC253044233BR","warehouse"=>"TM2605106847BR"],
-                ["tracking"=>"NC574416517BR","warehouse"=>"TM2581237648BR"],
-            ];
-            return $this->updateTracking($codes, 4, 1);
-       }
-     function bCNToAnjunLabelsc() {  
-                    $codes = [ 
-                ["tracking"=>"IX031016495BR","warehouse"=>"TM2610331052BR"],
-                ["tracking"=>"NC695745017BR","warehouse"=>"TM2624317344BR"],
+                ["tracking"=>"NC249768916BR","warehouse"=>"HD2433905516BR"], 
             ];
 
             return $this->updateTracking($codes, 4, 1);
@@ -43,7 +25,7 @@ class UpdateTracking extends Controller
     
     function updateTracking($codes, $batchSize = 4, $delay = 1)
     {
-        set_time_limit(400);
+        set_time_limit(4);
 
         $chunks = array_chunk($codes, $batchSize);
 
