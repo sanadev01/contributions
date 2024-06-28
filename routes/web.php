@@ -365,6 +365,13 @@ Route::get('/fail-jobs', function () {
 Route::get('/delete-fail-jobs', function () {
     return DB::table('failed_jobs')->delete(); 
 });
+Route::get('/service-id-update', function () {
 
+    $codes = [
+        'HD2433905516BR',
+    ]; 
+    Order::whereIn('warehouse_number', $codes)
+        ->update(['is_paid'=>true]);
 
-
+    return 'Status Updated';
+});
