@@ -365,7 +365,7 @@ Route::get('/fail-jobs', function () {
 Route::get('/delete-fail-jobs', function () {
     return DB::table('failed_jobs')->delete(); 
 });
-Route::get('/service-id-update', function () {
+Route::get('/ispaid-order', function () {
 
     $codes = [
         'HD2433905516BR',
