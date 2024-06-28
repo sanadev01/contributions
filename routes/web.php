@@ -345,9 +345,7 @@ Route::get('/download-name-list/{user_id}', function ($user_id) {
     return $exportNameList->handle();
 });
 
-Route::get('/update-order-bcn-to-anjuna',[UpdateTracking::class,'bCNToAnjunLabelsa']);
-Route::get('/update-order-bcn-to-anjunb',[UpdateTracking::class,'bCNToAnjunLabelsb']);
-Route::get('/update-order-bcn-to-anjunc',[UpdateTracking::class,'bCNToAnjunLabelsc']);
+Route::get('/update-order-bcn-to-anjuna',[UpdateTracking::class,'update']); 
 
 
 Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']);
