@@ -130,9 +130,9 @@
 
                                     <!-- Modal -->
                                     <div class="modal fade" id="uploadModal" aria-labelledby="uploadModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg">
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="background: #b8c2cc;">
+                                        <div class="modal-dialog modal-lg m-100">
+                                            <div class="modal-content w-100">
+                                                <div class="modal-header w-100" style="background: #B8C2CC;">
                                                     <h5 class="modal-title" id="uploadModalLabel">Shipment Images</h5>
                                                     <button type="button" id="closeModal" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
@@ -175,7 +175,7 @@
             event.preventDefault();
             $('#uploadModal').modal('show');
         });
-
+    
         const webcamBtn = document.getElementById('webcamBtn');
         const fileBtn = document.getElementById('fileBtn');
         const fileInput = document.getElementById('fileInput');
@@ -184,11 +184,16 @@
         const webcamVideo = document.getElementById('webcam-video');
         const takePhotoBtn = document.getElementById('takePhotoBtn');
         let stream;
-
+    
         webcamBtn.onclick = async function() {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 try {
-                    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    const constraints = {
+                        video: true,
+                        facingMode: 'environment' // Prefer environment-facing camera (rear camera)
+                    };
+    
+                    stream = await navigator.mediaDevices.getUserMedia(constraints);
                     webcamVideo.srcObject = stream;
                     webcamContainer.style.display = 'block';
                 } catch (error) {
@@ -198,22 +203,27 @@
                 alert('Your browser does not support the webcam feature.');
             }
         };
-
+    
         takePhotoBtn.onclick = function() {
             const randomString = getString(10);
             const canvas = document.createElement('canvas');
-            canvas.width = 400;
-            canvas.height = 400;
+            const previewWidth = 170; // Preview size
+            const previewHeight = 170;
+            const saveWidth = 800; // Save size
+            const saveHeight = 800;
+            
+            canvas.width = saveWidth;
+            canvas.height = saveHeight;
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(webcamVideo, 0, 0, canvas.width, canvas.height);
-
+            ctx.drawImage(webcamVideo, 0, 0, saveWidth, saveHeight);
+    
             canvas.toBlob(function(blob) {
                 const fileName = `${randomString}-${previewContainer.childElementCount + 1}.png`;
                 const file = new File([blob], fileName, { type: 'image/png' });
-                addImageToPreview(file, canvas, fileName);
-            });
+                addImageToPreview(file, canvas, fileName, previewWidth, previewHeight);
+            }, 'image/png', 1); // Adjust the image quality here (1 for highest quality)
         };
-
+    
         fileBtn.onclick = function() {
             fileInput.click();
             if (stream) {
@@ -221,7 +231,7 @@
             }
             webcamContainer.style.display = 'none';
         };
-
+    
         fileInput.onchange = function(event) {
             const files = Array.from(event.target.files);
             files.forEach(file => {
@@ -230,80 +240,89 @@
                     const img = new Image();
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
-                        canvas.width = 400;
-                        canvas.height = 400;
+                        const previewWidth = 170; // Preview size
+                        const previewHeight = 170;
+                        const saveWidth = 800; // Save size
+                        const saveHeight = 800;
+                        
+                        canvas.width = saveWidth;
+                        canvas.height = saveHeight;
                         const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        addImageToPreview(file, canvas, file.name);
+                        ctx.drawImage(img, 0, 0, saveWidth, saveHeight);
+                        addImageToPreview(file, canvas, file.name, previewWidth, previewHeight);
                     };
                     img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             });
         };
-
-        function addImageToPreview(file, canvas, fileName) {
+    
+        function addImageToPreview(file, canvas, fileName, previewWidth, previewHeight) {
             const img = new Image();
-            img.src = canvas.toDataURL('image/png');
-            img.style.width = '150px';
-            img.style.height = '150px';
+            img.src = canvas.toDataURL('image/png', 1); // Adjust image quality here as well
+            img.style.width = `${previewWidth}px`; // Display in preview size
+            img.style.height = `${previewHeight}px`;
             img.classList.add('mr-2');
-
+    
             const previewDiv = document.createElement('div');
             previewDiv.style.position = 'relative';
             previewDiv.style.display = 'inline-block';
-            previewDiv.style.marginRight = '5px'; 
+            previewDiv.style.marginRight = '5px';
+            previewDiv.style.marginBottom = '5px'; 
             previewDiv.appendChild(img);
-
-            const deleteBtn = document.createElement('button');
-            deleteBtn.style.position = 'absolute';
-            deleteBtn.style.top = '-10px';
-            deleteBtn.style.right = '-1px';
-            deleteBtn.style.backgroundColor = '#ff0000'; // Red color for the button
-            deleteBtn.style.color = '#fff';
-            deleteBtn.style.border = 'none';
-            deleteBtn.style.borderRadius = '50%';
-            deleteBtn.style.width = '25px';
-            deleteBtn.style.height = '25px';
-            deleteBtn.style.fontSize = '14px';
-            deleteBtn.style.lineHeight = '1';
-            deleteBtn.style.cursor = 'pointer';
-            deleteBtn.innerHTML = '&times;';
-            deleteBtn.onclick = function() {
+    
+            const removeBtn = document.createElement('button');
+            removeBtn.style.display = 'block';
+            removeBtn.style.marginTop = '5px';
+            removeBtn.style.marginBottom = '5px';
+            removeBtn.style.marginLeft = '-3px';
+            removeBtn.style.backgroundColor = 'red'; // Red background
+            removeBtn.style.color = 'white'; // White text
+            removeBtn.style.border = '2px solid red'; // Red border
+            removeBtn.style.borderRadius = '5px';
+            removeBtn.style.padding = '2px 7px';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.style.width = '100%';
+            removeBtn.style.textAlign = 'center';
+            removeBtn.innerHTML = 'Remove Photo';
+            removeBtn.onclick = function() {
                 previewDiv.remove();
                 updateFileInput();
             };
-
-            previewDiv.appendChild(deleteBtn);
+    
+            previewDiv.appendChild(removeBtn);
             previewContainer.appendChild(previewDiv);
-
+    
             updateFileInput();
         }
-
+    
         function updateFileInput() {
             const dataTransfer = new DataTransfer();
             const previews = previewContainer.querySelectorAll('img');
             previews.forEach((img, index) => {
                 const canvas = document.createElement('canvas');
-                canvas.width = 400;
-                canvas.height = 400;
+                const saveWidth = 800; // Save size
+                const saveHeight = 800;
+                
+                canvas.width = saveWidth;
+                canvas.height = saveHeight;
                 const ctx = canvas.getContext('2d');
                 const src = img.src;
                 const image = new Image();
                 image.onload = function() {
-                    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(image, 0, 0, saveWidth, saveHeight);
                     canvas.toBlob(function(blob) {
                         const randomString = getString(10);
                         const fileName = `${randomString}.png`;
                         const file = new File([blob], fileName, { type: 'image/png' });
                         dataTransfer.items.add(file);
                         fileInput.files = dataTransfer.files;
-                    });
+                    }, 'image/png', 1); // Adjust image quality here as well
                 };
                 image.src = src;
             });
         }
-
+    
         document.getElementById('closeModal').addEventListener('click', function(event) {
             event.preventDefault();
             if (stream) {
@@ -311,7 +330,7 @@
             }
             webcamContainer.style.display = 'none';
         });
-
+    
         function getString(length) {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let result = '';
@@ -320,7 +339,11 @@
             }
             return result;
         }
-
     </script>
+    
+    
+    
+    
+    
 
 @endsection
