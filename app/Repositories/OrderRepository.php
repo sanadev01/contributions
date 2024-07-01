@@ -46,6 +46,17 @@ class OrderRepository
         {
             $query->where('sender_country_id', Country::US);
         }
+        if($request->taxAndDutyOnly)
+        {
+            $query->where('tax_and_duty','!=',0);
+        }
+       
+        $query->when($request->tax_and_duty,function($query,$tax){
+            return $query->where('tax_and_duty',  'LIKE', "%{$tax}%");
+        })->when($request->fee_for_tax_and_duty,function($query,$feeTax){
+            return $query->where('fee_for_tax_and_duty',  'LIKE', "%{$feeTax}%");
+        });
+        
 
         if ($request->userType == 'pickups') {
             $query->where('api_pickup_response' , '!=', null);
@@ -181,6 +192,11 @@ class OrderRepository
             if($request->carrier == 'HD Express'){
                 $service = [
                     ShippingService::HD_Express
+                ];
+            }
+            if($request->carrier == 'PasarEx'){
+                $service = [
+                    ShippingService::PasarEx
                 ];
             }
             if($request->carrier == 'Correios AJ'){
@@ -733,10 +749,10 @@ class OrderRepository
                         return !$shippingService->isAnjunService();
                     });
             }
-            if(Auth::id()!="1233"){
+            if(!Auth::user()->isAdmin()){
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                return !$shippingService->isAnjunChinaService();
-            });
+                    return !$shippingService->isAnjunChinaService();
+                });
             }
 
             if(!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){

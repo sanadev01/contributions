@@ -10,7 +10,6 @@ use App\Models\ShippingService;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use App\Services\Correios\Models\Package;
 use App\Services\Correios\Contracts\HasLableExport;
-use App\Services\Correios\GetZipcodeGroup;
 
 class CN23LabelMaker implements HasLableExport
 {
@@ -63,16 +62,25 @@ class CN23LabelMaker implements HasLableExport
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
-        // if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-01'))) {
-            $this->labelZipCodeGroup = (new GetZipcodeGroup($this->order->recipient->zipcode))->getZipcodeGroup();
-        // }
+        if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-01'))) {
+            $this->labelZipCodeGroup = getOrderGroupRange($this->order);
+        }
         if ($this->order->shippingService->is_bcn_service) {
             $this->contractNumber = 'B Contract: 0076204456';
             $this->packageSign = 'B';
         }
+        if ($this->order->shippingService->is_anjun_china_service_sub_class) {
+            $this->contractNumber = 'AC Contract: 0076204456';
+            $this->packageSign = 'AC';
+        }
         if($this->order->shippingService->isAnjunService()) {
             $this->contractNumber = 'A Contract: 9912501700';
             $this->packageSign = 'A';
+
+        }
+        if($this->order->shippingService->is_pasar_ex) {
+            $this->contractNumber = 'Contract: 9912501700';
+            $this->packageSign = '';
 
         }
         return $this;
@@ -98,9 +106,13 @@ class CN23LabelMaker implements HasLableExport
                 $this->packetType = 'Packet Express';
                 $this->serviceLogo = public_path('images/express-package.png');
                 break;
-            case Package::SERVICE_CLASS_MINI:
-                $this->packetType = 'Packet Mini';
-                $this->serviceLogo = public_path('images/mini-package.png');
+                case Package::SERVICE_CLASS_MINI:
+                    $this->packetType = 'Packet Mini';
+                    $this->serviceLogo = public_path('images/mini-package.png');
+                    break;
+            case ShippingService::PasarEx:
+                $this->packetType = 'Pasar Ex';
+                $this->serviceLogo = public_path('images/pasarex_logo.png');
                 break;
             case Package::SERVICE_CLASS_STANDARD:
             default:
