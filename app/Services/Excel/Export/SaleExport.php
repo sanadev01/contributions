@@ -60,8 +60,7 @@ class SaleExport extends AbstractExportService
             
             if ( Auth::user()->isAdmin() ){
                 if(!$isReferrerNow){
-                    $this->setCellValue('L'.$row,'Referrer Removed');
-                    $this->setBackgroundColor("A{$row}:L{$row}", 'fcf7b6');
+                    $this->setCellValue('M'.$row,'Referrer Removed');
                 }
             }
             $this->setCellValue('A'.$row, $user->name . $user->pobox_number);
@@ -138,10 +137,12 @@ class SaleExport extends AbstractExportService
         $this->setColumnWidth('I', 20);
         $this->setCellValue('I1', 'Order Weight');
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', 'Paid/unpaid');
-
+        $this->setCellValue('J1', 'Rate');
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Date');
+        $this->setCellValue('K1', 'Paid/Unpaid');
+
+        $this->setColumnWidth('L', 20);
+        $this->setCellValue('L1', 'Date');
 
         $this->setBackgroundColor('A1:L1', '2b5cab');
         $this->setColor('A1:L1', 'FFFFFF');

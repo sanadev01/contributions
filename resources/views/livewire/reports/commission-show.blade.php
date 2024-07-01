@@ -35,14 +35,18 @@
                     <div class="row mt-1">
                         <div class="form-group col-10 col-sm-6 col-md-3">
                             <div class="row">
-                                <label class="col-md-3 control-label">@lang('sales-commission.start date')3</label>
-                                <input type="date" name="start" class="form-control col-md-8">
+                                
+                                
+                                <label class="col-md-3 control-label">@lang('sales-commission.start date')</label>
+                                <input type="date" name="start" class="form-control col-md-6" wire:model.debounce.1000ms="start">
+                                 
                             </div>
                         </div>
                         <div class="form-group col-12 col-sm-6 col-md-3">
                             <div class="row">
+
                                 <label class="col-md-3 control-label">@lang('sales-commission.end date')</label>
-                                <input type="date" name="end" class="form-control col-md-8">
+                                <input type="date" name="end"  class="form-control col-md-6" wire:model.debounce.1000ms="end">
                             </div>
                         </div>
                         <div class="form-group col-12 col-sm-6 col-md-3">
@@ -99,8 +103,6 @@
                         @endadmin
                         <th>
                             <div class="row">
-                                <input type="date" class="form-control col-md-6" wire:model.debounce.1000ms="start">
-                                <input type="date" class="form-control col-md-6" wire:model.debounce.1000ms="end">
                             </div>
                             
                         </th>

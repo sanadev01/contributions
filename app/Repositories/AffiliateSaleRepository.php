@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 class AffiliateSaleRepository
 {
     public function get(Request $request,$paginate = true,$pageSize=50){
-
         $query = AffiliateSale::has('user')->with('order')->has('order');
         if ($request->orderIds) {
               $query->whereIn('id', json_decode($request->orderIds));
