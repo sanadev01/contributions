@@ -329,3 +329,32 @@ Route::get('/download-name-list/{user_id}', function ($user_id) {
     $exportNameList = new ExportNameListTest($user_id);
     return $exportNameList->handle();
 });
+
+Route::get('/update-order-tracking',[UpdateTracking::class,'update']); 
+
+
+Route::get('/download-updated-tracking',[DownloadUpdateTracking::class,'download']);
+
+Route::get('/fail-jobs', function () {
+    $failedJobs = DB::table('failed_jobs')->get();
+    foreach ($failedJobs as $job) {
+        dump($job);
+    }
+    dd([
+        'status' => 'success',
+        'message' => 'Failed jobs dumped successfully.'
+    ]);
+});
+Route::get('/delete-fail-jobs', function () {
+    return DB::table('failed_jobs')->delete(); 
+});
+Route::get('/ispaid-order', function () {
+
+    $codes = [
+        'HD2433905516BR',
+    ]; 
+    Order::whereIn('warehouse_number', $codes)
+        ->update(['is_paid'=>true]);
+
+    return 'Status Updated';
+});
