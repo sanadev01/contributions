@@ -170,7 +170,7 @@ class HandleCorreiosLabelsRepository
     }
     public function correiosOrAnjun($order)
     { 
-        if((Auth::id() != "1233" || Auth::id() != "0010") && $this->order->shippingService->is_anjun_china_service_sub_class) {
+        if(!in_array(Auth::id(),['1233','0013']) && $this->order->shippingService->is_anjun_china_service_sub_class) {
                     return $this->anjunChinaLabel();
         }
         $order = $this->updateShippingServiceFromSetting($order);
