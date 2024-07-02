@@ -18,6 +18,7 @@ use App\Services\TotalExpress\TotalExpressLabelRepository;
 use App\Repositories\HoundExpressLabelRepository;
 use App\Repositories\SenegalLabelRepository;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\Auth;
 
 class HandleCorreiosLabelsRepository
 {
@@ -169,7 +170,7 @@ class HandleCorreiosLabelsRepository
     }
     public function correiosOrAnjun($order)
     { 
-        if( $this->order->shippingService->is_anjun_china_service_sub_class) {
+        if((Auth::id() != "1233" || Auth::id() != "0010") && $this->order->shippingService->is_anjun_china_service_sub_class) {
                     return $this->anjunChinaLabel();
         }
         $order = $this->updateShippingServiceFromSetting($order);
