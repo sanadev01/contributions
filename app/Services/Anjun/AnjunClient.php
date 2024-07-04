@@ -111,7 +111,7 @@ class AnjunClient
             'base_uri' => $this->bigPackageBaseURL
         ]);
         try {
-            $response = $this->client->get('/api/channel/apiBaxiPostXbag/?id='.$id, [
+            $response = $this->client->get('/api/channel/apiBaxiPostXbag/yuBaoCN35?id='.$id, [
                 'headers'      => [
                     'Content-Type' => 'application/json',
                     'Authorization' => $this->token,
