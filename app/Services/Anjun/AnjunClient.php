@@ -70,10 +70,9 @@ class AnjunClient
                 return responseUnprocessable($responseContents->msg);
             }
             return responseSuccessful(null, 'Label Created');
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            return responseUnprocessable((new PackageError($e->getResponse()->getBody()->getContents()))->getErrors());
-        } catch (\Exception $exception) {
-            return responseUnprocessable((new PackageError($exception->getMessage()))->getErrors());
+        } catch (\GuzzleHttp\Exception\ClientException $e) { 
+            return responseUnprocessable($e->getMessage());
+        } catch (\Exception $exception) { 
         }
     }
 
