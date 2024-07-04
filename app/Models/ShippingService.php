@@ -100,8 +100,8 @@ class ShippingService extends Model
         $serviceMapping = [
             ShippingService::AJ_Packet_Standard => 'Packet Standard',
             ShippingService::AJ_Packet_Express => 'Packet Express', 
-            ShippingService::AJ_Standard_CN => 'Packet China Standard',
-            ShippingService::AJ_Express_CN => 'Packet China Express', 
+            ShippingService::AJ_Standard_CN => 'Packet Standard AJ',
+            ShippingService::AJ_Express_CN => 'Packet Express AJ', 
             ShippingService::BCN_Packet_Standard => 'Packet Standard', 
             ShippingService::BCN_Packet_Express => 'Packet Express', 
         ]; 
