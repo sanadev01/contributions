@@ -51,7 +51,7 @@ class AnjunClient
                 ]
             ]);
             $responseContents = json_decode($response->getBody()->getContents());
-            
+            \Log::info(['response cn23' => $responseContents]);
             if ($responseContents->code == 200) {
                 $trackingNumber = $responseContents->data->trackNum;
                 if ($trackingNumber) {
@@ -70,10 +70,9 @@ class AnjunClient
                 return responseUnprocessable($responseContents->msg);
             }
             return responseSuccessful(null, 'Label Created');
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            return responseUnprocessable((new PackageError($e->getResponse()->getBody()->getContents()))->getErrors());
-        } catch (\Exception $exception) {
-            return responseUnprocessable((new PackageError($exception->getMessage()))->getErrors());
+        } catch (\GuzzleHttp\Exception\ClientException $e) { 
+            return responseUnprocessable($e->getMessage());
+        } catch (\Exception $exception) { 
         }
     }
 
@@ -92,8 +91,8 @@ class AnjunClient
             ]);
 
             $responseContents = json_decode($response->getBody()->getContents());
-
-            if ($responseContents->status == 200) { 
+            \Log::info(['response container' => $responseContents]);
+            if ($responseContents->status == 200){
                 return $this->getCN35BarCode($responseContents->data);
             } else {
                 return responseUnprocessable($responseContents->msg);
@@ -112,22 +111,20 @@ class AnjunClient
             'base_uri' => $this->bigPackageBaseURL
         ]);
         try {
-            $response = $this->client->get('/api/channel/apiBaxiPostXbag/yuBaoCN35?id='.$id, [
+            $response = $this->client->get('/api/channel/apiBaxiPostXbag/?id='.$id, [
                 'headers'      => [
                     'Content-Type' => 'application/json',
                     'Authorization' => $this->token,
                 ],
             ]);
             $responseContents = json_decode($response->getBody()->getContents());
-
+            \Log::info(['response cn35 barcode' => $responseContents]);
             if ($responseContents->status == 200) {
-
                 return responseSuccessful($responseContents, 'Label Printer Success');
             } else{
                 return responseUnprocessable($responseContents->msg);
             }
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-
+        } catch (\GuzzleHttp\Exception\ClientException $e){
             return responseUnprocessable($e->getResponse()->getBody()->getContents());
         } catch (\Exception $exception) {
             return responseUnprocessable($exception->getMessage());
