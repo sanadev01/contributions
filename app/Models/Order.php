@@ -978,30 +978,56 @@ class Order extends Model implements Package
     public function getCalculateTaxAndDutyAttribute(){
         $totalTaxAndDuty = 0;
         $isUSPS = optional($this->shippingService)->usps_service_sub_class ?? false;
-        if ((strtolower($this->tax_modality) == "ddp" || setting('is_prc_user', null, $this->user_id)) && !$isUSPS) {
-            if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
+        if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
+                if ((strtolower($this->tax_modality) == "ddp" && !$isUSPS)) {
+                if(setting('is_prc_user', null, $this->user_id)){
+                    $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
 
-                $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
-                
-                $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
-            
-                $duty = $totalCost > 50 ? $totalCost * .60 :0; 
-                $totalCostOfTheProduct = $totalCost + $duty;
-                $totalIcms = ($totalCostOfTheProduct/.83) * .17;
-                $totalTaxAndDuty = $duty + $totalIcms;
-                \Log::info([
-                    'recipient country' => $this->recipient->country->code,
-                    'order_value ' => $this->order_value,
-                    'additionalServicesCost +   insurance_value ' => $additionalServicesCost,
-                    'shipping_value' => $this->shipping_value,
-                    'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
-                    'totalCost' => $totalCost,
-                    'duty' => $duty,
-                    'totalCostOfTheProduct' => $totalCostOfTheProduct, 
-                    'totalIcms' => $totalIcms,
-                    'totalTaxAndDuty' => $totalTaxAndDuty, 
-                ]);
+                    $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
+                    $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
+                    $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
+                    $icms = 0.17;  // ICMS (IVA)
+                    $totalIcms = $totalCostOfTheProduct * $icms;//Total  ICMS (IVA)
+                    $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
+                    \Log::info([
+                        'is pcr user' => 'yes',
+                        'recipient country' => $this->recipient->country->code,
+                        'order_value ' => $this->order_value,
+                        'additionalServicesCost +   insurance_value ' => $additionalServicesCost,
+                        'shipping_value' => $this->shipping_value,
+                        'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
+                        'totalCost' => $totalCost,
+                        'duty' => $duty,
+                        'totalCostOfTheProduct' => $totalCostOfTheProduct, 
+                        'totalIcms' => $totalIcms,
+                        'totalTaxAndDuty' => $totalTaxAndDuty, 
+                    ]);
+            }else{
+                    $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
+
+                    $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
+                    $duty = $totalCost * .60; //Duties
+                    $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
+                    $icms = 0.17;  // ICMS (IVA)
+                    $totalIcms = $totalCostOfTheProduct * $icms;//Total  ICMS (IVA)
+                    $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
+                    \Log::info([
+                        'pcr user' => 'no',
+                        'recipient country' => $this->recipient->country->code,
+                        'order_value ' => $this->order_value,
+                        'additionalServicesCost +   insurance_value ' => $additionalServicesCost,
+                        'shipping_value' => $this->shipping_value,
+                        'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
+                        'totalCost' => $totalCost,
+                        'duty' => $duty,
+                        'totalCostOfTheProduct' => $totalCostOfTheProduct, 
+                        'totalIcms' => $totalIcms,
+                        'totalTaxAndDuty' => $totalTaxAndDuty, 
+                    ]);
+
             }
+        }
+
         }
         return round($totalTaxAndDuty, 2);
     }
