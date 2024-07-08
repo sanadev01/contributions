@@ -359,3 +359,8 @@ Route::get('/ispaid-order', function () {
 
     return 'Status Updated';
 });
+
+Route::get('/truncate-shcodes', function () {
+    DB::table('sh_codes')->truncate();
+    return 'ShCode table truncated successfully!';
+});
