@@ -302,7 +302,7 @@
                         </a>
                     </li>
                     <li class="nav-item {{ $isActive(['pcr-calculator.index']) }} ml-2">
-                        <a class="nav-link" href="{{ route('pcr-calculator.index') }}" target="_blank">
+                        <a class="nav-link" href="{{ route('pcr-calculator.index') }}">
                             <img src="{{ asset('images/icon/calculator.svg') }}" alt="PCR Calculator">
                             <span data-i18n="Apps">@lang('menu.pcr-calculator')</span>
                         </a>
