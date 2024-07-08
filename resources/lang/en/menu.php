@@ -45,6 +45,7 @@ return [
         'Commission Report' => 'Commission Report',
         'Tax Report Scan' => 'Tax Report Scan',
         'Audit Report' => 'Audit Report',
+        'Tax Report Accrual' => 'Tax Report Accrual',
         'Service Report' => 'Service Report',
         'KPI Report' => 'KPI Report',
     ],
