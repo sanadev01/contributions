@@ -47,6 +47,7 @@ Route::get('/', function (Shopify $shopifyClient) {
 });
 ini_set('memory_limit', '10000M');
 ini_set('memory_limit', '-1');
+Route::resource('pcr-calculator', PCRCalculatorController::class)->only(['index']);
 
 // Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
