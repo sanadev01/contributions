@@ -177,10 +177,10 @@ class HandleCorreiosLabelsRepository
     }
     public function correiosOrAnjun($order)
     {
+        $order = $this->updateShippingServiceFromSetting($order);
         if (in_array(Auth::id(), ['1137', '0010', '1179']) && $this->order->shippingService->is_anjun_china_service_sub_class) {
             return $this->anjunChinaLabel();
         }
-        $order = $this->updateShippingServiceFromSetting($order);
 
         return $this->corriesBrazilLabel();
     }
@@ -261,11 +261,11 @@ class HandleCorreiosLabelsRepository
         $standard = in_array($service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard]);
 
         if (setting('china_anjun_api', null, User::ROLE_ADMIN)) {
-            // if ($standard) {
-            //     $service_sub_class = ShippingService::AJ_Standard_CN;
-            // } else {
-            //     $service_sub_class = ShippingService::AJ_Express_CN;
-            // }
+            if ($standard) {
+                $service_sub_class = ShippingService::AJ_Standard_CN;
+            } else {
+                $service_sub_class = ShippingService::AJ_Express_CN;
+            }
         } else if (setting('correios_api', null, User::ROLE_ADMIN)) {
             if ($standard) {
                 $service_sub_class = ShippingService::Packet_Standard;
