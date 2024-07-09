@@ -1,5 +1,5 @@
 @extends('layouts.master')
 
 @section('page')
-    <livewire:pcr-calculator />
+    <livewire:prc-calculator />
 @endsection

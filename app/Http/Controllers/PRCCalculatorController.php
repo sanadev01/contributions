@@ -11,11 +11,11 @@ use App\Services\Converters\UnitsConverter;
 use App\Http\Requests\Calculator\USCalculatorRequest;
 use App\Repositories\Calculator\USCalculatorRepository;
 
-class PCRCalculatorController extends Controller
+class PRCCalculatorController extends Controller
 {
     public function index()
     {
-        return view('pcr-calculator.index');
+        return view('prc-calculator.index');
     }
  
 }

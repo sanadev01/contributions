@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
+use App\Http\Controllers\PRCCalculatorController;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
@@ -47,7 +48,6 @@ Route::get('/', function (Shopify $shopifyClient) {
 });
 ini_set('memory_limit', '10000M');
 ini_set('memory_limit', '-1');
-Route::resource('pcr-calculator', PCRCalculatorController::class)->only(['index']);
 
 // Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
@@ -263,6 +263,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 Route::middleware(['auth'])->group(function () {
     Route::resource('us-calculator', USCalculatorController::class)->only(['index', 'store']);
     Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
+    Route::get('prc-calculator', [PRCCalculatorController::class,'index'])->name('prc-calculator.index');
     Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
     Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
     Route::get('/auth', [ConnectionsController::class, 'getAuth']); 
