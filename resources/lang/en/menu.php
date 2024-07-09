@@ -16,7 +16,7 @@ return [
     'addresses' => 'Addresses',
     'calculator' => 'Correios Calculator',
     'uscalculator' => 'WorldWide Calculator',
-    'pcr-calculator' => 'Pcr Calculator',
+    'prc-calculator' => 'Prc Calculator',
     'uspscalculator' => 'USPS Calculator',
     'upscalculator' => 'UPS Calculator',
     'connect' => 'Connect',

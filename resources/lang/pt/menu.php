@@ -16,7 +16,7 @@ return [
     'addresses' => 'Endereços',
     'calculator' => 'Correios Calculadora',
     'uscalculator' => 'calculadora mundial',
-    'pcr-calculator' => 'calculadora Pcr',
+    'prc-calculator' => 'calculadora Prc',
     'uspscalculator' => 'USPS Calculadora',
     'upscalculator' => 'UPS Calculadora',
     'connect' => 'Conectar',
