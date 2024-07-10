@@ -15,7 +15,7 @@
 
                     <div class="d-flex align-items-center">
                         <div class="vertical-rectangle mb-0"> &nbsp; &nbsp;</div>
-                        <h4 class="col-12 font-weight-bold font-black mb-0">PCR Calculator</h4>
+                        <h4 class="col-12 font-weight-bold font-black mb-0">PRC Calculator</h4>
                     </div>
 
                 </div>
@@ -69,7 +69,7 @@
                 <div class="card-header">
                     <div class="d-flex align-items-center">
                         <div class="vertical-rectangle mb-0"> &nbsp; &nbsp;</div>
-                        <h4 class="col-12 font-weight-bold font-black mb-0">Non-PCR Calculator</h4>
+                        <h4 class="col-12 font-weight-bold font-black mb-0">Non-PRC Calculator</h4>
                     </div>
                 </div>
 
