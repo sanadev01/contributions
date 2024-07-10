@@ -114,7 +114,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
                                 <div class="vertical-rectangle mr-2 mb-0"></div>
-                                <h4 class="font-weight-bold mb-0">PRC Result</h4>
+                                <h4 class="font-weight-bold mb-0">Non-PRC Result</h4>
                             </div>
                             <div class="d-flex align-items-center">
                                 <label class="mr-2 mb-1" for="">Total Tax & Duty</label>
