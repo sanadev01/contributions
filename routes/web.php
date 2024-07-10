@@ -48,7 +48,7 @@ Route::get('/', function (Shopify $shopifyClient) {
 });
 ini_set('memory_limit', '10000M');
 ini_set('memory_limit', '-1');
-
+Route::get('prc-calculator', [PRCCalculatorController::class,'index'])->name('prc-calculator.index')->middleware('auth');
 // Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
 
@@ -263,7 +263,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
 Route::middleware(['auth'])->group(function () {
     Route::resource('us-calculator', USCalculatorController::class)->only(['index', 'store']);
     Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
-    Route::get('prc-calculator', [PRCCalculatorController::class,'index'])->name('prc-calculator.index');
+
     Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
     Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
     Route::get('/auth', [ConnectionsController::class, 'getAuth']); 

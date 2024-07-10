@@ -21,22 +21,22 @@
                 </div>
                 <div class="card-body m-3">
                     <form class="row">
-                        <div class="col-md-6"> 
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="prcCostOfProduct">Cost of Product</label>
                                 <input type="number" step="0.01" id="prcCostOfProduct" class="form-control pl-3" wire:model="prcCostOfProduct">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
 
                                 <label for="prcShippingCost">
-                                    Shiping Cost 
+                                    Shiping Cost
                                 </label>
                                 <input type="number" step="0.01" id="prcShippingCost" class="form-control pl-3" wire:model="prcShippingCost">
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-4">
 
                             <div class="form-group">
                                 <label for="prcInsurance"> Insurance
@@ -76,16 +76,19 @@
                 <div class="card-body m-3">
 
                     <form class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
 
                                 <label for="nonPrcCostOfProduct">
                                     Cost of Product
                                 </label>
-                                <input type="number" step="0.01" id="nonPrcCostOfProduct" class="form-control pl-3" wire:model="nonPrcCostOfProduct">
+                                <div class="input-group">
+                                    <input type="number" step="0.01" id="nonPrcCostOfProduct" class="form-control pl-3" wire:model="nonPrcCostOfProduct">
+                                    
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
 
                             <div class="form-group">
 
@@ -93,16 +96,22 @@
 
                                     Shipping Cost
                                 </label>
-                                <input type="number" step="0.01" id="nonPrcShippingCost" class="form-control pl-3" wire:model="nonPrcShippingCost">
+                                <div class="input-group">
+                                    <input type="number" step="0.01" id="nonPrcShippingCost" class="form-control pl-3" wire:model="nonPrcShippingCost">
+                                   
+                                </div>
+
                             </div>
                         </div>
-                        <div class="col-md-12">
-
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="nonPrcInsurance">
                                     Insurance
                                 </label>
-                                <input type="number" step="0.01" id="nonPrcInsurance" class="form-control pl-3" wire:model="nonPrcInsurance">
+                                <div class="input-group">
+                                    <input type="number" step="0.01" id="nonPrcInsurance" class="form-control pl-3" wire:model="nonPrcInsurance">
+                                    
+                                </div>
                             </div>
                         </div>
                     </form>
