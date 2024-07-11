@@ -301,10 +301,10 @@
                             <span data-i18n="Apps">@lang('menu.uscalculator')</span>
                         </a>
                     </li>
-                    <li class="nav-item {{ $isActive(['prc-calculator.index']) }} ml-2">
-                        <a class="nav-link" href="{{ route('prc-calculator.index') }}">
-                            <img src="{{ asset('images/icon/calculator.svg') }}" alt="PRC Calculator">
-                            <span data-i18n="Apps">@lang('menu.prc-calculator')</span>
+                    <li class="nav-item {{ $isActive(['tax-calculator.index']) }} ml-2">
+                        <a class="nav-link" href="{{ route('tax-calculator.index') }}">
+                            <img src="{{ asset('images/icon/calculator.svg') }}" alt="@lang('menu.Tax Calculator'">
+                            <span data-i18n="Apps">@lang('menu.Tax Calculator')</span>
                         </a>
                     </li>
                 </ul>

@@ -16,7 +16,9 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
-use App\Http\Controllers\PRCCalculatorController;
+use App\Http\Controllers\UpdateTracking;
+use App\Http\Controllers\DownloadUpdateTracking;
+use App\Http\Controllers\TaxCalculatorController;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
@@ -48,7 +50,10 @@ Route::get('/', function (Shopify $shopifyClient) {
 });
 ini_set('memory_limit', '10000M');
 ini_set('memory_limit', '-1');
-Route::get('prc-calculator', [PRCCalculatorController::class,'index'])->name('prc-calculator.index')->middleware('auth');
+Route::view('tax-calculator.index')->name('tax-calculator.index')->middleware('auth');
+Route::get('tax-calculator', function () {
+    return view('tax-calculator.index');
+})->name('tax-calculator.index')->middleware('auth');
 // Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
 
