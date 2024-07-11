@@ -412,6 +412,9 @@ class Order extends Model implements Package
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::DSS_SENEGAL){
                 return 'DSS Senegal';
             }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMEI || optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI || optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP){
+                return 'VIP Parcels';
+            }
             return 'Correios Brazil';
         }
 

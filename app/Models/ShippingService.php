@@ -72,6 +72,9 @@ class ShippingService extends Model
     const GSS_CEP = 237;
     const TOTAL_EXPRESS_10KG = 284;
     const DSS_SENEGAL = 735;
+    const VIP_PARCEL_PMEI = 847;
+    const VIP_PARCEL_PMI = 848;
+    const VIP_PARCEL_FCP = 849;
 
     protected $guarded = [];
 
@@ -495,5 +498,13 @@ class ShippingService extends Model
                 self::Packet_Mini,
             ]
         );
+    }
+
+    public function isVipParcelService()
+    {
+        if(in_array($this->service_sub_class, [self::VIP_PARCEL_PMEI, self::VIP_PARCEL_PMI, self::VIP_PARCEL_FCP])){
+            return true;
+        }
+        return false;
     }
 }

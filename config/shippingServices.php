@@ -58,6 +58,9 @@ return [
             237 => 'GSS CEP',
             284 => 'Total Express 10KG',
             735 => 'DSS Senegal',
+            847 => 'VIP Parcel PMEI',
+            848 => 'VIP Parcel PMI',
+            849 => 'VIP Parcel FCP',
         ]
     ]
 ];
