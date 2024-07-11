@@ -11,11 +11,11 @@ use App\Services\Converters\UnitsConverter;
 use App\Http\Requests\Calculator\USCalculatorRequest;
 use App\Repositories\Calculator\USCalculatorRepository;
 
-class PRCCalculatorController extends Controller
+class TaxCalculatorController extends Controller
 {
     public function index()
     {
-        return view('prc-calculator.index');
+        return view('tax-calculator.index');
     }
  
 }
