@@ -50,8 +50,10 @@ Route::get('/', function (Shopify $shopifyClient) {
 });
 ini_set('memory_limit', '10000M');
 ini_set('memory_limit', '-1');
-Route::get('tax-calculator', [TaxCalculatorController::class,'index'])->name('tax-calculator.index')->middleware('auth');
-
+Route::view('tax-calculator.index')->name('tax-calculator.index')->middleware('auth');
+Route::get('tax-calculator', function () {
+    return view('tax-calculator.index');
+})->name('tax-calculator.index')->middleware('auth');
 // Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
 
