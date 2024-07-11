@@ -943,7 +943,6 @@ class Order extends Model implements Package
         $gssProfit = ZoneCountry::where('shipping_service_id', $shippingService->id)
             ->where('country_id', $this->recipient->country_id)
             ->value('profit_percentage');
-
         $client = new Client();
         $response = $client->getCostRates($this, $shippingService);
         $data = optional($response)->getData();
