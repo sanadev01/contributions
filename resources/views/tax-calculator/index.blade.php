@@ -166,7 +166,7 @@
     const duty = totalCost > 50 ? (totalCost * 0.60 - 20) : totalCost * 0.2;
     const totalCostOfTheProduct = totalCost + duty;
     const icms = 0.17;
-    const totalIcms = totalCostOfTheProduct * icms;
+    const totalIcms =( totalCostOfTheProduct / (1-icms))*icms;
 
     const prcTotalTaxAndDuty = Math.round((duty + totalIcms) * 100) / 100;
     totalTaxAndDutyElement.textContent = `$${prcTotalTaxAndDuty.toFixed(2)}`;
@@ -191,7 +191,7 @@
     const duty = totalCost * 0.60;
     const totalCostOfTheProduct = totalCost + duty;
     const icms = 0.17;
-    const totalIcms = totalCostOfTheProduct * icms;
+  const totalIcms = (totalCostOfTheProduct / (1-icms))*icms;
 
     const nonPrctotalTaxAndDuty = Math.round((duty + totalIcms) * 100) / 100;
  
