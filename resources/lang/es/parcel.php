@@ -24,6 +24,7 @@ return [
     'Length' => 'Largo',
     'Width' => 'Ancho',
     'Height' => 'Altura',
+    'Order value' => 'Valor de la orden',
     'The Rate will be applied on' => 'Tarifa se aplica sobre',
     'Shipment Images' => 'Seleccionar archivo (foto) (documento)',
     'Image 1' => 'Imagen 1',

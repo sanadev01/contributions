@@ -30,6 +30,7 @@ class Table extends Component
     public $customer_reference = '';
     public $tracking_code = '';
     public $amount = '';
+    public $tax_and_duty = '';
     public $status = '';
     public $orderType = null;
     public $userType = null;
@@ -82,6 +83,7 @@ class Table extends Component
             'customer_reference' => trim($this->customer_reference),
             'corrios_tracking_code' => trim($this->tracking_code),
             'status' => trim($this->status),
+            'tax_and_duty' => trim($this->tax_and_duty),
             'orderType' => trim($this->orderType),
             'paymentStatus' => trim($this->paymentStatus),
             'userType' => trim($this->userType),

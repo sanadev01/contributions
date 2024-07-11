@@ -11,9 +11,9 @@
                         </div>
                         <div class="col-6 d-flex justify-content-end">
                             @if($isGDE)
-                                <a href="{{ route('admin.rates.rates.exports', $service) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
+                                <a href="{{ route('admin.rates.rates.exports',['package'=>$packageId,'service'=>$service->id]) }}" class="btn btn-success">@lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
                             @else
-                                <a href="{{ route('admin.rates.rates.exports',$packageId) }}" class="btn btn-success"> @lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
+                                <a href="{{ route('admin.rates.rates.exports',['package'=>$packageId,'service'=>$service->id]) }}" class="btn btn-success">@lang('profitpackage.download-profit-package') <i class="feather icon-download"> </i></a>
                             @endif
                             <a href="{{ route('admin.rates.user-rates.index') }}" class="btn btn-primary mx-3">@lang('profitpackage.back to list')</a>  
                         </div>
