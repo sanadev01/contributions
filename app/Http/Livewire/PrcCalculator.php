@@ -26,9 +26,9 @@ class PrcCalculator extends Component
 
     public function calculatePrc()
     {
-        $prcCostOfProduct = floatval($this->prcCostOfProduct ?: 0);
-        $prcShippingCost = floatval($this->prcShippingCost ?: 0);
-        $prcInsurance = floatval($this->prcInsurance ?: 0);
+        $prcCostOfProduct = floatval($this->prcCostOfProduct ?: 0);//given value 1
+        $prcShippingCost = floatval($this->prcShippingCost ?: 0);//given value 2
+        $prcInsurance = floatval($this->prcInsurance ?: 0);//given value 3
 
         $totalCost = $prcInsurance + $prcShippingCost + $prcCostOfProduct;
         $duty = $totalCost > 50 ? (($totalCost * .60) - 20) : $totalCost * 0.2; // Duties
@@ -40,9 +40,9 @@ class PrcCalculator extends Component
 
     public function calculateNonPrc()
     {
-        $nonPrcCostOfProduct = floatval($this->nonPrcCostOfProduct ?: 0);
-        $nonPrcShippingCost = floatval($this->nonPrcShippingCost ?: 0);
-        $nonPrcInsurance = floatval($this->nonPrcInsurance ?: 0);
+        $nonPrcCostOfProduct = floatval($this->nonPrcCostOfProduct ?: 0);//given value 1
+        $nonPrcShippingCost = floatval($this->nonPrcShippingCost ?: 0);//given value 2
+        $nonPrcInsurance = floatval($this->nonPrcInsurance ?: 0);//given value 3
 
         $totalCost = $nonPrcInsurance + $nonPrcShippingCost + $nonPrcCostOfProduct;
         $duty = $totalCost * .60; // Duties
