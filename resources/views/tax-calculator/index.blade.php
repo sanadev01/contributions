@@ -2,140 +2,196 @@
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/kpi.css') }}">
 <style>
-  .vertical-rectangle {
-    background-color: #1074B6;
-    width: 3.1px;
-    height: 16.8px;
-    gap: 0px;
-    opacity: 0px;
+  .calculator {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
   }
 
-  .form-group:hover input {
-    border-left: 5px solid #1074B6;
-    ;
-    background-color: #F2FAFF;
+  .calculator-header {
+    font-size: 1.25rem;
+    padding: 10px 20px;
+    margin: 0;
+  }
+
+  .prc-calculator .calculator-header {
+    background: linear-gradient(to right, #2a83be, #5faf5f);
+    color: white;
+  }
+
+  .non-prc-calculator .calculator-header {
+    background-color: #B0BEC5;
+    color: white;
+  }
+
+  .calculator-body {
+    padding: 20px;
+  }
+
+  .form-group-prc {
+    margin-bottom: 20px;
+    position: relative;
+    padding-left: 10px;
+    background-color: #f2faff;
+    border-left: 5px solid #1074b6;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .form-group-non-prc {
+    margin-bottom: 20px;
+    position: relative;
+    padding-left: 10px;
+    background-color: #f2faff;
+    border-left: 5px solid #888888;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .form-group label {
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .input-group {
+    display: flex;
+    align-items: center;
+  }
+
+  .input-group-prepend {
+    border-right: 0;
+    font-size: 1.7rem;
+    color: #93c4e5;
   }
 
   .form-control {
-    background-color: #F8F8F8;
-
+    border-left: 0;
+    background-color: white;
+    border: none;
+    border-bottom: 2px solid black;
+    border-radius: 0;
   }
 
-  .form-group:hover label {
-    color: #1074B6;
+  .form-control:focus {
+    box-shadow: none;
+  }
+
+  .prc-total-amount {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #00C853;
+    text-align: center;
+  }
+
+  .non-prc-total-amount {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #a8a8a8;
+    text-align: center;
+  }
+
+  .total-label {
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    font-weight: 300;
+    color: #9e9e9e;
+  }
+
+  .input-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .input-row .form-group {
+    flex: 1;
+    margin-right: 10px;
+  }
+
+  .input-row .form-group:last-child {
+    margin-right: 0;
   }
 </style>
 @endsection
 @section('page')
-<div class="mt-5">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb" style="background-color: #f7fbfe;">
-      <li class="breadcrumb-item"><a href="#">Home</a></li>
-      <li class="breadcrumb-item"><a href="#">Calculator</a></li>
-      <li class="breadcrumb-item active" aria-current="page">PRC</li>
-    </ol>
-  </nav>
+<div class="container">
   <div class="row">
-    <h4 class="col-12 my-4 font-weight-bold font-black"> Tax and Duty Calculator</h4>
-    <div class="col-md-6 mb-4">
-      <div class="card">
-        <div class="card-header">
-          <div class="d-flex align-items-center">
-            <div class="vertical-rectangle mb-0"> &nbsp; &nbsp;</div>
-            <h4 class="col-12 font-weight-bold font-black mb-0">PRC Calculator</h4>
-          </div>
-        </div>
-        <div class="card-body m-3">
-          <form class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="prcCostOfProduct">Cost of Product</label>
-                <input type="number" step="0.01" id="prcCostOfProduct" class="form-control pl-3">
+    <div class="col-md-6">
+      <div class="calculator prc-calculator">
+        <div class="calculator-header">PRC Calculator</div>
+        <div class="calculator-body">
+          <div class="input-row">
+            <div class="form-group">
+              <label for="prc-cost-product">Cost of Product</label>
+              <div class="input-group form-group-prc">
+                <div class="input-group-prepend mr-2">
+                  $
+                </div>
+                <input type="text" class="form-control" id="prc-cost-product">
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="prcShippingCost">Shipping Cost</label>
-                <input type="number" step="0.01" id="prcShippingCost" class="form-control pl-3">
+            <div class="form-group">
+              <label for="prc-shipping-cost">Shipping Cost</label>
+              <div class="input-group form-group-prc">
+                <div class="input-group-prepend mr-2">
+                  $
+                </div>
+                <input type="text" class="form-control" id="prc-shipping-cost">
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="prcInsurance">Insurance</label>
-                <input type="number" step="0.01" id="prcInsurance" class="form-control pl-3">
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="card">
-        <div class="m-2">
-          <div class="container my-2">
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="d-flex align-items-center">
-                <div class="vertical-rectangle mr-2 mb-0"></div>
-                <h4 class="font-weight-bold mb-0">PRC Result</h4>
-              </div>
-              <div class="d-flex align-items-center">
-                <label class="mr-2 mb-1" for="">Total Tax & Duty</label>
-                <h4 class="font-weight-bold mb-0" id="prcTotalTaxAndDuty">$0.00</h4>
+            <div class="form-group">
+              <label for="prc-insurance">Insurance</label>
+              <div class="input-group form-group-prc">
+                <div class="input-group-prepend mr-2">
+                  $
+                </div>
+                <input type="text" class="form-control" id="prc-insurance">
               </div>
             </div>
           </div>
+          <div class="total-label">Total Tax and Duty</div>
+          <div class="prc-total-amount" id="prc-total-amount">$00.00</div>
         </div>
       </div>
     </div>
-    <div class="col-md-6 mb-4">
-      <div class="card">
-        <div class="card-header">
-          <div class="d-flex align-items-center">
-            <div class="vertical-rectangle mb-0"> &nbsp; &nbsp;</div>
-            <h4 class="col-12 font-weight-bold font-black mb-0">Non-PRC Calculator</h4>
-          </div>
-        </div>
-        <div class="card-body m-3">
-          <form class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="nonPrcCostOfProduct">Cost of Product</label>
-                <div class="input-group">
-                  <input type="number" step="0.01" id="nonPrcCostOfProduct" class="form-control pl-3">
+    <div class="col-md-6">
+      <div class="calculator non-prc-calculator">
+        <div class="calculator-header">Non-PRC Calculator</div>
+        <div class="calculator-body">
+          <div class="input-row">
+            <div class="form-group">
+              
+              <label for="non-prc-cost-product">Cost of Product</label>
+              <div class="input-group form-group-non-prc">
+                <div class="input-group-prepend mr-2">
+                  $
                 </div>
+                <input type="text" class="form-control" id="non-prc-cost-product">
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="nonPrcShippingCost">Shipping Cost</label>
-                <div class="input-group">
-                  <input type="number" step="0.01" id="nonPrcShippingCost" class="form-control pl-3">
+            <div class="form-group">
+              <label for="non-prc-shipping-cost">Shipping Cost</label>
+              <div class="input-group form-group-non-prc">
+                <div class="input-group-prepend mr-2">
+                  $
                 </div>
+                <input type="text" class="form-control" id="non-prc-shipping-cost">
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="nonPrcInsurance">Insurance</label>
-                <div class="input-group">
-                  <input type="number" step="0.01" id="nonPrcInsurance" class="form-control pl-3">
+            <div class="form-group">
+              <label for="non-prc-insurance">Insurance</label>
+              <div class="input-group form-group-non-prc">
+                <div class="input-group-prepend mr-2">
+                  $
                 </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="card">
-        <div class="m-2">
-          <div class="container my-2">
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="d-flex align-items-center">
-                <div class="vertical-rectangle mr-2 mb-0"></div>
-                <h4 class="font-weight-bold mb-0">Non-PRC Result</h4>
-              </div>
-              <div class="d-flex align-items-center">
-                <label class="mr-2 mb-1" for="">Total Tax & Duty</label>
-                <h4 class="font-weight-bold mb-0" id="nonPrcTotalTaxAndDuty">$0.00</h4>
+                <input type="text" class="form-control" id="non-prc-insurance">
               </div>
             </div>
           </div>
+          <div class="total-label">Total Tax and Duty</div>
+          <div class="non-prc-total-amount" id="non-prc-total-amount">$00.00</div>
         </div>
       </div>
     </div>
@@ -143,41 +199,31 @@
 </div>
 @endsection
 @section('js')
-<script>
-  // Get input elements
-  const costOfProductInput = document.getElementById('prcCostOfProduct');
-  const shippingCostInput = document.getElementById('prcShippingCost');
-  const insuranceInput = document.getElementById('prcInsurance');
-  const totalTaxAndDutyElement = document.getElementById('prcTotalTaxAndDuty');
-
-  // Add event listeners
+<script>  
+  const costOfProductInput = document.getElementById('prc-cost-product');
+  const shippingCostInput = document.getElementById('prc-shipping-cost');
+  const insuranceInput = document.getElementById('prc-insurance');
+  const totalTaxAndDutyElement = document.getElementById('prc-total-amount');
   costOfProductInput.addEventListener('keyup', calculatePRC);
   shippingCostInput.addEventListener('keyup', calculatePRC);
   insuranceInput.addEventListener('keyup', calculatePRC);
- 
 
-  function calculatePRC() { 
-    
+  function calculatePRC() {
     const costOfProduct = parseFloat(costOfProductInput.value) || 0;
     const shippingCost = parseFloat(shippingCostInput.value) || 0;
     const insurance = parseFloat(insuranceInput.value) || 0;
-
     const totalCost = shippingCost + costOfProduct + insurance;
     const duty = totalCost > 50 ? (totalCost * 0.60 - 20) : totalCost * 0.2;
     const totalCostOfTheProduct = totalCost + duty;
     const icms = 0.17;
-    const totalIcms =( totalCostOfTheProduct / (1-icms))*icms;
-
+    const totalIcms = (totalCostOfTheProduct / (1 - icms)) * icms;
     const prcTotalTaxAndDuty = Math.round((duty + totalIcms) * 100) / 100;
     totalTaxAndDutyElement.textContent = `$${prcTotalTaxAndDuty.toFixed(2)}`;
-  }
-
-  
-  const nonCostOfProductInput = document.getElementById('nonPrcCostOfProduct');
-  const nonPrcShippingCostInput = document.getElementById('nonPrcShippingCost');
-  const nonPrcInsuranceInput = document.getElementById('nonPrcInsurance');
-  const nonPrctotalTaxAndDutyElement = document.getElementById('nonPrcTotalTaxAndDuty');
-
+  } 
+  const nonCostOfProductInput = document.getElementById('non-prc-cost-product');
+  const nonPrcShippingCostInput = document.getElementById('non-prc-shipping-cost');
+  const nonPrcInsuranceInput = document.getElementById('non-prc-insurance');
+  const nonPrctotalTaxAndDutyElement = document.getElementById('non-prc-total-amount');
   nonCostOfProductInput.addEventListener('keyup', calculateNonPrc);
   nonPrcShippingCostInput.addEventListener('keyup', calculateNonPrc);
   nonPrcInsuranceInput.addEventListener('keyup', calculateNonPrc);
@@ -186,15 +232,12 @@
     const costOfProduct = parseFloat(nonCostOfProductInput.value) || 0;
     const shippingCost = parseFloat(nonPrcShippingCostInput.value) || 0;
     const insurance = parseFloat(nonPrcInsuranceInput.value) || 0;
-
     const totalCost = shippingCost + costOfProduct + insurance;
     const duty = totalCost * 0.60;
     const totalCostOfTheProduct = totalCost + duty;
     const icms = 0.17;
-  const totalIcms = (totalCostOfTheProduct / (1-icms))*icms;
-
+    const totalIcms = (totalCostOfTheProduct / (1 - icms)) * icms;
     const nonPrctotalTaxAndDuty = Math.round((duty + totalIcms) * 100) / 100;
- 
     nonPrctotalTaxAndDutyElement.textContent = `$${nonPrctotalTaxAndDuty.toFixed(2)}`;
   }
 </script>
