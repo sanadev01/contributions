@@ -987,14 +987,14 @@ class Order extends Model implements Package
                     $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
                     $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
                     $icms = 0.17;  // ICMS (IVA)
-                    $totalIcms = $totalCostOfTheProduct * $icms;//Total  ICMS (IVA)
+                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;;//Total  ICMS (IVA)
                     $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
                     \Log::info([
                         'is pcr user' => 'yes',
                         'recipient country' => $this->recipient->country->code,
-                        'order_value ' => $this->order_value,
-                        'additionalServicesCost +   insurance_value ' => $additionalServicesCost,
-                        'shipping_value' => $this->shipping_value,
+                        'order_value v1' => $this->order_value,
+                        'additionalServicesCost +   insurance_value v2 ' => $additionalServicesCost,
+                        'shipping_value v3' => $this->shipping_value,
                         'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
                         'totalCost' => $totalCost,
                         'duty' => $duty,
@@ -1009,14 +1009,14 @@ class Order extends Model implements Package
                     $duty = $totalCost * .60; //Duties
                     $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
                     $icms = 0.17;  // ICMS (IVA)
-                    $totalIcms = $totalCostOfTheProduct * $icms;//Total  ICMS (IVA)
+                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;;//Total  ICMS (IVA)
                     $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
                     \Log::info([
                         'pcr user' => 'no',
                         'recipient country' => $this->recipient->country->code,
-                        'order_value ' => $this->order_value,
-                        'additionalServicesCost +   insurance_value ' => $additionalServicesCost,
-                        'shipping_value' => $this->shipping_value,
+                        'order_value v1' => $this->order_value,
+                        'additionalServicesCost +   insurance_value v2 ' => $additionalServicesCost,
+                        'shipping_value v3' => $this->shipping_value,
                         'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
                         'totalCost' => $totalCost,
                         'duty' => $duty,

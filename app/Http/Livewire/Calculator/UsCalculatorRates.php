@@ -138,17 +138,17 @@ class UsCalculatorRates extends Component
         $totalCost = $profitRate + $orderValue;
         $isPRCUser = setting('is_prc_user', null, Auth::id());
         if ($this->isInternational && (strtolower($this->selectedTaxModality) == "ddp") && !$isUSPS) {
-            if($isPRCUser){
+        if($isPRCUser){
                 $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
                 $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
                 $icms = 0.17;  // ICMS (IVA)
-                $totalIcms = $totalCostOfTheProduct * $icms;//Total  ICMS (IVA)
+                $totalIcms =($totalCostOfTheProduct / (1-$icms))*$icms;//Total  ICMS (IVA)
                 $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
         }else{
                 $duty = $totalCost * .60; //Duties
                 $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
                 $icms = 0.17;  // ICMS (IVA)
-                $totalIcms = $totalCostOfTheProduct * $icms;//Total  ICMS (IVA)
+                $totalIcms =($totalCostOfTheProduct / (1-$icms))*$icms;//Total  ICMS (IVA)
                 $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
         } 
         \Log::info([
