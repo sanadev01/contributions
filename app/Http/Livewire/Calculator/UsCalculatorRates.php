@@ -137,14 +137,37 @@ class UsCalculatorRates extends Component
         }, 0);
         $totalCost = $profitRate + $orderValue;
         $isPRCUser = setting('is_prc_user', null, Auth::id());
-        if ($this->isInternational && (strtolower($this->selectedTaxModality) == "ddp" || $isPRCUser) && !$isUSPS) {
-            $duty = $totalCost > 50 ? $totalCost * .60 : 0;
-            $totalCostOfTheProduct = $totalCost + $duty;
-            $icms = .17;
-            $totalIcms = $icms * $totalCostOfTheProduct;
-            $totalTaxAndDuty = $duty + $totalIcms;
+        if ($this->isInternational && (strtolower($this->selectedTaxModality) == "ddp") && !$isUSPS) {
+        if($isPRCUser){
+                $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
+                $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
+                $icms = 0.17;  // ICMS (IVA)
+                $totalIcms =($totalCostOfTheProduct / (1-$icms))*$icms;//Total  ICMS (IVA)
+                $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
+        }else{
+                $duty = $totalCost * .60; //Duties
+                $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
+                $icms = 0.17;  // ICMS (IVA)
+                $totalIcms =($totalCostOfTheProduct / (1-$icms))*$icms;//Total  ICMS (IVA)
+                $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
+        } 
+        \Log::info([
+            'is calculator' =>'yes',
+            'is pcr user' =>$isPRCUser?'yes':'no',
+            'totalCost' => $totalCost,
+            'duty' => $duty,
+            'totalCostOfTheProduct' => $totalCostOfTheProduct, 
+            'totalIcms' => $totalIcms,
+            'totalTaxAndDuty' => $totalTaxAndDuty, 
+        ]);
+
             $feeForTaxAndDuty = $this->calculateFeeForTaxAndDuty($totalTaxAndDuty);
         } else {
+            \Log::info([
+                'is calculator' =>'yes but tax not apply',   
+                'is internation'=>$this->isInternational ,
+                'not usps'=> !$isUSPS,
+            ]);
             $totalTaxAndDuty = 0;
             $feeForTaxAndDuty = 0;
         }
