@@ -1009,7 +1009,7 @@ class Order extends Model implements Package
                     $duty = $totalCost * .60; //Duties
                     $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
                     $icms = 0.17;  // ICMS (IVA)
-                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;;//Total  ICMS (IVA)
+                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;//Total  ICMS (IVA)
                     $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
                     \Log::info([
                         'pcr user' => 'no',
