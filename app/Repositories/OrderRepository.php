@@ -15,6 +15,7 @@ use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
 use App\Services\GePS\GePSShippingService;
 use App\Services\Calculators\WeightCalculator;
+use App\Services\VipParcel\VIPParcelShippingService;
 use App\Models\User;
 
 class OrderRepository
@@ -578,6 +579,7 @@ class OrderRepository
             $uspsShippingService = new USPSShippingService($order);
             $upsShippingService = new UPSShippingService($order);
             $fedExShippingService = new FedExShippingService($order);
+            $vipParcelShippingService = new VIPParcelShippingService($order);
             
             foreach (ShippingService::where('active',true)->get() as $shippingService) 
             {
@@ -590,6 +592,10 @@ class OrderRepository
                 }
 
                 if ($fedExShippingService->isAvailableFor($shippingService)) {
+                    $shippingServices->push($shippingService);
+                }
+
+                if ($vipParcelShippingService->isAvailableFor($shippingService)) {
                     $shippingServices->push($shippingService);
                 }
             }
@@ -677,10 +683,7 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::Japan_EMS)
             || $shippingServices->contains('service_sub_class', ShippingService::GSS_CEP)
             || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS_10KG)
-            || $shippingServices->contains('service_sub_class', ShippingService::DSS_SENEGAL)
-            || $shippingServices->contains('service_sub_class', ShippingService::VIP_PARCEL_FCP)
-            || $shippingServices->contains('service_sub_class', ShippingService::VIP_PARCEL_PMEI)
-            || $shippingServices->contains('service_sub_class', ShippingService::VIP_PARCEL_PMI))
+            || $shippingServices->contains('service_sub_class', ShippingService::DSS_SENEGAL))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {

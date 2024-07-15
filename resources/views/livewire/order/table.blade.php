@@ -156,6 +156,7 @@
                             <option value="HD Express">HD Express</option>
                             <option value="Hound Express">Hound Express</option>
                             <option value="DSS Senegal">DSS Senegal</option>
+                            <option value="VIP Parcels">VIP Parcel</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin
