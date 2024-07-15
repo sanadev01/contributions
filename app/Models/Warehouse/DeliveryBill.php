@@ -153,4 +153,12 @@ class DeliveryBill extends Model
         return false;
     }
 
+    public function isVipParcel()
+    {
+        if(($this->containers->first()->services_subclass_code == ShippingService::VIP_PARCEL_FCP) || ($this->containers->first()->services_subclass_code == ShippingService::VIP_PARCEL_PMEI) || ($this->containers->first()->services_subclass_code == ShippingService::VIP_PARCEL_PMI)){
+            return true;
+        }
+        return false;
+    }
+
 }

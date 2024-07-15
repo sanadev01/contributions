@@ -200,6 +200,13 @@ class OrderRepository
                     ShippingService::DSS_SENEGAL
                 ];
             }
+            if($request->carrier == 'VIP Parcels'){
+                $service = [
+                    ShippingService::VIP_PARCEL_FCP,
+                    ShippingService::VIP_PARCEL_PMEI,
+                    ShippingService::VIP_PARCEL_PMI,
+                ];
+            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });
@@ -670,7 +677,10 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::Japan_EMS)
             || $shippingServices->contains('service_sub_class', ShippingService::GSS_CEP)
             || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS_10KG)
-            || $shippingServices->contains('service_sub_class', ShippingService::DSS_SENEGAL))
+            || $shippingServices->contains('service_sub_class', ShippingService::DSS_SENEGAL)
+            || $shippingServices->contains('service_sub_class', ShippingService::VIP_PARCEL_FCP)
+            || $shippingServices->contains('service_sub_class', ShippingService::VIP_PARCEL_PMEI)
+            || $shippingServices->contains('service_sub_class', ShippingService::VIP_PARCEL_PMI))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {
@@ -711,6 +721,16 @@ class OrderRepository
                 $this->shippingServiceError = 'GSS is not enabled for this user';
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
                     return !$shippingService->isGSSService();
+                });
+            }
+
+            if(!setting('vip_parcels', null, User::ROLE_ADMIN))
+            {
+                $this->shippingServiceError = 'VIP Parcel service is not enabled for this user';
+                $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
+                    return $shippingService->service_sub_class != ShippingService::VIP_PARCEL_FCP 
+                        && $shippingService->service_sub_class != ShippingService::VIP_PARCEL_PMEI
+                        && $shippingService->service_sub_class != ShippingService::VIP_PARCEL_PMI;
                 });
             }
 

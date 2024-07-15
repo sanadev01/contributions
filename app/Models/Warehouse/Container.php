@@ -133,6 +133,12 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'GSS Commercial E-Packet';
         }elseif($this->services_subclass_code == ShippingService::DSS_SENEGAL){
             return 'DSS Senegal';
+        }elseif($this->services_subclass_code == ShippingService::VIP_PARCEL_FCP){
+            return 'VIP Parcel First Class';
+        }elseif($this->services_subclass_code == ShippingService::VIP_PARCEL_PMEI){
+            return 'VIP Parcel Priority Mail Express International';
+        }elseif($this->services_subclass_code == ShippingService::VIP_PARCEL_PMI){
+            return 'VIP Parcel Priority Mail International';
         }else {
             return 'FirstClass';
         }
@@ -197,6 +203,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }
         elseif($this->services_subclass_code == ShippingService::DSS_SENEGAL){
             return 23;
+        }
+        elseif( $this->services_subclass_code == ShippingService::VIP_PARCEL_FCP || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMEI || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMI) {
+            return 24;
         }
         // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
@@ -338,5 +347,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasSenegalService()
     {
         return $this->services_subclass_code == ShippingService::DSS_SENEGAL;
+    }
+
+    public function hasVipParcelService()
+    {
+        return $this->services_subclass_code == ShippingService::VIP_PARCEL_FCP || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMEI || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMI;
     }
 }
