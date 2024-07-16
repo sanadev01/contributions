@@ -86,7 +86,12 @@
                                                     <td>{{ $order->tracking_id }}</td>
                                                     <td>{{  $order->corrios_tracking_code }}</td>
                                                     <td>{{  $order->warehouse_number }}</td>
-                                                    <td>{{  number_format($order->gross_total,2) }} USD</td>
+                                                    <td>  
+                                                        <div class="custom-tooltip">
+                                                            {{ number_format($order->gross_total, 2) }} USD
+                                                            <x-gross-total-details :order="$order" /> 
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

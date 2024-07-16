@@ -56,6 +56,7 @@ return [
             5537 => 'Japan Prime JerseyPost',
             5541 => 'Japan EMS JerseyPost',
             237 => 'GSS CEP',
+            238 => 'PasarEX',
             284 => 'Total Express 10KG',
             735 => 'DSS Senegal',
             847 => 'VIP Parcel PMEI',

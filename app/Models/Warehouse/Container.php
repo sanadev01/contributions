@@ -24,10 +24,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
 
-    const CONTAINER_ANJUN_NX = 'AJ-NX';
-    const CONTAINER_ANJUN_IX = 'AJ-IX';
-    const CONTAINER_BCN_NX = 'BCN-NX';
-    const CONTAINER_BCN_IX = 'BCN-IX';
+    const CONTAINER_ANJUN_NX  = 'AJ-NX';
+    const CONTAINER_ANJUN_IX  = 'AJ-IX';
+    const CONTAINER_BCN_NX    = 'BCN-NX';
+    const CONTAINER_BCN_IX    = 'BCN-IX';
     const CONTAINER_ANJUNC_NX = 'AJC-NX';
     const CONTAINER_ANJUNC_IX = 'AJC-IX';
      
@@ -61,154 +61,97 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         return $this->unit_type == 1 ? 'Bag' : 'Box';
     }
-
     public function getServiceSubClass()
     {
-        if($this->services_subclass_code == 'NX'){
-            return  'Packet Standard service';
-        }elseif($this->services_subclass_code == 'IX'){
-            return 'Packet Express service';
-        }elseif($this->services_subclass_code == 'XP'){
-            return 'Packet Mini service';
-        }elseif($this->services_subclass_code == 'SL-NX'){
-            return 'SL Standard Modal';
-        }elseif($this->services_subclass_code == 'SL-IX'){
-            return 'SL Express Modal';
-        }elseif($this->services_subclass_code == 'SL-XP'){
-            return 'SL Small Parcels';
-        }elseif ($this->services_subclass_code == 'AJ-NX') {
-            return 'AJ Packet Standard Service';
-        }elseif ($this->services_subclass_code == 'AJC-NX') {
-            return 'AJC Packet Standard Service';
-        }elseif ($this->services_subclass_code == 'AJC-IX') {
-            return 'AJC Packet Express Service';
-        }elseif ($this->services_subclass_code == 'AJ-IX') {
-            return 'AJ Packet Express service';
-        }elseif ($this->services_subclass_code == 'BCN-NX') {
-            return 'BCN Standard service';
-        }elseif ($this->services_subclass_code == 'BCN-IX') {
-            return 'BCN Express service';
-            return 'AJ Packet Express Service';
-        }elseif($this->services_subclass_code == 'SRM'){
-            return 'SRM service';
-        }elseif($this->services_subclass_code == 'SRP'){
-            return 'SRP service';
-        }elseif($this->services_subclass_code == 'Priority'){
-            return 'Priority';
-        }elseif($this->services_subclass_code == '537'){
-            return 'Global eParcel Prime';
-        }elseif($this->services_subclass_code == '773'){
-            return 'Prime5';
-        }elseif($this->services_subclass_code == 'USPS Ground'){
-            return 'USPS Ground';
-        }elseif($this->services_subclass_code == '734'){
-            return 'Post Plus';
-        }elseif($this->services_subclass_code == '357'){
-            return 'Prime5RIO';
-        }elseif($this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL){
-            return 'GDE Priority Mail';
-        }elseif($this->services_subclass_code == ShippingService::GDE_FIRST_CLASS){
-            return 'GDE First Class';
-        }elseif($this->services_subclass_code == ShippingService::GSS_PMI){
-            return 'Priority Mail International';
-        }elseif($this->services_subclass_code == ShippingService::GSS_EPMEI){
-            return 'Priority Mail Express International (Pre-Sort)';
-        }elseif($this->services_subclass_code == ShippingService::GSS_EPMI){
-            return 'Priority Mail International (Pre-Sort)';
-        }elseif($this->services_subclass_code == ShippingService::GSS_FCM){
-            return 'First Class Package International';
-        }elseif($this->services_subclass_code == ShippingService::GSS_EMS){
-            return 'Priority Mail Express International (Nationwide)';
-        }elseif($this->services_subclass_code == ShippingService::TOTAL_EXPRESS || $this->services_subclass_code == ShippingService::TOTAL_EXPRESS_10KG){
-            return 'Total Express';
-        }elseif($this->services_subclass_code == ShippingService::DirectLinkAustralia){
-            return 'DirectLink Australia';
-        }elseif($this->services_subclass_code == ShippingService::DirectLinkCanada){
-            return 'DirectLink Canada';
-        }elseif($this->services_subclass_code == ShippingService::DirectLinkMexico){
-            return 'DirectLink Mexico';
-        }elseif($this->services_subclass_code == ShippingService::DirectLinkChile){
-            return 'DirectLink Chile';
-        }elseif($this->services_subclass_code == ShippingService::GSS_CEP){
-            return 'GSS Commercial E-Packet';
-        }elseif($this->services_subclass_code == ShippingService::DSS_SENEGAL){
-            return 'DSS Senegal';
-        }elseif($this->services_subclass_code == ShippingService::VIP_PARCEL_FCP){
-            return 'VIP Parcel First Class';
-        }elseif($this->services_subclass_code == ShippingService::VIP_PARCEL_PMEI){
-            return 'VIP Parcel Priority Mail Express International';
-        }elseif($this->services_subclass_code == ShippingService::VIP_PARCEL_PMI){
-            return 'VIP Parcel Priority Mail International';
-        }else {
+        $serviceSubclasses = [
+            'NX' => 'Packet Standard service',
+            'IX' => 'Packet Express service',
+            'XP' => 'Packet Mini service',
+            'SL-NX' => 'SL Standard Modal',
+            'SL-IX' => 'SL Express Modal',
+            'SL-XP' => 'SL Small Parcels',
+            'AJ-NX' => 'AJ Packet Standard Service',
+            'AJC-NX' => 'AJC Packet Standard Service',
+            'AJC-IX' => 'AJC Packet Express Service',
+            'AJ-IX' => 'AJ Packet Express service',
+            'BCN-NX' => 'BCN Standard service',
+            'BCN-IX' => 'BCN Express service',
+            'SRM' => 'SRM service',
+            'SRP' => 'SRP service',
+            'Priority' => 'Priority',
+            '537' => 'Global eParcel Prime',
+            '773' => 'Prime5',
+            'USPS Ground' => 'USPS Ground',
+            '734' => 'Post Plus',
+            '357' => 'Prime5RIO',
+            ShippingService::GDE_PRIORITY_MAIL => 'GDE Priority Mail',
+            ShippingService::GDE_FIRST_CLASS => 'GDE First Class',
+            ShippingService::GSS_PMI => 'Priority Mail International',
+            ShippingService::GSS_EPMEI => 'Priority Mail Express International (Pre-Sort)',
+            ShippingService::GSS_EPMI => 'Priority Mail International (Pre-Sort)',
+            ShippingService::GSS_FCM => 'First Class Package International',
+            ShippingService::GSS_EMS => 'Priority Mail Express International (Nationwide)',
+            ShippingService::TOTAL_EXPRESS => 'Total Express',
+            ShippingService::DirectLinkAustralia => 'DirectLink Australia',
+            ShippingService::DirectLinkCanada => 'DirectLink Canada',
+            ShippingService::DirectLinkMexico => 'DirectLink Mexico',
+            ShippingService::DirectLinkChile => 'DirectLink Chile',
+            ShippingService::GSS_CEP => 'GSS Commercial E-Packet',
+            ShippingService::PasarEx => 'PasarEx',
+            ShippingService::DSS_SENEGAL=>'DSS Senegal',
+            ShippingService::VIP_PARCEL_FCP=>'VIP Parcel First Class',
+            ShippingService::VIP_PARCEL_PMEI=>'VIP Parcel Priority Mail Express International',
+            ShippingService::VIP_PARCEL_PMI=>'VIP Parcel Priority Mail International',
+
+        ];
+    
+        // Check if the service subclass code exists in the array
+        // If it does, return its corresponding description
+        if (isset($serviceSubclasses[$this->services_subclass_code])) {
+            return $serviceSubclasses[$this->services_subclass_code];
+        } else {
             return 'FirstClass';
         }
-    }
+    } 
 
     public function getServiceCode()
     {
-        if($this->services_subclass_code == 'NX'){
-            return  2;
-        }elseif($this->services_subclass_code == 'IX'){
-            return 1;
-        }elseif($this->services_subclass_code == 'XP'){
-            return 3;
-        }elseif($this->services_subclass_code == 'SRM') {
-            return 4;
-        }elseif($this->services_subclass_code == 'SRP') {
-            return 5;
-        }elseif($this->services_subclass_code == 'Priority') {
-            return 6;
-        }elseif($this->services_subclass_code == 'FirstClass'){
-            return 7;
-        }elseif($this->services_subclass_code == 'AJ-NX') {
-            return 8;
-        }elseif($this->services_subclass_code == 'AJ-IX'){
-            return 9;
-        }elseif($this->services_subclass_code == '537'){
-            return 10;
+        $serviceCodes = [
+            'NX' => 2,
+            'IX' => 1,
+            'XP' => 3,
+            'SRM' => 4,
+            'SRP' => 5,
+            'Priority' => 6,
+            'FirstClass' => 7,
+            'AJ-NX' => 8,
+            'AJ-IX' => 9,
+            '537' => 10,
+            '773' => 11,
+            '05' => 12,
+            '734' => 13,
+            ShippingService::GDE_PRIORITY_MAIL => 14,
+            ShippingService::GDE_FIRST_CLASS => 15,
+            ShippingService::TOTAL_EXPRESS => 16,
+            ShippingService::HD_Express => 17,
+            'AJC-IX' => 18,
+            'AJC-NX' => 19,
+            'BCN-NX' => 20,
+            'BCN-IX' => 21,
+            ShippingService::HoundExpress => 22,
+            ShippingService::DSS_SENEGAL => 23,
+            ShippingService::PasarEx => 24,
+        ];
+    
+        // Check if the service subclass code exists in the array
+        // If it does, return its corresponding code
+        if (isset($serviceCodes[$this->services_subclass_code])) {
+            return $serviceCodes[$this->services_subclass_code];
+        } else {
+            return null;
         }
-        elseif($this->services_subclass_code == '773'){
-            return 11;
-        }
-        elseif($this->services_subclass_code == '05'){
-            return 12;
-        }
-        elseif($this->services_subclass_code == '734'){
-            return 13;
-        }
-        elseif( $this->services_subclass_code == ShippingService::GDE_PRIORITY_MAIL) {
-            return 14;
-        }
-        elseif( $this->services_subclass_code == ShippingService::GDE_FIRST_CLASS) {
-            return 15;
-        }elseif( $this->services_subclass_code == ShippingService::TOTAL_EXPRESS || $this->services_subclass_code == ShippingService::TOTAL_EXPRESS_10KG) {
-            return 16;
-        }
-        elseif($this->services_subclass_code == ShippingService::HD_Express){
-            return 17;
-        }
-        elseif( $this->services_subclass_code == 'AJC-IX') {
-            return 18;
-        }
-        elseif( $this->services_subclass_code == 'AJC-NX') {
-            return 19;
-        }elseif( $this->services_subclass_code == 'BCN-NX') {
-            return 20;
-        }
-        elseif($this->services_subclass_code == 'BCN-IX'){
-            return 21;
-        }
-        elseif($this->services_subclass_code == ShippingService::HoundExpress){
-            return 22;
-        }
-        elseif($this->services_subclass_code == ShippingService::DSS_SENEGAL){
-            return 23;
-        }
-        elseif( $this->services_subclass_code == ShippingService::VIP_PARCEL_FCP || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMEI || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMI) {
-            return 24;
-        }
-        // return $this->services_subclass_code == 'NX' ? 2 : 1;
     }
+    
 
     public function getDestinationAriport()
     {
@@ -223,7 +166,6 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         }else {
             return 'Other Region';
         }
-        // return $this->destination_operator_name == 'SAOD' ? 'GRU' : 'CWB';
     }
 
     public function getWeight(): float
@@ -336,6 +278,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasHDExpressService()
     {
         return $this->services_subclass_code == ShippingService::HD_Express;
+    } 
+    public function hasPasarExService()
+    {
+        return $this->services_subclass_code == ShippingService::PasarEx;
     }
 
     public function getGroup($container) {
