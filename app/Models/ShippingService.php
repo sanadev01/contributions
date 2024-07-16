@@ -70,6 +70,8 @@ class ShippingService extends Model
     const Japan_Prime = 5537;
     const Japan_EMS = 5541;
     const GSS_CEP = 237;
+    const TOTAL_EXPRESS_10KG = 284;
+    const DSS_SENEGAL = 735;
 
     protected $guarded = [];
 
@@ -96,9 +98,11 @@ class ShippingService extends Model
     {
         $serviceSubClass = $this->service_sub_class;
         $serviceMapping = [
-            ShippingService::AJ_Standard_CN => 'Packet Standard', 
-            ShippingService::BCN_Packet_Standard => 'Packet Standard', 
+            ShippingService::AJ_Packet_Standard => 'Packet Standard',
             ShippingService::AJ_Packet_Express => 'Packet Express', 
+            ShippingService::AJ_Standard_CN => 'Packet China Standard',
+            ShippingService::AJ_Express_CN => 'Packet China Express', 
+            ShippingService::BCN_Packet_Standard => 'Packet Standard', 
             ShippingService::BCN_Packet_Express => 'Packet Express', 
         ]; 
         if (array_key_exists($serviceSubClass, $serviceMapping)) { 
@@ -226,7 +230,7 @@ class ShippingService extends Model
     }
     public function getIsTotalExpressAttribute()
     {
-        return $this->service_sub_class == self::TOTAL_EXPRESS;
+        return in_array($this->service_sub_class,[self::TOTAL_EXPRESS, self::TOTAL_EXPRESS_10KG]); 
     }
     public function isSwedenPostService()
     {
@@ -356,6 +360,14 @@ class ShippingService extends Model
             self::GDE_PRIORITY_MAIL,
             self::GDE_FIRST_CLASS,
         ];
+    }
+
+    public function isSenegalService()
+    {
+        if($this->service_sub_class == self::DSS_SENEGAL){
+            return true;
+        }
+        return false;
     }
 
     public function getIsMilliExpressAttribute()

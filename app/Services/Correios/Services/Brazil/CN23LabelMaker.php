@@ -10,6 +10,7 @@ use App\Models\ShippingService;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use App\Services\Correios\Models\Package;
 use App\Services\Correios\Contracts\HasLableExport;
+use App\Services\Correios\GetZipcodeGroup;
 
 class CN23LabelMaker implements HasLableExport
 {
@@ -17,6 +18,7 @@ class CN23LabelMaker implements HasLableExport
     private $order;
     private $recipient;
     private $corriosLogo;
+    private $customsLogo;
     private $partnerLogo;
     private $packetType;
     private $contractNumber;
@@ -39,6 +41,7 @@ class CN23LabelMaker implements HasLableExport
         $this->hasAnjunLabel = false;
         $this->corriosLogo = \public_path('images/correios-1.png');
         $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
+        $this->customsLogo =  public_path('images/customs-br-logo.png');
         $this->packetType = 'Packet Standard';
         $this->contractNumber = 'H Contract:  9912501576';
         $this->packageSign = 'H';
@@ -60,12 +63,16 @@ class CN23LabelMaker implements HasLableExport
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
-        if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-01'))) {
-            $this->labelZipCodeGroup = getOrderGroupRange($this->order);
-        }
+        // if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-01'))) {
+            $this->labelZipCodeGroup = (new GetZipcodeGroup($this->order->recipient->zipcode))->getZipcodeGroup();
+        // }
         if ($this->order->shippingService->is_bcn_service) {
             $this->contractNumber = 'B Contract: 0076204456';
             $this->packageSign = 'B';
+        }
+        if ($this->order->shippingService->is_anjun_china_service_sub_class) {
+            $this->contractNumber = 'AC Contract: 0076204456';
+            $this->packageSign = 'AC';
         }
         if($this->order->shippingService->isAnjunService()) {
             $this->contractNumber = 'A Contract: 9912501700';
@@ -210,7 +217,8 @@ class CN23LabelMaker implements HasLableExport
             'activeAddress' => $this->activeAddress,
             'isReturn' => $this->isReturn,
             'labelZipCodeGroup' => $this->labelZipCodeGroup,
-            'packageSign' => $this->packageSign
+            'packageSign' => $this->packageSign,
+            'customsLogo' => $this->customsLogo,
         ];
     }
 

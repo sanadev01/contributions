@@ -174,7 +174,8 @@ class OrderRepository
             }
             if($request->carrier == 'Total Express'){
                 $service = [
-                    ShippingService::TOTAL_EXPRESS, 
+                    ShippingService::TOTAL_EXPRESS,
+                    ShippingService::TOTAL_EXPRESS_10KG,
                 ];
             }
             if($request->carrier == 'HD Express'){
@@ -192,6 +193,11 @@ class OrderRepository
                 $service = [
                     ShippingService::AJ_Packet_Standard, 
                     ShippingService::AJ_Packet_Express, 
+                ];
+            }
+            if($request->carrier == 'DSS Senegal'){
+                $service = [
+                    ShippingService::DSS_SENEGAL
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
@@ -662,7 +668,9 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS)
             || $shippingServices->contains('service_sub_class', ShippingService::Japan_Prime)
             || $shippingServices->contains('service_sub_class', ShippingService::Japan_EMS)
-            || $shippingServices->contains('service_sub_class', ShippingService::GSS_CEP))
+            || $shippingServices->contains('service_sub_class', ShippingService::GSS_CEP)
+            || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS_10KG)
+            || $shippingServices->contains('service_sub_class', ShippingService::DSS_SENEGAL))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {
@@ -725,10 +733,10 @@ class OrderRepository
                         return !$shippingService->isAnjunService();
                     });
             }
-            if(Auth::id()!="1233"){
+            if(!in_array(Auth::id(),['1233','0010'])){
                 $shippingServices = $shippingServices->filter(function ($shippingService, $key) {
-                return !$shippingService->isAnjunChinaService();
-            });
+                    return !$shippingService->isAnjunChinaService();
+                });
             }
 
             if(!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN)){

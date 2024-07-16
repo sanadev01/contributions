@@ -110,10 +110,16 @@ class AccrualRate extends Model
         if ( $this->service == Package::SERVICE_CLASS_Hound_Express ){
             return "MEXICO Hound Express";
         }
+        if ( $this->service == Package::SERVICE_CLASS_TOTAL_EXPRESS_10KG ){
+            return "Total Express 10KG";
+        }
+        if ( $this->service == Package::SERVICE_CLASS_DSS_SENEGAL ){
+            return "DSS Senegal";
+        }
         return '';
     }
 
-    public static function getRateSlabFor($weight, $service  = null): AccrualRate
+    public static function getRateSlabFor($weight, $service  = null): ?AccrualRate
     {
         if($weight < 0.1){
             $weight = 0.1;

@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
+use App\Http\Controllers\UpdateTracking;
+use App\Http\Controllers\DownloadUpdateTracking;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
@@ -144,7 +146,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('accrual-rates/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'showRates'])->name('show-accrual-rates');
             Route::get('accrual-rates-download/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'downloadRates'])->name('download-accrual-rates');
             Route::resource('user-rates', UserRateController::class)->only(['index']);
-            Route::get('rates-exports/{package}/{regionRates?}', RateDownloadController::class)->name('rates.exports');
+            Route::get('rates-exports/{package}/{service?}/{regionRates?}', RateDownloadController::class)->name('rates.exports');
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
             Route::get('/show-profit-package-rates/{id}/{packageId}', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showPackageRates'])->name('show-profit-rates');
             Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
@@ -329,54 +331,45 @@ Route::get('/cleanup-activity-log', function () {
 Route::get('/service-id-update', function () {
 
     $codes = [
-        'NC253044180BR',
-        'IX031011065BR',
-        'IX031016076BR',
-        'NC560917725BR',
-        'IX031016080BR',
-        'NC253044193BR',
-        'IX031011079BR',
-        'NC560917734BR',
-        'NC560917748BR',
-        'NC560917751BR',
-        'NC560917765BR',
-        'NC253044202BR',
-        'NC560917779BR',
-        'NC560917782BR',
-        'NC560917796BR',
-        'NC560917805BR',
-        'NC560917819BR',
-        'NC560917822BR',
-        'NC560917836BR',
-        'NC253044216BR',
-        'NC253044220BR',
-        'NC560917840BR',
-        'NC253044233BR',
-        'NC560917853BR',
-        'NC560917867BR',
-        'NC560917875BR',
-        'NC253044247BR',
-        'NC253044255BR',
-        'NC253044264BR',
-        'NC253044278BR',
-        'NC253044281BR',
-        'NC253044295BR',
-        'NC253044304BR',
-        'NC253044318BR',
+        'HD2282155927BR',
     ];
-    
-    $updatedRowsExp = Order::whereIn('corrios_tracking_code', $codes)
-        ->where('corrios_tracking_code', 'like', 'NC%')
-        ->update(['shipping_service_id' => 45]);
+    $orderDate = Carbon::create(2024, 1, 23);
+    $updatedRows = Order::whereIn('warehouse_number', $codes)
+        ->update(['status' => 70, 'order_date' => $orderDate]);
 
-    $updatedRowsStand = Order::whereIn('corrios_tracking_code', $codes)
-        ->where('corrios_tracking_code', 'like', 'IX%')
-        ->update(['shipping_service_id' => 46]);
-
-    return 'Updated ' . $updatedRowsExp . ' with Express Parcel and ' . $updatedRowsStand . ' with Standard Parcel';
+    return 'Status Updated';
 });
 
 Route::get('/download-name-list/{user_id}', function ($user_id) {
     $exportNameList = new ExportNameListTest($user_id);
     return $exportNameList->handle();
+});
+
+Route::get('/update-order-tracking',[UpdateTracking::class,'update']); 
+
+
+Route::get('/download-updated-tracking',[DownloadUpdateTracking::class,'download']);
+
+Route::get('/fail-jobs', function () {
+    $failedJobs = DB::table('failed_jobs')->get();
+    foreach ($failedJobs as $job) {
+        dump($job);
+    }
+    dd([
+        'status' => 'success',
+        'message' => 'Failed jobs dumped successfully.'
+    ]);
+});
+Route::get('/delete-fail-jobs', function () {
+    return DB::table('failed_jobs')->delete(); 
+});
+Route::get('/ispaid-order', function () {
+
+    $codes = [
+        'HD2433905516BR',
+    ]; 
+    Order::whereIn('warehouse_number', $codes)
+        ->update(['is_paid'=>true]);
+
+    return 'Status Updated';
 });

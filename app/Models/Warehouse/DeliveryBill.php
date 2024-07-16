@@ -125,7 +125,7 @@ class DeliveryBill extends Model
 
     public function isTotalExpress()
     {
-        if($this->containers->first()->services_subclass_code == ShippingService::TOTAL_EXPRESS){
+        if(($this->containers->first()->services_subclass_code == ShippingService::TOTAL_EXPRESS) || ($this->containers->first()->services_subclass_code == ShippingService::TOTAL_EXPRESS_10KG)){
             return true;
         }
         return false;
@@ -143,6 +143,14 @@ class DeliveryBill extends Model
     public function isBCN()
     {
         return $this->containers->first()->hasBCNService();
+    }
+
+    public function isSenegal()
+    {
+        if($this->containers->first()->services_subclass_code == ShippingService::DSS_SENEGAL){
+            return true;
+        }
+        return false;
     }
 
 }

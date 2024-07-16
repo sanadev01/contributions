@@ -22,7 +22,7 @@ class GSSShippingService
         $this->height = $order->height;
         $this->measurement_unit = $order->measurement_unit;
 
-        $this->weight = $order->getWeight('kg');
+        $this->weight = $order->getOriginalWeight();
     }
 
     public function isAvailableFor($shippingService)
