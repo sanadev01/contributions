@@ -362,6 +362,9 @@ class ShippingService extends Model
         return [
             self::GDE_PRIORITY_MAIL,
             self::GDE_FIRST_CLASS,
+            self::VIP_PARCEL_FCP,
+            self::VIP_PARCEL_PMEI,
+            self::VIP_PARCEL_PMI,
         ];
     }
 

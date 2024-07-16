@@ -21,8 +21,7 @@ class VIPParcelContainerPackageRepository {
         if ($order->status != Order::STATUS_PAYMENT_DONE) {
             $error = 'Please check the Order Status, whether the order has been shipped, canceled, refunded, or not yet paid';
         }
-        if ( (!$container->hasVipParcelService() && $order->shippingService->isVipParcelService()) 
-            || ($container->hasVipParcelService() && !$order->shippingService->isVipParcelService())){
+        if ($container->services_subclass_code != $order->shippingService->service_sub_class){
 
             $error = 'Order does not belong to this container. Please Check Packet Service';
         }

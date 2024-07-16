@@ -21,7 +21,7 @@ class VIPParcelUnitRegisterController extends Controller
             
             if ($container->unit_code == null) {
                 $container->update([
-                    'unit_code' => 'HDC'.date('d').date('m').sprintf("%07d", $container->id).'SN',
+                    'unit_code' => 'VIP'.date('d').date('m').sprintf("%07d", $container->id).'US',
                     'response' => true,
                 ]);
                 

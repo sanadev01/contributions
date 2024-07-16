@@ -651,7 +651,6 @@ class OrderRepository
         if ($shippingServices->isNotEmpty()) {
            $shippingServices = $this->filterShippingServices($shippingServices, $order);
         }
-
         return $shippingServices;
     }
 
@@ -683,7 +682,10 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::Japan_EMS)
             || $shippingServices->contains('service_sub_class', ShippingService::GSS_CEP)
             || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS_10KG)
-            || $shippingServices->contains('service_sub_class', ShippingService::DSS_SENEGAL))
+            || $shippingServices->contains('service_sub_class', ShippingService::DSS_SENEGAL)
+            || $shippingServices->contains('service_sub_class', ShippingService::VIP_PARCEL_FCP)
+            || $shippingServices->contains('service_sub_class', ShippingService::VIP_PARCEL_PMEI)
+            || $shippingServices->contains('service_sub_class', ShippingService::VIP_PARCEL_PMI))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {

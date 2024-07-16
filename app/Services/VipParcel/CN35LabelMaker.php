@@ -56,8 +56,8 @@ class CN35LabelMaker implements HasLableExport
     public function setService(int $service)
     {
         $this->service = $service; 
-        $this->packetType = 'DSS Senegal';
-        $this->companyName = 'DSS Senegal';
+        $this->packetType = 'VIP Parcels';
+        $this->companyName = 'VIP Parcels';
 
         return $this;
     }
@@ -101,7 +101,7 @@ class CN35LabelMaker implements HasLableExport
     public function setType(string $weight)
     {
         $this->OrderWeight = $weight; 
-        $this->officeAddress = 'HD Courier'; 
+        $this->officeAddress = 'VIP Parcels'; 
         return $this;
     }
     public function setDestinationAirport(string $airport)
