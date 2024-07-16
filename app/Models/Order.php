@@ -412,7 +412,9 @@ class Order extends Model implements Package
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::DSS_SENEGAL){
                 return 'DSS Senegal';
             }
-            elseif(optional($this->shippingService)->is_pasar_ex){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMEI || optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI || optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP){
+                return 'VIP Parcels';
+            }elseif(optional($this->shippingService)->is_pasar_ex){
 
                 return 'PasarEx';
             }
@@ -446,7 +448,10 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ) {
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ||
+                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP||
+                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMEI||
+                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI) {
 
                 return $this->user_declared_freight;
             }

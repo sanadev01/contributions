@@ -18,6 +18,7 @@ use App\Repositories\AnjunLabelRepository;
 use App\Services\TotalExpress\TotalExpressLabelRepository;
 use App\Repositories\HoundExpressLabelRepository;
 use App\Repositories\SenegalLabelRepository;
+use App\Repositories\VIPParcelLabelRepository;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
 
@@ -107,6 +108,10 @@ class HandleCorreiosLabelsRepository
 
             if ($this->order->shippingService->is_ups_ground) {
                 return $this->upsLabel();
+            }
+
+            if ($this->order->shippingService->isVipParcelService()) {
+                return $this->vipParcelLabel();
             }
         }
 
@@ -250,6 +255,13 @@ class HandleCorreiosLabelsRepository
         $senegalLabelRepository = new SenegalLabelRepository();
         $senegalLabelRepository->run($this->order, $this->update);
         return $this->renderLabel($this->request, $this->order, $senegalLabelRepository->getError());
+    }
+
+    public function vipParcelLabel()
+    {
+        $vipParcelLabelRepository = new VIPParcelLabelRepository();
+        $vipParcelLabelRepository->run($this->order, $this->update);
+        return $this->renderLabel($this->request, $this->order, $vipParcelLabelRepository->getError());
     }
 
     public function updateShippingServiceFromSetting($order)

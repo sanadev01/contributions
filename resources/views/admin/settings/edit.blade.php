@@ -223,6 +223,21 @@
                                             <input type="number" name="gde_fc_profit" step="0.01" min=0 class="form-control col-2" id="gde_fc_profit" value="{{ setting('gde_fc_profit', null, $adminId) }}">
                                         </div>
                                     </div>
+                                </div>
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">VIP Parcel<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="VIP Parcel">
+                                                <input type="checkbox" name="vip_parcels" id="vip_parcels" @if(setting('vip_parcels', null, \App\Models\User::ROLE_ADMIN)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div> 
                                 <h4>Correios Settings</h4>
                                 <hr>

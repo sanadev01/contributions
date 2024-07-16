@@ -125,6 +125,8 @@
                                                 <span class="badge text-dark" style="background-color:#b4e2ef">PEx</span>
                                                 @elseif($deliveryBill->isSenegal())
                                                 <span class="badge badge-secondary text-dark">SN</span>
+                                                @elseif($deliveryBill->isVipParcel())
+                                                <span class="badge badge-secondary text-dark">VIP</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif

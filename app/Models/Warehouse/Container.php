@@ -99,6 +99,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             ShippingService::GSS_CEP => 'GSS Commercial E-Packet',
             ShippingService::PasarEx => 'PasarEx',
             ShippingService::DSS_SENEGAL=>'DSS Senegal',
+            ShippingService::VIP_PARCEL_FCP=>'VIP Parcel First Class',
+            ShippingService::VIP_PARCEL_PMEI=>'VIP Parcel Priority Mail Express International',
+            ShippingService::VIP_PARCEL_PMI=>'VIP Parcel Priority Mail International',
+
         ];
     
         // Check if the service subclass code exists in the array
@@ -289,5 +293,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasSenegalService()
     {
         return $this->services_subclass_code == ShippingService::DSS_SENEGAL;
+    }
+
+    public function hasVipParcelService()
+    {
+        return $this->services_subclass_code == ShippingService::VIP_PARCEL_FCP || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMEI || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMI;
     }
 }

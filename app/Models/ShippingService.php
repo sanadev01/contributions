@@ -74,6 +74,9 @@ class ShippingService extends Model
     const PasarEx = 238;
     const TOTAL_EXPRESS_10KG = 284;
     const DSS_SENEGAL = 735;
+    const VIP_PARCEL_PMEI = 847;
+    const VIP_PARCEL_PMI = 848;
+    const VIP_PARCEL_FCP = 849;
 
     protected $guarded = [];
 
@@ -366,6 +369,9 @@ class ShippingService extends Model
         return [
             self::GDE_PRIORITY_MAIL,
             self::GDE_FIRST_CLASS,
+            self::VIP_PARCEL_FCP,
+            self::VIP_PARCEL_PMEI,
+            self::VIP_PARCEL_PMI,
         ];
     }
 
@@ -512,6 +518,13 @@ class ShippingService extends Model
         );
     }
 
+    public function isVipParcelService()
+    {
+        if(in_array($this->service_sub_class, [self::VIP_PARCEL_PMEI, self::VIP_PARCEL_PMI, self::VIP_PARCEL_FCP])){
+            return true;
+        }
+        return false;
+    }
     public function getCarrierServiceAttribute()
     {
         $serviceSubClass = $this->service_sub_class;
