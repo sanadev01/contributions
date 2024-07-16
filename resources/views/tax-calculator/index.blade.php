@@ -1,7 +1,69 @@
 @extends('layouts.master')
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/kpi.css') }}">
+
 <style>
+  .animate-text {
+    display: inline-block;
+    animation: slide-in 2s forwards; 
+      font-size: 36px; /* Adjust size as needed */
+      font-weight: bold; /* Makes the text bold */
+      color: white; /* Text color white */ 
+      text-align: center; /* Center the text */
+  }
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .banner {
+    position: relative;
+    background: url('images/hdtruck.jpg') no-repeat center center;
+    background-size: cover;
+    height: 350px;
+  }
+
+  .banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(to right, rgb(46, 135, 183, 1), rgb(87, 169, 108, 0.5));
+    z-index: 1;
+  }
+
+  .banner .content {
+    position: absolute;
+    z-index: 2;
+    color: white;
+  }
+
+  .banner .content h1 {
+    font-size: 3rem;
+    margin: 0;
+    color: white;
+  
+  }
+  .bar {
+    width: 1px;
+    height: 80px;
+    margin-left: -100px;
+    background: white;
+    margin-right: 10px;
+  }
+
+
   .calculator {
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -116,6 +178,12 @@
 </style>
 @endsection
 @section('page')
+<div class="banner">
+  <div class="content d-flex align-items-center mt-5">
+    <div class="bar"></div>
+    <h1 class="animate-text">PRC Calculator</h1>
+  </div>
+</div>
 <div class="container">
   <div class="row">
     <div class="col-md-6">
@@ -162,7 +230,7 @@
         <div class="calculator-body">
           <div class="input-row">
             <div class="form-group">
-              
+
               <label for="non-prc-cost-product">Cost of Product</label>
               <div class="input-group form-group-non-prc">
                 <div class="input-group-prepend mr-2">
@@ -199,7 +267,7 @@
 </div>
 @endsection
 @section('js')
-<script>  
+<script>
   const costOfProductInput = document.getElementById('prc-cost-product');
   const shippingCostInput = document.getElementById('prc-shipping-cost');
   const insuranceInput = document.getElementById('prc-insurance');
@@ -219,7 +287,7 @@
     const totalIcms = (totalCostOfTheProduct / (1 - icms)) * icms;
     const prcTotalTaxAndDuty = Math.round((duty + totalIcms) * 100) / 100;
     totalTaxAndDutyElement.textContent = `$${prcTotalTaxAndDuty.toFixed(2)}`;
-  } 
+  }
   const nonCostOfProductInput = document.getElementById('non-prc-cost-product');
   const nonPrcShippingCostInput = document.getElementById('non-prc-shipping-cost');
   const nonPrcInsuranceInput = document.getElementById('non-prc-insurance');
