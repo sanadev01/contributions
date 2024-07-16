@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\ConnectionsController;
+use App\Http\Controllers\DownloadUpdateTracking;
+use App\Http\Controllers\UpdateTracking;
 use App\Models\Country;
 use App\Models\ShippingService;
 use App\Models\ZoneCountry;
@@ -142,7 +144,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('accrual-rates/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'showRates'])->name('show-accrual-rates');
             Route::get('accrual-rates-download/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'downloadRates'])->name('download-accrual-rates');
             Route::resource('user-rates', UserRateController::class)->only(['index']);
-            Route::get('rates-exports/{package}/{regionRates?}', RateDownloadController::class)->name('rates.exports');
+            Route::get('rates-exports/{package}/{service?}/{regionRates?}', RateDownloadController::class)->name('rates.exports');
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
             Route::get('/show-profit-package-rates/{id}/{packageId}', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showPackageRates'])->name('show-profit-rates');
             Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
@@ -328,4 +330,33 @@ Route::get('/cleanup-activity-log', function () {
 Route::get('/download-name-list/{user_id}', function ($user_id) {
     $exportNameList = new ExportNameListTest($user_id);
     return $exportNameList->handle();
+});
+
+Route::get('/update-order-tracking',[UpdateTracking::class,'update']); 
+
+
+Route::get('/download-updated-tracking',[DownloadUpdateTracking::class,'download']);
+
+Route::get('/fail-jobs', function () {
+    $failedJobs = DB::table('failed_jobs')->get();
+    foreach ($failedJobs as $job) {
+        dump($job);
+    }
+    dd([
+        'status' => 'success',
+        'message' => 'Failed jobs dumped successfully.'
+    ]);
+});
+Route::get('/delete-fail-jobs', function () {
+    return DB::table('failed_jobs')->delete(); 
+});
+Route::get('/ispaid-order', function () {
+
+    $codes = [
+        'HD2433905516BR',
+    ]; 
+    Order::whereIn('warehouse_number', $codes)
+        ->update(['is_paid'=>true]);
+
+    return 'Status Updated';
 });
