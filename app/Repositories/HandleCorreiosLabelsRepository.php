@@ -169,9 +169,10 @@ class HandleCorreiosLabelsRepository
         return $this->renderLabel($this->request, $this->order, $corrieosChileLabelRepository->getChileErrors());
     }
     public function correiosOrAnjun($order)
-    { 
-        if(in_array(Auth::id(),['1233','0010']) && $this->order->shippingService->is_anjun_china_service_sub_class) {
-                    return $this->anjunChinaLabel();
+    {
+        $order = $this->updateShippingServiceFromSetting($order);
+        if ($this->order->shippingService->is_anjun_china_service_sub_class) {
+            return $this->anjunChinaLabel();
         }
         $order = $this->updateShippingServiceFromSetting($order);
 
