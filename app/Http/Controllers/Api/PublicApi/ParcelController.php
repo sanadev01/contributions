@@ -59,7 +59,7 @@ class ParcelController extends Controller
             return apiResponse(false, 'Selected shipping service is currently not available.');
         }
 
-        if (!setting('china_anjun_api', null,  \App\Models\User::ROLE_ADMIN) && !$shippingService->is_anjun_china_service_sub_class) {
+        if (setting('china_anjun_api', null,  \App\Models\User::ROLE_ADMIN)) {
             if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
                 return apiResponse(false, $shippingService->name . ' is currently not available.');
             }
@@ -368,12 +368,21 @@ class ParcelController extends Controller
         if (!setting('bcn_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->is_bcn_service) {
             return apiResponse(false, $shippingService->name . ' is currently not available.');
         }
-<<<<<<< HEAD
-        if (!in_array(Auth::id(),['1233','0010'])   && $shippingService->is_anjun_china_service_sub_class) {
-=======
         if (!setting('china_anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->is_anjun_china_service_sub_class) {
->>>>>>> 7ddcdd1aa (anjun china)
             return apiResponse(false, $shippingService->name . ' is currently not available.');
+        }
+        
+        if (setting('china_anjun_api', null,  \App\Models\User::ROLE_ADMIN)) {
+            if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
+                return apiResponse(false, $shippingService->name . ' is currently not available.');
+            }
+
+            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard])) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Standard_CN)->first();
+            }
+            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Express, ShippingService::AJ_Packet_Express,ShippingService::AJ_Express_CN,ShippingService::BCN_Packet_Express])) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Express_CN)->first();
+            }
         }
 
         if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
@@ -381,11 +390,10 @@ class ParcelController extends Controller
                 return apiResponse(false, $shippingService->name . ' is currently not available.');
             }
 
-            if ($shippingService->service_sub_class == ShippingService::Packet_Standard) {
+            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard])) {
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Standard)->first();
             }
-
-            if ($shippingService->service_sub_class == ShippingService::AJ_Packet_Express) {
+            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Express, ShippingService::AJ_Packet_Express,ShippingService::AJ_Express_CN,ShippingService::BCN_Packet_Express])) {
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Packet_Express)->first();
             }
         }
@@ -393,20 +401,28 @@ class ParcelController extends Controller
             if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
                 return apiResponse(false, $shippingService->name . ' is currently not available.');
             }
-            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard])) {
+            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard])) {
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::BCN_Packet_Standard)->first();
             }
-            if (in_array($shippingService->service_sub_class, [ShippingService::AJ_Packet_Express, ShippingService::AJ_Packet_Express])) {
+            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Express, ShippingService::AJ_Packet_Express,ShippingService::AJ_Express_CN,ShippingService::BCN_Packet_Express])) {
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::BCN_Packet_Express)->first();
             }
         }
         
-        if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
-            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
-            $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
+        if (setting('correios_api', null, \App\Models\User::ROLE_ADMIN)) {
+            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard])) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
+            }
+            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Express, ShippingService::AJ_Packet_Express,ShippingService::AJ_Express_CN,ShippingService::BCN_Packet_Express])) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
+            }
+        }
+        if (optional($request->parcel)['measurement_unit'] == 'kg/cm') {
+            $volumetricWeight = WeightCalculator::getVolumnWeight($length, $width, $height, 'cm');
+            $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight, 2);
 
-            if($shippingService->isCorreiosService() && $volumeWeight > 30){
-                return apiResponse(false,"Your ". $volumeWeight ." kg/cm weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 30 kg/cm");
+            if ($shippingService->isCorreiosService() && $volumeWeight > 30) {
+                return apiResponse(false, "Your " . $volumeWeight . " kg/cm weight has exceeded the limit. Please check the weight and dimensions. Weight shouldn't be greater than 30 kg/cm");
             }
 
         }else{
