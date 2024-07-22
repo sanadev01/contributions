@@ -124,22 +124,6 @@ class CreateRequest extends FormRequest
             $rules['recipient.phone'] = 'required|string|max:12';
 
         }
-        
-      
-        if ($shippingService && $shippingService->is_anjun_china_service_sub_class||setting('china_anjun_api', null, User::ROLE_ADMIN)) {
-            $user = Auth::user();
-            $rules = [
-                'sender.sender_country_id' => $user->country_id ?'':'required',
-                'sender.sender_state_id' => $user->state_id ?'': 'required',
-                'sender.sender_zipcode' => $user->zipcode ?'': 'required',
-                'sender.sender_city' => $user->city ?'': 'required|string|max:100',
-                'sender.sender_email' => $user->email ?'': 'required|email',
-                'sender.sender_address' => ($user->address . ' ' . $user->address2) ?'': 'required|string|max:100',
-                'sender.tax_id' => $user->tax_id ?'': 'sometimes|string|max:100',
-                'sender.sender_phone' => $user->phone ?'': 'sometimes|string|max:100'
-            ]; 
-            
-        } 
         if ($shippingService){
             if ($shippingService->is_sweden_post){
                 $limit = 60;
