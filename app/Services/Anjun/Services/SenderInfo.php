@@ -21,7 +21,7 @@ class SenderInfo
             "senderPhone" => $this->order->sender_phone??"",
             "senderMobile" => $this->order->sender_phone??"",
             "senderMail" =>$this->order->sender_email,
-            "senderCountry" => $this->order->senderCountry->code,
+            "senderCountry" => optional($this->order->senderCountry)->code,
             "senderProvince" => optional($this->order->senderState)->name??"",
             "senderCity" =>  $this->order->sender_city,
             "senderMail" => $this->order->sender_email,

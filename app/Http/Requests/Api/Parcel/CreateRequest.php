@@ -122,6 +122,17 @@ class CreateRequest extends FormRequest
             $rules['recipient.phone'] = 'required|string|max:12';
 
         }
+        
+        if ($shippingService && $shippingService->is_anjun_china_service_sub_class) {
+
+            $rules['sender.sender_country_id'] = 'required';
+            $rules['sender.sender_state_id'] = 'required';
+            $rules['sender.sender_city'] = 'required|string|max:100';
+            $rules['sender.sender_address'] = 'required|string|max:100';
+            $rules['sender.sender_phone'] = 'sometimes|string|max:100';
+            $rules['sender.sender_zipcode'] = 'required'; 
+
+        }
         if ($shippingService){
             if ($shippingService->is_sweden_post){
                 $limit = 60;
