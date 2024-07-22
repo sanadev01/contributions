@@ -153,13 +153,14 @@ class OrderLabelController extends Controller
                 }
                 if ($order->shippingService->is_anjun_china_service_sub_class){ 
                     $anjun = new AnjunLabelRepository($order, $request); 
-                    $labelData = $anjun->run(); 
+                    $labelData = $anjun->run();  
                     $order->refresh();
-                    if ($labelData) {
-                        Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-                    }
+                    \Log::info(["anjun label data response"=>$labelData]);
                     if ($anjun->getError()) {
                         return $this->rollback($anjun->getError());
+                    }
+                    if ($labelData) {
+                        Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
                     }
                 }
                 if ($order->shippingService->isAnjunService() ||  $order->shippingService->isCorreiosService() || $order->shippingService->is_bcn_service) {

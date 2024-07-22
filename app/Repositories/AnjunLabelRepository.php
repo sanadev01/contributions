@@ -44,8 +44,10 @@ class AnjunLabelRepository
         $data = $response->getData();
         \Log::info(["anjun error "=>$data]);
         if ($data->success) {
+            \Log::info(["anjun success data "=>$data]); 
             return $this->printLabel($order);
         } else { 
+            \Log::info(["anjun error data "=>$data]); 
             $this->error= $data->message;
             return $response;
         }
