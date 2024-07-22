@@ -50,7 +50,6 @@
                                                     <select name="type"  class="form-control" id="searchType"   >
                                                         <option class="form-control" value="bcn" @if(request('type')=='bcn') selected @endif>BCN</option>
                                                         <option class="form-control" value="anjun"  @if(request('type')=='anjun') selected @endif>ANJUN</option>
-                                                        <option class="form-control" value="correios"  @if(request('type')=='correios') selected @endif>Correios</option>
                                                     </select>
                                                     </div>
                                                 </div>

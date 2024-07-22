@@ -144,10 +144,22 @@ class DeliveryBill extends Model
     {
         return $this->containers->first()->hasBCNService();
     }
+    public function isPasarEx()
+    {
+        return $this->containers->first()->hasPasarExService();
+    }
 
     public function isSenegal()
     {
         if($this->containers->first()->services_subclass_code == ShippingService::DSS_SENEGAL){
+            return true;
+        }
+        return false;
+    }
+
+    public function isVipParcel()
+    {
+        if(($this->containers->first()->services_subclass_code == ShippingService::VIP_PARCEL_FCP) || ($this->containers->first()->services_subclass_code == ShippingService::VIP_PARCEL_PMEI) || ($this->containers->first()->services_subclass_code == ShippingService::VIP_PARCEL_PMI)){
             return true;
         }
         return false;

@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin\Reports;
 use App\Models\Reports;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use Illuminate\Support\Facades\Session;
 use App\Services\Excel\Export\KPIReport;
 use App\Repositories\Reports\KPIReportsRepository;
+use App\Services\Excel\Export\AccrualReport;
 use Exception;
 
 class KPIReportController extends Controller
@@ -19,7 +21,15 @@ class KPIReportController extends Controller
     */
     public function index(Request $request, KPIReportsRepository $kpiReportsRepository)
     { 
-        $this->authorize('viewKPIReport',Reports::class);
+        if($request->type=='accrual'){
+            $this->authorize('viewTaxAndDutyReport',Reports::class);
+            return view('admin.reports.report-accrual');
+        }
+        else{
+            $this->authorize('viewKPIReport',Reports::class);
+        }
+            
+        
         $trackings = [];
         $trackingCodeUsersName = [];
         $orderDates = [];
@@ -40,7 +50,25 @@ class KPIReportController extends Controller
         return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates', 'firstEventDate'));
     }
     public function store(Request $request)
-    {
+    { 
+        if($request->type == 'accrual'){
+            if($request->start_date != null && $request->end_date != null)
+                {
+                    $start_date = $request->start_date.' 00:00:00';
+                    $end_date = $request->end_date.' 23:59:59';
+                    $orders = Order::whereBetween('order_date', [$start_date, $end_date])->where('tax_and_duty','!=',0)->get();
+                }else{ 
+                    $orders =  Order::where('tax_and_duty','!=',0)->get();
+                }
+                if(count($orders)<1){ 
+                    session()->flash('alert-danger', 'No order found!');
+                    return back(); 
+                }
+                 
+            $exportService = new AccrualReport($orders);
+            return $exportService->handle();
+        }
+
         if($request->order){
             
             $trackings = json_decode($request->order, true);

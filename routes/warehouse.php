@@ -16,6 +16,7 @@ use App\Http\Controllers\Warehouse\UnitRegisterController;
 
 use App\Http\Controllers\Warehouse\Anjun\AnjunUnitRegisterController;
 use App\Http\Controllers\Warehouse\Anjun\AnjunCN35DownloadController;
+use App\Http\Controllers\Warehouse\CN35DownloadFactoryController;
 use App\Http\Controllers\Warehouse\SearchPackageController;
 use App\Http\Controllers\Warehouse\USPSContainerController;
 use App\Http\Controllers\Warehouse\ChileContainerController;
@@ -35,6 +36,8 @@ use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
 use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
 use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
 use App\Http\Controllers\Warehouse\CombineManifestDownloadController;
+use App\Http\Controllers\Warehouse\ContainerFactoryController;
+use App\Http\Controllers\Warehouse\ContainerPackageFactoryController;
 use App\Http\Controllers\Warehouse\GePSContainerController;
 use App\Http\Controllers\Warehouse\GePSContainerPackageController;
 use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
@@ -78,6 +81,7 @@ use App\Http\Controllers\Warehouse\HoundCN35DownloadController;
 use App\Http\Controllers\Warehouse\HoundContainerController;
 use App\Http\Controllers\Warehouse\HoundContainerPackageController;
 use App\Http\Controllers\Warehouse\HoundUnitRegisterController;
+use App\Http\Controllers\Warehouse\UnitRegisterFactoryController;
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Export\OrderExportTemp;
 use Illuminate\Support\Facades\Auth;
@@ -85,6 +89,11 @@ use App\Http\Controllers\Warehouse\SenegalContainerController;
 use App\Http\Controllers\Warehouse\SenegalUnitRegisterController;
 use App\Http\Controllers\Warehouse\SenegalCN35DownloadController;
 use App\Http\Controllers\Warehouse\SenegalContainerPackageController;
+
+use App\Http\Controllers\Warehouse\VIPParcelContainerController;
+use App\Http\Controllers\Warehouse\VIPParcelUnitRegisterController;
+use App\Http\Controllers\Warehouse\VIPParcelCN35DownloadController;
+use App\Http\Controllers\Warehouse\VIPParcelContainerPackageController;
 
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
@@ -191,6 +200,24 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('hound_container.packages', HoundContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('hound_container/{id}/create', [HoundUnitRegisterController::class, 'createMasterBox'])->name('hound_container.createRequest');
     Route::get('hound_container/{container}/download', HoundCN35DownloadController::class)->name('hound_container.download');
+    // Routes for any Container
+    Route::resource('containers_factory', ContainerFactoryController::class)->names([
+        'index' => 'containers_factory.index',
+        'create' => 'containers_factory.create',
+        'store' => 'containers_factory.store',
+        'edit' => 'containers_factory.edit',
+        'update' => 'containers_factory.update',
+        'destroy' => 'containers_factory.destroy',
+    ]); 
+    Route::resource('container_factory.packages', ContainerPackageFactoryController::class)->only('index','destroy', 'create');
+    Route::get('container_factory/{id}/create', [UnitRegisterFactoryController::class, 'createMasterBox'])->name('container_factory.createRequest');
+    Route::get('container_factory/{container}/download', CN35DownloadFactoryController::class)->name('container_factory.download');
+
+
+    Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('totalexpress_container/{id}/create', [TotalExpressUnitRegisterController::class, 'createMasterBox'])->name('totalexpress_container.createRequest');
+    Route::get('totalexpress_container/{id}/register', [TotalExpressUnitRegisterController::class, 'consultMasterBox'])->name('totalexpress_container.registerBox');
+    Route::get('totalexpress_container/{container}/download', TotalExpressCN35DownloadController::class)->name('totalexpress_container.download');
     // Routes for Total Express Container
     Route::resource('totalexpress_containers', TotalExpressContainerController::class);
     Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
@@ -213,6 +240,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('hd-senegal-container.packages', SenegalContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('hd-senegal-container/{container}/register', SenegalUnitRegisterController::class)->name('hd-senegal-container.register');
     Route::get('hd-senegal-container/{container}/download', SenegalCN35DownloadController::class)->name('hd-senegal-container.download');
+
+    // Routes for vip parcel container
+    Route::resource('vip-parcel-containers', VIPParcelContainerController::class);
+    Route::resource('vip-parcel-container.packages', VIPParcelContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('vip-parcel-container/{container}/register', VIPParcelUnitRegisterController::class)->name('vip-parcel-container.register');
+    Route::get('vip-parcel-container/{container}/download', VIPParcelCN35DownloadController::class)->name('vip-parcel-container.download');
 });
 
 
