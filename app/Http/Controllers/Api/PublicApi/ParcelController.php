@@ -387,20 +387,6 @@ class ParcelController extends Controller
             }
         }
 
-        
-        if (setting('china_anjun_api', null,  \App\Models\User::ROLE_ADMIN)) {
-            if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
-                return apiResponse(false, $shippingService->name . ' is currently not available.');
-            }
-
-            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard])) {
-                $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Standard_CN)->first();
-            }
-            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Express, ShippingService::AJ_Packet_Express,ShippingService::AJ_Express_CN,ShippingService::BCN_Packet_Express])) {
-                $shippingService = ShippingService::where('service_sub_class', ShippingService::AJ_Express_CN)->first();
-            }
-        }
-
         if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
             if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
                 return apiResponse(false, $shippingService->name . ' is currently not available.');
@@ -433,10 +419,6 @@ class ParcelController extends Controller
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
             }
         }
-        
-        if ( optional($request->parcel)['measurement_unit'] == 'kg/cm' ){
-            $volumetricWeight = WeightCalculator::getVolumnWeight($length,$width,$height,'cm');
-            $volumeWeight = round($volumetricWeight > $weight ? $volumetricWeight : $weight,2);
 
         if (setting('correios_api', null, \App\Models\User::ROLE_ADMIN)) {
             if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard])) {
