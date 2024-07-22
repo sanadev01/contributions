@@ -19,31 +19,23 @@ class SenderInfo
 
     public function requestBody()
     {
-        $user = Auth::user();
-        $userZipcode =  '33182';
-        $userAddress=  "2200 NW, 129th Ave - Suite # 100";
-        $userEmail = $user->email; 
-        $userPhone = $user->phone??"+13058885191";
-        $userCity = "Miami";
-        $userTaxId = $user->tax_id; 
-        $userCountryId= 250;
-        $state="FL"; 
-        $userStateId=4622; 
-        $state = State::find($userStateId);
-        $senderCountry = Country::find($userCountryId);
+        $user = Auth::user(); 
+        $userAddress=  "2200 NW, 129th Ave - Suite # 100"; 
+        $userPhone = $user->phone??"+13058885191"; 
+        $userTaxId = $user->tax_id;  
         return [
             "senderName" => $this->order->sender_first_name .' '. $this->order->sender_last_name,
             "senderPhone" => $this->order->sender_phone??$userPhone,
             "senderMobile" => $this->order->sender_phone??$userPhone,
-            "senderCountry" =>optional($senderCountry)->code,
-            "senderProvince" =>optional($state)->name,
-            "senderCity" =>  $userCity,
-            "senderMail" => $this->order->sender_email??$userEmail,
-            "senderArea" => $state->name,
+            "senderCountry" =>"US",
+            "senderProvince" =>"Florida",
+            "senderCity" =>  "Miami",
+            "senderMail" => $this->order->sender_email??$user->email,
+            "senderArea" => "Florida",
             "senderStreet" => "",
             "senderHouseNumber" => "",
             "senderAddress" => $this->order->sender_address??$userAddress,
-            "senderZipcode" => $this->order->sender_zipcode??$userZipcode,
+            "senderZipcode" => $this->order->sender_zipcode??"33182",
             "senderCompany" => "",
             "senderTax" => $this->order->sender_taxId??$userTaxId,
             "senderCertificateType" => "",
