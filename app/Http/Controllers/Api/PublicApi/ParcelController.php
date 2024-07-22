@@ -58,7 +58,10 @@ class ParcelController extends Controller
         if (!$shippingService->active) {
             return apiResponse(false, 'Selected shipping service is currently not available.');
         }
-
+       
+        if (!setting('china_anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->is_anjun_china_service_sub_class) {
+            return apiResponse(false, $shippingService->name . ' is currently not available.');
+        }
         if (setting('china_anjun_api', null,  \App\Models\User::ROLE_ADMIN)) {
             if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
                 return apiResponse(false, $shippingService->name . ' is currently not available.');
@@ -72,7 +75,7 @@ class ParcelController extends Controller
             }
         }
 
-        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)) {
+        if (setting('anjun_api', null, \App\Models\User::ROLE_ADMIN)){
             if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
                 return apiResponse(false, $shippingService->name . ' is currently not available.');
             }
@@ -370,7 +373,6 @@ class ParcelController extends Controller
         if (!setting('china_anjun_api', null, \App\Models\User::ROLE_ADMIN) && $shippingService->is_anjun_china_service_sub_class) {
             return apiResponse(false, $shippingService->name . ' is currently not available.');
         }
-
         
         if (setting('china_anjun_api', null,  \App\Models\User::ROLE_ADMIN)) {
             if ($shippingService->service_sub_class == ShippingService::Packet_Mini) {
@@ -406,6 +408,15 @@ class ParcelController extends Controller
             }
             if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Express, ShippingService::AJ_Packet_Express,ShippingService::AJ_Express_CN,ShippingService::BCN_Packet_Express])) {
                 $shippingService = ShippingService::where('service_sub_class', ShippingService::BCN_Packet_Express)->first();
+            }
+        }
+        
+        if (setting('correios_api', null, \App\Models\User::ROLE_ADMIN)) {
+            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard])) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Standard)->first();
+            }
+            if (in_array($shippingService->service_sub_class, [ShippingService::Packet_Express, ShippingService::AJ_Packet_Express,ShippingService::AJ_Express_CN,ShippingService::BCN_Packet_Express])) {
+                $shippingService = ShippingService::where('service_sub_class', ShippingService::Packet_Express)->first();
             }
         }
 

@@ -186,7 +186,6 @@ class HandleCorreiosLabelsRepository
         if ($this->order->shippingService->is_anjun_china_service_sub_class) {
             return $this->anjunChinaLabel();
         }
-
         return $this->corriesBrazilLabel();
     }
     public function corriesBrazilLabel()
