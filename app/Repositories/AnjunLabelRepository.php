@@ -42,6 +42,7 @@ class AnjunLabelRepository
         $anjunClient = new AnjunClient();
         $response = $anjunClient->createPackage($order);
         $data = $response->getData();
+        \Log::info(["anjun error "=>$data]);
         if ($data->success) {
             return $this->printLabel($order);
         } else { 

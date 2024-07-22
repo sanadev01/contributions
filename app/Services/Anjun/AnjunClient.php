@@ -51,6 +51,7 @@ class AnjunClient
                 ]
             ]);
             $responseContents = json_decode($response->getBody()->getContents());
+            \Log::info(["anjun response content "=>$responseContents]);
             
             if ($responseContents->code == 200) {
                 $trackingNumber = $responseContents->data->trackNum;
