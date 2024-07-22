@@ -379,7 +379,9 @@ Route::get('/warehouse-detail/{warehouse}', function ($warehouse) {
 });
 Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field) {
     $order = (Order::where('warehouse_number', $warehouse)->first());  
- 
+    \Log::info(
+        $order->toArray()
+    );
     dump($order->update([$field=>null]));  
     dd($order);
 });
