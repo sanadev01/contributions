@@ -92,6 +92,11 @@
                                 <span class="menu-title">Total Express</span>
                             </a>
                         </li>
+                        <li > <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>App\Models\ShippingService::PasarEx]) }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">PasarEx</span>
+                            </a>
+                        </li>
                         <li class="{{ $isActive(['warehouse.hound_containers.index','warehouse.hound_containers.create','warehouse.hound_containers.edit','warehouse.hound_container.packages.index']) }}">
                             <a href="{{ route('warehouse.hound_containers.index') }}">
                                 <i class="feather icon-circle"></i>
@@ -108,6 +113,12 @@
                             <a href="{{ route('warehouse.hd-senegal-containers.index') }}">
                                 <i class="feather icon-circle"></i>
                                 <span class="menu-title">@lang('menu.Warehouse.DSS Senegal')</span>
+                            </a>
+                        </li>
+                        <li class="{{ $isActive(['warehouse.vip-parcel-containers.index','warehouse.vip-parcel-containers.create','warehouse.vip-parcel-containers.edit','warehouse.vip-parcel-containers.packages.index']) }}">
+                            <a href="{{ route('warehouse.vip-parcel-containers.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">VIP Parcel</span>
                             </a>
                         </li>
 
