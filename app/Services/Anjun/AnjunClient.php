@@ -50,9 +50,7 @@ class AnjunClient
                     'Authorization' => $this->token,
                 ]
             ]);
-            $responseContents = json_decode($response->getBody()->getContents());
-            \Log::info(["anjun response content "=>$responseContents]);
-            
+            $responseContents = json_decode($response->getBody()->getContents());            
             if ($responseContents->code == 200) {
                 $trackingNumber = $responseContents->data->trackNum;
                 if ($trackingNumber) {
