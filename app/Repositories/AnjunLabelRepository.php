@@ -33,8 +33,10 @@ class AnjunLabelRepository
     {
         $cn23 = $this->generateLabel($order);
         if ($cn23) {
+            \Log::info(["anjun success data on label "]); 
             $this->printLabel($order);
         }
+        \Log::info(["anjun error data on null"]); 
         return null;
     }
     protected function generateLabel(Order $order)
@@ -44,12 +46,10 @@ class AnjunLabelRepository
         $data = $response->getData();
         \Log::info(["anjun error "=>$data]);
         if ($data->success) {
-            \Log::info(["anjun success data "=>$data]); 
             return $this->printLabel($order);
         } else { 
-            \Log::info(["anjun error data "=>$data]); 
             $this->error= $data->message;
-            return $response;
+            return null;
         }
     }
 public function printLabel(Order $order)
