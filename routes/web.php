@@ -373,3 +373,13 @@ Route::get('/ispaid-order', function () {
 
     return 'Status Updated';
 });
+Route::get('/warehouse-detail/{warehouse}', function ($warehouse) {
+ 
+    dd(Order::where('warehouse_number', $warehouse)->first());  
+});
+Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field) {
+    $order = (Order::where('warehouse_number', $warehouse)->first());  
+ 
+    dump($order->update([$field=>null]));  
+    dd($order);
+});
