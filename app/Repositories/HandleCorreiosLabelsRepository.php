@@ -188,7 +188,7 @@ class HandleCorreiosLabelsRepository
         $anjun= new AnjunLabelRepository($this->order, $this->request);
         $anjunResponse = $anjun->run(); 
         \Log::info([ "anjun run response front"=>$anjunResponse]);
-        \Log::info([ "anjun run response front anjun"=>$anjun]);
+        \Log::info([ "anjun run response front anjun"=>$anjun->error]);
         return $this->renderLabel($this->request, $this->order, $anjun->error);
     }
 
