@@ -188,8 +188,8 @@ class HandleCorreiosLabelsRepository
         $anjun= new AnjunLabelRepository($this->order, $this->request);
         $anjunResponse = $anjun->run(); 
         \Log::info([ "anjun run response front"=>$anjunResponse]);
-        \Log::info([ "anjun run response front anjun"=>$anjun->error]);
-        return $this->renderLabel($this->request, $this->order, $anjun->error);
+        \Log::info([ "anjun run response front anjun"=>$anjun->getError()]);
+        return $this->renderLabel($this->request, $this->order, $anjun->getError());
     }
 
     public function uspsLabel()
