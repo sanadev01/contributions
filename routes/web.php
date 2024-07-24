@@ -369,3 +369,7 @@ Route::get('/truncate-shcodes', function () {
     DB::table('sh_codes')->truncate();
     return 'ShCode table truncated successfully!';
 });
+Route::get('/warehouse-detail/{warehouse}', function ($warehouse) {
+ 
+    dd(Order::where('warehouse_number', $warehouse)->first());  
+});
