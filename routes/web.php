@@ -378,7 +378,7 @@ Route::get('/orderbyid/{id}', function ($id) {
  
     $orders = Order::where('shipping_service_id', $id)->get();
     $ordersdownload = new TempOrderExport($orders);
-    return $ordersdownload->handle();
+    return $ordersdownload->download();
 });
 Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field) {
     $order = (Order::where('warehouse_number', $warehouse)->first());  
