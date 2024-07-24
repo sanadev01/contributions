@@ -27,15 +27,12 @@ class TempOrderExport extends AbstractExportService
         $this->setExcelHeaderRow();
 
         $row = $this->currentRow;
-
         foreach ($this->orders as $order) {
-
             if ($order instanceof Order) {
-
                 $totalAmount = $order->items->reduce(function ($carry, $orderItem) {
                     return $carry + ($orderItem->quantity * $orderItem->value);
                 }, 0);
-
+        
                 $this->setCellValue('A'.$row, $order->corrios_tracking_code);
                 $this->setCellValue('B'.$row, $order->warehouse_number); 
                 $this->setCellValue('C'.$row, optional($order->user)->pobox_number); 
@@ -45,8 +42,8 @@ class TempOrderExport extends AbstractExportService
                 $this->setCellValue('G'.$row, $this->chargeWeight($order));
                 $this->setCellValue('H'.$row, $order->length.'x'.$order->width.'x'.$order->height);
                 $this->setCellValue('I'.$row, $order->shipping_value);
-                $this->setCellValue('J'.$row, number_format($totalAmount,2));
-                
+                $this->setCellValue('J'.$row, number_format($totalAmount, 2));
+        
                 foreach($order->items as $item) {
                     $this->setCellValue('K'.$row, $item->sh_code);   
                     $this->setCellValue('L'.$row, $item->description);
@@ -54,18 +51,18 @@ class TempOrderExport extends AbstractExportService
                 }
                 $this->setColor('D', 'FF0000');
             } else {
-
                 $this->setCellValue('A'.$row, $order->corrios_tracking_code);
                 $this->setCellValue('B'.$row, $order->warehouse_number); 
                 $this->setCellValue('C'.$row, optional($order->user)->pobox_number); 
                 $this->setCellValue('D'.$row, "Order Not Found");
-
+        
                 $this->setCellValue('K'.$row, '');   
                 $this->setCellValue('L'.$row, '');
                 $this->setBackgroundColor("A{$row}:L{$row}", 'FF0000');
                 $row++;
             }
         }
+        
     }
 
 

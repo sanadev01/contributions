@@ -6,6 +6,7 @@ use App\Models\State;
 use App\Models\ShCode;
 use App\Models\Country;
 use App\Models\ZoneCountry;
+use Illuminate\Http\Request;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
 use Illuminate\Http\Response;
@@ -22,8 +23,8 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Services\Excel\Export\TempOrderExport;
 use App\Http\Controllers\ConnectionsController;
 use App\Http\Controllers\DownloadUpdateTracking;
-use App\Services\Excel\Export\ExportNameListTest;
 
+use App\Services\Excel\Export\ExportNameListTest;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 
@@ -374,12 +375,22 @@ Route::get('/ispaid-order', function () {
 
     return 'Status Updated';
 });
-Route::get('/orderbyid/{id}', function ($id) {
- 
-    $orders = Order::where('shipping_service_id', $id)->get();
+Route::get('/orderbyid/{id}', function ($id, Request $request) {
+    $query = Order::where('shipping_service_id', $id);
+
+    if ($request->has('from') && $request->has('to')) {
+        $from = $request->query('from') . ' 00:00:00';
+        $to = $request->query('to') . ' 23:59:59';
+        $query->whereBetween('order_date', [$from, $to]);
+    }
+
+    $orders = $query->get();
     \Log::info([$orders]);
+
     $ordersdownload = new TempOrderExport($orders);
-    return $ordersdownload->download();
+    $filePath = $ordersdownload->handle();
+
+    return response()->download($filePath)->deleteFileAfterSend(true);
 });
 Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field) {
     $order = (Order::where('warehouse_number', $warehouse)->first());  
