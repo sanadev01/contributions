@@ -38,6 +38,21 @@
                                         @enderror
                                     </div>
                                 </div>
+
+                                <div class="controls row mb-1 align-items-center my-2">
+                                    <label class="col-md-3 text-md-right">@lang('warehouse.containers.Custom Type')<span class="text-danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="custom_type">
+                                            <option value="">@lang('warehouse.containers.Custom Type')</option>
+                                            <option value="1" {{ old('custom_type',$container->custom_type) == '1' ? 'selected' : '' }}>Non-PRC</option>
+                                            <option value="2" {{ old('custom_type',$container->custom_type) == '2' ? 'selected' : '' }}>PRC</option>
+                                        </select>
+                                        @error('custom_type')
+                                            <div class="help-block text-danger"> {{ $message }} </div>
+                                        @enderror
+                                    </div>
+                                </div>
+
                                 <div class="controls row mb-1 align-items-center my-2">
                                     <label class="col-md-3 text-md-right">@lang('warehouse.containers.Destination Airport')<span class="text-danger">*</span></label>
                                     <div class="col-md-6">

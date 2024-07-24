@@ -69,6 +69,7 @@
                                     </th>
                                     <th>@lang('warehouse.containers.Destination Airport')</th>
                                     <th>@lang('warehouse.containers.Container Type')</th>
+                                    <th>@lang('warehouse.containers.Custom Type')</th>
                                     <th>@lang('warehouse.containers.Distribution Service Class')</th>
                                     <th>
                                         Unit Code
@@ -93,6 +94,7 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>  
                                     <th></th>               
                                     <th>
                                         <select class="form-control" wire:model="packetType">
@@ -144,6 +146,9 @@
                                         </td>
                                         <td>
                                             {{ $container->getContainerType() }}
+                                        </td>
+                                        <td>
+                                            {{ $container->getCustomType() }}
                                         </td>
                                         <td>
                                             {{ $container->getServiceSubClass() }}
