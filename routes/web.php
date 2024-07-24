@@ -1,30 +1,31 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use App\Models\Order;
-use App\Models\ShCode;
 use App\Models\State;
+use App\Models\ShCode;
+use App\Models\Country;
+use App\Models\ZoneCountry;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
+use Illuminate\Http\Response;
+use App\Models\ShippingService;
+use Illuminate\Support\Facades\DB;
+// use App\Services\Correios\Services\Brazil\CN23LabelMaker;
+use App\Models\Warehouse\Container;
 use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\UpdateTracking;
 use App\Services\HDExpress\CN23LabelMaker;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
-// use App\Services\Correios\Services\Brazil\CN23LabelMaker;
+use App\Services\Excel\Export\TempOrderExport;
+use App\Http\Controllers\ConnectionsController;
+use App\Http\Controllers\DownloadUpdateTracking;
+use App\Services\Excel\Export\ExportNameListTest;
+
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use App\Models\Warehouse\Container;
-use App\Http\Controllers\ConnectionsController;
-use App\Http\Controllers\UpdateTracking;
-use App\Http\Controllers\DownloadUpdateTracking;
-use App\Models\Country;
-use App\Models\ShippingService;
-use App\Models\ZoneCountry;
-use App\Services\Excel\Export\ExportNameListTest;
-use Illuminate\Http\Response;
-
-use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -373,9 +374,11 @@ Route::get('/ispaid-order', function () {
 
     return 'Status Updated';
 });
-Route::get('/warehouse-detail/{warehouse}', function ($warehouse) {
+Route::get('/orderbyid/{id}', function ($id) {
  
-    dd(Order::where('warehouse_number', $warehouse)->first());  
+    $orders = Order::where('shipping_service_id', $id)->get();
+    $ordersdownload = new TempOrderExport($orders);
+    return $ordersdownload->handle();
 });
 Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field) {
     $order = (Order::where('warehouse_number', $warehouse)->first());  
