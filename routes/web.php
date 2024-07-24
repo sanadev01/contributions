@@ -377,6 +377,7 @@ Route::get('/ispaid-order', function () {
 Route::get('/orderbyid/{id}', function ($id) {
  
     $orders = Order::where('shipping_service_id', $id)->get();
+    \Log::info([$orders]);
     $ordersdownload = new TempOrderExport($orders);
     return $ordersdownload->download();
 });
