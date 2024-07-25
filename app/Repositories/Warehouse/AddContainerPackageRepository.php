@@ -37,7 +37,7 @@ class AddContainerPackageRepository extends AbstractRepository{
             return $this->validationError404('Order Already in Container.');
         }
         if ($this->container->isPRC() && strtolower($this->order->tax_modality) == "ddu") {
-            return $this->validationError404('DDU order cannot be added inside a PRC container.');
+            return $this->validationError404('DDU parcel cannot be added inside a PRC container.');
         }
         if(!$this->orderValidate()){
             return $this->orderValidateMessage($this->container,$this->shippingService->service_sub_class);

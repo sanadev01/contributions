@@ -4,6 +4,7 @@ namespace App\Services\Correios\Services\Brazil;
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
@@ -45,7 +46,8 @@ class Client
             'client_id' => $this->customsClientId,
             'client_secret' => $this->customsClientSecret,
         ];
-        $response = $this->client->post("$this->customsBaseUri/authenticate",['json' => $authParams ]);
+        $customsClient = new GuzzleClient();
+        $response = $customsClient->post("$this->customsBaseUri/authenticate",['json' => $authParams ]);
         $data = json_decode($response->getBody()->getContents());
         if($data->token) {
             return $this->customToken = $data->token;
@@ -137,20 +139,6 @@ class Client
 
             $data = json_decode($response->getBody()->getContents());
 
-            //Post Customs Batch for PRC Container
-            if($container->isPRC()) {
-                $batchRequest = (new ParcelsBatch($container))->getBatch();
-                $customsResponse = $this->client->post($this->customsBaseUri."/siscomex/batch", [
-                    'headers' => [
-                        'Authorization' => "Bearer {$this->getCustomsToken()}",
-                    ],
-                    'json' => [$batchRequest]
-                ]);
-                if($customsResponse) {
-                    $container->update(['customs_response_list' => json_encode($customsResponse)]);
-                }
-            }
-            
             return $data->unitResponseList[0]->unitCode;
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
@@ -327,6 +315,26 @@ class Client
             return new PackageError($e->getResponse()->getBody()->getContents());
         } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
+        }
+    }
+
+    public function registerPRCUnit(Container $container) {
+        try {
+        //Post Customs Batch for PRC Container
+        if($container->isPRC()) {
+            $batchRequest = (new ParcelsBatch($container))->getBatch();
+            $customsClient = new GuzzleClient();
+            $customsRequest = $customsClient->post($this->customsBaseUri."/siscomex/batch", [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->getCustomsToken()}",
+                ],
+                'json' => $batchRequest
+            ]);
+            $customsResponse = json_decode($customsRequest->getBody()->getContents());
+            return $customsResponse;
+        }
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents());
         }
     }
 }

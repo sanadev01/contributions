@@ -9,123 +9,91 @@ use DateTime;
 
 class ParcelsBatch
 {
+   protected $container;
 
-   protected $order;
-   protected $weight;
-   protected $width;
-   protected $height;
-   protected $length;
-   
-   protected $chargableWeight;
    public function __construct(Container $container)
    {
-      $this->order = $order;
-      $this->weight = $order->weight;
-      if(!$order->isWeightInKg()) {
-         $this->weight = UnitsConverter::poundToKg($order->getOriginalWeight('lbs'));
-      }
-      $this->width = round($order->isMeasurmentUnitCm() ? $order->width : UnitsConverter::inToCm($order->width));
-      $this->height = round($order->isMeasurmentUnitCm() ? $order->height : UnitsConverter::inToCm($order->height));
-      $this->length = round($order->isMeasurmentUnitCm() ? $order->length : UnitsConverter::inToCm($order->length));
+      $this->container = $container;
    }
+
    public function getBatch()
    {
-      if (strcasecmp($this->order->tax_modality, "DDU") === 0) {
-         $incoterm = "DDU";
-      } elseif (strcasecmp($this->order->tax_modality, "DDP") === 0) {
-            $incoterm = "DDP";
-      }
 
       if (app()->isProduction()) {
-         $contractId = config('total_express.production.contractId');
+         $webhookUrl = config('correios_customs.production.webhookUrl');
       } else {
-         $contractId = config('total_express.test.contractId');
+         $webhookUrl = config('correios_customs.testing.webhookUrl');
       }
-      $streetNo=optional($this->order->recipient)->street_no;
-      if($streetNo == 0 || $streetNo == '0'){
-         $streetNo = null;
-      }
+
       return [
-         "order_number" => $this->order->warehouse_number,
-         "contract_id" => $contractId,
-         "sales_channel_id" => null,
-         // "sales_channel_order_number" => null,
-         "incoterm" => $incoterm,
-         "is_landed_cost" => false,
-         "observations" => " ",
-         "return_insurance" => false,
-         "currency" => "USD",
-         "quantity" => 1,
-         "estimated_delivery_date" => ((new DateTime())->modify('+3 days'))->format('Y-m-d'),
-
-         'customer_full_name' => $this->order->recipient->getFullName(),
-         'customer_document_type' => $this->order->recipient->account_type == "business"? "CNPJ":"CPF",
-         'customer_address' => $this->order->recipient->address,
-         'customer_address_complement' => optional($this->order->recipient)->address2,
-         'customer_address_number' => $streetNo,
-         'customer_city' => $this->order->recipient->city,
-         'customer_state' => $this->order->recipient->State->code,
-         'customer_postal_code' => cleanString($this->order->recipient->zipcode),
-         'customer_country' => $this->order->recipient->country->code,
-         'customer_phone' => ($this->order->recipient->phone) ? substr($this->order->recipient->phone, -11) : '',
-         'customer_email' => ($this->order->recipient->email) ? $this->order->recipient->email : '',
-         'customer_document_number' => ($this->order->recipient->tax_id) ? $this->order->recipient->tax_id : '',
-         "customer_address_reference" => $streetNo,
-         "customer_phone_country_code" => substr($this->order->recipient->phone, 0, 3),
-         'is_commercial_destination' => $this->order->recipient->account_type == "business" ? true: false,
-
-         'seller_name' => $this->order->getSenderFullName(),
-         'seller_address' => ($this->order->sender_address) ? $this->order->sender_address : '2200 NW 129TH AVE',
-         // 'addressIsPOBox' => true,
-         'seller_city' => ($this->order->sender_city) ? $this->order->sender_city : 'Miami',
-         'seller_state' => ($this->order->sender_state_id) ? $this->order->senderState->code : 'FL',
-         'seller_zip_code' => ($this->order->sender_zipcode) ? $this->order->sender_zipcode : '33182',
-         'seller_country' => 'US',
-         'seller_phone' => ($this->order->sender_phone) ? $this->order->sender_phone : $this->order->user->phone,
-         'seller_email' => ($this->order->sender_email) ? $this->order->sender_email : $this->order->user->email,
-         "seller_tax_number" =>"12345678-998A",
-         'customerReferenceID' => ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id) . ' HD-' . $this->order->id,
-         'sales_channel_order_number' => ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id) . ' HD-' . $this->order->id,
-         "seller_address_number" => "605",
-         "seller_address_complement" => " ",
-         "seller_website" => "www.seller.com",
-
-         "volumes_attributes" => [
-            [
-               "height" => $this->height,
-               "length" => $this->length,
-               "width" => $this->width,
-               "weight" => $this->weight,
-               "freight_value" =>  ((float)$this->order->insurance_value)+((float)$this->order->user_declared_freight),
-               "order_items_attributes" => $this->setItemsDetails()
-
-            ]
-         ]
+         "webhookUrl" => $webhookUrl,
+         "uaDespacho" => $this->container->dispatch_number,
+         "originCountry" => 'US',
+         "shippings" => $this->addContainerParcels($this->container)
       ];
    }
 
-   private function setItemsDetails()
+   private function addContainerParcels($container)
    {
-      $items = [];
+      $parcels = [];
+      if (count($container->orders) >= 1) {
+         foreach ($container->orders as $key => $order) {
 
-      if (count($this->order->items) >= 1) {
-         $totalQuantity = $this->order->items->sum('quantity');
-         foreach ($this->order->items as $key => $item) {
-            $itemToPush = []; 
-            $itemToPush = [
-               "name" => substr($item->description, 20),
-               "description" =>  $item->description,
-               "value" => $item->value,
-               'weight' => round($this->weight / $totalQuantity, 2) - 0.02,
-               "hs_code" => substr( $item->sh_code, 0, 6),
-               "sku" => $item->sh_code,
-               "origin_country" => 'US',
-               "quantity" => (int)$item->quantity,
+            $weight = $order->weight;
+            if(!$order->isWeightInKg()) {
+               $weight = UnitsConverter::poundToKg($order->getOriginalWeight('lbs'));
+            }
 
+            $parcels[] = [
+               "shipmentNumber" => $order->warehouse_number,
+               "trackingCode" => $order->corrios_tracking_code,
+               "masterNumber" => ($order->customer_reference ? $order->customer_reference : $order->tracking_id) . ' HD-' . $order->id,
+               "totalValue" => $order->getOrderValue(),
+               "totalValueCurrency" => $order->getOrderValue(),
+               "description" => $order->items->first()->description,
+               "weight" => $weight,
+               "freight" => $order->user_declared_freight,
+               "freightCurrency" => $order->user_declared_freight,
+               "volumes" => 1,
+               "sender" => [
+                  "account" => optional($order)->user->pobox_number,
+                  "documentType" => 'CNPJ',
+                  "name" => $order->getSenderFullName(),
+                  "address" => [
+                     "zipCode" => ($order->sender_zipcode) ? $order->sender_zipcode : '33182',
+                     "street" => ($order->sender_address) ? $order->sender_address : '2200 NW 129TH AVE',
+                     "city" => ($order->sender_city) ? $order->sender_city : 'Miami',
+                     "state" => ($order->sender_state_id) ? $order->senderState->code : 'FL',
+                     "country" => 'US'
+                  ]
+               ],
+               "customer" => [
+                  "documentType" => 'CPF',
+                  "document" => ($order->recipient->tax_id) ? $order->recipient->tax_id : '',
+                  "name" => $order->recipient->getFullName(),
+                  "address" => [
+                     "zipCode" => cleanString($order->recipient->zipcode),
+                     "street" => $order->recipient->address,
+                     "city" => $order->recipient->city,
+                     "state" => $order->recipient->State->code,
+                     "country" => $order->recipient->country->code
+                  ]
+               ],
+               "items" => $order->items->map(function ($item, $index) {
+                  return [
+                     "sequence" => (string)($index + 1),
+                     "regimeTributacao" => (string)($index + 1),
+                     "value" => $item->value,
+                     "currency" => $item->value,
+                     "unit" => (int)$item->quantity,
+                     "quantity" => (string)$item->quantity,
+                     "description" => $item->description
+                  ];
+               })->toArray()
             ];
-            array_push($items, $itemToPush);
          }
       }
-      return $items;
+      return $parcels;
    }
+
 }

@@ -350,4 +350,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         return $this->custom_type == 2;
     }
 
+    public function isPRCRegistered()
+    {
+        return !empty($this->customs_response_list);
+    }
+
 }
