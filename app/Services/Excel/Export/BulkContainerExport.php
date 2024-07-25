@@ -25,13 +25,15 @@ class BulkContainerExport extends AbstractExportService
         $this->setExcelHeaderRow();
         $row = $this->currentRow;
         foreach ($this->containers as $container) {  
-            foreach($container->orders as $order){
-                $this->setCellValue('A'.$row, $container->getUnitCode()); 
-                $this->setCellValue('B'.$row, $order->corrios_tracking_code); 
-                $this->setCellValue('C'.$row, $container->flight_number);
-                $this->setCellValue('D'.$row, $container->origin_airport??"MIA");
-                $this->setCellValue('E'.$row, $container->destination_operator_name??"GRU"); 
-                $row++;
+            if($container->hasAnjunChinaService()){
+                foreach($container->orders as $order){
+                    $this->setCellValue('A'.$row, $container->getUnitCode()); 
+                    $this->setCellValue('B'.$row, $order->corrios_tracking_code); 
+                    $this->setCellValue('C'.$row, $container->flight_number);
+                    $this->setCellValue('D'.$row, $container->origin_airport??"MIA");
+                    $this->setCellValue('E'.$row, $container->destination_operator_name??"GRU"); 
+                    $row++;
+                }  
             }
         }
     }
