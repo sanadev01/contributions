@@ -17,6 +17,7 @@ use App\Http\Controllers\Warehouse\UnitRegisterController;
 use App\Http\Controllers\Warehouse\Anjun\AnjunUnitRegisterController;
 use App\Http\Controllers\Warehouse\Anjun\AnjunCN35DownloadController;
 use App\Http\Controllers\Warehouse\CN35DownloadFactoryController;
+use App\Http\Controllers\Warehouse\BulkContainerDownloadController;
 use App\Http\Controllers\Warehouse\SearchPackageController;
 use App\Http\Controllers\Warehouse\USPSContainerController;
 use App\Http\Controllers\Warehouse\ChileContainerController;
@@ -103,7 +104,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('search_package', SearchPackageController::class)->only('index', 'show');
     Route::resource('scan', ScanPackageController::class)->only('index');
     Route::resource('scan-label', ScanLabelController::class)->only('index', 'store', 'create');
-
+    Route::get('/download-bulk-container', [BulkContainerDownloadController::class,'index'])->name('download-bulk-container');
     Route::resource('containers', ContainerController::class);
 
     Route::get('awb/', AwbController::class)->name('container.awb');
