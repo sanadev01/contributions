@@ -7,6 +7,7 @@ return [
     'Today Orders'=> 'Pedidos de hoy',
     'Total Month Order'=>'Pedido total del (Mês :month)',
     'Completed Orders'=>'Órdenes completadas',
+    'Unpaid orders'=>'Pedidos no pagados',
     'Current Year' =>'Total de pedidos del año actual',
     'Total Orders'=>'Órdenes totales',
     'Start Date'=>'Órdenes totales',
