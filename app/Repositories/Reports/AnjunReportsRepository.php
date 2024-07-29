@@ -47,6 +47,8 @@ class AnjunReportsRepository
                 return $query->whereIn('services_subclass_code', ['BCN-NX', 'BCN-IX']);
             if($request->type=="anjun")
                 return $query->whereIn('services_subclass_code', ["AJ-IX","AJ-NX"]);
+            if($request->type=="anjun_china")
+                return $query->whereIn('services_subclass_code', ["AJC-IX","AJC-NX"]);
             if($request->type=="correios")
                 return $query->whereIn('services_subclass_code', ["IX","NX","XP"]);
         });
