@@ -28,6 +28,7 @@ class ExportAnjunReport implements ShouldQueue
      */
     public function __construct(array $request, $user)
     {
+        set_time_limit(120);
         $this->user = $user;
         $this->request = $request;
         $this->reportRepository = new AnjunReportsRepository();
