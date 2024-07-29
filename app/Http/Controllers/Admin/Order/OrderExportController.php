@@ -20,16 +20,15 @@ class OrderExportController extends Controller
         $todayDate = Carbon::now()->format('Y-m-d');
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-        $startDate = $startDate ? $startDate : $todayDate;
+        $startDate = $startDate ? $startDate : "2020-01-01";
         $endDate = $endDate ? $endDate : $todayDate;
 
         $report = Reports::create([
             'user_id' => Auth::id(),
-            'name' => $request->type == "anjun" ? "Anjun Report" : ( $request->type == "bcn" ? 'BCN Export':( $request->type == "correios" ? 'Correios Export':"Orders Export")),
+            'name' => $request->type == "anjun" ? "Anjun Report" : ( $request->type == "bcn" ? 'BCN Export':( $request->type == "correios" ? 'Correios Export':( $request->type == "anjun_china" ? 'Anjun China Export':"Orders Export"))),
             'start_date' => $startDate,
             'end_date' => $endDate,
-        ]);
-        
+        ]); 
         $request->merge(['report' => $report->id]);
         if(in_array($request->type ,["anjun","anjun_china",'bcn','correios'])){
             ExportAnjunReport::dispatch($request->all(), Auth::user());
