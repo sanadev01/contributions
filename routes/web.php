@@ -481,7 +481,7 @@ Route::get('/download-label-links', function (Request $request) {
             'tracking_old' => $order->corrios_tracking_code,
             'warehouse' => $order->warehouse_number,
             'tracking_new' => $order->corrios_tracking_code,
-            'link' => route('order.label.download', encrypt($order->id)),
+            'link' => url("/order/" . encrypt($order->id) . "/label/get"),
             'poboxName' => $order->user->pobox_name,
         ];
     }
