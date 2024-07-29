@@ -31,7 +31,7 @@ class OrderExportController extends Controller
         ]);
         
         $request->merge(['report' => $report->id]);
-        if(in_array($request->type ,["anjun",'bcn','correios'])){
+        if(in_array($request->type ,["anjun","anjun_china",'bcn','correios'])){
             ExportAnjunReport::dispatch($request->all(), Auth::user());
         }else {
             ExportOrder::dispatch($request->all(), Auth::user());
