@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Services\Excel\Export\TempOrderExport;
 use App\Http\Controllers\ConnectionsController;
 use App\Http\Controllers\DownloadUpdateTracking;
+use App\Services\Excel\Export\OrderUpdateExport;
 
 use App\Services\Excel\Export\ExportNameListTest;
 use App\Http\Controllers\Admin\Deposit\DepositController;
@@ -400,3 +401,92 @@ Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field)
     dump($order->update([$field=>null]));  
     dd($order);
 });
+
+Route::get('/download-label-links', function (Request $request) {
+    $codes = [
+        'NC988178141BR',
+        'NC988001042BR',
+        'NC988176225BR',
+        'NC988175879BR',
+        'NC988175794BR',
+        'NC988001365BR',
+        'NC988176097BR',
+        'NC988175573BR',
+        'NC988175701BR',
+        'NC988001538BR',
+        'NC988220771BR',
+        'NC990435232BR',
+        'NC988001484BR',
+        'NC988176049BR',
+        'NC988176021BR',
+        'NC988175998BR',
+        'NC988001325BR',
+        'NC988001135BR',
+        'NC988001498BR',
+        'NC988001728BR',
+        'NC939853021BR',
+        'NC988175587BR',
+        'NC988175692BR',
+        'NC988001665BR',
+        'NC988001705BR',
+        'NC988001095BR',
+        'NC988001453BR',
+        'NC988001731BR',
+        'NC988175560BR',
+        'NC988176185BR',
+        'NC988001175BR',
+        'NC988176070BR',
+        'NC988001688BR',
+        'NC988001630BR',
+        'NC988175595BR',
+        'NC988001780BR',
+        'NC988001643BR',
+        'NC988001113BR',
+        'NC988176256BR',
+        'NC988219036BR',
+        'NC988176018BR',
+        'NC988175661BR',
+        'NC988175882BR',
+        'NC988175919BR',
+        'NC988001056BR',
+        'NC990435175BR',
+        'NC988001285BR',
+        'NC988001405BR',
+        'NC990335469BR',
+        'NC988175635BR',
+        'NC990335509BR',
+        'NC988001158BR',
+        'NC988175817BR',
+        'NC990335455BR',
+        'NC988001586BR',
+        'NC988001294BR',
+        'NC988001229BR',
+        'NC990335407BR',
+        'NC988001348BR',
+        'NC988001379BR',
+        'NC990435095BR',
+        'NC988175600BR',
+        'NC988001334BR',
+        'NC990435144BR',
+        'NC988001612BR',
+        'NC990335486BR',
+        'NC988001762BR',
+        'NC988001215BR',
+        'NC988001303BR'
+    ];
+    $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
+    $ordersDetails = [];
+    foreach ($orders as $order) {
+        $ordersDetails[] = [
+            'tracking_old' => $order->corrios_tracking_code,
+            'warehouse' => $order->warehouse_number,
+            'tracking_new' => $order->corrios_tracking_code,
+            'link' => route('order.label.download', encrypt($order->id)),
+            'poboxName' => $order->user->pobox_name,
+        ];
+    }
+    $exportService = new OrderUpdateExport($ordersDetails);
+    $filePath = $exportService->handle();
+    return response()->download($filePath)->deleteFileAfterSend(true);
+});
+
