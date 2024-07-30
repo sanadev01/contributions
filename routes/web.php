@@ -25,6 +25,7 @@ use App\Http\Controllers\ConnectionsController;
 use App\Http\Controllers\DownloadUpdateTracking;
 
 use App\Services\Excel\Export\ExportNameListTest;
+use App\Http\Controllers\CustomsResponseController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 
@@ -400,3 +401,5 @@ Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field)
     dump($order->update([$field=>null]));  
     dd($order);
 });
+
+Route::post('/webhooks/customs-response', [CustomsResponseController::class, 'handle']);
