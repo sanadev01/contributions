@@ -21,6 +21,8 @@ class AnjunReportsRepository
                 return $query->whereIn('service_sub_class', [ShippingService::BCN_Packet_Standard, ShippingService::BCN_Packet_Express]);
             if($request->type=="anjun")
                 return $query->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express]);
+            if($request->type=="anjun_china")
+                return $query->whereIn('service_sub_class', [ShippingService::AJ_Standard_CN, ShippingService::AJ_Express_CN]);
             if($request->type=="correios")
                 return $query->whereIn('service_sub_class', [ShippingService::Packet_Standard,ShippingService::Packet_Express,ShippingService::Packet_Mini]);
         });
@@ -68,7 +70,7 @@ class AnjunReportsRepository
     }
     public function getAnjunChinaContainersReport($request)
     {
-        $query = Container::whereIn('services_subclass_code', ["AJ-IX","AJ-NX"]);
+        $query = Container::whereIn('services_subclass_code', ["AJC-IX","AJC-NX"]);
         $startDate  = $request['start_date'].' 00:00:00';
         $endDate    = $request['end_date'].' 23:59:59';
         if ( $request['start_date'] ){
