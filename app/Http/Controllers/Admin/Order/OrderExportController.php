@@ -17,12 +17,18 @@ class OrderExportController extends Controller
 {
     public function __invoke(Request $request)
     {
+        $serviceType = [
+            "anjun" => "Anjun Report",
+            "bcn" => "BCN Export",
+            "correios" => "Correios Export",
+            "anjun_china" => "Anjun China Export",
+        ];
         $request['start_date']  = $request->start_date?? Carbon::now()->startOfMonth()->toDateString();
         $request['end_date']  = $request->end_date?? Carbon::now()->format('Y-m-d'); 
         $report = Reports::create([
             'user_id' => Auth::id(),
-            'name' => $request->type == "anjun" ? "Anjun Report" : ( $request->type == "bcn" ? 'BCN Export':( $request->type == "correios" ? 'Correios Export':( $request->type == "anjun_china" ? 'Anjun China Export':"Orders Export"))),
-            'start_date' => $request['start_date'],
+            'name' => isset($serviceType[$request->type]) ? $serviceType[$request->type] : "Orders Export",
+             'start_date' => $request['start_date'],
             'end_date' => $request['end_date'],
         ]);
         $request->merge(['report' => $report->id]);
