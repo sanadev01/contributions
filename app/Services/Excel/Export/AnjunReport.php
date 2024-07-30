@@ -39,8 +39,7 @@ class AnjunReport extends AbstractExportService
             foreach ($deliveryBill->containers as $container) {
                 foreach ($container->orders as $order) {
                     $shippingService = $order->shippingService;
-                    if ($shippingService && $shippingService->is_correios) {
-
+                    if ($shippingService){
                         $this->setCellValue('A' . $row, $order->order_date);
                         $this->setCellValue('B' . $row, $order->warehouse_number);
                         $this->setCellValue('C' . $row, $order->user->name);
