@@ -70,7 +70,7 @@ class AnjunReportsRepository
     }
     public function getAnjunChinaContainersReport($request)
     {
-        $query = Container::whereIn('services_subclass_code', ["AJC-IX","AJC-NX"]);
+        $query = Container::with('orders')->whereIn('services_subclass_code', ["AJC-IX","AJC-NX"]);
         $startDate  = $request['start_date'].' 00:00:00';
         $endDate    = $request['end_date'].' 23:59:59';
         if ( $request['start_date'] ){
