@@ -56,17 +56,25 @@ class DeliveryBillRepository extends AbstractRepository
     {
         try {
 
+            $isPRC = null;
             $containerService = null;
 
             foreach($request->get('container',[]) as $containerId){
-                $container = Container::find($containerId)->services_subclass_code;
+                $container = Container::find($containerId);
                 
                 if ($container && !$containerService) {
                     $containerService = $container;
                 }
 
-                if($container && $containerService != $container){
+                if($container && $container->service_sub_class != $container->service_sub_class){
                     throw new \Exception("Please don't use diffirent type of Container in one Delivery Bill",500);
+                }
+
+                // Check for PRC condition
+                if ($isPRC === null) {
+                    $isPRC = $container->isPRC();
+                } elseif ($isPRC !== $container->isPRC()) {
+                    throw new \Exception("Cannot mix PRC and Non-PRC Containers in one Delivery Bill", 500);
                 }
             }
 

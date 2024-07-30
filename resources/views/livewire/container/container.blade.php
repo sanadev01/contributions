@@ -154,10 +154,10 @@
                                             {{ $container->getServiceSubClass() }}
                                         </td>
                                         <td>
-                                            {{ $container->getUnitCode() }}
+                                            {{ $container->getUnitCode() }}<br>
 
                                             @if(!empty($container->customs_response_list))
-                                                PRC Batch ID: {{$container->customs_response_list}}
+                                                PRC ID: {{$container->customs_response_list}}
                                             @endif
                                         </td>
                                         <td>

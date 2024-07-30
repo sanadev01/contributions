@@ -52,6 +52,16 @@ class CorreiosOrder extends Package{
         $this->freightPaidValue = $order->user_declared_freight;
         $this->nonNationalizationInstruction = "RETURNTOORIGIN";
 
+        if(setting('prc_label', null, $order->user->id)) {
+            $this->senderWebsite = '';
+            $this->taxPaymentMethod = 'PRC';
+            $this->currency = 'USD';
+            $this->provisionedTaxValue = '';
+            $this->provisionedtIcmsValue = '';
+            $this->senderCodeEce = $order->sender_taxId ? $order->sender_taxId : $order->user->tax_id;
+            $this->generalDescription = $order->items->first()->description;
+        }
+
         $items = [];
 
         foreach ($order->items as $item){
