@@ -115,6 +115,7 @@ return [
         'Select Country' => 'Select Country you want to send  your parcels',
         'State' => 'State',
         'Zipcode' => 'Zipcode',
+        'Website' => 'Website',
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Import Orders via Excel Sheet',
