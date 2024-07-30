@@ -4,6 +4,7 @@ namespace App\Repositories\Reports;
 
 use App\Models\Order;
 use App\Models\ShippingService;
+use App\Models\Warehouse\Container;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Warehouse\DeliveryBill;
@@ -63,6 +64,19 @@ class AnjunReportsRepository
             $query->where('created_at','<=',$endDate);
         }
 
+        return $query->get();
+    }
+    public function getAnjunChinaContainersReport($request)
+    {
+        $query = Container::whereIn('services_subclass_code', ["AJ-IX","AJ-NX"]);
+        $startDate  = $request['start_date'].' 00:00:00';
+        $endDate    = $request['end_date'].' 23:59:59';
+        if ( $request['start_date'] ){
+            $query->where('created_at','>=',$startDate);
+        }
+        if ( $request['end_date'] ){
+            $query->where('created_at','<=',$endDate);
+        }
         return $query->get();
     }
 
