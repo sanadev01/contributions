@@ -85,7 +85,7 @@ class TempOrderExport extends AbstractExportService
         $this->setColumnWidth('F', 20);
         $this->setCellValue('F1', 'Recepient');  
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Weight');
+        $this->setCellValue('G1', 'Weight in KG');
         $this->setColumnWidth('H', 20);
         $this->setCellValue('H1', 'Dimensions');  
 
