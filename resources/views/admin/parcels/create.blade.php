@@ -1,5 +1,4 @@
 @extends('layouts.master')
-
 @section('page')
     <section id="prealerts">
         <div class="row">
@@ -122,41 +121,38 @@
                                         </div>
                                     </div>
                                 @endcan
-
                                 @can('addShipmentDetails', App\Models\Order::class)
                                     <livewire:order.shipment-info />
                                     <h4 class="mt-2">@lang('parcel.Shipment Images') </h4>
-                                    <div class="row mt-1">
-                                        <div class="col-12 col-sm-6 col-md-4">
-                                            <div class="controls">
-                                                <label>@lang('parcel.Image 1')<span class="text-danger">*</span></label>
-                                                <input type="file" accept="image/*" name="images[]">
-                                                {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-md-4">
-                                            <div class="controls">
-                                                <label>@lang('parcel.Image 2')<span class="text-danger">*</span></label>
-                                                <input type="file" accept="image/*" name="images[]">
-                                                {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-md-4">
-                                            <div class="controls">
-                                                <label>@lang('parcel.Image 3')<span class="text-danger">*</span></label>
-                                                <input type="file" accept="image/*" name="images[]">
-                                                {{-- @error('record')
-                                                    <div class="help-block text-danger">{{ $message }}</div>
-                                                @enderror --}}
+
+                                    <!-- Button to trigger the modal -->
+                                    <button class="btn btn-primary" id="openUploadModalBtn" type="button">Upload Images</button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="uploadModal" aria-labelledby="uploadModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg m-100">
+                                            <div class="modal-content w-100">
+                                                <div class="modal-header w-100" style="background: #B8C2CC;">
+                                                    <h5 class="modal-title" id="uploadModalLabel">Shipment Images</h5>
+                                                    <button type="button" id="closeModal" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <button id="webcamBtn" class="btn btn-secondary mb-3 text-dark" type="button">Upload via Webcam</button>
+                                                    <button id="fileBtn" class="btn btn-secondary mb-3 text-dark" type="button">Upload from PC</button>
+                                                    <div id="previewContainer" class="d-flex flex-wrap"></div>
+                                                    <div class="webcam-container" style="display:none;">
+                                                        <video id="webcam-video" width="400" height="400" autoplay></video>
+                                                        <button id="takePhotoBtn" class="btn btn-secondary mt-1" type="button">Take Photo</button>
+                                                    </div>
+                                                    <input type="file" accept="image/*" name="images[]" id="fileInput" class="d-none" multiple>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    
                                 @endcan
-
 
                                 <div class="row mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
@@ -173,4 +169,181 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.getElementById('openUploadModalBtn').addEventListener('click', function(event) {
+            event.preventDefault();
+            $('#uploadModal').modal('show');
+        });
+    
+        const webcamBtn = document.getElementById('webcamBtn');
+        const fileBtn = document.getElementById('fileBtn');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const webcamContainer = document.querySelector('.webcam-container');
+        const webcamVideo = document.getElementById('webcam-video');
+        const takePhotoBtn = document.getElementById('takePhotoBtn');
+        let stream;
+    
+        webcamBtn.onclick = async function() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                try {
+                    const constraints = {
+                        video: true,
+                        facingMode: 'environment' // Prefer environment-facing camera (rear camera)
+                    };
+    
+                    stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    webcamVideo.srcObject = stream;
+                    webcamContainer.style.display = 'block';
+                } catch (error) {
+                    console.error('Error accessing webcam:', error);
+                }
+            } else {
+                alert('Your browser does not support the webcam feature.');
+            }
+        };
+    
+        takePhotoBtn.onclick = function() {
+            const randomString = getString(10);
+            const canvas = document.createElement('canvas');
+            const previewWidth = 170; // Preview size
+            const previewHeight = 170;
+            const saveWidth = 800; // Save size
+            const saveHeight = 800;
+            
+            canvas.width = saveWidth;
+            canvas.height = saveHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(webcamVideo, 0, 0, saveWidth, saveHeight);
+    
+            canvas.toBlob(function(blob) {
+                const fileName = `${randomString}-${previewContainer.childElementCount + 1}.png`;
+                const file = new File([blob], fileName, { type: 'image/png' });
+                addImageToPreview(file, canvas, fileName, previewWidth, previewHeight);
+            }, 'image/png', 1); // Adjust the image quality here (1 for highest quality)
+        };
+    
+        fileBtn.onclick = function() {
+            fileInput.click();
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            webcamContainer.style.display = 'none';
+        };
+    
+        fileInput.onchange = function(event) {
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const previewWidth = 170; // Preview size
+                        const previewHeight = 170;
+                        const saveWidth = 800; // Save size
+                        const saveHeight = 800;
+                        
+                        canvas.width = saveWidth;
+                        canvas.height = saveHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, saveWidth, saveHeight);
+                        addImageToPreview(file, canvas, file.name, previewWidth, previewHeight);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        };
+    
+        function addImageToPreview(file, canvas, fileName, previewWidth, previewHeight) {
+            const img = new Image();
+            img.src = canvas.toDataURL('image/png', 1); // Adjust image quality here as well
+            img.style.width = `${previewWidth}px`; // Display in preview size
+            img.style.height = `${previewHeight}px`;
+            img.classList.add('mr-2');
+    
+            const previewDiv = document.createElement('div');
+            previewDiv.style.position = 'relative';
+            previewDiv.style.display = 'inline-block';
+            previewDiv.style.marginRight = '5px';
+            previewDiv.style.marginBottom = '5px'; 
+            previewDiv.appendChild(img);
+    
+            const removeBtn = document.createElement('button');
+            removeBtn.style.display = 'block';
+            removeBtn.style.marginTop = '5px';
+            removeBtn.style.marginBottom = '5px';
+            removeBtn.style.marginLeft = '-3px';
+            removeBtn.style.backgroundColor = 'red'; // Red background
+            removeBtn.style.color = 'white'; // White text
+            removeBtn.style.border = '2px solid red'; // Red border
+            removeBtn.style.borderRadius = '5px';
+            removeBtn.style.padding = '2px 7px';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.style.width = '100%';
+            removeBtn.style.textAlign = 'center';
+            removeBtn.innerHTML = 'Remove Photo';
+            removeBtn.onclick = function() {
+                previewDiv.remove();
+                updateFileInput();
+            };
+    
+            previewDiv.appendChild(removeBtn);
+            previewContainer.appendChild(previewDiv);
+    
+            updateFileInput();
+        }
+    
+        function updateFileInput() {
+            const dataTransfer = new DataTransfer();
+            const previews = previewContainer.querySelectorAll('img');
+            previews.forEach((img, index) => {
+                const canvas = document.createElement('canvas');
+                const saveWidth = 800; // Save size
+                const saveHeight = 800;
+                
+                canvas.width = saveWidth;
+                canvas.height = saveHeight;
+                const ctx = canvas.getContext('2d');
+                const src = img.src;
+                const image = new Image();
+                image.onload = function() {
+                    ctx.drawImage(image, 0, 0, saveWidth, saveHeight);
+                    canvas.toBlob(function(blob) {
+                        const randomString = getString(10);
+                        const fileName = `${randomString}.png`;
+                        const file = new File([blob], fileName, { type: 'image/png' });
+                        dataTransfer.items.add(file);
+                        fileInput.files = dataTransfer.files;
+                    }, 'image/png', 1); // Adjust image quality here as well
+                };
+                image.src = src;
+            });
+        }
+    
+        document.getElementById('closeModal').addEventListener('click', function(event) {
+            event.preventDefault();
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            webcamContainer.style.display = 'none';
+        });
+    
+        function getString(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+    </script>
+    
+    
+    
+    
+    
+
 @endsection

@@ -55,6 +55,7 @@ return [
         'GePS' => 'GePS',
         'Prime5' => 'Prime5',
         'HD Express' => 'HD Express',
+        'DSS Senegal' => 'DSS Senegal',
         // 'Sinerlog' => 'Sinerlog',
     ],
     'Affiliate' => [

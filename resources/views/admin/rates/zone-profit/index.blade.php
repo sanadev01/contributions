@@ -5,18 +5,20 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-                    <div class="">
-                        <h4 class="mb-0 mr-3">
-                            All Groups
-                        </h4>
-                        <hr>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0 mr-3">
+                        All Groups
+                    </h4>
+                    <div>
+                        @can('create', App\Models\Rate::class)
+                            <a href="{{ route('admin.rates.zone-cost-upload') }}" class="btn btn-primary">
+                                Upload Rates
+                            </a>
+                            <a href="{{ route('admin.rates.zone-profit.create') }}" class="btn btn-primary ml-2">
+                                Upload Profit
+                            </a>
+                        @endcan
                     </div>
-                    @can('create', App\Models\Rate::class)
-                    <a href="{{ route('admin.rates.zone-profit.create') }}" class="pull-right btn btn-primary">
-                        Upload Profit Rate
-                    </a>
-                    @endcan
                 </div>
                 <hr>
                 <div class="card-content card-body">
@@ -62,6 +64,7 @@
                                 <th>
                                     {{$groupService->first()->shippingService->name}}
                                 </th>
+
                                 <th>
                                     <a href="{{ route('admin.rates.zone-profit-show', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" class="btn btn-primary btn-sm">
                                         <i class="feather icon-eye"></i> View
@@ -70,14 +73,52 @@
                                     <a href="{{ route('admin.rates.downloadZoneProfit', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" class="btn btn-success btn-sm">
                                         <i class="feather icon-download"></i> Download
                                     </a>
-                                    | <form action="{{ route('admin.rates.destroyZoneProfit', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" method="POST" style="display: inline;">
+                                    |
+                                    <form action="{{ route('admin.rates.destroyZoneProfit', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" method="POST" style="display: inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn  btn-danger btn-md">
+                                        <button type="submit" class="btn btn-danger btn-md">
                                             <i class="feather icon-trash px-1"></i>
                                         </button>
                                     </form>
+                                    @if($rates->contains('shippingService.id', $serviceId))
+                                    |
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 120px; height:27px; padding-top:3px;">
+                                             View Rates
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            @foreach($rates as $rate)
+                                                @if($rate->shippingService->id == $serviceId)
+                                                    @if(isset($rate->cost_rates))
+                                                        @php
+                                                            $costRateLabel = $rate->user ? 'Cost Rate - ' . $rate->user->pobox_number : 'Cost Rate - All';
+                                                            $decodedCostRates = json_decode($rate->cost_rates, true);
+                                                            $zoneExists = isset($decodedCostRates["Zone $groupId"]);
+                                                        @endphp
+                                                        @if($zoneExists)
+                                                            <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId, 'type' => 'cost', 'user_id' => $rate->user ? $rate->user->id : null]) }}">{{ $costRateLabel }}</a>
+                                                        @endif
+                                                    @endif
+                                        
+                                                    @if(isset($rate->selling_rates))
+                                                        @php
+                                                            $sellingRateLabel = $rate->user ? 'Selling Rate - ' . $rate->user->pobox_number : 'Selling Rate - All';
+                                                            $decodedSellingRates = json_decode($rate->selling_rates, true);
+                                                            $zoneExists = isset($decodedSellingRates["Zone $groupId"]);
+                                                        @endphp
+                                                        @if($zoneExists)
+                                                            <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId, 'type' => 'package', 'user_id' => $rate->user ? $rate->user->id : null]) }}">{{ $sellingRateLabel }}</a>
+                                                        @endif
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                        </div>                                                                               
+                                    </div>
+                                    
+                                    @endif
                                 </th>
+                                
                             </tr>
                             @endforeach
                             @endforeach

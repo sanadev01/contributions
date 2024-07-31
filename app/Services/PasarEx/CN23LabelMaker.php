@@ -59,7 +59,7 @@ class CN23LabelMaker implements HasLableExport
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
         if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-01'))) {
-            $this->labelZipCodeGroup = getOrderGroupRange($this->order);
+            $this->labelZipCodeGroup = '';
         }  
         $this->contractNumber = 'Contract: 9912501700';
         $this->packageSign = ''; 

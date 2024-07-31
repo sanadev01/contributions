@@ -76,7 +76,7 @@ class Parcel {
                   'orderDate' => Carbon::today()->toDateString(),
                   // 'paymentAndDeliveryTerms' => 'COD',
                   'pfCorEEL' => 'X20230101123456',
-               ]+($type != "FCM" ? [
+               ]+($type != "CEP" ? [
                   'length' => $order->length,
                   'width' => $order->width,
                   'height' => $order->height,

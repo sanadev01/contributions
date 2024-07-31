@@ -10,9 +10,10 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Services\Excel\Export\AnjunReport;
 use App\Repositories\Reports\AnjunReportsRepository;
+use App\Services\Excel\Export\AnjunChinaReport;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-
+use Illuminate\Support\Facades\Log;
 class ExportAnjunReport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -25,8 +26,9 @@ class ExportAnjunReport implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($request, $user)
+    public function __construct(array $request, $user)
     {
+        set_time_limit(120);
         $this->user = $user;
         $this->request = $request;
         $this->reportRepository = new AnjunReportsRepository();
@@ -39,14 +41,40 @@ class ExportAnjunReport implements ShouldQueue
      */
     public function handle()
     {
-        $request = new Request($this->request);
-        $deliveryBills = $this->reportRepository->getAnjunReport($request, $this->user);
-        $id = $this->user->id;
-        $exportService = new AnjunReport($deliveryBills, $id);
-        $url = $exportService->handle();
-        if($url) {
-            $report = Reports::find($request->report);
-            $report->update(['path'=> $url, 'is_complete' => true]);
+        try {
+            $request = new Request($this->request);
+            $id = $this->user->id;
+            if($request->type=="anjun_china"){
+                $containers = $this->reportRepository->getAnjunChinaContainersReport($request);
+                $exportService = new AnjunChinaReport($containers, $id);
+            }
+            else{ 
+                $deliveryBills = $this->reportRepository->getAnjunReport($request, $this->user);
+                $exportService = new AnjunReport($deliveryBills, $id);
+            }
+            $url = $exportService->handle();
+            
+            if ($url) {
+                $report = Reports::find($request->report);
+                if ($report) {
+                    $report->update(['path' => $url, 'is_complete' => true]);
+                    Log::error('path updated', ['path' => $url]);
+
+                } else {
+                    Log::error('Report not found', ['report_id' => $request->report]);
+                }
+            } else {
+                Log::error('Export service did not return a URL', ['user_id' => $id]);
+            }
+        } catch (\Exception $e) {
+            Log::error('An error occurred while processing the report', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => $id,
+                'request' => $request->all(),
+            ]);
         }
         
     }

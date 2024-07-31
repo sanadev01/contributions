@@ -23,7 +23,7 @@ class RateReportsRepository
         $recipient = new Recipient();
         $recipient->state_id = 508;//$request->state_id;
         $recipient->country_id = 30;//$request->country_id;
-        if(optional(optional($package->shippingService)->rates)[0]){
+        if(optional(optional(optional($package)->shippingService)->rates)[0]){
             $recipient->country_id = optional(optional(optional($package->shippingService)->rates)[0])->country_id;//$request->country_id;
         }
         $newUser = Auth::user();

@@ -17,6 +17,7 @@ use App\Http\Controllers\Warehouse\UnitRegisterController;
 use App\Http\Controllers\Warehouse\Anjun\AnjunUnitRegisterController;
 use App\Http\Controllers\Warehouse\Anjun\AnjunCN35DownloadController;
 use App\Http\Controllers\Warehouse\CN35DownloadFactoryController;
+use App\Http\Controllers\Warehouse\BulkContainerDownloadController;
 use App\Http\Controllers\Warehouse\SearchPackageController;
 use App\Http\Controllers\Warehouse\USPSContainerController;
 use App\Http\Controllers\Warehouse\ChileContainerController;
@@ -85,6 +86,11 @@ use App\Http\Controllers\Warehouse\UnitRegisterFactoryController;
 use App\Models\Warehouse\Container;
 use App\Services\Excel\Export\OrderExportTemp;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Warehouse\SenegalContainerController;
+use App\Http\Controllers\Warehouse\SenegalUnitRegisterController;
+use App\Http\Controllers\Warehouse\SenegalCN35DownloadController;
+use App\Http\Controllers\Warehouse\SenegalContainerPackageController;
+
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
 
@@ -93,7 +99,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('search_package', SearchPackageController::class)->only('index', 'show');
     Route::resource('scan', ScanPackageController::class)->only('index');
     Route::resource('scan-label', ScanLabelController::class)->only('index', 'store', 'create');
-
+    Route::get('/download-bulk-container', [BulkContainerDownloadController::class,'index'])->name('download-bulk-container');
     Route::resource('containers', ContainerController::class);
 
     Route::get('awb/', AwbController::class)->name('container.awb');
@@ -224,6 +230,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('hd-express-container.packages', HDExpressContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('hd-express-container/{container}/register', HDExpressUnitRegisterController::class)->name('hd-express-container.register');
     Route::get('hd-express-container/{container}/download', HDExpressCN35DownloadController::class)->name('hd-express-container.download');
+
+    // Routes for Senegal container
+    Route::resource('hd-senegal-containers', SenegalContainerController::class);
+    Route::resource('hd-senegal-container.packages', SenegalContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('hd-senegal-container/{container}/register', SenegalUnitRegisterController::class)->name('hd-senegal-container.register');
+    Route::get('hd-senegal-container/{container}/download', SenegalCN35DownloadController::class)->name('hd-senegal-container.download');
 });
 
 

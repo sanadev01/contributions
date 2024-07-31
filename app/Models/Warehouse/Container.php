@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Resources\Warehouse\Container\PackageResource;
+use App\Services\Correios\GetZipcodeGroup;
 
 class Container extends Model implements \App\Services\Correios\Contracts\Container
 {
@@ -97,6 +98,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             ShippingService::DirectLinkChile => 'DirectLink Chile',
             ShippingService::GSS_CEP => 'GSS Commercial E-Packet',
             ShippingService::PasarEx => 'PasarEx',
+            ShippingService::DSS_SENEGAL => 'DSS Senegal',
         ];
     
         // Check if the service subclass code exists in the array
@@ -261,7 +263,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getHasTotalExpressServiceAttribute()
     {
-        return $this->services_subclass_code == ShippingService::TOTAL_EXPRESS;
+        return $this->services_subclass_code == ShippingService::TOTAL_EXPRESS || $this->services_subclass_code == ShippingService::TOTAL_EXPRESS_10KG;
     }
     public function getHasHoundExpressAttribute()
     {
@@ -279,9 +281,12 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
 
     public function getGroup($container) {
         
-        $containerOrder = $container->orders->first();
-        $firstOrderGroupRange = getOrderGroupRange($containerOrder);
-        
-        return $firstOrderGroupRange['group'];
+        $firstOrder = $container->orders->first();
+        return (new GetZipcodeGroup($firstOrder->recipient->zipcode))->getZipcodeGroup();
+    }
+
+    public function hasSenegalService()
+    {
+        return $this->services_subclass_code == ShippingService::DSS_SENEGAL;
     }
 }

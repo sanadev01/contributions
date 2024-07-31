@@ -27,6 +27,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Events\AutoChargeAmountEvent;
+use App\Repositories\SenegalLabelRepository;
 
 class OrderLabelController extends Controller
 {
@@ -41,9 +42,6 @@ class OrderLabelController extends Controller
             $order = $this->updateShippingServiceFromSetting($order);
         }
         DB::beginTransaction();
-        if ($order->shippingService->is_anjun_china_service_sub_class && Auth::id() != "1233") {
-        return $this->rollback("service not available for this user.");
-        }
         $isPayingFlag = false;
         try {
             $orders = new Collection;
@@ -153,19 +151,17 @@ class OrderLabelController extends Controller
                         return $this->rollback((string)$error);
                     }
                 }
-                if ($order->shippingService->is_anjun_china_service_sub_class && Auth::id() == "1233") {
-                                    $anjun = new AnjunLabelRepository($order, $request);
-                    $labelData = $anjun->run();
+                if ($order->shippingService->is_anjun_china_service_sub_class){ 
+                    $anjun = new AnjunLabelRepository($order, $request); 
+                    $labelData = $anjun->run();  
                     $order->refresh();
-                    if ($labelData) {
-                        Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
-                    }
+                    \Log::info(["anjun label data response"=>$labelData]);
                     if ($anjun->getError()) {
                         return $this->rollback($anjun->getError());
                     }
-                }elseif ($order->shippingService->is_anjun_china_service_sub_class) {
-
-                    return $this->rollback('service not availble for this user.');
+                    if ($labelData) {
+                        Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
+                    }
                 }
                 if ($order->shippingService->isAnjunService() ||  $order->shippingService->isCorreiosService() || $order->shippingService->is_bcn_service) {
                     $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
@@ -200,6 +196,15 @@ class OrderLabelController extends Controller
                     return $this->rollback($error);
                 }
             }
+
+            if ($order->shippingService->isSenegalService()) {
+                $senegalLabelRepository = new SenegalLabelRepository();
+                $senegalLabelRepository->run($order, false);
+                $error = $senegalLabelRepository->getError();
+                if ($error) {
+                    return $this->rollback($error);
+                }
+            }
             return $this->commit($order);
         } catch (Exception $e) {
             return $this->rollback($e->getMessage());
@@ -221,6 +226,8 @@ class OrderLabelController extends Controller
     private function commit($order)
     {
         DB::commit();
+        //Check for Insurance
+        checkParcelInsurance($order);
         return apiResponse(true, "Lable Generated successfully.", [
             'url' => $order->cn23_label_url ?? route('order.label.download',  encrypt($order->id)),
             'tracking_code' => $order->corrios_tracking_code
