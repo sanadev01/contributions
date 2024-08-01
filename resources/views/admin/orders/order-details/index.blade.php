@@ -258,7 +258,9 @@
             $("#itemLimit").hide();
         } else if (service == 477 || service == 3674 || service == 37634 || service == 3326 || service == 4367 || service == 237) {
             return getGSSRates();
-        } else if (service == 537 || service == 540 || service == 773) {
+        } else if (service == 238) {
+            return getPasarExColombiaRates();
+        }else if (service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
             $("#rateBtn").hide();
         } else {
@@ -468,6 +470,28 @@
                     $('#shipping_service_id option:selected').remove();
                     $('#shipping_service_id').selectpicker('refresh');
                 }
+            }
+            $('#loading').fadeOut();
+
+        }).catch(function(error) {
+            console.log(error);
+            $('#loading').fadeOut();
+        })
+
+    }
+
+    function getPasarExColombiaRates() {
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        var order_id = $('#order_id').val();
+
+        $('#loading').fadeIn();
+        $.get('{{ route("api.pasarExRates") }}', {
+            service: service,
+            order_id: order_id,
+        }).then(function(response) {
+            if (response.success == true) {
+                $('#user_declared_freight').val(response.total_amount);
+                $('#user_declared_freight').prop('readonly', true);
             }
             $('#loading').fadeOut();
 

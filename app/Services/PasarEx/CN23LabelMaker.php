@@ -47,7 +47,6 @@ class CN23LabelMaker implements HasLableExport
         Sao Paulo CEP 04201-020';
         $this->complainAddress = '';
         $this->activeAddress = '';
-        $this->labelZipCodeGroup = '';
     }
 
     public function setOrder(Order $order)
@@ -58,9 +57,6 @@ class CN23LabelMaker implements HasLableExport
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
-        if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-01'))) {
-            $this->labelZipCodeGroup = '';
-        }  
         $this->contractNumber = 'Contract: 9912501700';
         $this->packageSign = ''; 
         $this->packetType = 'Pasar Ex';
@@ -172,7 +168,6 @@ class CN23LabelMaker implements HasLableExport
             'barcodeNew' => new BarcodeGeneratorPNG(),
             'activeAddress' => $this->activeAddress,
             'isReturn' => $this->isReturn,
-            'labelZipCodeGroup' => $this->labelZipCodeGroup,
             'packageSign' => $this->packageSign
         ];
     }

@@ -14,6 +14,7 @@ use App\Services\GSS\GSSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
 use App\Services\GePS\GePSShippingService;
+use App\Services\PasarEx\PasarExShippingService;
 use App\Services\Calculators\WeightCalculator;
 use App\Models\User;
 
@@ -675,7 +676,8 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::Japan_EMS)
             || $shippingServices->contains('service_sub_class', ShippingService::GSS_CEP)
             || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS_10KG)
-            || $shippingServices->contains('service_sub_class', ShippingService::DSS_SENEGAL))
+            || $shippingServices->contains('service_sub_class', ShippingService::DSS_SENEGAL)
+            || $shippingServices->contains('service_sub_class', ShippingService::PasarEx))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {
@@ -752,6 +754,14 @@ class OrderRepository
             
             if($shippingServices->isEmpty()){
                 $this->shippingServiceError = 'Please check your parcel dimensions';
+            }
+        }
+
+        if ($order->recipient->country_id == Order::COLOMBIA) {
+            $colombiaShippingService = ShippingService::where('service_sub_class', ShippingService::PasarEx)->first();
+            
+            if ($colombiaShippingService) {
+                $shippingServices->push($colombiaShippingService);
             }
         }
             

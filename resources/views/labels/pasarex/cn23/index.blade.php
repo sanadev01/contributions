@@ -502,7 +502,7 @@
                         <div class="table-text">
                             Volumetric weight:
                             <h2>
-                                0.85 kg
+                                {{ $order->getWeight('kg') }} kg
                             </h2>
                         </div>
 
@@ -512,7 +512,7 @@
 
                             Physical weight:
                             <h2>
-                                0.13 kg
+                                {{ $order->getOriginalWeight('kg') }} kg
                             </h2>
                         </div>
                     </td>
@@ -531,7 +531,7 @@
 
                             Date:
                             <h2>
-                                2024/02/10
+                                {{ \Carbon\Carbon::parse($order->order_date)->format('Y/m/d') }}
                             </h2>
                         </div>
                     </td>

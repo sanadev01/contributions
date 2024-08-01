@@ -50,6 +50,10 @@ Route::get('order-fedex-rates', [App\Http\Controllers\Admin\Order\OrderItemsCont
 //Route for GSS
 Route::get('order-gss-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'GSSRates'])->name('api.gssRates');
 
+//Route for PasarEx Colombia
+Route::get('order-pasarex-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'pasarExColombiaRates'])->name('api.pasarExRates');
+
+
 Route::post('update/inventory-order', Api\InventoryOrderUpdateController::class)->name('api.inventory.order.update');
 
 Route::prefix('v1')->middleware('auth:api')->group(function(){
