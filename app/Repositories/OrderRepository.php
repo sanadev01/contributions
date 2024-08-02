@@ -199,7 +199,12 @@ class OrderRepository
                     ShippingService::PasarEx
                 ];
             }
-            if ($request->carrier == 'Correios AJ') {
+            if($request->carrier == 'Cainiao'){
+                $service = [
+                    ShippingService::Cainiao
+                ];
+            }
+            if($request->carrier == 'Correios AJ'){
                 $service = [
                     ShippingService::AJ_Standard_CN,
                     ShippingService::AJ_Express_CN,

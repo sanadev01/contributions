@@ -152,6 +152,7 @@
                             <option value="HD Express">HD Express</option>
                             <option value="Hound Express">Hound Express</option>
                             <option value="PasarEx">Pasar Ex</option>
+                            <option value="Cainiao">Cainiao</option>
                             <option value="DSS Senegal">DSS Senegal</option>
                             <option value="VIP Parcels">VIP Parcel</option>
                         </select>

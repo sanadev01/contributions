@@ -77,6 +77,7 @@ class ShippingService extends Model
     const VIP_PARCEL_PMEI = 847;
     const VIP_PARCEL_PMI = 848;
     const VIP_PARCEL_FCP = 849;
+    const Cainiao = 1000;
 
     protected $guarded = [];
 
@@ -587,5 +588,9 @@ class ShippingService extends Model
     function getIsPasarExAttribute()
     {
         return $this->service_sub_class == self::PasarEx;
+    }
+    function getIsCainiaoAttribute()
+    {
+        return $this->service_sub_class == self::Cainiao;
     }
 }
