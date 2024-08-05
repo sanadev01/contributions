@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\Container;
-use App\Services\Correios\Services\Brazil\CN35LabelMaker;
+use App\Services\PasarEx\CN35LabelMaker;
 use Carbon\Carbon;
 class CN35DownloadFactoryController extends Controller
 {
@@ -24,7 +24,6 @@ class CN35DownloadFactoryController extends Controller
         $cn23Maker =   $cn23Maker->setDispatchNumber($this->container->dispatch_number)
             ->setDestinationAirport('GRU')
             ->setOriginAirport('MIA')
-            ->setPacketType($packetType)
             ->setCompanyName('PasarEx')
             ->setDispatchDate(Carbon::now()->format('Y-m-d'));
         return $cn23Maker->download();

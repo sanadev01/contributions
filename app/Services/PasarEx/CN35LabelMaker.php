@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Services\Senegal;
+namespace App\Services\PasarEx;
 
 use App\Models\Warehouse\Container;
 use App\Services\Correios\Contracts\HasLableExport;
@@ -56,8 +56,8 @@ class CN35LabelMaker implements HasLableExport
     public function setService($service)
     {
         $this->service = $service; 
-        $this->packetType = 'DSS Senegal';
-        $this->companyName = 'DSS Senegal';
+        $this->packetType = 'PasarEx';
+        $this->companyName = 'PasarEx';
 
         return $this;
     }
@@ -101,7 +101,7 @@ class CN35LabelMaker implements HasLableExport
     public function setType(string $weight)
     {
         $this->OrderWeight = $weight; 
-        $this->officeAddress = 'HD Courier'; 
+        $this->officeAddress = 'PasarEx Colombia'; 
         return $this;
     }
     public function setDestinationAirport(string $airport)
@@ -130,17 +130,17 @@ class CN35LabelMaker implements HasLableExport
 
     public function render()
     {
-        return view('labels.senegal.cn35.index',$this->getViewData());
+        return view('labels.pasarex.cn35.index',$this->getViewData());
     }
 
     public function download()
     {
-        return \PDF::loadView('labels.senegal.cn35.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.pasarex.cn35.index',$this->getViewData())->stream();
     }
 
     public function saveAs($path)
     {
-        return \PDF::loadView('labels.senegal.cn35.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.pasarex.cn35.index',$this->getViewData())->save($path);
     }
 
     private function getViewData()
