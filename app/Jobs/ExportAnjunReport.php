@@ -15,7 +15,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 use Illuminate\Support\Facades\Log;
-class ExportAnjunReport implements ShouldQueue
+class ExportAnjunReport 
+// implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -45,14 +46,8 @@ class ExportAnjunReport implements ShouldQueue
         try {
             $request = new Request($this->request);
             $id = $this->user->id;
-            if($request->type=="anjun_china"){
-                $containers = $this->reportRepository->getAnjunChinaContainersReport($request);
-                $exportService = new AnjunChinaReport($containers, $id);
-            }
-            else{ 
-                $deliveryBills = $this->reportRepository->getAnjunReport($request, $this->user);
-                $exportService = new AnjunReport($deliveryBills, $id);
-            }
+            $deliveryBills = $this->reportRepository->getAnjunReport($request, $this->user);
+            $exportService = new AnjunReport($deliveryBills, $id);
             $url = $exportService->handle();
             
             if ($url) {

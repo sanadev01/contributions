@@ -38,9 +38,6 @@ class AnjunReport extends AbstractExportService
         foreach ($this->deliveryBills as $deliveryBill) {
             foreach ($deliveryBill->containers as $container) {
                 foreach ($container->orders as $order) {
-                    if($order->shippingService){
-                        if($order->shippingService->isAnjunService()||$order->shippingService->is_bcn_service)
-                        {
                             $this->setCellValue('A'.$row, $order->order_date);
                             $this->setCellValue('B'.$row, $order->warehouse_number);
                             $this->setCellValue('C'.$row, $order->user->name);
@@ -52,8 +49,6 @@ class AnjunReport extends AbstractExportService
                             $this->setCellValue('I'.$row, $order->status_name);
                             $this->setCellValue('J'.$row, $deliveryBill->created_at);
                             $row++;
-                        }
-                    }
                 }
             }
         }
