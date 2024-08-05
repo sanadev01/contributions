@@ -33,7 +33,7 @@ class Packages extends Component
     {
         $this->dispatchBrowserEvent('scan-focus');
         $this->tracking = null;
-        return view('livewire.container-factory.packages',[
+        return view('livewire.container-factory.packages', [
             'orders' => $this->getPackages($this->idContainer),
             'totalweight' => $this->totalWeight(),
             'num_of_Packages' => $this->totalPackages()
@@ -43,18 +43,18 @@ class Packages extends Component
     public function getPackages($id)
     {
         $container = Container::find($id);
-        return $this->orders = $container->orders;        
+        return $this->orders = $container->orders;
     }
 
     public function submit()
     {
         $this->validate();
         $order = Order::where('corrios_tracking_code', $this->tracking)->first();
-        if ($order){
+        if ($order) {
             $container = Container::find($this->idContainer);
             $packageFactoryRepo = new ContainerPackageFactoryRepository;
             $response = $packageFactoryRepo->addOrderToContainer($container, $order);
-            if(!$response['success']){
+            if (!$response['success']) {
                 return $this->error = $response['message'];
             }
             $this->error = null;
@@ -74,7 +74,7 @@ class Packages extends Component
     {
         return  $this->num_of_Packages = count($this->orders);
     }
-      
+
     public function totalWeight()
     {
         $orders = $this->container->orders();

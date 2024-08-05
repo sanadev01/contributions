@@ -235,7 +235,7 @@ class FedExService
                     ],
                     'address' => [
                         'city' => $order->sender_city,
-                        'stateOrProvinceCode' => $order->senderState->code,
+                        'stateOrProvinceCode' => $order->senderState->code??"FL",
                         'postalCode' => $order->sender_zipcode,
                         'countryCode' => 'US',
                         'streetLines' => [$order->sender_address],

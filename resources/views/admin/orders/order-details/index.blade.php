@@ -7,7 +7,7 @@
 <div class="alert alert-danger" role="alert">
     {{$error}}
 </div>
-@endif
+@endif 
 <div class="alert alert-danger" role="alert" id="ups_response" style="display: none;"></div>
 <form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard" id="order-form">
     @csrf
@@ -59,7 +59,7 @@
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="us_shipping_service" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
                             @foreach ($shippingServices as $shippingService)
-                            @if($shippingService->isInboundDomesticService())
+                            @if($shippingService->is_inbound_domestic_service)
                             <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->sub_name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->sub_name }}@endif</option>
                             @else
                             <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->sub_name}"}}</option>
@@ -75,8 +75,8 @@
                     <div class="controls">
                         <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
                         <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" readonly required placeholder="@lang('orders.order-details.Tax Modality')">
-                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }}>DDU</option>
-                            <option value="ddp" {{ 'ddp' == $order->tax_modality ? 'selected' : '' }}>DDP</option>
+                            <option value="ddu" {{ 'ddu' == strtolower($order->tax_modality) ? 'selected' : '' }}>DDU</option>
+                            <option value="ddp" {{ 'ddp' == strtolower($order->tax_modality) ? 'selected' : '' }}>DDP</option>
                         </select>
                         <div class="help-block"></div>
                     </div>
@@ -238,6 +238,25 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="taxModalityModal" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title">Info</h5>
+            </div>
+            <div class="modal-body">
+                <h5>
+                    @lang('orders.DDP/PRC service not available')
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info text-white" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -267,19 +286,31 @@
             $("#itemLimit").hide();
             $("#rateBtn").hide();
         }
+        showTaxModalityMessage(service) 
+
     })
+    function showTaxModalityMessage(service){
+         serviceCode = Number(service)
+        const uspsService = @json($uspsService);
+        console.log(uspsService,serviceCode);
+        if(uspsService.includes(serviceCode)){
+            $('#taxModalityModal').modal('show');
+        }
+    }
 
     //USPS PRIORITY INTERNATIONAL SERVICE FOR RATES CALL 
     function checkService() {
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        showTaxModalityMessage(service)
         if (service == 3442) {
             return getUspsPriorityIntlRates();
         }
     }
 
     function getUspsPriorityIntlRates() {
+        flag = true;
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-        var order_id = $('#order_id').val();
+         var order_id = $('#order_id').val();
         var descpall = [];
         var qtyall = [];
         var valueall = [];
@@ -326,12 +357,17 @@
             })
         } else {
             alert('Add items to get rates!');
+            flag = false;
         }
+        if(flag)
+            showTaxModalityMessage(service)
+       
     }
 
 
     $('#us_shipping_service').ready(function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        showTaxModalityMessage(service)
         if (service == 3440 || service == 3441) {
 
             return getUspsRates();
@@ -346,7 +382,8 @@
 
     $('#us_shipping_service').on('change', function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
-
+        showTaxModalityMessage(service)
+       
         if (service == 3440 || service == 3441 || service == 05) {
 
             return getUspsRates();
@@ -377,7 +414,7 @@
     function getUspsRates() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-
+        showTaxModalityMessage(service) 
         $('#loading').fadeIn();
         $.get('{{ route("api.usps_rates") }}', {
             service: service,
@@ -425,6 +462,7 @@
     function getFedExRates() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
+        showTaxModalityMessage(service)
 
         $('#loading').fadeIn();
         $.get('{{ route("api.fedExRates") }}', {
@@ -451,6 +489,7 @@
     function getGSSRates() {
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
+        showTaxModalityMessage(service)
 
         $('#loading').fadeIn();
         $.get('{{ route("api.gssRates") }}', {
@@ -463,6 +502,7 @@
                     $('#user_declared_freight').val(response.total_amount);
                     $('#user_declared_freight').prop('readonly', true);
                 }
+                return true;
             } else {
                 if (service == 3674) {
                     $('#gssRateModal').modal('show');
@@ -477,7 +517,7 @@
             console.log(error);
             $('#loading').fadeOut();
         })
-
+        return false;
     }
 
     function getPasarExColombiaRates() {

@@ -91,6 +91,11 @@ use App\Http\Controllers\Warehouse\SenegalUnitRegisterController;
 use App\Http\Controllers\Warehouse\SenegalCN35DownloadController;
 use App\Http\Controllers\Warehouse\SenegalContainerPackageController;
 
+use App\Http\Controllers\Warehouse\VIPParcelContainerController;
+use App\Http\Controllers\Warehouse\VIPParcelUnitRegisterController;
+use App\Http\Controllers\Warehouse\VIPParcelCN35DownloadController;
+use App\Http\Controllers\Warehouse\VIPParcelContainerPackageController;
+
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
 
@@ -236,6 +241,12 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('hd-senegal-container.packages', SenegalContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('hd-senegal-container/{container}/register', SenegalUnitRegisterController::class)->name('hd-senegal-container.register');
     Route::get('hd-senegal-container/{container}/download', SenegalCN35DownloadController::class)->name('hd-senegal-container.download');
+
+    // Routes for vip parcel container
+    Route::resource('vip-parcel-containers', VIPParcelContainerController::class);
+    Route::resource('vip-parcel-container.packages', VIPParcelContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('vip-parcel-container/{container}/register', VIPParcelUnitRegisterController::class)->name('vip-parcel-container.register');
+    Route::get('vip-parcel-container/{container}/download', VIPParcelCN35DownloadController::class)->name('vip-parcel-container.download');
 });
 
 

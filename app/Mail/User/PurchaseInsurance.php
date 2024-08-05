@@ -34,7 +34,6 @@ class PurchaseInsurance extends Mailable
         $subject = "Insurance Purchased - Warehouse Number: " . $this->order->warehouse_number;
         return $this->markdown('emails.user.insurance-purchased')
                 ->subject($subject)
-                ->to('invoicing@hercoinc.com')
-                ->cc('mnaveedsaim@gmail.com');
+                ->to('invoicing@hercoinc.com');
     }
 }

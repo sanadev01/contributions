@@ -36,7 +36,8 @@ class AnjunChinaReport extends AbstractExportService
             foreach ($this->containers as $container) {
                 foreach ($container->orders as $order) {
                     $shippingService = $order->shippingService;
-                    if ($shippingService) {
+                    if ($shippingService && $shippingService->is_correios) {
+
                         $this->setCellValue('A' . $row, $order->order_date);
                         $this->setCellValue('B' . $row, $order->warehouse_number);
                         $this->setCellValue('C' . $row, $order->user->name);
@@ -48,7 +49,7 @@ class AnjunChinaReport extends AbstractExportService
                         $this->setCellValue('I' . $row, $this->getValuePaidToCorrieos($order)['airport']);
                         $this->setCellValue('J' . $row, $this->getValuePaidToCorrieos($order)['commission']);
                         $this->setCellValue('K' . $row, $order->status_name);
-                        $this->setCellValue('L' . $row, $container->created_at);
+                        $this->setCellValue('L' . $row, $deliveryBill->created_at);
                         $row++;
                     }
                 }
@@ -98,7 +99,7 @@ class AnjunChinaReport extends AbstractExportService
         $this->setCellValue('K1', 'Status');
 
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'Container Date');
+        $this->setCellValue('L1', 'DeliveryBill Date');
 
         $this->setBackgroundColor('A1:L1', '2b5cab');
         $this->setColor('A1:L1', 'FFFFFF');

@@ -413,7 +413,9 @@ class Order extends Model implements Package
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::DSS_SENEGAL){
                 return 'DSS Senegal';
             }
-            elseif(optional($this->shippingService)->is_pasar_ex){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMEI || optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI || optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP){
+                return 'VIP Parcels';
+            }elseif(optional($this->shippingService)->is_pasar_ex){
 
                 return 'PasarEx';
             }
@@ -447,7 +449,10 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ) {
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ||
+                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP||
+                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMEI||
+                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI) {
 
                 return $this->user_declared_freight;
             }
@@ -534,7 +539,8 @@ class Order extends Model implements Package
     }
   
 
-    public function doCalculations($onVolumetricWeight=true, $isServices = false)
+
+    public function doCalculations($onVolumetricWeight = true, $isServices = false)
     {
         $shippingService = $this->shippingService;
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
@@ -557,23 +563,31 @@ class Order extends Model implements Package
         // $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
         
         $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
-        $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
-
-        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $this->user_profit;
-
+        $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES', 0, null, true) : 0;
+        $calculatedUserProfit = (float) number_format($this->user_profit,2);
+        $total = number_format($shippingCost,2) + number_format($additionalServicesCost,2) + number_format($this->insurance_value,2) + number_format($dangrousGoodsCost,2) + number_format($consolidation,2) + $calculatedUserProfit;
         $discount = 0; // not implemented yet
-        $gross_total = $total - $discount;
-
+        $grossTotal = $total - $discount;
         $this->update([
             'consolidation' => $consolidation,
             'order_value' => $this->items()->sum(\DB::raw('quantity * value')),
             'shipping_value' => $shippingCost,
             'dangrous_goods' => $dangrousGoodsCost,
-            'total' => $total,
+            'total' => number_format($total,2),
             'discount' => $discount,
-            'gross_total' => $gross_total,
+            'calculated_user_profit'=> $calculatedUserProfit,
+            'gross_total' => number_format($grossTotal,2) ,
             'user_declared_freight' => $this->user_declared_freight
-            // 'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
+        ]);
+        $taxAndDuty = (float)$this->calculate_tax_and_duty;
+        $feeForTaxAndDuty = (float)$this->calculate_fee_for_tax_and_duty;
+        $total =  $grossTotal  + $taxAndDuty + $feeForTaxAndDuty; 
+        $grossTotal = $total - $discount;
+        $this->update([
+            'tax_and_duty' =>  $taxAndDuty,
+            'fee_for_tax_and_duty' => $feeForTaxAndDuty,
+            'total' => $total,
+            'gross_total' => $grossTotal,
         ]);
     }
 
@@ -968,6 +982,93 @@ class Order extends Model implements Package
             }
         }
         return true;
+    }
+ 
+    public function getCalculateTaxAndDutyAttribute(){
+        $totalTaxAndDuty = 0;
+        $isUSPS = optional($this->shippingService)->usps_service_sub_class ?? false;
+        if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
+                if ((strtolower($this->tax_modality) == "ddp" && !$isUSPS)) {
+                if(setting('is_prc_user', null, $this->user_id)){
+                    $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
+
+                    $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
+                    $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
+                    $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
+                    $icms = 0.17;  // ICMS (IVA)
+                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;;//Total  ICMS (IVA)
+                    $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
+                    \Log::info([
+                        'is pcr user' => 'yes',
+                        'recipient country' => $this->recipient->country->code,
+                        'order_value v1' => $this->order_value,
+                        'additionalServicesCost +   insurance_value v2 ' => $additionalServicesCost,
+                        'shipping_value v3' => $this->shipping_value,
+                        'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
+                        'totalCost' => $totalCost,
+                        'duty' => $duty,
+                        'totalCostOfTheProduct' => $totalCostOfTheProduct, 
+                        'totalIcms' => $totalIcms,
+                        'totalTaxAndDuty' => $totalTaxAndDuty, 
+                    ]);
+            }else{
+                    $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
+
+                    $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
+                    $duty = $totalCost * .60; //Duties
+                    $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
+                    $icms = 0.17;  // ICMS (IVA)
+                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;//Total  ICMS (IVA)
+                    $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
+                    \Log::info([
+                        'pcr user' => 'no',
+                        'recipient country' => $this->recipient->country->code,
+                        'order_value v1' => $this->order_value,
+                        'additionalServicesCost +   insurance_value v2 ' => $additionalServicesCost,
+                        'shipping_value v3' => $this->shipping_value,
+                        'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
+                        'totalCost' => $totalCost,
+                        'duty' => $duty,
+                        'totalCostOfTheProduct' => $totalCostOfTheProduct, 
+                        'totalIcms' => $totalIcms,
+                        'totalTaxAndDuty' => $totalTaxAndDuty, 
+                    ]);
+
+            }
+        }
+
+        }
+        return round($totalTaxAndDuty, 2);
+    }
+    public function getCalculateFeeForTaxAndDutyAttribute()
+    {
+        $fee=0;
+        if($this->calculate_tax_and_duty){
+            $flag=true;
+                if(setting('prc_user_fee', null, $this->user_id)=="flat_fee"){
+                    $fee = setting('prc_user_fee_flat', null, $this->user_id)??2;
+                    \Log::info([
+                        'fee type'=>'flat fee',
+                        'fee'=>$fee,
+                    ]);
+                    $flag=false;
+                }
+                if(setting('prc_user_fee', null, $this->user_id)=="variable_fee"){
+                    $percent = setting('prc_user_fee_variable', null, $this->user_id)??1;
+                    $fee= $this->calculate_tax_and_duty/100 * $percent;
+                    $fee= $fee <0.5? 0.5:$fee;
+                    \Log::info([
+                        'fee type'=>'variable fee',
+                        'fee'=>$fee,
+                    ]); 
+                    $flag=false;
+                }
+                if($flag){
+                $fee = $this->calculate_tax_and_duty*.01;
+                $fee = $fee<0.5?0.5:$fee;
+                }
+        }
+        return $fee;
     }
 
     public function getPasarexColombiaRate($shippingService)
