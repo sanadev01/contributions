@@ -59,6 +59,7 @@
                                                                     <option value="{{json_encode(['PostNL'])}}">Post NL</option>                                                           
                                                                     <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                    
                                                                     <option value="{{json_encode(['BCN-IX','BCN-NX'])}}">Correios B </option>                                                                  
+                                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                    
                                                                 </select>
                                                     </div>
                                                     <div class="col-md-2 mt-1">
@@ -127,6 +128,8 @@
                                                 <span class="badge badge-secondary text-dark">SN</span>
                                                 @elseif($deliveryBill->isVipParcel())
                                                 <span class="badge badge-secondary text-dark">VIP</span>
+                                                @elseif($deliveryBill->isAnjunChina())
+                                                <span class="badge badge-secondary text-dark">AJ</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif
