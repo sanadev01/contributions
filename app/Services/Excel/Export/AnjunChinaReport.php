@@ -34,7 +34,7 @@ class AnjunChinaReport extends AbstractExportService
 
         $row = $this->currentRow;
             foreach ($this->containers as $container) {
-                foreach ($container->orders as $order) {
+                foreach ($container->orders as $order) { 
                     $shippingService = $order->shippingService;
                     if ($shippingService) {
                         $this->setCellValue('A' . $row, $order->order_date);
@@ -109,7 +109,7 @@ class AnjunChinaReport extends AbstractExportService
     protected function getValuePaidToCorrieos(Order $order)
     {
         $commission = false;
-        $service  = $order->shippingService->service_sub_class;
+        $service  = $order->shippingService->service_sub_class; 
         $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'), $service);
 
         if (!$rateSlab) {
@@ -119,6 +119,9 @@ class AnjunChinaReport extends AbstractExportService
             ];
         }
         if ($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express) {
+            $commission = true;
+        }
+        if ($service == ShippingService::AJ_Express_CN || $service == ShippingService::AJ_Standard_CN) { 
             $commission = true;
         }
         return [
