@@ -29,7 +29,7 @@
                 <th>
                     GRU  
                 </th>
-                    @if ($anjunService)
+                    @if ($anjunService || $anjunChinaService)
                         <th>
                             Commission
                         </th>
@@ -56,7 +56,7 @@
                 <th>
                     <input type="search" class="form-control" wire:model.debounce.500ms="gru">
                 </th>
-                @if ($anjunService)
+                @if ($anjunService || $anjunChinaService)
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.500ms="commission">
                         
@@ -85,7 +85,7 @@
                     <th>
                         ${{ number_format($rate->gru, 2) }}
                     </th>
-                    @if ($anjunService)
+                    @if ($anjunService||$anjunChinaService)
                         <th>
                             ${{ number_format($rate->commission, 2) }}
                         </th>
