@@ -43,7 +43,7 @@ class SenderInfo
             "senderStreet" => "",
             "senderHouseNumber" => "",
             "senderAddress" => $this->order->sender_address??$userAddress,
-            "senderZipcode" => $this->order->sender_zipcode??$userZipcode,
+            "senderZipcode" => $this->order->sender_zipcode??"33182",
             "senderCompany" => "",
             "senderTax" => $this->order->sender_taxId??$userTaxId,
             "senderCertificateType" => "",

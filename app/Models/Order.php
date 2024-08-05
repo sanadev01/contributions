@@ -17,6 +17,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use App\Services\Correios\Contracts\Package;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
+use App\Services\PasarEx\GetZipcodeZone;
 use App\Services\Correios\Models\Package as ModelsPackage;
 use Exception;
 use Illuminate\Support\Facades\Crypt;
@@ -549,6 +550,9 @@ class Order extends Model implements Package
         }elseif ($shippingService && $shippingService->isGSSService()) {
             $this->calculateGSSProfit($shippingService);
             $shippingCost = $this->user_declared_freight;
+        }elseif ($shippingService && $shippingService->is_pasarex) {
+            $this->getPasarexColombiaRate($shippingService);
+            $shippingCost = $this->user_declared_freight;
         }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
         }
@@ -1065,6 +1069,21 @@ class Order extends Model implements Package
                 }
         }
         return $fee;
+    }
+
+    public function getPasarexColombiaRate($shippingService)
+    {
+        $zoneId = (new GetZipcodeZone($this->recipient->zipcode))->getZipcodeZone();
+        $rate = getZoneRate($this, $shippingService, $zoneId);
+        
+        if($rate > 0) {
+            $this->update([
+                'user_declared_freight' => $rate,
+            ]);
+            $this->user_declared_freight = $rate;
+            return true;
+        } 
+        return false;
     }
 
 }
