@@ -44,14 +44,9 @@ class ExportAnjunReport implements ShouldQueue
         try {
             $request = new Request($this->request);
             $id = $this->user->id;
-            if($request->type=="anjun_china"){
-                $containers = $this->reportRepository->getAnjunChinaContainersReport($request);
-                $exportService = new AnjunChinaReport($containers, $id);
-            }
-            else{ 
+             
                 $deliveryBills = $this->reportRepository->getAnjunReport($request, $this->user);
-                $exportService = new AnjunReport($deliveryBills, $id);
-            }
+                $exportService = new AnjunReport($deliveryBills, $id); 
             $url = $exportService->handle();
             
             if ($url) {

@@ -39,12 +39,12 @@ class AnjunReport extends AbstractExportService
             foreach ($deliveryBill->containers as $container) {
                 foreach ($container->orders as $order) {
                     $shippingService = $order->shippingService;
-                    if ($shippingService){
+                    if ($shippingService) {
                         $this->setCellValue('A' . $row, $order->order_date);
                         $this->setCellValue('B' . $row, $order->warehouse_number);
                         $this->setCellValue('C' . $row, $order->user->name);
                         $this->setCellValue('D' . $row, $order->corrios_tracking_code);
-                        $this->setCellValue('E' . $row, $order->getOriginalWeight('kg').'kg');
+                        $this->setCellValue('E' . $row, $order->getOriginalWeight('kg') . 'kg');
                         $this->setCellValue('F' . $row, $shippingService->sub_name);
                         $this->setCellValue('G' . $row, optional(optional($order->containers)[0])->unit_code);
                         $this->setCellValue('H' . $row, round($order->gross_total, 2));
@@ -123,6 +123,9 @@ class AnjunReport extends AbstractExportService
             ];
         }
         if ($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express) {
+            $commission = true;
+        }
+        if ($service == ShippingService::AJ_Express_CN || $service == ShippingService::AJ_Express_CN) {
             $commission = true;
         }
         return [
