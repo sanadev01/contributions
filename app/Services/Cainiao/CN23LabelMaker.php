@@ -42,7 +42,7 @@ class CN23LabelMaker implements HasLableExport
         $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
         $this->serviceLogo =  public_path('images/standard-package.png');
         $this->packetType = 'Packet Standard'; 
-        $this->contractNumber = 'Contract: 9912501700';
+        $this->contractNumber = 'Contract: 9912549304';
         $this->packageSign = 'CA';
         $this->service = 2;
         $this->returnAddress = 'Homedelivery BR (SMART RETURN) <br>
