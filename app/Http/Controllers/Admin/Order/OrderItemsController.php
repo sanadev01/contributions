@@ -14,6 +14,7 @@ use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
 use App\Models\ShCode;
 use App\Models\User;
+use App\Services\PasarEx\GetZipcodeZone;
 
 class OrderItemsController extends Controller
 {
@@ -39,12 +40,12 @@ class OrderItemsController extends Controller
         $usCountryId =  Order::US;
         $shippingServices = $this->orderRepository->getShippingServices($order);
         $error = $this->orderRepository->getShippingServicesError();
-
+        $uspsService = [ShippingService::GSS_PMI,ShippingService::GSS_EPMEI,ShippingService::GSS_EPMI,ShippingService::GSS_FCM,ShippingService::GSS_EMS,ShippingService::GSS_CEP,ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS, ShippingService::USPS_PRIORITY_INTERNATIONAL, ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, ShippingService::USPS_GROUND, ShippingService::GDE_PRIORITY_MAIL, ShippingService::GDE_FIRST_CLASS];
         if ($error) {
             session()->flash($error);
         }
         
-        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error','chileCountryId', 'usCountryId'));
+        return view('admin.orders.order-details.index',compact('uspsService','order','shippingServices', 'error','chileCountryId', 'usCountryId'));
     }
 
     /**
@@ -247,6 +248,28 @@ class OrderItemsController extends Controller
             ];
         }
 
+        
+    }
+
+    public function pasarExColombiaRates(Request $request)
+    {
+        $order = Order::find($request['order_id']);
+        $service = ShippingService::where('service_sub_class', $request['service'])->first();
+
+        $zoneId = (new GetZipcodeZone($order->recipient->zipcode))->getZipcodeZone();
+        $rate = getZoneRate($order, $service, $zoneId);
+
+        if ($rate > 0){
+            return (array)[
+                'success' => true,
+                'total_amount' => $rate,
+            ];
+        } else {
+            return (array)[
+                'success' => false,
+                'error' => 'server error occured while fetching rates',
+            ];
+        }
         
     }
 }

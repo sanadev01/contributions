@@ -39,7 +39,6 @@ class AnjunReport extends AbstractExportService
             foreach ($deliveryBill->containers as $container) {
                 foreach ($container->orders as $order) {
                     $shippingService = $order->shippingService;
-                    $commission= $this->getValuePaidToCorrieos($order);
                     if ($shippingService) {
                         $this->setCellValue('A' . $row, $order->order_date);
                         $this->setCellValue('B' . $row, $order->warehouse_number);
@@ -126,7 +125,7 @@ class AnjunReport extends AbstractExportService
         if ($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express) {
             $commission = true;
         }
-        if ($service == ShippingService::AJ_Express_CN || $service == ShippingService::AJ_Standard_CN) {
+        if ($service == ShippingService::AJ_Express_CN || $service == ShippingService::AJ_Express_CN) {
             $commission = true;
         }
         return [

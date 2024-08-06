@@ -58,8 +58,8 @@
                                                                     <option value="{{json_encode(['734','367','778','777'])}}">Post Plus</option>                                                           
                                                                     <option value="{{json_encode(['PostNL'])}}">Post NL</option>                                                           
                                                                     <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                    
-                                                                    <option value="{{json_encode(['BCN-IX','BCN-NX'])}}">Correios B </option>
-                                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                                 
+                                                                    <option value="{{json_encode(['BCN-IX','BCN-NX'])}}">Correios B </option>                                                                  
+                                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                    
                                                                 </select>
                                                     </div>
                                                     <div class="col-md-2 mt-1">
@@ -122,8 +122,12 @@
                                                 <span class="badge">B</span>
                                                 @elseif($deliveryBill->isHoundExpress())
                                                 <span class="badge text-dark" style="background-color:#b4e2ef">HE</span>
+                                                @elseif($deliveryBill->isPasarEx())
+                                                <span class="badge text-dark" style="background-color:#b4e2ef">PEx</span>
                                                 @elseif($deliveryBill->isSenegal())
                                                 <span class="badge badge-secondary text-dark">SN</span>
+                                                @elseif($deliveryBill->isVipParcel())
+                                                <span class="badge badge-secondary text-dark">VIP</span>
                                                 @elseif($deliveryBill->isAnjunChina())
                                                 <span class="badge badge-secondary text-dark">AJ</span>
                                                 @else
@@ -182,7 +186,7 @@
                                                                 <i class="fa fa-cloud-download"></i> Download PostPlus Manifest
                                                             </a>
                                                         @endif -->
-                                                        @if(!$deliveryBill->isGDE()&&!$deliveryBill->isHoundExpress())
+                                                        @if(!$deliveryBill->isGDE()&&!$deliveryBill->isHoundExpress()&&!$deliveryBill->isPasarEx())
                                                             <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> Download Manifest By Service
                                                             </a>

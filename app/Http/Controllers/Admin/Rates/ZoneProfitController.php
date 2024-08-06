@@ -47,7 +47,8 @@ class ZoneProfitController extends Controller
             ShippingService::GSS_EPMI, 
             ShippingService::GSS_FCM, 
             ShippingService::GSS_EMS,
-            ShippingService::GSS_CEP
+            ShippingService::GSS_CEP,
+            ShippingService::PasarEx,
             ])->where('active',true)->get();
         
         return view('admin.rates.zone-profit.create', compact('services'));
@@ -111,7 +112,8 @@ class ZoneProfitController extends Controller
         $this->authorizeResource(Rate::class);
 
         $services = ShippingService::whereIn('service_sub_class', [
-            ShippingService::GSS_CEP
+            ShippingService::GSS_CEP,
+            ShippingService::PasarEx,
             ])->where('active',true)->get();
         
         return view('admin.rates.zone-profit.add-cost', compact('services'));
