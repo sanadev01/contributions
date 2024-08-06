@@ -39,6 +39,7 @@ class AnjunReport extends AbstractExportService
             foreach ($deliveryBill->containers as $container) {
                 foreach ($container->orders as $order) {
                     $shippingService = $order->shippingService;
+                    $commission= $this->getValuePaidToCorrieos($order);
                     if ($shippingService) {
                         $this->setCellValue('A' . $row, $order->order_date);
                         $this->setCellValue('B' . $row, $order->warehouse_number);
@@ -48,8 +49,8 @@ class AnjunReport extends AbstractExportService
                         $this->setCellValue('F' . $row, $shippingService->sub_name);
                         $this->setCellValue('G' . $row, optional(optional($order->containers)[0])->unit_code);
                         $this->setCellValue('H' . $row, round($order->gross_total, 2));
-                        $this->setCellValue('I' . $row, $this->getValuePaidToCorrieos($order)['airport']);
-                        $this->setCellValue('J' . $row, $this->getValuePaidToCorrieos($order)['commission']);
+                        $this->setCellValue('I' . $row, $commission['airport']);
+                        $this->setCellValue('J' . $row, $commission['commission']);
                         $this->setCellValue('K' . $row, $order->status_name);
                         $this->setCellValue('L' . $row, $deliveryBill->created_at);
                         $row++;
@@ -125,7 +126,7 @@ class AnjunReport extends AbstractExportService
         if ($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express) {
             $commission = true;
         }
-        if ($service == ShippingService::AJ_Express_CN || $service == ShippingService::AJ_Express_CN) {
+        if ($service == ShippingService::AJ_Express_CN || $service == ShippingService::AJ_Standard_CN) {
             $commission = true;
         }
         return [
