@@ -266,6 +266,7 @@ class OrderRepository
             'sender_country_id' => $request->sender_country_id,
             'sender_state_id' => $request->sender_state_id,
             'sender_zipcode' => $request->sender_zipcode,
+            'sender_website' => $request->has('sender_website') ? $request->sender_website : NULL,
         ]);
 
         return $order;
