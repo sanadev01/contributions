@@ -54,6 +54,7 @@
                                             <option value="clear">Clear All</option>
                                             <option value="checkAll">Select All</option>
                                             <option value="assign-awb">Assign AWB</option>
+                                            <option value="download-report">Download Report</option>
                                         </select>
                                     </th>
                                     <th>@lang('warehouse.containers.Dispatch Number')</th>

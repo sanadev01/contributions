@@ -7,17 +7,15 @@ use App\Models\ShippingService;
 use Illuminate\Support\Collection;
 use App\Models\Warehouse\AccrualRate;
 
-class AnjunReport extends AbstractExportService
+class AnjunChinaReport extends AbstractExportService
 {
-    private $deliveryBills;
-    private $request;
+    private $containers; 
 
     private $currentRow = 1;
 
-    public function __construct(Collection $deliveryBills)
-    {
-        $this->deliveryBills = $deliveryBills;
-
+    public function __construct(Collection $containers)
+    { 
+        $this->containers = $containers;
         parent::__construct();
     }
 
@@ -35,29 +33,26 @@ class AnjunReport extends AbstractExportService
         $this->setExcelHeaderRow();
 
         $row = $this->currentRow;
-        foreach ($this->deliveryBills as $deliveryBill) {
-            foreach ($deliveryBill->containers as $container) {
-                foreach ($container->orders as $order) {
+            foreach ($this->containers as $container) {
+                foreach ($container->orders as $order) { 
                     $shippingService = $order->shippingService;
-                    $commission= $this->getValuePaidToCorrieos($order);
                     if ($shippingService) {
                         $this->setCellValue('A' . $row, $order->order_date);
                         $this->setCellValue('B' . $row, $order->warehouse_number);
                         $this->setCellValue('C' . $row, $order->user->name);
                         $this->setCellValue('D' . $row, $order->corrios_tracking_code);
-                        $this->setCellValue('E' . $row, $order->getOriginalWeight('kg') . 'kg');
+                        $this->setCellValue('E' . $row, $order->getOriginalWeight('kg').'kg');
                         $this->setCellValue('F' . $row, $shippingService->sub_name);
                         $this->setCellValue('G' . $row, optional(optional($order->containers)[0])->unit_code);
                         $this->setCellValue('H' . $row, round($order->gross_total, 2));
-                        $this->setCellValue('I' . $row, $commission['airport']);
-                        $this->setCellValue('J' . $row, $commission['commission']);
+                        $this->setCellValue('I' . $row, $this->getValuePaidToCorrieos($order)['airport']);
+                        $this->setCellValue('J' . $row, $this->getValuePaidToCorrieos($order)['commission']);
                         $this->setCellValue('K' . $row, $order->status_name);
-                        $this->setCellValue('L' . $row, $deliveryBill->created_at);
+                        $this->setCellValue('L' . $row, $container->created_at);
                         $row++;
                     }
                 }
             }
-        }
 
         $this->currentRow = $row;
 
@@ -103,7 +98,7 @@ class AnjunReport extends AbstractExportService
         $this->setCellValue('K1', 'Status');
 
         $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'DeliveryBill Date');
+        $this->setCellValue('L1', 'Container Date');
 
         $this->setBackgroundColor('A1:L1', '2b5cab');
         $this->setColor('A1:L1', 'FFFFFF');
@@ -114,7 +109,7 @@ class AnjunReport extends AbstractExportService
     protected function getValuePaidToCorrieos(Order $order)
     {
         $commission = false;
-        $service  = $order->shippingService->service_sub_class;
+        $service  = $order->shippingService->service_sub_class; 
         $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'), $service);
 
         if (!$rateSlab) {
@@ -126,7 +121,7 @@ class AnjunReport extends AbstractExportService
         if ($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express) {
             $commission = true;
         }
-        if ($service == ShippingService::AJ_Express_CN || $service == ShippingService::AJ_Standard_CN) {
+        if ($service == ShippingService::AJ_Express_CN || $service == ShippingService::AJ_Standard_CN) { 
             $commission = true;
         }
         return [

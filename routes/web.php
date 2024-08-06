@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Services\Excel\Export\TempOrderExport;
 use App\Http\Controllers\ConnectionsController;
 use App\Http\Controllers\DownloadUpdateTracking;
+use App\Services\Excel\Export\OrderUpdateExport;
 
 use App\Services\Excel\Export\ExportNameListTest;
 use App\Http\Controllers\CustomsResponseController;
