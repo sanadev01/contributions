@@ -152,7 +152,7 @@ class OrderLabelController extends Controller
                     }
                 }
                 if ($order->shippingService->is_anjun_china_service_sub_class){ 
-                    $anjun = new AnjunLabelRepository($order, $request); 
+                    $anjun = new AnjunLabelRepository($order, $request, false); 
                     $labelData = $anjun->run();  
                     $order->refresh();
                     \Log::info(["anjun label data response"=>$labelData]);

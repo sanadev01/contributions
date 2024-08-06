@@ -155,6 +155,10 @@ class CreateRequest extends FormRequest
             $rules['recipient.street_no'] = 'nullable';
         }
 
+        if(setting('prc_label', null, auth()->user()->id)) {
+            $rules['sender.sender_website'] = 'required';
+        }
+
         return $rules;
     }
 

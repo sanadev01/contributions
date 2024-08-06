@@ -123,6 +123,7 @@
                         @enderror
                     </div>
                 </div>
+
                 <div class="col-sm-6 d-none" id="zip_code">
                     <div class="form-group">
                         <label for="zipcode">@lang('orders.sender.Zipcode')<span class="text-danger">*</span></label>
@@ -135,6 +136,20 @@
                     </div>
                     <div class="help-block" id="zipcode_response"></div>
                 </div>
+                @if(setting('prc_label', null, $order->user->id))
+                    <div class="col-sm-6" id="sender_website">
+                        <div class="form-group">
+                            <label for="sender_website">@lang('orders.sender.Website')<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="sender_website" name="sender_website" value="{{ old('sender_website',__default($order->sender_website,null)) }}" required>
+                            @error('sender_website')
+                                <div class="text-danger">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="help-block" id="sender_website"></div>
+                    </div>
+                @endif
             </div>
         </fieldset>
     </div>

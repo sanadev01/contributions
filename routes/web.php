@@ -26,6 +26,7 @@ use App\Http\Controllers\DownloadUpdateTracking;
 use App\Services\Excel\Export\OrderUpdateExport;
 
 use App\Services\Excel\Export\ExportNameListTest;
+use App\Http\Controllers\CustomsResponseController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 
@@ -371,6 +372,16 @@ Route::get('/truncate-shcodes', function () {
     DB::table('sh_codes')->truncate();
     return 'ShCode table truncated successfully!';
 });
+Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field) {
+    $order = (Order::where('warehouse_number', $warehouse)->first());  
+    \Log::info(
+        $order->toArray()
+    );
+    dump($order->update([$field=>null]));  
+    dd($order);
+});
+
+Route::post('/webhooks/customs-response', [CustomsResponseController::class, 'handle']);
 Route::get('/warehouse-detail/{warehouse}', function ($warehouse) {
  
     dd(Order::where('warehouse_number', $warehouse)->first());  

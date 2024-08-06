@@ -70,6 +70,7 @@
                                     </th>
                                     <th>@lang('warehouse.containers.Destination Airport')</th>
                                     <th>@lang('warehouse.containers.Container Type')</th>
+                                    <th>@lang('warehouse.containers.Custom Type')</th>
                                     <th>@lang('warehouse.containers.Distribution Service Class')</th>
                                     <th>
                                         Unit Code
@@ -94,6 +95,7 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>  
                                     <th></th>               
                                     <th>
                                         <select class="form-control" wire:model="packetType">
@@ -147,10 +149,17 @@
                                             {{ $container->getContainerType() }}
                                         </td>
                                         <td>
+                                            {{ $container->getCustomType() }}
+                                        </td>
+                                        <td>
                                             {{ $container->getServiceSubClass() }}
                                         </td>
                                         <td>
-                                            {{ $container->getUnitCode() }}
+                                            {{ $container->getUnitCode() }}<br>
+
+                                            @if(!empty($container->customs_response_list))
+                                                PRC ID: {{$container->customs_response_list}}
+                                            @endif
                                         </td>
                                         <td>
                                             {{ $container->awb }}
@@ -190,6 +199,11 @@
                                                             @if( !$container->isRegistered() && $container->hasOrders())
                                                                 <a href="{{  $container->hasAnjunChinaService()?route('warehouse.anjun.container.register',$container):route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Register Unit
+                                                                </a>
+                                                            @endif
+                                                            @if($container->isPRC() && !$container->isPRCRegistered())
+                                                                <a href="{{ route('warehouse.container.registerprc',$container) }}" class="dropdown-item w-100">
+                                                                    <i class="feather icon-box"></i> Register PRC Unit
                                                                 </a>
                                                             @endif
                                                             @if( $container->isRegistered())

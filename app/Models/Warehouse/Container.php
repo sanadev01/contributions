@@ -299,4 +299,20 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         return $this->services_subclass_code == ShippingService::VIP_PARCEL_FCP || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMEI || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMI;
     }
+
+    public function getCustomType()
+    {
+        return ($this->custom_type == 1 || is_null($this->custom_type) || $this->custom_type === '') ? 'Non-PRC' : 'PRC';
+    }
+
+    public function isPRC()
+    {
+        return $this->custom_type == 2;
+    }
+
+    public function isPRCRegistered()
+    {
+        return !empty($this->customs_response_list);
+    }
+
 }

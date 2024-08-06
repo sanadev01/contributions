@@ -1086,4 +1086,60 @@ class Order extends Model implements Package
         return false;
     }
 
+    public function getTotalTaxes() {
+        if ($this->shouldCalculateTaxAndDuty()) {
+            $totalTaxAndDuty = $this->calculateTotalTaxAndDuty();
+            return round($totalTaxAndDuty, 2);
+        }
+        return 0;
+    }
+    
+    public function getTotalIcms() {
+        if ($this->shouldCalculateTaxAndDuty()) {
+            $totalIcms = $this->calculateTotalIcms();
+            return round($totalIcms, 2);
+        }
+        return 0;
+    }
+    
+    private function shouldCalculateTaxAndDuty() {
+        $isUSPS = optional($this->shippingService)->usps_service_sub_class ?? false;
+        $countryCode = $this->recipient->country->code;
+        return ($countryCode == "MX" || $countryCode == "CA" || $countryCode == "BR") && (strtolower($this->tax_modality) == "ddp" && !$isUSPS);
+    }
+    
+    private function calculateTotalTaxAndDuty() {
+        $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
+        $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
+    
+        if(setting('prc_label', null, $this->user_id)) {
+            $duty = $totalCost > 50 ? (($totalCost * .60) - 20) : $totalCost * 0.2;
+        } else {
+            $duty = $totalCost * .60;
+        }
+    
+        $totalCostOfTheProduct = $totalCost + $duty;
+        $icms = 0.17;
+        $totalIcms = $totalCostOfTheProduct / (1 - $icms) * $icms;
+    
+        return round($duty + $totalIcms, 2);
+    }
+    
+    private function calculateTotalIcms() {
+        $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
+        $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
+    
+        if(setting('prc_label', null, $this->user_id)) {
+            $duty = $totalCost > 50 ? (($totalCost * .60) - 20) : $totalCost * 0.2;
+        } else {
+            $duty = $totalCost * .60;
+        }
+    
+        $totalCostOfTheProduct = $totalCost + $duty;
+        $icms = 0.17;
+        $totalIcms = $totalCostOfTheProduct / (1 - $icms) * $icms;
+    
+        return round($totalIcms, 2);
+    }    
+
 }

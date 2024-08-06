@@ -197,7 +197,7 @@ class HandleCorreiosLabelsRepository
 
     public function anjunChinaLabel()
     {
-        $anjun = new AnjunLabelRepository($this->order, $this->request);
+        $anjun = new AnjunLabelRepository($this->order, $this->request, null);
         $anjun->run();
         return $this->renderLabel($this->request, $this->order, $anjun->error);
     }

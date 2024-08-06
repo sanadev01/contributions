@@ -4,6 +4,7 @@ namespace App\Services\Correios\Services\Brazil;
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
@@ -16,7 +17,11 @@ use App\Services\Correios\Services\Brazil\cn23\CorreiosOrder;
 class Client
 {
     protected $client;
+    private $customToken;
     private $baseUri;
+    private $customsBaseUri;
+    private $customsClientId;
+    private $customsClientSecret;
 
     public function __construct()
     { 
@@ -24,6 +29,29 @@ class Client
         $this->client = new GuzzleClient([
             'base_uri' => $this->baseUri
         ]);
+
+        if (app()->isProduction()) {
+            $this->customsBaseUri = config('correios_customs.production.customsBaseUri');
+            $this->customsClientId = config('correios_customs.production.clientId');
+            $this->customsClientSecret = config('correios_customs.production.clientSecret');
+        } else {
+            $this->customsBaseUri = config('correios_customs.testing.customsBaseUri');
+            $this->customsClientId = config('correios_customs.testing.clientId');
+            $this->customsClientSecret = config('correios_customs.testing.clientSecret'); 
+        }
+    }
+
+    public function getCustomsToken() {
+        $authParams = [
+            'client_id' => $this->customsClientId,
+            'client_secret' => $this->customsClientSecret,
+        ];
+        $customsClient = new GuzzleClient();
+        $response = $customsClient->post("$this->customsBaseUri/authenticate",['json' => $authParams ]);
+        $data = json_decode($response->getBody()->getContents());
+        if($data->token) {
+            return $this->customToken = $data->token;
+        }
     }
 
     public function createPackage(Package $order)
@@ -110,6 +138,7 @@ class Client
             ]);
 
             $data = json_decode($response->getBody()->getContents());
+
             return $data->unitResponseList[0]->unitCode;
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
@@ -286,6 +315,26 @@ class Client
             return new PackageError($e->getResponse()->getBody()->getContents());
         } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
+        }
+    }
+
+    public function registerPRCUnit(Container $container) {
+        try {
+        //Post Customs Batch for PRC Container
+        if($container->isPRC()) {
+            $batchRequest = (new ParcelsBatch($container))->getBatch();
+            $customsClient = new GuzzleClient();
+            $customsRequest = $customsClient->post($this->customsBaseUri."/siscomex/batch", [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->getCustomsToken()}",
+                ],
+                'json' => $batchRequest
+            ]);
+            $customsResponse = json_decode($customsRequest->getBody()->getContents());
+            return $customsResponse;
+        }
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents());
         }
     }
 }
