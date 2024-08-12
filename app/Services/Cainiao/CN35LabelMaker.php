@@ -35,101 +35,22 @@ class CN35LabelMaker implements HasLableExport
         $this->dispatchDate = Carbon::now()->format('Y-m-d');
         $order = $container->orders->first();
         if ($order) {
-            $this->setType($order->getOriginalWeight('kg'));
+            $this->OrderWeight = $order->getOriginalWeight('kg');
         }
 
         $this->weight =  $container->getWeight();
         $this->dispatchNumber = $container->dispatch_number;
-        $this->setService($container->getServiceCode());
+        $this->service = $container->getServiceCode();
         $this->destinationAirport = $container->destination_operator_name;
         $this->itemsCount = $container->getPiecesCount();
         $this->unitCode = $container->getUnitCode();
-        $this->originAirpot = 'HKG'; 
-        $this->destinationAirport="GRU";
+        $this->originAirpot = 'HKG';
+        $this->destinationAirport = "GRU";
         $this->officeAddress = "Empresa Brasileira de Correios e Telégrafos<br>
                                 Centro Internacional de Curitiba - SE/PR<br>
                                 Rua Salgado Filho, 476, Jardim Amélia<br>
                                 83330-972 - Pinhais/PR<br>
                                 CNPJ: 34.028.316/9148-22";
-    }
-
-    public function setCompanyName($companyName)
-    {
-        $this->companyName = $companyName;
-        return $this;
-    }
-
-    public function setService($service)
-    {
-        $this->service = $service;
-
-        return $this;
-    }
-
-    public function setDispatchNumber(string $dispatchNumber)
-    {
-        $this->dispatchNumber = $dispatchNumber;
-        return $this;
-    }
-
-    public function setOfficeAddress(string $address)
-    {
-        $this->officeAddress = $address;
-        return $this;
-    }
-
-    public function setSerialNumber(int $serialNumber)
-    {
-        $this->serialNumber = $serialNumber;
-        return $this;
-    }
-
-    public function setFlightNumber(string $flightNumber)
-    {
-        $this->flightNumber = $flightNumber;
-        return $this;
-    }
-
-    public function setDispatchDate(string $date)
-    {
-        $this->dispatchDate = $date;
-        return $this;
-    }
-
-    public function setOriginAirport(string $airport)
-    {
-        $this->originAirpot = $airport;
-        return $this;
-    }
-
-    public function setType(string $weight)
-    {
-        $this->OrderWeight = $weight;
-        $this->officeAddress = 'cainiao Colombia';
-        return $this;
-    }
-    public function setDestinationAirport(string $airport)
-    {
-        $this->destinationAirport = $airport;
-        return $this;
-    }
-
-    public function setItemsCount(string $itemsCount)
-    {
-        $this->itemsCount = $itemsCount;
-        return $this;
-    }
-
-    public function setWeight(string $weight)
-    {
-        $this->weight = $weight;
-        return $this;
-    }
-
-    public function setUnitCode(string $unitCode)
-    {
-        $this->unitCode = $unitCode;
-        return $this;
     }
 
     public function render()
