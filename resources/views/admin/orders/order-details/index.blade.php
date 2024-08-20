@@ -106,7 +106,7 @@
                                 </span>
                             </span>
                         </div>
-                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal Parcel<span class="text-danger"></span></label>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Dispose Parcel<span class="text-danger"></span></label>
                     </div>
                     {{-- <div class="form-check form-check-inline mr-5">
                         <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">

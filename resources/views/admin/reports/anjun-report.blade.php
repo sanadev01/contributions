@@ -14,6 +14,8 @@
                         <div class="card-body">
                             <div class="row mb-2 no-print">
                                 <div class="col-1">
+                                    
+                                    <label> </label>
                                     <select class="form-control" wire:model="pageSize">
                                         <option value="1">1</option>
                                         <option value="5">5</option>
@@ -25,6 +27,7 @@
                                     </select>
                                 </div>
                                 <div class="col-5">
+                                    <label></label>
                                     <form action="{{ url()->current() }}" method="GET" id="searchForm">
                                         <div class="row">                                                
                                             <div class="col-md-7">
@@ -39,42 +42,30 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-6 text-right">
+                                <div class="col-6">
                                     <form action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                                         @csrf
-                                       
                                         <div class="row">
                                             <div class="offset-1 col-md-3">
-                                                <div class="row">
-                                                    <div class="col-md-12">
+                                                    <label>Type</label>
                                                     <select name="type"  class="form-control" id="searchType"   >
-                                                        <option class="form-control" value="bcn" @if(request('type')=='bcn') selected @endif>BCN</option>
-                                                        <option class="form-control" value="anjun"  @if(request('type')=='anjun') selected @endif>ANJUN</option>
+                                                        
+                                                        <option class="form-control" value="bcn" @if(request('type')=='bcn') selected @endif>BCN Correios</option>
+                                                        <option class="form-control" value="correios"  @if(request('type')=='correios') selected @endif>HD Correios</option>
+                                                        <option class="form-control" value="anjun"  @if(request('type')=='anjun') selected @endif>ANJUN Correios</option>
+                                                        <option class="form-control" value="anjun_china"  @if(request('type')=='anjun_china') selected @endif>ANJUN CHINA</option>
                                                     </select>
-                                                    </div>
-                                                </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="row">
-                                                    <div class="col-md-4 mt-2">
                                                         <label>Start Date</label>
-                                                    </div>
-                                                    <div class="col-md-8 pl-0 pr-0">
-                                                        <input type="date" name="start_date" class="form-control">
-                                                    </div>
-                                                </div>
+                                                        <input type="date" name="start_date" class="form-control" value="{{ Carbon\Carbon::now()->startOfMonth()->toDateString() }}">
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="row">
-                                                    <div class="col-md-4 mt-2 pl-0">
                                                         <label>End Date</label>
-                                                    </div>
-                                                    <div class="col-md-8 pl-0">
-                                                        <input type="date" name="end_date" class="form-control">
-                                                    </div>
-                                                </div>
+                                                        <input type="date" name="end_date" class="form-control" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
                                             </div>
                                             <div class="col-md-1">
+                                                <label></label>
                                                 <button class="btn btn-success" title="@lang('orders.import-excel.Download')">
                                                     <i class="fa fa-arrow-down"></i>
                                                 </button>

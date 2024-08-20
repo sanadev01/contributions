@@ -169,12 +169,11 @@ class HandleCorreiosLabelsRepository
         return $this->renderLabel($this->request, $this->order, $corrieosChileLabelRepository->getChileErrors());
     }
     public function correiosOrAnjun($order)
-    { 
-        if(in_array(Auth::id(),['1233','0010']) && $this->order->shippingService->is_anjun_china_service_sub_class) {
-                    return $this->anjunChinaLabel();
-        }
+    {
         $order = $this->updateShippingServiceFromSetting($order);
-
+        if ($this->order->shippingService->is_anjun_china_service_sub_class) {
+            return $this->anjunChinaLabel();
+        }
         return $this->corriesBrazilLabel();
     }
     public function corriesBrazilLabel()
@@ -186,9 +185,11 @@ class HandleCorreiosLabelsRepository
 
     public function anjunChinaLabel()
     {
-        $anjun= new AnjunLabelRepository($this->order, $this->request);
-        $anjun->run();
-        return $this->renderLabel($this->request, $this->order, $anjun->error);
+        $anjun= new AnjunLabelRepository($this->order, $this->request, $this->update);
+        $anjunResponse = $anjun->run(); 
+        \Log::info([ "anjun run response front"=>$anjunResponse]);
+        \Log::info([ "anjun run response front anjun"=>$anjun->getError()]);
+        return $this->renderLabel($this->request, $this->order, $anjun->getError());
     }
 
     public function uspsLabel()
@@ -248,11 +249,11 @@ class HandleCorreiosLabelsRepository
         $standard = in_array($service_sub_class, [ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard]);
 
         if (setting('china_anjun_api', null, User::ROLE_ADMIN)) {
-            // if ($standard) {
-            //     $service_sub_class = ShippingService::AJ_Standard_CN;
-            // } else {
-            //     $service_sub_class = ShippingService::AJ_Express_CN;
-            // }
+            if ($standard) {
+                $service_sub_class = ShippingService::AJ_Standard_CN;
+            } else {
+                $service_sub_class = ShippingService::AJ_Express_CN;
+            }
         } else if (setting('correios_api', null, User::ROLE_ADMIN)) {
             if ($standard) {
                 $service_sub_class = ShippingService::Packet_Standard;

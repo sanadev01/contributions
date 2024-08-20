@@ -30,8 +30,8 @@ class ReceiverInfo
         $this->companyName     = '';
         $this->phone           = $recipient->phone;
         $this->mobileNumber    = '';
-        $this->countryCode     = $recipient->country->code;
-        $this->stateCode       = $recipient->state->code;
+        $this->countryCode     = optional($recipient->country)->code;
+        $this->stateCode       = optional($recipient->state)->code;
         $this->city            = $recipient->city;
         $this->zipcode         = $recipient->zipcode;
         $this->email           = $recipient->email;

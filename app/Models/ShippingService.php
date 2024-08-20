@@ -102,13 +102,13 @@ class ShippingService extends Model
             ShippingService::AJ_Standard_CN => 'Packet Standard',
             ShippingService::BCN_Packet_Standard => 'Packet Standard',
             ShippingService::AJ_Packet_Standard => 'Packet Standard',
-            ShippingService::Packet_Standard => 'Packet Standard',
-            ShippingService::AJ_Express_CN => 'Packet Express',
-            ShippingService::BCN_Packet_Express => 'Packet Express',
-            ShippingService::AJ_Packet_Express => 'Packet Express',
-            ShippingService::Packet_Express => 'Packet Express',
-        ];
-        if (array_key_exists($serviceSubClass, $serviceMapping)) {
+            ShippingService::AJ_Packet_Express => 'Packet Express', 
+            ShippingService::AJ_Standard_CN => 'Packet Standard AJ',
+            ShippingService::AJ_Express_CN => 'Packet Express AJ', 
+            ShippingService::BCN_Packet_Standard => 'Packet Standard', 
+            ShippingService::BCN_Packet_Express => 'Packet Express', 
+        ]; 
+        if (array_key_exists($serviceSubClass, $serviceMapping)) { 
             return $serviceMapping[$serviceSubClass];
         }
         return  $this->name;

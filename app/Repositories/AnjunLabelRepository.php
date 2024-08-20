@@ -11,30 +11,40 @@ class AnjunLabelRepository
     public $order;
     public $error;
     public $request;
-    public function __construct(Order $order, Request $request)
+    public $update;
+    public function __construct(Order $order, Request $request,$update)
     {
         $this->order = $order;
+        $this->update = $update;
         $this->error = null;
         $this->request = $request;
     }
     public function run()
     {
-        return $this->get($this->order);
+        if($this->update){
+            return $this->update($this->order);
+        }
+        else {
+            return $this->get($this->order);
+        }
     }
     public function get(Order $order)
     {
         if ($order->getCN23()) {
-        $this->printLabel($order);
+            $this->printLabel($order);
         return null;
         }
           return $this->update($order);
     }
     public function update(Order $order)
     {
+        \Log::info('updating label');
         $cn23 = $this->generateLabel($order);
-        if ($cn23) {
+        if(!$this->error && $cn23) {
+            \Log::info(["anjun success data on label "]); 
             $this->printLabel($order);
         }
+        \Log::info(["anjun error data on null"]); 
         return null;
     }
     protected function generateLabel(Order $order)
@@ -42,11 +52,12 @@ class AnjunLabelRepository
         $anjunClient = new AnjunClient();
         $response = $anjunClient->createPackage($order);
         $data = $response->getData();
+        \Log::info(["anjun error "=>$data]);
         if ($data->success) {
             return $this->printLabel($order);
         } else { 
             $this->error= $data->message;
-            return $response;
+            return null;
         }
     }
 public function printLabel(Order $order)
