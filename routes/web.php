@@ -30,7 +30,6 @@ use App\Http\Controllers\CustomsResponseController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\BillingInformation;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
 
 /*
@@ -389,29 +388,24 @@ Route::get('/warehouse-detail/{warehouse}', function ($warehouse) {
  
     dd(Order::where('warehouse_number', $warehouse)->first());  
 });
-
 Route::get('encrypt-billing-informaitons',function(){
   
     $records = BillingInformation::all(); 
     foreach ($records as $record){
-        if ($record->card_no && !isEncrypted($record->card_no) && !is_null($record->card_no) && $record->card_no != '') {
-            $record->update([
-                'card_no' => encrypt($record->card_no)
-            ]);
-            dump(["passed"=>$record->card_no]);
+        if ($record->card_no &&  !is_null($record->card_no) && $record->card_no != ''  && !isEncrypted($record->card_no)) {
+            $record->card_no = encrypt($record->card_no);
+            dump(["card_no passed"=>$record->card_no]);
         }else{
-            dump(['fail'=>$record]);
+            dump(['card_no fail',$record->card_no]);
+        }
+        if ($record->cvv&& !is_null($record->cvv) && $record->cvv != '' && !isEncrypted($record->cvv)) {
+            $record->cvv =encrypt($record->cvv);
+            dump(["cvv passed"=>$record->cvv]);
+        }else{
+            dump(['cvv fail'=>$record->cvv]);
         }
         $record->save();
     } 
     dd('Billing data encrypted successfully.');
  
 });   
-function isEncrypted($value) {
-    try {
-        decrypt($value);
-        return true;
-    } catch (DecryptException $e) {
-        return false;
-    }
-}
