@@ -46,6 +46,17 @@ class OrderRepository
         {
             $query->where('sender_country_id', Country::US);
         }
+        if($request->taxAndDutyOnly)
+        {
+            $query->where('tax_and_duty','!=',0);
+        }
+       
+        $query->when($request->tax_and_duty,function($query,$tax){
+            return $query->where('tax_and_duty',  'LIKE', "%{$tax}%");
+        })->when($request->fee_for_tax_and_duty,function($query,$feeTax){
+            return $query->where('fee_for_tax_and_duty',  'LIKE', "%{$feeTax}%");
+        });
+        
 
         if ($request->userType == 'pickups') {
             $query->where('api_pickup_response' , '!=', null);

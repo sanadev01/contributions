@@ -399,7 +399,7 @@
     <img class="partner-logo" src="{{ $partnerLogo }}">
     <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
     
-    @if(setting('prc_label', null, $order->user_id) && $order->tax())
+    @if(setting('is_prc_user', null, $order->user_id) && $order->tax())
         <img class="customs-logo" src="{{ $customsLogo }}" alt="">
     @else
         <p class="screening-code">CJA01</p>
@@ -459,7 +459,7 @@
             </div>
             @if(!empty($labelZipCodeGroup))
                 <div class="bottom-block">
-                    <div class="box-text" style="font-size: 24px !important; font-weight: bold; ">{{ $labelZipCodeGroup }}</div>
+                    <div class="box-text" style="font-size: 24px !important; font-weight: bold; ">{{ optional($labelZipCodeGroup)['group'] }}</div>
                 </div>
             @else
                 @if($order->getOriginalWeight('kg') > 3)

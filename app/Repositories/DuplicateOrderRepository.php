@@ -58,6 +58,7 @@ class DuplicateOrderRepository extends Model
 
         $this->makeRecipientCopy($order,$copy);
         $this->makeServicesCopy($order,$copy);
+        // $this->makeItemsCopy($order,$copy);
         return $copy;
     }
     
@@ -77,6 +78,16 @@ class DuplicateOrderRepository extends Model
         $recipientCopy = $order->recipient->replicate();
         $recipientCopy->order_id = $copy->id;
         $recipientCopy->save();
+    }
+    
+    private function makeItemsCopy(Order $order, Order $copy)
+    {
+        $items = $order->items;
+        foreach ($items as $item) {
+            $itemCopy = $item->replicate();
+            $itemCopy->order_id = $copy->id;
+            $itemCopy->save();
+        }
     }
 
     private function makeServicesCopy(Order $order, Order $copy)

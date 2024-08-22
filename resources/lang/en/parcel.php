@@ -26,6 +26,7 @@ return [
     'Length' => 'Length',
     'Width' => 'Width',
     'Height' => 'Height',
+    'Order value' => 'Order value',
     'The Rate will be applied on' => 'The Rate will be applied on',
     'Shipment Images' => 'Shipment Images',
     'Image 1' => 'Image 1',
