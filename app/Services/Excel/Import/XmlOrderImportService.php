@@ -90,6 +90,7 @@ class XmlOrderImportService
                     "is_shipment_added"     => true,
                     'status'                => Order::STATUS_ORDER,
                     'order_date'            => now(), 
+                    "tax_modality"          => in_array($this->getValue("AE{$row}"),['ddp','ddu',"DDP",'DDU'])?strtoupper($this->getValue("AE{$row}")):'DDU',
                     "sender_first_name"     => $items['SenderFirstName']?$items['SenderFirstName']:null,
                     "sender_last_name"      => $items['SenderLastName']?$items['SenderLastName']:null,
                     "sender_email"          => $items['SenderEmail']?$items['SenderEmail']:null,

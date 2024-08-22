@@ -108,7 +108,7 @@ class ShopifyOrderImportService extends AbstractImportService
                     "is_shipment_added" => true,
                     'status' => Order::STATUS_ORDER,
                     'order_date' => now(), 
-
+                    "tax_modality" => in_array($this->getValue("AE{$row}"),['ddp','ddu',"DDP",'DDU'])?strtoupper($this->getValue("AE{$row}")):'DDU',
                     "sender_first_name" => $this->getValue("J{$row}"),
                     "sender_last_name" => $this->getValue("K{$row}"),
                     "sender_email" => $this->getValue("L{$row}"),

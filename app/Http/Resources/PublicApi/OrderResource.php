@@ -44,6 +44,8 @@ class OrderResource extends JsonResource
             "total" => $this->total,
             "discount" => $this->discount,
             "gross_total" => $this->gross_total,
+            "tax_and_duty" => $this->tax_and_duty,
+            "fee_for_tax_and_duty" => $this->fee_for_tax_and_duty,
             "recipient" => OrderRecipientResource::make($this->recipient),
             "products" => OrderItemResource::collection($this->items),
         ];

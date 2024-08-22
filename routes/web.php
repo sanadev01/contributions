@@ -52,8 +52,6 @@ Route::get('/', function (Shopify $shopifyClient) {
 });
 ini_set('memory_limit', '10000M');
 ini_set('memory_limit', '-1');
-Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
-Route::resource('us-calculator', USCalculatorController::class)->only(['index', 'store']);
 
 // Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
@@ -266,6 +264,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 });
 Route::middleware(['auth'])->group(function () {
+    Route::resource('us-calculator', USCalculatorController::class)->only(['index', 'store']);
+    Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
     Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
     Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
     Route::get('/auth', [ConnectionsController::class, 'getAuth']); 
@@ -282,7 +282,6 @@ Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->g
 });
 
 Route::get('media/get/{document}', function (App\Models\Document $document) {
-    ob_end_clean();
     if (! Storage::exists($document->getStoragePath())) {
         abort(404, 'Resource Not Found');
     }
@@ -300,7 +299,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
  
 Route::get('permission',function($id = null){
-    Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
+    Artisan::call('db:seed', ['--class'=>"PermissionSeeder",'--force' => true ]);
     return Artisan::output();
 });
 Route::get('session-refresh/{slug?}', function($slug = null){
@@ -329,18 +328,6 @@ Route::get('/cleanup-activity-log', function () {
         ->delete();
     
     return 'Removed ' . $rowsRemoved . ' rows from activity_log table older than ' . $yearAgo->format('Y-m-d') . '.';
-});
-
-Route::get('/service-id-update', function () {
-
-    $codes = [
-        'HD2282155927BR',
-    ];
-    $orderDate = Carbon::create(2024, 1, 23);
-    $updatedRows = Order::whereIn('warehouse_number', $codes)
-        ->update(['status' => 70, 'order_date' => $orderDate]);
-
-    return 'Status Updated';
 });
 
 Route::get('/download-name-list/{user_id}', function ($user_id) {

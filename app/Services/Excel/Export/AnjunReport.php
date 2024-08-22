@@ -31,9 +31,9 @@ class AnjunReport extends AbstractExportService
     private function prepareExcelSheet()
     {
 
-
-        $this->setExcelHeaderRow();
-
+       
+                $this->setExcelHeaderRow();
+        
         $row = $this->currentRow;
         foreach ($this->deliveryBills as $deliveryBill) {
             foreach ($deliveryBill->containers as $container) {
@@ -61,10 +61,10 @@ class AnjunReport extends AbstractExportService
 
         $this->currentRow = $row;
 
-        $this->setCellValue('H' . $row, "=SUM(H1:H{$row})");
-        $this->setCellValue('I' . $row, "=SUM(I1:I{$row})");
-        $this->setCellValue('J' . $row, "=SUM(J1:J{$row})");
-        $this->setBackgroundColor("A{$row}:L{$row}", 'adfb84');
+        $this->setCellValue('F'.$row, "=SUM(F1:F{$row})");
+        $this->setCellValue('G'.$row, "=SUM(G1:G{$row})");
+        $this->setCellValue('H'.$row, "=SUM(H1:H{$row})");
+        $this->setBackgroundColor("A{$row}:H{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()
@@ -80,58 +80,53 @@ class AnjunReport extends AbstractExportService
 
         $this->setColumnWidth('D', 20);
         $this->setCellValue('D1', 'Tracking Code');
-
+        
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Gross Weight');
+        $this->setCellValue('E1', 'Unit Code');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Service');
+        $this->setCellValue('F1', 'Amount Customers Paid');
 
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Unit Code');
+        $this->setCellValue('G1', 'Correios');
 
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Amount Customers Paid');
-
+        $this->setCellValue('H1', 'Anjun Commission');
+        
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Correios');
+        $this->setCellValue('I1', 'Status');
 
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', 'Anjun Commission');
+        $this->setCellValue('J1', 'DeliveryBill Date');
 
-        $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'Status');
-
-        $this->setColumnWidth('L', 20);
-        $this->setCellValue('L1', 'DeliveryBill Date');
-
-        $this->setBackgroundColor('A1:L1', '2b5cab');
-        $this->setColor('A1:L1', 'FFFFFF');
+        $this->setBackgroundColor('A1:J1', '2b5cab');
+        $this->setColor('A1:J1', 'FFFFFF');
 
         $this->currentRow++;
+
     }
 
     protected function getValuePaidToCorrieos(Order $order)
     {
         $commission = false;
         $service  = $order->shippingService->service_sub_class;
-        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'), $service);
+        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
 
-        if (!$rateSlab) {
+        if ( !$rateSlab ){
             return [
-                'airport' => 0,
-                'commission' => 0
+                'airport'=> 0,
+                'commission'=> 0
             ];
         }
-        if ($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express) {
+        if($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express){
             $commission = true;
         }
         if ($service == ShippingService::AJ_Express_CN || $service == ShippingService::AJ_Standard_CN) {
             $commission = true;
         }
         return [
-            'airport' => $rateSlab->cwb,
-            'commission' => $commission ? $rateSlab->commission : 0
+            'airport'=> $rateSlab->cwb,
+            'commission'=> $commission ? $rateSlab->commission : 0
         ];
     }
 }
