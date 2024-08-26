@@ -58,7 +58,7 @@ class DuplicateOrderRepository extends Model
 
         $this->makeRecipientCopy($order,$copy);
         $this->makeServicesCopy($order,$copy);
-        $this->makeItemsCopy($order,$copy);
+        // $this->makeItemsCopy($order,$copy);
         return $copy;
     }
     

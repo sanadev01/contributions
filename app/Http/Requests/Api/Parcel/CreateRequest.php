@@ -47,7 +47,7 @@ class CreateRequest extends FormRequest
             "parcel.service_id" => "bail|required|exists:shipping_services,id",
             "parcel.merchant" => "required",
             "parcel.carrier" => "required",
-            "parcel.tax_modality" => "in:ddu,ddp",
+            "parcel.tax_modality" => "in:ddu,DDU,ddp,DDP",
             'parcel.tracking_id' => 'required|max:22',
             'parcel.customer_reference' => 'required|max:22',
             "parcel.measurement_unit" => "required|in:kg/cm,lbs/in",
@@ -147,7 +147,7 @@ class CreateRequest extends FormRequest
         if ($shippingService && $shippingService->is_total_express) {
 
             $rules['products.*.description'] = 'required|max:60';
-            $rules['parcel.tax_modality'] = 'required|in:DDU,DDP';
+            $rules['parcel.tax_modality'] = 'required|in:ddu,DDU,ddp,DDP';
         }
 
         if ($request->recipient['country_id'] == 'UK' || $request->recipient['country_id'] == Country::UK) {
