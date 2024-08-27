@@ -30,6 +30,7 @@ use App\Http\Controllers\CustomsResponseController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\BillingInformation;
+use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 
 /*
@@ -408,4 +409,48 @@ Route::get('encrypt-billing-informaitons',function(){
     } 
     dd('Billing data encrypted successfully.');
  
-});   
+}); 
+
+Route::get('encrypt-user-information',function(){
+  
+    $users = User::all(); 
+    foreach ($users as $user){
+        if ($user->email &&  !is_null($user->email) && $user->email != ''  && !isEncrypted($user->email)) {
+            $user->email = encrypt($user->email);
+            dump(["email passed"=>$user->email]);
+        }else{
+            dump(['email fail',$user->email]);
+        }
+        if ($user->address&& !is_null($user->address) && $user->address != '' && !isEncrypted($user->address)) {
+            $user->address =encrypt($user->address);
+            dump(["address passed"=>$user->address]);
+        }else{
+            dump(['address fail'=>$user->address]);
+        }
+        
+        if ($user->name&& !is_null($user->name) && $user->name != '' && !isEncrypted($user->name)) {
+            $user->name =encrypt($user->name);
+            dump(["name passed"=>$user->name]);
+        }else{
+            dump(['name fail'=>$user->name]);
+        }
+
+        if ($user->phone&& !is_null($user->phone) && $user->phone != '' && !isEncrypted($user->phone)) {
+            $user->phone =encrypt($user->phone);
+            dump(["phone passed"=>$user->phone]);
+        }else{
+            dump(['phone fail'=>$user->phone]);
+        }
+
+        
+        if ($user->last_name&& !is_null($user->last_name) && $user->last_name != '' && !isEncrypted($user->last_name)) {
+            $user->last_name =encrypt($user->last_name);
+            dump(["last_name passed"=>$user->last_name]);
+        }else{
+            dump(['last_name fail'=>$user->last_name]);
+        }
+        $user->save();
+    } 
+    dd('User data encrypted successfully.');
+ 
+}); 
