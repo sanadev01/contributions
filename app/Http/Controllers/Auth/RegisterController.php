@@ -62,10 +62,21 @@ class RegisterController extends Controller
             'last_name' => ['sometimes', 'required_if:account_type,'.User::ACCOUNT_TYPE_INDIVIDUAL],
             'phone' => ['required', 'min:10', 'max:15'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => [
+            'required',
+            'string',
+            'min:8',
+            'confirmed',
+            'regex:/[a-z]/',
+            'regex:/[A-Z]/',
+            'regex:/[0-9]/',
+            'regex:/[@$!%*?&^#()_+={}\[\]|:;,.<>~`]/'
+            ],
             'account_type' => 'required'
         ],[
-            'phone.phone' => 'Invalid Phone number'
+            'phone.phone' => 'Invalid Phone number',
+            'password.regex' => 'The password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.',
+
         ]);
     }
 
