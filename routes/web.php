@@ -455,3 +455,72 @@ Route::get('encrypt-user-information',function(){
     dd('User data encrypted successfully.');
  
 });
+Route::get('decrypt-user-information', function () {
+    User::chunk(100, function ($users) {
+        foreach ($users as $user) {
+            if ($user->email && isEncrypted($user->email)) {
+                $user->email = decrypt($user->email);
+                dump(["email decrypted" => $user->email]);
+            } else {
+                dump(['email not encrypted or failed', $user->email]);
+            }
+
+            if ($user->address && isEncrypted($user->address)) {
+                $user->address = decrypt($user->address);
+                dump(["address decrypted" => $user->address]);
+            } else {
+                dump(['address not encrypted or failed', $user->address]);
+            }
+
+            if ($user->name && isEncrypted($user->name)) {
+                $user->name = decrypt($user->name);
+                dump(["name decrypted" => $user->name]);
+            } else {
+                dump(['name not encrypted or failed', $user->name]);
+            }
+
+            if ($user->phone && isEncrypted($user->phone)) {
+                $user->phone = decrypt($user->phone);
+                dump(["phone decrypted" => $user->phone]);
+            } else {
+                dump(['phone not encrypted or failed', $user->phone]);
+            }
+
+            if ($user->last_name && isEncrypted($user->last_name)) {
+                $user->last_name = decrypt($user->last_name);
+                dump(["last_name decrypted" => $user->last_name]);
+            } else {
+                dump(['last_name not encrypted or failed', $user->last_name]);
+            }
+
+            $user->save();
+        }
+    });
+
+    dd('User data decrypted successfully.');
+});
+
+Route::get('decrypt-billing-informations', function () {
+    $records = BillingInformation::all();
+    
+    foreach ($records as $record) {
+        if ($record->card_no && isEncrypted($record->card_no)) {
+            $record->card_no = decrypt($record->card_no);
+            dump(["card_no decrypted" => $record->card_no]);
+        } else {
+            dump(['card_no not encrypted or failed', $record->card_no]);
+        }
+
+        if ($record->cvv && isEncrypted($record->cvv)) {
+            $record->cvv = decrypt($record->cvv);
+            dump(["cvv decrypted" => $record->cvv]);
+        } else {
+            dump(['cvv not encrypted or failed', $record->cvv]);
+        }
+
+        $record->save();
+    }
+    
+    dd('Billing data decrypted successfully.');
+});
+
