@@ -11,9 +11,18 @@ class BillingInformation extends Model
     protected static $logAttributes = ['*'];
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
-    
-    protected $fillable = [
-        'user_id', 'first_name', 'last_name', 'card_no', 'expiration', 'cvv', 'phone', 'address', 'state', 'zipcode', 'country'
-    ];
 
+    protected $fillable = [
+        'user_id',
+        'first_name',
+        'last_name',
+        'card_no',
+        'expiration',
+        'cvv',
+        'phone',
+        'address',
+        'state',
+        'zipcode',
+        'country'
+    ];
 }

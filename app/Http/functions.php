@@ -12,6 +12,7 @@ use App\Models\ZoneRate;
 use App\Models\ShippingService;
 use App\Mail\User\PurchaseInsurance;
 use App\Services\Calculators\AbstractRateCalculator;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 
@@ -585,4 +586,12 @@ function maskWithStarsMid($value)
         return ($length <= 2) ? $value : substr($value, 0, 1) . '******' . substr($value, -1);
     }
     return substr($value, 0, 3) . '******' . substr($value, -3);
+}
+function isEncrypted($value) {
+    try {
+        decrypt($value);
+        return true;
+    } catch (DecryptException $e) {
+        return false;
+    }
 }
