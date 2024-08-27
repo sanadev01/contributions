@@ -413,8 +413,8 @@ Route::get('encrypt-billing-informaitons',function(){
 
 Route::get('encrypt-user-information',function(){
   
-    $users = User::all(); 
-    foreach ($users as $user){
+    User::chunk(100, function ($users) {
+        foreach ($users as $user) {
         if ($user->email &&  !is_null($user->email) && $user->email != ''  && !isEncrypted($user->email)) {
             $user->email = encrypt($user->email);
             dump(["email passed"=>$user->email]);
@@ -451,6 +451,7 @@ Route::get('encrypt-user-information',function(){
         }
         $user->save();
     } 
+}); 
     dd('User data encrypted successfully.');
  
-}); 
+});
