@@ -83,7 +83,7 @@
                     </th>
 
                     <th>
-                        ${{ number_foramt($rate->gru, 2) }}
+                        ${{ number_format($rate->gru, 2) }}
                     </th>
                     @if ($anjunService||$anjunChinaService)
                         <th>
