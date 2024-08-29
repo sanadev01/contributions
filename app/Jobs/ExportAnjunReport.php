@@ -13,8 +13,6 @@ use App\Repositories\Reports\AnjunReportsRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-
-use Illuminate\Support\Facades\Log;
 class ExportAnjunReport 
 // implements ShouldQueue
 {
