@@ -14,6 +14,7 @@ use App\Repositories\OrderRepository;
 use App\Http\Requests\Orders\OrderDetails\CreateRequest;
 use App\Models\ShCode;
 use App\Models\User;
+use App\Services\PasarEx\GetZipcodeZone;
 
 class OrderItemsController extends Controller
 {
@@ -247,6 +248,27 @@ class OrderItemsController extends Controller
             ];
         }
 
+        
+    }
+
+    public function pasarExColombiaRates(Request $request)
+    {
+        $order = Order::find($request['order_id']);
+        $service = ShippingService::where('service_sub_class', $request['service'])->first();
+
+        $zoneId = (new GetZipcodeZone($order->recipient->zipcode))->getZipcodeZone();
+        $rate = getZoneRate($order, $service, $zoneId);
+        if ($rate > 0){
+            return (array)[
+                'success' => true,
+                'total_amount' => $rate,
+            ];
+        } else {
+            return (array)[
+                'success' => false,
+                'error' => 'server error occured while fetching rates',
+            ];
+        }
         
     }
 }

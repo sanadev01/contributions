@@ -17,6 +17,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use App\Services\Correios\Contracts\Package;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
+use App\Services\PasarEx\GetZipcodeZone;
 use App\Services\Correios\Models\Package as ModelsPackage;
 use Exception;
 use Illuminate\Support\Facades\Crypt;
@@ -345,7 +346,81 @@ class Order extends Model implements Package
 
     public function carrierService()
     {
-        return  $this->shippingService ? $this->shippingService->carrier_service : "null";
+        if ($this->shippingService()) {
+            if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY ||
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY_INTERNATIONAL ||
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS_INTERNATIONAL ||
+                optional($this->shippingService)->service_sub_class == ShippingService::USPS_GROUND ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GDE_PRIORITY_MAIL ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GDE_FIRST_CLASS ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_PMI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ||
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_CEP) {
+
+                return 'USPS';
+
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::UPS_GROUND){
+
+                return 'UPS';
+
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::FEDEX_GROUND){
+
+                return 'FEDEX';
+
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::SRP || optional($this->shippingService)->service_sub_class == ShippingService::SRM){
+
+                return 'Correios Chile';
+
+            }elseif(optional($this->shippingService)->service_sub_class == ShippingService::GePS || optional($this->shippingService)->service_sub_class == ShippingService::GePS_EFormat || optional($this->shippingService)->service_sub_class == ShippingService::Parcel_Post){
+
+                return 'Global eParcel';
+
+            }
+            elseif(in_array(optional($this->shippingService)->service_sub_class,[ShippingService::Prime5,ShippingService::Prime5RIO,ShippingService::DirectLinkCanada,ShippingService::DirectLinkMexico,ShippingService::DirectLinkChile,ShippingService::DirectLinkAustralia])){
+                return 'Prime5';
+
+            }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Registered || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_EMS || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Prime || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_Premium || optional($this->shippingService)->service_sub_class == ShippingService::LT_PRIME || optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_LT_Premium ||  optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_CO_EMS ||  optional($this->shippingService)->service_sub_class == ShippingService::Post_Plus_CO_REG){
+
+                return 'PostPlus';
+
+            }
+            elseif(optional($this->shippingService)->is_anjun_china_service_sub_class){
+                return 'Correios Brazil';
+            }
+            elseif(optional($this->shippingService)->isAnjunService()){
+                return 'Correios Brazil';
+            }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS || optional($this->shippingService)->service_sub_class == ShippingService::TOTAL_EXPRESS_10KG){
+
+                return 'Total Express';
+
+            }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::HD_Express){
+                return 'HD Express';
+            }
+            elseif(optional($this->shippingService)->is_bcn_service){
+                return 'Correios Brazil';
+            }
+            elseif(optional($this->shippingService)->is_hound_express){
+
+                return 'MEXICO Hound Express';
+            }
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::DSS_SENEGAL){
+                return 'DSS Senegal';
+            }
+            elseif(optional($this->shippingService)->is_pasar_ex){
+
+                return 'PasarEx';
+            }
+            return 'Correios Brazil';
+        }
+
+        return null;
     }
 
     public function carrierCost()
@@ -457,6 +532,7 @@ class Order extends Model implements Package
         }
         return ($api?'TM':'HD')."{$tempWhr}".(optional($this->recipient)->country->code??"BR");
     }
+  
 
 
     public function doCalculations($onVolumetricWeight = true, $isServices = false)
@@ -468,6 +544,9 @@ class Order extends Model implements Package
             $this->calculateProfit($shippingCost, $shippingService);
         }elseif ($shippingService && $shippingService->isGSSService()) {
             $this->calculateGSSProfit($shippingService);
+            $shippingCost = $this->user_declared_freight;
+        }elseif ($shippingService && $shippingService->is_pasarex) {
+            $this->getPasarexColombiaRate($shippingService);
             $shippingCost = $this->user_declared_freight;
         }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
@@ -985,6 +1064,21 @@ class Order extends Model implements Package
                 }
         }
         return $fee;
+    }
+
+    public function getPasarexColombiaRate($shippingService)
+    {
+        $zoneId = (new GetZipcodeZone($this->recipient->zipcode))->getZipcodeZone();
+        $rate = getZoneRate($this, $shippingService, $zoneId);
+        
+        if($rate > 0) {
+            $this->update([
+                'user_declared_freight' => $rate,
+            ]);
+            $this->user_declared_freight = $rate;
+            return true;
+        } 
+        return false;
     }
 
 }

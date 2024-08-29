@@ -27,6 +27,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Events\AutoChargeAmountEvent;
+use App\Repositories\PasarExLabelRepository;
 use App\Repositories\SenegalLabelRepository;
 
 class OrderLabelController extends Controller
@@ -205,6 +206,16 @@ class OrderLabelController extends Controller
                     return $this->rollback($error);
                 }
             }
+
+            if ($order->shippingService->is_pasarex) {
+                $pasarexLabelRepository = new PasarExLabelRepository();
+                $pasarexLabelRepository->run($order, false);
+                $error = $pasarexLabelRepository->getError();
+                if ($error) {
+                    return $this->rollback($error);
+                }
+            }
+
             return $this->commit($order);
         } catch (Exception $e) {
             return $this->rollback($e->getMessage());

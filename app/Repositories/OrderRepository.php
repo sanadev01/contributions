@@ -14,6 +14,7 @@ use App\Services\GSS\GSSShippingService;
 use App\Services\USPS\USPSShippingService;
 use App\Services\FedEx\FedExShippingService;
 use App\Services\GePS\GePSShippingService;
+use App\Services\PasarEx\PasarExShippingService;
 use App\Services\Calculators\WeightCalculator;
 use App\Models\User;
 
@@ -192,6 +193,11 @@ class OrderRepository
             if($request->carrier == 'HD Express'){
                 $service = [
                     ShippingService::HD_Express
+                ];
+            }
+            if($request->carrier == 'PasarEx'){
+                $service = [
+                    ShippingService::PasarEx
                 ];
             }
             if($request->carrier == 'Correios AJ'){
@@ -758,6 +764,14 @@ class OrderRepository
             
             if($shippingServices->isEmpty()){
                 $this->shippingServiceError = 'Please check your parcel dimensions';
+            }
+        }
+
+        if ($order->recipient->country_id == Order::COLOMBIA) {
+            $colombiaShippingService = ShippingService::where('service_sub_class', ShippingService::PasarEx)->first();
+            
+            if ($colombiaShippingService) {
+                $shippingServices->push($colombiaShippingService);
             }
         }
             
