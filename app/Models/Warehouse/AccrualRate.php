@@ -120,7 +120,7 @@ class AccrualRate extends Model
         return (ShippingService::where('service_sub_class',$this->service)->first())->name??'';
     }
 
-    public static function getRateSlabFor($weight, $service  = null): ?AccrualRate
+    public static function getRateSlabFor($weight, $service  = null)
     {
         if($weight < 0.1){
             $weight = 0.1;
