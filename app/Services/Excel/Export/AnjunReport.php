@@ -85,7 +85,7 @@ class AnjunReport extends AbstractExportService
         $this->setColumnWidth('F', 20);
         $this->setCellValue('F1', 'Correios');
 
-        $this->setColumnWidth('G', 20);
+        $this->setColumnWidth('G', 30);
         $this->setCellValue('G1', 'Unit Code');
 
         $this->setColumnWidth('H', 20);
