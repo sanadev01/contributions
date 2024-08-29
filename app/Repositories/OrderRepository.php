@@ -47,6 +47,17 @@ class OrderRepository
         {
             $query->where('sender_country_id', Country::US);
         }
+        if($request->taxAndDutyOnly)
+        {
+            $query->where('tax_and_duty','!=',0);
+        }
+       
+        $query->when($request->tax_and_duty,function($query,$tax){
+            return $query->where('tax_and_duty',  'LIKE', "%{$tax}%");
+        })->when($request->fee_for_tax_and_duty,function($query,$feeTax){
+            return $query->where('fee_for_tax_and_duty',  'LIKE', "%{$feeTax}%");
+        });
+        
 
         if ($request->userType == 'pickups') {
             $query->where('api_pickup_response' , '!=', null);
@@ -676,8 +687,7 @@ class OrderRepository
             || $shippingServices->contains('service_sub_class', ShippingService::Japan_EMS)
             || $shippingServices->contains('service_sub_class', ShippingService::GSS_CEP)
             || $shippingServices->contains('service_sub_class', ShippingService::TOTAL_EXPRESS_10KG)
-            || $shippingServices->contains('service_sub_class', ShippingService::DSS_SENEGAL)
-            || $shippingServices->contains('service_sub_class', ShippingService::PasarEx))
+            || $shippingServices->contains('service_sub_class', ShippingService::DSS_SENEGAL))
         {
             if(!setting('usps', null, User::ROLE_ADMIN))
             {

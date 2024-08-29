@@ -1,4 +1,9 @@
 <nav class="{{ $navbarClass }}">
+    <div class="row col-md-3">
+        <span class="btn" data-toggle="modal" data-target="#popupModal">
+            <span class="text-danger font-weight-bold font-medium-2">Disclaimer</span> <i class="fa fa-info" aria-hidden="true"></i>
+        </span>
+    </div>
     <div class="navbar-header d-xl-block d-none">
         <ul class="nav navbar-nav flex-row">
             <li class="nav-item">
@@ -38,3 +43,37 @@
         </div>
     </div>
 </nav>
+<!-- The Modal -->
+<div class="modal" id="popupModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #EA5455;">
+                <h5 class="modal-title text-white">Disclaimer</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>Amount included</strong> (DDP - Delivered Duty Paid)
+                    Sender of the package pays for <strong>import taxes and duties</strong>.
+                    Import tax and duty charges will be included in the <strong>Total Charge.</strong>
+                </p>
+                <p>
+                    If customs determines that the actual value of the goods in the package is higher than declared,
+                    <strong>import tax and duty charges</strong> will increase.
+                </p>
+                <p>
+                    <strong>Amount to be paid by receiver</strong> (DDU- Delivered Duty Unpaid)
+                    Receiver will have to pay indicated amount for <strong>import taxes and duties</strong>.
+                    In addition, a courier-specific handling fee may apply.
+                </p>
+                <p>
+                    The risk is that the receiver may reject the package if he/she is unhappy with
+                    <strong>import taxes and duties charges.</strong>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

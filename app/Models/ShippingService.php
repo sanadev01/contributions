@@ -34,7 +34,7 @@ class ShippingService extends Model
     const Packet_Mini = 33197;
     const AJ_Standard_CN = 34166;
     const AJ_Express_CN = 33174;
-
+    
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
     const BCN_Packet_Standard = 44164;
@@ -100,6 +100,8 @@ class ShippingService extends Model
     {
         $serviceSubClass = $this->service_sub_class;
         $serviceMapping = [
+            ShippingService::AJ_Standard_CN => 'Packet Standard',
+            ShippingService::BCN_Packet_Standard => 'Packet Standard',
             ShippingService::AJ_Packet_Standard => 'Packet Standard',
             ShippingService::AJ_Packet_Express => 'Packet Express', 
             ShippingService::AJ_Standard_CN => 'Packet Standard AJ',
@@ -511,6 +513,67 @@ class ShippingService extends Model
             ]
         );
     }
+
+    public function getCarrierServiceAttribute()
+    {
+        $serviceSubClass = $this->service_sub_class;
+
+        $serviceMap = [
+            ShippingService::USPS_PRIORITY => 'USPS',
+            ShippingService::USPS_FIRSTCLASS => 'USPS',
+            ShippingService::USPS_PRIORITY_INTERNATIONAL => 'USPS',
+            ShippingService::USPS_FIRSTCLASS_INTERNATIONAL => 'USPS',
+            ShippingService::USPS_GROUND => 'USPS',
+            ShippingService::GDE_PRIORITY_MAIL => 'USPS',
+            ShippingService::GDE_FIRST_CLASS => 'USPS',
+            ShippingService::GSS_PMI => 'USPS',
+            ShippingService::GSS_EPMEI => 'USPS',
+            ShippingService::GSS_EPMI => 'USPS',
+            ShippingService::GSS_FCM => 'USPS',
+            ShippingService::GSS_EMS => 'USPS',
+            ShippingService::GSS_CEP => 'USPS',
+            ShippingService::UPS_GROUND => 'UPS',
+            ShippingService::FEDEX_GROUND => 'FEDEX',
+            ShippingService::SRP => 'Correios Chile',
+            ShippingService::SRM => 'Correios Chile',
+            ShippingService::GePS => 'Global eParcel',
+            ShippingService::GePS_EFormat => 'Global eParcel',
+            ShippingService::Parcel_Post => 'Global eParcel',
+            ShippingService::Prime5 => 'Prime5',
+            ShippingService::Prime5RIO => 'Prime5',
+            ShippingService::DirectLinkCanada => 'Prime5',
+            ShippingService::DirectLinkMexico => 'Prime5',
+            ShippingService::DirectLinkChile => 'Prime5',
+            ShippingService::DirectLinkAustralia => 'Prime5',
+            ShippingService::Post_Plus_Registered => 'PostPlus',
+            ShippingService::Post_Plus_EMS => 'PostPlus',
+            ShippingService::Post_Plus_Prime => 'PostPlus',
+            ShippingService::Post_Plus_Premium => 'PostPlus',
+            ShippingService::LT_PRIME => 'PostPlus',
+            ShippingService::Post_Plus_LT_Premium => 'PostPlus',
+            ShippingService::Post_Plus_CO_EMS => 'PostPlus',
+            ShippingService::Post_Plus_CO_REG => 'PostPlus',
+            ShippingService::TOTAL_EXPRESS => 'Total Express',
+            ShippingService::TOTAL_EXPRESS_10KG =>'Total Express',
+            ShippingService::HD_Express =>'HD Express',
+            ShippingService::DSS_SENEGAL=>'DSS Senegal',
+        ];
+
+        if (array_key_exists($serviceSubClass, $serviceMap)) {
+            return $serviceMap[$serviceSubClass];
+        } else {
+            if ($this->is_anjun_china_service_sub_class || $this->isAnjunService() || $this->is_bcn_service) {
+                return 'Correios Brazil';
+            } elseif ($this->is_hound_express) {
+                return 'MEXICO Hound Express';
+            }
+            return 'Correios Brazil';
+        }
+    }
+    function orders() {
+        return $this->hasMany(Order::class);
+    }
+
     function getIsPasarExAttribute()
     {
         return $this->service_sub_class == self::PasarEx;

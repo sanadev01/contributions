@@ -13,7 +13,7 @@ use App\Repositories\Reports\AnjunReportsRepository;
 use App\Services\Excel\Export\AnjunChinaReport;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\Log;
+
 class ExportAnjunReport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -26,7 +26,7 @@ class ExportAnjunReport implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(array $request, $user)
+    public function __construct($request, $user)
     {
         set_time_limit(120);
         $this->user = $user;
@@ -44,14 +44,9 @@ class ExportAnjunReport implements ShouldQueue
         try {
             $request = new Request($this->request);
             $id = $this->user->id;
-            if($request->type=="anjun_china"){
-                $containers = $this->reportRepository->getAnjunChinaContainersReport($request);
-                $exportService = new AnjunChinaReport($containers, $id);
-            }
-            else{ 
+             
                 $deliveryBills = $this->reportRepository->getAnjunReport($request, $this->user);
-                $exportService = new AnjunReport($deliveryBills, $id);
-            }
+                $exportService = new AnjunReport($deliveryBills, $id); 
             $url = $exportService->handle();
             
             if ($url) {

@@ -40,12 +40,12 @@ class OrderItemsController extends Controller
         $usCountryId =  Order::US;
         $shippingServices = $this->orderRepository->getShippingServices($order);
         $error = $this->orderRepository->getShippingServicesError();
-
+        $uspsService = [ShippingService::GSS_PMI,ShippingService::GSS_EPMEI,ShippingService::GSS_EPMI,ShippingService::GSS_FCM,ShippingService::GSS_EMS,ShippingService::GSS_CEP,ShippingService::USPS_PRIORITY, ShippingService::USPS_FIRSTCLASS, ShippingService::USPS_PRIORITY_INTERNATIONAL, ShippingService::USPS_FIRSTCLASS_INTERNATIONAL, ShippingService::USPS_GROUND, ShippingService::GDE_PRIORITY_MAIL, ShippingService::GDE_FIRST_CLASS];
         if ($error) {
             session()->flash($error);
         }
         
-        return view('admin.orders.order-details.index',compact('order','shippingServices', 'error','chileCountryId', 'usCountryId'));
+        return view('admin.orders.order-details.index',compact('uspsService','order','shippingServices', 'error','chileCountryId', 'usCountryId'));
     }
 
     /**
@@ -258,7 +258,6 @@ class OrderItemsController extends Controller
 
         $zoneId = (new GetZipcodeZone($order->recipient->zipcode))->getZipcodeZone();
         $rate = getZoneRate($order, $service, $zoneId);
-
         if ($rate > 0){
             return (array)[
                 'success' => true,

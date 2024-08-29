@@ -15,7 +15,7 @@
                         @can('create', App\Models\Rate::class)
                         <div class="row col-md-6">
                             <div class="ml-auto">
-                                <a href="{{ route('admin.rates.zone-profit.index') }}" class="pull-right btn btn-primary ml-2">
+                                <a href="{{ url()->previous() }}" class="pull-right btn btn-primary ml-2">
                                     @lang('shipping-rates.Return to List')
                                 </a>
                                 <a href="{{ route('admin.rates.downloadZoneProfit', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" class="pull-right btn btn-success">

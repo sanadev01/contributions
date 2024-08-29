@@ -40,6 +40,8 @@ class Package implements \App\Services\Correios\Contracts\Package
     const SERVICE_CLASS_Hound_Express = ShippingService::HoundExpress;
     const SERVICE_CLASS_TOTAL_EXPRESS_10KG = ShippingService::TOTAL_EXPRESS_10KG;
     const SERVICE_CLASS_DSS_SENEGAL = ShippingService::DSS_SENEGAL;
+    const SERVICE_CLASS_AJ_Express_CN = ShippingService::AJ_Express_CN;
+    const SERVICE_CLASS_AJ_Standard_CN = ShippingService::AJ_Standard_CN;
 
     public $customerControlCode = "";
     public $senderName = "HERCO";

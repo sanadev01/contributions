@@ -251,12 +251,21 @@
                     @endcan
 
                     @can('viewAny', App\Models\Rate::class)
-                    <li class="{{ $isActive(['admin.rates.zone-profit.index']) }}">
-                        <a href="{{ route('admin.rates.zone-profit.index') }}">
+                    <li class="nav-item has-sub {{ request()->is('admin/rates/zone-profit*') && request()->query('service') ? 'active new-active' : '' }}">
+                        <a href="#">
                             <i class="icon_adjst feather icon-circle"></i>
                             <span class="menu-title">Zone Profits</span>
                         </a>
+                        <ul class="menu-content">
+                            <li class="{{ request()->query('service') === 'usps' ? 'active new-active' : '' }}">
+                                <a href="{{ route('admin.rates.zone-profit.index', ['service' => 'usps']) }}">USPS</a>
+                            </li>
+                            <li class="{{ request()->query('service') === 'pasarex' ? 'active new-active' : '' }}">
+                                <a href="{{ route('admin.rates.zone-profit.index', ['service' => 'pasarex']) }}">PasarEx</a>
+                            </li>
+                        </ul>
                     </li>
+                    
                     @endcan
 
                 </ul>
@@ -290,13 +299,13 @@
                 </a>
                 <ul class="menu-content">
                     <li class="nav-item {{ $isActive(['calculator.index']) }} ml-2">
-                        <a class="nav-link" href="{{ route('calculator.index') }}" target="_blank">
+                        <a class="nav-link" href="{{ route('calculator.index') }}">
                             <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
                             <span data-i18n="Apps">@lang('menu.calculator')</span>
                         </a>
                     </li>
                     <li class="nav-item {{ $isActive(['us-calculator.index']) }} ml-2">
-                        <a class="nav-link" href="{{ route('us-calculator.index') }}" target="_blank">
+                        <a class="nav-link" href="{{ route('us-calculator.index') }}">
                             <img src="{{ asset('images/icon/calculator.svg') }}" alt="Calculator">
                             <span data-i18n="Apps">@lang('menu.uscalculator')</span>
                         </a>
@@ -364,6 +373,15 @@
                         <a href="{{ route('admin.reports.kpi-report.index',['type' => 'scan']) }}">
                             <i class="icon_adjst feather icon-circle"></i>
                             <span class="menu-title">@lang('menu.Reports.Tax Report Scan')</span>
+                        </a>
+                    </li>
+                    @endcan
+                    
+                    @can('viewTaxAndDutyReport', App\Models\Reports::class)
+                    <li class="@if(request('type')=='accrual') active @endif">
+                        <a href="{{ route('admin.reports.kpi-report.index',['type' => 'accrual']) }}">
+                            <i class="icon_adjst feather icon-circle"></i>
+                            <span class="menu-title">@lang('menu.Reports.Tax Report Accrual')</span>
                         </a>
                     </li>
                     @endcan
