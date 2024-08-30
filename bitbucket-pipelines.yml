@@ -9,38 +9,42 @@ pipelines:
           script:
             - pipe: atlassian/ssh-run:0.3.0
               variables:
-                SSH_USER: 'homeqdba'
-                SERVER: '162.0.229.211'
-                MODE: 'script' # Optional
-                PORT: '21098' # Optional
-                COMMAND: 'deploy-staging.sh'
+                  SSH_USER: 'homeqdba'
+                  SERVER: '162.0.229.211'
+                  MODE: 'script'
+                  PORT: '21098'
+                  COMMAND: 'deploy-staging.sh'
     master:
       - step:
-          name: 'Clone Repository and SonarCloud Scan'
+          name: 'SonarCloud Scan'
+          caches:
+            - sonar
           script:
-            - pipe: sonarsource/sonarcloud-scan:2.0.0
-              variables:
-                SONAR_TOKEN: ${SONAR_TOKEN}
-                SONAR_SCANNER_OPTS: "-X -Dsonar.verbose=true"
-                SONAR_PROJECT_KEY: "ikonicsolution_hd-v2"
-                SONAR_ORGANIZATION: "herco"
+            - apt-get update && apt-get install -y openjdk-11-jdk wget
+            - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
+            - unzip sonar-scanner-cli-4.7.0.2747-linux.zip
+            - export PATH="$PATH:$PWD/sonar-scanner-4.7.0.2747-linux/bin"
+            - sonar-scanner \
+                -Dsonar.organization=herco \
+                -Dsonar.projectKey=ikonicsolution_hd-v2 \
+                -Dsonar.sources=. \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.login=${SONAR_TOKEN}
             - pipe: sonarsource/sonarcloud-quality-gate:0.1.6
-              variables:
-                SONAR_TOKEN: ${SONAR_TOKEN}  # Required to check the quality gate status
       - step:
           name: 'Deployment to Production'
           deployment: production
           script:
             - pipe: atlassian/ssh-run:0.3.0
               variables:
-                SSH_USER: 'homeqdba'
-                SERVER: '164.90.255.76'
-                MODE: 'script' # Optional
-                COMMAND: 'deploy-production.sh'
-
-clone:
-  depth: full    # SonarCloud scanner needs the full history to assign issues properly
+                  SSH_USER: 'homeqdba'
+                  SERVER: '164.90.255.76'
+                  MODE: 'script'
+                  COMMAND: 'deploy-production.sh'
 
 definitions:
   caches:
     sonar: ~/.sonar/cache
+
+clone:
+  depth: full
