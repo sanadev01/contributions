@@ -2,7 +2,7 @@
 # Use a skeleton to build, test and deploy using manual and parallel steps
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: atlassian/default-image:2
+image: maven:3.6.3  # Use the Maven image for the build step
 
 pipelines:
   branches:
@@ -13,12 +13,18 @@ pipelines:
           script:
             - pipe: atlassian/ssh-run:0.3.0
               variables:
-                  SSH_USER: 'homeqdba'
-                  SERVER: '162.0.229.211'
-                  MODE: 'script' # Optional
-                  PORT: '21098' # Optional
-                  COMMAND: 'deploy-staging.sh'
+                SSH_USER: 'homeqdba'
+                SERVER: '162.0.229.211'
+                MODE: 'script' # Optional
+                PORT: '21098' # Optional
+                COMMAND: 'deploy-staging.sh'
     master:
+      - step:
+          name: 'Build and Test'
+          caches:
+            - maven
+          script:
+            - mvn clean install  # Build the project using Maven
       - step:
           name: 'SonarCloud Scan'
           caches:
@@ -28,8 +34,8 @@ pipelines:
               variables:
                 SONAR_TOKEN: ${SONAR_TOKEN}
                 SONAR_SCANNER_OPTS: "-X -Dsonar.verbose=true"
-                SONAR_PROJECT_KEY: "ikonicsolution_hd-v2" 
-                SONAR_ORGANIZATION: "herco" 
+                SONAR_PROJECT_KEY: "ikonicsolution_hd-v2"
+                SONAR_ORGANIZATION: "herco"
             - pipe: sonarsource/sonarcloud-quality-gate:0.1.6
       - step:
           name: 'Deployment to Production'
@@ -37,15 +43,16 @@ pipelines:
           script:
             - pipe: atlassian/ssh-run:0.3.0
               variables:
-                  SSH_USER: 'homeqdba'
-                  SERVER: '164.90.255.76'
-                  MODE: 'script'
-                  COMMAND: 'deploy-production.sh'
+                SSH_USER: 'homeqdba'
+                SERVER: '164.90.255.76'
+                MODE: 'script'
+                COMMAND: 'deploy-production.sh'
 
 definitions:
   caches:
     sonar: ~/.sonar/cache
+    maven: ~/.m2/repository  # Cache Maven dependencies
 
 clone:
-  depth: full 
+  depth: full
 
