@@ -23,6 +23,7 @@ class CN35LabelMaker implements HasLableExport
     private $service;
     private $unitCode;
     private $OrderWeight;
+    private $containerGroup;
 
     public function __construct(Container $container)
     {
