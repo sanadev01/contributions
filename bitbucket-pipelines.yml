@@ -20,11 +20,14 @@ pipelines:
                   COMMAND: 'deploy-staging.sh'
     master:
       - step:
-          name: 'Clone Repository and SonarCloud Scan'
+          name: 'SonarCloud Scan'
+          caches:
+            - sonar
           script:
             - pipe: sonarsource/sonarcloud-scan:2.0.0
               variables:
-                SONAR_SCANNER_OPTS: '-X'  # Enable full debug logging
+                SONAR_TOKEN: $SONAR_TOKEN
+                SONAR_SCANNER_OPTS: "-X -Dsonar.verbose=true"
             - pipe: sonarsource/sonarcloud-quality-gate:0.1.6
       - step:
           name: 'Deployment to Production'
@@ -34,8 +37,12 @@ pipelines:
               variables:
                   SSH_USER: 'homeqdba'
                   SERVER: '164.90.255.76'
-                  MODE: 'script' # Optional
+                  MODE: 'script'
                   COMMAND: 'deploy-production.sh'
 
+definitions:
+  caches:
+    sonar: ~/.sonar/cache
+
 clone:
-  depth: full  
+  depth: full 
