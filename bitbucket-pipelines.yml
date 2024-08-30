@@ -26,7 +26,7 @@ pipelines:
           script:
             - pipe: sonarsource/sonarcloud-scan:2.0.0
               variables:
-                SONAR_TOKEN: $SONAR_TOKEN
+                SONAR_TOKEN: ${SONAR_TOKEN}
                 SONAR_SCANNER_OPTS: "-X -Dsonar.verbose=true"
                 SONAR_PROJECT_KEY: "ikonicsolution_hd-v2" 
                 SONAR_ORGANIZATION: "herco" 
