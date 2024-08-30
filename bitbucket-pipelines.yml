@@ -23,6 +23,8 @@ pipelines:
           name: 'Clone Repository and SonarCloud Scan'
           script:
             - pipe: sonarsource/sonarcloud-scan:2.0.0
+              variables:
+                SONAR_SCANNER_OPTS: '-X'  # Enable full debug logging
             - pipe: sonarsource/sonarcloud-quality-gate:0.1.6
       - step:
           name: 'Deployment to Production'
@@ -36,4 +38,4 @@ pipelines:
                   COMMAND: 'deploy-production.sh'
 
 clone:
-  depth: full 
+  depth: full  
