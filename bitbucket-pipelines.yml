@@ -20,6 +20,11 @@ pipelines:
                   COMMAND: 'deploy-staging.sh'
     master:
       - step:
+          name: 'Clone Repository and SonarCloud Scan'
+          script:
+            - pipe: sonarsource/sonarcloud-scan:2.0.0
+            - pipe: sonarsource/sonarcloud-quality-gate:0.1.6
+      - step:
           name: 'Deployment to Production'
           deployment: production
           script:
@@ -29,3 +34,6 @@ pipelines:
                   SERVER: '164.90.255.76'
                   MODE: 'script' # Optional
                   COMMAND: 'deploy-production.sh'
+
+clone:
+  depth: full 
