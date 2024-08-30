@@ -18,31 +18,34 @@ pipelines:
                   MODE: 'script' # Optional
                   PORT: '21098' # Optional
                   COMMAND: 'deploy-staging.sh'
-    master:
-      - step:
-          name: 'SonarCloud Scan'
-          caches:
-            - sonar
-          script:
-            - pipe: sonarsource/sonarcloud-scan:2.0.0
-              variables:
-                SONAR_TOKEN: $SONAR_TOKEN
-                SONAR_SCANNER_OPTS: "-X -Dsonar.verbose=true"
-            - pipe: sonarsource/sonarcloud-quality-gate:0.1.6
-      - step:
-          name: 'Deployment to Production'
-          deployment: production
-          script:
-            - pipe: atlassian/ssh-run:0.3.0
-              variables:
-                  SSH_USER: 'homeqdba'
-                  SERVER: '164.90.255.76'
-                  MODE: 'script'
-                  COMMAND: 'deploy-production.sh'
+pipelines:
+  master:
+    - step:
+        name: 'SonarCloud Scan'
+        caches:
+          - sonar
+        script:
+          - pipe: sonarsource/sonarcloud-scan:2.0.0
+            variables:
+              SONAR_TOKEN: $SONAR_TOKEN
+              SONAR_PROJECT_KEY: "ikonicsolution_hd-v2"  # Add your project key here
+              SONAR_ORGANIZATION: "herco"  # Add your organization key here
+              SONAR_SCANNER_OPTS: "-X -Dsonar.verbose=true"
+          - pipe: sonarsource/sonarcloud-quality-gate:0.1.6
+    - step:
+        name: 'Deployment to Production'
+        deployment: production
+        script:
+          - pipe: atlassian/ssh-run:0.3.0
+            variables:
+                SSH_USER: 'homeqdba'
+                SERVER: '164.90.255.76'
+                MODE: 'script'
+                COMMAND: 'deploy-production.sh'
 
 definitions:
   caches:
     sonar: ~/.sonar/cache
 
 clone:
-  depth: full 
+  depth: full
