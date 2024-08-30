@@ -32,10 +32,13 @@ class ChileServiceProvider extends ServiceProvider
 
         $this->app->singleton('CorreosChileTracking_service', function() {
 
-            // Api Credentials
-            $apiUrl = 'https://wsseguimientoclientes.correos.cl:10443/api/v1/appmovil/';
-            $user = 'userappmobile';
-            $password = 'dXNlcm1vYmlsZUNvcnJlb3MyMDIx';
+            $apiUrl = env('CORREOS_API_URL', 'https://wsseguimientoclientes.correos.cl:10443/api/v1/appmovil/');
+            $user = env('CORREOS_API_USER');
+            $password = env('CORREOS_API_PASSWORD');
+            if (!$user || !$password) {
+                throw new \Exception("Correos API credentials are not set.");
+            }
+
             return new CorreosChileTrackingService($apiUrl, $user, $password);
         });
     }

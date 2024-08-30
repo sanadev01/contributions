@@ -19,11 +19,14 @@ class AppServiceProvider extends ServiceProvider
     {
         
         $this->app->singleton('CorreiosBrazilTracking_service', function() {
+            
+            $wsdlUrl = env('CORREIOS_WSDL_URL', 'http://webservice.correios.com.br/service/rastro/Rastro.wsdl');
+            $user = env('CORREIOS_USER');
+            $password = env('CORREIOS_PASSWORD');
+            if (!$user || !$password) {
+                throw new \Exception("Correios service credentials are not set.");
+            }
 
-            // Api Credentials
-            $wsdlUrl = 'http://webservice.correios.com.br/service/rastro/Rastro.wsdl';
-            $user = '9912501576';
-            $password = 'N>WTBF@3GP';
             return new CorreiosBrazilTrackingService($wsdlUrl, $user, $password);
         });
     }

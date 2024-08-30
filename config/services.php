@@ -23,7 +23,6 @@
         'postmark' => [
             'token' => env('POSTMARK_TOKEN'),
         ],
-
         'ses' => [
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
@@ -33,18 +32,17 @@
             'secret' => env('STRIPE_SECRET'),
         ],
         'sp-api-prod' => [
-        "SP_APP_ID" => env('SP_APP_ID'),
-        "SP_APP_CLIENT_ID" => env('SP_APP_CLIENT_ID'),
-        "SP_APP_CLIENT_SECRET" => env('SP_APP_CLIENT_SECRET'),
-        "SP_APP_REDIRECT" =>  env('SP_APP_REDIRECT'),
-        "HD_REDIRECT" => "https://app.homedeliverybr.com/amazon/home",
+            "SP_APP_ID" => env('SP_API_PROD_APP_ID'),
+            "SP_APP_CLIENT_ID" => env('SP_API_PROD_APP_CLIENT_ID'),
+            "SP_APP_CLIENT_SECRET" => env('SP_API_PROD_APP_CLIENT_SECRET'),
+            "SP_APP_REDIRECT" => env('SP_API_PROD_APP_REDIRECT'), 
+            "HD_REDIRECT" => "https://app.homedeliverybr.com/amazon/home",
         ],
-        'sp-api-dev' => [
-            "SP_APP_ID" => env('SP_APP_ID'),
-            "SP_APP_CLIENT_ID" => env('SP_APP_CLIENT_ID'),
-            "SP_APP_CLIENT_SECRET" => env('SP_APP_CLIENT_SECRET'),
-            "SP_APP_REDIRECT" =>  env('SP_APP_REDIRECT'),
+        'sp-api-dev' => [ 
+            "SP_APP_ID" => env('SP_API_DEV_APP_ID'),
+            "SP_APP_CLIENT_ID" => env('SP_API_DEV_APP_CLIENT_ID'),
+            "SP_APP_CLIENT_SECRET" => env('SP_API_DEV_APP_CLIENT_SECRET'),
+            "SP_APP_REDIRECT" => env('SP_API_DEV_APP_REDIRECT'),
             "HD_REDIRECT" => "https://dev.homedeliverybr.com/amazon/home",
         ]
-
     ];
