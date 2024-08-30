@@ -23,7 +23,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class Client
-{
+{   
     private $baseUri;
     private $clientUsername;
     private $clientPassword;
@@ -35,27 +35,22 @@ class Client
         $this->clientUsername = env('EASYMUNDI_CLIENT_USERNAME');
         $this->clientPassword = env('EASYMUNDI_CLIENT_PASSWORD');
         $this->clientSecret = env('EASYMUNDI_CLIENT_SECRET');
-
-        if (!$this->clientUsername || !$this->clientPassword || !$this->clientSecret) {
-            throw new \Exception("Easymundi API credentials are not set.");
-        }
         return "teste";
-
+       
         $this->headers = [
             'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->token
-        ];
+            'Authorization' => 'Bearer '.$this->token
+        ];        
     }
 
-    public function getToken()
-    {
+    public function getToken(){
 
-        return Cache::remember('token', Carbon::now()->addHours(12), function () {
+        return Cache::remember('token',Carbon::now()->addHours(12),function (){
             $client = new GuzzleHttpClient([
                 'base_uri' => $this->baseUri
             ]);
 
-            $response = $client->post('/oauth/token', [
+            $response = $client->post('/oauth/token',[
                 'json' =>  [
                     'grant_type' => 'password',
                     'client_id' => '1',
@@ -71,15 +66,16 @@ class Client
             //return json_decode($response->getBody()->getContents());
             return ($response->getStatusCode() == 200 || $response->getStatusCode() == 201) ? optional(json_decode($response->getBody()->getContents()))->access_token : null;
         });
-    }
 
+    }
+    
     /**
      * @param $package,
      * @return $data,
      */
     public function createPackage(Order $order)
     {
-
+        
         $token = $this->getToken();
 
         $recipientAddress = $order->recipient;
@@ -88,13 +84,13 @@ class Client
         $height = round($order->isMeasurmentUnitCm() ? $order->height : UnitsConverter::inToCm($order->height));
         $length = round($order->isMeasurmentUnitCm() ? $order->length : UnitsConverter::inToCm($order->length));
 
-        if ($order->isWeightInKg()) {
+        if($order->isWeightInKg()) {
             $weight = UnitsConverter::kgToGrams($order->getWeight('kg'));
-        } else {
+        }else{
             $kg = UnitsConverter::poundToKg($order->getWeight('lbs'));
             $weight = UnitsConverter::kgToGrams($kg);
         }
-
+        
 
         $orderSinerlog = new SinerlogOrder();
 
@@ -102,39 +98,39 @@ class Client
         $products = [];
         $package_description = '';
         $actual_item_description = '';
-        foreach ($order->items as $orderItem) {
+        foreach ( $order->items as $orderItem){
             $item = new SinerlogProducts();
 
             $item->code = $orderItem->id;
             $item->sh_code = $orderItem->sh_code;
             $item->name = $orderItem->description;
-            $item->value = round((float)$orderItem->value, 2);
+            $item->value = round((float)$orderItem->value,2);
             $item->qty = strval($orderItem->quantity);
             $item->photoBase64 = '';
             $products[] = $item;
 
             $sh_description = \DB::table('sh_codes')
-                ->select('description')
-                ->where('code', $orderItem->sh_code)
-                ->first();
-
+                    ->select('description')
+                    ->where('code', $orderItem->sh_code)
+                    ->first();
+            
             //prevent to add a repeated description
-            if ($actual_item_description != $sh_description->description) {
-                $package_description = $package_description . ', ' . trim(substr($sh_description->description, 0, strpos($sh_description->description, '-', 0)));
+            if($actual_item_description != $sh_description->description){
+                $package_description = $package_description.', '.trim(substr($sh_description->description,0,strpos($sh_description->description,'-',0)));
             }
             $actual_item_description = $sh_description->description;
         }
 
 
         // Create order info
-        $orderSinerlog->description = substr($package_description, 2, strlen($package_description));
+        $orderSinerlog->description = substr($package_description,2,strlen($package_description));
         $orderSinerlog->orderNumber = strval($order->id);
         $orderSinerlog->externalId = $order->tracking_id;
         $orderSinerlog->weight = $weight;
         $orderSinerlog->height = $height;
         $orderSinerlog->width = $width;
         $orderSinerlog->length = $length;
-        if ($order->items()->where('contains_battery', true)->count() > 0) {
+        if ( $order->items()->where('contains_battery',true)->count() > 0 ){
             $orderSinerlog->classification = 'hazmat';
         } else {
             $orderSinerlog->classification = 'regular';
@@ -143,9 +139,9 @@ class Client
         $orderSinerlog->currency = "USD";
         // Get sinerlog service alias
         $sinerlogAlias = \DB::table('shipping_services')
-            ->select('service_api_alias')
-            ->find($order->shipping_service_id);
-
+                    ->select('service_api_alias')
+                    ->find($order->shipping_service_id);
+                    
         $orderSinerlog->deliveryType = $sinerlogAlias->service_api_alias;
 
         switch ($order->tax_modality) {
@@ -154,7 +150,7 @@ class Client
                 break;
             case 'ddu':
                 $orderSinerlog->deliveryTax = '2';
-                break;
+                break;              
             default:
                 $orderSinerlog->deliveryTax = '2';
                 break;
@@ -162,7 +158,7 @@ class Client
 
         // create seller info
         $sinerLogSeller = new SinerlogSeller();
-        $sinerLogSeller->name = $order->sender_first_name . ' ' . $order->sender_last_name;
+        $sinerLogSeller->name = $order->sender_first_name.' '.$order->sender_last_name;
         $sinerLogSeller->document = $order->sender_taxId;
         $sinerLogSeller->email = $order->sender_email;
         $sinerLogSeller->phone = $order->sender_phone;
@@ -177,7 +173,7 @@ class Client
 
         // create customer info      
         $sinerLogCustomer = new SinerlogCustomer();
-        $sinerLogCustomer->name = $recipientAddress->first_name . ' ' . $recipientAddress->last_name;
+        $sinerLogCustomer->name = $recipientAddress->first_name.' '.$recipientAddress->last_name;
         $sinerLogCustomer->document = $recipientAddress->tax_id;
         $sinerLogCustomer->email = $recipientAddress->email;
         $sinerLogCustomer->phone = $recipientAddress->phone;
@@ -198,13 +194,13 @@ class Client
         $sinerLogCustomerSA->city = $recipientAddress->city;
         // get brazilian state code
         $state = \DB::table('states')
-            ->select('code')
-            ->where([
-                ['id', '=', $recipientAddress->state_id],
-                ['country_id', '=', $recipientAddress->country_id]
-            ])
-            ->first();
-
+                    ->select('code')
+                    ->where([
+                        ['id', '=', $recipientAddress->state_id],
+                        ['country_id', '=', $recipientAddress->country_id]
+                    ])
+                    ->first();
+        
         $sinerLogCustomerSA->province = $state->code;
         $sinerLogCustomerSA->zipcode = $recipientAddress->zipcode;
 
@@ -217,7 +213,7 @@ class Client
             'province' => $sinerLogCustomerSA->province,
             'zipcode' => $sinerLogCustomerSA->zipcode
         ];
-
+       
 
         $orderBody = [
             'description' => $orderSinerlog->description,
@@ -235,48 +231,50 @@ class Client
             'seller' => $seller,
             'customer' => $customer,
             'shippingAddress' => $shippingAddress,
-            'products' => $products
+            'products' => $products    
         ];
         //dd($token);
         //dd(json_encode($orderBody));
-
+        
         try {
 
             $client = new GuzzleHttpClient([
                 'base_uri' => $this->baseUri
             ]);
 
-            $response = $client->post('/api/orders', [
+            $response = $client->post('/api/orders',[
                 'json' =>  $orderBody,
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $token
+                    'Authorization' => 'Bearer '.$token 
                 ]
             ]);
             //dd($response);
-            if ($response->getStatusCode() == 200 || $response->getStatusCode() == 201) {
+            if ( $response->getStatusCode() == 200 || $response->getStatusCode() == 201){
                 $data = json_decode($response->getBody()->getContents());
-
-                return (object)[
+                
+                return (Object)[
                     'success' => true,
                     'data' => $data
                 ];
             }
 
-            throw new \Exception($response->getBody()->getContents(), 500);
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            return (object)[
+            throw new \Exception($response->getBody()->getContents(),500);
+
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return (Object)[
                 'success' => false,
                 'message' => $e->getResponse()->getBody()->getContents(),
                 'data' => json_decode($e->getResponse()->getBody()->getContents())
             ];
         } catch (\Exception $ex) {
-            return (object)[
+            return (Object)[
                 'success' => false,
                 'message' => $ex->getMessage(),
                 'data' => json_decode($ex->getMessage())
             ];
         }
+        
     }
 
     /**
@@ -288,24 +286,24 @@ class Client
         try {
 
             $response = $this->httpClient->get(
-                $this->getUrl('/operation/get-package-details/' . $trackingCode),
-                [
+                $this->getUrl('/operation/get-package-details/'.$trackingCode),[
                     'headers' => $this->headers
                 ]
             );
 
-            if ($response->getStatusCode() == 200) {
-                $data = json_decode($response->getBody()->getContents(), true);
-
-                return (object)[
+            if ( $response->getStatusCode() == 200 ){
+                $data = json_decode($response->getBody()->getContents(),true);
+                
+                return (Object)[
                     'success' => true,
                     'data' => (new BaseModel($data))
                 ];
             }
 
-            throw new Exception($response->getBody()->getContents(), 500);
+            throw new Exception($response->getBody()->getContents(),500);
+
         } catch (\Exception $ex) {
-            return (object)[
+            return (Object)[
                 'success' => false,
                 'message' => $ex->getMessage()
             ];
@@ -316,8 +314,8 @@ class Client
     {
         try {
 
-            if ($order->sinerlog_url_label != '') {
-                return (object)[
+            if( $order->sinerlog_url_label != '' ){
+                return (Object)[
                     'success' => true,
                     'data' => $order->sinerlog_url_label
                 ];
@@ -327,38 +325,39 @@ class Client
                 $client = new GuzzleHttpClient([
                     'base_uri' => $this->baseUri
                 ]);
-
+    
                 $trxId = $order->sinerlog_tran_id;
-
-                $response = $client->get('/api/orders/cn23/' . $trxId, [
+    
+                $response = $client->get('/api/orders/cn23/'.$trxId,[
                     'headers' => [
                         'Content-Type' => 'application/json',
-                        'Authorization' => 'Bearer ' . $token
+                        'Authorization' => 'Bearer '.$token 
                     ]
                 ]);
-
-                if ($response->getStatusCode() == 200 || $response->getStatusCode() == 201) {
+                
+                if ( $response->getStatusCode() == 200 || $response->getStatusCode() == 201){
 
                     $data = json_decode($response->getBody()->getContents());
 
                     $order->setSinerlogLabelURL($data->data->file);
 
-                    return (object)[
+                    return (Object)[
                         'success' => true,
                         'data' => $data->data->file
                     ];
                 }
-
-                throw new \Exception($response->getBody()->getContents(), 500);
+    
+                throw new \Exception($response->getBody()->getContents(),500);
             }
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            return (object)[
+
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return (Object)[
                 'success' => false,
                 'message' => $e->getResponse()->getBody()->getContents(),
                 'data' => json_decode($e->getResponse()->getBody()->getContents())
             ];
         } catch (\Exception $ex) {
-            return (object)[
+            return (Object)[
                 'success' => false,
                 'message' => $ex->getMessage(),
                 'data' => json_decode($ex->getMessage())
@@ -368,7 +367,7 @@ class Client
 
     public function getUrl($url)
     {
-        return $this->baseUri . $url;
+        return $this->baseUri.$url;
     }
 
     public function createBag(Container $sinerlog_container)
@@ -376,12 +375,13 @@ class Client
         $token = $this->getToken();
 
         $sinerlogBag = new SinerlogBag();
-        $sinerlogBag->bag_code = 'TS' . $sinerlog_container->dispatch_number;
+        $sinerlogBag->bag_code = 'TS'.$sinerlog_container->dispatch_number;
         $sinerlogBag->seal_barcode = $sinerlog_container->seal_no;
         $sinerlogBag->unitization_type = $sinerlog_container->unit_type;
         $sinerlogBag->weight = $sinerlog_container->getWeight() * 1000;
 
-        foreach ($sinerlog_container->orders as $key => $order) {
+        foreach($sinerlog_container->orders as $key => $order)
+        {
             array_push($sinerlogBag->orders, array('tracking_number' => $order->corrios_tracking_code));
         }
 
@@ -398,32 +398,33 @@ class Client
                 'base_uri' => $this->baseUri
             ]);
 
-            $response = $client->post('/api/bags', [
+            $response = $client->post('/api/bags',[
                 'json' =>  $bagBody,
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $token
+                    'Authorization' => 'Bearer '.$token 
                 ]
             ]);
-
-            if ($response->getStatusCode() == 200 || $response->getStatusCode() == 201) {
+            
+            if ( $response->getStatusCode() == 200 || $response->getStatusCode() == 201){
                 $data = json_decode($response->getBody()->getContents());
-
-                return (object)[
+                
+                return (Object)[
                     'success' => true,
                     'data' => $data
                 ];
             }
 
-            throw new \Exception($response->getBody()->getContents(), 500);
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            return (object)[
+            throw new \Exception($response->getBody()->getContents(),500);
+
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return (Object)[
                 'success' => false,
                 'message' => $e->getResponse()->getBody()->getContents(),
                 'data' => json_decode($e->getResponse()->getBody()->getContents())
             ];
         } catch (\Exception $ex) {
-            return (object)[
+            return (Object)[
                 'success' => false,
                 'message' => $ex->getMessage(),
                 'data' => json_decode($ex->getMessage())
@@ -440,31 +441,32 @@ class Client
                 'base_uri' => $this->baseUri
             ]);
 
-            $response = $client->get('/api/bags/cn35/' . (int)$sinerlog_container->unit_code, [
+            $response = $client->get('/api/bags/cn35/' . (int)$sinerlog_container->unit_code ,[
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $token
+                    'Authorization' => 'Bearer '.$token 
                 ]
             ]);
-
-            if ($response->getStatusCode() == 200 || $response->getStatusCode() == 201) {
+            
+            if ( $response->getStatusCode() == 200 || $response->getStatusCode() == 201){
                 $data = json_decode($response->getBody()->getContents());
-
-                return (object)[
+                
+                return (Object)[
                     'success' => true,
                     'data' => $data
                 ];
             }
 
-            throw new \Exception($response->getBody()->getContents(), 500);
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            return (object)[
+            throw new \Exception($response->getBody()->getContents(),500);
+
+        }catch (\GuzzleHttp\Exception\ClientException $e) {
+            return (Object)[
                 'success' => false,
                 'message' => $e->getResponse()->getBody()->getContents(),
                 'data' => json_decode($e->getResponse()->getBody()->getContents())
             ];
         } catch (\Exception $ex) {
-            return (object)[
+            return (Object)[
                 'success' => false,
                 'message' => $ex->getMessage(),
                 'data' => json_decode($ex->getMessage())
