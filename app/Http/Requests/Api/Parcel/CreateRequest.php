@@ -156,6 +156,10 @@ class CreateRequest extends FormRequest
             $rules['recipient.street_no'] = 'nullable';
         }
 
+        if ($request->recipient['country_id'] == 'MEX' || $request->recipient['country_id'] == 'Mexico' || $request->recipient['country_id'] == Country::Mexico) {
+            $rules['recipient.tax_id'] = 'nullable';
+        }
+
         return $rules;
     }
 
