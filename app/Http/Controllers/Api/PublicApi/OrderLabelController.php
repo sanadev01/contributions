@@ -229,10 +229,10 @@ class OrderLabelController extends Controller
         }
     }
     function isHoundExpress($order){
-        $swedenpostLabelRepository = new HoundExpressLabelRepository(); 
-        $swedenpostLabelRepository->run($order,false);
-        if ($swedenpostLabelRepository->getError()) {
-            return $this->rollback($swedenpostLabelRepository->getError());
+        $houndExpress = new HoundExpressLabelRepository(); 
+        $houndExpress->run($order,false);
+        if ($houndExpress->getError()) {
+            return $this->rollback($houndExpress->getError());
         }
         return $this->commit($order);
     }
