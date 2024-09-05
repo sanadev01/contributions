@@ -92,7 +92,7 @@
                             CJA01
                             <div style="background-color: black; width: 115px; float: right;">
                                 <p style="font-size: 30px; font-weight: bold; color: white;">
-                                    {{$containerGroup['group']}}
+                                    {{$containerGroup}}
                                 </p>
                             </div>
                         </div>
