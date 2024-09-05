@@ -282,7 +282,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function getGroup($container) {
         
         $firstOrder = $container->orders->first();
-        return getOrderGroupRange($firstOrder);
+        return (new GetZipcodeGroup($firstOrder->recipient->zipcode))->getZipcodeGroup();
     }
 
     public function hasSenegalService()

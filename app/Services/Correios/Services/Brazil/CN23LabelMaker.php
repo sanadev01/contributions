@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\ShippingService;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use App\Services\Correios\Models\Package;
+use App\Services\Correios\GetZipcodeGroup;
 use App\Services\Correios\Contracts\HasLableExport;
 
 class CN23LabelMaker implements HasLableExport
@@ -63,7 +64,8 @@ class CN23LabelMaker implements HasLableExport
         $this->getActiveAddress($this->order);
         $this->checkReturn($this->order);
         // if(optional($this->order->order_date)->greaterThanOrEqualTo(Carbon::parse('2024-01-01'))) {
-            $this->labelZipCodeGroup = getOrderGroupRange($this->order);
+            // $this->labelZipCodeGroup = getOrderGroupRange($this->order);
+            $this->labelZipCodeGroup = (new GetZipcodeGroup($this->order->recipient->zipcode))->getZipcodeGroup();
         // }
         if ($this->order->shippingService->is_bcn_service) {
             $this->contractNumber = 'B Contract: 0076204456';
