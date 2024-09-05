@@ -30,9 +30,7 @@ class Client
         $this->client = new GuzzleClient();
     }
     public function createPackage(Order $order)
-    {
-        $content = (new Parcel($order))->getRequestBody();
-        $content = [
+    { $content = [
             "syncGetTrackingNumber" => true,
             "outOrderId" => "test20240626test",
             "receiverParam" => [
@@ -107,6 +105,8 @@ class Client
                 "code" => "GRU"
             ]
         ];
+        $content = (new Parcel($order))->getRequestBody();
+       
 
         try {
             $linkUrl = 'https://link.cainiao.com/gateway/custom/open_integration_test_env';
@@ -132,7 +132,10 @@ class Client
             $output = curl_exec($ch);
             curl_close($ch);
             $data = json_decode($output);
-            if ($data->success) {
+            if ($data->success=='true') {
+                \Log::info([
+                    'response'=>$data,
+                ]);
                 $order->update([
                     'corrios_tracking_code' => $data->data->trackingNumber,
                     'cn23' => $data->data->trackingNumber,

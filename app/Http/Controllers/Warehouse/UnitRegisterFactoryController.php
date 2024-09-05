@@ -21,11 +21,9 @@ class UnitRegisterFactoryController extends Controller
         }
         $container->unit_code=null;
         $container->save();
-       
-        if(!$container->unit_code){ 
+        if(!$container->unit_code){
             if($container->has_cainiao){
                 $cainiaoClient = new Client();
-                
                 if(!$cainiaoClient->cngeBigbagCreate($container)){
                     session()->flash('alert-danger',$cainiaoClient->error);
                     return back();
@@ -34,11 +32,10 @@ class UnitRegisterFactoryController extends Controller
             $container->update([
                 'unit_code' => 'HDC' . date('d') . date('m') . sprintf("%07d", $container->id) . 'CO',
                 'response' => true,
-            ]); 
+            ]);
             }
         }
-
-        session()->flash('alert-success', 'registered successfully!');
+        session()->flash('alert-success','registered successfully!');
         return back();
     }
 

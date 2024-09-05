@@ -9,38 +9,37 @@ use App\Services\Converters\UnitsConverter;
 class Parcel
 {
     protected $chargableWeight;
-    protected $order;
-    protected $weight;
+    protected $order; 
+    protected $itemWeight = 0;
+    protected $orignalWeight = 0;
 
     public function __construct(Order $order)
     {
         $this->order = $order;
-        $this->weight = $order->weight;
-        if (!$this->order->isWeightInKg()) {
-            $this->weight = UnitsConverter::poundToKg($this->order->getOriginalWeight('lbs'));
-        }
+       
+        $this->itemWeight = $this->order->getOriginalWeight() / ($this->order->items->count());
+        $this->orignalWeight = $this->order->getOriginalWeight();
     }
 
     public function getRequestBody()
     {
         $refNo = $this->order->customer_reference;
         $customerReference = ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id) . ' HD-333' . $this->order->id;
-
         return [
             "syncGetTrackingNumber" => true,
             "outOrderId" => $customerReference,
             "receiverParam" => [
-                "zipCode" => $this->order->recipient->zipcode ?? "25025102",
-                "mobilePhone" => $this->order->recipient->phone ?? "+5521966321087",
-                "city" => $this->order->recipient->city ?? "Duque de Caxias",
-                "countryCode" => $this->order->recipient->country->code ?? "BR",
-                "street" => $this->order->recipient->address ?? "Avenida Henrique Valadares 1536",
-                "district" => $this->order->recipient->district ?? "",
-                "name" => $this->order->recipient->getFullName() ?? "Igor Frank",
-                "detailAddress" => $this->order->recipient->address2 ?? "Casa Parque Lafaiete",
-                "telephone" => $this->order->recipient->phone ?? "+5521966321087",
-                "state" => $this->order->recipient->state->code ?? "RJ",
-                "email" => $this->order->recipient->email ?? "yvqbw91k97vpg0f@marketplace.amazon.com.br",
+                "zipCode" => $this->order->recipient->zipcode,
+                "mobilePhone" => $this->order->recipient->phone,
+                "city" => $this->order->recipient->city,
+                "countryCode" => $this->order->recipient->country->code,
+                "street" => $this->order->recipient->address,
+                "district" => $this->order->recipient->district,
+                "name" => $this->order->recipient->getFullName(),
+                "detailAddress" => $this->order->recipient->address2,
+                "telephone" => $this->order->recipient->phone,
+                "state" => $this->order->recipient->state->code,
+                "email" => $this->order->recipient->email,
                 "addressId" => ""
             ],
             "locale" => "zh_CN",
@@ -56,25 +55,25 @@ class Parcel
             "packageParams" => [
                 [
                     "itemParams" => $this->mapItemParams(),
-                    "length" => $this->order->length ?? 16,
-                    "width" => $this->order->width ?? 11,
-                    "height" => $this->order->height ?? 2,
-                    "weight" => $this->weight
+                    "length" => $this->order->length,
+                    "width" => $this->order->width,
+                    "height" => $this->order->height,
+                    "weight" => "$this->orignalWeight"
                 ]
             ],
             "senderParam" => [
-                "zipCode" => $this->order->sender_zipcode ?? "518109",
-                "mobilePhone" => $this->order->sender_phone ?? "",
-                "city" => $this->order->sender_city ?? "shenzhen",
-                "countryCode" => $this->order->sender_country->code ?? "CN",
-                "street" => $this->order->sender_address ?? "",
-                "district" => $this->order->sender_district ?? null,
-                "name" => $this->order->getSenderFullName() ?? "Hrich",
-                "detailAddress" => $this->order->sender_address2 ?? "Building 17, Fumao New Village,Sanlian Community",
-                "telephone" => $this->order->sender_phone ?? "18063210240",
-                "state" => $this->order->sender_state->code ?? "GD",
-                "email" => $this->order->sender_email ?? "hrich1@163.com",
-                "addressId" => $this->order->sender_address_id ?? null
+                "zipCode" => $this->order->sender_zipcode,
+                "mobilePhone" => $this->order->sender_phone,
+                "city" => $this->order->sender_city,
+                "countryCode" => $this->order->senderCountry->code,
+                "street" => $this->order->sender_address,
+                "district" => $this->order->sender_district,
+                "name" => $this->order->getSenderFullName(),
+                "detailAddress" => $this->order->sender_address,
+                "telephone" => $this->order->sender_phone,
+                "state" => $this->order->senderState->code,
+                "email" => $this->order->sender_email,
+                "addressId" => null
             ],
             "sourceHandoverParam" => [
                 "type" => "PORT",
@@ -85,26 +84,28 @@ class Parcel
 
     private function mapItemParams()
     {
-        return array_map(function($item) {
-            return [
-                "unitPrice" => $item->unit_price ?? 50,
-                "englishName" => $item->english_name ?? "smart watch",
-                "itemType" => $item->item_type ?? "cf_normal",
-                "clearanceShipUnitPrice" => $item->clearance_ship_unit_price ?? 0,
-                "clearanceVat" => $item->clearance_vat ?? null,
-                "quantity" => $item->quantity ?? 1,
-                "unitPriceCurrency" => $item->unit_price_currency ?? "USD",
-                "hscode" => $item->hscode ?? "8517629900",
-                "msds" => $item->msds ?? "",
-                "weight" => $item->weight ?? "200",
-                "clearanceShipVat" => $item->clearance_ship_vat ?? null,
-                "clearanceUnitPrice" => $item->clearance_unit_price ?? null,
-                "itemId" => $item->item_id ?? "C20-black",
-                "taxRate" => $item->tax_rate ?? 0,
-                "taxCurrency" => $item->tax_currency ?? "USD",
-                "chineseName" => $item->chinese_name ?? "智能手表",
-                "itemUrl" => $item->item_url ?? "aliexpress.com"
+        $items = [];
+        foreach ($this->order->items as $item) {
+            $items[] = [
+                "unitPrice" => $item->value ?? null,
+                "englishName" => $item->description,
+                "itemType" => 'cf_normal',
+                "clearanceShipUnitPrice" => 0,
+                "clearanceVat" => null,
+                "quantity" => $item->quantity,
+                "unitPriceCurrency" => "USD",
+                "hscode" => $item->sh_code,
+                "msds" => '',
+                "weight" => "$this->itemWeight",
+                "clearanceShipVat" => null,
+                "clearanceUnitPrice" => null,
+                "itemId" => 'C20-black',
+                "taxRate" => 0,
+                "taxCurrency" => "USD",
+                "chineseName" => "智能手表",
+                "itemUrl" =>  "https://app.homedeliverybr.com"
             ];
-        }, $this->order->items->toArray());
+        }
+        return $items;
     }
 }
