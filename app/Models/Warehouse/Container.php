@@ -103,6 +103,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             ShippingService::VIP_PARCEL_PMEI=>'VIP Parcel Priority Mail Express International',
             ShippingService::VIP_PARCEL_PMI=>'VIP Parcel Priority Mail International',
 
+            ShippingService::Cainiao=>'Cainiao',
         ];
     
         // Check if the service subclass code exists in the array
@@ -207,6 +208,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasAnjunService()
     {
         return in_array($this->services_subclass_code ,['AJ-NX', 'AJ-IX']);
+    } 
+    public function getHasCainiaoAttribute()
+    {
+        return in_array($this->services_subclass_code ,['1000']);
     } 
     public function hasBCNService()
     {

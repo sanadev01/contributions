@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Warehouse;
 use Carbon\Carbon;
 use App\Models\Order;
 use Illuminate\Http\Request;
-use App\Models\OrderTracking;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
+use App\Services\Cainiao\Client;
 use App\Services\TotalExpress\Services\TotalExpressMasterBox;
 
 class UnitRegisterFactoryController extends Controller
@@ -19,12 +19,23 @@ class UnitRegisterFactoryController extends Controller
             session()->flash('alert-danger', 'Please add parcels to this container');
             return back();
         }
-
-        if (!$container->unit_code) {
+        $container->unit_code=null;
+        $container->save();
+       
+        if(!$container->unit_code){ 
+            if($container->has_cainiao){
+                $cainiaoClient = new Client();
+                
+                if(!$cainiaoClient->cngeBigbagCreate($container)){
+                    session()->flash('alert-danger',$cainiaoClient->error);
+                    return back();
+                }
+            }else{
             $container->update([
                 'unit_code' => 'HDC' . date('d') . date('m') . sprintf("%07d", $container->id) . 'CO',
                 'response' => true,
-            ]);
+            ]); 
+            }
         }
 
         session()->flash('alert-success', 'registered successfully!');

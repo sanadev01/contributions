@@ -4,13 +4,14 @@ namespace App\Services\Cainiao;
 
 use App\Models\Order;
 use App\Models\OrderTracking;
-use Illuminate\Support\Facades\Http; 
+use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client as GuzzleClient;
-use App\Services\Cainiao\Services\Parcel; 
-use App\Services\Correios\Contracts\Package; 
+use App\Services\Cainiao\Services\Parcel;
+use App\Services\Correios\Contracts\Package;
 use App\Services\Correios\Models\PackageError;
 
-class Client{
+class Client
+{
 
     protected $appSecret;
     protected $cpCode;
@@ -18,30 +19,20 @@ class Client{
     public $error;
 
     public function __construct()
-    {   
-        if(app()->isProduction()){
+    {
+        if (app()->isProduction()) {
             $this->appSecret = config('cainiao.production.app_secret');
             $this->cpCode = config('cainiao.production.cp_code');
-        }else{
+        } else {
             $this->appSecret = config('cainiao.production.app_secret');
             $this->cpCode = config('cainiao.production.cp_code');
         }
-
         $this->client = new GuzzleClient();
-    } 
-
-    // private function getHeaders()
-    // {
-    //     return [
-    //         'Authorization' => 'Bearer ' . $this->token,
-    //         'Content-Type' => 'application/json'
-    //     ];
-    // }
+    }
     public function createPackage(Order $order)
-    {  
-        $content = (new Parcel($order))->getRequestBody(); 
-        $content =
-        [
+    {
+        $content = (new Parcel($order))->getRequestBody();
+        $content = [
             "syncGetTrackingNumber" => true,
             "outOrderId" => "test20240626test",
             "receiverParam" => [
@@ -116,53 +107,120 @@ class Client{
                 "code" => "GRU"
             ]
         ];
-        
+
         try {
-        $linkUrl = 'https://link.cainiao.com/gateway/custom/open_integration_test_env';
-        
-        $msgType = 'cnge.order.create';    //调用的API名 
-        $toCode = 'CNGCP-OPEN';        //调用的目标TOCODE，有些接口TOCODE可以不用填写  
-        $digest = base64_encode(md5(json_encode($content) . $this->appSecret, true));     //生成签名
+            $linkUrl = 'https://link.cainiao.com/gateway/custom/open_integration_test_env';
+
+            $msgType = 'cnge.order.create';    //调用的API名 
+            $toCode = 'CNGCP-OPEN';        //调用的目标TOCODE，有些接口TOCODE可以不用填写  
+            $digest = base64_encode(md5(json_encode($content) . $this->appSecret, true));     //生成签名
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $linkUrl);
+            // For debugging 
+            curl_setopt($ch, CURLOPT_VERBOSE, 1);
+            curl_setopt($ch, CURLOPT_FAILONERROR, false);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded']);
+            $post_data = 'msg_type=' . $msgType
+                . '&to_code=' . $toCode
+                . '&logistics_interface=' . urlencode(json_encode($content))
+                . '&data_digest=' . urlencode($digest)
+                . '&logistic_provider_id=' . urlencode($this->cpCode);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            $output = curl_exec($ch);
+            curl_close($ch);
+            $data = json_decode($output);
+            if ($data->success) {
+                $order->update([
+                    'corrios_tracking_code' => $data->data->trackingNumber,
+                    'cn23' => $data->data->trackingNumber,
+                    'api_response' => $output,
+                ]);
+                return true;
+            } else {
+                $this->error = "Error code: $data->errorCode <br> Error message: $data->errorMsg";
+                return false;
+            }
+        } catch (\Exception $exception) {
+            $this->error = $exception->getMessage();
+            return false;
+        }
+    }
+
+    function cngeBigbagCreate($container)
+    {
+
+        $content = [
+            "request" => [
+                "locale" => "zh_cn",
+                "weight" => 150,
+                "weightUnit" => "g",
+                "orderCodeList" => [
+                    "LP00672306313219"
+                ],
+                "handoverParam" => [
+                    "zipCode" => "310000",
+                    "mobilePhone" => "18666270000",
+                    "city" => "杭州市",
+                    "addressId" => "",
+                    "telephone" => "",
+                    "street" => "Chiang Village Street",
+                    "district" => "",
+                    "name" => "Hrich",
+                    "detailAddress" => "西湖区蒋村街道龙湖天街",
+                    "country" => "CN",
+                    "countryCode" => "CN",
+                    "portCode" => "GRU",
+                    "state" => "浙江省",
+                    "email" => ""
+                ]
+            ]
+
+        ];
+        $linkUrl = 'https://link.cainiao.com/gateway/custom/open_integration_test_env';  
+        $msgType = 'cnge.bigbag.create';  // 调用的API名 
+        $toCode = 'CNPMS';        //  调用的目标TOCODE，有些接口TOCODE可以不用填写
+        $digest = base64_encode(md5(json_encode($content) . $this->appSecret, true)); //生成签名   
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $linkUrl);
-        // For debugging 
         curl_setopt($ch, CURLOPT_VERBOSE, 1);
         curl_setopt($ch, CURLOPT_FAILONERROR, false);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded']);
-        $post_data = 'msg_type='.$msgType
-            . '&to_code='.$toCode
-            . '&logistics_interface='.urlencode(json_encode($content))
-            . '&data_digest='.urlencode($digest)
-            . '&logistic_provider_id='.urlencode($this->cpCode);
+        $post_data = 'msg_type=' . $msgType
+            . '&to_code=' . $toCode
+            . '&logistics_interface=' . urlencode(json_encode($content))
+            . '&data_digest=' . urlencode($digest)
+            . '&logistic_provider_id=' . urlencode($this->cpCode);
+ 
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POST, 1); 
         $output = curl_exec($ch);
-        curl_close($ch); 
-        $data = json_decode($output);  
-        if($data->success)
-        {
-            $order->update([
-                'corrios_tracking_code' => $data->data->trackingNumber,
-                'cn23' => $data->data->trackingNumber,
-                'api_response' => $output,
-            ]); 
+        curl_close($ch);
+        
+        $data = json_decode($output);
+        \Log::info([
+          'api cnge.bigbag.create output'=>  $data
+        ]);
+         if($data->success=='true'){
+            $container->update([
+                    'unit_code' =>  $data->data->bigBagTrackingNumber,
+                    'response' => true, 
+                    'unit_response_list' => $output
+            ]);
             return true;
-        }else{
+        } else {
             $this->error = "Error code: $data->errorCode <br> Error message: $data->errorMsg";
-            return false;
-        }
-        }catch (\Exception $exception){
-            $this->error =$exception->getMessage();
             return false;
         }
     }
 
     public function addOrderTracking($order)
     {
-        if($order->trackings->isEmpty())
-        {
+        if ($order->trackings->isEmpty()) {
             OrderTracking::create([
                 'order_id' => $order->id,
                 'status_code' => Order::STATUS_PAYMENT_DONE,
@@ -174,8 +232,4 @@ class Client{
         }
         return true;
     }
-
-    
-     
-
 }
