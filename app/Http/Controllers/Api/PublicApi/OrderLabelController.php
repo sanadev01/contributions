@@ -27,6 +27,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Events\AutoChargeAmountEvent;
+use App\Repositories\HoundExpressLabelRepository;
 use App\Repositories\SenegalLabelRepository;
 
 class OrderLabelController extends Controller
@@ -63,6 +64,10 @@ class OrderLabelController extends Controller
             //sweden post
             if ($order->shippingService->isSwedenPostService()) {
                 return $this->swedenPostLabel($order);
+            }
+            //hound express
+            if ($order->shippingService->is_hound_express) { 
+                return $this->isHoundExpress($order);
             }
 
             //For USPS International services
@@ -223,6 +228,15 @@ class OrderLabelController extends Controller
             return $this->commit($order);
         }
     }
+    function isHoundExpress($order){
+        $swedenpostLabelRepository = new HoundExpressLabelRepository(); 
+        $swedenpostLabelRepository->run($order,false);
+        if ($swedenpostLabelRepository->getError()) {
+            return $this->rollback($swedenpostLabelRepository->getError());
+        }
+        return $this->commit($order);
+    }
+
     private function commit($order)
     {
         DB::commit();
