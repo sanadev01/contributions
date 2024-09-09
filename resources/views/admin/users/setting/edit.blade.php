@@ -608,7 +608,7 @@
                                         </div>
                                     </div>
                                 </div>
-
+                            </div>
                                 {{-- <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right" for="prc_label">PRC Label<span class="text-danger"></span></label>
                                     <div class="col-md-6">
@@ -624,7 +624,7 @@
                                     </div>
                                 </div> --}}
                                 
-                                <div class="row mt-1">
+                                <div class="row mb-1 mt-1">
                                     <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
                                         <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
                                             Save Changes
@@ -632,7 +632,7 @@
                                         <button type="reset" class="btn btn-outline-warning waves-effect waves-light">Reset</button>
                                     </div>
                                 </div>
-                            </div>
+                            
                         </form>
                     </div>
                 </div>

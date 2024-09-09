@@ -136,7 +136,7 @@
                     </div>
                     <div class="help-block" id="zipcode_response"></div>
                 </div>
-                @if(setting('prc_label', null, $order->user->id))
+                @if(setting('is_prc_user', null, $order->user->id))
                     <div class="col-sm-6" id="sender_website">
                         <div class="form-group">
                             <label for="sender_website">@lang('orders.sender.Website')<span class="text-danger">*</span></label>
