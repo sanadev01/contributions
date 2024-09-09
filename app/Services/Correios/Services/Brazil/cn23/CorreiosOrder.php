@@ -50,7 +50,7 @@ class CorreiosOrder extends Package{
         $this->nonNationalizationInstruction = "RETURNTOORIGIN";
         
         if(setting('is_prc_user', null, $order->user->id)) {
-            $this->senderWebsite = $order->sender_website ? $order->sender_website : '';
+            $this->senderWebsite = $order->sender_website ? $order->sender_website : 'https://homedeliverybr.com';
             $this->taxPaymentMethod = 'PRC';
             $this->currency = 'USD';
             $this->provisionedTaxValue = $order->getTotalTaxes();
