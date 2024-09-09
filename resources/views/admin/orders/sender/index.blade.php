@@ -140,7 +140,7 @@
                     <div class="col-sm-6" id="sender_website">
                         <div class="form-group">
                             <label for="sender_website">@lang('orders.sender.Website')<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="sender_website" name="sender_website" value="{{ old('sender_website',__default($order->sender_website,null)) }}" required>
+                            <input type="text" class="form-control" id="sender_website" name="sender_website" value="{{ old('sender_website',__default($order->sender_website,null)) }}">
                             @error('sender_website')
                                 <div class="text-danger">
                                     {{ $message }}
