@@ -337,4 +337,24 @@ class Client
             return json_decode($e->getResponse()->getBody()->getContents());
         }
     }
+
+    public function deletePRCUnit($container)
+    {
+        try {
+            //Post Customs Delete Batch for PRC Container
+            if($container->isPRC()) {
+                $batchId = $container->customs_response_list;
+                $customsClient = new GuzzleClient();
+                $customsRequest = $customsClient->delete($this->customsBaseUri."/batch"."/".$batchId, [
+                    'headers' => [
+                        'Authorization' => "Bearer {$this->getCustomsToken()}",
+                    ],
+                ]);
+                $customsResponse = json_decode($customsRequest->getBody()->getContents());
+                return $customsResponse;
+            }
+            } catch (\GuzzleHttp\Exception\ClientException $e) {
+                return json_decode($e->getResponse()->getBody()->getContents());
+            }
+    }
 }
