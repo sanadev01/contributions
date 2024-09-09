@@ -31,7 +31,7 @@ class DeliveryBillRegisterController extends Controller
         } 
 
  
-        if($deliveryBill->isAnjunChina() ||$deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE() || $deliveryBill->isHDExpress()|| $deliveryBill->isHoundExpress() || $deliveryBill->isSenegal() || $deliveryBill->isPasarEx()){
+        if($deliveryBill->isAnjunChina() ||$deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE() || $deliveryBill->isHDExpress()|| $deliveryBill->isHoundExpress() || $deliveryBill->isSenegal() || $deliveryBill->isVipParcel() || $deliveryBill->isPasarEx()){
             $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->id.''.$deliveryBill->setCN38Code(),
                 'request_id' => $deliveryBill->setRandomRequestId()

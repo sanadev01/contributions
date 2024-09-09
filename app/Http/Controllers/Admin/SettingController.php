@@ -79,6 +79,7 @@ class SettingController extends Controller
         $request->has('post_plus') ? saveSetting('post_plus', true, $this->adminId) : saveSetting('post_plus', false, $this->adminId);
         $request->has('gss') ? saveSetting('gss', true, $this->adminId) : saveSetting('gss', false, $this->adminId);
         $request->has('gde') ? saveSetting('gde', true, $this->adminId) : saveSetting('gde', false, $this->adminId);
+        $request->has('vip_parcels') ? saveSetting('vip_parcels', true, $this->adminId) : saveSetting('vip_parcels', false, $this->adminId);
 
         ($request->usps_profit != null ) ? saveSetting('usps_profit', $request->usps_profit, $this->adminId) : saveSetting('usps_profit', 0, $this->adminId);
         ($request->ups_profit != null ) ? saveSetting('ups_profit', $request->ups_profit, $this->adminId) : saveSetting('ups_profit', 0, $this->adminId);

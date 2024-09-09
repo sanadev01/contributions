@@ -16,42 +16,38 @@ class UnitRegisterFactoryController extends Controller
     {
         $container = Container::find($request->id);
         if ($container->orders->isEmpty()) {
-            session()->flash('alert-danger','Please add parcels to this container');
+            session()->flash('alert-danger', 'Please add parcels to this container');
             return back();
         }
 
-        if(!$container->unit_code){
+        if (!$container->unit_code) {
             $container->update([
-                'unit_code' => 'HDC'.date('d').date('m').sprintf("%07d", $container->id).'CO',
+                'unit_code' => 'HDC' . date('d') . date('m') . sprintf("%07d", $container->id) . 'CO',
                 'response' => true,
-            ]); 
+            ]);
         }
 
-        session()->flash('alert-success','registered successfully!');
+        session()->flash('alert-success', 'registered successfully!');
         return back();
-              
-         
     }
 
     public function consultMasterBox(Request $request)
     {
         $container = Container::find($request->id);
-        if($container->unit_response_list) {
+        if ($container->unit_response_list) {
             $apiRequest = (new TotalExpressMasterBox($container))->consultCreateMasterBox($container);
 
             $response = $apiRequest->getData();
-            if ($response->isSuccess){
+            if ($response->isSuccess) {
                 session()->flash('alert-success', $response->message);
                 return back();
-                
             } else {
-                session()->flash('alert-danger',$response->message);
+                session()->flash('alert-danger', $response->message);
                 return back();
-            } 
+            }
         } else {
             session()->flash('alert-danger', 'Request ID Not Found');
             return back();
-        } 
- 
+        }
     }
 }

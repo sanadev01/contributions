@@ -115,6 +115,12 @@
                                 <span class="menu-title">@lang('menu.Warehouse.DSS Senegal')</span>
                             </a>
                         </li>
+                        <li class="{{ $isActive(['warehouse.vip-parcel-containers.index','warehouse.vip-parcel-containers.create','warehouse.vip-parcel-containers.edit','warehouse.vip-parcel-containers.packages.index']) }}">
+                            <a href="{{ route('warehouse.vip-parcel-containers.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">VIP Parcel</span>
+                            </a>
+                        </li>
 
                         <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
                             <a href="{{ route('warehouse.chile_containers.index') }}">
