@@ -29,6 +29,7 @@ use App\Services\Excel\Export\ExportNameListTest;
 use App\Http\Controllers\CustomsResponseController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Models\CustomResponse;
 
 /*
 |--------------------------------------------------------------------------
@@ -391,3 +392,23 @@ Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field)
 });
 
 Route::post('/webhooks/customs-response', [CustomsResponseController::class, 'handle']);
+Route::get('/get/customs-response', function (Request $request) {
+    $customResponse = CustomResponse::all();
+    dd($customResponse);
+});
+
+Route::get('/remove-container-orders', function (Request $request) {
+    $codes = [
+        'ND067762066BR',
+        'ND072972270BR',
+        'IX031018633BR',
+    ];
+    $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
+
+    foreach ($orders as $order) {
+        foreach ($order->containers as $container) {
+            $container->orders()->detach($order->id);
+        }
+    }
+    return "Orders Detached Successfully";
+});

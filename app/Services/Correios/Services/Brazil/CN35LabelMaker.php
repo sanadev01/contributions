@@ -23,6 +23,7 @@ class CN35LabelMaker implements HasLableExport
     private $service;
     private $unitCode;
     private $OrderWeight;
+    private $containerGroup;
 
     public function __construct(Container $container)
     {
@@ -48,9 +49,9 @@ class CN35LabelMaker implements HasLableExport
         $this->itemsCount = $container->getPiecesCount();
         $this->unitCode = $container->getUnitCode();
         $firstOrderDate = optional($container->orders->first())->order_date;
-        if(optional($firstOrderDate)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
+        // if(optional($firstOrderDate)->greaterThanOrEqualTo(Carbon::parse('2024-01-22'))) {
             $this->containerGroup = $container->getGroup($container);
-        }
+        // }
     }
 
     public function setCompanyName($companyName)
@@ -72,7 +73,9 @@ class CN35LabelMaker implements HasLableExport
         if ( $this->service == 3 ){
             $this->packetType = 'PACKET MINI';
         }
-
+        if ( $this->service == 23 ){
+            $this->packetType = 'PasarEx';
+        }
         return $this;
     }
     public function setPacketType($packetType)
