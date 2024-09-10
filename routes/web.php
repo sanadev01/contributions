@@ -388,3 +388,19 @@ Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field)
     dump($order->update([$field=>null]));  
     dd($order);
 });
+
+Route::get('/remove-container-orders', function (Request $request) {
+    $codes = [
+        'ND067762066BR',
+        'ND072972270BR',
+        'IX031018633BR',
+    ];
+    $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
+
+    foreach ($orders as $order) {
+        foreach ($order->containers as $container) {
+            $container->orders()->detach($order->id);
+        }
+    }
+    return "Orders Detached Successfully";
+});

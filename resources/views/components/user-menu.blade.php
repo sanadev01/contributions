@@ -251,12 +251,21 @@
                     @endcan
 
                     @can('viewAny', App\Models\Rate::class)
-                    <li class="{{ $isActive(['admin.rates.zone-profit.index']) }}">
-                        <a href="{{ route('admin.rates.zone-profit.index') }}">
+                    <li class="nav-item has-sub {{ request()->is('admin/rates/zone-profit*') && request()->query('service') ? 'active new-active' : '' }}">
+                        <a href="#">
                             <i class="icon_adjst feather icon-circle"></i>
                             <span class="menu-title">Zone Profits</span>
                         </a>
+                        <ul class="menu-content">
+                            <li class="{{ request()->query('service') === 'usps' ? 'active new-active' : '' }}">
+                                <a href="{{ route('admin.rates.zone-profit.index', ['service' => 'usps']) }}">USPS</a>
+                            </li>
+                            <li class="{{ request()->query('service') === 'pasarex' ? 'active new-active' : '' }}">
+                                <a href="{{ route('admin.rates.zone-profit.index', ['service' => 'pasarex']) }}">PasarEx</a>
+                            </li>
+                        </ul>
                     </li>
+                    
                     @endcan
 
                 </ul>

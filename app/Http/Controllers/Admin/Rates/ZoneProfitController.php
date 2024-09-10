@@ -27,15 +27,31 @@ class ZoneProfitController extends Controller
 
     public function index(Request $request)
     {
+        $service = $request->get('service', 'usps'); // default to 'usps' if not provided
         $sort = $request->get('sort', 'group_id');
         $order = $request->get('order', 'asc');
-        
-        $groups = ZoneCountry::orderBy($sort, $order)
+
+        // Assuming service_id for USPS and PasarEx are predefined
+        $serviceIds = [];
+
+        if ($service === 'usps') {
+            $serviceIds = ShippingService::whereIn('service_sub_class', [ShippingService::GSS_CEP, ShippingService::GSS_EPMI])
+                ->pluck('id');
+        } elseif ($service === 'pasarex') {
+            $serviceIds = ShippingService::where('service_sub_class', ShippingService::PasarEx)
+                ->pluck('id');
+        }
+
+        $groups = ZoneCountry::whereIn('shipping_service_id', $serviceIds)
+            ->orderBy($sort, $order)
             ->get()
             ->groupBy(['group_id', 'shipping_service_id']);
+
         $rates = ZoneRate::orderBy('id')->get();
-        return view('admin.rates.zone-profit.index', compact('groups', 'rates'));
+
+        return view('admin.rates.zone-profit.index', compact('groups', 'rates', 'service'));
     }
+
 
     public function create()
     {   
@@ -47,7 +63,8 @@ class ZoneProfitController extends Controller
             ShippingService::GSS_EPMI, 
             ShippingService::GSS_FCM, 
             ShippingService::GSS_EMS,
-            ShippingService::GSS_CEP
+            ShippingService::GSS_CEP,
+            ShippingService::PasarEx,
             ])->where('active',true)->get();
         
         return view('admin.rates.zone-profit.create', compact('services'));
@@ -111,7 +128,8 @@ class ZoneProfitController extends Controller
         $this->authorizeResource(Rate::class);
 
         $services = ShippingService::whereIn('service_sub_class', [
-            ShippingService::GSS_CEP
+            ShippingService::GSS_CEP,
+            ShippingService::PasarEx,
             ])->where('active',true)->get();
         
         return view('admin.rates.zone-profit.add-cost', compact('services'));

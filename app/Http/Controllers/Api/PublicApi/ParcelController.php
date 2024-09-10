@@ -735,7 +735,8 @@ class ParcelController extends Controller
             $shippingService->isInternationalService() ||
             $shippingService->isInboundDomesticService() ||
             $shippingService->isGSSService() ||
-            $shippingService->isGDEService() )
+            $shippingService->isGDEService() ||
+            $shippingService->is_pasarex)
         {
             return true;
         }
