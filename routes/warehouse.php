@@ -91,6 +91,7 @@ use App\Http\Controllers\Warehouse\SenegalUnitRegisterController;
 use App\Http\Controllers\Warehouse\SenegalCN35DownloadController;
 use App\Http\Controllers\Warehouse\SenegalContainerPackageController;
 use App\Http\Controllers\Warehouse\PRCUnitRegisterController;
+use App\Http\Controllers\Warehouse\PRCUnitDeleteController;
 
 use App\Http\Controllers\Warehouse\VIPParcelContainerController;
 use App\Http\Controllers\Warehouse\VIPParcelUnitRegisterController;
@@ -120,6 +121,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::get('container/{container}/cancel', UnitCancelContoller::class)->name('container.cancel');
     Route::get('container/{container}/download', CN35DownloadController::class)->name('container.download');
     Route::get('container/{container}/registerprc', PRCUnitRegisterController::class)->name('container.registerprc');
+    Route::get('container/{container}/cancelprc', PRCUnitDeleteController::class)->name('container.cancelprc');
     
     Route::resource('delivery_bill', DeliveryBillController::class);
     Route::get('delivery_bill/{delivery_bill}/register', DeliveryBillRegisterController::class)->name('delivery_bill.register');

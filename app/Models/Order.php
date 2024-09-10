@@ -996,7 +996,7 @@ class Order extends Model implements Package
                     $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
                     $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
                     $icms = 0.17;  // ICMS (IVA)
-                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;;//Total  ICMS (IVA)
+                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;//Total  ICMS (IVA)
                     $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
                     \Log::info([
                         'is pcr user' => 'yes',
@@ -1018,7 +1018,7 @@ class Order extends Model implements Package
                     $duty = $totalCost * .60; //Duties
                     $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
                     $icms = 0.17;  // ICMS (IVA)
-                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;//Total  ICMS (IVA)
+                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;;//Total  ICMS (IVA)
                     $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
                     \Log::info([
                         'pcr user' => 'no',
@@ -1071,21 +1071,6 @@ class Order extends Model implements Package
         return $fee;
     }
 
-    public function getPasarexColombiaRate($shippingService)
-    {
-        $zoneId = (new GetZipcodeZone($this->recipient->zipcode))->getZipcodeZone();
-        $rate = getZoneRate($this, $shippingService, $zoneId);
-        
-        if($rate > 0) {
-            $this->update([
-                'user_declared_freight' => $rate,
-            ]);
-            $this->user_declared_freight = $rate;
-            return true;
-        } 
-        return false;
-    }
-
     public function getTotalTaxes() {
         if ($this->shouldCalculateTaxAndDuty()) {
             $totalTaxAndDuty = $this->calculateTotalTaxAndDuty();
@@ -1112,7 +1097,7 @@ class Order extends Model implements Package
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
         $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
     
-        if(setting('prc_label', null, $this->user_id)) {
+        if(setting('is_prc_user', null, $this->user_id)) {
             $duty = $totalCost > 50 ? (($totalCost * .60) - 20) : $totalCost * 0.2;
         } else {
             $duty = $totalCost * .60;
@@ -1129,7 +1114,7 @@ class Order extends Model implements Package
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
         $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
     
-        if(setting('prc_label', null, $this->user_id)) {
+        if(setting('is_prc_user', null, $this->user_id)) {
             $duty = $totalCost > 50 ? (($totalCost * .60) - 20) : $totalCost * 0.2;
         } else {
             $duty = $totalCost * .60;
@@ -1141,5 +1126,19 @@ class Order extends Model implements Package
     
         return round($totalIcms, 2);
     }    
+    public function getPasarexColombiaRate($shippingService)
+    {
+        $zoneId = (new GetZipcodeZone($this->recipient->zipcode))->getZipcodeZone();
+        $rate = getZoneRate($this, $shippingService, $zoneId);
+        
+        if($rate > 0) {
+            $this->update([
+                'user_declared_freight' => $rate,
+            ]);
+            $this->user_declared_freight = $rate;
+            return true;
+        } 
+        return false;
+    }
 
 }

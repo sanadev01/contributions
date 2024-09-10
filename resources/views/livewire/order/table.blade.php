@@ -97,8 +97,8 @@
                     <th>Carrier Cost</th>
                     @endadmin
                     <th>Tracking Code</th>
-                    <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
-                    <th>@lang('orders.Estimate tax & duty')</th>
+                    <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount') USD</a></th>
+                    <th>@lang('orders.Estimate tax & duty') USD</th>
                     <th>@lang('orders.status')</th>
                     <th>@lang('orders.payment-status')</th>
                     <th class="no-print">@lang('orders.actions.actions')</th>
