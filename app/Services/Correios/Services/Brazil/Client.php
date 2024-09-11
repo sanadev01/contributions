@@ -56,7 +56,11 @@ class Client
 
     public function createPackage(Package $order)
     {
-        $packet = new CorreiosOrder($order);
+        if (setting('is_prc_user', null, $order->user->id)) {
+            $packet = (new CorreiosOrder($order))->getRequestBody($order);
+        } else {
+            $packet = new CorreiosOrder($order);
+        }
         \Log::info(
             $packet
         );
