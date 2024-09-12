@@ -391,10 +391,10 @@ Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field)
 });
 Route::get('/anjun-china-label/{warehouse}', function ($warehouse,Request $request) {
     $order = (Order::where('warehouse_number', $warehouse)->first());  
+    if($order){ 
     $order->shipping_service_id = 43;
     $order->save();
     $order->fresh();
-    if($order){ 
         $anjun= new AnjunLabelRepository($order, $request, true);
         $anjunResponse = $anjun->run(); 
         dump([ "anjun run response front"=>$anjunResponse]);
