@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Warehouse;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\DeliveryBill;
+use App\Services\Cainiao\Client as CainiaoClient;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\Client;
 
@@ -15,14 +16,16 @@ class DeliveryBillRegisterController extends Controller
         if ($deliveryBill->containers->isEmpty()) {
             session()->flash('alert-danger','Please add containers to this delivery bill');
             return back();
-        }
-     
-
+        } 
         // if ($deliveryBill->isRegistered()) {
         //     session()->flash('alert-danger','This delivery bill has already been registered');
         //     return back();
         // }
-       
+        if($deliveryBill->is_cainiao){ 
+            return $this->registerCianiaoDeliveryBill($deliveryBill);  
+            
+        } 
+
         if ($deliveryBill->containerShippingService(ShippingService::TOTAL_EXPRESS)) {
              $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->setCN38Code(),
@@ -53,6 +56,17 @@ class DeliveryBillRegisterController extends Controller
         }
 
         session()->flash('alert-success','Delivery Bill Request Created. Please Check 30 minutes later to download bill');
+        return back();
+    }
+
+    function registerCianiaoDeliveryBill($deliveryBill) {
+        $client = new CainiaoClient();
+        $client->cngeCn38Request($deliveryBill);
+        if ($client->error){
+            session()->flash('alert-danger',$client->error);
+            return back();
+        }  
+        session()->flash('alert-success','Delivery Bill Register Successfully!');
         return back();
     }
 }

@@ -9,34 +9,34 @@ use App\Services\Converters\UnitsConverter;
 class Parcel
 {
     protected $chargableWeight;
-    protected $order; 
-    protected $itemWeight = 0;
-    protected $orignalWeight = 0;
+    protected $order;
+    protected $itemWeightInGram = 0;
+    protected $orignalWeightInGram = 0;
 
     public function __construct(Order $order)
     {
         $this->order = $order;
-       
-        $this->itemWeight = $this->order->getOriginalWeight() / ($this->order->items->count());
-        $this->orignalWeight = $this->order->getOriginalWeight();
+
+        $this->itemWeightInGram =1000*($this->order->getOriginalWeight() / ($this->order->items->count()));
+        $this->orignalWeightInGram = 1000*$this->order->getOriginalWeight();
     }
 
     public function getRequestBody()
     {
-        $refNo = $this->order->customer_reference;
-        $customerReference = ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id) . ' HD-333' . $this->order->id;
-        return [
+        $customerReference = ($this->order->customer_reference ? $this->order->customer_reference : $this->order->tracking_id) . 'HD-333' . $this->order->id;
+       
+        return ([
             "syncGetTrackingNumber" => true,
-            "outOrderId" => $customerReference,
+            "outOrderId" =>"$customerReference",
             "receiverParam" => [
                 "zipCode" => $this->order->recipient->zipcode,
                 "mobilePhone" => $this->order->recipient->phone,
                 "city" => $this->order->recipient->city,
                 "countryCode" => $this->order->recipient->country->code,
-                "street" => $this->order->recipient->address,
+                "street" => $this->order->recipient->address2.' '. $this->order->recipient->street_no,
                 "district" => $this->order->recipient->district,
                 "name" => $this->order->recipient->getFullName(),
-                "detailAddress" => $this->order->recipient->address2,
+                "detailAddress" => $this->order->recipient->address,
                 "telephone" => $this->order->recipient->phone,
                 "state" => $this->order->recipient->state->code,
                 "email" => $this->order->recipient->email,
@@ -45,7 +45,7 @@ class Parcel
             "locale" => "zh_CN",
             "solutionParam" => [
                 "importCustomsParam" => [
-                    "taxNumber" => "08738558840111"
+                    "taxNumber" => "08846108965"
                 ],
                 "cainiaoCustomsParam" => [
                     "whetherNeed" => false
@@ -58,7 +58,7 @@ class Parcel
                     "length" => $this->order->length,
                     "width" => $this->order->width,
                     "height" => $this->order->height,
-                    "weight" => "$this->orignalWeight"
+                    "weight" => $this->orignalWeightInGram
                 ]
             ],
             "senderParam" => [
@@ -71,7 +71,7 @@ class Parcel
                 "name" => $this->order->getSenderFullName(),
                 "detailAddress" => $this->order->sender_address,
                 "telephone" => $this->order->sender_phone,
-                "state" => $this->order->senderState->code,
+                "state" => "GD"??$this->order->senderState->code,
                 "email" => $this->order->sender_email,
                 "addressId" => null
             ],
@@ -79,7 +79,7 @@ class Parcel
                 "type" => "PORT",
                 "code" => "GRU"
             ]
-        ];
+        ]);
     }
 
     private function mapItemParams()
@@ -96,7 +96,7 @@ class Parcel
                 "unitPriceCurrency" => "USD",
                 "hscode" => $item->sh_code,
                 "msds" => '',
-                "weight" => "$this->itemWeight",
+                "weight" => $this->itemWeightInGram,
                 "clearanceShipVat" => null,
                 "clearanceUnitPrice" => null,
                 "itemId" => 'C20-black',

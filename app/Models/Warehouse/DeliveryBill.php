@@ -156,6 +156,11 @@ class DeliveryBill extends Model
         }
         return false;
     }
+    
+    public function getIsCainiaoAttribute()
+    {
+        return $this->containers->first()->has_cainiao;
+    }
 
     public function isVipParcel()
     {

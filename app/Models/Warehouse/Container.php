@@ -142,6 +142,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             ShippingService::HoundExpress => 22,
             ShippingService::DSS_SENEGAL => 23,
             ShippingService::PasarEx => 24,
+            ShippingService::Cainiao => 25,
         ];
     
         // Check if the service subclass code exists in the array

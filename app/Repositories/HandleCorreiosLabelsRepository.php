@@ -241,7 +241,7 @@ class HandleCorreiosLabelsRepository
     public function cainiaoLabel()
     {
         $label = new CainiaoLabelRepository(); ///by default consider false
-        $label->run($this->order);
+        $label->run($this->order,$this->update);
         return $this->renderLabel($this->request, $this->order, $label->getError());
     }
     public function uspsGSSLabel()

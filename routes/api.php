@@ -145,3 +145,9 @@ Route::prefix('v1')->group(function(){
     });
 
 });
+Route::post('/cainiao-webhook', function (Request $request) {
+    // Handle webhook payload
+    \Log::info('Webhook post received:', $request->all());
+
+    return response()->json(['status' => 'success post']);
+});
