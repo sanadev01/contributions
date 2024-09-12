@@ -42,7 +42,7 @@ class InvoiceInfo
             "declaredValue" => $this->orderItem->value,
             "declaredWeight" => 0.01,
             "nameCn" =>  $this->chineseName,
-            "nameEn" => "CAP",
+            "nameEn" =>  $this->orderItem->description,
             "hscode" => $hscode,
             "sku" => $this->sku,
             "purpose" => "",
