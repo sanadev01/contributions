@@ -28,6 +28,7 @@ use App\Services\Excel\Export\OrderUpdateExport;
 use App\Services\Excel\Export\ExportNameListTest;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Repositories\AnjunLabelRepository;
 
 /*
 |--------------------------------------------------------------------------
@@ -388,7 +389,20 @@ Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field)
     dump($order->update([$field=>null]));  
     dd($order);
 });
-
+Route::get('/anjun-china-label/{warehouse}', function ($warehouse,Request $request) {
+    $order = (Order::where('warehouse_number', $warehouse)->first());  
+    $order->shipping_service_id = 43;
+    $order->save();
+    $order->fresh();
+    if($order){ 
+        $anjun= new AnjunLabelRepository($order, $request, true);
+        $anjunResponse = $anjun->run(); 
+        dump([ "anjun run response front"=>$anjunResponse]);
+        dump([ "anjun run response error"=>$anjun->getError()]);  
+        dd('done');
+    }
+    dd('order not found');
+});
 Route::get('/remove-container-orders', function (Request $request) {
     $codes = [
         'ND067762066BR',
