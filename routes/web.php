@@ -418,3 +418,12 @@ Route::get('/remove-container-orders', function (Request $request) {
     }
     return "Orders Detached Successfully";
 });
+Route::get('/remove-container-orders', function (Request $request) {
+  $codes=[
+];
+$orders = Order::whereIn('corrios_tracking_code', $codes)->get();  
+$ordersdownload = new TempOrderExport($orders);
+$filePath = $ordersdownload->handle();
+
+return response()->download($filePath)->deleteFileAfterSend(true);
+});
