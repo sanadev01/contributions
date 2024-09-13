@@ -64,6 +64,8 @@ Route::get('/home', function () {
 
     return redirect()->route('admin.home');
 });
+Route::get('verify', 'Auth\TwoFactorVerificationController@showVerificationForm')->name('showVerificationForm');
+Route::post('verify', 'Auth\TwoFactorVerificationController@verifyToken')->name('verifyToken');
 
 Auth::routes();
 
