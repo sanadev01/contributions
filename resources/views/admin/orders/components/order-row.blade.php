@@ -76,12 +76,12 @@
     </td>
     <td>
         <div class="custom-tooltip">
-            {{ number_format($order->gross_total, 2) }} USD
+            {{ number_format($order->gross_total, 2) }}
             <x-gross-total-details :order="$order" /> 
         </div>
     </td>
     <td> 
-            {{ number_format($order->tax_and_duty, 2) }} USD  
+            {{ number_format($order->tax_and_duty, 2) }}  
     </td>
     <td>
         <select style="min-width:150px;" class="form-control {{ !auth()->user()->isAdmin() ? 'btn disabled' : ''  }} {{ $order->getStatusClass() }}" @if (auth()->user()->isAdmin() && !$order->isTrashed()) wire:change="$emit('updated-status',{{$order->id}},$event.target.value)" @else disabled="disabled" @endif>

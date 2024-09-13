@@ -206,6 +206,11 @@
                                                                     <i class="feather icon-box"></i> Register PRC Unit
                                                                 </a>
                                                             @endif
+                                                            @if($container->isPRC() && $container->isPRCRegistered())
+                                                                <a href="{{ route('warehouse.container.cancelprc',$container) }}" class="dropdown-item w-100">
+                                                                    <i class="feather icon-box"></i> Cancel PRC Unit
+                                                                </a>
+                                                            @endif
                                                             @if( $container->isRegistered())
                                                                 <a href="{{ route('warehouse.container.cancel',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Cancel Unit

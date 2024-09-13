@@ -76,6 +76,12 @@ class Package implements \App\Services\Correios\Contracts\Package
     public $insurancePaidValue = 0;
     public $nonNationalizationInstruction = "RETURNTOORIGIN";
 
+    public $provisionedTaxValue = null;
+    public $provisionedtIcmsValue = null;
+    public $senderCodeEce = null;
+    public $generalDescription = null;
+
+
     public $items = [];
 
     public function __toString()

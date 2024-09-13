@@ -49,6 +49,7 @@
                                             <div class="offset-1 col-md-3">
                                                     <label>Type</label>
                                                     <select name="type"  class="form-control" id="searchType"   >
+                                                        
                                                         <option class="form-control" value="bcn" @if(request('type')=='bcn') selected @endif>BCN Correios</option>
                                                         <option class="form-control" value="correios"  @if(request('type')=='correios') selected @endif>HD Correios</option>
                                                         <option class="form-control" value="anjun"  @if(request('type')=='anjun') selected @endif>ANJUN Correios</option>

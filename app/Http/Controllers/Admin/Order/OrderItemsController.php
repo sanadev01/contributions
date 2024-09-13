@@ -258,7 +258,6 @@ class OrderItemsController extends Controller
 
         $zoneId = (new GetZipcodeZone($order->recipient->zipcode))->getZipcodeZone();
         $rate = getZoneRate($order, $service, $zoneId);
-
         if ($rate > 0){
             return (array)[
                 'success' => true,
