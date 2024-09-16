@@ -419,7 +419,7 @@ Route::get('/remove-container-orders', function (Request $request) {
     return "Orders Detached Successfully";
 });
 
-Route::get('/download-return-orders-16', function (Request $request) {
+Route::get('/download-return-orders', function (Request $request) {
     set_time_limit(300);
     $codes = [ 
     ];
