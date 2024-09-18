@@ -45,7 +45,7 @@ class Parcel
             "locale" => "zh_CN",
             "solutionParam" => [
                 "importCustomsParam" => [
-                    "taxNumber" => "08846108965"
+                    "taxNumber" => $this->order->recipient->tax_id
                 ],
                 "cainiaoCustomsParam" => [
                     "whetherNeed" => false
@@ -71,7 +71,7 @@ class Parcel
                 "name" => $this->order->getSenderFullName(),
                 "detailAddress" => $this->order->sender_address,
                 "telephone" => $this->order->sender_phone,
-                "state" => "GD"??$this->order->senderState->code,
+                "state" => $this->order->senderState->code,
                 "email" => $this->order->sender_email,
                 "addressId" => null
             ],

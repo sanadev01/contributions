@@ -93,6 +93,9 @@ class Client
 
     public function updatePackage(Order $order)
     {
+        if(!$order->corrios_tracking_code){
+            return $this->createPackage($order);
+        }
         $content = (new UpdateParcel($order))->getRequestBody();
         $data = $this->sendRequest('cnge.order.update', 'CNGCP-OPEN', $content);
 

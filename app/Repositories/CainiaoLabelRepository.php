@@ -15,7 +15,7 @@ class CainiaoLabelRepository
     public function run(Order $order, $update)
     {
         $this->order = $order;
-        if ($update) {
+        if ($update) { 
             \Log::info('updating the cainiao order label');
             if ($this->updateLabel($order)) {
                 \Log::info('updated the cainiao order label');
