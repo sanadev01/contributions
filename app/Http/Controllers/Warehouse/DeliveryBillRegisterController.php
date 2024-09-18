@@ -16,13 +16,13 @@ class DeliveryBillRegisterController extends Controller
         if ($deliveryBill->containers->isEmpty()) {
             session()->flash('alert-danger','Please add containers to this delivery bill');
             return back();
-        } 
+        }
         // if ($deliveryBill->isRegistered()) {
         //     session()->flash('alert-danger','This delivery bill has already been registered');
         //     return back();
         // }
         if($deliveryBill->is_cainiao){ 
-            return $this->registerCianiaoDeliveryBill($deliveryBill);  
+            return $this->registerCainiaoDeliveryBill($deliveryBill);  
             
         } 
 
@@ -34,7 +34,7 @@ class DeliveryBillRegisterController extends Controller
         } 
 
  
-        if($deliveryBill->isAnjunChina() ||$deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE() || $deliveryBill->isHDExpress()|| $deliveryBill->isHoundExpress() || $deliveryBill->isSenegal() || $deliveryBill->isVipParcel() || $deliveryBill->isPasarEx()){
+        if($deliveryBill->isAnjunChina() ||$deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE() || $deliveryBill->isHDExpress()|| $deliveryBill->isHoundExpress() || $deliveryBill->isSenegal() || $deliveryBill->isPasarEx()){
             $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->id.''.$deliveryBill->setCN38Code(),
                 'request_id' => $deliveryBill->setRandomRequestId()
@@ -59,7 +59,7 @@ class DeliveryBillRegisterController extends Controller
         return back();
     }
 
-    function registerCianiaoDeliveryBill($deliveryBill) {
+    function registerCainiaoDeliveryBill($deliveryBill) {
         $client = new CainiaoClient();
         $client->cngeCn38Request($deliveryBill);
         if ($client->error){
