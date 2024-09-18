@@ -345,7 +345,7 @@ class Order extends Model implements Package
     }
 
     public function carrierService()
-    {
+    { 
         if ($this->shippingService()) {
             if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
@@ -418,6 +418,10 @@ class Order extends Model implements Package
             }elseif(optional($this->shippingService)->is_pasar_ex){
 
                 return 'PasarEx';
+            }
+            elseif(optional($this->shippingService)->is_cainiao){
+
+                return 'Cainiao';
             }
             return 'Correios Brazil';
         }

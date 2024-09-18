@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Warehouse;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\DeliveryBill;
+use App\Services\Cainiao\Client as CainiaoClient;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\Client;
 
@@ -16,13 +17,15 @@ class DeliveryBillRegisterController extends Controller
             session()->flash('alert-danger','Please add containers to this delivery bill');
             return back();
         }
-     
-
         // if ($deliveryBill->isRegistered()) {
         //     session()->flash('alert-danger','This delivery bill has already been registered');
         //     return back();
         // }
-       
+        if($deliveryBill->is_cainiao){ 
+            return $this->registerCainiaoDeliveryBill($deliveryBill);  
+            
+        } 
+
         if ($deliveryBill->containerShippingService(ShippingService::TOTAL_EXPRESS)) {
              $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->setCN38Code(),
@@ -31,7 +34,7 @@ class DeliveryBillRegisterController extends Controller
         } 
 
  
-        if($deliveryBill->isAnjunChina() ||$deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE() || $deliveryBill->isHDExpress()|| $deliveryBill->isHoundExpress() || $deliveryBill->isSenegal() || $deliveryBill->isVipParcel() || $deliveryBill->isPasarEx()){
+        if($deliveryBill->isAnjunChina() ||$deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE() || $deliveryBill->isHDExpress()|| $deliveryBill->isHoundExpress() || $deliveryBill->isSenegal() || $deliveryBill->isPasarEx()){
             $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->id.''.$deliveryBill->setCN38Code(),
                 'request_id' => $deliveryBill->setRandomRequestId()
@@ -53,6 +56,17 @@ class DeliveryBillRegisterController extends Controller
         }
 
         session()->flash('alert-success','Delivery Bill Request Created. Please Check 30 minutes later to download bill');
+        return back();
+    }
+
+    function registerCainiaoDeliveryBill($deliveryBill) {
+        $client = new CainiaoClient();
+        $client->cngeCn38Request($deliveryBill);
+        if ($client->error){
+            session()->flash('alert-danger',$client->error);
+            return back();
+        }  
+        session()->flash('alert-success','Delivery Bill Register Successfully!');
         return back();
     }
 }

@@ -130,6 +130,8 @@
                                                 <span class="badge badge-secondary text-dark">VIP</span>
                                                 @elseif($deliveryBill->isAnjunChina())
                                                 <span class="badge badge-secondary text-dark">AJ</span>
+                                                @elseif($deliveryBill->is_cainiao)
+                                                <span class="badge badge-secondary text-danger">CIA</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif

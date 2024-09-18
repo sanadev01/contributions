@@ -38,6 +38,9 @@ class HandleCorreiosLabelsRepository
     }
     public function handle()
     {
+        if($this->order->shippingService->is_cainiao) {
+            return $this->cainiaoLabel();
+        }
         if ($this->order->shippingService->isSwedenPostService()) {
             return $this->swedenPostLabel();
         }
@@ -65,7 +68,6 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->is_total_express) {
                 return $this->totalExpressLabel();
             }
-
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
             // }
@@ -236,6 +238,12 @@ class HandleCorreiosLabelsRepository
         return $this->renderLabel($this->request, $this->order, $pasarExLabelRepository->getError());
     }
 
+    public function cainiaoLabel()
+    {
+        $label = new CainiaoLabelRepository(); ///by default consider false
+        $label->run($this->order,$this->update);
+        return $this->renderLabel($this->request, $this->order, $label->getError());
+    }
     public function uspsGSSLabel()
     {
         $gssLabelRepository = new GSSLabelRepository();

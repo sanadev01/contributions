@@ -121,7 +121,7 @@ class AnjunReport extends AbstractExportService
                 'commission' => 0
             ];
         }
-        if ($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express) {
+        if(in_array($service,[ShippingService::AJ_Packet_Standard , ShippingService::AJ_Packet_Express,ShippingService::AJ_Standard_CN,ShippingService::AJ_Express_CN])) {
             $commission = true;
         }
         if ($service == ShippingService::AJ_Express_CN || $service == ShippingService::AJ_Express_CN) {

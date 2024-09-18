@@ -15,14 +15,27 @@ class CN35DownloadFactoryController extends Controller
         $this->container = $container;
         if ($container->hasPasarExService()) {
             return $this->getPasarExLabel();
+        }       
+        if($container->has_cainiao){
+            return $this->getCainiaoLabel();
         }
-        session()->flash('alert-danger', 'We are not handle this container cn35 yet');
+        session()->flash('alert-danger','We are not handle this container cn35 yet');
         return back();
+    }
+    function getCainiaoLabel(){
+        $cn23Maker = new CN35LabelMaker($this->container);
+        $packetType = 'PACKET STANDARD';
+        $cn23Maker =   $cn23Maker->setDispatchNumber($this->container->dispatch_number)
+            ->setDestinationAirport('GRU')
+            ->setOriginAirport('HKG')
+            ->setPacketType($packetType)
+            ->setCompanyName('CAINIAO')
+            ->setDispatchDate(Carbon::now()->format('Y-m-d'));
+        return $cn23Maker->download();
     }
     function getPasarExLabel()
     {
         $cn23Maker = new CN35LabelMaker($this->container);
-        $packetType = 'PasarEx';
         $cn23Maker =   $cn23Maker->setDispatchNumber($this->container->dispatch_number)
             ->setDestinationAirport('GRU')
             ->setOriginAirport('MIA')
