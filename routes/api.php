@@ -147,6 +147,6 @@ Route::prefix('v1')->group(function(){
 
 });
 Route::post('/cainiao-webhook', function (Request $request){   
-    $request = new CainiaoClient();
-    return $request->cngeCn38CallbackWebHook($request);
+    $cainiaoClient = new CainiaoClient();
+    return $cainiaoClient->cngeCn38CallbackWebHook($request);
 });
