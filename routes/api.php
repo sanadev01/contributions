@@ -3,6 +3,7 @@
 use App\Models\Deposit;
 use App\Models\Order;
 use App\Models\PaymentInvoice;
+use App\Services\Cainiao\Client as CainiaoClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -145,9 +146,7 @@ Route::prefix('v1')->group(function(){
     });
 
 });
-Route::post('/cainiao-webhook', function (Request $request) {
-    // Handle webhook payload
-    \Log::info('Webhook post received:', $request->all());
-
-    return response()->json(['status' => 'success post']);
+Route::post('/cainiao-webhook', function (Request $request){   
+    $request = new CainiaoClient();
+    return $request->cngeCn38CallbackWebHook($request);
 });

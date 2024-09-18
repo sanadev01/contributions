@@ -44,7 +44,6 @@ class DeliveryBill extends Model
         foreach ($this->containers as $container){
             $weight += round($container->orders()->sum(DB::raw('CASE WHEN orders.measurement_unit = "kg/cm" THEN orders.weight ELSE (orders.weight/2.205) END')),2);
         }
-
         return $weight;
     }
 

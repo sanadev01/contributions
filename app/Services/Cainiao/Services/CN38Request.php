@@ -17,8 +17,8 @@ class CN38Request
     {
         return ([
             "ULDParam" => [
-                "ULDNoBatchNo" => "SNU13092024220246622555",
-                "ULDNo" => "SNU120920432",
+                "ULDNoBatchNo" => "SNU0160320242-".$this->deliveryBill->id,
+                "ULDNo" => "SNU16092024",
                 "ULDType" => "Q5",
                 "ULDWeight" => $this->deliveryBill->getWeight(),
                 "ULDWeightUnit" => "KG",
@@ -36,7 +36,7 @@ class CN38Request
             "operationParam" => [
                 "opCode" => "0",
                 "opLocation" => "DHS",
-                "opTime" => "2024-08-22 17:52:29",
+                "opTime" => date('Y-m-d H:i:s'),
                 "timeZone" => "+8"
             ]
         ]);
