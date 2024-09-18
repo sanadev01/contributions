@@ -83,6 +83,7 @@ class Client
                 'cn23' => $data->data->trackingNumber,
                 'api_response' => json_encode($data),
             ]);
+            $this->updatePackage($order->fresh());
             return true;
         }
 
