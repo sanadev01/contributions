@@ -53,8 +53,7 @@ class Client
             'data_digest' => $digest,
             'logistic_provider_id' => $this->cpCode
         ];
-
-        try {
+ 
             $response = $this->client->post($this->appUrl, [
                 'form_params' => $postData,
                 'headers' => ['Content-Type' => 'application/x-www-form-urlencoded']
@@ -62,13 +61,10 @@ class Client
             Log::info([
                 "msgType" => $msgType,
                 "createPackage: content" => $content,
-                "createPackage: response data" => $response,
+                "createPackage: response data" => $response->getBody()
             ]);
             return json_decode($response->getBody());
-        } catch (\Exception $exception) {
-            $this->error = $exception->getMessage();
-            return false;
-        }
+        
     }
 
     public function createPackage(Order $order)
@@ -86,6 +82,7 @@ class Client
             $this->updatePackage($order->fresh());
             return true;
         }
+        return dd($data);
 
         $this->error = "Error code: {$data->errorCode} <br> Error message: {$data->errorMsg}";
         return false;
@@ -112,7 +109,6 @@ class Client
     {
         $content = (new Bigbag($container))->getRequestBody();
         $data = $this->sendRequest('cnge.bigbag.create', 'CNPMS', $content);
-
         if ($data && $data->success === 'true') {
             $container->update([
                 'unit_code' => $data->data->bigBagTrackingNumber,
