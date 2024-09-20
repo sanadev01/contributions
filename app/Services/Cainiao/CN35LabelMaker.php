@@ -44,7 +44,7 @@ class CN35LabelMaker implements HasLableExport
         $this->destinationAirport = $container->destination_operator_name;
         $this->itemsCount = $container->getPiecesCount();
         $this->unitCode = $container->getUnitCode();
-        $this->originAirpot = 'HKG';
+        $this->originAirpot = 'MIA';
         $this->destinationAirport = "GRU";
         $this->officeAddress = "Empresa Brasileira de Correios e Telégrafos<br>
                                 Centro Internacional de Curitiba - SE/PR<br>

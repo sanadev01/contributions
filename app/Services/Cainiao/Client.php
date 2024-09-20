@@ -79,16 +79,14 @@ class Client
                 'cn23' => $data->data->trackingNumber,
                 'api_response' => json_encode($data),
             ]);
-            $this->updatePackage($order->fresh());
+            $this->updatePackage($order->fresh(),'Label Generated Successfully.');
             return true;
-        }
-        return dd($data);
-
+        } 
         $this->error = "Error code: {$data->errorCode} <br> Error message: {$data->errorMsg}";
         return false;
     }
 
-    public function updatePackage(Order $order)
+    public function updatePackage(Order $order,$message=null)
     {
         if(!$order->corrios_tracking_code){
             return $this->createPackage($order);
@@ -100,7 +98,7 @@ class Client
             return true;
         }
 
-        $this->error = "Error code: {$data->errorCode} <br> Error message: {$data->errorMsg}";
+        $this->error = $message . "Error code: {$data->errorCode} <br> Error message: {$data->errorMsg}";
         return false;
     }
 
@@ -179,25 +177,36 @@ class Client
         }
     }
     function cngeCn38CallbackWebHook($request) {
+        try{
+
         $data = $request->all();  
         Log::info([
-            'Post cainiao webhook data'=>$data
+            'Post cainiao webhook data'=> json_encode($data)
         ]);
         $jsonDecode = json_decode($data['logistics_interface']);  
         $cn38List = $jsonDecode->cn38List; 
         $ULDNoBatchNo = $jsonDecode->ULDNoBatchNo; 
         if(isset(explode('-',$ULDNoBatchNo)[1])){
             $id= explode('-',$ULDNoBatchNo)[1];
-            $deliveryBills = DeliveryBill::find($id);
-            $deliveryBills->update([
-                'response'=>$data,
-                'request_id'=>$ULDNoBatchNo,
-                'cnd38_code'=>implode('',$cn38List),
-            ]);
+            $deliveryBill = DeliveryBill::find($id);
+            if($deliveryBill->is_cainiao){
+               $deliveryBill->update([
+                    'response'=> json_encode($data),
+                    'request_id'=> $ULDNoBatchNo,
+                    'cnd38_code'=> implode('',$cn38List),
+                ]);
+            }else{
+                Log::info(['delivery bill not belongs to  cainiao'=>$deliveryBill]);
+            }
+
         }else{
             Log::info('ID not found in post webhook cainiao');
         }
-        return response()->json(['status' => 'success post','request'=>$data]);
+        return response()->json(['status' => true,'data'=>$data]);
+        }catch (\Exception $exception){
+            Log::info(['Exception in post webhook cainiao'=> $exception->getMessage()]);
+            return response()->json(['status' => false,'message'=>$exception->getMessage()], 500);
+        }
     }
     public function addOrderTracking($order)
     {

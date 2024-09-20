@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Services\Cainiao\Services;
-use App\Models\Warehouse\Container; 
+
+use App\Models\Warehouse\Container;
 
 class Bigbag
-{ 
-    protected $container; 
+{
+    protected $container;
 
     public function __construct(Container $container)
     {
@@ -14,26 +15,27 @@ class Bigbag
 
     public function getRequestBody()
     {
+        $weight = $this->container->getWeight();
         return ([
             "request" => [
                 "locale" => "zh_cn",
-                "weight" => $this->container->getWeight(),
+                "weight" => "$weight",
                 "weightUnit" => "kg",
                 "orderCodeList" => $this->mapItemParams(),
                 "handoverParam" => [
-                    "zipCode" => "310000",
-                    "mobilePhone" => "18666270000",
-                    "city" => "杭州市",
+                    "zipCode" => "01045001",
+                    "mobilePhone" => "+5511992230189",
+                    "city" => "Sao Paulo",
                     "addressId" => "",
                     "telephone" => "",
-                    "street" => "Chiang Village Street",
+                    "street" => "1302",
                     "district" => "",
-                    "name" => "Hrich",
-                    "detailAddress" => "西湖区蒋村街道龙湖天街",
-                    "country" => "CN",
-                    "countryCode" => "CN",
+                    "name" => "Lucas Sibie Lucas Sibie",
+                    "detailAddress" => "Avenida Jandira",
+                    "country" => "BR",
+                    "countryCode" => "BR",
                     "portCode" => "GRU",
-                    "state" => "浙江省",
+                    "state" => "SP",
                     "email" => ""
                 ]
             ]
