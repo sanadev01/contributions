@@ -120,6 +120,11 @@
                                 <span class="menu-title">@lang('menu.Warehouse.DSS Senegal')</span>
                             </a>
                         </li>
+                        <li> <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>App\Models\ShippingService::FOX_ST_COURIER]) }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Fox Courier</span>
+                            </a>
+                        </li>
                         <li class="{{ $isActive(['warehouse.vip-parcel-containers.index','warehouse.vip-parcel-containers.create','warehouse.vip-parcel-containers.edit','warehouse.vip-parcel-containers.packages.index']) }}">
                             <a href="{{ route('warehouse.vip-parcel-containers.index') }}">
                                 <i class="feather icon-circle"></i>

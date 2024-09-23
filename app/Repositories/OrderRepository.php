@@ -221,6 +221,12 @@ class OrderRepository
                     ShippingService::DSS_SENEGAL
                 ];
             }
+            if($request->carrier == 'Fox Courier'){
+                $service = [
+                    ShippingService::FOX_ST_COURIER, 
+                    ShippingService::FOX_EX_COURIER,
+                ];
+            } 
             if($request->carrier == 'VIP Parcels'){
                 $service = [
                     ShippingService::VIP_PARCEL_FCP,

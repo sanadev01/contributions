@@ -419,9 +419,9 @@ class Order extends Model implements Package
 
                 return 'PasarEx';
             }
-            elseif(optional($this->shippingService)->is_cainiao){
+            elseif(optional($this->shippingService)->is_fox_courier){
 
-                return 'Cainiao';
+                return 'Fox Courier';
             }
             return 'Correios Brazil';
         }
@@ -454,7 +454,9 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP||
+                optional($this->shippingService)->service_sub_class == ShippingService::FOX_ST_COURIER ||
+                optional($this->shippingService)->service_sub_class == ShippingService::FOX_EX_COURIER ||
+                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP ||
                 optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMEI||
                 optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI) {
 

@@ -29,6 +29,7 @@ use App\Services\Excel\Export\ExportNameListTest;
 use App\Http\Controllers\CustomsResponseController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Repositories\AnjunLabelRepository;
 use App\Models\CustomResponse;
 use App\Models\BillingInformation;
 use App\Models\User;
@@ -386,6 +387,20 @@ Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field)
     dump($order->update([$field=>null]));  
     dd($order);
 });
+Route::get('/anjun-china-label/{warehouse}', function ($warehouse,Request $request) {
+    $order = (Order::where('warehouse_number', $warehouse)->first());  
+    if($order){ 
+    $order->shipping_service_id = 43;
+    $order->save();
+    $order->fresh();
+        $anjun= new AnjunLabelRepository($order, $request, true);
+        $anjunResponse = $anjun->run(); 
+        dump([ "anjun run response front"=>$anjunResponse]);
+        dump([ "anjun run response error"=>$anjun->getError()]);  
+        dd('done');
+    }
+    dd('order not found');
+});
 
 Route::post('/webhooks/customs-response', [CustomsResponseController::class, 'handle']);
 Route::get('/get/customs-response', function (Request $request) {
@@ -407,6 +422,17 @@ Route::get('/remove-container-orders', function (Request $request) {
         }
     }
     return "Orders Detached Successfully";
+});
+
+Route::get('/download-return-orders', function (Request $request) {
+    set_time_limit(300);
+    $codes = [
+    ];
+    $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
+    $ordersdownload = new TempOrderExport($orders);
+    $filePath = $ordersdownload->handle();
+
+    return response()->download($filePath)->deleteFileAfterSend(true);
 });
 Route::get('/warehouse-detail/{warehouse}', function ($warehouse) {
  

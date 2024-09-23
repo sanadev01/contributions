@@ -154,6 +154,7 @@
                             <option value="PasarEx">Pasar Ex</option>
                             <option value="Cainiao">Cainiao</option>
                             <option value="DSS Senegal">DSS Senegal</option>
+                            <option value="Fox Courier">Fox Courier</option>
                             <option value="VIP Parcels">VIP Parcel</option>
                         </select>
                     </th>

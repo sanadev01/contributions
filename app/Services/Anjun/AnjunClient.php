@@ -42,7 +42,7 @@ class AnjunClient
     {
 
         $orderBody = (new Package($order))->requestBody(); 
-        
+        \Log::info(['anjun china order request body'=>$orderBody]);
         try {
             $response = $this->client->post('/logistics/order/api/create', [
                 'json'    =>  $orderBody,

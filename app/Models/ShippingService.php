@@ -74,6 +74,8 @@ class ShippingService extends Model
     const PasarEx = 238;
     const TOTAL_EXPRESS_10KG = 284;
     const DSS_SENEGAL = 735;
+    const FOX_ST_COURIER = 3697;
+    const FOX_EX_COURIER = 3693;
     const VIP_PARCEL_PMEI = 847;
     const VIP_PARCEL_PMI = 848;
     const VIP_PARCEL_FCP = 849;
@@ -569,6 +571,8 @@ class ShippingService extends Model
             ShippingService::TOTAL_EXPRESS_10KG =>'Total Express',
             ShippingService::HD_Express =>'HD Express',
             ShippingService::DSS_SENEGAL=>'DSS Senegal',
+            ShippingService::FOX_ST_COURIER=>'FOX Courier',
+            ShippingService::FOX_EX_COURIER=>'FOX Courier',
         ];
 
         if (array_key_exists($serviceSubClass, $serviceMap)) {
@@ -588,6 +592,17 @@ class ShippingService extends Model
     function getIsPasarExAttribute()
     {
         return $this->service_sub_class == self::PasarEx;
+    }
+
+    function getIsFoxCourierAttribute()
+    {
+        return in_array(
+            $this->service_sub_class,
+            [
+                self::FOX_ST_COURIER,
+                self::FOX_EX_COURIER,
+            ]
+        );
     }
     function getIsCainiaoAttribute()
     {

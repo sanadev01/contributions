@@ -68,6 +68,11 @@ class HandleCorreiosLabelsRepository
             if ($this->order->shippingService->is_total_express) {
                 return $this->totalExpressLabel();
             }
+
+            if ($this->order->shippingService->is_fox_courier) {
+                return $this->foxCourierLabel();
+            }
+
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
             // }
@@ -264,6 +269,12 @@ class HandleCorreiosLabelsRepository
         return $this->renderLabel($this->request, $this->order, $senegalLabelRepository->getError());
     }
 
+    public function foxCourierLabel()
+    {
+        $foxCourier = new FoxCourierLabelRepository(); ///by default consider false
+        $foxCourier->run($this->order, $this->update);
+        return $this->renderLabel($this->request, $this->order, $foxCourier->getError());
+    }
     public function vipParcelLabel()
     {
         $vipParcelLabelRepository = new VIPParcelLabelRepository();

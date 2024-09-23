@@ -130,6 +130,8 @@
                                                 <span class="badge badge-secondary text-dark">VIP</span>
                                                 @elseif($deliveryBill->isAnjunChina())
                                                 <span class="badge badge-secondary text-dark">AJ</span>
+                                                @elseif($deliveryBill->isFoxCourier())
+                                                <span class="badge text-dark" style="background-color:#b4e2ef">Fox</span>
                                                 @elseif($deliveryBill->is_cainiao)
                                                 <span class="badge badge-secondary text-danger">CIA</span>
                                                 @else

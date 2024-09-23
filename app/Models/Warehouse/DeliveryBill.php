@@ -169,4 +169,9 @@ class DeliveryBill extends Model
         return false;
     }
 
+    public function isFoxCourier()
+    {
+        return $this->containers->first()->hasFoxCourierService();
+    }
+
 }
