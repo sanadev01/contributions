@@ -18,6 +18,7 @@ use App\Repositories\AnjunLabelRepository;
 use App\Services\TotalExpress\TotalExpressLabelRepository;
 use App\Repositories\HoundExpressLabelRepository;
 use App\Repositories\SenegalLabelRepository;
+use App\Repositories\VIPParcelLabelRepository;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,10 +38,13 @@ class HandleCorreiosLabelsRepository
     }
     public function handle()
     {
+        if($this->order->shippingService->is_cainiao) {
+            return $this->cainiaoLabel();
+        }
         if ($this->order->shippingService->isSwedenPostService()) {
             return $this->swedenPostLabel();
         }
-        if ($this->order->shippingService->is_hound_express) { 
+        if ($this->order->shippingService->is_hound_express) {
             return $this->isHoundExpress();
         }
         if ($this->order->shippingService->isSenegalService()) {
@@ -52,8 +56,8 @@ class HandleCorreiosLabelsRepository
 
                 return $this->gepsLabel();
             }
-            if ($this->order->shippingService->isCorreiosService() ||$this->order->shippingService->is_bcn_service || $this->order->shippingService->is_anjun_china_service_sub_class || $this->order->shippingService->isAnjunService()) {
-                        return $this->correiosOrAnjun($this->order);
+            if ($this->order->shippingService->isCorreiosService() || $this->order->shippingService->is_bcn_service || $this->order->shippingService->is_anjun_china_service_sub_class || $this->order->shippingService->isAnjunService()) {
+                return $this->correiosOrAnjun($this->order);
             }
             if ($this->order->shippingService->isPostPlusService()) {
                 return $this->postPlusLabel();
@@ -78,7 +82,7 @@ class HandleCorreiosLabelsRepository
                 return $this->postPlusLabel();
             }
         }
-        if ($this->order->recipient->country_id ==Order::COLOMBIA){ 
+        if ($this->order->recipient->country_id == Order::COLOMBIA) {
             if ($this->order->shippingService->is_pasar_ex) {
                 return $this->pasarExLabel();
             }
@@ -111,6 +115,10 @@ class HandleCorreiosLabelsRepository
 
             if ($this->order->shippingService->is_ups_ground) {
                 return $this->upsLabel();
+            }
+
+            if ($this->order->shippingService->isVipParcelService()) {
+                return $this->vipParcelLabel();
             }
         }
 
@@ -166,9 +174,10 @@ class HandleCorreiosLabelsRepository
         $swedenpostLabelRepository->run($this->order, $this->update); //by default consider false
         return $this->renderLabel($this->request, $this->order, $swedenpostLabelRepository->getError());
     }
-    function isHoundExpress(){
-        $swedenpostLabelRepository = new HoundExpressLabelRepository(); 
-        $swedenpostLabelRepository->run($this->order,$this->update); //by default consider false
+    function isHoundExpress()
+    {
+        $swedenpostLabelRepository = new HoundExpressLabelRepository();
+        $swedenpostLabelRepository->run($this->order, $this->update); //by default consider false
         return $this->renderLabel($this->request, $this->order, $swedenpostLabelRepository->getError());
     }
 
@@ -195,11 +204,9 @@ class HandleCorreiosLabelsRepository
 
     public function anjunChinaLabel()
     {
-        $anjun= new AnjunLabelRepository($this->order, $this->request, $this->update);
-        $anjunResponse = $anjun->run(); 
-        \Log::info([ "anjun run response front"=>$anjunResponse]);
-        \Log::info([ "anjun run response front anjun"=>$anjun->getError()]);
-        return $this->renderLabel($this->request, $this->order, $anjun->getError());
+        $anjun = new AnjunLabelRepository($this->order, $this->request, null);
+        $anjun->run();
+        return $this->renderLabel($this->request, $this->order, $anjun->error);
     }
 
     public function uspsLabel()
@@ -236,6 +243,12 @@ class HandleCorreiosLabelsRepository
         return $this->renderLabel($this->request, $this->order, $pasarExLabelRepository->getError());
     }
 
+    public function cainiaoLabel()
+    {
+        $label = new CainiaoLabelRepository(); ///by default consider false
+        $label->run($this->order,$this->update);
+        return $this->renderLabel($this->request, $this->order, $label->getError());
+    }
     public function uspsGSSLabel()
     {
         $gssLabelRepository = new GSSLabelRepository();
@@ -261,6 +274,12 @@ class HandleCorreiosLabelsRepository
         $foxCourier = new FoxCourierLabelRepository(); ///by default consider false
         $foxCourier->run($this->order, $this->update);
         return $this->renderLabel($this->request, $this->order, $foxCourier->getError());
+    }
+    public function vipParcelLabel()
+    {
+        $vipParcelLabelRepository = new VIPParcelLabelRepository();
+        $vipParcelLabelRepository->run($this->order, $this->update);
+        return $this->renderLabel($this->request, $this->order, $vipParcelLabelRepository->getError());
     }
 
     public function updateShippingServiceFromSetting($order)

@@ -73,6 +73,7 @@ class UserSettingRepository {
         $request->has('pay_tax_service') ? saveSetting('pay_tax_service', true,$user->id) : saveSetting('pay_tax_service', false, $user->id);
         $request->has('gde') ? saveSetting('gde', true, $user->id) : saveSetting('gde', false, $user->id);
         $request->has('amazon_sp') ? saveSetting('amazon_sp', true, $user->id) : saveSetting('amazon_sp', false, $user->id);
+        $request->has('vip_parcels') ? saveSetting('vip_parcels', true, $user->id) : saveSetting('vip_parcels', false, $user->id);
         $request->has('is_prc_user') ? saveSetting('is_prc_user', $request->is_prc_user == "true", $user->id) : saveSetting('is_prc_user', false, $user->id);
         $request->has('prc_user_fee') ? saveSetting('prc_user_fee', $request->prc_user_fee, $user->id) : saveSetting('prc_user_fee', 'variable_fee', $user->id);
 

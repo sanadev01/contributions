@@ -58,8 +58,8 @@
                                                                     <option value="{{json_encode(['734','367','778','777'])}}">Post Plus</option>                                                           
                                                                     <option value="{{json_encode(['PostNL'])}}">Post NL</option>                                                           
                                                                     <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                    
-                                                                    <option value="{{json_encode(['BCN-IX','BCN-NX'])}}">Correios B </option>
-                                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                                 
+                                                                    <option value="{{json_encode(['BCN-IX','BCN-NX'])}}">Correios B </option>                                                                  
+                                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                    
                                                                 </select>
                                                     </div>
                                                     <div class="col-md-2 mt-1">
@@ -126,13 +126,20 @@
                                                 <span class="badge text-dark" style="background-color:#b4e2ef">PEx</span>
                                                 @elseif($deliveryBill->isSenegal())
                                                 <span class="badge badge-secondary text-dark">SN</span>
+                                                @elseif($deliveryBill->isVipParcel())
+                                                <span class="badge badge-secondary text-dark">VIP</span>
                                                 @elseif($deliveryBill->isAnjunChina())
                                                 <span class="badge badge-secondary text-dark">AJ</span>
                                                 @elseif($deliveryBill->isFoxCourier())
                                                 <span class="badge text-dark" style="background-color:#b4e2ef">Fox</span>
+                                                @elseif($deliveryBill->is_cainiao)
+                                                <span class="badge badge-secondary text-danger">CIA</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif
+                                            @endif
+                                            @if(optional($deliveryBill)->Containers->first()->isPRC())
+                                                <strong class="primary">(PRC)</strong>
                                             @endif
                                             @admin @if(optional($deliveryBill->user)->isUser()) <span class="badge badge-danger">GoBox</span> @endif @endadmin
                                         </td>

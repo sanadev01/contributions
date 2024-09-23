@@ -13,8 +13,8 @@ use App\Repositories\Reports\AnjunReportsRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-
-class ExportAnjunReport implements ShouldQueue
+class ExportAnjunReport 
+// implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -26,7 +26,7 @@ class ExportAnjunReport implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($request, $user)
+    public function __construct(array $request, $user)
     {
         set_time_limit(120);
         $this->user = $user;
@@ -44,9 +44,8 @@ class ExportAnjunReport implements ShouldQueue
         try {
             $request = new Request($this->request);
             $id = $this->user->id;
-             
-                $deliveryBills = $this->reportRepository->getAnjunReport($request, $this->user);
-                $exportService = new AnjunReport($deliveryBills, $id); 
+            $deliveryBills = $this->reportRepository->getAnjunReport($request, $this->user);
+            $exportService = new AnjunReport($deliveryBills, $id);
             $url = $exportService->handle();
             
             if ($url) {

@@ -5,17 +5,15 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Mail\Admin\NewRegistration;
 use App\Mail\User\AccountCreated;
-use App\Models\Permission;
-use App\Providers\RouteServiceProvider;
 use App\Models\User;
-use App\Rules\PhoneNumberValidator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use App\Models\CommissionSetting;
-
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 class RegisterController extends Controller
 {
     /*
@@ -36,7 +34,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = 'login';
 
     /**
      * Create a new controller instance.
@@ -59,13 +57,32 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'last_name' => ['sometimes', 'required_if:account_type,'.User::ACCOUNT_TYPE_INDIVIDUAL],
+            'last_name' => ['sometimes', 'required_if:account_type,' . User::ACCOUNT_TYPE_INDIVIDUAL],
             'phone' => ['required', 'min:10', 'max:15'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => [
+                'required',
+                'string',
+                'min:12',
+                'confirmed',
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
+                'regex:/[@$!%*?&^#()_+={}\[\]|:;,.<>~`]/',
+                function ($attribute, $value, $fail) use ($data) {
+                    if((isset($data['name']) && is_string($data['name']) && stripos($value, $data['name']) !== false)) {
+                        $fail('The password cannot contain your first name.');
+                    }
+                    if((isset($data['last_name']) && is_string($data['last_name']) && stripos($value, $data['last_name']) !== false)) {
+                        $fail('The password cannot contain your last name.');
+                    }
+                }
+            ],
             'account_type' => 'required'
-        ],[
-            'phone.phone' => 'Invalid Phone number'
+        ], [
+            'phone.phone' => 'Invalid Phone number',
+            'password.regex' => 'The password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.',
+
         ]);
     }
 
@@ -78,7 +95,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $locale = app()->getLocale();
-        
+
         $referrer = User::findRef($data['reffered_by']);
 
         $user = User::create([
@@ -98,12 +115,26 @@ class RegisterController extends Controller
         if ($user->reffered_by) {
             $this->setReferererCommission($user, $referrer);
         }
-
         saveSetting('locale', $locale, $user->id);
         saveSetting('geps_service', true, $user->id);
         return $user;
     }
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
 
+        event(new Registered($user = $this->create($request->all())));
+
+        // $this->guard()->login($user);
+
+        if ($response = $this->registered($request, $user)) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+                    ? new JsonResponse([], 201)
+                    : redirect($this->redirectPath());
+    }
     public function registered(Request $request, $user)
     {
         Mail::to($user->email)->send(new AccountCreated($user));
@@ -123,5 +154,4 @@ class RegisterController extends Controller
 
         return true;
     }
-    
 }

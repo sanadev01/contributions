@@ -61,6 +61,7 @@ class ContainerRepository extends AbstractRepository{
                 'postal_category_code' => 'A',
                 'destination_operator_name' => $request->destination_operator_name,
                 'unit_type' => $request->unit_type,
+                'custom_type' => $request->custom_type,
                 'services_subclass_code' => $request->services_subclass_code
             ]);
             $container->update([
@@ -81,7 +82,8 @@ class ContainerRepository extends AbstractRepository{
             return  $container->update([
                 'destination_operator_name' => $request->destination_operator_name,
                 'seal_no' => $request->seal_no,
-                'unit_type' => $request->unit_type
+                'unit_type' => $request->unit_type,
+                'custom_type' => $request->custom_type,
             ]);
 
         } catch (\Exception $ex) {

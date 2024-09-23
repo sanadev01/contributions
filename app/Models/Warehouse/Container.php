@@ -101,6 +101,12 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             ShippingService::DSS_SENEGAL => 'DSS Senegal',
             ShippingService::FOX_ST_COURIER => 'Fox Standard Courier',
             ShippingService::FOX_EX_COURIER => 'Fox Express Courier',
+            ShippingService::DSS_SENEGAL=>'DSS Senegal',
+            ShippingService::VIP_PARCEL_FCP=>'VIP Parcel First Class',
+            ShippingService::VIP_PARCEL_PMEI=>'VIP Parcel Priority Mail Express International',
+            ShippingService::VIP_PARCEL_PMI=>'VIP Parcel Priority Mail International',
+
+            ShippingService::Cainiao=>'Cainiao',
         ];
     
         // Check if the service subclass code exists in the array
@@ -138,8 +144,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             'BCN-IX' => 21,
             ShippingService::HoundExpress => 22,
             ShippingService::PasarEx => 23,
-            ShippingService::FOX_ST_COURIER => 24,
-            ShippingService::FOX_EX_COURIER => 25,
+            ShippingService::DSS_SENEGAL => 24,
+            ShippingService::Cainiao => 25,
+            ShippingService::FOX_ST_COURIER => 26,
+            ShippingService::FOX_EX_COURIER => 27,
         ];
     
         // Check if the service subclass code exists in the array
@@ -206,6 +214,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasAnjunService()
     {
         return in_array($this->services_subclass_code ,['AJ-NX', 'AJ-IX']);
+    } 
+    public function getHasCainiaoAttribute()
+    {
+        return in_array($this->services_subclass_code ,['1000']);
     } 
     public function hasBCNService()
     {
@@ -299,4 +311,24 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         return $this->services_subclass_code == ShippingService::FOX_ST_COURIER || $this->services_subclass_code == ShippingService::FOX_EX_COURIER;
 
     }
+    public function hasVipParcelService()
+    {
+        return $this->services_subclass_code == ShippingService::VIP_PARCEL_FCP || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMEI || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMI;
+    }
+
+    public function getCustomType()
+    {
+        return ($this->custom_type == 1 || is_null($this->custom_type) || $this->custom_type === '') ? 'Non-PRC' : 'PRC';
+    }
+
+    public function isPRC()
+    {
+        return $this->custom_type == 2;
+    }
+
+    public function isPRCRegistered()
+    {
+        return !empty($this->customs_response_list);
+    }
+
 }
