@@ -42,7 +42,7 @@ class AnjunClient
     {
 
         $orderBody = (new Package($order))->requestBody(); 
-        
+        \Log::info(['anjun china order request body'=>$orderBody]);
         try {
             $response = $this->client->post('/logistics/order/api/create', [
                 'json'    =>  $orderBody,
@@ -50,6 +50,7 @@ class AnjunClient
                     'Authorization' => $this->token,
                 ]
             ]);
+            \Log::info(['anjun china order response'=>$response]);
             $responseContents = json_decode($response->getBody()->getContents());            
             if ($responseContents->code == 200) {
                 $trackingNumber = $responseContents->data->trackNum;

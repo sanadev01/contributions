@@ -30,6 +30,7 @@ use App\Http\Controllers\CustomsResponseController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\CustomResponse;
+use App\Repositories\AnjunLabelRepository;
 
 /*
 |--------------------------------------------------------------------------
@@ -397,6 +398,20 @@ Route::get('/get/customs-response', function (Request $request) {
     dd($customResponse);
 });
 
+Route::get('/anjun-china-label/{warehouse}', function ($warehouse,Request $request) {
+    $order = (Order::where('warehouse_number', $warehouse)->first());  
+    if($order){ 
+    $order->shipping_service_id = 43;
+    $order->save();
+    $order->fresh();
+        $anjun= new AnjunLabelRepository($order, $request, true);
+        $anjunResponse = $anjun->run(); 
+        dump([ "anjun run response front"=>$anjunResponse]);
+        dump([ "anjun run response error"=>$anjun->getError()]);  
+        dd('done');
+    }
+    dd('order not found');
+});
 Route::get('/remove-container-orders', function (Request $request) {
     $codes = [
         'ND067762066BR',
@@ -411,4 +426,15 @@ Route::get('/remove-container-orders', function (Request $request) {
         }
     }
     return "Orders Detached Successfully";
+});
+
+Route::get('/download-return-orders', function (Request $request) {
+    set_time_limit(300);
+    $codes = [
+    ];
+    $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
+    $ordersdownload = new TempOrderExport($orders);
+    $filePath = $ordersdownload->handle();
+
+    return response()->download($filePath)->deleteFileAfterSend(true);
 });
