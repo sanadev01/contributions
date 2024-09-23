@@ -403,11 +403,9 @@ Route::get('/anjun-china-label/{warehouse}', function ($warehouse,Request $reque
     }
     dd('order not found');
 });
-Route::get('/remove-container-orders', function (Request $request) {
+Route::get('/detach-container-orders', function (Request $request) {
     $codes = [
-        'ND067762066BR',
-        'ND072972270BR',
-        'IX031018633BR',
+        'ND145854165BR',
     ];
     $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
 
