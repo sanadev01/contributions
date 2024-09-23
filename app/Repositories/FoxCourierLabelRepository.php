@@ -37,9 +37,6 @@ class FoxCourierLabelRepository
     {
         if($order->api_response)
         {
-            $response = json_decode($order->api_response);
-            $base64Pdf = $response->data[0]->labelContent;
-            Storage::put("labels/{$order->corrios_tracking_code}.pdf", base64_decode($base64Pdf));
             return true; 
         }
     }

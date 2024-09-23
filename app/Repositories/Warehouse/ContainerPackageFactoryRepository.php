@@ -18,7 +18,8 @@ class ContainerPackageFactoryRepository
         $success = false;
 
         if ($container->services_subclass_code != $order->shippingService->service_sub_class) {
-            $message = "This is " . $container->getServiceSubClass() . " packages container.You put $order->carrier package";
+            $service = $order->shippingService->name;
+            $message = "This is " . $container->getServiceSubClass() . " packages container.You put $service package";
         } elseif (!$order->containers->isEmpty()) {
             $message = "Order is already present in Container";
         } elseif ($order->status != Order::STATUS_PAYMENT_DONE) {

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\OrderTracking;
+use App\Models\ShippingService;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Services\TotalExpress\Services\TotalExpressMasterBox;
@@ -20,12 +21,25 @@ class UnitRegisterFactoryController extends Controller
             return back();
         }
 
-        if(!$container->unit_code){
+        if (!$container->unit_code) {
+            $serviceSubClass = $container->getSubClassCode();
+
+            if (in_array($serviceSubClass, [
+                ShippingService::FOX_ST_COURIER,
+                ShippingService::FOX_EX_COURIER,
+            ])) {
+                $unitCodePrefix = 'HDFOX';
+                $unitCodeSuffix = 'BR';
+            } else {
+                $unitCodePrefix = 'HDC';
+                $unitCodeSuffix = 'CO';
+            }
             $container->update([
-                'unit_code' => 'HDC'.date('d').date('m').sprintf("%07d", $container->id).'CO',
+                'unit_code' => $unitCodePrefix . date('d') . date('m') . sprintf("%07d", $container->id) . $unitCodeSuffix,
                 'response' => true,
-            ]); 
+            ]);
         }
+        
 
         session()->flash('alert-success','registered successfully!');
         return back();

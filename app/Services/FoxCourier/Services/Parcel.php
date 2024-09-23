@@ -51,7 +51,7 @@ class Parcel
       $tpService = $standard ? 'ST' : 'EX'; 
 
       // Construct the request body
-      return [
+      $parcel = [
          "cdPartnerRepository" => $cdPartnerRepository,
          "cdShipment" => $this->order->warehouse_number,
          "tpCourierOperation" => 'IMPORT',
@@ -61,7 +61,7 @@ class Parcel
          "cdIncoterm" => $incoterm,
          "tpService" => $tpService,
          "vlWeight" => $this->weight,
-         "vlDepth" => $this->length,
+         "vlDepth" => $this->height,
          "vlWidth" => $this->width,
          "vlHeight" => $this->height,
          "nbQuantity" => 1,
@@ -111,6 +111,8 @@ class Parcel
          // Goods information
          "goods" => $this->setItemsDetails()
       ];
+
+      return [$parcel];
    }
 
    private function setItemsDetails()

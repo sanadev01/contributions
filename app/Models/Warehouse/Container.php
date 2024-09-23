@@ -99,6 +99,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             ShippingService::GSS_CEP => 'GSS Commercial E-Packet',
             ShippingService::PasarEx => 'PasarEx',
             ShippingService::DSS_SENEGAL => 'DSS Senegal',
+            ShippingService::FOX_ST_COURIER => 'Fox Standard Courier',
+            ShippingService::FOX_EX_COURIER => 'Fox Express Courier',
         ];
     
         // Check if the service subclass code exists in the array
@@ -136,6 +138,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             'BCN-IX' => 21,
             ShippingService::HoundExpress => 22,
             ShippingService::PasarEx => 23,
+            ShippingService::FOX_ST_COURIER => 24,
+            ShippingService::FOX_EX_COURIER => 25,
         ];
     
         // Check if the service subclass code exists in the array
@@ -288,5 +292,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function hasSenegalService()
     {
         return $this->services_subclass_code == ShippingService::DSS_SENEGAL;
+    }
+
+    public function hasFoxCourierService()
+    {
+        return $this->services_subclass_code == ShippingService::FOX_ST_COURIER || $this->services_subclass_code == ShippingService::FOX_EX_COURIER;
+
     }
 }
