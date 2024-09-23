@@ -153,6 +153,7 @@
                             <option value="Hound Express">Hound Express</option>
                             <option value="PasarEx">Pasar Ex</option>
                             <option value="DSS Senegal">DSS Senegal</option>
+                            <option value="Fox Courier">Fox Courier</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin

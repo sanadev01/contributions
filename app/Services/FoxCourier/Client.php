@@ -12,10 +12,9 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
 use App\Services\Converters\UnitsConverter;
-use App\Services\SwedenPost\Services\Parcel;
+use App\Services\FoxCourier\Services\Parcel;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\PackageError;
-use App\Services\SwedenPost\Services\ShippingOrder;
 
 class Client{
 
@@ -50,36 +49,50 @@ class Client{
     {   
         $parcel = new Parcel($order);
         $shippingRequest = $parcel->getRequestBody();
+        $orderURI = 'add-shipment';
+        dd($shippingRequest);
+        // dd($this->baseUrl.$orderURI);
 
         try {
             $orderURI = 'add-shipment';
             $labelURI = 'print';
-            $response = Http::withHeaders($this->getHeaders('POST', $orderURI))->post($this->baseUrl.$orderURI, [$shippingRequest]);
+            $response = $this->client->post($this->baseUrl.$orderURI, [
+                'headers' => ['Authorization' => $this->token],
+                'json' => $shippingRequest
+            ]);
 
-            $data = json_decode($response);
-            if($data->status == "Success") {
-                $trackingNumber = $data->data[0]->trackingNo;
-                $orderId = $data->data[0]->orderId;
+            $data = json_decode($response->getBody()->getContents());
+            dd($data);
+            if($data->success) {
+                $trackingNumber = $data->reference;
+
                 if ($trackingNumber){
-                    $labelData = [
-                        "orderIds" => ["$trackingNumber"],
-                        "labelType" => 1,
-                        "packinglist" => true,
-                        "merged" => false,
-                        "labelFormat" => "PDF",
-                    ];
-                    $printLabel = Http::withHeaders($this->getHeaders('POST', $labelURI))->post($this->baseUrl.$labelURI, $labelData);
+                    $order->update([
+                        'corrios_tracking_code' => $trackingNumber,
+                        'cn23' => [
+                            "tracking_code" => $trackingNumber,
+                            "stamp_url" => route('warehouse.cn23.download', $order->id),
+                            'leve' => false
+                        ],
+                        'api_response' => json_encode($data)
+                    ]);
+                    $this->addOrderTracking($order);
 
-                    $printResponse = json_decode($printLabel);
-                    if($printResponse->status == "Failure") {
-                        $deleteURI = 'services/shipper/order/'.$orderId;
-                        $deleteLabel = Http::withHeaders($this->getHeaders('DELETE', $deleteURI))->DELETE($this->baseUrl.$deleteURI);
-                        return new PackageError("Error while printing label. Code: ".$printResponse->errors[0]->code.' Description: '.$printResponse->errors[0]->message);
+                    //Print Label APi
+
+                    $printLabel = $this->client->get($this->baseUrl.$labelURI."/".$trackingNumber, [
+                        'headers' => ['Authorization' => $this->token]
+                    ]);
+
+                    $printResponse = json_decode($printLabel->getBody()->getContents());
+
+                    if(!$printResponse->success) {
+                        return new PackageError("Error while printing label. ".$printResponse->errors[0]);
                     }
                 }
             }
-            if($data->status == "Failure") {
-                return new PackageError("Error while creating shipment. Code: ".$data->errors[0]->code.' Description: '.$data->errors[0]->message);
+            if(!$data->success) {
+                return new PackageError("Error while creating shipment. ".$data->errors[0]);
             }
             return null;
         }catch (\GuzzleHttp\Exception\ClientException $e) {

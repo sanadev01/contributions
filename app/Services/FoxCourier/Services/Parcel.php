@@ -47,12 +47,7 @@ class Parcel
       }
 
       $service_sub_class = $this->order->shippingService->service_sub_class;
-      $standard = in_array($service_sub_class, [
-         ShippingService::Packet_Standard,
-         ShippingService::AJ_Packet_Standard,
-         ShippingService::AJ_Standard_CN,
-         ShippingService::BCN_Packet_Standard
-      ]);
+      $standard = in_array($service_sub_class, [ShippingService::FOX_ST_COURIER]);
       $tpService = $standard ? 'ST' : 'EX'; 
 
       // Construct the request body
