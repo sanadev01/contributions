@@ -23,26 +23,34 @@ class UnitRegisterFactoryController extends Controller
         }
 
         if (!$container->unit_code) {
-            $serviceSubClass = $container->getSubClassCode();
-
-            if (in_array($serviceSubClass, [
-                ShippingService::FOX_ST_COURIER,
-                ShippingService::FOX_EX_COURIER,
-            ])) {
-                $unitCodePrefix = 'HDFOX';
-                $unitCodeSuffix = 'BR';
+            if ($container->has_cainiao) {
+                $cainiaoClient = new Client();
+                if (!$cainiaoClient->cngeBigbagCreate($container)) {
+                    session()->flash('alert-danger', $cainiaoClient->error);
+                    return back();
+                }
             } else {
-                $unitCodePrefix = 'HDC';
-                $unitCodeSuffix = 'CO';
-            }
-            $container->update([
-                'unit_code' => $unitCodePrefix . date('d') . date('m') . sprintf("%07d", $container->id) . $unitCodeSuffix,
-                'response' => true,
-            ]);
-        }
-        
+                $serviceSubClass = $container->getSubClassCode();
 
-        session()->flash('alert-success','registered successfully!');
+                if (in_array($serviceSubClass, [
+                    ShippingService::FOX_ST_COURIER,
+                    ShippingService::FOX_EX_COURIER,
+                ])) {
+                    $unitCodePrefix = 'HDFOX';
+                    $unitCodeSuffix = 'BR';
+                } else {
+                    $unitCodePrefix = 'HDC';
+                    $unitCodeSuffix = 'CO';
+                }
+                $container->update([
+                    'unit_code' => $unitCodePrefix . date('d') . date('m') . sprintf("%07d", $container->id) . $unitCodeSuffix,
+                    'response' => true,
+                ]);
+            }
+        }
+
+
+        session()->flash('alert-success', 'registered successfully!');
         return back();
     }
 
