@@ -7,7 +7,7 @@ use App\Models\Warehouse\Container;
 use App\Services\PasarEx\CN35LabelMaker;
 use App\Services\FoxCourier\CN35LabelMaker as FoxCN35;
 use Carbon\Carbon;
-
+use App\Services\Cainiao\CN35LabelMaker as CainiaoCN35LabelMaker;
 class CN35DownloadFactoryController extends Controller
 {
     public $container;
@@ -17,8 +17,9 @@ class CN35DownloadFactoryController extends Controller
         if ($container->hasPasarExService()) {
             return $this->getPasarExLabel();
         }       
-        if($container->has_cainiao){
-            return $this->getCainiaoLabel();
+        if($container->has_cainiao){ 
+            $cn23Maker = new CainiaoCN35LabelMaker($this->container);
+            return $cn23Maker->download();
         }
         if($container->hasFoxCourierService()){
             return $this->getFoxCourierLabel();
@@ -46,4 +47,5 @@ class CN35DownloadFactoryController extends Controller
             ->setDispatchDate(Carbon::now()->format('Y-m-d'));
         return $cn35Maker->download();
     }
+    
 }
