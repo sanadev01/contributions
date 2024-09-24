@@ -229,4 +229,41 @@ class Client
         }
         return true;
     }
+function testWaybill($type, $code)
+{
+
+    $content = [
+        "waybillType" => $type == 'cn35' ? "256" : "1", // 1 for cn23 //256 for cn35
+        "orderCode" => $code,
+        "locale" => "zh_CN",
+        "needSelfDrawLabels" => "true"
+    ];
+    $linkUrl = 'https://link.cainiao.com/gateway/custom/open_integration_test_env';
+    $appSecret = '2A1X6281822ts3068j1F8Wdq99C76119';   // APPKEY对应的秘钥 
+    $cpCode = 'de316159604032ef042935f43ffc3e2b';     //  调用方的CPCODE 
+    $msgType = 'cnge.waybill.get';  // 调用的API名 
+    $toCode = 'CGOP';        //  调用的目标TOCODE，有些接口TOCODE可以不用填写
+    $digest = base64_encode(md5(json_encode($content) . $appSecret, true)); //生成签名  
+    echo ('digest is ' . $digest);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $linkUrl);
+    curl_setopt($ch, CURLOPT_VERBOSE, 1);
+    curl_setopt($ch, CURLOPT_FAILONERROR, false);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded']);
+    $post_data = 'msg_type=' . $msgType
+        . '&to_code=' . $toCode
+        . '&logistics_interface=' . urlencode(json_encode($content))
+        . '&data_digest=' . urlencode($digest)
+        . '&logistic_provider_id=' . urlencode($cpCode);
+
+    dump("Post body is: \n" . json_encode($post_data)) . "\n";
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    dump("Start to run...\n");
+    $output = curl_exec($ch);
+    curl_close($ch);
+    dd("Finished, result data is: \n" .   ($output));
+}
 }
