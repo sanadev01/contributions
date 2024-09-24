@@ -423,6 +423,10 @@ class Order extends Model implements Package
 
                 return 'Fox Courier';
             }
+            elseif(optional($this->shippingService)->is_cainiao){
+
+                return 'Cainiao';
+            }
             return 'Correios Brazil';
         }
 
