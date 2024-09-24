@@ -125,11 +125,18 @@ class Client
         $content = (new CN38Request($deliveryBill))->getRequestBody();
         $data = $this->sendRequest('cnge.cn38.request', 'CGOP', $content);
 
-        if ($data && $data->success === 'true'){
-            $deliveryBill->update([
-                'cnd38_code' => null,
-                'request_id' => 'loading...',
-            ]);
+        if ($data && $data->success === 'true'  ){
+            if($deliveryBill->request_id==null){
+                Log::info('Request change to waiting');
+                $deliveryBill->update([
+                    'cnd38_code' => null,
+                    'request_id' => "waiting...",
+                ]);
+            }
+            else{
+                Log::info(['Request already submitted'=>'waiting...','Response'=>$data]);
+            }
+
             return true;
         }
 

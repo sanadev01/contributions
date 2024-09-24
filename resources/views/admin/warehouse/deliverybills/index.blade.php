@@ -142,7 +142,10 @@
                                             @admin @if(optional($deliveryBill->user)->isUser()) <span class="badge badge-danger">GoBox</span> @endif @endadmin
                                         </td>
                                         <td>
+                                        <span class="{{ ($deliveryBill->request_id == 'waiting...' ? 'text-danger' : '') }}">
                                             {{ $deliveryBill->request_id }}
+                                        </span>
+                                            
                                         </td>
                                         <td>{{ $deliveryBill->cnd38_code }}</td>
                                         <td class="d-flex">
@@ -250,14 +253,14 @@
                                                             </a>
                                                         
                                                         @endif
-                                                        {{-- @if( !$deliveryBill->isRegistered() ) --}}
+                                                       @if( !$deliveryBill->isRegistered() ) 
                                                             {{-- <a href="{{ route('warehouse.delivery_bill.edit',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a> --}}
                                                             <a href="{{ route('warehouse.delivery_bill.register',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Register Delivery Bill
                                                             </a>
-                                                        {{-- @endif --}}
+                                                        @endif  
 
                                                         @if(!$deliveryBill->isReady())
                                                             <form action="{{ route('warehouse.delivery_bill.destroy',$deliveryBill) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
