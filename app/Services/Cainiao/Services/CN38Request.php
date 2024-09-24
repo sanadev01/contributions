@@ -18,8 +18,8 @@ class CN38Request
         $weight = $this->deliveryBill->getWeight();
         return ([
             "ULDParam" => [
-                "ULDNoBatchNo" => "SNU0160320242-".$this->deliveryBill->id,
-                "ULDNo" => "SNU16092024",
+                "ULDNoBatchNo" => "SNU24092024-".$this->deliveryBill->id,
+                "ULDNo" => "SNU24092024",
                 "ULDType" => "Q5",
                 "ULDWeight" => "$weight",
                 "ULDWeightUnit" => "KG",
