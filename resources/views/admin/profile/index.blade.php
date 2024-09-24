@@ -210,7 +210,7 @@
                                             </div>
                                             <label class="form-check-label font-medium-1 font-weight-bold mt-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
                                         </div>
-                                        <div class="form-check form-check-inline">
+                                        {{-- <div class="form-check form-check-inline">
                                             <div class="vs-checkbox-con vs-checkbox-primary ml-3" title="Disposal All Authorized">
                                                 <input type="checkbox" name="dispose_all" id="disposeAll" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
@@ -220,7 +220,7 @@
                                                 </span>
                                             </div>
                                             <label class="form-check-label font-medium-1 font-weight-bold mt-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
-                                        </div>
+                                        </div> --}}
                                         <div class="form-check form-check-inline">
                                             <div class="vs-checkbox-con vs-checkbox-primary ml-3" title="Choose Return by Individual Parcel">
                                                 <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>

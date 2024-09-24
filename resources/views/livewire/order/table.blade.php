@@ -33,7 +33,16 @@
                 <option value="300">300</option>
             </select>
         </div>
-        <div class="row col-11  d-flex justify-content-end pr-0">
+        <div class="col-1">
+            <select class="form-control" wire:model="year">
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
+            </select>
+        </div>
+        <div class="row col-10  d-flex justify-content-end pr-0">
             <form class="row col-8  d-flex justify-content-end " action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                 @csrf
                 @if (request()->route()->getName() != 'admin.trash-orders.index')
