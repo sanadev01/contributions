@@ -15,12 +15,13 @@ class CN38Request
 
     public function getRequestBody()
     {
+        $weight = $this->deliveryBill->getWeight();
         return ([
             "ULDParam" => [
                 "ULDNoBatchNo" => "SNU0160320242-".$this->deliveryBill->id,
                 "ULDNo" => "SNU16092024",
                 "ULDType" => "Q5",
-                "ULDWeight" => $this->deliveryBill->getWeight(),
+                "ULDWeight" => "$weight",
                 "ULDWeightUnit" => "KG",
                 "bigBagList" => [
                     "bigBagTrackingNumber" => $this->bigBagTrackingNumber(),
@@ -30,7 +31,7 @@ class CN38Request
                 "airlineCode" => "LA",
                 "ETD" => 1722620416000,
                 "transportNo" => "8119",
-                "fromPortCode" => "HKG",
+                "fromPortCode" => "MIA",
                 "toPortCode" => "GRU"
             ],
             "operationParam" => [

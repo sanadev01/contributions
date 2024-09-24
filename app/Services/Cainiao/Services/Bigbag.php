@@ -5,7 +5,7 @@ use App\Models\Warehouse\Container;
 
 class Bigbag
 { 
-    protected $container; 
+    protected $container;
 
     public function __construct(Container $container)
     {
@@ -13,11 +13,12 @@ class Bigbag
     }
 
     public function getRequestBody()
-    {
-        return ([
+    { 
+        $weight = $this->container->getWeight();
+        return [
             "request" => [
                 "locale" => "zh_cn",
-                "weight" => $this->container->getWeight(),
+                "weight" => "$weight",
                 "weightUnit" => "kg",
                 "orderCodeList" => $this->mapItemParams(),
                 "handoverParam" => [
@@ -37,9 +38,8 @@ class Bigbag
                     "email" => ""
                 ]
             ]
-        ]);
+        ];
     }
-    // 组大包的小包LP00676355941098必须先更新实际重量，请调用小包重量更新接口
     private function mapItemParams()
     {
         $items = [];

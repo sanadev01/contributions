@@ -23,7 +23,6 @@ class DeliveryBillDownloadController extends Controller
         $contractNo = $hasAnjunService ? '9912501700' : '9912501576';
         if($deliveryBill->is_cainiao){
             $contractNo= '9912549304';
-            $departure = 'HKG';
         }
             $labelPrinter = new CN38LabelMaker();
             $labelPrinter->setDeliveryBillNo($deliveryBill->cnd38_code)

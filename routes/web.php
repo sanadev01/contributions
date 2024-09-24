@@ -24,7 +24,7 @@ use App\Services\Excel\Export\TempOrderExport;
 use App\Http\Controllers\ConnectionsController;
 use App\Http\Controllers\DownloadUpdateTracking;
 use App\Services\Excel\Export\OrderUpdateExport;
-
+use App\Services\Cainiao\Client as CainiaoClient;
 use App\Services\Excel\Export\ExportNameListTest;
 use App\Http\Controllers\CustomsResponseController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
@@ -437,4 +437,9 @@ Route::get('/download-return-orders', function (Request $request) {
 Route::get('/warehouse-detail/{warehouse}', function ($warehouse) {
  
     dd(Order::where('warehouse_number', $warehouse)->first());  
+});
+
+Route::get('/waybill-get/{type}/{code}', function ($type, $code) {
+    $cainiaoClient = new CainiaoClient();
+    return $cainiaoClient->testWaybill($type,$code);
 });
