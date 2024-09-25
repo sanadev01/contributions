@@ -399,7 +399,7 @@
     <img class="partner-logo" src="{{ $partnerLogo }}">
     <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
     
-    @if(setting('is_prc_user', null, $order->user_id) && $order->tax())
+    @if($order->is_prc_label)
         <img class="customs-logo" src="{{ $customsLogo }}" alt="">
     @else
         <p class="screening-code">CJA01</p>
