@@ -36,16 +36,17 @@ class KPIReportController extends Controller
         $firstEventDate = [];
         if($request->start_date && $request->end_date || $request->trackingNumbers) {
             try{ 
-            $response = $kpiReportsRepository->get($request);
+                $response = $kpiReportsRepository->get($request);
+                \Log::info(['response data'=>$response]);
+                $trackings = $response['trackings'];
+                $firstEventDate = $response['firstEventDate'];
+                $trackingCodeUsersName = $response['trackingCodeUsersName'];
+                $orderDates = $response['orderDates'];
             }
             catch(Exception $e){
                 session()->flash('alert-danger', 'Error' . $e->getMessage());
                 return back(); 
             }
-            $trackings = $response['trackings'];
-            $firstEventDate = $response['firstEventDate'];
-            $trackingCodeUsersName = $response['trackingCodeUsersName'];
-            $orderDates = $response['orderDates'];
         }
         return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates', 'firstEventDate'));
     }
