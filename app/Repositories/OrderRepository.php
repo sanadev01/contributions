@@ -70,7 +70,10 @@ class OrderRepository
             });
         }
 
-        if ($request->order_date) {
+        $year = $request->year ?: date('Y');
+        $query->whereYear('created_at', $year);
+
+        if($request->order_date){
             $query->where('order_date', 'LIKE', "%{$request->order_date}%");
         }
         if ($request->name) {

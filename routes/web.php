@@ -387,6 +387,13 @@ Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field)
     dump($order->update([$field=>null]));  
     dd($order);
 });
+
+Route::post('/webhooks/customs-response', [CustomsResponseController::class, 'handle']);
+Route::get('/get/customs-response', function (Request $request) {
+    $customResponse = CustomResponse::all();
+    dd($customResponse);
+});
+
 Route::get('/anjun-china-label/{warehouse}', function ($warehouse,Request $request) {
     $order = (Order::where('warehouse_number', $warehouse)->first());  
     if($order){ 
@@ -401,18 +408,9 @@ Route::get('/anjun-china-label/{warehouse}', function ($warehouse,Request $reque
     }
     dd('order not found');
 });
-
-Route::post('/webhooks/customs-response', [CustomsResponseController::class, 'handle']);
-Route::get('/get/customs-response', function (Request $request) {
-    $customResponse = CustomResponse::all();
-    dd($customResponse);
-});
-
-Route::get('/remove-container-orders', function (Request $request) {
+Route::get('/detach-container-orders', function (Request $request) {
     $codes = [
-        'ND067762066BR',
-        'ND072972270BR',
-        'IX031018633BR',
+        'ND145854165BR',
     ];
     $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
 

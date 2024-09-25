@@ -89,6 +89,7 @@ class Client
                         "stamp_url" => route('warehouse.cn23.download', $order->id),
                         'leve' => false
                     ],
+                    'is_prc_label' => setting('prc_label', null, $order->user_id) && $order->tax() && $order->tax_modality == 'DDP' ? true : false,
                 ]);
 
                 // \Log::info('Response');
