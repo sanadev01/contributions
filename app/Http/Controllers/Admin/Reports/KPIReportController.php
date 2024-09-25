@@ -37,7 +37,6 @@ class KPIReportController extends Controller
         if($request->start_date && $request->end_date || $request->trackingNumbers) {
             try{ 
             $response = $kpiReportsRepository->get($request);
-            \Log::info(['response data'=>$response]);
             }
             catch(Exception $e){
                 session()->flash('alert-danger', 'Error' . $e->getMessage());
