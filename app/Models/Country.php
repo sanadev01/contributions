@@ -28,6 +28,7 @@ class Country extends Model
     const UK = 249;
     const Mexico = 146;
     const Senegal = 205;
+    const China = 47;
 
     public function states()
     {

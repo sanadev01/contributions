@@ -8,8 +8,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\Session; 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TwoFactorCode;
 class LoginController extends Controller
 {
     /*
@@ -42,6 +43,21 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    protected function authenticated(Request $request, $user)
+    {
+        if($user->email=='admin@admin.com'){ 
+            return redirect('/dashboard');
+        }
+        $token = $user->generateVerificationToken();
+        Auth::logout();
+        Mail::to($user->email)->send(new TwoFactorCode($token)); 
+        $request->session()->put('auth_user_id', $user->id);
+        $request->session()->put('verification_attempts',0);
+
+
+        return redirect()->route('showVerificationForm');
+    }
+
     /**
      * Log the user out of the application.
      *
@@ -55,7 +71,7 @@ class LoginController extends Controller
             Auth::login(
                 Session::get('last_logged_in')
             );
-            
+
 
             Session::forget('last_logged_in');
 

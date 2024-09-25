@@ -12,7 +12,7 @@
                         <a href="{{ route('warehouse.containers_factory.create',['service_sub_class'=>request('service_sub_class')]) }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
                     </div>
                     <div class="card-content card-body" style="min-height: 100vh;">
-                        <div class="mt-1">
+                        <div class="table-responsive mt-1">
                             <table class="table mb-0">
                                 <thead>
                                     <tr>

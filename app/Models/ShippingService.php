@@ -74,6 +74,12 @@ class ShippingService extends Model
     const PasarEx = 238;
     const TOTAL_EXPRESS_10KG = 284;
     const DSS_SENEGAL = 735;
+    const FOX_ST_COURIER = 3697;
+    const FOX_EX_COURIER = 3693;
+    const VIP_PARCEL_PMEI = 847;
+    const VIP_PARCEL_PMI = 848;
+    const VIP_PARCEL_FCP = 849;
+    const Cainiao = 1000;
 
     protected $guarded = [];
 
@@ -100,8 +106,6 @@ class ShippingService extends Model
     {
         $serviceSubClass = $this->service_sub_class;
         $serviceMapping = [
-            ShippingService::AJ_Standard_CN => 'Packet Standard',
-            ShippingService::BCN_Packet_Standard => 'Packet Standard',
             ShippingService::AJ_Packet_Standard => 'Packet Standard',
             ShippingService::AJ_Packet_Express => 'Packet Express', 
             ShippingService::AJ_Standard_CN => 'Packet Standard AJ',
@@ -368,6 +372,9 @@ class ShippingService extends Model
         return [
             self::GDE_PRIORITY_MAIL,
             self::GDE_FIRST_CLASS,
+            self::VIP_PARCEL_FCP,
+            self::VIP_PARCEL_PMEI,
+            self::VIP_PARCEL_PMI,
         ];
     }
 
@@ -514,6 +521,13 @@ class ShippingService extends Model
         );
     }
 
+    public function isVipParcelService()
+    {
+        if(in_array($this->service_sub_class, [self::VIP_PARCEL_PMEI, self::VIP_PARCEL_PMI, self::VIP_PARCEL_FCP])){
+            return true;
+        }
+        return false;
+    }
     public function getCarrierServiceAttribute()
     {
         $serviceSubClass = $this->service_sub_class;
@@ -557,6 +571,8 @@ class ShippingService extends Model
             ShippingService::TOTAL_EXPRESS_10KG =>'Total Express',
             ShippingService::HD_Express =>'HD Express',
             ShippingService::DSS_SENEGAL=>'DSS Senegal',
+            ShippingService::FOX_ST_COURIER=>'FOX Courier',
+            ShippingService::FOX_EX_COURIER=>'FOX Courier',
         ];
 
         if (array_key_exists($serviceSubClass, $serviceMap)) {
@@ -573,9 +589,23 @@ class ShippingService extends Model
     function orders() {
         return $this->hasMany(Order::class);
     }
-
     function getIsPasarExAttribute()
     {
         return $this->service_sub_class == self::PasarEx;
+    }
+
+    function getIsFoxCourierAttribute()
+    {
+        return in_array(
+            $this->service_sub_class,
+            [
+                self::FOX_ST_COURIER,
+                self::FOX_EX_COURIER,
+            ]
+        );
+    }
+    function getIsCainiaoAttribute()
+    {
+        return $this->service_sub_class == self::Cainiao;
     }
 }

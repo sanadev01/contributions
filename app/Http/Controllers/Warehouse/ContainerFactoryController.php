@@ -22,9 +22,23 @@ class ContainerFactoryController extends Controller
     public function index()
     {
         $serviceSubClass = request('service_sub_class');
+
         $containers = Container::when(!Auth::user()->isAdmin(), function ($query) {
             $query->where('user_id', Auth::id());
-        })->where('services_subclass_code', $serviceSubClass)->latest()->paginate();
+        })
+        ->when(in_array($serviceSubClass, [
+            ShippingService::FOX_ST_COURIER,
+            ShippingService::FOX_EX_COURIER,
+        ]), function ($query) {
+            $query->whereIn('services_subclass_code', [
+                ShippingService::FOX_ST_COURIER,
+                ShippingService::FOX_EX_COURIER,
+            ]);
+        }, function ($query) use ($serviceSubClass) {
+            $query->where('services_subclass_code', $serviceSubClass);
+        })
+        ->latest()
+        ->paginate();
         $shippingServiceNotExists = config("shippingServices.correios.sub_classess.$serviceSubClass") == null;
         if ($shippingServiceNotExists) {
             abort(404);
@@ -39,8 +53,16 @@ class ContainerFactoryController extends Controller
      */
     public function create()
     {
-        $serviceSubClass = request('service_sub_class'); 
-        $shippingServices = ShippingService::where('service_sub_class', $serviceSubClass)->get();
+        $serviceSubClass = request('service_sub_class');
+
+        $shippingServices = ShippingService::when($serviceSubClass == ShippingService::FOX_ST_COURIER, function ($query) {
+            $query->whereIn('service_sub_class', [
+                ShippingService::FOX_ST_COURIER,
+                ShippingService::FOX_EX_COURIER,
+            ]);
+        }, function ($query) use ($serviceSubClass) {
+            $query->where('service_sub_class', $serviceSubClass);
+        })->get();
         if ($shippingServices->isEmpty()){
             abort(404);
         }
@@ -54,11 +76,11 @@ class ContainerFactoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateContainerRequest $request)
-    { 
+    {
         try {
             $shippingServices = ShippingService::where('service_sub_class',  $request->services_subclass_code)->get();
-           
-            if ($shippingServices->isEmpty()){
+
+            if ($shippingServices->isEmpty()) {
                 abort(404);
             }
             $container =  Container::create([
@@ -71,21 +93,18 @@ class ContainerFactoryController extends Controller
                 // 'destination_operator_name' => $request->destination_operator_name,
                 // 'unit_type' => $request->unit_type,
                 // 'services_subclass_code' => $request->services_subclass_code
-            ]+request()->all());
+            ] + request()->all());
 
             $container->update([
                 'dispatch_number' => $container->id
             ]);
 
             session()->flash('alert-success', 'Container Saved Please Scan Packages');
-            return redirect()->route('warehouse.containers_factory.index',['service_sub_class'=>$request->services_subclass_code]); 
-
-        } catch (\Exception $ex) { 
+            return redirect()->route('warehouse.containers_factory.index', ['service_sub_class' => $request->services_subclass_code]);
+        } catch (\Exception $ex) {
             session()->flash('alert-danger', $ex->getMessage());
             return back()->withInput();
         }
-
-         
     }
 
     /**
@@ -107,7 +126,7 @@ class ContainerFactoryController extends Controller
      */
     public function edit($container)
     {
-        $container = Container::find($container); 
+        $container = Container::find($container);
         if ($container->response != 0) {
             abort(405);
         }
@@ -133,10 +152,10 @@ class ContainerFactoryController extends Controller
                 'seal_no' => $request->seal_no,
                 'unit_type' => $request->unit_type
             ]);
-            session()->flash('alert-success', 'Container Saved Please Scan Packages'); 
-            return redirect()->route('warehouse.containers_factory.index',['service_sub_class'=>$container->services_subclass_code]); 
-        } catch (\Exception $ex) { 
-            session()->flash('alert-danger',$ex->getMessage() );
+            session()->flash('alert-success', 'Container Saved Please Scan Packages');
+            return redirect()->route('warehouse.containers_factory.index', ['service_sub_class' => $container->services_subclass_code]);
+        } catch (\Exception $ex) {
+            session()->flash('alert-danger', $ex->getMessage());
             return back()->withInput();
         }
     }
@@ -154,13 +173,13 @@ class ContainerFactoryController extends Controller
             abort(403, 'Cannot Delete Container registered on Correios Chile.');
         }
         try {
-            $subClass=$container->services_subclass_code;
+            $subClass = $container->services_subclass_code;
             $container->deliveryBills()->delete();
             $container->orders()->sync([]);
             $container->delete();
             session()->flash('alert-success', 'Container Deleted');
-            return redirect()->route('warehouse.containers_factory.index',['service_sub_class'=>$subClass]);
-        } catch (\Exception $ex){
+            return redirect()->route('warehouse.containers_factory.index', ['service_sub_class' => $subClass]);
+        } catch (\Exception $ex) {
             session()->flash('alert-danger', $ex->getMessage());
             return back()->withInput();
         }

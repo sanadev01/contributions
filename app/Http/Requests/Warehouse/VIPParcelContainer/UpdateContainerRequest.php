@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Warehouse\Container;
+namespace App\Http\Requests\Warehouse\VIPParcelContainer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateContainerFactoryRequest extends FormRequest
+class UpdateContainerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,7 @@ class UpdateContainerFactoryRequest extends FormRequest
     {
         return [
             'unit_type' => 'required|integer|in:1,2',
-            'destination_operator_name' => 'required|in:SAOD,CRBA',
-            'seal_no' => 'required|unique:containers,seal_no,'.$this->id,
+            'seal_no' => 'required|unique:containers,seal_no,',
         ];
     }
 
@@ -34,7 +33,6 @@ class UpdateContainerFactoryRequest extends FormRequest
     {
         return [
             'unit_type.*' => __('warehouse.containers.validations.Container Type'),
-            'destination_operator_name.*' => __('warehouse.containers.validations.Destination Airport'),
             'services_subclass_code.*' => __('warehouse.containers.validations.Distribution Service Class'),
         ];
     }

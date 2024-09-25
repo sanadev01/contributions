@@ -366,6 +366,23 @@
                                         </div>
                                     </div>
                                 </div> --}}
+                                @if(setting('vip_parcels', null, \App\Models\User::ROLE_ADMIN))
+                                <div class="controls row mb-1 align-items-center">
+                                    <label class="col-md-3 text-md-right">VIP Parcel<span class="text-danger"></span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="vs-checkbox-con vs-checkbox-primary" title="VIP Parcel">
+                                                <input type="checkbox" name="vip_parcels" id="vip_parcels" @if(setting('vip_parcels', null, $user->id)) checked @endif>
+                                                <span class="vs-checkbox vs-checkbox-lg">
+                                                    <span class="vs-checkbox--check">
+                                                        <i class="vs-icon feather icon-check"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
                                 <div class="controls row mb-1 align-items-center">
                                     <label class="col-md-3 text-md-right">Volumetric Discount Postal Service<span class="text-danger"></span></label>
                                     <div class="col-md-6">

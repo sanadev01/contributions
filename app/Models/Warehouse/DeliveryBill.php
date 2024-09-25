@@ -44,7 +44,6 @@ class DeliveryBill extends Model
         foreach ($this->containers as $container){
             $weight += round($container->orders()->sum(DB::raw('CASE WHEN orders.measurement_unit = "kg/cm" THEN orders.weight ELSE (orders.weight/2.205) END')),2);
         }
-
         return $weight;
     }
 
@@ -155,6 +154,24 @@ class DeliveryBill extends Model
             return true;
         }
         return false;
+    }
+    
+    public function getIsCainiaoAttribute()
+    {
+        return $this->containers->first()->has_cainiao;
+    }
+
+    public function isVipParcel()
+    {
+        if(($this->containers->first()->services_subclass_code == ShippingService::VIP_PARCEL_FCP) || ($this->containers->first()->services_subclass_code == ShippingService::VIP_PARCEL_PMEI) || ($this->containers->first()->services_subclass_code == ShippingService::VIP_PARCEL_PMI)){
+            return true;
+        }
+        return false;
+    }
+
+    public function isFoxCourier()
+    {
+        return $this->containers->first()->hasFoxCourierService();
     }
 
 }

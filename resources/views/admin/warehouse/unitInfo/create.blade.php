@@ -26,6 +26,7 @@
                                                         <option value="correios" {{ old('api',request('api')) == 'correios' ? 'selected' : '' }}>Correios</option>
                                                         <option value="anjun" {{ old('api',request('api')) == 'anjun' ? 'selected' : '' }}>Anjun</option>
                                                         <option value="bcn" {{ old('api',request('api')) == 'bcn' ? 'selected' : '' }}>Bcn</option>
+                                                        <option value="cainiao" {{ old('api',request('api')) == 'cainiao' ? 'selected' : '' }}>Cainiao</option>
                                                     </select>
                                                     </div>
                                                 </div>

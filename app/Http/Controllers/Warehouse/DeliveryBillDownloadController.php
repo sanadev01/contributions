@@ -18,10 +18,12 @@ class DeliveryBillDownloadController extends Controller
         if ($deliveryBill->containers->isEmpty()) {
             return redirect()->back()->with('error', 'please add a container to this delivery bill');
         }
-
+        $departure= 'MIA';
         $hasAnjunService = $deliveryBill->containers->first()->hasAnjunService() || $deliveryBill->containers->first()->hasAnjunChinaService();
         $contractNo = $hasAnjunService ? '9912501700' : '9912501576';
-        
+        if($deliveryBill->is_cainiao){
+            $contractNo= '9912549304';
+        }
             $labelPrinter = new CN38LabelMaker();
             $labelPrinter->setDeliveryBillNo($deliveryBill->cnd38_code)
                         ->setContractNo($contractNo)
@@ -29,7 +31,7 @@ class DeliveryBillDownloadController extends Controller
                         ->setTime(Carbon::now()->format('h:i'))
                         ->setService(2)
                         ->setTaxModality('ddu')
-                        ->setOriginAirpot('MIA')
+                        ->setOriginAirpot($departure)
                         ->setDestinationAirpot('GRU')
                         ->setBags(
                             $deliveryBill->containers
