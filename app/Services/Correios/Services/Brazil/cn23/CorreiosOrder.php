@@ -32,7 +32,7 @@ class CorreiosOrder extends Package{
         $this->recipientAddressNumber = $order->recipient->street_no;
         $this->recipientZipCode = cleanString($order->recipient->zipcode);
         $this->recipientState = $order->recipient->state->code;
-        $this->recipientPhoneNumber = preg_replace('/^\+55/', '', $order->recipient->phone);;
+        $this->recipientPhoneNumber = preg_replace('/^\+55/', '', $order->recipient->phone);
         $this->recipientEmail = $order->recipient->email;
         $this->distributionModality = $serviceSubClassCode;
         $this->taxPaymentMethod = $order->getService() == 1 ? 'DDP' : 'DDU';
@@ -48,6 +48,16 @@ class CorreiosOrder extends Package{
 
         $this->freightPaidValue = $order->user_declared_freight;
         $this->nonNationalizationInstruction = "RETURNTOORIGIN";
+        
+        if(setting('is_prc_user', null, $order->user->id)) {
+            $this->senderWebsite = $order->sender_website ? $order->sender_website : 'https://homedeliverybr.com';
+            $this->taxPaymentMethod = 'PRC';
+            $this->currency = 'USD';
+            $this->provisionedTaxValue = $order->getTotalTaxes();
+            $this->provisionedtIcmsValue = $order->getTotalIcms();
+            $this->senderCodeEce = $order->sender_taxId ? $order->sender_taxId : $order->user->tax_id;
+            $this->generalDescription = $order->items->first()->description;
+        }
 
         $items = [];
 
@@ -76,4 +86,82 @@ class CorreiosOrder extends Package{
         return 2;
     }
     
+    function getRequestBody($order) {
+
+        $serviceSubClassCode = $order->getDistributionModality();
+        if($order->getDistributionModality() == ShippingService::Packet_Standard || $order->getDistributionModality() == ShippingService::BCN_Packet_Standard){
+            $serviceSubClassCode = 33227;
+        }
+        if($order->getDistributionModality() == ShippingService::BCN_Packet_Express){
+            $serviceSubClassCode = ShippingService::Packet_Express; 
+        }
+        if($order->isWeightInKg()) {
+            $weight = UnitsConverter::kgToGrams($order->getOriginalWeight('kg'));
+        }else{
+            $kg = UnitsConverter::poundToKg($order->getOriginalWeight('lbs'));
+            $weight = UnitsConverter::kgToGrams($kg);
+        }
+
+        $width = round($order->isMeasurmentUnitCm() ? $order->width : UnitsConverter::inToCm($order->width));
+        $height = round($order->isMeasurmentUnitCm() ? $order->height : UnitsConverter::inToCm($order->height));
+        $length = round($order->isMeasurmentUnitCm() ? $order->length : UnitsConverter::inToCm($order->length));
+         
+            $packet = [
+                "customerControlCode"=> $order->id,
+                "senderName"=> $order->sender_first_name.' '.$order->sender_last_name,
+                "senderAddress"=> "2200 NW, 129th Ave – Suite # 100",
+                "senderZipCode"=> "33182",
+                "senderCityName"=> "Miami",
+                "senderState"=> "FL",
+                "senderCountryCode"=> "US",
+                "senderEmail"=> "homedelivery@homedeliverybr.com",
+                "senderWebsite"=> $order->sender_website ? $order->sender_website : 'www.homedeliverybr.com',
+                "recipientName"=> $order->recipient->getFullName(),
+                "recipientDocumentType"=> $order->recipient->getDocumentType(),
+                "recipientDocumentNumber"=> cleanString($order->recipient->tax_id),
+                "recipientAddress"=> $order->recipient->address,
+                "recipientAddressNumber"=> $order->recipient->street_no,
+                "recipientAddressComplement"=> $order->recipient->address2,
+                "recipientCityName"=> $order->recipient->city,
+                "recipientState"=> $order->recipient->state->code,
+                "recipientZipCode"=> cleanString($order->recipient->zipcode),
+                "recipientEmail"=> $order->recipient->email,
+                "recipientPhoneNumber"=> preg_replace('/^\+55/', '', $order->recipient->phone),
+                "totalWeight"=> ceil($weight),
+                "packagingLength"=> $length > 16 ? $length : 16,
+                "packagingWidth"=> $width > 11 ? $width : 11,
+                "packagingHeight"=> $height > 2 ? $height : 2,
+                "distributionModality"=> $serviceSubClassCode,
+                "taxPaymentMethod"=> "PRC",
+                "currency"=> "USD",
+                "nonNationalizationInstruction"=> "RETURNTOORIGIN",
+                "freightPaidValue"=> $order->user_declared_freight,
+                "insurancePaidValue"=> 0.00,
+                "provisionedTaxValue"=> $order->getTotalTaxes(),
+                "provisionedIcmsValue"=> $order->getTotalIcms(),
+                "senderCodeEce"=> $order->sender_taxId ? $order->sender_taxId : $order->user->tax_id,
+                "generalDescription"=> $order->items->first()->description,
+                "items"=> $this->getOrderItems($order),
+            ];
+        return $packet;
+    }
+
+    function getOrderItems($order) {
+
+        $items = [];
+
+        if (count($order->items) >= 1) {
+            foreach ($order->items as $key => $item) {
+               $itemToPush = [];
+               $itemToPush = [
+                     'hsCode' => $item->sh_code,
+                     'description' => $item->description,
+                     'quantity' => (int)$item->quantity,
+                     'value' => $item->value,
+               ];
+               $items[] = $itemToPush;
+            }
+         }
+         return $items;
+    }
 }

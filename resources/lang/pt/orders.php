@@ -119,6 +119,7 @@ return [
         'Select Country' => 'Selecione o país para o qual deseja enviar suas encomendas', 
         'State' => 'State',
         'Zip Code' => 'Código Postal',
+        'Website' => 'Local na rede Internet',
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Importar pedidos via planilha do Excel',

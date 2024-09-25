@@ -132,6 +132,9 @@
                                                     <span class="badge badge-primary">H</span>
                                                 @endif
                                             @endif
+                                            @if(optional($deliveryBill)->Containers->first()->isPRC())
+                                                <strong class="primary">(PRC)</strong>
+                                            @endif
                                             @admin @if(optional($deliveryBill->user)->isUser()) <span class="badge badge-danger">GoBox</span> @endif @endadmin
                                         </td>
                                         <td>

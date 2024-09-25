@@ -118,6 +118,7 @@ return [
         'Next' => 'Próximo', 
         'Step 1' => 'Paso 1',
         'Select Country' => 'Seleccione el país al que desea enviar sus paquetes', 
+        'Website' => 'Sitio web',
     ],
     'import-excel' =>[
         'Import Orders via Excel Sheet' => 'Importar pedidos a través de una hoja de Excel',
