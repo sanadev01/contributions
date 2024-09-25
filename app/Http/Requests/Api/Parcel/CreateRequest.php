@@ -160,6 +160,10 @@ class CreateRequest extends FormRequest
             $rules['recipient.tax_id'] = 'nullable';
         }
 
+        if(setting('is_prc_user', null, auth()->user()->id)) {
+            $rules['sender.sender_website'] = 'required';
+        }
+
         return $rules;
     }
 

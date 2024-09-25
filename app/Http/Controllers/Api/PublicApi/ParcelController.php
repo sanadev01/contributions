@@ -230,6 +230,9 @@ class ParcelController extends Controller
                 'sender_address' => optional($request->sender)['sender_address'],
                 'sender_phone' => optional($request->sender)['sender_phone'],
                 'sender_zipcode' => optional($request->sender)['sender_zipcode'],
+                'sender_website' => optional($request->sender)['sender_website']? optional($request->sender)['sender_website'] : NULL,
+
+                'tax_modality' => setting('is_prc_user', null, Auth::id())? 'DDP' : 'DDU',
             ]);
 
             $this->orderRepository->setVolumetricDiscount($order);

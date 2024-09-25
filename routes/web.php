@@ -26,8 +26,10 @@ use App\Http\Controllers\DownloadUpdateTracking;
 use App\Services\Excel\Export\OrderUpdateExport;
 
 use App\Services\Excel\Export\ExportNameListTest;
+use App\Http\Controllers\CustomsResponseController;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
+use App\Models\CustomResponse;
 use App\Repositories\AnjunLabelRepository;
 
 /*
@@ -389,6 +391,13 @@ Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field)
     dump($order->update([$field=>null]));  
     dd($order);
 });
+
+Route::post('/webhooks/customs-response', [CustomsResponseController::class, 'handle']);
+Route::get('/get/customs-response', function (Request $request) {
+    $customResponse = CustomResponse::all();
+    dd($customResponse);
+});
+
 Route::get('/anjun-china-label/{warehouse}', function ($warehouse,Request $request) {
     $order = (Order::where('warehouse_number', $warehouse)->first());  
     if($order){ 
