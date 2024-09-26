@@ -124,7 +124,7 @@ class Parcel
          foreach ($this->order->items as $item) {
                $itemToPush = [
                   "cdFreightCurrencyGoods" => "USD",
-                  "vlUnitaryGoods" => $item->value,
+                  "vlUnitaryGoods" => floatval($item->value),
                   "vlFreight" => ((float)$this->order->insurance_value) + ((float)$this->order->user_declared_freight),
                   "vlWeight" => round($this->weight / $totalQuantity, 2) - 0.02,
                   "nbQuantity" => (int)$item->quantity,
