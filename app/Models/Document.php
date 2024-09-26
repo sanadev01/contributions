@@ -14,7 +14,8 @@ class Document extends Model
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
     
-    const PATH = '/documents/';
+    const PATH = '/public/documents/';
+    const PUBLIC_PATH = '/storage/documents/';
 
     protected $guarded = [];
 
@@ -26,10 +27,21 @@ class Document extends Model
     {
         return self::PATH.$this->path;
     }
+    function getPublicPathAttribute() {
+        return self::PUBLIC_PATH.$this->path;
+        
+    } 
+    function getAbsolutePublicPathAttribute() {
+        return env('APP_URL').self::PUBLIC_PATH.$this->path;
+        
+    }
 
     public function getFullPathAttribute()
     {
         return $this->getPath();
+    }
+    function testpath() {
+        return url('storage/app'.$this->getStoragePath());
     }
 
     public function getPath()
