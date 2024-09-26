@@ -126,7 +126,7 @@ class Parcel
                   "cdFreightCurrencyGoods" => "USD",
                   "vlUnitaryGoods" => floatval($item->value),
                   "vlFreight" => ((float)$this->order->insurance_value) + ((float)$this->order->user_declared_freight),
-                  "vlWeight" => round($this->weight / $totalQuantity, 2),
+                  "vlWeight" => round($this->weight / $totalQuantity, 2) - 0.02,
                   "nbQuantity" => (int)$item->quantity,
                   "dsGoods" => substr($item->description, 0, 20),
                   "cdNCM" => substr($item->sh_code, 0, 6),
