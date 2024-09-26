@@ -64,8 +64,10 @@ class Client{
                 'headers' => $this->getHeaders(),
                 'json' => $shippingRequest,
             ]);
+            \Log::info(["Fox Api Response" =>$response]);
 
             $data = json_decode($response->getBody()->getContents(), true);
+            \Log::info(["Fox json decode Data " =>$data]);
 
             if (isset($data[0]['success']) && $data[0]['success']) {
                 $trackingNumber = $data[0]['reference'];
@@ -86,13 +88,20 @@ class Client{
                         $printLabel = $this->client->get('https://api.smartcomex.io/api-courier/print' . "/" . $trackingNumber, [
                             'headers' => $this->getHeaders()
                         ]);
+                        \Log::info(["Fox print api call " =>$printLabel]);
                         $printResponse = $printLabel->getBody()->getContents();
+                        \Log::info(["Fox print api response " =>$printResponse]);
+
                         Storage::put("labels/{$order->corrios_tracking_code}.pdf", $printResponse);
                     } catch (\GuzzleHttp\Exception\ServerException $printException) {
                         $printErrorResponse = json_decode($printException->getResponse()->getBody()->getContents(), true);
+                        \Log::info("Fox Print Error Response");
+                        \Log::info($printErrorResponse);
                         $printErrorMessage = isset($printErrorResponse['message']) 
                             ? (is_array($printErrorResponse['message']) ? implode(', ', $printErrorResponse['message']) : $printErrorResponse['message']) 
                             : 'Unknown error';
+                        \Log::info("Fox Print Error Message");
+                        \Log::info($printErrorMessage);
                         return new PackageError("Label Print Error: " . $printErrorMessage);
                     } catch (\Exception $printException) {
                         return new PackageError($printException->getMessage());
@@ -108,9 +117,13 @@ class Client{
             return new PackageError($e->getResponse()->getBody()->getContents());
         } catch (\GuzzleHttp\Exception\ServerException $e) {
             $errorResponse = json_decode($e->getResponse()->getBody()->getContents(), true);
+            \Log::info("Fox Api Error Response");
+            \Log::info($errorResponse);
             $errorMessage = isset($errorResponse['message']) 
                 ? (is_array($errorResponse['message']) ? implode(', ', $errorResponse['message']) : $errorResponse['message']) 
                 : 'Unknown error';
+            \Log::info("Fox Api Error Message");
+            \Log::info($errorMessage);
             return new PackageError($errorMessage);
         } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
