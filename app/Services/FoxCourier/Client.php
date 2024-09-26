@@ -64,8 +64,10 @@ class Client{
                 'headers' => $this->getHeaders(),
                 'json' => $shippingRequest,
             ]);
+            \Log::info(["Fox Api Response" =>$response]);
 
             $data = json_decode($response->getBody()->getContents(), true);
+            \Log::info(["Fox json decode Data " =>$data]);
 
             if (isset($data[0]['success']) && $data[0]['success']) {
                 $trackingNumber = $data[0]['reference'];
@@ -86,7 +88,10 @@ class Client{
                         $printLabel = $this->client->get('https://api.smartcomex.io/api-courier/print' . "/" . $trackingNumber, [
                             'headers' => $this->getHeaders()
                         ]);
+                        \Log::info(["Fox print api call " =>$printLabel]);
                         $printResponse = $printLabel->getBody()->getContents();
+                        \Log::info(["Fox print api response " =>$printResponse]);
+
                         Storage::put("labels/{$order->corrios_tracking_code}.pdf", $printResponse);
                     } catch (\GuzzleHttp\Exception\ServerException $printException) {
                         $printErrorResponse = json_decode($printException->getResponse()->getBody()->getContents(), true);
