@@ -55,7 +55,7 @@ class Client{
     }
 
     public function createPackage($order)
-    {   
+    {
         $parcel = new Parcel($order);
         $shippingRequest = $parcel->getRequestBody();
 
@@ -90,8 +90,10 @@ class Client{
                         Storage::put("labels/{$order->corrios_tracking_code}.pdf", $printResponse);
                     } catch (\GuzzleHttp\Exception\ServerException $printException) {
                         $printErrorResponse = json_decode($printException->getResponse()->getBody()->getContents(), true);
-                        $printErrorMessage = isset($printErrorResponse['message']) ? json_decode($printErrorResponse['message'], true)['errors'] : 'Unknown error';
-                        return new PackageError("Label Print Error: ".$printErrorMessage);
+                        $printErrorMessage = isset($printErrorResponse['message']) 
+                            ? (is_array($printErrorResponse['message']) ? implode(', ', $printErrorResponse['message']) : $printErrorResponse['message']) 
+                            : 'Unknown error';
+                        return new PackageError("Label Print Error: " . $printErrorMessage);
                     } catch (\Exception $printException) {
                         return new PackageError($printException->getMessage());
                     }
@@ -106,12 +108,15 @@ class Client{
             return new PackageError($e->getResponse()->getBody()->getContents());
         } catch (\GuzzleHttp\Exception\ServerException $e) {
             $errorResponse = json_decode($e->getResponse()->getBody()->getContents(), true);
-            $errorMessage = isset($errorResponse['message']) ? json_decode($errorResponse['message'], true)['errors'] : 'Unknown error';
+            $errorMessage = isset($errorResponse['message']) 
+                ? (is_array($errorResponse['message']) ? implode(', ', $errorResponse['message']) : $errorResponse['message']) 
+                : 'Unknown error';
             return new PackageError($errorMessage);
         } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
     }
+
 
 
     public function addOrderTracking($order)
