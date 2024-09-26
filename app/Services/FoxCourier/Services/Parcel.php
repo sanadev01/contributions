@@ -60,7 +60,7 @@ class Parcel
          "cdDestination" => 'GRU',
          "cdIncoterm" => $incoterm,
          "tpService" => $tpService,
-         "vlWeight" => $this->weight,
+         "vlWeight" => floatval($this->weight),
          "vlDepth" => $this->height,
          "vlWidth" => $this->width,
          "vlHeight" => $this->height,
