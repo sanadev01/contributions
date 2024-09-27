@@ -87,6 +87,9 @@ class CN23LabelMaker implements HasLableExport
             $this->packageSign = '';
 
         }
+        if($order->shippingService->isAnjunChinaService()) {
+            $this->partnerLogo = $this->anjunChinaHdLogo;
+        }
         return $this;
     }
 
@@ -230,8 +233,7 @@ class CN23LabelMaker implements HasLableExport
             'isReturn' => $this->isReturn,
             'labelZipCodeGroup' => $this->labelZipCodeGroup,
             'packageSign' => $this->packageSign,
-            'customsLogo' => $this->customsLogo,
-            'anjunChinaHdLogo' => $this->anjunChinaHdLogo,
+            'customsLogo' => $this->customsLogo
         ];
     }
 
