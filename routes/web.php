@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\CustomResponse;
 use App\Repositories\AnjunLabelRepository;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -284,13 +285,23 @@ Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->g
     });
 });
 
-Route::get('media/get/{document}', function (App\Models\Document $document) {
-    if (! Storage::exists($document->getStoragePath())) {
-        abort(404, 'Resource Not Found');
+Route::get('media/get/{document}', function (App\Models\Document $document) {   
+
+    // Parse the URL and get the file name from the path
+    $name = $document->path; 
+    $filePath = 'documents/' . $name;
+
+    // Check if the file exists
+    if (!Storage::disk('public')->exists($filePath)) {
+        return abort(404, 'File not found');
     }
 
-    return Storage::response($document->getStoragePath(), $document->name);
-})->name('media.get');
+    // Return a download response using Storage facade
+    return Storage::disk('public')->download($filePath, $name, [
+        'Content-Type' => 'image/png'
+    ]);
+
+ })->name('media.get');
 
 Route::get('order/{id}/label/get',\Admin\Label\GetLabelController::class)->name('order.label.download');
 
