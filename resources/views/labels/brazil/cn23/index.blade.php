@@ -396,11 +396,7 @@
     <div class="cn23-text">
         CN23
     </div>
-    @if($order->shippingService->isAnjunChinaService())
-        <img class="partner-logo" src="{{ $anjunChinaHdLogo }}">
-    @else
-        <img class="partner-logo" src="{{ $partnerLogo }}">
-    @endif
+    <img class="partner-logo" src="{{ $partnerLogo }}">
     <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
     
     @if($order->is_prc_label)
