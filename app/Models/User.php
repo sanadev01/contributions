@@ -286,7 +286,7 @@ class User extends Authenticatable
             return asset('app-assets/images/portrait/small/avatar-s-11.jpg');
         }
         
-        return $this->image->getPath();
+        return $this->image->public_path;
         
     }
 

@@ -40,9 +40,6 @@ class Document extends Model
     {
         return $this->getPath();
     }
-    function testpath() {
-        return url('storage/app'.$this->getStoragePath());
-    }
 
     public function getPath()
     {
