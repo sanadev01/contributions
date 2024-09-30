@@ -72,7 +72,9 @@ class OrderRepository
         }
 
         $year = $request->year ?: date('Y');
-        $query->whereYear('created_at', $year);
+        if ($year !== 'all') {
+            $query->whereYear('created_at', $year);
+        }
 
         if($request->order_date){
             $query->where('order_date', 'LIKE', "%{$request->order_date}%");
