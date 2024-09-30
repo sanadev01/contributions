@@ -436,7 +436,7 @@ Route::get('/download-return-orders', function (Request $request) {
 
     return response()->download($filePath)->deleteFileAfterSend(true);
 });
-Route::get('storage-link',function($id = null){
+Route::get('storage-link',function(){
     Artisan::call('storage:link');
     return Artisan::output();
 });
