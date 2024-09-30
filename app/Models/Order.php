@@ -1015,21 +1015,7 @@ class Order extends Model implements Package
                         $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
                         $icms = 0.17;  // ICMS (IVA)
                         $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;//Total  ICMS (IVA)
-                        $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
-                        \Log::info([
-                            'warehouse_number' => $this->warehouse_number,
-                            'is pcr user' => 'yes',
-                            'recipient country' => $this->recipient->country->code,
-                            'order_value v1' => $this->order_value,
-                            'additionalServicesCost +   insurance_value v2 ' => $additionalServicesCost,
-                            'shipping_value v3' => $this->shipping_value,
-                            'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
-                            'totalCost' => $totalCost,
-                            'duty' => $duty,
-                            'totalCostOfTheProduct' => $totalCostOfTheProduct, 
-                            'totalIcms' => $totalIcms,
-                            'totalTaxAndDuty' => $totalTaxAndDuty, 
-                        ]);
+                        $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties 
                 }else{
                     $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
                     $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
@@ -1037,22 +1023,7 @@ class Order extends Model implements Package
                     $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
                     $icms = 0.17;  // ICMS (IVA)
                     $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;;//Total  ICMS (IVA)
-                    $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
-                    \Log::info([
-                        'warehouse_number' => $this->warehouse_number,                        
-                        'pcr user' => 'no',
-                        'recipient country' => $this->recipient->country->code,
-                        'order_value v1' => $this->order_value,
-                        'additionalServicesCost +   insurance_value v2 ' => $additionalServicesCost,
-                        'shipping_value v3' => $this->shipping_value,
-                        'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
-                        'totalCost' => $totalCost,
-                        'duty' => $duty,
-                        'totalCostOfTheProduct' => $totalCostOfTheProduct, 
-                        'totalIcms' => $totalIcms,
-                        'totalTaxAndDuty' => $totalTaxAndDuty, 
-                    ]);
-
+                    $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties  
                 }
             }
 
