@@ -997,33 +997,42 @@ class Order extends Model implements Package
     public function getCalculateTaxAndDutyAttribute(){
         $totalTaxAndDuty = 0;
         $isUSPS = optional($this->shippingService)->usps_service_sub_class ?? false;
-        if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
-                if ((strtolower($this->tax_modality) == "ddp" && !$isUSPS)) {
-                if(setting('is_prc_user', null, $this->user_id)){
+        $taxSHCode=false;
+        $ignoreSHCode=["49019900","490199"];
+        foreach($this->items as $item) {
+            if(!in_array($item->sh_code,$ignoreSHCode)){
+                $taxSHCode = true;
+                break;
+            }
+        }
+        if ($this->recipient->country->code == "BR" && $taxSHCode) {
+            if ((strtolower($this->tax_modality) == "ddp" && !$isUSPS))
+            {
+                if(setting('is_prc_user', null, $this->user_id))
+                {
+                        $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
+                        $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
+                        $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
+                        $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
+                        $icms = 0.17;  // ICMS (IVA)
+                        $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;//Total  ICMS (IVA)
+                        $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
+                        \Log::info([
+                            'warehouse_number' => $this->warehouse_number,
+                            'is pcr user' => 'yes',
+                            'recipient country' => $this->recipient->country->code,
+                            'order_value v1' => $this->order_value,
+                            'additionalServicesCost +   insurance_value v2 ' => $additionalServicesCost,
+                            'shipping_value v3' => $this->shipping_value,
+                            'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
+                            'totalCost' => $totalCost,
+                            'duty' => $duty,
+                            'totalCostOfTheProduct' => $totalCostOfTheProduct, 
+                            'totalIcms' => $totalIcms,
+                            'totalTaxAndDuty' => $totalTaxAndDuty, 
+                        ]);
+                }else{
                     $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
-
-                    $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
-                    $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
-                    $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
-                    $icms = 0.17;  // ICMS (IVA)
-                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;//Total  ICMS (IVA)
-                    $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
-                    \Log::info([
-                        'is pcr user' => 'yes',
-                        'recipient country' => $this->recipient->country->code,
-                        'order_value v1' => $this->order_value,
-                        'additionalServicesCost +   insurance_value v2 ' => $additionalServicesCost,
-                        'shipping_value v3' => $this->shipping_value,
-                        'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
-                        'totalCost' => $totalCost,
-                        'duty' => $duty,
-                        'totalCostOfTheProduct' => $totalCostOfTheProduct, 
-                        'totalIcms' => $totalIcms,
-                        'totalTaxAndDuty' => $totalTaxAndDuty, 
-                    ]);
-            }else{
-                    $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
-
                     $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
                     $duty = $totalCost * .60; //Duties
                     $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
@@ -1031,6 +1040,7 @@ class Order extends Model implements Package
                     $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;;//Total  ICMS (IVA)
                     $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
                     \Log::info([
+                        'warehouse_number' => $this->warehouse_number,                        
                         'pcr user' => 'no',
                         'recipient country' => $this->recipient->country->code,
                         'order_value v1' => $this->order_value,
@@ -1044,8 +1054,8 @@ class Order extends Model implements Package
                         'totalTaxAndDuty' => $totalTaxAndDuty, 
                     ]);
 
+                }
             }
-        }
 
         }
         return round($totalTaxAndDuty, 2);
@@ -1057,20 +1067,12 @@ class Order extends Model implements Package
             $flag=true;
                 if(setting('prc_user_fee', null, $this->user_id)=="flat_fee"){
                     $fee = setting('prc_user_fee_flat', null, $this->user_id)??2;
-                    \Log::info([
-                        'fee type'=>'flat fee',
-                        'fee'=>$fee,
-                    ]);
                     $flag=false;
                 }
                 if(setting('prc_user_fee', null, $this->user_id)=="variable_fee"){
                     $percent = setting('prc_user_fee_variable', null, $this->user_id)??1;
                     $fee= $this->calculate_tax_and_duty/100 * $percent;
-                    $fee= $fee <0.5? 0.5:$fee;
-                    \Log::info([
-                        'fee type'=>'variable fee',
-                        'fee'=>$fee,
-                    ]); 
+                    $fee= $fee <0.5? 0.5:$fee; 
                     $flag=false;
                 }
                 if($flag){
