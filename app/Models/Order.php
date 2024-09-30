@@ -998,9 +998,8 @@ class Order extends Model implements Package
         $totalTaxAndDuty = 0;
         $isUSPS = optional($this->shippingService)->usps_service_sub_class ?? false;
         $taxSHCode=false;
-        $ignoreSHCode=["49019900","490199"];
         foreach($this->items as $item) {
-            if(!in_array($item->sh_code,$ignoreSHCode)){
+            if(!in_array($item->sh_code,["49019900","490199"])){
                 $taxSHCode = true;
                 break;
             }
