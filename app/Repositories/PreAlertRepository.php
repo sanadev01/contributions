@@ -192,7 +192,6 @@ class PreAlertRepository
         if ( $request->hasFile('invoiceFile') ){
             $order->attachInvoice( $request->file('invoiceFile') );
         }
-
         if ($request->hasFile('images')) {
             foreach ($order->images as $oldImage) {
                 $oldImage->delete();
