@@ -997,13 +997,9 @@ class Order extends Model implements Package
     public function getCalculateTaxAndDutyAttribute(){
         $totalTaxAndDuty = 0;
         $isUSPS = optional($this->shippingService)->usps_service_sub_class ?? false;
-        $taxSHCode=false;
-        foreach($this->items as $item) {
-            if(!in_array($item->sh_code,["49019900","490199"])){
-                $taxSHCode = true;
-                break;
-            }
-        }
+        $taxSHCode = $this->items->contains(function ($item) {
+            return !in_array($item->sh_code, ["49019900", "490199"]);
+        });
         if ($this->recipient->country->code == "BR" && $taxSHCode) {
             if ((strtolower($this->tax_modality) == "ddp" && !$isUSPS))
             {
