@@ -1053,7 +1053,7 @@ class Order extends Model implements Package
         }
         return $fee;
     }
-    private function getTaxAndDutyShouldCalculateAttribute() {
+    public function getIsTaxDutyApplicableAttribute() {
         $isUSPS = optional($this->shippingService)->usps_service_sub_class ?? false;
         $taxSHCode = $this->items->contains(function ($item) {
             return !in_array($item->sh_code, ["49019900", "490199"]);
@@ -1065,50 +1065,7 @@ class Order extends Model implements Package
         }
         return false;
     }
-    
-    public function getTotalIcms() {
-        if ($this->shouldCalculateTaxAndDuty()) {
-            $totalIcms = $this->calculateTotalIcms();
-            return round($totalIcms, 2);
-        }
-        return 0;
-    }
-    
-   
-    
-    private function calculateTotalTaxAndDuty() {
-        $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
-        $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
-    
-        if(setting('is_prc_user', null, $this->user_id)) {
-            $duty = $totalCost > 50 ? (($totalCost * .60) - 20) : $totalCost * 0.2;
-        } else {
-            $duty = $totalCost * .60;
-        }
-    
-        $totalCostOfTheProduct = $totalCost + $duty;
-        $icms = 0.17;
-        $totalIcms = $totalCostOfTheProduct / (1 - $icms) * $icms;
-    
-        return round($duty + $totalIcms, 2);
-    }
-    
-    private function calculateTotalIcms() {
-        $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
-        $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
-    
-        if(setting('is_prc_user', null, $this->user_id)) {
-            $duty = $totalCost > 50 ? (($totalCost * .60) - 20) : $totalCost * 0.2;
-        } else {
-            $duty = $totalCost * .60;
-        }
-    
-        $totalCostOfTheProduct = $totalCost + $duty;
-        $icms = 0.17;
-        $totalIcms = $totalCostOfTheProduct / (1 - $icms) * $icms;
-    
-        return round($totalIcms, 2);
-    }    
+       
     public function getPasarexColombiaRate($shippingService)
     {
         $zoneId = (new GetZipcodeZone($this->recipient->zipcode))->getZipcodeZone();
