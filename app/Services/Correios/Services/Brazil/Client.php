@@ -56,12 +56,8 @@ class Client
 
     public function createPackage(Package $order)
     {
-        $taxSHCode = $order->items->contains(function ($item) {
-            return !in_array($item->sh_code, ["49019900", "490199"]);
-        });
-
-        if (setting('is_prc_user', null, $order->user->id) && $taxSHCode) {
-            $packet = (new CorreiosOrder($order))->getRequestBody($order);
+        if ($order->is_tax_duty_applicable) {
+            $packet = (new CorreiosOrder($order))->getRequestBody();
         } else {
             $packet = new CorreiosOrder($order);
         }
