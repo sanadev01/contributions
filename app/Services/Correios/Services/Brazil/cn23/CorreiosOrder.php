@@ -6,8 +6,10 @@ use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Contracts\PacketItem;
 class CorreiosOrder extends Package{
+    public $order;
 
     function __construct($order){
+        $this->order = $order;
         $serviceSubClassCode = $order->getDistributionModality();
         if($order->getDistributionModality() == ShippingService::Packet_Standard || $order->getDistributionModality() == ShippingService::BCN_Packet_Standard){
             $serviceSubClassCode = 33227;
@@ -86,8 +88,8 @@ class CorreiosOrder extends Package{
         return 2;
     }
     
-    function getRequestBody($order) {
-
+    function getRequestBody() {
+        $order = $this->order;
         $serviceSubClassCode = $order->getDistributionModality();
         if($order->getDistributionModality() == ShippingService::Packet_Standard || $order->getDistributionModality() == ShippingService::BCN_Packet_Standard){
             $serviceSubClassCode = 33227;
