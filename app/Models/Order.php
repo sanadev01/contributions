@@ -987,34 +987,31 @@ class Order extends Model implements Package
     }
 
     public function getCalculateDutyAttribute(){
-        $totalTaxAndDuty = 0; 
-            if ($this->tax_and_duty_should_calculate)
+        if ($this->is_tax_duty_applicable)
+        {
+            $totalCost = $this->calculate_total_cost;
+            if(setting('is_prc_user', null, $this->user_id))
             {
-                $totalCost = $this->calculate_total_cost;
-                if(setting('is_prc_user', null, $this->user_id))
-                {
-                    $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
-                    return round($duty,2);//Total Taxes & Duties 
-                }else{
-                    $duty = $totalCost * .60; //Duties
-                    return round($duty,2);//Total Taxes & Duties  
-                }
+                $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
+            }else{
+                $duty = $totalCost * .60; //Duties
             }
-        return round($totalTaxAndDuty, 2);
+            return round($duty,2);//Total Taxes & Duties  
+        }
+        return 0;
     }
     
     public function getCalculateIcmsAttribute(){
-        $totalTaxAndDuty = 0; 
-        if ($this->tax_and_duty_should_calculate)
+        if ($this->is_tax_duty_applicable)
         {
             $totalCost = $this->calculate_total_cost;
             $duty =  $this->calculate_duty;
             $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
             $icms = 0.17;  // ICMS (IVA)
             $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;//Total  ICMS (IVA)
-            return $totalIcms;
+            return round($totalIcms, 2);
         }
-        return round($totalTaxAndDuty, 2);
+        return 0;
     }
     public function getCalculateFeeForTaxAndDutyAttribute()
     {
