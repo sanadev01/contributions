@@ -42,7 +42,9 @@ class ProfileRepository
             if ( $request->hasFile('image') ){
                 $user = Auth::user();
                 $file = Document::saveDocument($request->file('image'),'profile/');
-                $user->image->delete();
+                if($user->image){
+                    $user->image->delete();
+                }
                 $image = Document::create([
                     'name' => $file->getClientOriginalName(),
                     'size' => $file->getSize(),
