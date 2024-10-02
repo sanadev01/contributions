@@ -452,8 +452,3 @@ Route::get('/waybill-get/{type}/{code}', function ($type, $code) {
     $cainiaoClient = new CainiaoClient();
     return $cainiaoClient->testWaybill($type,$code);
 });
-
-Route::get('storage-link',function($id = null){
-    Artisan::call('storage:link');
-    return Artisan::output();
-});

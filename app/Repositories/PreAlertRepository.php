@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\User\ConsolidationRequest;
 use App\Services\Calculators\WeightCalculator;
+use Illuminate\Support\Facades\File;
 
 class PreAlertRepository
 {
@@ -87,8 +88,11 @@ class PreAlertRepository
         }
 
         if ($request->hasFile('images')) {
+            foreach ($order->images() as $image) {
+                File::delete(public_path($image->path));
+            }
             foreach ($request->file('images') as $image) {
-                $document = Document::saveDocument($image);
+                $document = Document::saveDocument($image,'parcels/');
                 $order->images()->create([
                     'name' => $document->getClientOriginalName(),
                     'size' => $document->getSize(),
@@ -198,7 +202,7 @@ class PreAlertRepository
             }
 
             foreach ($request->file('images') as $image) {
-                $document = Document::saveDocument($image);
+                $document = Document::saveDocument($image,'parcels/');
                 $order->images()->create([
                     'name' => $document->getClientOriginalName(),
                     'size' => $document->getSize(),
