@@ -284,7 +284,7 @@ Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->g
     });
 });
 
-Route::get('media/get/{document}', function (App\Models\Document $document) {
+Route::get('media/get/{document}', function (App\Models\Document $document) { 
     if (! Storage::exists($document->getStoragePath())) {
         abort(404, 'Resource Not Found');
     }
