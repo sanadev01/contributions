@@ -295,7 +295,7 @@ Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->g
 
 Route::get('media/get/{document}', function (App\Models\Document $document) {
     if ( !file_exists(storage_path("app/public/documents/$document->path")) ){
-        return apiResponse(false,"Lable Expired or not generated yet please update lable");
+        return apiResponse(false,"File Expired or not generated yet please update lable");
     }
     return response()->download(storage_path("app/public/documents/$document->path"));
 
