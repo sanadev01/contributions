@@ -65,9 +65,9 @@ class Document extends Model
         });
     }
 
-    public static function saveDocument(UploadedFile $file) : UploadedFile
+    public static function saveDocument(UploadedFile $file,$subFolder='') : UploadedFile
     {
-        $filename = md5(microtime()).'.'.$file->getClientOriginalExtension();
+        $filename = $subFolder.md5(microtime()).'.'.$file->getClientOriginalExtension();
         $file->storeAs(Document::PATH, $filename);
         $file->filename = $filename;
         return $file;
