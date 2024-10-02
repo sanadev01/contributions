@@ -293,21 +293,12 @@ Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->g
     });
 });
 
-Route::get('media/get/{document}', function (App\Models\Document $document) {   
-
-    // Parse the URL and get the file name from the path
-    $name = $document->path; 
-    $filePath = 'documents/' . $name;
-
-    // Check if the file exists
-    if (!Storage::disk('public')->exists($filePath)) {
-        return abort(404, 'File not found');
+Route::get('media/get/{document}', function (App\Models\Document $document) {
+    if ( !file_exists(storage_path("app/public/documents/$document->path")) ){
+        return apiResponse(false,"File Expired or not generated yet please update lable");
     }
+    return response()->download(storage_path("app/public/documents/$document->path"));
 
-    // Return a download response using Storage facade
-    return Storage::disk('public')->download($filePath, $name, [
-        'Content-Type' => 'image/png'
-    ]);
 
  })->name('media.get');
 
@@ -451,9 +442,4 @@ Route::get('/warehouse-detail/{warehouse}', function ($warehouse) {
 Route::get('/waybill-get/{type}/{code}', function ($type, $code) {
     $cainiaoClient = new CainiaoClient();
     return $cainiaoClient->testWaybill($type,$code);
-});
-
-Route::get('storage-link',function($id = null){
-    Artisan::call('storage:link');
-    return Artisan::output();
 });
