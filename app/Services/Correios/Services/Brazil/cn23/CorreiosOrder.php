@@ -6,8 +6,10 @@ use App\Models\ShippingService;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Correios\Contracts\PacketItem;
 class CorreiosOrder extends Package{
+    public $order;
 
     function __construct($order){
+        $this->order = $order;
         $serviceSubClassCode = $order->getDistributionModality();
         if($order->getDistributionModality() == ShippingService::Packet_Standard || $order->getDistributionModality() == ShippingService::BCN_Packet_Standard){
             $serviceSubClassCode = 33227;
@@ -50,11 +52,11 @@ class CorreiosOrder extends Package{
         $this->nonNationalizationInstruction = "RETURNTOORIGIN";
         
         if(setting('is_prc_user', null, $order->user->id)) {
-            $this->senderWebsite = $order->sender_website ? $order->sender_website : 'https://homedeliverybr.com';
+            $this->senderWebsite = $order->sender_website ? $order->sender_website : 'www.homedeliverybr.com';
             $this->taxPaymentMethod = 'PRC';
             $this->currency = 'USD';
-            $this->provisionedTaxValue = $order->getTotalTaxes();
-            $this->provisionedtIcmsValue = $order->getTotalIcms();
+            $this->provisionedTaxValue = $order->calculate_tax_and_duty;
+            $this->provisionedtIcmsValue = $order->calculate_icms;
             $this->senderCodeEce = $order->sender_taxId ? $order->sender_taxId : $order->user->tax_id;
             $this->generalDescription = $order->items->first()->description;
         }
@@ -86,8 +88,8 @@ class CorreiosOrder extends Package{
         return 2;
     }
     
-    function getRequestBody($order) {
-
+    function getRequestBody() {
+        $order = $this->order;
         $serviceSubClassCode = $order->getDistributionModality();
         if($order->getDistributionModality() == ShippingService::Packet_Standard || $order->getDistributionModality() == ShippingService::BCN_Packet_Standard){
             $serviceSubClassCode = 33227;
@@ -137,8 +139,8 @@ class CorreiosOrder extends Package{
                 "nonNationalizationInstruction"=> "RETURNTOORIGIN",
                 "freightPaidValue"=> $order->user_declared_freight,
                 "insurancePaidValue"=> 0.00,
-                "provisionedTaxValue"=> $order->getTotalTaxes(),
-                "provisionedIcmsValue"=> $order->getTotalIcms(),
+                "provisionedTaxValue"=> $order->calculate_tax_and_duty,
+                "provisionedIcmsValue"=> $order->calculate_icms,
                 "senderCodeEce"=> $order->sender_taxId ? $order->sender_taxId : $order->user->tax_id,
                 "generalDescription"=> $order->items->first()->description,
                 "items"=> $this->getOrderItems($order),

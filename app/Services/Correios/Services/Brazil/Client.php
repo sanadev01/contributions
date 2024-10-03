@@ -56,14 +56,15 @@ class Client
 
     public function createPackage(Package $order)
     {
-        if (setting('is_prc_user', null, $order->user->id)) {
-            $packet = (new CorreiosOrder($order))->getRequestBody($order);
+        if ($order->is_tax_duty_applicable) {
+            $packet = (new CorreiosOrder($order))->getRequestBody();
         } else {
             $packet = new CorreiosOrder($order);
         }
         \Log::info(
             $packet
         );
+        
         try {
             $response = $this->client->post('/packet/v1/packages', [
                 'headers' => [
@@ -87,7 +88,7 @@ class Client
                         "stamp_url" => route('warehouse.cn23.download', $order->id),
                         'leve' => false
                     ],
-                    'is_prc_label' => setting('prc_label', null, $order->user_id) && $order->tax() && $order->tax_modality == 'DDP' ? true : false,
+                    'is_prc_label' => setting('is_prc_user', null, $order->user_id) && $order->tax() && strcasecmp($order->tax_modality, 'DDP') == 0 ? true : false,
                 ]);
 
                 // \Log::info('Response');
