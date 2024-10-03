@@ -71,6 +71,11 @@ class OrderRepository
             });
         }
 
+        $year = $request->year ?: date('Y');
+        if ($year !== 'all') {
+            $query->whereYear('created_at', $year);
+        }
+
         if($request->order_date){
             $query->where('order_date', 'LIKE', "%{$request->order_date}%");
         }  
@@ -223,6 +228,12 @@ class OrderRepository
                     ShippingService::FOX_EX_COURIER, 
                 ];
             }
+            if($request->carrier == 'Phx Courier'){
+                $service = [
+                    ShippingService::PHX_ST_COURIER, 
+                    ShippingService::PHX_EX_COURIER, 
+                ];
+            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });
@@ -289,6 +300,7 @@ class OrderRepository
             'sender_country_id' => $request->sender_country_id,
             'sender_state_id' => $request->sender_state_id,
             'sender_zipcode' => $request->sender_zipcode,
+            'sender_website' => $request->has('sender_website') ? $request->sender_website : NULL,
         ]);
 
         return $order;

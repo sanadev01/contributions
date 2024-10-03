@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +15,8 @@ class Document extends Model
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
     
-    const PATH = '/documents/';
+    const PATH = '/public/documents/';
+    const PUBLIC_PATH = '/storage/documents/';
 
     protected $guarded = [];
 
@@ -26,6 +28,14 @@ class Document extends Model
     {
         return self::PATH.$this->path;
     }
+    function getPublicPathAttribute() {
+        return self::PUBLIC_PATH.$this->path;
+        
+    } 
+    function getAbsolutePublicPathAttribute() {
+        return env('APP_URL').self::PUBLIC_PATH.$this->path;
+        
+    }
 
     public function getFullPathAttribute()
     {
@@ -34,12 +44,19 @@ class Document extends Model
 
     public function getPath()
     {
-        return route('media.get', $this->path);
+        return route('media.get', encrypt($this->id));
     }
 
-    public function getRouteKeyName()
+    public function resolveRouteBinding($encryptedId, $field = null)
     {
-        return 'path';
+        try{
+            return $this->findOrFail(decrypt($encryptedId));
+        }
+        catch(Exception $e){
+            return $this->findOrFail($encryptedId);
+            
+        }
+        
     }
 
     /**
@@ -56,9 +73,9 @@ class Document extends Model
         });
     }
 
-    public static function saveDocument(UploadedFile $file) : UploadedFile
+    public static function saveDocument(UploadedFile $file,$subFolder='') : UploadedFile
     {
-        $filename = md5(microtime()).'.'.$file->getClientOriginalExtension();
+        $filename = $subFolder.md5(microtime()).'.'.$file->getClientOriginalExtension();
         $file->storeAs(Document::PATH, $filename);
         $file->filename = $filename;
         return $file;

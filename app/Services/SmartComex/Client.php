@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\FoxCourier;
+namespace App\Services\SmartComex;
 
 use Carbon\Carbon;
 use App\Models\Order;
@@ -13,32 +13,33 @@ use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Converters\UnitsConverter;
-use App\Services\FoxCourier\Services\Parcel;
+use App\Services\SmartComex\Services\Parcel;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\PackageError;
 
 class Client{
 
-    protected $token;
-    protected $baseUrl;
     protected $client;
     protected $apiKey;
     protected $apiSecret;
 
 
-    public function __construct()
+    public function __construct(Order $order)
     {
-        if(app()->isProduction()){
-            $this->token = config('fox_courier.production.token');
-            $this->baseUrl = config('fox_courier.production.base_uri');
-            $this->apiKey = config('fox_courier.production.api_key');
-            $this->apiSecret = config('fox_courier.production.api_secret');
-        }else{ 
-            $this->token = config('fox_courier.test.token');
-            $this->baseUrl = config('fox_courier.test.base_uri');
-            $this->apiKey = config('fox_courier.production.api_key');
-            $this->apiSecret = config('fox_courier.production.api_secret');
-        }
+        $services = [
+            'fox_courier' => 'fox_courier',
+            'phx_courier' => 'phx_courier'
+        ];
+        
+        $environment = app()->isProduction() ? 'production' : 'test';
+        
+        foreach ($services as $service => $configKey) {
+            if ($order->shippingService->{'is_' . $service}) {
+                $this->apiKey = config("{$configKey}.{$environment}.api_key");
+                $this->apiSecret = config("{$configKey}.{$environment}.api_secret");
+                break;
+            }
+        }     
 
         $this->client = new GuzzleClient();
 
@@ -55,17 +56,19 @@ class Client{
     }
 
     public function createPackage($order)
-    {   
+    {
         $parcel = new Parcel($order);
         $shippingRequest = $parcel->getRequestBody();
-
+        
         try {
             $response = $this->client->post('https://api.smartcomex.io/api-courier/add-shippment', [
                 'headers' => $this->getHeaders(),
                 'json' => $shippingRequest,
             ]);
+            \Log::info(["Fox Api Response" =>$response]);
 
             $data = json_decode($response->getBody()->getContents(), true);
+            \Log::info(["Fox json decode Data " =>$data]);
 
             if (isset($data[0]['success']) && $data[0]['success']) {
                 $trackingNumber = $data[0]['reference'];
@@ -86,12 +89,17 @@ class Client{
                         $printLabel = $this->client->get('https://api.smartcomex.io/api-courier/print' . "/" . $trackingNumber, [
                             'headers' => $this->getHeaders()
                         ]);
+                        \Log::info(["Fox print api call " =>$printLabel]);
                         $printResponse = $printLabel->getBody()->getContents();
+                        \Log::info(["Fox print api response " =>$printResponse]);
+
                         Storage::put("labels/{$order->corrios_tracking_code}.pdf", $printResponse);
                     } catch (\GuzzleHttp\Exception\ServerException $printException) {
                         $printErrorResponse = json_decode($printException->getResponse()->getBody()->getContents(), true);
-                        $printErrorMessage = isset($printErrorResponse['message']) ? json_decode($printErrorResponse['message'], true)['errors'] : 'Unknown error';
-                        return new PackageError("Label Print Error: ".$printErrorMessage);
+                        $printErrorMessage = isset($printErrorResponse['message']) 
+                            ? (is_array($printErrorResponse['message']) ? implode(', ', $printErrorResponse['message']) : $printErrorResponse['message']) 
+                            : 'Unknown error';
+                        return new PackageError("Label Print Error: " . $printErrorMessage);
                     } catch (\Exception $printException) {
                         return new PackageError($printException->getMessage());
                     }
@@ -106,12 +114,15 @@ class Client{
             return new PackageError($e->getResponse()->getBody()->getContents());
         } catch (\GuzzleHttp\Exception\ServerException $e) {
             $errorResponse = json_decode($e->getResponse()->getBody()->getContents(), true);
-            $errorMessage = isset($errorResponse['message']) ? json_decode($errorResponse['message'], true)['errors'] : 'Unknown error';
+            $errorMessage = isset($errorResponse['message']) 
+                ? (is_array($errorResponse['message']) ? implode(', ', $errorResponse['message']) : $errorResponse['message']) 
+                : 'Unknown error';
             return new PackageError($errorMessage);
         } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
     }
+
 
 
     public function addOrderTracking($order)

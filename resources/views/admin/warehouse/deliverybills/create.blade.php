@@ -37,6 +37,9 @@
                                             </td>
                                             <td>
                                                 {{ $container->getServiceSubClass() }}
+                                                @if($container->isPRC())
+                                                    <strong class="primary">PRC</strong>
+                                                @endif
                                             </td>
                                             <td>
                                                 {{ $container->getWeight() }} KG / {{  $container->getPiecesCount() }}

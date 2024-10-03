@@ -396,10 +396,10 @@
     <div class="cn23-text">
         CN23
     </div>
-    <img class="partner-logo" src="{{ $partnerLogo }}">
+    <img class="partner-logo" src="{{ $partnerLogo }}" style="{{ $order->is_tax_duty_applicable ? 'height:auto;' : '' }}" alt="Partner Logo">
     <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
     
-    @if(setting('prc_label', null, $order->user_id) && $order->tax())
+    @if($order->is_prc_label)
         <img class="customs-logo" src="{{ $customsLogo }}" alt="">
     @else
         <p class="screening-code">CJA01</p>
@@ -452,7 +452,7 @@
     <div class="serivce-zipcode">
         <div class="left-block">
             <div class="return-address">
-                <span class="return-box"> <i class="return-box-text">@if($isReturn) X @else  @endif</i></span> &nbsp; &nbsp; Retorno a origem  <span class="return-box">@if(!$isReturn) X @else   @endif</span> Tratar como abandono<br>
+                <span class="return-box"> <i class="return-box-text">@if($isReturn) X @else  @endif</i></span> &nbsp; &nbsp; Retorno a origem <br>
                 <span class="site-text" >Dúvidas e reclamações: homedeliverybr.com</span><br><br>
                 <strong>DEVOLUCÃO:</strong> <br>
                 {!! $returnAddress !!}

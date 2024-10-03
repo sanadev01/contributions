@@ -984,62 +984,40 @@ class Order extends Model implements Package
         }
         return true;
     }
- 
-    public function getCalculateTaxAndDutyAttribute(){
-        $totalTaxAndDuty = 0;
-        $isUSPS = optional($this->shippingService)->usps_service_sub_class ?? false;
-        if ($this->recipient->country->code == "MX" || $this->recipient->country->code == "CA" || $this->recipient->country->code == "BR") {
-                if ((strtolower($this->tax_modality) == "ddp" && !$isUSPS)) {
-                if(setting('is_prc_user', null, $this->user_id)){
-                    $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
+    public function getCalculateTotalCostAttribute(){ 
+        $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
+        return $this->shipping_value + $this->order_value + $additionalServicesCost;
+    }
+    public function getCalculateTaxAndDutyAttribute(){ 
+        return round($this->calculate_duty + $this->calculate_icms,2);//Total Taxes & Duties
+    }
 
-                    $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
-                    $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
-                    $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
-                    $icms = 0.17;  // ICMS (IVA)
-                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;//Total  ICMS (IVA)
-                    $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
-                    \Log::info([
-                        'is pcr user' => 'yes',
-                        'recipient country' => $this->recipient->country->code,
-                        'order_value v1' => $this->order_value,
-                        'additionalServicesCost +   insurance_value v2 ' => $additionalServicesCost,
-                        'shipping_value v3' => $this->shipping_value,
-                        'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
-                        'totalCost' => $totalCost,
-                        'duty' => $duty,
-                        'totalCostOfTheProduct' => $totalCostOfTheProduct, 
-                        'totalIcms' => $totalIcms,
-                        'totalTaxAndDuty' => $totalTaxAndDuty, 
-                    ]);
+    public function getCalculateDutyAttribute(){
+        if ($this->is_tax_duty_applicable)
+        {
+            $totalCost = $this->calculate_total_cost;
+            if(setting('is_prc_user', null, $this->user_id))
+            {
+                $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
             }else{
-                    $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
-
-                    $totalCost = $this->shipping_value + $this->order_value + $additionalServicesCost;
-                    $duty = $totalCost * .60; //Duties
-                    $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
-                    $icms = 0.17;  // ICMS (IVA)
-                    $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;;//Total  ICMS (IVA)
-                    $totalTaxAndDuty = round($duty + $totalIcms,2);//Total Taxes & Duties
-                    \Log::info([
-                        'pcr user' => 'no',
-                        'recipient country' => $this->recipient->country->code,
-                        'order_value v1' => $this->order_value,
-                        'additionalServicesCost +   insurance_value v2 ' => $additionalServicesCost,
-                        'shipping_value v3' => $this->shipping_value,
-                        'total' =>  $totalCost > 50 ? 'total is above 50' : 'total is under 50',
-                        'totalCost' => $totalCost,
-                        'duty' => $duty,
-                        'totalCostOfTheProduct' => $totalCostOfTheProduct, 
-                        'totalIcms' => $totalIcms,
-                        'totalTaxAndDuty' => $totalTaxAndDuty, 
-                    ]);
-
+                $duty = $totalCost * .60; //Duties
             }
+            return round($duty,2);//Total Taxes & Duties  
         }
-
+        return 0;
+    }
+    
+    public function getCalculateIcmsAttribute(){
+        if ($this->is_tax_duty_applicable)
+        {
+            $totalCost = $this->calculate_total_cost;
+            $duty =  $this->calculate_duty;
+            $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
+            $icms = 0.17;  // ICMS (IVA)
+            $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;//Total  ICMS (IVA)
+            return round($totalIcms, 2);
         }
-        return round($totalTaxAndDuty, 2);
+        return 0;
     }
     public function getCalculateFeeForTaxAndDutyAttribute()
     {
@@ -1048,20 +1026,12 @@ class Order extends Model implements Package
             $flag=true;
                 if(setting('prc_user_fee', null, $this->user_id)=="flat_fee"){
                     $fee = setting('prc_user_fee_flat', null, $this->user_id)??2;
-                    \Log::info([
-                        'fee type'=>'flat fee',
-                        'fee'=>$fee,
-                    ]);
                     $flag=false;
                 }
                 if(setting('prc_user_fee', null, $this->user_id)=="variable_fee"){
                     $percent = setting('prc_user_fee_variable', null, $this->user_id)??1;
                     $fee= $this->calculate_tax_and_duty/100 * $percent;
-                    $fee= $fee <0.5? 0.5:$fee;
-                    \Log::info([
-                        'fee type'=>'variable fee',
-                        'fee'=>$fee,
-                    ]); 
+                    $fee= $fee <0.5? 0.5:$fee; 
                     $flag=false;
                 }
                 if($flag){
@@ -1071,7 +1041,19 @@ class Order extends Model implements Package
         }
         return $fee;
     }
-
+    public function getIsTaxDutyApplicableAttribute() {
+        $isUSPS = optional($this->shippingService)->usps_service_sub_class ?? false;
+        $taxSHCode = $this->items->contains(function ($item) {
+            return !in_array($item->sh_code, ["49019900", "490199"]);
+        });
+        if ($this->recipient->country->code == "BR" && $taxSHCode) {
+            if ((strtolower($this->tax_modality) == "ddp" && !$isUSPS)){
+                return true;
+            }
+        }
+        return false;
+    }
+       
     public function getPasarexColombiaRate($shippingService)
     {
         $zoneId = (new GetZipcodeZone($this->recipient->zipcode))->getZipcodeZone();

@@ -75,8 +75,8 @@
                     <div class="controls">
                         <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
                         <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" readonly required placeholder="@lang('orders.order-details.Tax Modality')">
-                            <option value="ddu" {{ 'ddu' == strtolower($order->tax_modality) ? 'selected' : '' }}>DDU</option>
-                            <option value="ddp" {{ 'ddp' == strtolower($order->tax_modality) ? 'selected' : '' }}>DDP</option>
+                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }}>DDU</option>
+                            <option value="ddp" {{ 'ddp' == $order->tax_modality || setting('is_prc_user', null, $order->user->id) ? 'selected' : '' }}>DDP</option>
                         </select>
                         <div class="help-block"></div>
                     </div>
@@ -133,7 +133,7 @@
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
                     </div>
-                    <div class="form-check form-check-inline mr-5">
+                    {{-- <div class="form-check form-check-inline mr-5">
                         <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
                             <input type="checkbox" name="dispose_all" id="disposeAll" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
                             <span class="vs-checkbox vs-checkbox-lg">
@@ -143,7 +143,7 @@
                             </span>
                         </div>
                         <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
-                    </div>
+                    </div> --}}
                     {{-- <div class="form-check form-check-inline mr-5">
                         <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
                             <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\FoxCourier\Services;
+namespace App\Services\SmartComex\Services;
 
 use DateTime;
 use App\Models\Order;
@@ -38,7 +38,13 @@ class Parcel
       }
 
       // Define cdPartnerRepository based on the environment
-      $cdPartnerRepository = app()->isProduction() ? 'FOX_API_HERCO_BOPE0' : 'FOX_API_TEST_HERCO_xVDCD';
+      if($this->order->shippingService->is_fox_courier) {
+         $cdPartnerRepository = app()->isProduction() ? 'FOX_API_HERCO_BOPE0' : 'FOX_API_TEST_HERCO_xVDCD';
+         $cdContract = "CTFOX240501";
+      } else {
+         $cdPartnerRepository = '';
+         $cdContract = "HERCO_IMPO";
+      }
 
       // Handle street number for recipient
       $streetNo = optional($this->order->recipient)->street_no;
@@ -47,7 +53,7 @@ class Parcel
       }
 
       $service_sub_class = $this->order->shippingService->service_sub_class;
-      $standard = in_array($service_sub_class, [ShippingService::FOX_ST_COURIER]);
+      $standard = in_array($service_sub_class, [ShippingService::FOX_ST_COURIER, ShippingService::PHX_ST_COURIER]);
       $tpService = $standard ? 'ST' : 'EX'; 
 
       // Construct the request body
@@ -60,7 +66,7 @@ class Parcel
          "cdDestination" => 'GRU',
          "cdIncoterm" => $incoterm,
          "tpService" => $tpService,
-         "vlWeight" => $this->weight,
+         "vlWeight" => floatval($this->weight),
          "vlDepth" => $this->height,
          "vlWidth" => $this->width,
          "vlHeight" => $this->height,
@@ -104,7 +110,7 @@ class Parcel
 
          "dsPayImportTax" => "true", // Need to set it up with PRC if required
          "flConforme" => false, // Need to set it up with PRC if required
-         "cdContract" => "CTFOX240501",
+         "cdContract" => $cdContract,
          "vlProvisionICMS" => 0,
          "vlProvisionII" => 0,
 
@@ -124,7 +130,7 @@ class Parcel
          foreach ($this->order->items as $item) {
                $itemToPush = [
                   "cdFreightCurrencyGoods" => "USD",
-                  "vlUnitaryGoods" => $item->value,
+                  "vlUnitaryGoods" => floatval($item->value),
                   "vlFreight" => ((float)$this->order->insurance_value) + ((float)$this->order->user_declared_freight),
                   "vlWeight" => round($this->weight / $totalQuantity, 2) - 0.02,
                   "nbQuantity" => (int)$item->quantity,

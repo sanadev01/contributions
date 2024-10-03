@@ -76,6 +76,8 @@ class ShippingService extends Model
     const DSS_SENEGAL = 735;
     const FOX_ST_COURIER = 3697;
     const FOX_EX_COURIER = 3693;
+    const PHX_ST_COURIER = 7492;
+    const PHX_EX_COURIER = 7493;
 
     protected $guarded = [];
 
@@ -561,6 +563,8 @@ class ShippingService extends Model
             ShippingService::DSS_SENEGAL=>'DSS Senegal',
             ShippingService::FOX_ST_COURIER=>'FOX Courier',
             ShippingService::FOX_EX_COURIER=>'FOX Courier',
+            ShippingService::PHX_ST_COURIER=>'PHX Courier',
+            ShippingService::PHX_EX_COURIER=>'PHX Courier',
         ];
 
         if (array_key_exists($serviceSubClass, $serviceMap)) {
@@ -589,7 +593,18 @@ class ShippingService extends Model
             $this->service_sub_class,
             [
                 self::FOX_ST_COURIER,
-                self::FOX_EX_COURIER,
+                self::FOX_EX_COURIER
+            ]
+        );
+    }
+
+    function getIsPhxCourierAttribute()
+    {
+        return in_array(
+            $this->service_sub_class,
+            [
+                self::PHX_ST_COURIER,
+                self::PHX_EX_COURIER
             ]
         );
     }

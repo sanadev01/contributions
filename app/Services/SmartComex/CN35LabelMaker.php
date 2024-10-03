@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Services\FoxCourier;
+namespace App\Services\SmartComex;
 
 use App\Models\Warehouse\Container;
 use App\Services\Correios\Contracts\HasLableExport;
@@ -131,17 +131,17 @@ class CN35LabelMaker implements HasLableExport
 
     public function render()
     {
-        return view('labels.fox-courier.cn35.index',$this->getViewData());
+        return view('labels.smart-comex.cn35.index',$this->getViewData());
     }
 
     public function download()
     {
-        return \PDF::loadView('labels.fox-courier.cn35.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.smart-comex.cn35.index',$this->getViewData())->stream();
     }
 
     public function saveAs($path)
     {
-        return \PDF::loadView('labels.fox-courier.cn35.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.smart-comex.cn35.index',$this->getViewData())->save($path);
     }
 
     private function getViewData()

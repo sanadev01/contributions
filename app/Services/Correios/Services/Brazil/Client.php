@@ -4,6 +4,7 @@ namespace App\Services\Correios\Services\Brazil;
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
@@ -16,7 +17,11 @@ use App\Services\Correios\Services\Brazil\cn23\CorreiosOrder;
 class Client
 {
     protected $client;
+    private $customToken;
     private $baseUri;
+    private $customsBaseUri;
+    private $customsClientId;
+    private $customsClientSecret;
 
     public function __construct()
     { 
@@ -24,14 +29,42 @@ class Client
         $this->client = new GuzzleClient([
             'base_uri' => $this->baseUri
         ]);
+
+        if (app()->isProduction()) {
+            $this->customsBaseUri = config('correios_customs.production.customsBaseUri');
+            $this->customsClientId = config('correios_customs.production.clientId');
+            $this->customsClientSecret = config('correios_customs.production.clientSecret');
+        } else {
+            $this->customsBaseUri = config('correios_customs.testing.customsBaseUri');
+            $this->customsClientId = config('correios_customs.testing.clientId');
+            $this->customsClientSecret = config('correios_customs.testing.clientSecret'); 
+        }
+    }
+
+    public function getCustomsToken() {
+        $authParams = [
+            'client_id' => $this->customsClientId,
+            'client_secret' => $this->customsClientSecret,
+        ];
+        $customsClient = new GuzzleClient();
+        $response = $customsClient->post("$this->customsBaseUri/authenticate",['json' => $authParams ]);
+        $data = json_decode($response->getBody()->getContents());
+        if($data->token) {
+            return $this->customToken = $data->token;
+        }
     }
 
     public function createPackage(Package $order)
     {
-        $packet = new CorreiosOrder($order);
+        if ($order->is_tax_duty_applicable) {
+            $packet = (new CorreiosOrder($order))->getRequestBody();
+        } else {
+            $packet = new CorreiosOrder($order);
+        }
         \Log::info(
             $packet
         );
+        
         try {
             $response = $this->client->post('/packet/v1/packages', [
                 'headers' => [
@@ -55,6 +88,7 @@ class Client
                         "stamp_url" => route('warehouse.cn23.download', $order->id),
                         'leve' => false
                     ],
+                    'is_prc_label' => setting('is_prc_user', null, $order->user_id) && $order->tax() && strcasecmp($order->tax_modality, 'DDP') == 0 ? true : false,
                 ]);
 
                 // \Log::info('Response');
@@ -110,6 +144,7 @@ class Client
             ]);
 
             $data = json_decode($response->getBody()->getContents());
+
             return $data->unitResponseList[0]->unitCode;
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             return new PackageError($e->getResponse()->getBody()->getContents());
@@ -287,5 +322,45 @@ class Client
         } catch (\Exception $exception) {
             return new PackageError($exception->getMessage());
         }
+    }
+
+    public function registerPRCUnit(Container $container) {
+        try {
+        //Post Customs Batch for PRC Container
+        if($container->isPRC()) {
+            $batchRequest = (new ParcelsBatch($container))->getBatch();
+            $customsClient = new GuzzleClient();
+            $customsRequest = $customsClient->post($this->customsBaseUri."/siscomex/batch", [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->getCustomsToken()}",
+                ],
+                'json' => $batchRequest
+            ]);
+            $customsResponse = json_decode($customsRequest->getBody()->getContents());
+            return $customsResponse;
+        }
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents());
+        }
+    }
+
+    public function deletePRCUnit($container)
+    {
+        try {
+            //Post Customs Delete Batch for PRC Container
+            if($container->isPRC()) {
+                $batchId = $container->customs_response_list;
+                $customsClient = new GuzzleClient();
+                $customsRequest = $customsClient->delete($this->customsBaseUri."/batch"."/".$batchId, [
+                    'headers' => [
+                        'Authorization' => "Bearer {$this->getCustomsToken()}",
+                    ],
+                ]);
+                $customsResponse = json_decode($customsRequest->getBody()->getContents());
+                return $customsResponse;
+            }
+            } catch (\GuzzleHttp\Exception\ClientException $e) {
+                return json_decode($e->getResponse()->getBody()->getContents());
+            }
     }
 }

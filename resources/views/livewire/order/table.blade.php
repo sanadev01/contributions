@@ -33,7 +33,16 @@
                 <option value="300">300</option>
             </select>
         </div>
-        <div class="row col-11  d-flex justify-content-end pr-0">
+        <div class="col-1">
+            <select class="form-control" wire:model="year">
+                <option value="all">All</option>
+                @for ($i = date('Y'); $i >= 2020; $i--)
+                    <option value="{{ $i }}">{{ $i }}</option>
+                @endfor
+            </select>
+        </div>
+        
+        <div class="row col-10  d-flex justify-content-end pr-0">
             <form class="row col-8  d-flex justify-content-end " action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                 @csrf
                 @if (request()->route()->getName() != 'admin.trash-orders.index')
@@ -154,6 +163,7 @@
                             <option value="PasarEx">Pasar Ex</option>
                             <option value="DSS Senegal">DSS Senegal</option>
                             <option value="Fox Courier">Fox Courier</option>
+                            <option value="Phx Courier">Phx Courier</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin

@@ -30,6 +30,12 @@ class UnitRegisterFactoryController extends Controller
             ])) {
                 $unitCodePrefix = 'HDFOX';
                 $unitCodeSuffix = 'BR';
+            }elseif (in_array($serviceSubClass, [
+                ShippingService::PHX_ST_COURIER,
+                ShippingService::PHX_EX_COURIER,
+            ])) {
+                $unitCodePrefix = 'HDPHX';
+                $unitCodeSuffix = 'BR';
             } else {
                 $unitCodePrefix = 'HDC';
                 $unitCodeSuffix = 'CO';

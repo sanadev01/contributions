@@ -24,21 +24,37 @@ class ContainerFactoryController extends Controller
         $serviceSubClass = request('service_sub_class');
 
         $containers = Container::when(!Auth::user()->isAdmin(), function ($query) {
-            $query->where('user_id', Auth::id());
-        })
-        ->when(in_array($serviceSubClass, [
-            ShippingService::FOX_ST_COURIER,
-            ShippingService::FOX_EX_COURIER,
-        ]), function ($query) {
-            $query->whereIn('services_subclass_code', [
+                $query->where('user_id', Auth::id());
+            })
+            ->when(in_array($serviceSubClass, [
                 ShippingService::FOX_ST_COURIER,
                 ShippingService::FOX_EX_COURIER,
-            ]);
-        }, function ($query) use ($serviceSubClass) {
-            $query->where('services_subclass_code', $serviceSubClass);
-        })
-        ->latest()
-        ->paginate();
+            ]), function ($query) {
+                $query->whereIn('services_subclass_code', [
+                    ShippingService::FOX_ST_COURIER,
+                    ShippingService::FOX_EX_COURIER,
+                ]);
+            })
+            ->when(in_array($serviceSubClass, [
+                ShippingService::PHX_ST_COURIER,
+                ShippingService::PHX_EX_COURIER,
+            ]), function ($query) {
+                $query->whereIn('services_subclass_code', [
+                    ShippingService::PHX_ST_COURIER,
+                    ShippingService::PHX_EX_COURIER,
+                ]);
+            })
+            ->when(!in_array($serviceSubClass, [
+                ShippingService::FOX_ST_COURIER,
+                ShippingService::FOX_EX_COURIER,
+                ShippingService::PHX_ST_COURIER,
+                ShippingService::PHX_EX_COURIER,
+            ]), function ($query) use ($serviceSubClass) {
+                $query->where('services_subclass_code', $serviceSubClass);
+            })
+            ->latest()
+            ->paginate();        
+    
         $shippingServiceNotExists = config("shippingServices.correios.sub_classess.$serviceSubClass") == null;
         if ($shippingServiceNotExists) {
             abort(404);
@@ -55,14 +71,34 @@ class ContainerFactoryController extends Controller
     {
         $serviceSubClass = request('service_sub_class');
 
-        $shippingServices = ShippingService::when($serviceSubClass == ShippingService::FOX_ST_COURIER, function ($query) {
-            $query->whereIn('service_sub_class', [
+        $shippingServices = ShippingService::when(in_array($serviceSubClass, [
                 ShippingService::FOX_ST_COURIER,
                 ShippingService::FOX_EX_COURIER,
-            ]);
-        }, function ($query) use ($serviceSubClass) {
-            $query->where('service_sub_class', $serviceSubClass);
-        })->get();
+            ]), function ($query) {
+                $query->whereIn('service_sub_class', [
+                    ShippingService::FOX_ST_COURIER,
+                    ShippingService::FOX_EX_COURIER,
+                ]);
+            })
+            ->when(in_array($serviceSubClass, [
+                ShippingService::PHX_ST_COURIER,
+                ShippingService::PHX_EX_COURIER,
+            ]), function ($query) {
+                $query->whereIn('service_sub_class', [
+                    ShippingService::PHX_ST_COURIER,
+                    ShippingService::PHX_EX_COURIER,
+                ]);
+            })
+            ->when(!in_array($serviceSubClass, [
+                ShippingService::FOX_ST_COURIER,
+                ShippingService::FOX_EX_COURIER,
+                ShippingService::PHX_ST_COURIER,
+                ShippingService::PHX_EX_COURIER,
+            ]), function ($query) use ($serviceSubClass) {
+                $query->where('service_sub_class', $serviceSubClass);
+            })->get();
+
+
         if ($shippingServices->isEmpty()){
             abort(404);
         }

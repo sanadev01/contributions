@@ -20,6 +20,7 @@ class CN23LabelMaker implements HasLableExport
     private $corriosLogo;
     private $customsLogo;
     private $partnerLogo;
+    private $anjunChinaHdLogo;
     private $packetType;
     private $contractNumber;
     private $hasAnjunLabel;
@@ -42,6 +43,7 @@ class CN23LabelMaker implements HasLableExport
         $this->corriosLogo = \public_path('images/correios-1.png');
         $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
         $this->customsLogo =  public_path('images/customs-br-logo.png');
+        $this->anjunChinaHdLogo =  public_path('images/anjun-hd-logo.png');
         $this->packetType = 'Packet Standard';
         $this->contractNumber = 'H Contract:  9912501576';
         $this->packageSign = 'H';
@@ -84,6 +86,12 @@ class CN23LabelMaker implements HasLableExport
             $this->contractNumber = 'Contract: 9912501700';
             $this->packageSign = '';
 
+        }
+        if($order->shippingService->isAnjunChinaService()) {
+            $this->partnerLogo = $this->anjunChinaHdLogo;
+        }
+        if ($order->is_tax_duty_applicable) {
+            $this->partnerLogo = asset($order->user->image->public_path);
         }
         return $this;
     }
@@ -228,7 +236,7 @@ class CN23LabelMaker implements HasLableExport
             'isReturn' => $this->isReturn,
             'labelZipCodeGroup' => $this->labelZipCodeGroup,
             'packageSign' => $this->packageSign,
-            'customsLogo' => $this->customsLogo,
+            'customsLogo' => $this->customsLogo
         ];
     }
 

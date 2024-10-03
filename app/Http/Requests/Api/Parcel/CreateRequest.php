@@ -56,7 +56,7 @@ class CreateRequest extends FormRequest
             "parcel.width" => "required|numeric|gt:0",
             "parcel.height" => "required|numeric|gt:0",
             "parcel.shipment_value" => "nullable|numeric",
-            "parcel.return_option" => "nullable|numeric",
+            'parcel.return_option' => 'nullable|in:1',
 
             "sender.sender_first_name" => "required|max:100",
             "sender.sender_last_name" => "required|max:100",
@@ -160,6 +160,10 @@ class CreateRequest extends FormRequest
             $rules['recipient.tax_id'] = 'nullable';
         }
 
+        if(setting('is_prc_user', null, auth()->user()->id)) {
+            $rules['sender.sender_website'] = 'required';
+        }
+
         return $rules;
     }
 
@@ -173,7 +177,7 @@ class CreateRequest extends FormRequest
             'sender.sender_city.required_if' => __('validation.sender_city.required_if'),
             'recipient.phone.required' => 'The phone number field is required.',
             'recipient.phone.regex' => 'Please enter a valid phone number in international format. Example: +551234567890',
-            'parcel.return_option.required' => 'The return option is required. It should be 0 or 1.',
+            'parcel.return_option.required' => 'The return option is required. It should be 1.',
         ];
     }
 }
