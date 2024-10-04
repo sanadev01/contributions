@@ -71,7 +71,9 @@ class OrderRepository
         }
 
         $year = $request->year ?: date('Y');
-        $query->whereYear('created_at', $year);
+        if ($year !== 'all') {
+            $query->whereYear('created_at', $year);
+        }
 
         if($request->order_date){
             $query->where('order_date', 'LIKE', "%{$request->order_date}%");
@@ -235,6 +237,12 @@ class OrderRepository
                     ShippingService::VIP_PARCEL_FCP,
                     ShippingService::VIP_PARCEL_PMEI,
                     ShippingService::VIP_PARCEL_PMI,
+                ];
+            }
+            if($request->carrier == 'Phx Courier'){
+                $service = [
+                    ShippingService::PHX_ST_COURIER, 
+                    ShippingService::PHX_EX_COURIER, 
                 ];
             }
             $query->whereHas('shippingService', function ($query) use($service) {
