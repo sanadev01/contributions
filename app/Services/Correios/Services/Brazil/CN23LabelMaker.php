@@ -92,6 +92,16 @@ class CN23LabelMaker implements HasLableExport
         }
         if ($order->is_tax_duty_applicable) {
             $this->partnerLogo = asset($order->user->image->public_path);
+            \Log::info([
+                'partnerLogo' => 'rendered successfully',
+                'path'=>$this->partnerLogo,
+            ]);
+        }
+        else{
+            \Log::info([
+                'partnerLogo' => 'not rendered',
+                'path'=>$this->partnerLogo,
+            ]);
         }
         return $this;
     }
@@ -194,6 +204,7 @@ class CN23LabelMaker implements HasLableExport
 
     public function render()
     {
+        \Log::info($this->getViewData());
         return view('labels.brazil.cn23.index', $this->getViewData());
     }
 
