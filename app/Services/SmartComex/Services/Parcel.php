@@ -71,7 +71,7 @@ class Parcel
          "vlWidth" => $this->width,
          "vlHeight" => $this->height,
          "nbQuantity" => 1,
-         "taxRegime" => 7,
+         "taxRegime" => $this->order->is_tax_duty_applicable ? 18: 7,
          "unitMeasure" => '11',
 
          // Shipper information
@@ -109,10 +109,10 @@ class Parcel
          ],
 
          "dsPayImportTax" => "true", // Need to set it up with PRC if required
-         "flConforme" => false, // Need to set it up with PRC if required
+         "flConforme" => $this->order->is_tax_duty_applicable ? true : false, // Need to set it up with PRC if required
          "cdContract" => $cdContract,
-         "vlProvisionICMS" => 0,
-         "vlProvisionII" => 0,
+         "vlProvisionICMS" =>$this->order->is_tax_duty_applicable ? $this->order->calculate_icms: 0,
+         "vlProvisionII" => $this->order->is_tax_duty_applicable ? $this->order->calculate_tax_and_duty: 0,
 
          // Goods information
          "goods" => $this->setItemsDetails()

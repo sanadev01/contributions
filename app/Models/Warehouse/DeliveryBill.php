@@ -162,4 +162,9 @@ class DeliveryBill extends Model
         return $this->containers->first()->hasFoxCourierService();
     }
 
+    public function isPhxCourier()
+    {
+        return $this->containers->first()->hasPhxCourierService();
+    }
+
 }
