@@ -7,14 +7,19 @@ use App\Models\Warehouse\Container;
 use App\Services\PasarEx\CN35LabelMaker;
 use App\Services\SmartComex\CN35LabelMaker as SmartComexCN35;
 use Carbon\Carbon;
+use App\Services\Cainiao\CN35LabelMaker as CainiaoCN35LabelMaker;
 class CN35DownloadFactoryController extends Controller
 {
     public $container;
     public function __invoke(Container $container)
     {
         $this->container = $container;
-        if($container->hasPasarExService()){
+        if ($container->hasPasarExService()) {
             return $this->getPasarExLabel();
+        }       
+        if($container->has_cainiao){ 
+            $cn23Maker = new CainiaoCN35LabelMaker($this->container);
+            return $cn23Maker->download();
         }
         if($container->hasFoxCourierService()){
             return $this->getFoxCourierLabel();
@@ -28,7 +33,6 @@ class CN35DownloadFactoryController extends Controller
 
     function getPasarExLabel(){
         $cn23Maker = new CN35LabelMaker($this->container);
-        $packetType = 'PasarEx';
         $cn23Maker =   $cn23Maker->setDispatchNumber($this->container->dispatch_number)
             ->setDestinationAirport('GRU')
             ->setOriginAirport('MIA')

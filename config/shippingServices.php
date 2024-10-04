@@ -61,6 +61,10 @@ return [
             735 => 'DSS Senegal',
             3697 => 'Fox Standard Courier',
             3693 => 'Fox Express Courier',
+            847 => 'VIP Parcel PMEI',
+            848 => 'VIP Parcel PMI',
+            849 => 'VIP Parcel FCP',
+            1000 => 'Cainiao China',
             7492 => 'PHX Standard Courier',
             7493 => 'PHX Express Courier',
         ]

@@ -62,7 +62,8 @@ class Client
             $packet = new CorreiosOrder($order);
         }
         \Log::info(
-            $packet
+            json_encode(['packageList' => [ $packet  ]])
+                    
         );
         
         try {
