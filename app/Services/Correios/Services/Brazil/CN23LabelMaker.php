@@ -206,7 +206,6 @@ class CN23LabelMaker implements HasLableExport
 
     public function render()
     {
-        \Log::info($this->getViewData());
         return view('labels.brazil.cn23.index', $this->getViewData());
     }
 
