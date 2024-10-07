@@ -17,14 +17,23 @@
             box-sizing:border-box !important;
             font-weight: bold;
         }
-
-        img.partner-logo{
-            width: 2cm;
-            height: 2.5cm;
-            position: absolute;
-            top: 2.5mm;
-            left: 2.5mm;
-            object-fit: contain;
+        .partner-logo-container {
+            padding: 2mm;
+            width: 2cm; 
+            left:  2.5mm;
+            height: 2.1cm;  
+            overflow: hidden; 
+            position: relative; 
+        }
+        img.partner-logo { 
+            max-width: 100%;  
+            max-height: 90%; 
+            height: auto; 
+            position: absolute; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            object-fit: contain;  
         }
 
         img.corrioes-lable{
@@ -395,8 +404,10 @@
 <body>
     <div class="cn23-text">
         CN23
-    </div>
-    <img class="partner-logo" src="{{ $partnerLogo }}" style="{{ $order->is_tax_duty_applicable ? 'height:auto;' : '' }}" alt="{{$partnerLogo }}">
+    </div> 
+    <div class="partner-logo-container" >
+        <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
+    </div> 
     <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
     
     @if($order->is_prc_label)
