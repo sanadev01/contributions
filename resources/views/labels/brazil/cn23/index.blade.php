@@ -35,6 +35,15 @@
             transform: translate(-50%, -50%); 
             object-fit: contain;  
         }
+        img.hd-logo { 
+            top: 4mm; 
+            width: 2.3cm; 
+            height: auto; 
+            left:  3cm;  
+            position: absolute;  
+            transform: translate(-50%, -50%); 
+            object-fit: contain;  
+        }
 
         img.corrioes-lable{
             position: absolute;
@@ -407,11 +416,14 @@
     </div> 
     <div class="partner-logo-container" >
         <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
-    </div> 
+    </div>
+    @if($order->is_prc_label) 
+            <img class="hd-logo" src="{{ $profileLogo }}" alt="Partner Logo"> 
+    @endif
     <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
     
     @if($order->is_prc_label)
-        <img class="customs-logo" src="{{ $customsLogo }}" alt="">
+        <img class="customs-logo" src="{{ $customsLogo }}" alt="custom">
     @else
         <p class="screening-code">CJA01</p>
     @endif

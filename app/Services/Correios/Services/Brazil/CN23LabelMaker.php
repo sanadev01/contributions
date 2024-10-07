@@ -34,13 +34,15 @@ class CN23LabelMaker implements HasLableExport
     private $activeAddress;
     private $isReturn;
     private $packageSign;
+    private $profileLogo;
     private $labelZipCodeGroup;
 
     public function __construct()
     {
         $this->hasSuplimentary = false;
         $this->hasAnjunLabel = false;
-        $this->corriosLogo = \public_path('images/correios-1.png');
+        $this->corriosLogo = public_path('images/correios-1.png');
+        $this->profileLogo =  public_path('images/hd-1cm.png');
         $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
         $this->customsLogo =  public_path('images/customs-br-logo.png');
         $this->anjunChinaHdLogo =  public_path('images/anjun-hd-logo.png');
@@ -91,20 +93,9 @@ class CN23LabelMaker implements HasLableExport
             $this->partnerLogo = $this->anjunChinaHdLogo;
         }
         if ($order->is_tax_duty_applicable) {
-            $this->partnerLogo = public_path($order->user->image->public_path);
-            \Log::info([
-                'partnerLogo' => 'rendered successfully',
-                'path'=>$this->partnerLogo,
-                'order'=>$order->warehouse_number,
-            ]);
-        }
-        else{
-            \Log::info([
-                'partnerLogo' => 'not rendered',
-                'path'=>$this->partnerLogo,
-                'order'=>$order->warehouse_number,
-            ]);
-        }
+            $this->profileLogo = public_path($order->user->image->public_path);
+            
+        } 
         return $this;
     }
 
@@ -248,7 +239,8 @@ class CN23LabelMaker implements HasLableExport
             'isReturn' => $this->isReturn,
             'labelZipCodeGroup' => $this->labelZipCodeGroup,
             'packageSign' => $this->packageSign,
-            'customsLogo' => $this->customsLogo
+            'customsLogo' => $this->customsLogo,
+            'profileLogo' => $this->profileLogo
         ];
     }
 
