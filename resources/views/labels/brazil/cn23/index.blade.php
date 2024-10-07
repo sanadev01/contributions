@@ -396,7 +396,7 @@
     <div class="cn23-text">
         CN23
     </div>
-    <img class="partner-logo" src="{{ $partnerLogo }}" style="{{ $order->is_tax_duty_applicable ? 'height:auto;' : '' }}" alt="Partner Logo">
+    <img class="partner-logo" src="{{ $partnerLogo }}" style="{{ $order->is_tax_duty_applicable ? 'height:auto;' : '' }}" alt="{{$partnerLogo }}">
     <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
     
     @if($order->is_prc_label)
