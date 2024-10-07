@@ -17,23 +17,30 @@
             box-sizing:border-box !important;
             font-weight: bold;
         }
-        .partner-logo-container {
+        /* .partner-logo-container {
             padding: 2mm;
             width: 2cm; 
             left:  2.5mm;
             height: 2.1cm;  
             overflow: hidden; 
             position: relative; 
-        }
+        } */
         img.partner-logo { 
-            max-width: 100%;  
+            /* max-width: 100%;  
             max-height: 90%; 
             height: auto; 
             position: absolute; 
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%); 
-            object-fit: contain;  
+            object-fit: contain;   */
+            
+            width: 2cm;
+            height: 2.5cm;
+            position: absolute;
+            top: 2.5mm;
+            left: 2.5mm;
+            object-fit: contain;
         }
         img.hd-logo { 
             top: 4mm; 
@@ -414,15 +421,11 @@
     <div class="cn23-text">
         CN23
     </div> 
-    <div class="partner-logo-container" >
         <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
-    </div>
-    @if($order->is_prc_label) 
-            <img class="hd-logo" src="{{ $profileLogo }}" alt="Partner Logo"> 
-    @endif
+ 
     <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
-    
-    @if($order->is_prc_label)
+    @if($order->is_prc_label) 
+        <img class="hd-logo" src="{{ $profileLogo }}" alt="Partner Logo"> 
         <img class="customs-logo" src="{{ $customsLogo }}" alt="custom">
     @else
         <p class="screening-code">CJA01</p>
