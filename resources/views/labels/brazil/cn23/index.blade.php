@@ -20,17 +20,17 @@
         .partner-logo-container {
             padding: 2mm;
             width: 2cm; 
-            left: 1.5mm;
+            left:  2.5mm;
             height: 2.1cm;  
             overflow: hidden; 
             position: relative; 
         }
         img.partner-logo { 
             max-width: 100%;  
-            max-height: 85%; 
+            max-height: 90%; 
             height: auto; 
             position: absolute; 
-            top: 50%;  
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%); 
             object-fit: contain;  
