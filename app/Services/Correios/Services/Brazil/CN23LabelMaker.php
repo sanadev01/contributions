@@ -91,7 +91,7 @@ class CN23LabelMaker implements HasLableExport
             $this->partnerLogo = $this->anjunChinaHdLogo;
         }
         if ($order->is_tax_duty_applicable) {
-            $this->partnerLogo = asset($order->user->image->public_path);
+            $this->partnerLogo = public_path($order->user->image->public_path);
             \Log::info([
                 'partnerLogo' => 'rendered successfully',
                 'path'=>$this->partnerLogo,
