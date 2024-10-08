@@ -103,7 +103,7 @@ class CN23LabelMaker implements HasLableExport
             $this->profileLogo = public_path($order->user->image->public_path); 
             $this->TIN = $order->user->tax_id;
             $this->website = old('user_website',setting('user_website', null, $order->user_id));
-        } 
+        }
         return $this;
     }
 
