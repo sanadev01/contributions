@@ -82,7 +82,7 @@
             top: 3mm;
             left: 2mm;
             object-fit: contain;
-        } 
+        }
         img.corrioes-logo{
             position: absolute;
             top: 2.5mm;
@@ -91,7 +91,7 @@
             height: 2.5cm;
             object-fit: contain;
         }
-        
+
 
         p.screening-code{
             position: absolute;
@@ -444,9 +444,6 @@
     <div class="cn23-text">
         CN23
     </div>
-    <img class="partner-logo" src="{{ $partnerLogo }}" style="{{ $order->is_tax_duty_applicable ? 'height:auto;' : '' }}" alt="Partner Logo">
-    <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
-    
     @if($order->is_prc_label)
         <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner PRC">
         <div class="profile-prc-logo-container">

@@ -188,7 +188,7 @@
                                     <div class="controls row mb-1 align-items-center">
                                         <label class="col-md-3 text-md-right">Website<span class="text-danger"></span></label>
                                         <div class="col-md-6">
-                                            <input type="url" class="form-control"  name="user_website" value="{{ old('user_website',setting('user_website', null, auth()->user()->id)) }}"  placeholder="Enter website URL"/>
+                                            <input type="url" class="form-control"  name="user_website" value="{{ old('user_website',setting('user_website', null, auth()->user()->id))??'https://homedeliverybr.com' }}"  placeholder="Enter website URL"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
