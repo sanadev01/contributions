@@ -37,7 +37,8 @@ class CN23LabelMaker implements HasLableExport
     private $profileLogo;
     private $labelZipCodeGroup;
     private $website;
-    private $cpf;
+    private $CPF;
+    private $TIN;
 
     public function __construct()
     {
@@ -60,6 +61,7 @@ class CN23LabelMaker implements HasLableExport
         $this->activeAddress = '';
         $this->labelZipCodeGroup = '';
         $this->website = 'homedeliverybr.com'; 
+        $this->TIN = '';
 
     }
 
@@ -67,7 +69,7 @@ class CN23LabelMaker implements HasLableExport
     {
         $this->order = $order;
         $this->recipient = $order->recipient;
-        $this->cpf = $order->recipient->tax_id;
+        $this->CPF = $order->recipient->tax_id;
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
@@ -99,7 +101,7 @@ class CN23LabelMaker implements HasLableExport
         }
         if ($order->is_tax_duty_applicable) {
             $this->profileLogo = public_path($order->user->image->public_path); 
-            $this->cpf = $order->user->tax_id;
+            $this->TIN = $order->user->tax_id;
             $this->website = old('user_website',setting('user_website', null, $order->user_id));
         } 
         return $this;
@@ -248,7 +250,8 @@ class CN23LabelMaker implements HasLableExport
             'customsLogo' => $this->customsLogo,
             'profileLogo' => $this->profileLogo,
             'website' => $this->website,
-            'cpf' => $this->cpf,
+            'CPF' => $this->CPF,
+            'TIN' => $this->TIN,
         ];
     }
 

@@ -26,19 +26,32 @@
             left: 2.3mm;
             object-fit: contain;
         }
-        img.profile-prc-logo { 
-            top: 6mm;  
-            width: 1.4cm;
-            height: 0.5cm; 
-            left: 2cm;
-            object-fit: contain; 
+        img.profile-prc-logo {  
+            max-width: 100%;  
+            max-height: 90%; 
+            height: auto; 
             position: absolute; 
-             
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            object-fit: contain;  
         }
+
+
+        .profile-prc-logo-container { 
+            width: 1.4cm; 
+            left: 2.15cm; 
+            padding: 2mm;  
+            height: 2.1cm;  
+            overflow: hidden; 
+            position: relative;  
+        }
+        
+
         img.corrioes-prc-logo{
             position: absolute;
             top: 2.5mm;
-            left: 4cm; 
+            left: 4.3cm; 
             width: 1.4cm;
             height: 1.8cm;
             object-fit: contain;
@@ -46,10 +59,18 @@
         img.customs-prc-logo{
             position: absolute;
             top: 7.mm;
-            left: 6cm;
+            left: 6.45cm;
             width: 1cm;
             height: 1cm;
             object-fit: contain;
+        }
+        .order-prc-date {
+
+            position: absolute;
+            left: 2.5mm;
+            top: 27mm;
+            font-size: 8pt;
+            width: 100%;
         }
         /* prc design end */
         
@@ -424,11 +445,15 @@
         CN23
     </div>  
     @if($order->is_prc_label)
-    <img class="partner-prc-logo" src="{{ $partnerLogo }}" alt="Partner PRC">
-    <img class="profile-prc-logo" src="{{ $profileLogo }}" alt="Partner Logo">
-    <img class="corrioes-prc-logo" src="{{ $corriosLogo }}" alt="">
-    <img class="customs-prc-logo" src="{{ $customsLogo }}" alt="custom">
-
+        <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner PRC">
+        <div class="profile-prc-logo-container">
+            <img class="profile-prc-logo" src="{{ $profileLogo }}" alt="Partner Logo">
+        </div> 
+        <img class="corrioes-prc-logo" src="{{ $corriosLogo }}" alt="">
+        <img class="customs-prc-logo" src="{{ $customsLogo }}" alt="custom">
+        <div class="order-prc-date">
+            <strong>Emissão: </strong> {{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') }} <br>
+        </div>
     @else
         <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
         <p class="screening-code">CJA01</p>
@@ -466,7 +491,10 @@
             {{ $recipient->address }}, @if ($recipient->street_no != 0 ) {{ $recipient->street_no }}, @endif {{ $recipient->address2 }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
             {{ $recipient->state->name }}
             {{ $recipient->country->name }} <br>
-            CPF: {{ $cpf }}
+            CPF: {{ $CPF }}<br>
+            @if($order->is_prc_label)
+                TIN: {{ $TIN }}
+            @endif
         </div>
     </div>
     <div class="package-sign">{{$packageSign}}</div>
