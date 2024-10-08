@@ -96,7 +96,7 @@
                                     <div class="col-md-6">
                                         <input type="file" accept="image/*" class="form-control" name="image" placeholder="">
                                         <div class="help-block"></div>
-                                        <img src="{{ auth()->user()->getImage() }}" style="width: 100px; height:100px;" alt="">
+                                        <img src="{{ auth()->user()->getImage() }}" style="width: 100px; height:auto;" class="mt-2" alt="">
                                     </div>
                                 </div>
 
@@ -180,6 +180,15 @@
                                         <label class="col-md-3 text-md-right">CPF / CNPJ<span class="text-danger"></span></label>
                                         <div class="col-md-6">
                                             <input type="text" class="form-control" name="tax_id" value="{{ old('tax_id',auth()->user()->tax_id) }}"  placeholder="CPF / CNPJ"/>
+                                            <div class="help-block"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="controls row mb-1 align-items-center">
+                                        <label class="col-md-3 text-md-right">Website<span class="text-danger"></span></label>
+                                        <div class="col-md-6">
+                                            <input type="url" class="form-control"  name="user_website" value="{{ old('user_website',setting('user_website', null, auth()->user()->id)) }}"  placeholder="Enter website URL"/>
                                             <div class="help-block"></div>
                                         </div>
                                     </div>

@@ -5,10 +5,8 @@ namespace App\Repositories;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Profie;
 use App\Models\User;
 use Exception;
-
 
 class ProfileRepository
 {
@@ -42,8 +40,11 @@ class ProfileRepository
             }
 
             if ( $request->hasFile('image') ){
-                $file = Document::saveDocument($request->file('image'));
-                Auth::user()->image()->delete();
+                $user = Auth::user();
+                $file = Document::saveDocument($request->file('image'),'profile/');
+                if($user->image){
+                    $user->image->delete();
+                }
                 $image = Document::create([
                     'name' => $file->getClientOriginalName(),
                     'size' => $file->getSize(),
@@ -51,13 +52,12 @@ class ProfileRepository
                     'path' => $file->filename
                 ]);
                 Auth::user()->image()->associate($image)->save();
-
-                // dd($image);
-            }
+            } 
             $request->has('auto_charge') ? saveSetting('auto_charge', true, $user->id) : saveSetting('auto_charge', false, $user->id);
             $request->has('return_origin') ? saveSetting('return_origin', true, $user->id) : saveSetting('return_origin', false, $user->id);
             $request->has('dispose_all') ? saveSetting('dispose_all', true, $user->id) : saveSetting('dispose_all', false, $user->id);
             $request->has('individual_parcel') ? saveSetting('individual_parcel', true, $user->id) : saveSetting('individual_parcel', false, $user->id);
+            $request->has('user_website') ? saveSetting('user_website', $request->user_website, $user->id) :  saveSetting('user_website', $request->user_website, $user->id);
             return true;
 
         }catch(Exception $exception){
