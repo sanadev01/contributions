@@ -34,13 +34,18 @@ class CN23LabelMaker implements HasLableExport
     private $activeAddress;
     private $isReturn;
     private $packageSign;
+    private $profileLogo;
     private $labelZipCodeGroup;
+    private $website;
+    private $CPF;
+    private $TIN;
 
     public function __construct()
     {
         $this->hasSuplimentary = false;
         $this->hasAnjunLabel = false;
-        $this->corriosLogo = \public_path('images/correios-1.png');
+        $this->corriosLogo = public_path('images/correios-1.png');
+        $this->profileLogo =  public_path('images/hd-1cm.png');
         $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
         $this->customsLogo =  public_path('images/customs-br-logo.png');
         $this->anjunChinaHdLogo =  public_path('images/anjun-hd-logo.png');
@@ -55,12 +60,16 @@ class CN23LabelMaker implements HasLableExport
         $this->complainAddress = 'Em caso de problemas com o produto, entre em contato com o remetente';
         $this->activeAddress = '';
         $this->labelZipCodeGroup = '';
+        $this->website = 'homedeliverybr.com'; 
+        $this->TIN = '';
+
     }
 
     public function setOrder(Order $order)
     {
         $this->order = $order;
         $this->recipient = $order->recipient;
+        $this->CPF = $order->recipient->tax_id;
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
         $this->getActiveAddress($this->order);
@@ -91,7 +100,9 @@ class CN23LabelMaker implements HasLableExport
             $this->partnerLogo = $this->anjunChinaHdLogo;
         }
         if ($order->is_tax_duty_applicable) {
-            $this->partnerLogo = asset($order->user->image->public_path);
+            $this->profileLogo = public_path($order->user->image->public_path); 
+            $this->TIN = $order->user->tax_id;
+            $this->website = old('user_website',setting('user_website', null, $order->user_id));
         }
         return $this;
     }
@@ -236,7 +247,11 @@ class CN23LabelMaker implements HasLableExport
             'isReturn' => $this->isReturn,
             'labelZipCodeGroup' => $this->labelZipCodeGroup,
             'packageSign' => $this->packageSign,
-            'customsLogo' => $this->customsLogo
+            'customsLogo' => $this->customsLogo,
+            'profileLogo' => $this->profileLogo,
+            'website' => $this->website,
+            'CPF' => $this->CPF,
+            'TIN' => $this->TIN,
         ];
     }
 
