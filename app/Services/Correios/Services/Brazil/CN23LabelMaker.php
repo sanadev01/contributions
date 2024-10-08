@@ -61,7 +61,7 @@ class CN23LabelMaker implements HasLableExport
         $this->activeAddress = '';
         $this->labelZipCodeGroup = '';
         $this->website = 'homedeliverybr.com'; 
-        $this->TIN = 'homedeliverybr.com';
+        $this->TIN = '';
 
     }
 
