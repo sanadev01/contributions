@@ -96,7 +96,7 @@
                                     <div class="col-md-6">
                                         <input type="file" accept="image/*" class="form-control" name="image" placeholder="">
                                         <div class="help-block"></div>
-                                        <img src="{{ auth()->user()->getImage() }}" style="width: 100px; height:100px;" alt="">
+                                        <img src="{{ auth()->user()->getImage() }}" style="width: 100px; height:auto;" class="mt-2" alt="">
                                     </div>
                                 </div>
 
