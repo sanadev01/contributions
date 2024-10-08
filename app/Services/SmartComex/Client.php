@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\FoxCourier;
+namespace App\Services\SmartComex;
 
 use Carbon\Carbon;
 use App\Models\Order;
@@ -13,32 +13,33 @@ use App\Models\Warehouse\DeliveryBill;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Converters\UnitsConverter;
-use App\Services\FoxCourier\Services\Parcel;
+use App\Services\SmartComex\Services\Parcel;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\Correios\Models\PackageError;
 
 class Client{
 
-    protected $token;
-    protected $baseUrl;
     protected $client;
     protected $apiKey;
     protected $apiSecret;
 
 
-    public function __construct()
+    public function __construct(Order $order)
     {
-        if(app()->isProduction()){
-            $this->token = config('fox_courier.production.token');
-            $this->baseUrl = config('fox_courier.production.base_uri');
-            $this->apiKey = config('fox_courier.production.api_key');
-            $this->apiSecret = config('fox_courier.production.api_secret');
-        }else{ 
-            $this->token = config('fox_courier.test.token');
-            $this->baseUrl = config('fox_courier.test.base_uri');
-            $this->apiKey = config('fox_courier.production.api_key');
-            $this->apiSecret = config('fox_courier.production.api_secret');
-        }
+        $services = [
+            'fox_courier' => 'fox_courier',
+            'phx_courier' => 'phx_courier'
+        ];
+        
+        $environment = app()->isProduction() ? 'production' : 'test';
+        
+        foreach ($services as $service => $configKey) {
+            if ($order->shippingService->{'is_' . $service}) {
+                $this->apiKey = config("{$configKey}.{$environment}.api_key");
+                $this->apiSecret = config("{$configKey}.{$environment}.api_secret");
+                break;
+            }
+        }     
 
         $this->client = new GuzzleClient();
 
@@ -58,7 +59,7 @@ class Client{
     {
         $parcel = new Parcel($order);
         $shippingRequest = $parcel->getRequestBody();
-
+        
         try {
             $response = $this->client->post('https://api.smartcomex.io/api-courier/add-shippment', [
                 'headers' => $this->getHeaders(),

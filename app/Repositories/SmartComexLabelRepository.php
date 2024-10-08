@@ -6,8 +6,8 @@ namespace App\Repositories;
 use App\Models\Order;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Correios\Models\PackageError;
-use App\Services\FoxCourier\Client;
-class FoxCourierLabelRepository
+use App\Services\SmartComex\Client;
+class SmartComexLabelRepository
 {
     protected $error;
 
@@ -43,7 +43,7 @@ class FoxCourierLabelRepository
 
     protected function generateLabel(Order $order)
     {
-        $client = new Client();
+        $client = new Client($order);
         $data = $client->createPackage($order);
         if ( $data instanceof PackageError){
             $this->error = $data->getErrors();

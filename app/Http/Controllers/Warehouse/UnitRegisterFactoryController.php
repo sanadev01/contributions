@@ -23,7 +23,21 @@ class UnitRegisterFactoryController extends Controller
         }
 
         if (!$container->unit_code) {
-            if ($container->has_cainiao) {
+            $serviceSubClass = $container->getSubClassCode();
+
+            if (in_array($serviceSubClass, [
+                ShippingService::FOX_ST_COURIER,
+                ShippingService::FOX_EX_COURIER,
+            ])) {
+                $unitCodePrefix = 'HDFOX';
+                $unitCodeSuffix = 'BR';
+            }elseif (in_array($serviceSubClass, [
+                ShippingService::PHX_ST_COURIER,
+                ShippingService::PHX_EX_COURIER,
+            ])) {
+                $unitCodePrefix = 'HDPHX';
+                $unitCodeSuffix = 'BR';
+            }elseif ($container->has_cainiao) {
                 $cainiaoClient = new Client();
                 if (!$cainiaoClient->cngeBigbagCreate($container)) {
                     session()->flash('alert-danger', $cainiaoClient->error);
