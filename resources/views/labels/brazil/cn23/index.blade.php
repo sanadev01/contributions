@@ -17,40 +17,33 @@
             box-sizing:border-box !important;
             font-weight: bold;
         }
-        /* .partner-logo-container {
-            padding: 2mm;
-            width: 2cm; 
-            left:  2.5mm;
-            height: 2.1cm;  
-            overflow: hidden; 
-            position: relative; 
-        } */
-        img.partner-logo { 
-            /* max-width: 100%;  
-            max-height: 90%; 
-            height: auto; 
-            position: absolute; 
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); 
-            object-fit: contain;   */
-            
+        img.partner-logo {
             width: 2cm;
             height: 2.5cm;
             position: absolute;
-            top: 2.5mm;
+            top: 3mm;
             left: 2.5mm;
             object-fit: contain;
         }
-        img.hd-logo { 
-            top: 4mm; 
-            width: 2.3cm; 
-            height: auto; 
-            left:  3cm;  
-            position: absolute;  
-            transform: translate(-50%, -50%); 
-            object-fit: contain;  
+
+        img.profile-logo {
+            top: 2mm;  
+            width: 2.2cm;
+            height: 0.5cm;
+            left: 2.5mm;
+            object-fit: contain; 
+            position: absolute; 
+             
         }
+
+        img.partner-prc-logo {   
+            width: 2cm;
+            height: 2.5cm;
+            position: absolute;
+            top: 3.3mm;
+            left: 2.3mm;
+            object-fit: contain;
+        }        
 
         img.corrioes-lable{
             position: absolute;
@@ -421,14 +414,18 @@
     <div class="cn23-text">
         CN23
     </div> 
-        <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
- 
-    <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
-    @if($order->is_prc_label) 
-        <img class="hd-logo" src="{{ $profileLogo }}" alt="Partner Logo"> 
-        <img class="customs-logo" src="{{ $customsLogo }}" alt="custom">
+    
+    @if($order->is_prc_label)
+    <img class="partner-prc-logo" src="{{ $partnerLogo }}" alt="Partner PRC">
     @else
-        <p class="screening-code">CJA01</p>
+    <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
+    @endif
+    <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
+    @if($order->is_prc_label)
+    <img class="profile-logo" src="{{ $profileLogo }}" alt="Partner Logo">
+    <img class="customs-logo" src="{{ $customsLogo }}" alt="custom">
+    @else
+    <p class="screening-code">CJA01</p>
     @endif
     <img src="{{ $serviceLogo }}" class="service-type"/>
     <div class="service-info-wrapper">
