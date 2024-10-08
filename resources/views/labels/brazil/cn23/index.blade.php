@@ -17,35 +17,52 @@
             box-sizing:border-box !important;
             font-weight: bold;
         }
+        /* prc design started */
+        img.partner-prc-logo {   
+            top: 3.3mm;
+            width: 1.8cm;
+            height: 2.2cm;
+            position: absolute;
+            left: 2.3mm;
+            object-fit: contain;
+        }
+        img.profile-prc-logo { 
+            top: 6mm;  
+            width: 1.4cm;
+            height: 0.5cm; 
+            left: 2cm;
+            object-fit: contain; 
+            position: absolute; 
+             
+        }
+        img.corrioes-prc-logo{
+            position: absolute;
+            top: 2.5mm;
+            left: 4cm; 
+            width: 1.4cm;
+            height: 1.8cm;
+            object-fit: contain;
+        }
+        img.customs-prc-logo{
+            position: absolute;
+            top: 7.mm;
+            left: 6cm;
+            width: 1cm;
+            height: 1cm;
+            object-fit: contain;
+        }
+        /* prc design end */
+        
+
         img.partner-logo {
             width: 2cm;
             height: 2.5cm;
             position: absolute;
             top: 3mm;
-            left: 2.5mm;
+            left: 2mm;
             object-fit: contain;
-        }
-
-        img.profile-logo {
-            top: 2mm;  
-            width: 2.2cm;
-            height: 0.5cm;
-            left: 2.5mm;
-            object-fit: contain; 
-            position: absolute; 
-             
-        }
-
-        img.partner-prc-logo {   
-            width: 2cm;
-            height: 2.5cm;
-            position: absolute;
-            top: 3.3mm;
-            left: 2.3mm;
-            object-fit: contain;
-        }        
-
-        img.corrioes-lable{
+        } 
+        img.corrioes-logo{
             position: absolute;
             top: 2.5mm;
             left: 2.7cm;
@@ -53,15 +70,7 @@
             height: 2.5cm;
             object-fit: contain;
         }
-
-        img.customs-logo{
-            position: absolute;
-            top: 7.mm;
-            left: 5.5cm;
-            width: 1.4cm;
-            height: 1.5cm;
-            object-fit: contain;
-        }
+        
 
         p.screening-code{
             position: absolute;
@@ -413,20 +422,19 @@
 <body>
     <div class="cn23-text">
         CN23
-    </div> 
-    
+    </div>  
     @if($order->is_prc_label)
     <img class="partner-prc-logo" src="{{ $partnerLogo }}" alt="Partner PRC">
+    <img class="profile-prc-logo" src="{{ $profileLogo }}" alt="Partner Logo">
+    <img class="corrioes-prc-logo" src="{{ $corriosLogo }}" alt="">
+    <img class="customs-prc-logo" src="{{ $customsLogo }}" alt="custom">
+
     @else
-    <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
+        <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
+        <p class="screening-code">CJA01</p>
+        <img class="corrioes-logo" src="{{ $corriosLogo }}" alt="">
     @endif
-    <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
-    @if($order->is_prc_label)
-    <img class="profile-logo" src="{{ $profileLogo }}" alt="Partner Logo">
-    <img class="customs-logo" src="{{ $customsLogo }}" alt="custom">
-    @else
-    <p class="screening-code">CJA01</p>
-    @endif
+
     <img src="{{ $serviceLogo }}" class="service-type"/>
     <div class="service-info-wrapper">
         <div class="order-infoline"></div>
@@ -458,7 +466,7 @@
             {{ $recipient->address }}, @if ($recipient->street_no != 0 ) {{ $recipient->street_no }}, @endif {{ $recipient->address2 }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
             {{ $recipient->state->name }}
             {{ $recipient->country->name }} <br>
-            CPF: {{ $recipient->tax_id }}
+            CPF: {{ $cpf }}
         </div>
     </div>
     <div class="package-sign">{{$packageSign}}</div>
@@ -476,7 +484,7 @@
         <div class="left-block">
             <div class="return-address">
                 <span class="return-box"> <i class="return-box-text">@if($isReturn) X @else  @endif</i></span> &nbsp; &nbsp; Retorno a origem <br>
-                <span class="site-text" >Dúvidas e reclamações: homedeliverybr.com</span><br><br>
+                <span class="site-text" >Dúvidas e reclamações: {{$website}}</span><br><br>
                 <strong>DEVOLUCÃO:</strong> <br>
                 {!! $returnAddress !!}
             </div>
