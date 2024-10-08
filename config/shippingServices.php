@@ -59,6 +59,10 @@ return [
             238 => 'PasarEX',
             284 => 'Total Express 10KG',
             735 => 'DSS Senegal',
+            3697 => 'Fox Standard Courier',
+            3693 => 'Fox Express Courier',
+            7492 => 'PHX Standard Courier',
+            7493 => 'PHX Express Courier',
         ]
     ]
 ];

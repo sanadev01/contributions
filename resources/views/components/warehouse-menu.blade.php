@@ -115,6 +115,16 @@
                                 <span class="menu-title">@lang('menu.Warehouse.DSS Senegal')</span>
                             </a>
                         </li>
+                        <li > <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>App\Models\ShippingService::FOX_ST_COURIER]) }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Fox Courier</span>
+                            </a>
+                        </li>
+                        <li > <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>App\Models\ShippingService::PHX_ST_COURIER]) }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Phx Courier</span>
+                            </a>
+                        </li>
 
                         <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
                             <a href="{{ route('warehouse.chile_containers.index') }}">

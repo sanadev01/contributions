@@ -65,6 +65,10 @@ class HandleCorreiosLabelsRepository
                 return $this->totalExpressLabel();
             }
 
+            if ($this->order->shippingService->is_fox_courier || $this->order->shippingService->is_phx_courier) {
+                return $this->smartComexLabel();
+            }
+
             // if ($this->order->shippingService->is_milli_express) {
             //     return $this->mileExpressLabel();
             // }
@@ -250,6 +254,13 @@ class HandleCorreiosLabelsRepository
         $senegalLabelRepository = new SenegalLabelRepository();
         $senegalLabelRepository->run($this->order, $this->update);
         return $this->renderLabel($this->request, $this->order, $senegalLabelRepository->getError());
+    }
+
+    public function smartComexLabel()
+    {
+        $smartComex = new SmartComexLabelRepository(); ///by default consider false
+        $smartComex->run($this->order, $this->update);
+        return $this->renderLabel($this->request, $this->order, $smartComex->getError());
     }
 
     public function updateShippingServiceFromSetting($order)

@@ -99,6 +99,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             ShippingService::GSS_CEP => 'GSS Commercial E-Packet',
             ShippingService::PasarEx => 'PasarEx',
             ShippingService::DSS_SENEGAL => 'DSS Senegal',
+            ShippingService::FOX_ST_COURIER => 'Fox Standard',
+            ShippingService::FOX_EX_COURIER => 'Fox Express',
+            ShippingService::PHX_ST_COURIER => 'Phx Standard',
+            ShippingService::PHX_EX_COURIER => 'Phx Express',
         ];
     
         // Check if the service subclass code exists in the array
@@ -136,6 +140,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             'BCN-IX' => 21,
             ShippingService::HoundExpress => 22,
             ShippingService::PasarEx => 23,
+            ShippingService::FOX_ST_COURIER => 24,
+            ShippingService::FOX_EX_COURIER => 25,
+            ShippingService::PHX_ST_COURIER => 26,
+            ShippingService::PHX_EX_COURIER => 27,
         ];
     
         // Check if the service subclass code exists in the array
@@ -303,6 +311,18 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     public function isPRCRegistered()
     {
         return !empty($this->customs_response_list);
+    }
+
+    public function hasFoxCourierService()
+    {
+        return $this->services_subclass_code == ShippingService::FOX_ST_COURIER || $this->services_subclass_code == ShippingService::FOX_EX_COURIER;
+
+    }
+
+    public function hasPhxCourierService()
+    {
+        return $this->services_subclass_code == ShippingService::PHX_ST_COURIER || $this->services_subclass_code == ShippingService::PHX_EX_COURIER;
+
     }
 
 }

@@ -27,6 +27,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Events\AutoChargeAmountEvent;
+use App\Repositories\SmartComexLabelRepository;
 use App\Repositories\HoundExpressLabelRepository;
 use App\Repositories\PasarExLabelRepository;
 use App\Repositories\SenegalLabelRepository;
@@ -178,6 +179,15 @@ class OrderLabelController extends Controller
                     }
                     if ($corrieosBrazilLabelRepository->getError()) {
                         return $this->rollback($corrieosBrazilLabelRepository->getError());
+                    }
+                }
+
+                if ($order->shippingService->is_fox_courier || $order->shippingService->is_phx_courier) {
+                    $smartComexLabelRepository = new SmartComexLabelRepository();
+                    $smartComexLabelRepository->get($order);
+                    $error = $smartComexLabelRepository->getError();
+                    if ($error) {
+                        return $this->rollback((string)$error);
                     }
                 }
             }

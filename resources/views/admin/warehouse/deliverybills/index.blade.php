@@ -128,6 +128,10 @@
                                                 <span class="badge badge-secondary text-dark">SN</span>
                                                 @elseif($deliveryBill->isAnjunChina())
                                                 <span class="badge badge-secondary text-dark">AJ</span>
+                                                @elseif($deliveryBill->isFoxCourier())
+                                                <span class="badge text-dark" style="background-color:#b4e2ef">Fox</span>
+                                                @elseif($deliveryBill->isPhxCourier())
+                                                <span class="badge text-dark" style="background-color:#b4e2ef">Phx</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif

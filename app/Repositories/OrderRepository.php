@@ -222,6 +222,18 @@ class OrderRepository
                     ShippingService::DSS_SENEGAL
                 ];
             }
+            if($request->carrier == 'Fox Courier'){
+                $service = [
+                    ShippingService::FOX_ST_COURIER, 
+                    ShippingService::FOX_EX_COURIER, 
+                ];
+            }
+            if($request->carrier == 'Phx Courier'){
+                $service = [
+                    ShippingService::PHX_ST_COURIER, 
+                    ShippingService::PHX_EX_COURIER, 
+                ];
+            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });
