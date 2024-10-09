@@ -102,7 +102,7 @@ class CN23LabelMaker implements HasLableExport
         if ($order->is_tax_duty_applicable) {
             $this->profileLogo = public_path($order->user->image->public_path); 
             $this->TIN = $order->user->tax_id;
-            $this->website = old('user_website',setting('user_website', null, $order->user_id))??$order->sender_email;
+            $this->website = setting('user_website', null, $order->user_id)??$order->sender_email;
         }
         return $this;
     }
