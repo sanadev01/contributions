@@ -452,7 +452,10 @@
         <img class="corrioes-prc-logo" src="{{ $corriosLogo }}" alt="">
         <img class="customs-prc-logo" src="{{ $customsLogo }}" alt="custom">
         <div class="order-prc-date">
-            <strong>Emissão: </strong> {{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') }} <br>
+            <strong>Emissão: </strong> {{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') }} <br>             
+            @if($order->is_prc_label)
+            <strong>TIN: {{ $TIN }}</strong>
+            @endif
         </div>
     @else
         <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
@@ -492,9 +495,6 @@
             {{ $recipient->state->name }}
             {{ $recipient->country->name }} <br>
             CPF: {{ $CPF }}<br><br>
-            @if($order->is_prc_label)
-                TIN: {{ $TIN }}
-            @endif
         </div>
     </div>
     <div class="package-sign">{{$packageSign}}</div>
@@ -512,7 +512,7 @@
         <div class="left-block">
             <div class="return-address">
                 <span class="return-box"> <i class="return-box-text">@if($isReturn) X @else  @endif</i></span> &nbsp; &nbsp; Retorno a origem <br>
-                <span class="site-text" >Dúvidas e reclamações: {{$website}}</span><br><br>
+                <span class="site-text" >Dúvidas e reclamações: homedeliverybr.com</span><br><br>
                 <strong>DEVOLUCÃO:</strong> <br>
                 {!! $returnAddress !!}
             </div>
@@ -540,7 +540,7 @@
         <div class="right-block">
             <h2 style="margin-bottom: 0px !important">Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2>
             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
-            {{ $order->sender_email }} <br>
+            {{ $order->is_prc_label?$website:$order->sender_email }} <br>
             {{ $activeAddress }}
             <div style="font-size: 6.5px !important">
                 <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
