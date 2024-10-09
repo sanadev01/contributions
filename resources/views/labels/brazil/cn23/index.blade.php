@@ -17,15 +17,16 @@
             box-sizing:border-box !important;
             font-weight: bold;
         }
-        .partner-logo-container {
-            padding: 2mm;
-            width: 2cm; 
-            left:  2.5mm;
-            height: 2.1cm;  
-            overflow: hidden; 
-            position: relative; 
+        /* prc design started */
+        img.partner-prc-logo {   
+            top: 3.3mm;
+            width: 1.8cm;
+            height: 2.2cm;
+            position: absolute;
+            left: 2.3mm;
+            object-fit: contain;
         }
-        img.partner-logo { 
+        img.profile-prc-logo {  
             max-width: 100%;  
             max-height: 90%; 
             height: auto; 
@@ -36,7 +37,53 @@
             object-fit: contain;  
         }
 
-        img.corrioes-lable{
+
+        .profile-prc-logo-container { 
+            width: 1.4cm; 
+            left: 2.15cm; 
+            padding: 2mm;  
+            height: 2.1cm;  
+            overflow: hidden; 
+            position: relative;  
+        }
+        
+
+        img.corrioes-prc-logo{
+            position: absolute;
+            top: 2.5mm;
+            left: 4.3cm; 
+            width: 1.4cm;
+            height: 1.8cm;
+            object-fit: contain;
+        }
+        img.customs-prc-logo{
+            position: absolute;
+            top: 7.mm;
+            left: 6.45cm;
+            width: 1cm;
+            height: 1cm;
+            object-fit: contain;
+        }
+        .order-prc-date {
+
+            position: absolute;
+            left: 2.5mm;
+            top: 27mm;
+            font-size: 8pt;
+            width: 100%;
+        }
+        /* prc design end */
+        
+
+        img.partner-logo {
+            width: 2cm;
+            height: 2.5cm;
+            position: absolute;
+            top: 3mm;
+            left: 2mm;
+            object-fit: contain;
+        } 
+        img.corrioes-logo{
             position: absolute;
             top: 2.5mm;
             left: 2.7cm;
@@ -44,15 +91,7 @@
             height: 2.5cm;
             object-fit: contain;
         }
-
-        img.customs-logo{
-            position: absolute;
-            top: 7.mm;
-            left: 5.5cm;
-            width: 1.4cm;
-            height: 1.5cm;
-            object-fit: contain;
-        }
+        
 
         p.screening-code{
             position: absolute;
@@ -404,17 +443,26 @@
 <body>
     <div class="cn23-text">
         CN23
-    </div> 
-    <div class="partner-logo-container" >
-        <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
-    </div> 
-    <img class="corrioes-lable" src="{{ $corriosLogo }}" alt="">
-    
+    </div>  
     @if($order->is_prc_label)
-        <img class="customs-logo" src="{{ $customsLogo }}" alt="">
+        <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner PRC">
+        <div class="profile-prc-logo-container">
+            <img class="profile-prc-logo" src="{{ $profileLogo }}" alt="Partner Logo">
+        </div> 
+        <img class="corrioes-prc-logo" src="{{ $corriosLogo }}" alt="">
+        <img class="customs-prc-logo" src="{{ $customsLogo }}" alt="custom">
+        <div class="order-prc-date">
+            <strong>Emissão: </strong> {{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') }} <br>             
+            @if($order->is_prc_label)
+            <strong>TIN: {{ $TIN }}</strong>
+            @endif
+        </div>
     @else
+        <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
         <p class="screening-code">CJA01</p>
+        <img class="corrioes-logo" src="{{ $corriosLogo }}" alt="">
     @endif
+
     <img src="{{ $serviceLogo }}" class="service-type"/>
     <div class="service-info-wrapper">
         <div class="order-infoline"></div>
@@ -446,7 +494,7 @@
             {{ $recipient->address }}, @if ($recipient->street_no != 0 ) {{ $recipient->street_no }}, @endif {{ $recipient->address2 }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
             {{ $recipient->state->name }}
             {{ $recipient->country->name }} <br>
-            CPF: {{ $recipient->tax_id }}
+            CPF: {{ $CPF }}
         </div>
     </div>
     <div class="package-sign">{{$packageSign}}</div>
@@ -492,7 +540,7 @@
         <div class="right-block">
             <h2 style="margin-bottom: 0px !important">Remetente: @if($hasAnjunLabel) <span style="margin-left: 8px; border:solid 1px; padding-right:2px">A</span> @endif </h2>
             {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
-            {{ $order->sender_email }} <br>
+            {{ $order->is_prc_label?$website:$order->sender_email }} <br>
             {{ $activeAddress }}
             <div style="font-size: 6.5px !important">
                 <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
