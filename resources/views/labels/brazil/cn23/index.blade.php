@@ -494,7 +494,7 @@
             {{ $recipient->address }}, @if ($recipient->street_no != 0 ) {{ $recipient->street_no }}, @endif {{ $recipient->address2 }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
             {{ $recipient->state->name }}
             {{ $recipient->country->name }} <br>
-            CPF: {{ $CPF }}<br><br>
+            CPF: {{ $CPF }}
         </div>
     </div>
     <div class="package-sign">{{$packageSign}}</div>
