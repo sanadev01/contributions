@@ -1,6 +1,6 @@
 <tr>
     <td>
-        COD SH
+        COD {{$order->is_prc_label?"NCM":"SH"}}
     </td>
     <td style="width: 15px;">
         QTDE
