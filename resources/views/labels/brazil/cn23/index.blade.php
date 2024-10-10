@@ -18,12 +18,12 @@
             font-weight: bold;
         }
         /* prc design started */
-        img.partner-prc-logo {   
-            top: 3.3mm;
-            width: 1.8cm;
-            height: 2.2cm;
+        img.partner-prc-logo {
+            width: 2cm;
+            height: 2.5cm;
             position: absolute;
-            left: 2.3mm;
+            top: 3mm;
+            left: 2.15cm; 
             object-fit: contain;
         }
         img.profile-prc-logo {  
@@ -40,7 +40,7 @@
 
         .profile-prc-logo-container { 
             width: 1.4cm; 
-            left: 2.15cm; 
+            left: 2mm;
             padding: 2mm;  
             height: 2.1cm;  
             overflow: hidden; 
@@ -445,18 +445,13 @@
         CN23
     </div>
     @if($order->is_prc_label)
-        <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner PRC">
         <div class="profile-prc-logo-container">
             <img class="profile-prc-logo" src="{{ $profileLogo }}" alt="Partner Logo">
         </div> 
+        <img class="partner-prc-logo" src="{{ $partnerLogo }}" alt="Partner PRC">
+      
         <img class="corrioes-prc-logo" src="{{ $corriosLogo }}" alt="">
         <img class="customs-prc-logo" src="{{ $customsLogo }}" alt="custom">
-        <div class="order-prc-date">
-            <strong>Emissão: </strong> {{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') }} <br>             
-            @if($order->is_prc_label)
-            <strong>TIN: {{ $TIN }}</strong>
-            @endif
-        </div>
     @else
         <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
         <p class="screening-code">CJA01</p>
@@ -464,10 +459,18 @@
     @endif
 
     <img src="{{ $serviceLogo }}" class="service-type"/>
+    @if(!$order->is_prc_label)
+    
     <div class="service-info-wrapper">
         <div class="order-infoline"></div>
         <strong>Service: </strong> {{ $service }} <br>
-    </div>
+    </div> 
+    @else
+    <div class="service-info-wrapper">
+            <strong>Emissão: </strong> {{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') }} <br>
+            <strong>{{ $TIN_CNPJ }}</strong> 
+        </div>
+    @endif
     <div class="service-info">
         <div class="service-name">
             {!! $packetType !!}
