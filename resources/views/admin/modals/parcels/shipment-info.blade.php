@@ -17,7 +17,7 @@
                     <td>{{ $parcel->warehouse_number }} </td>
                     <td>{{ $parcel->customer_reference }} </td>
                     <td>{{ $parcel->corrios_tracking_code }} </td>
-                </tr>                                
+                </tr>
                 <tr>
                     <th>@lang('orders.invoice.length')</th>
                     <th>@lang('orders.invoice.width')</th>
@@ -32,29 +32,46 @@
                     <td>{{ $parcel->getWeight('kg') }} kg ( {{ $parcel->getWeight('lbs') }} lbs ) </td>
                     <td colspan="2">{{ $parcel->measurement_unit }} </td>
                 </tr>
+                @if ($parcel->purchaseInvoice)
                 <tr>
                     <th colspan="6"> Invoice / Fatura </th>
                 </tr>
                 <tr>
                     <th colspan="6">
-                        @if ($parcel->purchaseInvoice)
-                        <a href=" {{ $parcel->purchaseInvoice->getPath() }}" target="__blank">  {{ $parcel->purchaseInvoice->name }} </a> 
-                        @endif
+                        <a href=" {{ $parcel->purchaseInvoice->getPath() }}" target="__blank"> {{ $parcel->purchaseInvoice->name }} </a>
+                       
+                    </th>
+                </tr> 
+                @else
+                <tr>
+                    <th colspan="6"> No (Invoice/Fatura) </th>
+                </tr>
+                @endif
+
+                @if($parcel->images->count() > 0)
+                <tr>
+                    <th colspan="6">{{ $parcel->images->count()}} Image  </th>
+                </tr>
+                @else
+                <tr>
+                    <th colspan="6">No image Found in the parcel</th>
+                </tr>
+                @endif
+
+                <tr>
+                    <th colspan="6">
+
+                        <div class="container">
+                            <div class="row">
+                                @foreach ($parcel->images as $image)
+                                <div class="col-md-4 mb-4">
+                                    <a href="{{ $image->getPath() }}" target="__blank"> <img src="{{ $image->public_path }}" alt="{{ $image->name }} " class="img-fluid"></a>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
                     </th>
                 </tr>
-                <tr>
-                    <th colspan="6"> Images </th>
-                </tr>
-                @foreach ($parcel->images as $image)
-                    <tr>
-                        <td>
-                            {{ $loop->index+1 }}
-                        </td>
-                        <td colspan="5">
-                            <a href="{{ $image->getPath() }}" target="__blank"> {{ $image->name }} </a>
-                        </td>
-                    </tr>
-                @endforeach                              
             </tbody>
         </table>
     </div>
