@@ -155,6 +155,9 @@
                                                 <button id="takePhotoBtn" class="btn btn-secondary mt-1" type="button">Take Photo</button>
                                             </div>
                                             <input type="file" accept="image/*" name="images[]" id="fileInput" class="d-none" multiple>
+                                            <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect float-right waves-light">
+                                               Save Images
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
