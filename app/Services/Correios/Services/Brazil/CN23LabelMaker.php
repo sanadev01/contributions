@@ -39,6 +39,7 @@ class CN23LabelMaker implements HasLableExport
     private $website;
     private $CPF;
     private $TIN_CNPJ;
+    private $isAmazon=false;
 
     public function __construct()
     {
@@ -99,14 +100,14 @@ class CN23LabelMaker implements HasLableExport
         if($order->shippingService->isAnjunChinaService()) {
             $this->partnerLogo = $this->anjunChinaHdLogo;
         }
-        if ($order->is_tax_duty_applicable) {
+        if ($order->is_tax_duty_applicable || $this->isAmazon){
             $this->profileLogo = public_path($order->user->image->public_path);  
              
             $description = (strlen($order->user->tax_id)>11?"CNPJ: ":"TIN: "); 
             $this->TIN_CNPJ =$description. $order->user->tax_id;
 
             $this->website = setting('user_website', null, $order->user_id)??$order->sender_email;
-        }
+        } 
         return $this;
     }
 
@@ -255,6 +256,7 @@ class CN23LabelMaker implements HasLableExport
             'website' => $this->website,
             'CPF' => $this->CPF,
             'TIN_CNPJ' => $this->TIN_CNPJ,
+            'isAmazon' => $this->isAmazon,
         ];
     }
 
