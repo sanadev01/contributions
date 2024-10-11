@@ -93,7 +93,6 @@ class PreAlertController extends Controller
                 return redirect()->route('admin.orders.index');
             }
         }
-        session()->flash('alert-danger','parcel.Error Parcel Update');
         return back()->withInput();
     }
 
