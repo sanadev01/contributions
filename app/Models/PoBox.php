@@ -13,6 +13,7 @@ class PoBox extends Model
     protected $casts = [
         'extra_data' => 'Array'
     ];
+    protected $fillable = ['address'];
 
     use LogsActivity;
     protected static $logAttributes = ['*'];
