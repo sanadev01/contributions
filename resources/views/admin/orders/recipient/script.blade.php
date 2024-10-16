@@ -100,6 +100,12 @@
             {
                 window.activeGuatmalaFields();
                 return;
+            } 
+            if(val == '146')
+            {
+
+                window.activeMexicoFields();
+                return;
             }
             if(val == '249')
             {
@@ -413,6 +419,21 @@
 
         $('#region').prop('disabled', true);
     }
+    
+    activeMexicoFields = function(){
+        console.log('active mexico fields'); 
+                $('#cpf_label_id').css('display', 'none')
+                $('#cnpj_label_id').css('display', 'none')
+                $('#rfc_curp').css('display', 'block')  
+                $('#tax_id').attr('placeholder', 'RFC or CURP')
+
+             
+    }
+    
+    inActiveMexicoFields = function(){
+ 
+        $('#rfc_curp').css('display', 'none')  
+    }   
     inActiveGuatmalaFields = function(){
 
         console.log('in active guatemala fields');  
@@ -476,16 +497,23 @@
         });
 
         $('#country').on('change', function() {
-            window.validate_us_address();
-            if($('#country').val() == '250' || $('#country').val() == '46' || $('#country').val() == '94'){
+            window.validate_us_address(); 
+            if($('#country').val() == '146'){
+                $('#rfc_curp').css('display', 'block') 
+                $('#cpf_label_id').css('display', 'none')
+                $('#cnpj_label_id').css('display', 'none')
+            }else if($('#country').val() == '250' || $('#country').val() == '46' || $('#country').val() == '94'){
                 if($('#country').val() != '94')
                 $('#div_street_number').css('display', 'none')
-
                 $('#cpf').css('display', 'none')
             }else{
                 $('#div_street_number').css('display', 'block')
                 $('#cpf').css('display', 'block')
+                $('#rfc_curp').css('display', 'none')   
+                $('#cpf_label_id').css('display', 'block')
+                $('#cnpj_label_id').css('display', 'none')
             }
+
         });
 
         $('#country').ready(function() {

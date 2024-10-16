@@ -88,6 +88,7 @@ return [
             'restricted goods' => 'restricted goods',
             'Remove' => 'Remover',
             'Contains Battery' => 'Contém Bateria',
+            'madein' => 'Origem do produto (Made in)',
             'Contains Perfume' => 'Contém líquido inflamável (perfume, aerossol, esmalte apenas - quaisquer outros produtos NÃO são permitidos)',
             'Contains Flammable Liquid' => 'Contém líquido inflamável',
         ],

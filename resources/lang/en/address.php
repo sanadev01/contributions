@@ -23,6 +23,7 @@ return  [
     'State' => 'State',
     'CPF' => 'CPF',
     'CNPJ' => 'CNPJ',
+    'RFC_CURP' => 'RFC or CURP',
     'Zip Code' => 'Zip Code',
     'Actions' => 'Actions',
     'Back to List' => 'Back to List',
