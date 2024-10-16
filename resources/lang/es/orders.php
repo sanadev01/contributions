@@ -85,6 +85,7 @@ return [
             'Quantity' => 'Cantidad',
             'Unit Value' => 'Valor unitario',
             'Total' => 'Total',
+            'madein' => 'Origen del producto (Hecho en)',
             'Is Contains Dangrous Goods' => 'Este paquete contiene batería o líquido inflamable?',
             'restricted goods' => 'mercancías restringidas',
             'Remove' => 'Eliminar',
