@@ -142,6 +142,14 @@
             font-size: 8pt;
             width: 100%;
         }
+        .service-type-prc {
+            position: absolute;
+            top: 3mm;
+            right: 2.5mm;
+            width: 15mm;
+            height: 15mm;
+            display: block;
+        }
 
         /* amazon design end */
 
@@ -326,10 +334,6 @@
             display: inline-block;
             font-family: Arial, Helvetica, sans-serif;
             font-size: 7pt;
-        }
-
-        .return-address {
-            /* color: rgb(124, 124, 124); */
         }
 
         .right-block {
@@ -573,27 +577,29 @@
     <div class="cn23-text">
         CN23
     </div>
-    @if($isAmazon)
+    @if(($isAmazon && $order->is_prc_label)||$order->is_prc_label)
         <div class="profile-amazon-logo-container">
             <img class="profile-amazon-logo" src="{{ $profileLogo }}" alt="Partner Logo">
         </div>
         <img class="partner-amazon-logo" src="{{ $partnerLogo }}" alt="Partner PRC">
         <img class="corrioes-amazon-logo" src="{{ $corriosLogo }}" alt="">
         <img class="customs-amazon-logo" src="{{ $customsLogo }}" alt="custom">
-    @elseif($order->is_prc_label)
+        <img src="{{ $serviceLogo }}" class="service-type-prc" />
+    <!-- @elseif()
         <img class="partner-prc-logo" src="{{ $partnerLogo }}" alt="Partner PRC">
         <div class="profile-prc-logo-container">
             <img class="profile-prc-logo" src="{{ $profileLogo }}" alt="Partner Logo">
         </div>
         <img class="corrioes-prc-logo" src="{{ $corriosLogo }}" alt="">
         <img class="customs-prc-logo" src="{{ $customsLogo }}" alt="custom">
+        <img src="{{ $serviceLogo }}" class="service-type-prc" /> --> 
      @else
         <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
         <p class="screening-code">CJA01</p>
         <img class="corrioes-logo" src="{{ $corriosLogo }}" alt="">
+        <img src="{{ $serviceLogo }}" class="service-type" />
     @endif
 
-    <img src="{{ $serviceLogo }}" class="service-type" />
      @if($isAmazon)
         <div class="service-info-wrapper-amazon">
             <strong>Emissão: </strong> {{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') }} <br>
@@ -606,7 +612,7 @@
             <strong>{{ $TIN_CNPJ }}</strong> <br>
             <strong>Emissão: </strong> {{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') }}
         </div>
-    $else
+    @else
         <div class="service-info-wrapper">
             <div class="order-infoline"></div>
             <strong>Service: </strong> {{ $service }} <br>

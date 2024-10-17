@@ -63,13 +63,13 @@ class CN23LabelMaker implements HasLableExport
         $this->labelZipCodeGroup = '';
         $this->website = 'homedeliverybr.com'; 
         $this->TIN_CNPJ = '';
-
     }
 
     public function setOrder(Order $order)
     {
         $this->order = $order;
         $this->recipient = $order->recipient;
+        $this->isAmazon = $this->order->user->amazon_api_enabled;
         $this->CPF = $order->recipient->tax_id;
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();

@@ -1,12 +1,10 @@
 <tr>
-    <td>
-        COD {{$order->is_prc_label?"NCM":"SH"}}
-    </td>
+    <td>COD NCM</td>
     <td style="width: 15px;">
         QTDE
     </td>
-    <td colspan="2"  >
-        DESCRIÇÃO DO CON TEÚDO 
+    <td colspan="2">
+        DESCRIÇÃO DO CON TEÚDO
     </td>
     <td>
         PESO (KG)
