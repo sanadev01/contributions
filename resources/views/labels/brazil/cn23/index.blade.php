@@ -577,7 +577,7 @@
     <div class="cn23-text">
         CN23
     </div>
-    @if(($isAmazon && $order->is_prc_label)||$order->is_prc_label)
+    @if($isAmazon || $order->is_prc_label)
         <div class="profile-amazon-logo-container">
             <img class="profile-amazon-logo" src="{{ $profileLogo }}" alt="Partner Logo">
         </div>
