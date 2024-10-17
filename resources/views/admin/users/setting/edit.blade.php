@@ -547,43 +547,6 @@
                                     </div>
                                     <div class="col"></div>
                                 </div>
-
-
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="row align-item-center">
-                                            <div class="col-1">
-                                                <div class="controls row mb-1 align-items-center">
-                                                    <div class="input-group">
-                                                        <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
-                                                            <input type="checkbox" name="postal_volumetric_discount" id="postal_volumetric_discount" @if(setting('postal_volumetric_discount', null, $user->id)) checked @endif>
-
-                                                            <span class="vs-checkbox vs-checkbox-lg">
-                                                                <span class="vs-checkbox--check">
-                                                                    <i class="vs-icon feather icon-check"></i>
-                                                                </span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-11"><label>Postal Discount <span class="text-danger"></span></label></div>
-                                        </div>
-                                    </div>
-                                    <div class="col ">
-                                        <div class="row">
-                                            <div class="col-6 text-right">
-                                                <span>Profit Percentage (%) :</span>
-                                            </div>
-                                            <div class="col-6">
-                                                <input type="number" name="postal_discount_percentage" class="form-control"  min=0 max="100" id="postal_discount_percentage" value="{{ setting('postal_discount_percentage', null, $user->id) }}">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col"></div>
-
-                                </div>
                                 <div class="row">
                                     <div class="col">
                                         <div class="row align-item-center">

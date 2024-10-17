@@ -36,7 +36,6 @@ class UserSettingRepository {
             'marketplace_checked'=> setting('marketplace_checked', null,$user->id)? 'Active': 'Inactive',
             'usps_profit'=> setting('usps_profit', null, $user->id) ? setting('usps_profit', null, $user->id): 0,
             'ups_profit'=> setting('ups_profit', null, $user->id) ?setting('ups_profit', null, $user->id) : 0,
-            'postal_discount_percentage'=> setting('postal_discount_percentage', null, $user->id)? setting('postal_discount_percentage', null, $user->id): 0,
             'discount_percentage'=> setting('discount_percentage', null, $user->id)? setting('discount_percentage', null, $user->id): 0,
             'tax_discount_percentage'=> setting('tax_discount_percentage', null, $user->id)? setting('tax_discount_percentage', null, $user->id): 0,
             'marketplace'=> setting('marketplace', null, $user->id)? setting('marketplace', null, $user->id): 0,
