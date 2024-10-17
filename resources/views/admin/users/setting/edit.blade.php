@@ -776,25 +776,18 @@
         $('.selectpicker').selectpicker();
     });
 
-    document.addEventListener("DOMContentLoaded", function() {
-        // Get the elements
+    document.addEventListener("DOMContentLoaded", function() { 
         var prcUserTrue = document.getElementById('prcUserTrue');
         var prcUserFalse = document.getElementById('prcUserFalse');
-        var prcDev = document.getElementById('prcDev');
-
-        // Function to toggle the visibility of the prc-dev div
+        var prcDev = document.getElementById('prcDev'); 
         function togglePrcDev() {
             if (prcUserTrue.checked) {
-                prcDev.style.display = 'block'; // Show the div
+                prcDev.style.display = 'block';
             } else {
-                prcDev.style.display = 'none'; // Hide the div
+                prcDev.style.display = 'none'; 
             }
-        }
-
-        // Initial toggle based on the current selection
-        togglePrcDev();
-
-        // Add event listeners to both radio buttons
+        } 
+        togglePrcDev(); 
         prcUserTrue.addEventListener('change', togglePrcDev);
         prcUserFalse.addEventListener('change', togglePrcDev);
     });
