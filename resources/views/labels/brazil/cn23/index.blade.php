@@ -584,15 +584,7 @@
         <img class="partner-amazon-logo" src="{{ $partnerLogo }}" alt="Partner PRC">
         <img class="corrioes-amazon-logo" src="{{ $corriosLogo }}" alt="">
         <img class="customs-amazon-logo" src="{{ $customsLogo }}" alt="custom">
-        <img src="{{ $serviceLogo }}" class="service-type-prc" />
-    <!-- @elseif()
-        <img class="partner-prc-logo" src="{{ $partnerLogo }}" alt="Partner PRC">
-        <div class="profile-prc-logo-container">
-            <img class="profile-prc-logo" src="{{ $profileLogo }}" alt="Partner Logo">
-        </div>
-        <img class="corrioes-prc-logo" src="{{ $corriosLogo }}" alt="">
-        <img class="customs-prc-logo" src="{{ $customsLogo }}" alt="custom">
-        <img src="{{ $serviceLogo }}" class="service-type-prc" /> --> 
+        <img src="{{ $serviceLogo }}" class="service-type-prc" /> 
      @else
         <img class="partner-logo" src="{{ $partnerLogo }}" alt="Partner Logo">
         <p class="screening-code">CJA01</p>
