@@ -541,7 +541,7 @@
                                                 <span>Profit Percentage (%) :</span>
                                             </div>
                                             <div class="col-6">
-                                                <input type="number" name="discount_percentage" class="form-control" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
+                                                <input type="number" name="tax_discount_percentage" class="form-control" id="tax_discount_percentage" value="{{ setting('tax_discount_percentage', null, $user->id) }}">
                                             </div>
                                         </div>
                                     </div>
