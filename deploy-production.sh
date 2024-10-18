@@ -10,3 +10,5 @@ cd /var/www/hd
 /usr/bin/php7.4 artisan cache:clear --no-interaction
 /usr/bin/php7.4 artisan view:clear --no-interaction
 /usr/bin/php7.4 artisan config:clear --no-interaction
+rm -rf  public/storage
+/usr/bin/php7.4 artisan storage:link
