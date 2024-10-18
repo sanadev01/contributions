@@ -212,7 +212,7 @@
                 @forelse ($orders as $order)
                     @include('admin.orders.components.order-row',['order'=>$order])    
                 @empty
-                    <x-tables.no-record colspan="12"></x-tables.no-record>
+                    <x-tables.no-record colspan="{{auth()->user()->isAdmin()?14:12}}"></x-tables.no-record>
                 @endforelse
             </tbody>
         </table>

@@ -17,6 +17,25 @@
             box-sizing: border-box !important;
             font-weight: bold;
         }
+        /* prc design started */
+        img.partner-prc-logo {   
+            top: 3.3mm;
+            width: 1.8cm;
+            height: 2.2cm;
+            position: absolute;
+            left: 2.3mm;
+            object-fit: contain;
+        }
+        img.profile-prc-logo {  
+            max-width: 100%;  
+            max-height: 90%; 
+            height: auto; 
+            position: absolute; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            object-fit: contain;  
+        }
 
         /* prc design started */
         img.partner-prc-logo {
@@ -171,7 +190,6 @@
             height: 2.5cm;
             object-fit: contain;
         }
-
 
         p.screening-code {
             position: absolute;

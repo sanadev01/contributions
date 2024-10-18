@@ -183,30 +183,9 @@ class PreAlertRepository
                 'weight_discount' => null,
             ]);
         }
-        
         $order->update(
             $request->only($data)
         );
-
-        if ( $request->hasFile('invoiceFile') ){
-            $order->attachInvoice( $request->file('invoiceFile') );
-        }
-        if ($request->hasFile('images')) {
-            foreach ($order->images as $oldImage) {
-                $oldImage->delete();
-            }
-
-            foreach ($request->file('images') as $image) {
-                $document = Document::saveDocument($image,'parcels/');
-                $order->images()->create([
-                    'name' => $document->getClientOriginalName(),
-                    'size' => $document->getSize(),
-                    'type' => $document->getMimeType(),
-                    'path' => $document->filename
-                ]);
-            }
-        }
-
         if($order->status == Order::STATUS_PREALERT_TRANSIT){
             try {
                 \Mail::send(new ShipmentTransit($order));
