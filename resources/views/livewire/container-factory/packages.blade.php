@@ -14,7 +14,7 @@
         </thead>
         <tbody>
             @foreach ($orders as $key => $order)
-            
+
             <tr id="{{ $key }}">
                 <td>
                     {{ $order->corrios_tracking_code }}
@@ -26,8 +26,8 @@
                     {{ $order->getOriginalWeight('kg') }} Kg
                 </td>
                 <td>
-                    {{ $order->getWeight('lbs') }} Lbs 
-                        <hr>
+                    {{ $order->getWeight('lbs') }} Lbs
+                    <hr>
                     {{ $order->getWeight('kg') }} Kg
                 </td>
                 <td>
@@ -41,18 +41,18 @@
                 </td>
                 <td>
                     @if ($editMode == true)
-                        <button wire:click="removeOrder({{ $order->id }})" class="btn btn-danger">
-                            Remove
-                        </button>
+                    <button wire:click="removeOrder({{ $order->id }})" class="btn btn-danger">
+                        Remove
+                    </button>
                     @endif
                 </td>
             </tr>
             @endforeach
             <tr>
-                <td colspan="8"> 
+                <td colspan="8">
                     <div class="alert {{ Session::get('alert-class')}}" role="alert">
-                        {{  Session::get('message') }}
-                    </div> 
+                        {{ Session::get('message') }}
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -75,4 +75,3 @@
     </table>
     @include('layouts.livewire.loading')
 </div>
-
