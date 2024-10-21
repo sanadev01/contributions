@@ -88,9 +88,6 @@ class PreAlertRepository
         }
 
         if ($request->hasFile('images')) {
-            foreach ($order->images() as $image) {
-                File::delete(public_path($image->path));
-            }
             foreach ($request->file('images') as $image) {
                 $document = Document::saveDocument($image,'parcels/');
                 $order->images()->create([
@@ -166,6 +163,7 @@ class PreAlertRepository
         }
         if ($request->hasFile('images')) {
             foreach ($order->images as $oldImage) {
+                File::delete(public_path($oldImage->path));
                 $oldImage->delete();
             }
 
