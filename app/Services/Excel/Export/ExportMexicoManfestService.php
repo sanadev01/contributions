@@ -15,17 +15,9 @@ class ExportMexicoManfestService extends AbstractCsvExportService
     private $csvData = [];
     private $row = 0;
     private $totalCustomerPaid;
-    private $totalPaidToCorreios;
-    private $totalPieces = 0;
-    private $totalWeight = 0;
-    private $totalCommission = 0;
-    private $totalAnjunCommission = 0;
-    private $date;
-
     public function __construct(DeliveryBill $deliveryBill)
     {
         $this->deliveryBill = $deliveryBill;
-        $this->date = $deliveryBill->created_at->format('m/d/Y');
     }
 
     public function handle()
@@ -51,9 +43,13 @@ class ExportMexicoManfestService extends AbstractCsvExportService
             'CNNE ZIP CODE',
             'CNNE PH NUMBER',
             'CNEE COUNTRY CODE',
+            'RFC COGSIGNEE',
+            'CURP COGSIGNEE',
             'PARCEL Weight',
             'Weight UNIT',
             'PRODUCT DESCRIPTION',
+            'PRODUCT ORIGIN',
+            'FOOTWEAR',
             'TOTAL QTY OF ITEMS IN PARCEL',
             'CURRENCY',
             'TOTAL DECLARED VALUE'
@@ -71,7 +67,9 @@ class ExportMexicoManfestService extends AbstractCsvExportService
 
     protected function prePareDataForContainer(Container $container)
     {
-        foreach ($container->orders as $package) {
+        foreach ($container->orders as $package) { 
+            $tax= $package->recipient->tax_id;
+            $taxLenght =strlen($tax);
             $this->csvData[$this->row] = [
                 $package->corrios_tracking_code,
                 '',
@@ -86,10 +84,14 @@ class ExportMexicoManfestService extends AbstractCsvExportService
                 ($package->recipient)->getAddress(), 
                 ($package->recipient)->city,
                 ($package->recipient)->zipcode,
-                ($package->recipient)->phone_number,
+                ($package->recipient)->phone_number, 
+                $taxLenght<16? $tax:'',
+                $taxLenght>16? $tax:'',
                 ($package->recipient)->country->code,
                 $package->weight,
                 $package->measurement_unit,
+                '',
+                '',
                 '',
                 count($package->items), 
                 'USD',
@@ -102,18 +104,14 @@ class ExportMexicoManfestService extends AbstractCsvExportService
                     $this->csvData[$this->row] = array_fill(0,20,'');
                 }
                 $this->csvData[$this->row][17] = $item->description;
+                $this->csvData[$this->row][18] = $item->made_in;
+                $shCode = $item->shCodeModel();
+                $this->csvData[$this->row][19] = $shCode->is_foot_wear?'Yes':'No';
                 $this->row++;
                 $i++;
             }
-            
             $this->row++;
-
             $this->totalCustomerPaid +=  $package->gross_total;
-            // $this->totalPaidToCorreios += $this->getValuePaidToCorrieos($container,$package)['airport'];
-            // $this->totalPieces++;
-            // $this->totalWeight += $package->getWeight('kg');
-            // $this->totalCommission += optional($package->affiliateSale)->commission;
-            // $this->totalAnjunCommission += $this->getValuePaidToCorrieos($container,$package)['commission'];
         }
 
         $this->csvData[$this->row] = [
@@ -122,17 +120,16 @@ class ExportMexicoManfestService extends AbstractCsvExportService
             '',
             '',
             '',
-            // $this->totalPieces,
-            // $this->totalWeight,
             '',
             '',
             '',
             '',
             '',
             '',
-            // $this->totalPaidToCorreios,
-            // $this->totalAnjunCommission,
-            // $this->totalCommission,
+            '',
+            '',
+            '',
+            '',
             '',
             '',
             '',
@@ -145,31 +142,6 @@ class ExportMexicoManfestService extends AbstractCsvExportService
             $this->totalCustomerPaid,
         ];
 
-    } 
-    protected function getValuePaidToCorrieos(Container $container, Order $order)
-    {
-        $commission = false;
-        $service  = $order->shippingService->service_sub_class;
-        $rateSlab = AccrualRate::getRateSlabFor($order->getOriginalWeight('kg'),$service);
-
-        if ( !$rateSlab ){
-            return [
-                'airport'=> 0,
-                'commission'=> 0
-            ];
-        }
-        if($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express){
-            $commission = true;
-        }
-        if ( $container->getDestinationAriport() ==  "GRU"){
-            return [
-                'airport'=> $rateSlab->gru,
-                'commission'=> $commission ? $rateSlab->commission : 0
-            ];
-        }
-        return [
-            'airport'=> $rateSlab->cwb,
-            'commission'=> $commission ? $rateSlab->commission : 0
-        ];
     }
+     
 }

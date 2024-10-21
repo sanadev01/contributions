@@ -100,6 +100,17 @@
                 @enderror
             </div>
         </div>
+        @if($order->recipient->country_id == \App\Models\Order::MEXICO)
+        <div class="form-group col-12 col-sm-4 col-md-4">
+            <div class="controls">
+                <label>@lang('orders.order-details.order-item.madein') <span class="text-danger"></span></label>
+                <input class="form-control" require wire:model="made_in" >
+                @error("quantity")
+                <div class="help-block text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+        @endif
     </div>
 
     <div class="row justify-content-end">

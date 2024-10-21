@@ -58,8 +58,9 @@
                                                                     <option value="{{json_encode(['734','367','778','777'])}}">Post Plus</option>                                                           
                                                                     <option value="{{json_encode(['PostNL'])}}">Post NL</option>                                                           
                                                                     <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                    
-                                                                    <option value="{{json_encode(['BCN-IX','BCN-NX'])}}">Correios B </option>                                                                  
-                                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                    
+                                                                    <option value="{{json_encode(['BCN-IX','BCN-NX'])}}">Correios B </option>
+                                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                                 
+                                                                    <option value="{{json_encode([App\Models\ShippingService::HoundExpress])}}">Hound Express</option>
                                                                 </select>
                                                     </div>
                                                     <div class="col-md-2 mt-1">

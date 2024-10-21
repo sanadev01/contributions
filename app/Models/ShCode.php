@@ -14,4 +14,17 @@ class ShCode extends Model
     protected $fillable = [
         'code','description','type'
     ];
+    function getIsFootWearAttribute() {
+        $keyWords = ['shoes', 'shoe', 'sneaker', 'boots', 'sandals', 'slipper', 'footwear'];
+        $isFootWear = false;
+        foreach($keyWords as $word){
+            if(strpos(strtolower($this->description), strtolower($word)) !== false){
+                $isFootWear = true;
+                break;
+            }
+
+           
+        }
+        return $isFootWear;
+    }
 }
