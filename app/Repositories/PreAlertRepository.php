@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\User\ConsolidationRequest;
 use App\Services\Calculators\WeightCalculator;
-use Illuminate\Support\Facades\File;
 
 class PreAlertRepository
 {
@@ -163,7 +162,6 @@ class PreAlertRepository
         }
         if ($request->hasFile('images')) {
             foreach ($order->images as $oldImage) {
-                File::delete(public_path($oldImage->path));
                 $oldImage->delete();
             }
 
