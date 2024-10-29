@@ -5,9 +5,27 @@
 @section('wizard-form')
 @if ($error)
 <div class="alert alert-danger" role="alert">
-    {{$error}}
+    <ul>
+        @foreach (explode('!', $error) as $index=>$msg)
+        @if(trim($msg))
+        @if($index==0)
+            @foreach (explode(':', $msg) as $index2=>$msg2)
+                @if(trim($msg))
+                    @if($index2==0)
+                        <h6 class="alert text-danger text-justify">{{ trim($msg2) }}</h6>
+                    @else
+                        <li>{{ trim($msg2) }}</li>
+                    @endif
+                @endif
+            @endforeach 
+        @else
+            <li>{{ trim($msg) }}</li>
+        @endif
+        @endif
+        @endforeach
+</ul>
 </div>
-@endif 
+@endif
 <div class="alert alert-danger" role="alert" id="ups_response" style="display: none;"></div>
 <form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard" id="order-form">
     @csrf
@@ -279,21 +297,22 @@
             return getGSSRates();
         } else if (service == 238) {
             return getPasarExColombiaRates();
-        }else if (service == 537 || service == 540 || service == 773) {
+        } else if (service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
             $("#rateBtn").hide();
         } else {
             $("#itemLimit").hide();
             $("#rateBtn").hide();
         }
-        showTaxModalityMessage(service) 
+        showTaxModalityMessage(service)
 
     })
-    function showTaxModalityMessage(service){
-         serviceCode = Number(service)
+
+    function showTaxModalityMessage(service) {
+        serviceCode = Number(service)
         const uspsService = @json($uspsService);
-        console.log(uspsService,serviceCode);
-        if(uspsService.includes(serviceCode)){
+        console.log(uspsService, serviceCode);
+        if (uspsService.includes(serviceCode)) {
             $('#taxModalityModal').modal('show');
         }
     }
@@ -310,7 +329,7 @@
     function getUspsPriorityIntlRates() {
         flag = true;
         const service = $('#shipping_service_id option:selected').attr('data-service-code');
-         var order_id = $('#order_id').val();
+        var order_id = $('#order_id').val();
         var descpall = [];
         var qtyall = [];
         var valueall = [];
@@ -359,9 +378,9 @@
             alert('Add items to get rates!');
             flag = false;
         }
-        if(flag)
+        if (flag)
             showTaxModalityMessage(service)
-       
+
     }
 
 
@@ -383,7 +402,7 @@
     $('#us_shipping_service').on('change', function() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         showTaxModalityMessage(service)
-       
+
         if (service == 3440 || service == 3441 || service == 05) {
 
             return getUspsRates();
@@ -414,7 +433,7 @@
     function getUspsRates() {
         const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-        showTaxModalityMessage(service) 
+        showTaxModalityMessage(service)
         $('#loading').fadeIn();
         $.get('{{ route("api.usps_rates") }}', {
             service: service,

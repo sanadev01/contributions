@@ -636,7 +636,7 @@ class OrderRepository
 
                     $shippingServices->push($shippingService);
                 }elseif($shippingService->getCalculator($order)->getErrors() != null && $shippingServices->isEmpty()){
-                    $this->shippingServiceError = 'Shipping Service not Available Error: {'.$shippingService->getCalculator($order)->getErrors().'}';
+                    $this->shippingServiceError = 'Shipping Service not Available Error : '.$shippingService->getCalculator($order)->getErrors().'';
                 }
             } 
             // USPS Intenrational Services
