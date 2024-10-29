@@ -16,7 +16,7 @@
             font-family: Arial, Helvetica, sans-serif;
             box-sizing: border-box !important;
             font-weight: bold;
-        }d
+        }
 
         /* prc design started */
         img.partner-prc-logo {
