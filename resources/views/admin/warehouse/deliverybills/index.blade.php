@@ -127,12 +127,16 @@
                                                 <span class="badge text-dark" style="background-color:#b4e2ef">PEx</span>
                                                 @elseif($deliveryBill->isSenegal())
                                                 <span class="badge badge-secondary text-dark">SN</span>
+                                                @elseif($deliveryBill->isVipParcel())
+                                                <span class="badge badge-secondary text-dark">VIP</span>
                                                 @elseif($deliveryBill->isAnjunChina())
                                                 <span class="badge badge-secondary text-dark">AJ</span>
                                                 @elseif($deliveryBill->isFoxCourier())
                                                 <span class="badge text-dark" style="background-color:#b4e2ef">Fox</span>
                                                 @elseif($deliveryBill->isPhxCourier())
                                                 <span class="badge text-dark" style="background-color:#b4e2ef">Phx</span>
+                                                @elseif($deliveryBill->is_cainiao)
+                                                <span class="badge badge-secondary text-danger">CIA</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif
@@ -143,7 +147,10 @@
                                             @admin @if(optional($deliveryBill->user)->isUser()) <span class="badge badge-danger">GoBox</span> @endif @endadmin
                                         </td>
                                         <td>
+                                        <span class="{{ ($deliveryBill->request_id == 'waiting...' ? 'text-danger' : '') }}">
                                             {{ $deliveryBill->request_id }}
+                                        </span>
+                                            
                                         </td>
                                         <td>{{ $deliveryBill->cnd38_code }}</td>
                                         <td class="d-flex">
@@ -251,14 +258,14 @@
                                                             </a>
                                                         
                                                         @endif
-                                                        {{-- @if( !$deliveryBill->isRegistered() ) --}}
+                                                       @if( !$deliveryBill->isRegistered() ) 
                                                             {{-- <a href="{{ route('warehouse.delivery_bill.edit',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a> --}}
                                                             <a href="{{ route('warehouse.delivery_bill.register',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Register Delivery Bill
                                                             </a>
-                                                        {{-- @endif --}}
+                                                        @endif  
 
                                                         @if(!$deliveryBill->isReady())
                                                             <form action="{{ route('warehouse.delivery_bill.destroy',$deliveryBill) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">

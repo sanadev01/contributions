@@ -12,6 +12,6 @@ return [
         'username'          => 'ajtest',
         'password'          => 'e536dc6236e42b8c6e720e6dfba82d5f',
         'bigPackageBaseURL' => 'http://api.bailidaming.com',
-        'token' => "oZ2ETMjDJznOfJDTg2VULj7/MOC7wxQ3+eVhzaURniQt2VjSFU3GfE9CwyE8XdRZkQ/bDX+jRDYfQASnCA0M7TEqcQCrrqHhK7LU9qfdyftqST6F8K0OKHTANLJeaVGyzQiTFtxJgC5lTpcLIZ+QTJKCRHK0h6o6uMPpMGdVXIivuR4p8beXMVVeqQ//qGfVb9kUzkTuwOat/OhrLaPL0Z0Oe/JfHOSBmAoPjZ8lhNHO40CmeSa6GmprjXQ4/uJTaZ/JWTWosROH1QvY1DClwkseuDumRrppb4Uta5ko9WVmPvVE8G/+VZETdukifW5hVOqsPi6kDDLXC17RerPFmQ==,POdWyBrBOuRUa65rr5ot5qVLJYkgzR7UtH2uDVAsF0/wuiIBFvsSSPeFc+uM9mNmij8yxMwqyjmkNM32+vZc2gZekCLVZqmzDyoWxWvFDscA860IYVPuTaDLgSkqh7SdMCnkz9XByQqZbD6Lzj6kl8BNxdyVWrwAjscHJrisVtc=,"
+        'token' => "Xs4o5Lc6ziActgvpVs+hJyUKLBh9Dv/dGJLKg+/+JM5EzFedD1jBe6t/JiMBk8rGyDi78853sTafSi0ofv/VSrFp6p5EFKHTfVfNLNtb1Ix0fYBn/Lbpg0hkk+H0qhasYDGi1W0u99U6YN+ltB4g1it9eL3vWq/gytQd9F8Ubts=,RWT1Io2egr2jB7wHKhvpNQ/yfeUtkjpS7T9sQ9dsJh5IuoykUD1LY0qArOnsaUFoIB6pQ3Ni2MSCfUDeRs/6tHZVwdGjDVs2HwimetgvkJTggsWQaGouPnL6OSaBA9/BM40HshTAiyFvbdUip3jxo+pw9Rf1ByupFBU5iu9q+X0=,"
     ],
 ];

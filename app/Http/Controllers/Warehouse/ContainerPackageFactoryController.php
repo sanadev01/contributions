@@ -20,8 +20,7 @@ class ContainerPackageFactoryController extends Controller
         $container = Container::find($id);
         $editMode = ($container->response == 0) ? true : false;
 
-        return view('admin.warehouse.containers_factory.packages.scan',compact('container', 'editMode'));
-                
+        return view('admin.warehouse.containers_factory.packages.scan', compact('container', 'editMode'));
     }
 
     /**
@@ -44,7 +43,7 @@ class ContainerPackageFactoryController extends Controller
     {
         $packageFactoryRepo = new ContainerPackageFactoryRepository();
 
-        return $packageFactoryRepo->addOrderToContainer($container,$order);
+        return $packageFactoryRepo->addOrderToContainer($container, $order);
     }
 
     /**
@@ -91,7 +90,7 @@ class ContainerPackageFactoryController extends Controller
     {
         $packageFactoryRepo = new ContainerPackageFactoryRepository();
         try {
-            return $packageFactoryRepo->removeOrderFromContainer($container,$id);
+            return $packageFactoryRepo->removeOrderFromContainer($container, $id);
         } catch (\Exception $ex) {
             \Log::info($ex);
         }

@@ -37,16 +37,26 @@ class Create extends FormRequest
         // }
 
         if ($this->password) {
-            $rules['password'] = 'required|confirmed|min:8';
+            $rules['password'] =[
+            'required',
+            'string',
+            'min:8',
+            'confirmed',
+            'regex:/[a-z]/',
+            'regex:/[A-Z]/',
+            'regex:/[0-9]/',
+            'regex:/[@$!%*?&^#()_+={}\[\]|:;,.<>~`]/'
+            ];
         }
-
+        
         return $rules;
     }
 
     public function messages()
     {
         return [
-           'phone.phone' => 'Invalid Telefone' 
+           'phone.phone' => 'Invalid Telefone',
+           'password.regex' => 'The password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.',
         ];
     }
 }
