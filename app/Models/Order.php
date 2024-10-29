@@ -21,6 +21,8 @@ use App\Services\PasarEx\GetZipcodeZone;
 use App\Services\Correios\Models\Package as ModelsPackage;
 use Exception;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
+
 class Order extends Model implements Package
 {
 
@@ -579,7 +581,17 @@ class Order extends Model implements Package
         $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES', 0, null, true) : 0;
         $calculatedUserProfit = (float) number_format($this->user_profit,2);
-        $total = number_format($shippingCost,2) + number_format($additionalServicesCost,2) + number_format($this->insurance_value,2) + number_format($dangrousGoodsCost,2) + number_format($consolidation,2) + $calculatedUserProfit;
+          
+           
+        Log::info('shippingCost:', ['value' => $shippingCost, 'type' => gettype($shippingCost)]);
+        Log::info('additionalServicesCost:', ['value' => $additionalServicesCost, 'type' => gettype($additionalServicesCost)]);
+        Log::info('insurance_value:', ['value' => $this->insurance_value, 'type' => gettype($this->insurance_value)]);
+        Log::info('dangrousGoodsCost:', ['value' => $dangrousGoodsCost, 'type' => gettype($dangrousGoodsCost)]);
+        Log::info('consolidation:', ['value' => $consolidation, 'type' => gettype($consolidation)]);
+        Log::info('calculatedUserProfit:', ['value' => $calculatedUserProfit, 'type' => gettype($calculatedUserProfit)]);
+           
+        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $calculatedUserProfit;
+        $total = number_format($total, 2); 
         $discount = 0; // not implemented yet
         $grossTotal = $total - $discount;
         $this->update([
