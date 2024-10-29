@@ -16,26 +16,24 @@
             font-family: Arial, Helvetica, sans-serif;
             box-sizing: border-box !important;
             font-weight: bold;
-        }
+        }d
 
         /* prc design started */
         img.partner-prc-logo {
-            left: 2mm;
-            width: 2cm;
-            height: 2.5cm;
+            top: 3.3mm;
+            width: 1.8cm;
+            height: 2.2cm;
             position: absolute;
-            top: 3mm;
+            left: 2.3mm;
             object-fit: contain;
         }
 
         img.profile-prc-logo {
-            max-width: 100%;
-            max-height: 90%;
-            height: auto;
+            max-width: 100%;  
+            max-height: 90%; 
+            height: auto; 
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%); 
             object-fit: contain;
         }
 
