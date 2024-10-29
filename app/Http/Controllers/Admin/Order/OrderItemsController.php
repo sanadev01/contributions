@@ -266,7 +266,7 @@ class OrderItemsController extends Controller
         } else {
             return (array)[
                 'success' => false,
-                'error' => 'server error occured while fetching rates',
+                'error' => 'Invalid Zip Code for Pasarex Colombia. Rate value not found.',
             ];
         }
         
