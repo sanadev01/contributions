@@ -580,18 +580,9 @@ class Order extends Model implements Package
         
         $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES', 0, null, true) : 0;
-        $calculatedUserProfit = (float) number_format($this->user_profit,2);
-          
-           
-        Log::info('shippingCost:', ['value' => $shippingCost, 'type' => gettype($shippingCost)]);
-        Log::info('additionalServicesCost:', ['value' => $additionalServicesCost, 'type' => gettype($additionalServicesCost)]);
-        Log::info('insurance_value:', ['value' => $this->insurance_value, 'type' => gettype($this->insurance_value)]);
-        Log::info('dangrousGoodsCost:', ['value' => $dangrousGoodsCost, 'type' => gettype($dangrousGoodsCost)]);
-        Log::info('consolidation:', ['value' => $consolidation, 'type' => gettype($consolidation)]);
-        Log::info('calculatedUserProfit:', ['value' => $calculatedUserProfit, 'type' => gettype($calculatedUserProfit)]);
-           
+        $calculatedUserProfit = (float) number_format($this->user_profit,2); 
         $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $calculatedUserProfit;
-        $total = number_format($total, 2); 
+        $total =(float) number_format($total, 2); 
         $discount = 0; // not implemented yet
         $grossTotal = $total - $discount;
         $this->update([
