@@ -9,7 +9,7 @@
                         <div class="">
                             <h4 class="mb-0 mr-3">
                                 @if($type=="cost")
-                                    Cost Rates of {{$service->name}} for Zone {{$zoneId}} @if($poboxNumber) - {{$poboxNumber}} @endif
+                                    @if($service->is_pasarex) Accrual @else Cost @endif Rates of {{$service->name}} for Zone {{$zoneId}} @if($poboxNumber) - {{$poboxNumber}} @endif
                                 @else
                                     Selling Rates of {{$service->name}} for Zone {{$zoneId}} @if($poboxNumber) - {{$poboxNumber}} @endif
                                 @endif

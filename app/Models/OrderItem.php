@@ -23,6 +23,9 @@ class OrderItem extends Model
     {
         return $builder->where('contains_battery',true);
     }
+    function shCodeModel() {
+        return ShCode::where('code',$this->sh_code)->first(); 
+    }
 
     public function scopePerfumes(Builder $builder)
     {

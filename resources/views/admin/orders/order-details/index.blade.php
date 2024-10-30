@@ -61,6 +61,10 @@
                 </div>
             </div>
             <h4 class="mt-2">@lang('orders.order-details.Service')</h4>
+            <div id="error-alert" style="display: none; color: red; font-weight: bold; margin-bottom: 10px;">
+                <!-- Error message will appear here -->
+            </div>
+            
             <div class="row mt-1">
                 <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
@@ -540,9 +544,13 @@
     }
 
     function getPasarExColombiaRates() {
-        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        const $shippingService = $('#shipping_service_id');
+        const service = $shippingService.find('option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
 
+        // Hide error alert at the beginning of the request
+        $('#error-alert').hide();
+        
         $('#loading').fadeIn();
         $.get('{{ route("api.pasarExRates") }}', {
             service: service,
@@ -551,15 +559,23 @@
             if (response.success == true) {
                 $('#user_declared_freight').val(response.total_amount);
                 $('#user_declared_freight').prop('readonly', true);
+            }else {
+                $('#error-alert').text(response.error).fadeIn();
+                $shippingService.val('');
+                $shippingService.trigger('change');
+                $('#user_declared_freight').val(0);
+                setTimeout(function() {
+                    $('#error-alert').fadeOut();
+                }, 10000);
             }
             $('#loading').fadeOut();
 
         }).catch(function(error) {
             console.log(error);
             $('#loading').fadeOut();
-        })
-
+        });
     }
+
 
     $('#returnParcel').change(function() {
         if ($(this).is(":checked")) {
