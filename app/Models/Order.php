@@ -545,6 +545,9 @@ class Order extends Model implements Package
     public function doCalculations($onVolumetricWeight = true, $isServices = false)
     {
         $shippingService = $this->shippingService;
+        if(!$shippingService){
+            return;
+        }
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
         if ($shippingService && in_array($shippingService->service_sub_class, $this->usShippingServicesSubClasses())) {
             $shippingCost = $this->user_declared_freight;
