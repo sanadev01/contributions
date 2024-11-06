@@ -28,8 +28,9 @@
                 </li>
                 @endif
                 @can('view',App\Models\OrderTracking::class)
-                <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
-                    <a href="{{ route('admin.tracking.index') }}" target="_blank">
+                {{-- <li class="nav-item {{ $isActive(['admin.tracking.index']) }}"> --}}
+                <li class="nav-item {{ $isActive(['tracking.index']) }}">
+                    <a href="{{ route('tracking.index') }}" target="_blank">
                         <i class="icon_adjst feather icon-map-pin"></i>
                         <span class="menu-title">@lang('menu.trackings')</span>
                     </a>
@@ -69,8 +70,9 @@
             @endcan
 
             @can('view',App\Models\OrderTracking::class)
-                <li class="nav-item {{ $isActive(['admin.tracking.index']) }}">
-                    <a href="{{ route('admin.tracking.index') }}" target="_blank">
+                {{-- <li class="nav-item {{ $isActive(['admin.tracking.index']) }}"> --}}
+                <li class="nav-item {{ $isActive(['tracking.index']) }}">
+                    <a href="{{ route('tracking.index') }}" target="_blank">
                         <img  src="{{ asset('images/icon/tracking.svg') }}" alt="Tracking">
                         <span class="menu-title">@lang('menu.trackings')</span>
                     </a>
