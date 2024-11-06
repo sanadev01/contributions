@@ -2,7 +2,7 @@ image: atlassian/default-image:2
 
 pipelines:
   branches:
-    development:
+    master:
       - step:
           name: 'Setup and Deployment to production'
           deployment: master
