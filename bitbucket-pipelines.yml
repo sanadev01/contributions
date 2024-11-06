@@ -13,7 +13,7 @@ pipelines:
             - mv doctl /usr/local/bin
             
             # Step 2: Configure DigitalOcean CLI
-            - echo "$DIGITALOCEAN_ACCESS_TOKEN" | doctl auth init --access-token
+            - echo "$DIGITALOCEAN_ACCESS_TOKEN" | doctl auth init --access-token $DIGITALOCEAN_ACCESS_TOKEN
         
             # Step 3: Add Bitbucket IP to DigitalOcean Droplet's Inbound Rules
             - BITBUCKET_IP=$(dig +short myip.opendns.com @resolver1.opendns.com) # Get current Bitbucket IP
