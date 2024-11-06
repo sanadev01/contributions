@@ -57,7 +57,7 @@ Route::get('/', function (Shopify $shopifyClient) {
 ini_set('memory_limit', '10000M');
 ini_set('memory_limit', '-1');
 
-// Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
+Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
 
     if ( session()->get('shopify.redirect') ){
@@ -94,7 +94,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::resource('orders',OrderController::class)->only('index','destroy', 'show');
         Route::resource('trash-orders',TrashOrderController::class)->only(['index','destroy']);
 
-        Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
+        // Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
         Route::get('/buy-usps-label', [\App\Http\Controllers\Admin\Order\OrderUSPSLabelController::class, 'uspsBulkView'])->name('bulk-usps-label');
 
         Route::namespace('Order')->group(function () {
