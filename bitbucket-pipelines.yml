@@ -28,4 +28,4 @@ pipelines:
                 SERVER: '164.90.255.76'
                 MODE: 'script'
                 PORT: '22'
-                COMMAND: 'deploy-staging.sh'
+                COMMAND: '/var/www/hd/deploy-production.sh'
