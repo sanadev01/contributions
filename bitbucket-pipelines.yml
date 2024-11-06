@@ -4,13 +4,27 @@ pipelines:
   branches:
     development:
       - step:
-          name: 'Deployment to Staging'
+          name: 'Setup and Deployment to production'
           deployment: master
           script:
+            # Step 1: Install DigitalOcean CLI
+            - apt-get update && apt-get install -y curl
+            - curl -sL https://github.com/digitalocean/doctl/releases/download/v1.97.0/doctl-1.97.0-linux-amd64.tar.gz | tar -xz
+            - mv doctl /usr/local/bin
+            
+            # Step 2: Configure DigitalOcean CLI
+            - echo "$DIGITALOCEAN_ACCESS_TOKEN" | doctl auth init --access-token
+        
+            # Step 3: Add Bitbucket IP to DigitalOcean Droplet's Inbound Rules
+            - BITBUCKET_IP=$(dig +short myip.opendns.com @resolver1.opendns.com) # Get current Bitbucket IP
+            - doctl compute firewall add-rules 50ad10e3-af87-40fe-8636-5f8675de4a2b \
+                --inbound-rules "protocol:tcp,ports:22,address:${BITBUCKET_IP}/32"
+
+            # Step 4: Run Deployment Script on Droplet
             - pipe: atlassian/ssh-run:0.3.0
               variables:
-                  SSH_USER: 'homeqdba'
-                  SERVER: '162.0.229.211'
-                  MODE: 'script'
-                  PORT: '21098'
-                  COMMAND: 'deploy-staging.sh'
+                SSH_USER: 'homeqdba'
+                SERVER: '164.90.255.76'
+                MODE: 'script'
+                PORT: '22'
+                COMMAND: 'deploy-staging.sh'
