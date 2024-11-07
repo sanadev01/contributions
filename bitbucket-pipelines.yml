@@ -6,6 +6,18 @@ pipelines:
       - step:
           name: 'Test SSH Connection and Run Script'
           script:
+                      # Step 1: Install DigitalOcean CLI
+            - apt-get update && apt-get install -y curl
+            - curl -sL https://github.com/digitalocean/doctl/releases/download/v1.97.0/doctl-1.97.0-linux-amd64.tar.gz | tar -xz
+            - mv doctl /usr/local/bin
+            
+            # Step 2: Configure DigitalOcean CLI
+            - echo "$DIGITALOCEAN_ACCESS_TOKEN" | doctl auth init --access-token $DIGITALOCEAN_ACCESS_TOKEN
+        
+            # Step 3: Add Bitbucket IP to DigitalOcean Droplet's Inbound Rules
+            - BITBUCKET_IP=$(curl -s ifconfig.me)  # Fetch public IP using curl
+            
+            - doctl compute firewall add-rules 50ad10e3-af87-40fe-8636-5f8675de4a2b --inbound-rules "protocol:tcp,ports:22,address:${BITBUCKET_IP}"
             - pipe: atlassian/ssh-run:0.3.0
               variables:
                 SSH_USER: 'homeqdba'
