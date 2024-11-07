@@ -4,13 +4,12 @@ pipelines:
   branches:
     master:
       - step:
-          name: 'Deployment to Staging'
-          deployment: Production
+          name: 'Test SSH Connection'
           script:
             - pipe: atlassian/ssh-run:0.3.0
               variables:
-                  SSH_USER: 'homeqdba'
-                  SERVER: '164.90.255.76'
-                  MODE: 'script'
-                  PORT: '22'
-                  COMMAND: ssh homeqdba@164.90.255.76 
+                SSH_USER: 'homeqdba'
+                SERVER: '164.90.255.76'
+                MODE: 'command'
+                PORT: '22'
+                COMMAND: 'echo "SSH connection successful"'
