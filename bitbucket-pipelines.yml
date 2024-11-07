@@ -13,4 +13,4 @@ pipelines:
                   SERVER: '164.90.255.76'
                   MODE: 'script'
                   PORT: '22'
-                  COMMAND: 'cd /var/www/hd && bash deploy-production.sh'
+                  COMMAND: 'ls -la'
