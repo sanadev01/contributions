@@ -2,10 +2,10 @@ image: atlassian/default-image:2
 
 pipelines:
   branches:
-    development:
+    master:
       - step:
           name: 'Deployment to Staging'
-          deployment: staging
+          deployment: Production
           script:
             - pipe: atlassian/ssh-run:0.3.0
               variables:
