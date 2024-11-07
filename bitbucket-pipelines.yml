@@ -4,7 +4,7 @@ pipelines:
   branches:
     master:
       - step:
-          name: 'Test SSH Connection'
+          name: 'Test SSH Connection and Run Script'
           script:
             - pipe: atlassian/ssh-run:0.3.0
               variables:
@@ -12,15 +12,4 @@ pipelines:
                 SERVER: '164.90.255.76'
                 MODE: 'command'
                 PORT: '22'
-                COMMAND: 'echo "SSH connection successful"'
-      
-      - step:
-          name: 'Run Deployment Script'
-          script:
-            - pipe: atlassian/ssh-run:0.3.0
-              variables:
-                SSH_USER: 'homeqdba'
-                SERVER: '164.90.255.76'
-                MODE: 'script'
-                PORT: '22'
-                COMMAND: 'cd /var/www/hd && bash deploy-production.sh'
+                COMMAND: 'echo "SSH connection successful" && cd /var/www/hd && bash deploy-production.sh'
