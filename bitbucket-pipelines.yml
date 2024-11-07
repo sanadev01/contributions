@@ -13,4 +13,4 @@ pipelines:
                   SERVER: '164.90.255.76'
                   MODE: 'script'
                   PORT: '22'
-                  COMMAND: '/bin/bash -c "echo SSH connection successful"'
+                  COMMAND: ssh homeqdba@164.90.255.76 
