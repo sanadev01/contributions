@@ -28,4 +28,4 @@ pipelines:
                 SERVER: '164.90.255.76'
                 MODE: 'script'
                 PORT: '22'
-                COMMAND: 'bash /var/www/hd/deploy-production.sh'
+                COMMAND: 'cd /var/www/hd/  && ./deploy-production.sh'
