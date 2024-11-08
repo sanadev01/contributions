@@ -166,6 +166,8 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             return 'Miami';
         }elseif($this->destination_operator_name == 'MR') {
             return 'Santiago';
+        }elseif($this->destination_operator_name == 'BOG') {
+            return 'BOG';
         }else {
             return 'Other Region';
         }
