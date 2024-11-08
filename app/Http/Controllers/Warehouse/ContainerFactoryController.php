@@ -102,7 +102,10 @@ class ContainerFactoryController extends Controller
         if ($shippingServices->isEmpty()){
             abort(404);
         }
-        return view('admin.warehouse.containers_factory.create', compact('shippingServices'));
+
+        $hasPasarexService = $shippingServices->contains('is_pasarex', true);
+
+        return view('admin.warehouse.containers_factory.create', compact('shippingServices', 'hasPasarexService'));
     }
 
     /**

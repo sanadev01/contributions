@@ -112,7 +112,7 @@
                                                             </a>
                                                             @if( !$container->isRegistered() && $container->hasOrders())
                                                                 <a href="{{ route('warehouse.container_factory.createRequest',$container) }}" class="dropdown-item w-100">
-                                                                    <i class="feather icon-box"></i> Create Unit
+                                                                    <i class="feather icon-box"></i> Register Unit
                                                                 </a>
                                                             @endif
                                                             <!-- @if( $container->unit_response_list )
