@@ -17,7 +17,7 @@ class LoginController extends Controller
 {
     use ThrottlesLogins;
  
-    protected $maxAttempts = 2;
+    protected $maxAttempts = 5;
     protected $decayMinutes = 30;   
     /*
     |--------------------------------------------------------------------------
