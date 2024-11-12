@@ -19,13 +19,13 @@
                         <div class="input-group">
                             @for ($i = 0; $i < 6; $i++)
                                 <input type="text" name="token[]" maxlength="1" data-index="{{ $i }}" required>
-                            @endfor
+                                @endfor
                         </div>
                         <button type="submit" class="btn btn-primary mt-3" id="submitBtn">
                             {{ __('Verify') }}
                         </button>
                     </form>
-                    <p class="mt-3">Time left: <span id="timer">{{$remainingTime}}</span> seconds</p>
+                    <p class="mt-3">Time left: <span id="timer"></span></p>
                 </div>
             </div>
         </div>
@@ -41,6 +41,7 @@
         max-width: 300px;
         margin: 0 auto;
     }
+
     .input-group input {
         width: 40px;
         height: 40px;
@@ -49,16 +50,19 @@
         border: 2px solid #ddd;
         border-radius: 4px;
         margin: 0 5px;
-        box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
         transition: border-color 0.3s;
     }
+
     .input-group input:focus {
         border-color: #007bff;
         outline: none;
     }
+
     .input-group input.error {
         border-color: #dc3545;
     }
+
     button {
         display: block;
         width: 100%;
@@ -70,6 +74,7 @@
         cursor: pointer;
         font-size: 1rem;
     }
+
     button:hover {
         background-color: #0056b3;
     }
@@ -78,7 +83,7 @@
 
 @section('jquery')
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const inputs = document.querySelectorAll('.input-group input');
         const timerElement = document.getElementById('timer');
         const submitBtn = document.getElementById('submitBtn');
@@ -87,7 +92,15 @@
         // Countdown timer
         const countdown = setInterval(() => {
             timeLeft--;
-            timerElement.textContent = timeLeft;
+
+            // Calculate minutes and seconds
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+
+            // Format the time as MM:SS
+            const timeFormatted = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            timerElement.textContent = timeFormatted;
 
             if (timeLeft <= 0) {
                 clearInterval(countdown);
@@ -98,7 +111,7 @@
 
         // Handle input focus and verification
         inputs.forEach((input, index) => {
-            input.addEventListener('input', function () {
+            input.addEventListener('input', function() {
                 if (this.value.length === 1 && index < inputs.length - 1) {
                     inputs[index + 1].focus();
                 }
@@ -109,7 +122,7 @@
         });
 
         // Form submit validation
-        document.getElementById('verificationForm').addEventListener('submit', function (event) {
+        document.getElementById('verificationForm').addEventListener('submit', function(event) {
             const values = Array.from(inputs).map(input => input.value).join('');
             if (values.length !== 6) {
                 event.preventDefault();
