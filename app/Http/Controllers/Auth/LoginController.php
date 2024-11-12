@@ -62,7 +62,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($this->credentials($request))) {
             $this->clearLoginAttempts($request);
-            return redirect()->intended($this->redirectPath());
+            return $this->authenticated($request,Auth::user());
         }
 
         $this->incrementLoginAttempts($request);
