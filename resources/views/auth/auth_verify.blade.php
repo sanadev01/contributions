@@ -16,7 +16,7 @@
                     <form id="verificationForm" method="POST" action="{{ route('verifyToken') }}">
                         @csrf
                         <label for="token">Enter the 6-digit code sent to your email:</label>
-                        <div class="input-group">
+                        <div class="input-group" id="code-inputs">
                             @for ($i = 0; $i < 6; $i++)
                                 <input type="text" name="token[]" maxlength="1" data-index="{{ $i }}" required>
                             @endfor
@@ -77,6 +77,47 @@
 @endsection
 
 @section('jquery')
+
+<script>
+    // Select all input fields in the code inputs container
+    const inputs = document.querySelectorAll('#code-inputs input');
+
+    // Function to handle pasting the 6-digit code
+    inputs[0].addEventListener('paste', (event) => {
+        // Get the pasted data
+        const pasteData = event.clipboardData.getData('text');
+
+        // Check if the pasted data is a 6-digit code
+        if (pasteData.length === 6 && /^\d+$/.test(pasteData)) {
+            event.preventDefault(); // Prevent default paste behavior
+
+            // Split the code into individual digits and place them into inputs
+            inputs.forEach((input, index) => {
+                input.value = pasteData[index] || ''; // Assign each digit
+            });
+
+            // Focus the last input field after pasting
+            inputs[inputs.length - 1].focus();
+        }
+    });
+
+    // Add event listeners for each input to move focus automatically
+    inputs.forEach((input, index) => {
+        input.addEventListener('input', () => {
+            // Move to the next input if there is a value and it's not the last input
+            if (input.value && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        });
+
+        // Handle backspace to move focus back
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Backspace' && !input.value && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
+    });
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const inputs = document.querySelectorAll('.input-group input');
