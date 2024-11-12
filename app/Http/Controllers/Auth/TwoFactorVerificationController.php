@@ -16,7 +16,7 @@ class TwoFactorVerificationController extends Controller
          
         $userId = session()->get('auth_user_id');
          if (!$userId) {
-            session()->flash('alert-danger','Session expired. Please log in again.');
+            session()->flash('alert-danger','Time expired. Please log in again.');
             return redirect()->route('login');
         }
         $user = User::find($userId);
@@ -24,7 +24,7 @@ class TwoFactorVerificationController extends Controller
         if ($remainingTime>0){ 
             return view('auth.auth_verify',['remainingTime'=>$remainingTime]); 
         } 
-        session()->flash('alert-danger','Session expired. Please log in again.');
+        session()->flash('alert-danger','Time expired. Please log in again.');
 
         return redirect()->route('login');
 

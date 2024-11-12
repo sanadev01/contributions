@@ -399,7 +399,7 @@ class User extends Authenticatable
         $token = rand(100000, 999999);
         DB::table('verification_tokens')->updateOrInsert(
             ['user_id' => $this->id],
-            ['token' => $token, 'expires_at' => Carbon::now()->addMinutes(1)]
+            ['token' => $token, 'expires_at' => Carbon::now()->addMinutes(3)]
         );
     
         return $token;
