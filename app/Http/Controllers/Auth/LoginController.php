@@ -53,10 +53,7 @@ class LoginController extends Controller
     {  
 
         $this->validateLogin($request);
-        $this->incrementLoginAttempts($request);
-        $attempts = $this->limiter()->attempts($this->throttleKey($request));
-        $remainingAttempts = $this->maxAttempts - $attempts;
-        if ($this->hasTooManyLoginAttempts($request)||$remainingAttempts === 0){
+        if ($this->hasTooManyLoginAttempts($request)){
             $this->fireLockoutEvent($request);
             throw ValidationException::withMessages([
                 $this->username() => [trans('auth.throttle', ['minutes' =>$this->decayMinutes])],
@@ -67,7 +64,9 @@ class LoginController extends Controller
             $this->clearLoginAttempts($request);
             return $this->authenticated($request,Auth::user());
         }
-        
+        $this->incrementLoginAttempts($request);
+        $attempts = $this->limiter()->attempts($this->throttleKey($request));
+        $remainingAttempts = $this->maxAttempts - $attempts;
         if ($remainingAttempts === 1) {
             throw ValidationException::withMessages([
                 $this->username() => ['Warning: This is your last attempt before lockout.'],
