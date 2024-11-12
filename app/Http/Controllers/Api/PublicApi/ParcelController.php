@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\State;
 use App\Models\ApiLog;
 use App\Models\Country;
+use App\Models\ZoneRate;
 use Illuminate\Http\Request;
 use App\Models\ProfitSetting;
 use App\Models\ShippingService;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
+use App\Services\PasarEx\GetZipcodeZone;
 use Illuminate\Support\Facades\Validator;
 use App\Services\Converters\UnitsConverter;
 use App\Services\Calculators\WeightCalculator;
@@ -195,6 +197,11 @@ class ParcelController extends Controller
         if (!$this->serviceActive($shippingService)) {
             return apiResponse(false, 'Selected shipping service is not active against your account!!.');
         }
+
+        if($shippingService->is_pasarex && $recipientCountryId == Country::Colombia && $this->getPasarexRate($shippingService, round(optional($request->parcel)['weight'], 2), optional($request->recipient)['zipcode'], Auth::id()) <= 0){
+            return apiResponse(false, 'Invalid Zip Code for Pasarex Colombia. Rate value not found.');
+        }
+
         DB::beginTransaction();
 
         try {
@@ -747,4 +754,63 @@ class ParcelController extends Controller
         }
         return false;
     }
+
+    public function getPasarexRate($service, $weight, $zipCode, $userId) {
+        $zoneId = (new GetZipcodeZone($zipCode))->getZipcodeZone();
+        if($zoneId) {
+            $rate = $this->getPasarexZoneRate($service, $weight, $zoneId, $userId);
+            if ($rate > 0){
+                return $rate;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public function getPasarexZoneRate($service, $weight, $zoneId, $userId)
+    {
+        $rates = ZoneRate::where(function ($query) use ($userId, $service) {
+            $query->where('user_id', $userId)
+                ->where('shipping_service_id', $service->id);
+            })->orWhere(function ($query) use ($service) {
+                $query->whereNull('user_id')
+                    ->where('shipping_service_id', $service->id);
+            })->first();
+
+        $decodedRates = json_decode($rates->selling_rates, true); 
+
+        $rate = null;    
+        $rateData = $rates['data'];
+        
+        foreach ($decodedRates as $zone => $zoneData) {
+
+            $zoneNumber = (int) filter_var($zone, FILTER_SANITIZE_NUMBER_INT);
+
+            if ($zoneNumber === (int)$zoneId) {
+                $rateData = $zoneData;
+                break;
+            }
+        }
+
+        if(isset($rateData['data'])) {
+
+            foreach ($rateData['data'] as $range => $value) {
+                $rangeValue = floatval($range);
+            
+                $keys = array_keys($rateData['data']);
+                $index = array_search($range, $keys);
+                $nextWeight = isset($keys[$index + 1]) ? floatval($keys[$index + 1]) : INF;
+
+                if ($weight >= $rangeValue && $weight < $nextWeight) {
+                    $rate = $value;
+                    break;
+                }
+            }
+        }
+
+        return $rate;
+    }
+
 }
