@@ -70,7 +70,7 @@ class LoginController extends Controller
         $attempts = $this->limiter()->attempts($this->throttleKey($request));
         $remainingAttempts = $this->maxAttempts - $attempts;
 
-        if ($remainingAttempts === 1) {
+        if ($remainingAttempts === 0) {
             throw ValidationException::withMessages([
                 $this->username() => ['Warning: This is your last attempt before lockout.'],
             ]);
