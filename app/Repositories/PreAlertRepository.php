@@ -160,9 +160,30 @@ class PreAlertRepository
             $data[] = 'weight_discount';
 
         }
+        
+        if ( $request->hasFile('invoiceFile') ){
+            $order->attachInvoice( $request->file('invoiceFile') );
+        }
+        if ($request->hasFile('images')) {
+            foreach ($order->images as $oldImage) {
+                $oldImage->delete();
+            }
+
+            foreach ($request->file('images') as $image) {
+                $document = Document::saveDocument($image,'parcels/');
+                $order->images()->create([
+                    'name' => $document->getClientOriginalName(),
+                    'size' => $document->getSize(),
+                    'type' => $document->getMimeType(),
+                    'path' => $document->filename
+                ]);
+            }
+            session()->flash('alert-success','Images Updated Successfully');
+        }
+        
         //CHECK VOL WEIGHT OF PARCEL AND SET DISCOUNT
         $totalDiscountPercentage = 0; 
-        $discountPercentage = setting('discount_percentage', null, $order->user->id)??0;
+        $discountPercentage = setting('discount_percentage', null, $order->user->id)??0; 
         if ( $request->measurement_unit == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
         }else {
