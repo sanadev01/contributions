@@ -26,7 +26,7 @@ class CN35LabelMaker implements HasLableExport
     private $containerGroup;
 
     public function __construct(Container $container)
-    {
+    { 
         $this->companyName = '<img src="'.public_path('images/hd-1cm.png').'" style="height:1cm;display:block;position:absolute:top:0;left:0;"/>';
         $this->packetType = 'PACKET STANDARD';
         $this->officeAddress = '';
@@ -34,6 +34,7 @@ class CN35LabelMaker implements HasLableExport
         $this->flightNumber = '';
         $this->dispatchDate = '';
         $this->containerGroup = '';
+        $this->hideContainerGroup = false;
 
         $order = $container->orders->first();
         
@@ -62,8 +63,7 @@ class CN35LabelMaker implements HasLableExport
 
     public function setService(int $service)
     {
-        $this->service = $service;
- 
+        $this->service = $service; 
         if (in_array($this->service ,[1,9,18,21]) ) {
             $this->packetType = 'PACKET EXPRESS';
         }
@@ -75,6 +75,12 @@ class CN35LabelMaker implements HasLableExport
         }
         if ( $this->service == 23 ){
             $this->packetType = 'PasarEx';
+            $this->hideContainerGroup = true;
+        }
+        if ( $this->service == 25 ){
+            $this->packetType = 'PasarEx';
+            $this->originAirpot = 'HKG'; 
+            $this->hideContainerGroup = true;
         }
         return $this;
     }
@@ -205,7 +211,8 @@ class CN35LabelMaker implements HasLableExport
             'service' => $this->service,
             'unitCode' => $this->unitCode,
             'OrderWeight' => $this->OrderWeight,
-            'containerGroup' => $this->containerGroup
+            'containerGroup' => $this->containerGroup,
+            'hideContainerGroup' => $this->hideContainerGroup
         ];
     }
 

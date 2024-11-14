@@ -2,6 +2,19 @@ image: atlassian/default-image:2
 
 pipelines:
   branches:
+    development:
+      - step:
+          name: 'Deployment to Staging'
+          deployment: staging
+          script:
+            - pipe: atlassian/ssh-run:0.3.0
+              variables:
+                SSH_USER: 'homeqdba'
+                SERVER: '162.0.229.211'
+                MODE: 'script'
+                PORT: '21098'
+                COMMAND: 'deploy-staging.sh'
+
     master:
       - step:
           name: 'Test SSH Connection and Run Script'
@@ -29,3 +42,4 @@ pipelines:
             
             # Step 5: Remove Bitbucket IP from DigitalOcean Droplet's Inbound Rules
             - doctl compute firewall remove-rules 50ad10e3-af87-40fe-8636-5f8675de4a2b --inbound-rules "protocol:tcp,ports:22,address:${BITBUCKET_IP}"
+ 

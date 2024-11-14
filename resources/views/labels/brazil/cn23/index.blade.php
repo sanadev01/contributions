@@ -17,6 +17,25 @@
             box-sizing: border-box !important;
             font-weight: bold;
         }
+        /* prc design started */
+        img.partner-prc-logo {   
+            top: 3.3mm;
+            width: 1.8cm;
+            height: 2.2cm;
+            position: absolute;
+            left: 2.3mm;
+            object-fit: contain;
+        }
+        img.profile-prc-logo {  
+            max-width: 100%;  
+            max-height: 90%; 
+            height: auto; 
+            position: absolute; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            object-fit: contain;  
+        }
 
         /* prc design started */
         img.partner-prc-logo {
@@ -171,7 +190,6 @@
             height: 2.5cm;
             object-fit: contain;
         }
-
 
         p.screening-code {
             position: absolute;
@@ -577,7 +595,7 @@
     <div class="cn23-text">
         CN23
     </div>
-    @if($isAmazon || $order->is_prc_label)
+    @if($isAmazon||$order->is_prc_label)
         <div class="profile-amazon-logo-container">
             <img class="profile-amazon-logo" src="{{ $profileLogo }}" alt="Partner Logo">
         </div>
@@ -636,7 +654,7 @@
             {{ $recipient->address }}, @if ($recipient->street_no != 0 ) {{ $recipient->street_no }}, @endif {{ $recipient->address2 }}, {{ $recipient->city }}, {{ $recipient->zipcode }} <br>
             {{ $recipient->state->name }}
             {{ $recipient->country->name }} <br>
-            CPF: {{ $CPF }}
+            CPF: {{ $CPF }}<br><br>
         </div>
     </div>
     <div class="package-sign">{{$packageSign}}</div>

@@ -266,7 +266,7 @@ class OrderItemsController extends Controller
         } else {
             return (array)[
                 'success' => false,
-                'error' => 'Invalid Zip Code for Pasarex Colombia. Rate value not found.',
+                'error' =>$zoneId?"Pasarex Colombia: no rate found for zone $zoneId" :"Pasarex Colombia:Invalid Zip Code zone not found.",
             ];
         }
         

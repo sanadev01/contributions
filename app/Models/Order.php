@@ -21,6 +21,8 @@ use App\Services\PasarEx\GetZipcodeZone;
 use App\Services\Correios\Models\Package as ModelsPackage;
 use Exception;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
+
 class Order extends Model implements Package
 {
 
@@ -346,7 +348,7 @@ class Order extends Model implements Package
     }
 
     public function carrierService()
-    {
+    { 
         if ($this->shippingService()) {
             if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
@@ -414,13 +416,19 @@ class Order extends Model implements Package
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::DSS_SENEGAL){
                 return 'DSS Senegal';
             }
-            elseif(optional($this->shippingService)->is_pasar_ex){
+            elseif(optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMEI || optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI || optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP){
+                return 'VIP Parcels';
+            }elseif(optional($this->shippingService)->is_pasar_ex){
 
                 return 'PasarEx';
             }
             elseif(optional($this->shippingService)->is_fox_courier){
 
                 return 'Fox Courier';
+            }
+            elseif(optional($this->shippingService)->is_cainiao){
+
+                return 'Cainiao';
             }
             return 'Correios Brazil';
         }
@@ -454,7 +462,10 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ||
                 optional($this->shippingService)->service_sub_class == ShippingService::FOX_ST_COURIER ||
-                optional($this->shippingService)->service_sub_class == ShippingService::FOX_EX_COURIER) {
+                optional($this->shippingService)->service_sub_class == ShippingService::FOX_EX_COURIER ||
+                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP ||
+                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMEI||
+                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI) {
 
                 return $this->user_declared_freight;
             }
@@ -569,8 +580,9 @@ class Order extends Model implements Package
         
         $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
         $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES', 0, null, true) : 0;
-        $calculatedUserProfit = (float) number_format($this->user_profit,2);
-        $total = number_format($shippingCost,2) + number_format($additionalServicesCost,2) + number_format($this->insurance_value,2) + number_format($dangrousGoodsCost,2) + number_format($consolidation,2) + $calculatedUserProfit;
+        $calculatedUserProfit = (float) number_format($this->user_profit,2); 
+        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $calculatedUserProfit;
+        $total =(float) number_format($total, 2); 
         $discount = 0; // not implemented yet
         $grossTotal = $total - $discount;
         $this->update([

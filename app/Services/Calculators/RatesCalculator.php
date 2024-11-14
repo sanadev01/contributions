@@ -113,6 +113,7 @@ class RatesCalculator
                 ShippingService::Packet_Express,
                 ShippingService::Prime5,
                 ShippingService::Prime5RIO,
+                ShippingService::Cainiao,
             ])
             && $this->order->weight_discount && $originalRate == false) 
         {

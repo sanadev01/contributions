@@ -31,6 +31,7 @@ use App\Repositories\SmartComexLabelRepository;
 use App\Repositories\HoundExpressLabelRepository;
 use App\Repositories\PasarExLabelRepository;
 use App\Repositories\SenegalLabelRepository;
+use App\Repositories\FoxCourierLabelRepository;
 
 class OrderLabelController extends Controller
 {
