@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\Order\OrderUSLabelController;
 use App\Models\CustomResponse;
 use App\Models\PoBox;
 use App\Repositories\AnjunLabelRepository;
+use App\Http\Controllers\AmazonOrdersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -274,6 +275,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
     Route::get('/auth', [ConnectionsController::class, 'getAuth']); 
     Route::get('/status-change/{user}', [ConnectionsController::class, 'getStatusChange']);
+    Route::get('/amazon/orders', [AmazonOrdersController::class, 'listOrders'])->name('amazon.orders');
+    Route::get('/amazon/orders/create/{id}', [AmazonOrdersController::class, 'createOrder'])->name('amazon.orders.create');
+
 });
 Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->group(function(){
     Route::namespace('Shopify')->prefix('shopify')->as('shopify.')->group(function(){
