@@ -60,7 +60,8 @@ class AddContainerPackageRepository extends AbstractRepository{
                 $firstGroup  = (new GetZipcodeGroup($this->containerFirstOrder->recipient->zipcode))->getZipcodeGroup();
                 $currentGroup =  (new GetZipcodeGroup($this->order->recipient->zipcode))->getZipcodeGroup();
                 if ($currentGroup !== $firstGroup){
-                    return $this->validationError404("Invalid Zipcode Group for container. Valid Group is {$firstGroup}");
+                    $zipCode = $this->order->recipient->zipcode;
+                    return $this->validationError404("Invalid Zone Group: ZipCode ($zipCode) belongs to group $currentGroup, but Valid Group is {$firstGroup} for this container.");
                 }
         }else{
             //make sure tha container first order have valid group.

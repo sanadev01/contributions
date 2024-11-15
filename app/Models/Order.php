@@ -19,9 +19,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
 use App\Services\PasarEx\GetZipcodeZone;
 use App\Services\Correios\Models\Package as ModelsPackage;
+use App\Services\Correios\GetZipcodeGroup;
 use Exception;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Log;
+
 
 class Order extends Model implements Package
 {
@@ -1083,6 +1083,11 @@ class Order extends Model implements Package
             return true;
         } 
         return false;
+    }
+    public function getZoneGroupAttribute()
+    { 
+           $getZipcodeGroup = new GetZipcodeGroup(optional($this->recipient)->zipcode);
+           return $getZipcodeGroup->getZipcodeGroup()??'no';  
     }
 
 }
