@@ -11,8 +11,14 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session; 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TwoFactorCode;
+use Illuminate\Foundation\Auth\ThrottlesLogins;  
+use Illuminate\Validation\ValidationException;
 class LoginController extends Controller
 {
+    use ThrottlesLogins;
+ 
+    protected $maxAttempts = 5;
+    protected $decayMinutes = 30;   
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -41,6 +47,35 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function login(Request $request)
+    {  
+
+        $this->validateLogin($request);
+        if ($this->hasTooManyLoginAttempts($request)){
+            $this->fireLockoutEvent($request);
+            throw ValidationException::withMessages([
+                $this->username() => [trans('auth.throttle', ['minutes' =>$this->decayMinutes])],
+            ]);
+        }
+
+        if (Auth::attempt($this->credentials($request))) {
+            $this->clearLoginAttempts($request);
+            return $this->authenticated($request,Auth::user());
+        }
+        $this->incrementLoginAttempts($request);
+        $attempts = $this->limiter()->attempts($this->throttleKey($request));
+        $remainingAttempts = $this->maxAttempts - $attempts;
+        if ($remainingAttempts === 1) {
+            throw ValidationException::withMessages([
+                $this->username() => ['Warning: This is your last attempt before lockout.'],
+            ]);
+        }
+
+        throw ValidationException::withMessages([
+            $this->username() => [trans('auth.failed')],
+        ]);
     }
 
     protected function authenticated(Request $request, $user)

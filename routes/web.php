@@ -183,7 +183,8 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 
         Route::resource('settings', SettingController::class)->only(['index', 'store']);
-        Route::resource('profile', ProfileController::class)->only(['index', 'store']);
+        Route::resource('profile', ProfileController::class)->only(['index', 'store']);        
+        Route::get('login-details', [HomeController::class,'loginDetails'])->name('login-details');
         Route::resource('users', UserController::class)->only(['index','destroy']);
         Route::post('users/export', UserExportController::class)->name('users.export.index');
         Route::resource('users.setting', UserSettingController::class)->only('index','store');
