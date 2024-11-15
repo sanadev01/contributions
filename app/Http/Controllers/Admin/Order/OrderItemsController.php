@@ -266,7 +266,7 @@ class OrderItemsController extends Controller
         } else {
             return (array)[
                 'success' => false,
-                'error' => 'server error occured while fetching rates',
+                'error' =>$zoneId?"Pasarex Colombia: no rate found for zone $zoneId" :"Pasarex Colombia:Invalid Zip Code zone not found.",
             ];
         }
         

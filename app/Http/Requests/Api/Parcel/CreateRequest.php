@@ -160,6 +160,10 @@ class CreateRequest extends FormRequest
             $rules['recipient.tax_id'] = 'nullable';
         }
 
+        if ($request->recipient['country_id'] == 'CO' || $request->recipient['country_id'] == 'Colombia' || $request->recipient['country_id'] == Country::Colombia) {
+            $rules['recipient.tax_id'] = 'nullable';
+        }
+
         if(setting('is_prc_user', null, auth()->user()->id)) {
             $rules['sender.sender_website'] = 'required';
         }

@@ -92,7 +92,7 @@
                                                 @if($rate->shippingService->id == $serviceId)
                                                     @if(isset($rate->cost_rates))
                                                         @php
-                                                            $costRateLabel = $rate->user ? 'Cost Rate - ' . $rate->user->pobox_number : 'Cost Rate - All';
+                                                            $costRateLabel = ($rate->shippingService->is_pasarex ? 'Accrual Rate' : 'Cost Rate') . ' - ' . ($rate->user ? $rate->user->pobox_number : 'All');
                                                             $decodedCostRates = json_decode($rate->cost_rates, true);
                                                             $zoneExists = isset($decodedCostRates["Zone $groupId"]);
                                                         @endphp

@@ -43,8 +43,8 @@ class ExportMexicoManfestService extends AbstractExportService
                 $this->setCellValue('E' . $row, $order->sender_address);
                 $this->setCellValue('F' . $row, $order->sender_city);
                 $this->setCellValue('G' . $row, $order->sender_city_zipcode);
-                $this->setCellValue('H' . $row, $order->senderCountry->name);
-                $this->setCellValue('I' . $row, $order->senderCountry->code);
+                $this->setCellValue('H' . $row, optional($order->senderCountry)->name);
+                $this->setCellValue('I' . $row, optional($order->senderCountry)->code);
                 $this->setCellValue('J' . $row, $order->recipient->fullName());
                 $this->setCellValue('K' . $row, $order->recipient->getAddress());
                 $this->setCellValue('L' . $row, $order->recipient->city);
@@ -80,11 +80,11 @@ class ExportMexicoManfestService extends AbstractExportService
     {
 
         $this->setColumnWidth('A', 20);
-        $this->setCellValue('A1', ' HAWB ');
+        $this->setCellValue('A1', ' MWB ');
         $this->setColumnWidth('B', 20);
         $this->setCellValue('B1', 'SACA');
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'Tracking Number (HAWB)');
+        $this->setCellValue('C1', 'Tracking Number (AWB)');
         $this->setColumnWidth('D', 20);
         $this->setCellValue('D1', 'Shipper Name');
         $this->setColumnWidth('E', 20);
