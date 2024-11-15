@@ -19,7 +19,7 @@
                         <div class="input-group" id="code-inputs">
                             @for ($i = 0; $i < 6; $i++)
                                 <input type="text" name="token[]" maxlength="1" data-index="{{ $i }}" required>
-                            @endfor
+                                @endfor
                         </div>
                         <button type="submit" class="btn btn-primary mt-3" id="submitBtn">
                             {{ __('Verify') }}

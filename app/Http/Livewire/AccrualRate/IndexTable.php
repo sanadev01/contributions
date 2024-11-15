@@ -20,11 +20,11 @@ class IndexTable extends Component
     public function getServices()
     {
         $this->services[0] = [
-            'name' => 'Standard',
+            'name' => 'Herco Packet Standard',
             'value' => Package::SERVICE_CLASS_STANDARD,
         ];
         $this->services[1] = [
-            'name' => 'Express',
+            'name' => 'Herco Packet Express',
             'value' => Package::SERVICE_CLASS_EXPRESS,
         ];
         $this->services[2] = [
