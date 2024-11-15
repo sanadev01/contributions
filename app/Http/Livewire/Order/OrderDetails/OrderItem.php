@@ -28,7 +28,6 @@ class OrderItem extends Component
     public $prime5;
     public $service;
     public $made_in="";
-
     // public $search;
     // public $name;
     public $type = 'Postal (Correios)';

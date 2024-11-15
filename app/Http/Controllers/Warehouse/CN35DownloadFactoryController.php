@@ -34,7 +34,7 @@ class CN35DownloadFactoryController extends Controller
     function getPasarExLabel(){
         $cn23Maker = new CN35LabelMaker($this->container);
         $cn23Maker =   $cn23Maker->setDispatchNumber($this->container->dispatch_number)
-            ->setDestinationAirport('GRU')
+            ->setDestinationAirport('BOG')
             ->setOriginAirport('MIA')
             ->setCompanyName('PasarEx')
             ->setDispatchDate(Carbon::now()->format('Y-m-d'));

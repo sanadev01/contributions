@@ -35,6 +35,7 @@ use App\Models\BillingInformation;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\AmazonOrdersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,7 +62,7 @@ ini_set('memory_limit', '10000M');
 ini_set('memory_limit', '-1');
 Route::get('tax-calculator', [TaxCalculatorController::class,'index'])->name('tax-calculator.index')->middleware('auth');
 
-// Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
+Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
 
     if ( session()->get('shopify.redirect') ){
@@ -100,7 +101,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::resource('orders',OrderController::class)->only('index','destroy', 'show');
         Route::resource('trash-orders',TrashOrderController::class)->only(['index','destroy']);
 
-        Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
+        // Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
         Route::get('/buy-usps-label', [\App\Http\Controllers\Admin\Order\OrderUSPSLabelController::class, 'uspsBulkView'])->name('bulk-usps-label');
 
         Route::namespace('Order')->group(function () {
@@ -282,6 +283,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
     Route::get('/auth', [ConnectionsController::class, 'getAuth']); 
     Route::get('/status-change/{user}', [ConnectionsController::class, 'getStatusChange']);
+    Route::get('/amazon/orders', [AmazonOrdersController::class, 'listOrders'])->name('amazon.orders');
+    Route::get('/amazon/orders/create/{id}', [AmazonOrdersController::class, 'createOrder'])->name('amazon.orders.create');
+
 });
 Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->group(function(){
     Route::namespace('Shopify')->prefix('shopify')->as('shopify.')->group(function(){

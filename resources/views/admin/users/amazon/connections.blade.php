@@ -62,12 +62,6 @@
                                                 </a>
                                             </td>
                                         </tr>
-                                        @else
-                                        <tr>
-                                            <td colspan="4" class="text-center">
-                                                No Connection found !
-                                            </td>
-                                        </tr>
                                         @endif
                                         @endforeach
                                     </tbody>
