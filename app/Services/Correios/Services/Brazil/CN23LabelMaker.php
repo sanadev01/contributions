@@ -70,6 +70,7 @@ class CN23LabelMaker implements HasLableExport
         $this->order = $order;
         $this->recipient = $order->recipient;
         $this->isAmazon = $this->order->user->amazon_api_enabled;
+        $this->isAmazon = false;
         $this->CPF = $order->recipient->tax_id;
         $this->order->load('items');
         $this->setItems()->setSuplimentryItems();
