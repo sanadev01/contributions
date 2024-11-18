@@ -161,10 +161,8 @@ class ContainerPackageRepository extends AbstractRepository{
                     $validRangeGroup = "Group {$firstOrderGroupRange['group']}";
                     $validRangeStart = $firstOrderGroupRange['start'];
                     $validRangeEnd = $firstOrderGroupRange['end'];
-                
-                    $validRange = "Valid range: $validRangeGroup (Start: $validRangeStart, End: $validRangeEnd)";
-                    
-                    return $this->validationError404($barcode, "Invalid Zipcode Group for container. Valid Group is {$firstOrderGroupRange['group']}");
+                    $zipCode = $order->recipient->zipcode;
+                    return $this->validationError404($barcode,"Invalid Zone Group: ZipCode $zipCode belongs to group {$currentOrderGroupRange['group']}, but  Valid Group is {$firstOrderGroupRange['group']}");
                 }
             } else {
                 

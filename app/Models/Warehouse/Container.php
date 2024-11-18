@@ -342,5 +342,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         return $this->services_subclass_code == ShippingService::VIP_PARCEL_FCP || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMEI || $this->services_subclass_code == ShippingService::VIP_PARCEL_PMI;
     }
+    public function getZoneGroupAttribute()
+    {
+        $order = $this->orders()->first();
+        return $order?$order->zone_group:'no';
+    }
 
 }
