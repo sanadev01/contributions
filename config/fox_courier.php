@@ -1,15 +1,15 @@
 <?php
 return [
     'test' => [
-        'api_key' =>'EWYc8GvnaAdV8jEJJvDhkPYDD3pdLRAE',
-        'api_secret' =>'tcAKm6QHKqDkx6VnndyJi8mMHFw2qkkw',
-        'token' => 'Basic RVdZYzhHdm5hQWRWOGpFSkp2RGhrUFlERDNwZExSQUU6dGNBS202UUhLcURreDZWbm5keUppOG1NSEZ3MnFra3c=',
-        'base_uri' => 'https://api.smartcomex.io/api-courier/'
+        'api_key'     => env('FOX_TEST_API_KEY'),
+        'api_secret'  => env('FOX_TEST_API_SECRET'),
+        'token'       => env('FOX_TEST_TOKEN'),
+        'base_uri'    => env('FOX_TEST_BASE_URI'),
     ],
     'production' => [
-        'api_key' =>'EWYc8GvnaAdV8jEJJvDhkPYDD3pdLRAE',
-        'api_secret' =>'tcAKm6QHKqDkx6VnndyJi8mMHFw2qkkw',
-        'token' => 'Basic RVdZYzhHdm5hQWRWOGpFSkp2RGhrUFlERDNwZExSQUU6dGNBS202UUhLcURreDZWbm5keUppOG1NSEZ3MnFra3c=',
-        'base_uri' => 'https://api.smartcomex.io/api-courier/'
+        'api_key'     => env('FOX_PROD_API_KEY'),
+        'api_secret'  => env('FOX_PROD_API_SECRET'),
+        'token'       => env('FOX_PROD_TOKEN'),
+        'base_uri'    => env('FOX_PROD_BASE_URI'),
     ],
 ];
