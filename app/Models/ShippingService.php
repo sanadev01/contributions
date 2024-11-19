@@ -82,6 +82,7 @@ class ShippingService extends Model
     const VIP_PARCEL_PMI = 848;
     const VIP_PARCEL_FCP = 849;
     const Cainiao = 1000;
+    const Mile_Express = 33175;
 
     protected $guarded = [];
 
@@ -623,4 +624,13 @@ class ShippingService extends Model
     {
         return $this->service_sub_class == self::Cainiao;
     }
+
+    public function isMileExpressService()
+    {
+        if ($this->service_sub_class == self::Mile_Express) {
+            return true;
+        }
+        return false;
+    }
+
 }
