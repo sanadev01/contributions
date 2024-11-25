@@ -43,6 +43,7 @@ class UserSettingRepository {
             'gde_pm_profit'=> setting('gde_pm_profit', null, $user->id)? setting('gde_pm_profit', null, $user->id): 0,
             'gde_fc_profit'=> setting('gde_fc_profit', null, $user->id)? setting('gde_fc_profit', null, $user->id): 0,
             'gss_profit'=> setting('gss_profit', null, $user->id) ? setting('gss_profit', null, $user->id): 0,
+            'postal_volumetric_discount'=> setting('postal_volumetric_discount', null,$user->id)? 'Active': 'Inactive', 
             'hd_express_volumetric_discount'=> setting('hd_express_volumetric_discount', null,$user->id)? 'Active': 'Inactive', 
             'hd_express_discount_percentage'=> setting('hd_express_discount_percentage', null, $user->id)? setting('hd_express_discount_percentage', null, $user->id): 0,
             'weight'=> setting('weight', null, $user->id),
@@ -72,6 +73,7 @@ class UserSettingRepository {
         $request->has('gss') ? saveSetting('gss', true, $user->id) : saveSetting('gss', false, $user->id);
         $request->has('tax') ? saveSetting('tax', true, $user->id) : saveSetting('tax', false, $user->id);
         $request->has('volumetric_discount') ? saveSetting('volumetric_discount', true,$user->id) : saveSetting('volumetric_discount', false, $user->id);
+        $request->has('postal_volumetric_discount') ? saveSetting('postal_volumetric_discount', true,$user->id) : saveSetting('postal_volumetric_discount', false, $user->id);
         $request->has('hd_express_volumetric_discount') ? saveSetting('hd_express_volumetric_discount', true,$user->id) : saveSetting('hd_express_volumetric_discount', false, $user->id);
         $request->has('marketplace_checked') ? saveSetting('marketplace_checked', true,$user->id) : saveSetting('marketplace_checked', false, $user->id);
         $request->has('pay_tax_service') ? saveSetting('pay_tax_service', true,$user->id) : saveSetting('pay_tax_service', false, $user->id);

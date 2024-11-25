@@ -506,14 +506,14 @@
                                                 <span>Profit Percentage (%) :</span>
                                             </div>
                                             <div class="col-6">
-                                                <input type="number" name="discount_percentage"  min=0 max="100" class="form-control" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
+                                                <input type="number" name="discount_percentage" min=0 max="100" class="form-control" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
 
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col"></div> 
+                                    <div class="col"></div>
                                 </div>
-  
+
                                 <div class="row">
                                     <div class="col">
                                         <div class="row align-item-center">
@@ -541,7 +541,41 @@
                                                 <span>Profit Percentage (%) :</span>
                                             </div>
                                             <div class="col-6">
-                                                <input type="number" name="tax_discount_percentage" class="form-control"  min=0 max="100" id="tax_discount_percentage" value="{{ setting('tax_discount_percentage', null, $user->id) }}">
+                                                <input type="number" name="discount_percentage" class="form-control" min=0 max="100" id="discount_percentage" value="{{ setting('discount_percentage', null, $user->id) }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="row align-item-center">
+                                            <div class="col-1">
+                                                <div class="controls row mb-1 align-items-center">
+                                                    <div class="input-group">
+                                                        <div class="vs-checkbox-con vs-checkbox-primary" title="marketplace_checked">
+                                                            <input type="checkbox" name="postal_volumetric_discount" id="postal_volumetric_discount" @if(setting('postal_volumetric_discount', null, $user->id)) checked @endif>
+                                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                                <span class="vs-checkbox--check">
+                                                                    <i class="vs-icon feather icon-check"></i>
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-11"><label>Postal Discount <span class="text-danger"></span></label></div>
+                                        </div>
+                                    </div>
+                                    <div class="col ">
+                                        <div class="row">
+                                            <div class="col-6 text-right">
+                                                <span>Profit Percentage (%) :</span>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="number" name="postal_discount_percentage" class="form-control" id="postal_discount_percentage" value="{{ setting('postal_discount_percentage', null, $user->id) }}">
                                             </div>
                                         </div>
                                     </div>
@@ -580,14 +614,59 @@
                                         </div>
                                     </div>
                                     <div class="col"></div>
-
                                 </div>
-
 
                             </div>
                             <hr>
                             <!-- gde input -->
 
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="row align-item-center">
+                                            <div class="col-1">
+                                                <div class="controls row mb-1 align-items-center">
+                                                    <div class="input-group">
+                                                        <div class="vs-checkbox-con vs-checkbox-primary" title="gde">
+                                                            <input type="checkbox" name="gde" id="gde" @if(setting('gde', null, $user->id)) checked @endif>
+                                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                                <span class="vs-checkbox--check">
+                                                                    <i class="vs-icon feather icon-check"></i>
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-11"><label>GDE <span class="text-danger"></span></label></div>
+                                        </div>
+                                    </div>
+                                    <div class="col ">
+                                        <div class="row">
+                                            <div class="col-6 text-right">
+                                                <span>Priority Mail (%):</span>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="number" name="gde_pm_profit" step="0.01" min=0 class="form-control" id="gde_pm_profit" value="{{ setting('gde_pm_profit', null, $user->id) }}">
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-6 text-right">
+                                                <span>First Class (%):</span>
+                                            </div>
+                                            <div class="col-6">
+
+                                                <input type="number" name="gde_fc_profit" step="0.01" min=0 class="form-control " id="gde_fc_profit" value="{{ setting('gde_fc_profit', null, $user->id) }}">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col"></div>
+                                </div>
+                            </div>
+                            <hr>
                             <!-- gde input end -->
 
 
@@ -647,21 +726,88 @@
                                         <div class="row">
 
                                             <div class="col-6">Width (%): </div>
-                                            <div class="col-6"> <input type="number" name="width" class="form-control" id="width" step="0.01" min=0  max="100" type="number" value="{{ setting('width', null, $user->id) }}">
+                                            <div class="col-6"> <input type="number" name="width" class="form-control" id="width" step="0.01" min=0 max="100" type="number" value="{{ setting('width', null, $user->id) }}">
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="col">
-                                        <div class="row"> 
+                                        <div class="row">
                                             <div class="col-6">Height (%):</div>
-                                            <div class="col-6"><input type="number" name="height" class="form-control" id="height" step="0.01" min=0  max="100" type="number" value="{{ setting('height', null, $user->id) }}">
+                                            <div class="col-6"><input type="number" name="height" class="form-control" id="height" step="0.01" min=0 max="100" type="number" value="{{ setting('height', null, $user->id) }}">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
- 
+                                <!-- Hd Express Discount start -->
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-1">
+                                                <div class="controls row mb-1 align-items-center">
+                                                    <div class="input-group">
+                                                        <div class="vs-checkbox-con vs-checkbox-primary" title="volumetric_discount">
+                                                            <input type="checkbox" name="hd_express_volumetric_discount" id="hd_express_volumetric_discount" @if(setting('hd_express_volumetric_discount', null, $user->id)) checked @endif>
+                                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                                <span class="vs-checkbox--check">
+                                                                    <i class="vs-icon feather icon-check"></i>
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-11"> <label class="">Hd Express Discount<span class="text-danger"></span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col"></div>
+                                    <div class="col"></div>
+                                </div>
+                                <div class="row mt-2 bg-light p-4">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-6">Discount %:</div>
+                                            <div class="col-6"> <input type="number" name="hd_express_discount_percentage" max="100" class="form-control" id="hd_express_discount_percentage" value="{{ setting('hd_express_discount_percentage', null, $user->id) }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-6">Weight (%)</div>
+                                            <div class="col-6"> <input class="form-control" step="0.01" min=0 type="number" max="100" name="weight" value="{{ setting('weight', null, $user->id) }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="row">
+
+                                            <div class="col-6">Length (%):</div>
+                                            <div class="col-6"> <input type="number" name="length" class="form-control" max="100" id="length" step="0.01" min=0 type="number" value="{{ setting('length', null, $user->id) }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="row">
+
+                                            <div class="col-6">Width (%): </div>
+                                            <div class="col-6"> <input type="number" name="width" class="form-control" id="width" step="0.01" min=0 max="100" type="number" value="{{ setting('width', null, $user->id) }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-6">Height (%):</div>
+                                            <div class="col-6"><input type="number" name="height" class="form-control" id="height" step="0.01" min=0 max="100" type="number" value="{{ setting('height', null, $user->id) }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Volumetric Discount Courier Service end -->
 
 
                             </div>
@@ -776,18 +922,19 @@
         $('.selectpicker').selectpicker();
     });
 
-    document.addEventListener("DOMContentLoaded", function() { 
+    document.addEventListener("DOMContentLoaded", function() {
         var prcUserTrue = document.getElementById('prcUserTrue');
         var prcUserFalse = document.getElementById('prcUserFalse');
-        var prcDev = document.getElementById('prcDev'); 
+        var prcDev = document.getElementById('prcDev');
+
         function togglePrcDev() {
             if (prcUserTrue.checked) {
                 prcDev.style.display = 'block';
             } else {
-                prcDev.style.display = 'none'; 
+                prcDev.style.display = 'none';
             }
-        } 
-        togglePrcDev(); 
+        }
+        togglePrcDev();
         prcUserTrue.addEventListener('change', togglePrcDev);
         prcUserFalse.addEventListener('change', togglePrcDev);
     });
