@@ -323,8 +323,8 @@
                                             <div class="col-1">
                                                 <div class="controls row mb-1 align-items-center">
                                                     <div class="input-group">
-                                                        <div class="vs-checkbox-con vs-checkbox-primary" title="sinerlog">
-                                                            <input type="checkbox" name="sinerlog" id="sinerlog" @if(setting('sinerlog', null, $user->id)) checked @endif>
+                                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Pasar Ex">                                                            
+                                                            <input type="checkbox" name="pasarEx" id="pasarEx" @if(setting('pasarEx', null, $user->id)) checked @endif>
                                                             <span class="vs-checkbox vs-checkbox-lg">
                                                                 <span class="vs-checkbox--check">
                                                                     <i class="vs-icon feather icon-check"></i>
@@ -335,7 +335,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-11">
-                                                <label>SinerLog<span class="text-danger"></span></label>
+                                                <label>PasarEx<span class="text-danger"></span></label>
                                             </div>
                                         </div>
                                     </div>
