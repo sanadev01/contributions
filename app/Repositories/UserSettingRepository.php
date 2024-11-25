@@ -50,6 +50,7 @@ class UserSettingRepository {
             'width'=> setting('width', null, $user->id),
             'height'=> setting('height', null, $user->id),
             'prc_label' => setting('prc_label', null, $user->id)? 'Active': 'Inactive',
+            'pasarEx' => setting('pasarEx', null, $user->id)? 'Active': 'Inactive',
         ];
 
         try {
@@ -102,6 +103,7 @@ class UserSettingRepository {
         ($request->height != null ) ? saveSetting('height', $request->height, $user->id) : saveSetting('height', 0, $user->id);
 
         $request->has('prc_label') ? saveSetting('prc_label', true, $user->id) : saveSetting('prc_label', false, $user->id);
+        $request->has('pasarEx') ? saveSetting('pasarEx', true, $user->id) : saveSetting('pasarEx', false, $user->id);
 
         if ( $request->password ){
             $user->update([
