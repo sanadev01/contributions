@@ -50,21 +50,24 @@
                                 @if(Auth::user()->hasPermission("view_pasarex_service"))
                                 <tr>
                                     <td>
-                                        pasarex
+                                        {{ \App\Models\ShippingService::where('service_sub_class',\App\Models\ShippingService::PasarEx)->first()->name }}
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.rates.zone-profit.index', ['service' => 'pasarex']) }}" class="btn btn-primary btn-sm">View Rates</a>
+
+
                                     </td>
                                 </tr>
                                 @endif
                                 @if(Auth::user()->hasPermission("view_usps_service"))
                                 <tr>
                                     <td>
-
-                                        usps
+                                        USPS Service
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.rates.zone-profit.index', ['service' => 'usps']) }}" class="btn btn-primary btn-sm">View Rates</a>
+
+
                                     </td>
                                 </tr>
                                 @endif
