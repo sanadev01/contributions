@@ -54,8 +54,6 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.rates.zone-profit.index', ['service' => 'pasarex']) }}" class="btn btn-primary btn-sm">View Rates</a>
-
-
                                     </td>
                                 </tr>
                                 @endif
@@ -66,8 +64,6 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.rates.zone-profit.index', ['service' => 'usps']) }}" class="btn btn-primary btn-sm">View Rates</a>
-
-
                                     </td>
                                 </tr>
                                 @endif
