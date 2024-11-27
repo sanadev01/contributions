@@ -82,9 +82,9 @@
                                             <i class="feather icon-trash px-1"></i>
                                         </button>
                                     </form>
+                                    |
                                     @endif
                                     @if($rates->contains('shippingService.id', $serviceId))
-                                    |
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 120px; height:27px; padding-top:3px;">
                                              View Rates

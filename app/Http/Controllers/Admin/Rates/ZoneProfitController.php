@@ -182,6 +182,9 @@ class ZoneProfitController extends Controller
     }
 
     public function viewRates($serviceId, $zoneId, $type, $userId = null) {
+        if(!Auth::user()->isAdmin()&&$userId!=Auth::id()){
+            abort(403,"Invalid user ID provided");
+        }
         $poboxNumber = '';
         $service = ShippingService::findOrFail($serviceId);
         $ratesQuery = ZoneRate::where('shipping_service_id', $serviceId);
