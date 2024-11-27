@@ -66,6 +66,7 @@
                                 </th>
 
                                 <th>
+                                    @if(Auth::user()->isAdmin())
                                     <a href="{{ route('admin.rates.zone-profit-show', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" class="btn btn-primary btn-sm">
                                         <i class="feather icon-eye"></i> View
                                     </a>
@@ -81,8 +82,9 @@
                                             <i class="feather icon-trash px-1"></i>
                                         </button>
                                     </form>
-                                    @if($rates->contains('shippingService.id', $serviceId))
                                     |
+                                    @endif
+                                    @if($rates->contains('shippingService.id', $serviceId))
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 120px; height:27px; padding-top:3px;">
                                              View Rates
@@ -90,7 +92,7 @@
                                         <div class="dropdown-menu">
                                             @foreach($rates as $rate)
                                                 @if($rate->shippingService->id == $serviceId)
-                                                    @if(isset($rate->cost_rates))
+                                                    @if(isset($rate->cost_rates) && Auth::user()->isAdmin())
                                                         @php
                                                             $costRateLabel = ($rate->shippingService->is_pasarex ? 'Accrual Rate' : 'Cost Rate') . ' - ' . ($rate->user ? $rate->user->pobox_number : 'All');
                                                             $decodedCostRates = json_decode($rate->cost_rates, true);
@@ -101,7 +103,7 @@
                                                         @endif
                                                     @endif
                                         
-                                                    @if(isset($rate->selling_rates))
+                                                    @if(isset($rate->selling_rates) )
                                                         @php
                                                             $sellingRateLabel = $rate->user ? 'Selling Rate - ' . $rate->user->pobox_number : 'Selling Rate - All';
                                                             $decodedSellingRates = json_decode($rate->selling_rates, true);
