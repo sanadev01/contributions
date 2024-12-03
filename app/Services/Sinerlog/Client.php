@@ -24,13 +24,17 @@ use Illuminate\Support\Facades\Log;
 
 class Client
 {   
-    private $baseUri = 'https://dev.easymundi.com/';
-    private $clientUsername = 'fernando@fecisan.com';
-    private $clientPassword = ',96(LcBL~HLPk4J@';
-    private $clientSecret = '1VZlziQ8J2obtEg1NByxxnC4DJqq6BeXs2Lxgkry';
-
+    private $baseUri;
+    private $clientUsername;
+    private $clientPassword;
+    private $clientSecret;
+    
     public function __construct()
     {
+        $this->baseUri = env('EASYMUNDI_BASE_URI', 'https://dev.easymundi.com/');
+        $this->clientUsername = env('EASYMUNDI_CLIENT_USERNAME');
+        $this->clientPassword = env('EASYMUNDI_CLIENT_PASSWORD');
+        $this->clientSecret = env('EASYMUNDI_CLIENT_SECRET');
         return "teste";
        
         $this->headers = [
