@@ -33,16 +33,18 @@ class CreateRequest extends FormRequest
      */
     public function rules(Request $request)
     {
-        $order = Order::where([
-                    ['user_id', auth()->user()->id],
-                    ['tracking_id', $request->parcel['tracking_id']]
-                ])
-                ->orWhere([
-                    ['user_id', auth()->user()->id],
-                    ['customer_reference', $request->parcel['customer_reference']]
-                ])
-                ->first();
-                
+         $order = Order::where('user_id', auth()->user()->id)
+                    ->where(function ($query) use ($request) {
+                        $query->where('tracking_id', $request->parcel['tracking_id'])
+                            ->orWhere('customer_reference', $request->parcel['customer_reference']);
+                    })
+                    ->whereNotIn('status', [
+                        Order::STATUS_RELEASE,
+                        Order::STATUS_REJECTED,
+                        Order::STATUS_REFUND,
+                        Order::STATUS_CANCEL,
+                    ])
+                    ->first();
         $rules = [
             "parcel.service_id" => "bail|required|exists:shipping_services,id",
             "parcel.merchant" => "required",
