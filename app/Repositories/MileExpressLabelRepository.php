@@ -2,11 +2,15 @@
 namespace App\Repositories;
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Facades\MileExpressFacade;
 use App\Services\MileExpress\CN23LabelMaker;
+use App\Services\Correios\Models\PackageError;
+
 class MileExpressLabelRepository
 {
     private $order;
     private $error;
+    public $mileError;
 
     public function run(Order $order,$update)
     {
@@ -22,7 +26,13 @@ class MileExpressLabelRepository
     public function handle()
     {
         if ($this->order->api_response == null) {
-            return $this->getPrimaryLabel();
+            $data = $this->getPrimaryLabel($this->order);
+            if ( $data instanceof PackageError){
+                $this->error = $data->getErrors();
+                return null;
+            }
+    
+            return $data;
         }
         $this->printCN23();
         return true;
@@ -44,17 +54,26 @@ class MileExpressLabelRepository
         return $this->error;
     }
 
-    private function getPrimaryLabel()
+    private function getPrimaryLabel($order)
     {
-            if(!$this->order->corrios_tracking_code){ 
-                $code = optional(optional(optional($this->order)->recipient)->country)->code ?? 'BR';
-                $this->order->update([
-                    'api_response' => null,
-                    'corrios_tracking_code' => 'HD'.date('d').date('m').substr(date('s'), 1, 1).$this->order->id.$code,
-                ]);
-            }
+        $response = MileExpressFacade::createShipment($order);
+        if ($response->success == true) {
+
+            $order->update([
+                'api_response' => json_encode($response->data),
+                'corrios_tracking_code' => $response->data  ['trackingNumber'],
+            ]);
+
+            $order->refresh();
             $this->printCN23();
-            return true; 
+
+            // store order status in order tracking
+            $this->addOrderTracking($order);
+
+            return true;
+        }
+        return new PackageError("Error while creating parcel <br> Message:".$response->error['message']);
+
     }
 
     private function addOrderTracking()
@@ -75,8 +94,6 @@ class MileExpressLabelRepository
 
     private function printCN23()
     {
-        $this->addOrderTracking();
-
         $labelPrinter = new CN23LabelMaker();
         $labelPrinter->setOrder($this->order);
         $labelPrinter->setService($this->order->getService());

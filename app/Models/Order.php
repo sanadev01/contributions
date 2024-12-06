@@ -430,6 +430,10 @@ class Order extends Model implements Package
 
                 return 'Cainiao';
             }
+            elseif(optional($this->shippingService)->isMileExpressService()){
+
+                return 'Mile Express';
+            }
             return 'Correios Brazil';
         }
 
@@ -465,7 +469,8 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::FOX_EX_COURIER ||
                 optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP ||
                 optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMEI||
-                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI) {
+                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Mile_Express) {
 
                 return $this->user_declared_freight;
             }
