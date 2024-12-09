@@ -99,10 +99,16 @@ class Client{
     public static function orderTrackings($tracking)
     { 
         try {
-            $response = Http::withHeaders([
-                'partnerKey' => config('hound.production.partner_key'),
-            ])
-            ->post("https://ws_pods.hound-express.com/Sabueso/ws/deliveryServices/trackOrder", [
+            if (app()->isProduction()) {
+                $partnerKey = config('hound.production.partner_key');
+                $baseUrl = config('hound.production.base_url');
+            } else {
+                $partnerKey = config('hound.test.partner_key');
+                $baseUrl = config('hound.test.base_url');
+            }
+            $response =  Http::withHeaders([
+                'partnerKey' => $partnerKey,
+            ])->post($baseUrl .'/Sabueso/ws/deliveryServices/trackOrder', [
                 "guideNumber" => $tracking 
             ]);
                 if ($response->successful()){
