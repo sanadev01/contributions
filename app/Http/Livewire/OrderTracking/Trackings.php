@@ -70,7 +70,7 @@ class Trackings extends Component
         // dd($tracking, $hdTrackings);
         foreach($tracking as $tracking) {
             // dd($tracking->codigo);
-            if ($tracking->description == 'PAR') {
+            if ($tracking->codigo == 'PAR') {
                 return 90;
             }
 
