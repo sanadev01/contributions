@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories;
+
 use App\Models\Order;
 use App\Models\Setting;
 use App\Facades\UPSFacade;
@@ -12,6 +13,7 @@ use App\Facades\CorreiosBrazilTrackingFacade;
 use App\Services\SwedenPost\DirectLinkTrackingService;
 use App\Http\Resources\TrackingUserResource;
 use App\Services\Correios\Services\Brazil\CorreiosTrackingService;
+use App\Services\HoundExpress\Client as HoundExpressClient;
 use Illuminate\Support\Facades\Log;
 
 class OrderTrackingRepository
@@ -33,19 +35,28 @@ class OrderTrackingRepository
     }
 
     public function searchOrder()
-    {   
+    {
         $trackingNumbers = explode(',', preg_replace('/\s+/', '', $this->trackingNumber));
-        // dd($trackingNumbers);
-        $orders = Order::whereIn('corrios_tracking_code', $trackingNumbers)->orWhereIn('warehouse_number',$trackingNumbers)->orWhereIn('tracking_id',$trackingNumbers)->get();
+        $orders = Order::with(['trackings', 'recipient', 'shippingService'])->whereIn('corrios_tracking_code', $trackingNumbers)->orWhereIn('warehouse_number', $trackingNumbers)->orWhereIn('tracking_id', $trackingNumbers)->get();
 
         $getTrackings = collect();
         if ($orders) {
             foreach ($orders as $key => $order) {
-
                 $apiResponse = [];
                 if ($order->trackings->isNotEmpty() && $order->shippingService != null) {
-                    if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
-                        if ($order->recipient->country_id == Order::CHILE) {
+
+                    if ($order->trackings->last()->status_code == Order::STATUS_SHIPPED) {
+                        if ($order->shippingService->is_hound_express){
+                            $response = HoundExpressClient::orderTrackings($order->corrios_tracking_code);
+                            $apiResponse = [
+                                'success' => true,
+                                'status' => 200,
+                                'service' => 'Hound Express',
+                                'trackings' => $order->trackings,
+                                'api_trackings' => collect($response['resultDetails']),
+                                'order' => $order
+                            ];
+                        }elseif ($order->recipient->country_id == Order::CHILE) {
 
                             $response = CorreiosChileTrackingFacade::trackOrder($order->corrios_tracking_code);
                             if ($response->status == true && ($response->data != null || $response->data != [])) {
@@ -59,7 +70,7 @@ class OrderTrackingRepository
                                 ];
                             }
                         } elseif ($order->recipient->country_id == Order::US) {
-                            
+
                             if ($order->shippingService->service_sub_class == ShippingService::UPS_GROUND) {
 
                                 $response = UPSFacade::trackOrder($order->corrios_tracking_code);
@@ -87,8 +98,8 @@ class OrderTrackingRepository
                                 ];
                             }
                         } elseif ($order->recipient->country_id == Order::BRAZIL) {
-                        
-                            if($order->shippingService->is_total_express) {
+
+                            if ($order->shippingService->is_total_express) {
                                 array_push($this->totalExpressTrackingCodes, $order->corrios_tracking_code);
                             }
 
@@ -102,7 +113,6 @@ class OrderTrackingRepository
                                 'trackings' => $order->trackings,
                                 'order' => $order
                             ];
-                        
                         } elseif ($order->recipient->country_id == Order::Guatemala) {
 
                             $apiResponse = [
@@ -112,8 +122,19 @@ class OrderTrackingRepository
                                 'trackings' => $order->trackings,
                                 'order' => $order
                             ];
-                        
-                        }else {
+                        } elseif ($order->recipient->country_id == Order::COLOMBIA) {
+
+                            if ($order->shippingService->is_pasar_ex) {
+                                array_push($this->pasarExTrackingCodes, $order->corrios_tracking_code);
+                            }
+                            $apiResponse = [
+                                'success' => true,
+                                'status' => 200,
+                                'service' => 'HD',
+                                'trackings' => $order->trackings,
+                                'order' => $order
+                            ];
+                        } else {
                             $apiResponse = [
                                 'success' => false,
                                 'status' => 201,
@@ -124,9 +145,8 @@ class OrderTrackingRepository
                         }
 
                         $getTrackings->push($apiResponse);
+                    } else {
 
-                    }else{
-                        
                         $apiResponse = [
                             'success' => true,
                             'status' => 200,
@@ -139,7 +159,7 @@ class OrderTrackingRepository
                 }
             }
         } else {
-            
+
             $apiResponse = [
                 'success' => false,
                 'status' => 404,
@@ -149,19 +169,17 @@ class OrderTrackingRepository
             ];
             $getTrackings->push($apiResponse);
         }
-        
+
         $serviceClient = new CorreiosTrackingService();
         if (!empty($this->brazilTrackingCodes)) {
             // $response = CorreiosBrazilTrackingFacade::trackOrder(implode('', $this->brazilTrackingCodes));
-            if(count($this->brazilTrackingCodes) > 1) {
+            if (count($this->brazilTrackingCodes) > 1) {
 
                 $response = $serviceClient->getMultiTrackings($this->brazilTrackingCodes);
-
             } elseif (count($this->brazilTrackingCodes) == 1) {
                 $response = $serviceClient->getTracking($this->brazilTrackingCodes[0]);
 
                 $response = $serviceClient->getMultiTrackings($this->brazilTrackingCodes);
-
             }
             if (isset($response->objetos) && is_array($response->objetos) && count($response->objetos) > 0) {
                 $getTrackings = $getTrackings->map(function ($item, $key) use ($response) {
@@ -186,20 +204,20 @@ class OrderTrackingRepository
             $directLinkTrackingService = new DirectLinkTrackingService();
             $response = $directLinkTrackingService->trackOrders($this->directLinkTrackingCodes);
             if ($response->status == true) {
-                $getTrackings = $getTrackings->map(function($item, $key) use ($response){
+                $getTrackings = $getTrackings->map(function ($item, $key) use ($response) {
                     if (count($this->directLinkTrackingCodes) > 1) {
-                        foreach ($response->data['Item'] as $key=>$data) {
-                            
-                            if($response->status == false){
+                        foreach ($response->data['Item'] as $key => $data) {
+
+                            if ($response->status == false) {
                                 return $item;
                             }
-                            if($item['order']->corrios_tracking_code == $data['ItemNumber']){
+                            if ($item['order']->corrios_tracking_code == $data['ItemNumber']) {
                                 $item['api_trackings'] = collect($this->reverseTrackings($data['Events']))->last();
                                 $item['service'] = 'Prime5';
                             }
                         }
-                    }else{
-                        if($response->status == false){
+                    } else {
+                        if ($response->status == false) {
                             return $item;
                         }
                         if ($response->data['Item']['ItemNumber'] == $item['order']->corrios_tracking_code) {
@@ -212,26 +230,27 @@ class OrderTrackingRepository
                 });
             }
         }
-        if (count($this->totalExpressTrackingCodes) > 0) {     
-            $totalExpClient = new Client();       
+        if (count($this->totalExpressTrackingCodes) > 0) {
+            $totalExpClient = new Client();
             $response = $totalExpClient->getPacketTracking($this->totalExpressTrackingCodes);
             if ($response['success'] == true) {
-                $getTrackings = $getTrackings->map(function($item, $key) use ($response){
-                    foreach ($response['data'] as $key=>$data) {
-                        if($response['success'] == false){
+                $getTrackings = $getTrackings->map(function ($item, $key) use ($response) {
+                    foreach ($response['data'] as $key => $data) {
+                        if ($response['success'] == false) {
                             return $item;
                         }
-                        if($item['order']->corrios_tracking_code == $data['trackingNumber']){
+                        if ($item['order']->corrios_tracking_code == $data['trackingNumber']) {
                             $item['api_trackings'] = collect($data['Events']);
                             $item['service'] = 'Total Express';
                         }
                     }
-                    
+
                     return $item;
                 });
             }
         }
- 
+
+
         return $getTrackings;
     }
 
@@ -242,13 +261,14 @@ class OrderTrackingRepository
         return $response;
     }
 
-    public function getTrackings($request) {
+    public function getTrackings($request)
+    {
         $users = Setting::where('key', 'MARKETPLACE')->where('value', 'AMAZON')->pluck('user_id')->toArray();
         $trackingCodes = Order::whereIn('user_id', $users)
-        ->with("user")
-        ->where('status', Order::STATUS_SHIPPED)
-        ->whereBetween('order_date', [$request->start_date, $request->end_date])
-        ->get();
+            ->with("user")
+            ->where('status', Order::STATUS_SHIPPED)
+            ->whereBetween('order_date', [$request->start_date, $request->end_date])
+            ->get();
         return TrackingUserResource::collection($trackingCodes);
     }
 }

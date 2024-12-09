@@ -95,6 +95,30 @@ class Client{
             return new PackageError($e->getResponse()->getBody()->getContents());
         }
     }
+    
+    public static function orderTrackings($tracking)
+    { 
+        try {
+            $response = Http::withHeaders([
+                'partnerKey' => config('hound.production.partner_key'),
+            ])
+            ->post("https://ws_pods.hound-express.com/Sabueso/ws/deliveryServices/trackOrder", [
+                "guideNumber" => $tracking 
+            ]);
+                if ($response->successful()){
+                    $data = $response->json(); 
+                    return $data;
+                } else {
+                    return [
+                        'error' => true,
+                        'message' => $response->body(),
+                    ];
+                }
+            
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+    }
 
     public function addOrderTracking($order)
     {
