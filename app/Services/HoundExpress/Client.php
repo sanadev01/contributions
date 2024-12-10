@@ -95,6 +95,36 @@ class Client{
             return new PackageError($e->getResponse()->getBody()->getContents());
         }
     }
+    
+    public static function orderTrackings($tracking)
+    { 
+        try {
+            if (app()->isProduction()) {
+                $partnerKey = config('hound.production.partner_key');
+                $baseUrl = config('hound.production.base_url');
+            } else {
+                $partnerKey = config('hound.test.partner_key');
+                $baseUrl = config('hound.test.base_url');
+            }
+            $response =  Http::withHeaders([
+                'partnerKey' => $partnerKey,
+            ])->post($baseUrl .'/Sabueso/ws/deliveryServices/trackOrder', [
+                "guideNumber" => $tracking 
+            ]);
+                if ($response->successful()){
+                    $data = $response->json(); 
+                    return $data;
+                } else {
+                    return [
+                        'error' => true,
+                        'message' => $response->body(),
+                    ];
+                }
+            
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return new PackageError($e->getResponse()->getBody()->getContents());
+        }
+    }
 
     public function addOrderTracking($order)
     {

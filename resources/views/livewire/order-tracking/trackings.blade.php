@@ -22,12 +22,10 @@
                 <button wire:click="download" class="btn btn-success btn-lg" wire:click="trackOrder">Download</button>
             </div>
         @endif
-    </div>
-
+    </div> 
     @if ($trackings)
         <div id="accordion">
-            @foreach ($trackings as $tracking)
-
+            @foreach ($trackings as $tracking)  
                 @if(optional($tracking)['success'] && optional($tracking)['status'] == 200)
                 <div class="card">
                     <div class="card-header pt-2" id="t-{{optional($tracking['order'])->warehouse_number}}">
@@ -96,7 +94,7 @@
                                                     <li class="@if($tracking['trackings']->last()->status_code >=  80) active @endif step0">
                                                         <div class="icon-content">
                                                             <img class="icon offset-1" src="{{ asset('images/tracking/awb.png') }}">
-                                                            <div class="d-flex flex-column mt-4">
+                                                            <div class="d-flex flex-column mt-4"> 
                                                                 <p class="font-weight-bold">@if($tracking['order']->recipient->country_id == \App\Models\Order::BRAZIL)Posted @else Shipped @endif</p>
                                                             </div>
                                                         </div>
@@ -402,6 +400,88 @@
                                                                 </div>
                                                             </div>
                                                         </li>
+                                                        @elseif( $tracking['service'] == 'PasarEx' )
+                                                        <li class="@if( $this->togglePasarExTrackingStatus($tracking['api_trackings']) >= 80 ) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/pasarex_logo.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Received <br>by PasarEx</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->togglePasarExTrackingStatus($tracking['api_trackings']) >= 90) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/custom-finished.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">At Customs<br>Clearance</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if($this->togglePasarExTrackingStatus($tracking['api_trackings']) >= 100 ) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Parcel in<br> Transit</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->togglePasarExTrackingStatus($tracking['api_trackings']) >= 110) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Out for  <br> Delivery</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->togglePasarExTrackingStatus($tracking['api_trackings']) >= 120) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/delivered.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Parcels Delivered </p>
+                                                                </div>
+                                                            </div>
+                                                        </li>                                                        
+                                                        @elseif( $tracking['service'] == 'Hound Express' )
+                                                        <li class="@if( $this->toggleHoundExpressTrackingStatus($tracking['api_trackings']) >= 30 ) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/hound.JPEG') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Received <br>by HoundExress</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->toggleHoundExpressTrackingStatus($tracking['api_trackings']) >= 40) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/custom-finished.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">At Customs<br>Clearance</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if($this->toggleHoundExpressTrackingStatus($tracking['api_trackings']) >= 50 ) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/to-hd.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Parcel in<br> Transit</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->toggleHoundExpressTrackingStatus($tracking['api_trackings']) >= 60) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/left-to-buyer.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Out for  <br> Delivery</p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="@if( $this->toggleHoundExpressTrackingStatus($tracking['api_trackings']) >= 70) active @endif step0">
+                                                            <div class="icon-content">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/delivered.png') }}">
+                                                                <div class="d-flex flex-column" mt-4>
+                                                                    <p class="font-weight-bold">Parcels Delivered </p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
                                                     @endif
                                                 @endif
 
@@ -409,13 +489,12 @@
                                         </div>
                                     </div>
 
-                                </div>
-                                {{-- <hr> --}}
+    </div>
                                 <div class="card">
                                     <div class="table-wrapper position-relative">
                                         <table class="table mb-0 table-responsive-md table-striped" id="">
                                             <thead>
-                                                <tr>
+                                                <tr>  
                                                     <th>Date</th>
                                                     <th>@if($tracking['order']->recipient->country_id == \App\Models\Order::US)City @else Country @endif</th>
                                                     <th>Description</th>
@@ -504,11 +583,41 @@
                                                         </td>
                                                     </tr>
                                                 @endif
+                                                @if(optional($tracking)['service'] == 'PasarEx')
+                                                    @foreach($tracking['api_trackings'] as $key => $track)
+                                                        <tr>
+                                                            <td>
+                                                                {{ $track['localeventdate'] }} {{ $track['localeventtime'] }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $track['depot'] }} - Colombia
+                                                            </td>
+                                                            <td>
+                                                                {{ $track['statusdesc'] }} - {{ $track['statuscode'] }}
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
+                                                @if(optional($tracking)['service'] == 'Hound Express')
+                                                    @foreach($tracking['api_trackings'] as $key => $track)
+                                                        <tr>
+                                                            <td>
+                                                                {{ $track['dateTime'] }}  
+                                                            </td>
+                                                            <td>
+                                                                {{ $track['country'] }}
+                                                            </td> 
+                                                            <td>
+                                                                 {{ $track['description'] }} 
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
                                             </tbody>
                                         </table>
                                     </div>
 
-                                </div>
+                                </div> 
                             </div>
                         </div>
 

@@ -24,7 +24,7 @@ class Trackings extends Component
         if ( $this->trackingNumber != null && $this->trackingNumber != '' &&  strlen($this->trackingNumber) >= 12 )
         {
             $order_tracking_repository = new OrderTrackingRepository($this->trackingNumber);
-            $this->apiResponse = $order_tracking_repository->handle();
+            $this->apiResponse = $order_tracking_repository->handle(); 
         }
 
     }
@@ -37,6 +37,34 @@ class Trackings extends Component
         }
     }    
 
+    function toggleHoundExpressTrackingStatus($trackings) 
+    {  
+         $tracking = $trackings->last();
+            switch ($tracking['description']) {
+                case 'LABEL CREATED':
+                    return 10;  
+                case 'RECEIVED AT HX HUB':
+                    return 20;  
+                case 'DEPOT EXIT':
+                    return 30;  
+                case 'CUSTOMS CLEARANCE/ON DESTINATION ROUTE':
+                    return 40;  
+                case 'SCANNED AT DELIVERY PARTNER OFFICE':
+                case 'RECEIVED AT DP HUB':
+                    return 50;  
+                case 'IN FOREIGN ROUTE':
+                    return 60;  
+                case 'REGISTERED AS DELIVERED':
+                    if ($tracking['status'] == 31) {
+                        return 70; 
+                    }
+                    break;
+                default: 
+                    return 0;  
+        }
+        return 0;
+    }
+    
     public function toggleBrazilStatus($tracking, $hdTrackings)
     {
         // dd($tracking, $hdTrackings);
