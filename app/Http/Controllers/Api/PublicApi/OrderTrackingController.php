@@ -14,8 +14,8 @@ class OrderTrackingController extends Controller
 
     public function __invoke(Request $request, $search, $format = 'json')
     {
-        $order_tracking_repository = new OrderTrackingRepository($search);
-        $responses = $order_tracking_repository->handle(); 
+        $orderTrackingRepository = new OrderTrackingRepository($search);
+        $responses = $orderTrackingRepository->handle(); 
         if ($format === 'xml') {
             $xmlResponse = $this->generateXmlResponse($responses);
             return response($xmlResponse, 200)->header('Content-Type', 'application/xml');
