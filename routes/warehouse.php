@@ -204,6 +204,11 @@ Route::resource('delivery_bill/download', DeliveryBillDownloadController::class)
     Route::get('gde/{delivery_bill}/manifest', GDEManifestDownloadController::class)->name('gde.manifest.download');
 
     // Routes for Hound Express Container
+    Route::resource('hound_containers', HoundContainerController::class);
+    Route::resource('hound_container.packages', HoundContainerPackageController::class)->only('index','destroy', 'create');
+    Route::get('hound_container/{id}/create', [HoundUnitRegisterController::class, 'createMasterBox'])->name('hound_container.createRequest');
+    Route::get('hound_container/{container}/download', HoundCN35DownloadController::class)->name('hound_container.download');
+
     Route::resource('mile_express', MileExpressContainerController::class);
     Route::resource('mile_express.packages', MileExpressContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('mile_express/{id}/create', [MileExpressUnitRegisterController::class, 'createMasterBox'])->name('mile_container.createRequest');
