@@ -2,17 +2,17 @@
 
 return[
     'production' => [
-        'baseUrl' => '',
+        'baseUrl' => 'https://api.mileexpress.com.br',
     ],
     'testing' => [
-        'baseUrl' => 'https://dev.mileexpress.com.br',
+        'baseUrl' => 'https://api.mileexpress.com.br',
     ],
     'credentials' => [
         'grant_type' => 'password',
-        'clientId' => 4932,
-        'clientSecret' => 'zDy4aT6tmqYBgsg8WbU4GgZ8cwNwpM7g4F5BsmMP',
+        'clientId' => 1,
+        'clientSecret' => 'xwShEAUn6MJ82AZzaECmypbp6PmjTM3HPhDYaxE7',
         'userName' => 'hercoinc@mileexpress.com.br',
-        'password' => 'D29GdSPg3neSH8h',
+        'password' => 'o867>P%0]^Rt',
         'scope' => '*'
     ],
     'tokenUrl' => '/oauth/token',

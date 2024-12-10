@@ -348,4 +348,10 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         return $order?$order->zone_group:'no';
     }
 
+    public function hasMileExpressService()
+    {
+        return $this->services_subclass_code == ShippingService::Mile_Express;
+
+    }
+
 }

@@ -14,7 +14,7 @@ class CN23LabelMaker implements HasLableExport
 
     private $order;
     private $recipient;
-    private $corriosLogo;
+    private $hdLogo;
     private $partnerLogo;
     private $packetType;
     private $contractNumber;
@@ -31,8 +31,8 @@ class CN23LabelMaker implements HasLableExport
     {
         $this->hasSuplimentary = false;
         $this->hasAnjunLabel = false;
-        $this->corriosLogo = \public_path('images/correios-1.png');
-        $this->partnerLogo =  public_path('images/hd-label-logo-1.png');
+        $this->hdLogo = public_path('images/hd-label-logo-1.png');
+        $this->partnerLogo =  public_path('images/mile-express.png');
         $this->packetType = 'Packet Standard';
         $this->contractNumber = 'Contrato:  9912501576';
         $this->service = 2;
@@ -128,7 +128,7 @@ class CN23LabelMaker implements HasLableExport
 
     public function render()
     {
-        return view('labels.hd-express.cn23.index',$this->getViewData());
+        return view('labels.mile-express.cn23.index',$this->getViewData());
     }
 
     public function download()
@@ -137,7 +137,7 @@ class CN23LabelMaker implements HasLableExport
             throw new Exception("Order not Set");
         }
 
-        return \PDF::loadView('labels.hd-express.cn23.index',$this->getViewData())->stream();
+        return \PDF::loadView('labels.mile-express.cn23.index',$this->getViewData())->stream();
     }
 
     public function saveAs($path)
@@ -145,7 +145,7 @@ class CN23LabelMaker implements HasLableExport
         if ( !file_exists(dirname($path)) ){
             mkdir(dirname($path),0775,true);
         }
-        return \PDF::loadView('labels.hd-express.cn23.index',$this->getViewData())->save($path);
+        return \PDF::loadView('labels.mile-express.cn23.index',$this->getViewData())->save($path);
     }
 
     private function getViewData()
@@ -153,7 +153,7 @@ class CN23LabelMaker implements HasLableExport
         return [
             'order' => $this->order,
             'recipient' => $this->recipient,
-            'corriosLogo' => $this->corriosLogo,
+            'hdLogo' => $this->hdLogo,
             'partnerLogo' => $this->partnerLogo,
             'serviceLogo' => $this->serviceLogo,
             'packetType' => $this->packetType,

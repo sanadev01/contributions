@@ -136,6 +136,12 @@
                                 <span class="menu-title">VIP Parcel</span>
                             </a>
                         </li>
+                        <li class="{{ $isActive(['warehouse.hound_containers.index','warehouse.hound_containers.create','warehouse.hound_containers.edit','warehouse.hound_container.packages.index']) }}">
+                            <a href="{{ route('warehouse.hound_containers.index') }}">
+                                <i class="feather icon-circle"></i>
+                                <span class="menu-title">Mile Express</span>
+                            </a>
+                        </li>
 
                         <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
                             <a href="{{ route('warehouse.chile_containers.index') }}">

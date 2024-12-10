@@ -24,7 +24,7 @@ class MileExpressService
     private $registerMasterUrl;
 
     const MILE_EXPRESS_BRAZIL_COUNTRY_CODE = 105;
-    const MILE_EXPRESS_US_COUNTRY_CODE = 250;
+    const MILE_EXPRESS_US_COUNTRY_CODE = 249;
 
     public function __construct($clientId, $clientSecret, $userName, $password, $getTokenUrl, $houseUrl, $trackingUrl, $createConsolidatorUrl, $registerConsolidatorUrl, $createMasterUrl, $registerMasterUrl)
     {
@@ -58,6 +58,7 @@ class MileExpressService
                                         'password' => $this->password,
                                         'scope' => '*'
                                 ]);
+                Log::info('MileExpress Token' . $response->successful() ? $response->json()['access_token'] : null);
 
                 return $response->successful() ? $response->json()['access_token'] : null;                  
             });
@@ -134,7 +135,7 @@ class MileExpressService
             // dd($url, $data);
             $response = Http::mileExpress()->withHeaders($this->setHeaders())
                                 ->acceptJson()->post($url, $data);
-
+            Log::info('MileExpress Api Response ' . $response);
             return $this->setResponse($response);
 
         } catch (\Exception $ex) {

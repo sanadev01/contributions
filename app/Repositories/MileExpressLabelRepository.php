@@ -16,7 +16,7 @@ class MileExpressLabelRepository
     {
       $this->order = $order;
         if($update){
-            return $this->updateLabel();
+            return $this->handle();
         }
         else {
             return $this->handle();
@@ -58,10 +58,9 @@ class MileExpressLabelRepository
     {
         $response = MileExpressFacade::createShipment($order);
         if ($response->success == true) {
-
             $order->update([
                 'api_response' => json_encode($response->data),
-                'corrios_tracking_code' => $response->data  ['trackingNumber'],
+                'corrios_tracking_code' => $response->data['data']['code'],
             ]);
 
             $order->refresh();
@@ -72,7 +71,8 @@ class MileExpressLabelRepository
 
             return true;
         }
-        return new PackageError("Error while creating parcel <br> Message:".$response->error['message']);
+        // dd($response);
+        return new PackageError("Error while creating parcel <br> Message: " . $response->error['message'] . "<br> Field: " . $response->error['errors'][0]['field'] . "<br> Message: " . implode(', ', $response->error['errors'][0]['message']));
 
     }
 
