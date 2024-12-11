@@ -137,6 +137,8 @@
                                                 <span class="badge text-dark" style="background-color:#b4e2ef">Phx</span>
                                                 @elseif($deliveryBill->is_cainiao)
                                                 <span class="badge badge-secondary text-danger">CIA</span>
+                                                @elseif($deliveryBill->isMileExpress())
+                                                <span class="badge badge-warning text-black">Mile</span>
                                                 @else
                                                     <span class="badge badge-primary">H</span>
                                                 @endif

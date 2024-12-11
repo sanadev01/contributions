@@ -81,6 +81,7 @@ use App\Http\Controllers\Warehouse\Anjun\AnjunCN35DownloadController;
 use App\Http\Controllers\Warehouse\Anjun\AnjunUnitRegisterController;
 use App\Http\Controllers\Warehouse\CombineManifestDownloadController;
 use App\Http\Controllers\Warehouse\ContainerPackageFactoryController;
+use App\Http\Controllers\Warehouse\MileExpressCN35DownloadController;
 use App\Http\Controllers\Warehouse\MileExpressUnitRegisterController;
 use App\Http\Controllers\Warehouse\SenegalContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
@@ -209,10 +210,11 @@ Route::resource('delivery_bill/download', DeliveryBillDownloadController::class)
     Route::get('hound_container/{id}/create', [HoundUnitRegisterController::class, 'createMasterBox'])->name('hound_container.createRequest');
     Route::get('hound_container/{container}/download', HoundCN35DownloadController::class)->name('hound_container.download');
 
-    Route::resource('mile_express', MileExpressContainerController::class);
-    Route::resource('mile_express.packages', MileExpressContainerPackageController::class)->only('index','destroy', 'create');
-    Route::get('mile_express/{id}/create', [MileExpressUnitRegisterController::class, 'createMasterBox'])->name('mile_container.createRequest');
-    // Route::get('mile_express/{container}/download', MileExpressN35DownloadController::class)->name('mile_container.download');
+    // Routes for Mile Express Container
+    Route::resource('mile_express_containers', MileExpressContainerController::class);
+    Route::get('mile_express_container/{container}/packages', MileExpressContainerPackageController::class)->name('mile_express_container.packages');
+    Route::get('mile_express_container/{container}/register', MileExpressUnitRegisterController::class)->name('mile_express_container.register');
+    Route::get('mile_express/{container}/download', MileExpressCN35DownloadController::class)->name('mile_express_container.download');
     
     // Routes for any Container
     Route::resource('containers_factory', ContainerFactoryController::class)->names([

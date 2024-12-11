@@ -42,9 +42,8 @@ class DeliveryBillRegisterController extends Controller
             
         }
         
-        $firstContainer = $deliveryBill->containers()->first();
-        if ($firstContainer->services_subclass_code == Container::CONTAINER_MILE_EXPRESS) {
-            
+        if ($deliveryBill->isMileExpress()) {
+            $firstContainer = $deliveryBill->containers()->first();
             $deliveryBillRepository->processMileExpressBill($deliveryBill, $firstContainer);
             $error = $deliveryBillRepository->getError();
             if ($error) {

@@ -132,7 +132,6 @@ class MileExpressService
     private function mileExpressApiCall($url, $data)
     {
         try {
-            // dd($url, $data);
             $response = Http::mileExpress()->withHeaders($this->setHeaders())
                                 ->acceptJson()->post($url, $data);
             Log::info('MileExpress Api Response ' . $response);
@@ -338,9 +337,7 @@ class MileExpressService
     private function setClientOptions()
     {
         return [
-            'base_uri' => (app()->isProduction()) ? 
-                                                config('mileExpress.production.baseUrl') 
-                                                : config('mileExpress.testing.baseUrl'),
+            'base_uri' => (app()->isProduction()) ? config('mileExpress.production.baseUrl') : config('mileExpress.testing.baseUrl'),
             'headers' => $this->setHeaders(),
         ];
     }

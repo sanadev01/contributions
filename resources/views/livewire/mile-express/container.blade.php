@@ -1,206 +1,79 @@
 <div>
-    <section id="prealerts">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">
-                            @lang('warehouse.containers.Containers')
-                        </h4>
-                        <a href="{{ route('warehouse.mile-express-containers.create') }}" class="pull-right btn btn-primary"> @lang('warehouse.containers.Create Container') </a>
+    <table class="table mb-0">
+        <thead>
+            <tr>
+                <th>Tracking Code</th>
+                <th>WHR#</th>
+                <th>Weight</th>
+                <th>Volume Weight</th>
+                <th>POBOX#</th>
+                <th>Sender</th>
+                <th>Customer Reference</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($orders as $key => $order)
+            
+            <tr id="{{ $key }}">
+                <td>
+                    {{ $order->corrios_tracking_code }}
+                </td>
+                <td>
+                    {{ $order->warehouse_number }}
+                </td>
+                <td>
+                    {{ $order->getOriginalWeight('kg') }} Kg
+                </td>
+                <td>
+                    {{ $order->getWeight('lbs') }} Lbs 
+                        <hr>
+                    {{ $order->getWeight('kg') }} Kg
+                </td>
+                <td>
+                    {{ optional($order->user)->pobox_number.' / '. optional($order->user)->getFullName() }}
+                </td>
+                <td>
+                    {{ $order->getSenderFullName() }}
+                </td>
+                <td>
+                    {{ $order->customer_reference }}
+                </td>
+                <td>
+                    @if ($editMode == true)
+                        <button wire:click="removeOrder({{ $order->id }})" class="btn btn-danger">
+                            Remove
+                        </button>
+                    @endif
+                </td>
+            </tr>
+            @endforeach
+            <tr>
+                <td colspan="8">
+                    @if($error)
+                    <div class="alert {{ Session::get('alert-class', 'alert-danger') }}" role="alert">
+                        {{ $error }}
                     </div>
-                    <div class="card-content card-body" style="min-height: 100vh;">
-                        <div class="mt-1">
-                            <table class="table mb-0">
-                                <thead>
-                                    <tr>
-                                        <th style="min-width: 100px;">
-                                            <select name="" id="bulk-actions" class="form-control">
-                                                <option value="clear">Clear All</option>
-                                                <option value="checkAll">Select All</option>
-                                                <option value="assign-awb">Assign AWB</option>
-                                            </select>
-                                        </th>
-                                        <th>@lang('warehouse.containers.Dispatch Number')</th>
-                                        <th>@lang('warehouse.containers.Seal No')</th>
-                                        <th>
-                                            Weight (Kg)
-                                        </th>
-                                        <th>
-                                            Pieces
-                                        </th>
-                                        <th>
-                                            @lang('warehouse.containers.Origin Country')
-                                        </th>
-                                        <th>@lang('warehouse.containers.Destination Airport')</th>
-                                        <th>@lang('warehouse.containers.Container Type')</th>
-                                        <th>@lang('warehouse.containers.Distribution Service Class')</th>
-                                        <th>Unit Code</th>
-                                        <th>
-                                            AWB#
-                                        </th>
-                                        <th>
-                                            Status
-                                        </th>
-                                        <th>@lang('warehouse.actions.Action')</th>
-                                    </tr>
-                                    <tr>
-                                        <th></th>
-                                        <th>    
-                                            <input type="search" class="form-control" wire:model.debounce.1000ms="dispatchNumber">
-                                        </th>
-                                        <th>
-                                            <input type="search" class="form-control" wire:model.debounce.1000ms="sealNo">
-                                        </th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>               
-                                        <th>
-                                            <select class="form-control" wire:model="packetType">
-                                                <option value="">Select Type</option>
-                                                <option value="CO-NX">Colombia Standard</option>
-                                            </select>
-                                        </th>
-                                        
-                                        <th>
-                                            <input type="search" class="form-control" wire:model.debounce.1000ms="unitCode">
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($containers as $container)
-                                    <tr>
-                                        <td>
-                                            <div class="vs-checkbox-con vs-checkbox-primary" title="@lang('orders.Bulk Print')">
-                                                <input type="checkbox" name="containers[]" class="bulk-container" value="{{$container->id}}">
-                                                <span class="vs-checkbox vs-checkbox-lg">
-                                                    <span class="vs-checkbox--check">
-                                                        <i class="vs-icon feather icon-check"></i>
-                                                    </span>
-                                                </span>
-                                                <span class="h3 mx-2 text-primary my-0 py-0"></span>
-                                            </div>
-                                        </td>
-                                        <td>{{ $container->dispatch_number }}</td>
-                                        <td>{{ $container->seal_no }}</td>
-                                        <td>
-                                            {{ $container->getWeight() }} KG
-                                        </td>
-                                        <td>
-                                            {{  $container->getPiecesCount() }}
-                                        </td>
-                                        <td>
-                                            {{ $container->origin_country }}
-                                        </td>
-                                        <td>
-                                            {{ $container->destination_operator_name }}
-                                        </td>
-                                        <td>
-                                            {{ $container->getContainerType() }}
-                                        </td>
-                                        <td>
-                                            {{ $container->getServiceSubClass() }}
-                                        </td>
-                                        <td>
-                                            {{ $container->getUnitCode() }}
-                                        </td>
-                                        <td>
-                                            {{ $container->awb }}
-                                        </td>
-                                        <td>
-                                            @if(!$container->isRegistered())
-                                                <div class="btn btn-info">
-                                                    New
-                                                </div>
-                                            @endif
-                                            @if($container->isRegistered() && !$container->isShipped())
-                                                <div class="btn btn-primary">
-                                                    Registered
-                                                </div>
-                                            @endif
-
-                                            @if($container->isShipped())
-                                                <div class="btn btn-success">
-                                                    Shipped
-                                                </div>
-                                            @endif
-                                        </td>
-                                        <td class="d-flex">
-                                            <div class="btn-group">
-                                                <div class="dropdown">
-                                                    <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-success dropdown-toggle waves-effect waves-light">
-                                                        @lang('user.Action')
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-right dropright">
-                                                        <a href="{{ route('warehouse.mile-express-container.packages', $container) }}" class="dropdown-item w-100">
-                                                            <i class="feather icon-box"></i> @lang('warehouse.actions.Packages')
-                                                        </a>
-                                                        @if( !$container->isRegistered())
-                                                            <a href="{{ route('warehouse.mile-express-containers.edit', $container) }}" class="dropdown-item w-100">
-                                                                <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
-                                                            </a>
-                                                            @if ($container->orders->isNotEmpty())
-                                                                <a href="{{ route('warehouse.mile-express-container.register',$container) }}" class="dropdown-item w-100">
-                                                                    <i class="feather icon-box"></i> Register Unit
-                                                                </a>
-                                                            @endif
-                                                            <form action="{{ route('warehouse.mile-express-containers.destroy',$container) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button class="dropdown-item w-100 text-danger">
-                                                                    <i class="feather icon-trash-2"></i> @lang('warehouse.actions.Delete')
-                                                                </button>
-                                                            </form>
-                                                        @endif
-                                                        @if ($container->isRegistered())
-                                                            <a href="{{ route('warehouse.hd-express.container.download', $container) }}" class="dropdown-item w-100">
-                                                                <i class="feather icon-box"></i> Get CN35
-                                                            </a>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <div class="d-flex justify-content-end py-2 px-3">
-                                {{ $containers->links() }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" id="confirm" role="dialog">
-                <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="col-8">
-                            <h4>
-                               Are you Sure!
-                            </h4>
-                        </div>
-                    </div>
-                    <form action="{{ route('warehouse.container.awb') }}" method="GET" id="bulk_sale_form">
-                        <div class="modal-body" style="font-size: 15px;">
-                            <p>
-                                Are you Sure want to Assign AWB number to Selected Containers  {{-- <span class="result"></span> --}}
-                            </p>
-                            <input type="text" name="awb" required class="form-control" value="">
-                            <input type="hidden" name="command" id="command" value="">
-                            <input type="hidden" name="data" id="data" value="">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" id="save"> Yes Add</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"> @lang('consolidation.Cancel')</button>
-                        </div>
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td colspan="8" class="h2 text-right px-5">
+                    <span class="text-danger font-weight-bold">Weight :</span> {{$totalweight}}
+                    <span class="mx-3 text-danger font-weight-bold">Packages:</span> {{$num_of_Packages}}
+                </td>
+            </tr>
+            @if($editMode == true)
+            <tr>
+                <td colspan="8">
+                    <form wire:submit.prevent="submit">
+                        <input type="text" wire:model.defer="tracking" class="w-100 text-center" style="height:50px;font-size:30px;" id="scan">
+                        @error('tracking') <span class="error offset-5 h4 text-danger">{{ $message }}</span> @enderror
                     </form>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                </td>
+            </tr>
+            @endif
+        </tbody>
+    </table>
+    @include('layouts.livewire.loading')
 </div>
