@@ -166,6 +166,7 @@
                             <option value="Fox Courier">Fox Courier</option>
                             <option value="Phx Courier">Phx Courier</option>
                             <option value="VIP Parcels">VIP Parcel</option>
+                            <option value="Mile Express">Mile Express</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin

@@ -109,6 +109,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             ShippingService::Cainiao=>'Cainiao',
             ShippingService::PHX_ST_COURIER => 'Phx Standard',
             ShippingService::PHX_EX_COURIER => 'Phx Express',
+            ShippingService::Mile_Express => 'Mile Express',
         ];
     
         // Check if the service subclass code exists in the array
@@ -146,12 +147,11 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             'BCN-IX' => 21,
             ShippingService::HoundExpress => 22,
             ShippingService::PasarEx => 23,
-            ShippingService::DSS_SENEGAL => 24,
-            ShippingService::Cainiao => 25,
-            ShippingService::FOX_ST_COURIER => 26,
-            ShippingService::FOX_EX_COURIER => 27,
-            ShippingService::PHX_ST_COURIER => 28,
-            ShippingService::PHX_EX_COURIER => 29,
+            ShippingService::FOX_ST_COURIER => 24,
+            ShippingService::FOX_EX_COURIER => 25,
+            ShippingService::PHX_ST_COURIER => 26,
+            ShippingService::PHX_EX_COURIER => 27,
+            ShippingService::Mile_Express => 28,
         ];
     
         // Check if the service subclass code exists in the array
@@ -346,6 +346,12 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         $order = $this->orders()->first();
         return $order?$order->zone_group:'no';
+    }
+
+    public function hasMileExpressService()
+    {
+        return $this->services_subclass_code == ShippingService::Mile_Express;
+
     }
 
 }

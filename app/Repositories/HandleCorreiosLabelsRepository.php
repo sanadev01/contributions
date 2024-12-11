@@ -73,9 +73,9 @@ class HandleCorreiosLabelsRepository
                 return $this->smartComexLabel();
             }
 
-            // if ($this->order->shippingService->is_milli_express) {
-            //     return $this->mileExpressLabel();
-            // }
+            if ($this->order->shippingService->isMileExpressService()) {
+                return $this->mileExpressLabel();
+            }
         }
         if (in_array($this->order->recipient->country_id, [Order::PORTUGAL, Order::COLOMBIA])) {
             if ($this->order->shippingService->isPostPlusService()) {
@@ -280,6 +280,13 @@ class HandleCorreiosLabelsRepository
         $vipParcelLabelRepository = new VIPParcelLabelRepository();
         $vipParcelLabelRepository->run($this->order, $this->update);
         return $this->renderLabel($this->request, $this->order, $vipParcelLabelRepository->getError());
+    }
+
+    public function mileExpressLabel()
+    {
+        $mileExpress = new MileExpressLabelRepository();
+        $mileExpress->run($this->order, $this->update);
+        return $this->renderLabel($this->request, $this->order, $mileExpress->getError());
     }
 
     public function updateShippingServiceFromSetting($order)

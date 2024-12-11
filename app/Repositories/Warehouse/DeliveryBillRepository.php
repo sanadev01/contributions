@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\OrderTracking;
+use App\Facades\MileExpressFacade;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Warehouse\DeliveryBill;
@@ -162,6 +163,32 @@ class DeliveryBillRepository extends AbstractRepository
             'city' => 'Miami'
         ]);
 
+        return true;
+    }
+
+    public function processMileExpressBill($deliveryBill, $firstContainer)
+    {
+        $deliveryBillCreateResponse = MileExpressFacade::createDeilveryBill($deliveryBill->id, $firstContainer->destination_operator_name);
+        
+        if ($deliveryBillCreateResponse->success == false) {
+            $this->error = $deliveryBillCreateResponse->error;
+            return false;
+        }
+        $containerIds = [];
+        foreach ($deliveryBill->containers()->get() as $container) {
+            $containerResponse = json_decode($container->unit_response_list);
+            array_push($containerIds, $containerResponse->id);
+        }
+        
+        $deliveryBillRegisterResponse = MileExpressFacade::registerDeliveryBill($deliveryBillCreateResponse->data['data']['id'], $containerIds);
+        if ($deliveryBillRegisterResponse->success == false) {
+            $this->error = $deliveryBillCreateResponse->error;
+            return false;
+        }
+        $deliveryBill->update([
+            'request_id' => $deliveryBillCreateResponse->data['data']['id'],
+            'cnd38_code' => $deliveryBillCreateResponse->data['data']['code']
+        ]);
         return true;
     }
 }

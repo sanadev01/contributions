@@ -179,4 +179,9 @@ class DeliveryBill extends Model
         return $this->containers->first()->hasPhxCourierService();
     }
 
+    public function isMileExpress()
+    {
+        return $this->containers->first()->hasMileExpressService();
+    }
+
 }

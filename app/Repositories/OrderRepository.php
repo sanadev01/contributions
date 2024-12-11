@@ -245,6 +245,11 @@ class OrderRepository
                     ShippingService::PHX_EX_COURIER, 
                 ];
             }
+            if($request->carrier == 'Mile Express'){
+                $service = [
+                    ShippingService::Mile_Express,
+                ];
+            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });

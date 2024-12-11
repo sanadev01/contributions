@@ -3,29 +3,29 @@
 namespace App\Http\Controllers\Warehouse;
 
 use App\Models\ShippingService;
+use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\DeliveryBill;
 use App\Services\Cainiao\Client as CainiaoClient;
 use App\Services\Correios\Models\PackageError;
 use App\Services\Correios\Services\Brazil\Client;
+use App\Repositories\Warehouse\DeliveryBillRepository;
 
 class DeliveryBillRegisterController extends Controller
 {
-    public function __invoke(DeliveryBill $deliveryBill)
+    public function __invoke(DeliveryBill $deliveryBill, DeliveryBillRepository $deliveryBillRepository)
     {
         if ($deliveryBill->containers->isEmpty()) {
             session()->flash('alert-danger','Please add containers to this delivery bill');
             return back();
         }
-        // if ($deliveryBill->isRegistered()) {
-        //     session()->flash('alert-danger','This delivery bill has already been registered');
-        //     return back();
-        // }
-        if($deliveryBill->is_cainiao){ 
-            return $this->registerCainiaoDeliveryBill($deliveryBill);  
-            
-        } 
+     
 
+        if ($deliveryBill->isRegistered()) {
+            session()->flash('alert-danger','This delivery bill has already been registered');
+            return back();
+        }
+       
         if ($deliveryBill->containerShippingService(ShippingService::TOTAL_EXPRESS)) {
              $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->setCN38Code(),
@@ -40,7 +40,19 @@ class DeliveryBillRegisterController extends Controller
                 'request_id' => $deliveryBill->setRandomRequestId()
             ]);
             
-        } else {
+        }
+        
+        if ($deliveryBill->isMileExpress()) {
+            $firstContainer = $deliveryBill->containers()->first();
+            $deliveryBillRepository->processMileExpressBill($deliveryBill, $firstContainer);
+            $error = $deliveryBillRepository->getError();
+            if ($error) {
+                session()->flash('alert-danger',$error);
+                return back();
+            }
+        }
+        
+        else {
 
             $client = new Client();
             $response = $client->registerDeliveryBill($deliveryBill);
