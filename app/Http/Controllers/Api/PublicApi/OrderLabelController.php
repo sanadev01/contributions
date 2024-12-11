@@ -2,37 +2,37 @@
 
 namespace App\Http\Controllers\Api\PublicApi;
 
-use App\Models\Order;
+use Exception;
 use App\Models\User;
+use App\Models\Order;
 use App\Events\OrderPaid;
 use Illuminate\Http\Request;
-use App\Repositories\AnjunLabelRepository;
 use App\Services\GePS\Client;
 use App\Models\ShippingService;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Events\AutoChargeAmountEvent;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\GSSLabelRepository;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
+use App\Repositories\AnjunLabelRepository;
 use App\Repositories\FedExLabelRepository;
-use App\Repositories\SwedenPostLabelRepository;
-use Illuminate\Database\Eloquent\Collection;
-use App\Repositories\CorrieosChileLabelRepository;
-use App\Repositories\CorrieosBrazilLabelRepository;
-use App\Repositories\PostPlusLabelRepository;
-use App\Repositories\GSSLabelRepository;
-use App\Repositories\HDExpressLabelRepository;
-use App\Services\TotalExpress\TotalExpressLabelRepository;
-use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Events\AutoChargeAmountEvent;
-use App\Repositories\SmartComexLabelRepository;
-use App\Repositories\HoundExpressLabelRepository;
 use App\Repositories\PasarExLabelRepository;
 use App\Repositories\SenegalLabelRepository;
+use Illuminate\Database\Eloquent\Collection;
+use App\Repositories\PostPlusLabelRepository;
+use App\Repositories\HDExpressLabelRepository;
 use App\Repositories\FoxCourierLabelRepository;
+use App\Repositories\SmartComexLabelRepository;
+use App\Repositories\SwedenPostLabelRepository;
 use App\Repositories\MileExpressLabelRepository;
+use App\Repositories\HoundExpressLabelRepository;
+use App\Repositories\CorrieosChileLabelRepository;
+use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Services\TotalExpress\TotalExpressLabelRepository;
 
 class OrderLabelController extends Controller
 {
