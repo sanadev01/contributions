@@ -32,6 +32,7 @@ use App\Repositories\HoundExpressLabelRepository;
 use App\Repositories\PasarExLabelRepository;
 use App\Repositories\SenegalLabelRepository;
 use App\Repositories\FoxCourierLabelRepository;
+use App\Repositories\MileExpressLabelRepository;
 
 class OrderLabelController extends Controller
 {
@@ -189,6 +190,15 @@ class OrderLabelController extends Controller
                     $error = $smartComexLabelRepository->getError();
                     if ($error) {
                         return $this->rollback((string)$error);
+                    }
+                }
+
+                if ($order->shippingService->isMileExpressService()) {
+                    $mileExpressLabelRepository = new MileExpressLabelRepository();
+                    $mileExpressLabelRepository->run($order, false);
+                    $error = $mileExpressLabelRepository->getError();
+                    if ($error) {
+                        return $this->rollback($error);
                     }
                 }
             }
