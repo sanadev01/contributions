@@ -83,41 +83,30 @@ class OrderTrackingController extends Controller
 
     private function generateJsonResponse($responses)
     {
+                $apiTrackings = null; 
         foreach($responses as $response){
             if( $response['success'] == true ){
-                if($response['service'] == 'Correios_Chile')
-                {
-                    $this->trackings = $this->getChileTrackings($response['chile_trackings'], $response['trackings']);
-     
-                    
-                    return apiResponse(true,'Order found', ['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => null ]);
+                $service = $response['service'];
+                if($service == 'Correios_Chile'){
+                    $this->trackings = $this->getChileTrackings($response['chile_trackings'], $response['trackings']);   
+                    $apiTrackings = null;
+                }elseif($service == 'USPS'){
+                    $this->trackings = $this->getUSPSTrackings($response['usps_trackings'], $response['trackings']); 
+                    $apiTrackings = null;
                 }
-                if($response['service'] == 'USPS')
-                {
-                    $this->trackings = $this->getUSPSTrackings($response['usps_trackings'], $response['trackings']);
-     
-                    
-                    return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => null ]);
-                }
-                if($response['service'] == 'Correios_Brazil')
-                {
+                elseif($service == 'Correios_Brazil'||$service == 'PasarEx'||$service == 'Hound Express'){
                     $this->trackings = $response['trackings'];
-                    $apiTracking = $response['api_trackings']; 
-                    return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => $apiTracking]); 
+                    $apiTrackings = $response['api_trackings'];                     
                 }
-                if($response['service'] == 'PasarEx'||$response['service'] == 'Hound Express')
-                {
-                    $this->trackings = $response['trackings'];
-                    $apiTracking = $response['api_trackings']; 
-                    return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => $apiTracking]); 
+                else{
+                    $this->trackings = $response['trackings']; 
                 }
-                
-                $this->trackings = $response['trackings'];
-                return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => null]);
+                $this->trackings = OrderTrackingResource::collection($this->trackings);
+                return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings, 'apiTrackings' => $apiTrackings ]); 
             }
         }
         
-        return apiResponse(false,'Order not found', ['hdTrackings'=> $this->trackings, 'apiTrackings' => null ]);
+        return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings, 'apiTrackings' => $apiTrackings ]); 
     }
 
     private function getChileTrackings($response, $hd_trackings)
