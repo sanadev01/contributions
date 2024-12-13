@@ -98,7 +98,7 @@ class Client{
     
     public static function orderTrackings($tracking)
     { 
-        try {
+        try { 
             if (app()->isProduction()) {
                 $partnerKey = config('hound.production.partner_key');
                 $baseUrl = config('hound.production.base_url');

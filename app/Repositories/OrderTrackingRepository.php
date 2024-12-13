@@ -43,7 +43,7 @@ class OrderTrackingRepository
             foreach ($orders as $key => $order) { 
                 $apiResponse = [];
                 if ($order->trackings->isNotEmpty() && $order->shippingService != null) {
-                    if(true){
+                    if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
                         if ($order->shippingService->is_hound_express){
                             $response = HoundClient::orderTrackings($order->corrios_tracking_code); 
                             
