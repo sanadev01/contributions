@@ -40,21 +40,31 @@ class OrderTrackingRepository
 
         $getTrackings = collect();
         if ($orders) {
-            foreach ($orders as $key => $order) {
-
+            foreach ($orders as $key => $order) { 
                 $apiResponse = [];
                 if ($order->trackings->isNotEmpty() && $order->shippingService != null) {
-                    if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
+                    if(true){
                         if ($order->shippingService->is_hound_express){
-                            $response = HoundClient::orderTrackings($order->corrios_tracking_code);
-                            $apiResponse = [
-                                'success' => true,
-                                'status' => 200,
-                                'service' => 'Hound Express',
-                                'trackings' => $order->trackings,
-                                'api_trackings' => collect($response['resultDetails']),
-                                'order' => $order
-                            ];
+                            $response = HoundClient::orderTrackings($order->corrios_tracking_code); 
+                            
+                            if(isset($response['resultDetails'])){
+                                $apiResponse = [
+                                    'success' => true,
+                                    'status' => 200,
+                                    'service' => 'Hound Express',
+                                    'trackings' => $order->trackings,
+                                    'api_trackings' => collect($response['resultDetails']),
+                                    'order' => $order
+                                ];
+                            }else{
+                                $apiResponse = [
+                                    'success' => false,
+                                    'status' => 201,
+                                    'service' => 'Hound Express',
+                                    'trackings' => null,
+                                    'order' => null
+                                ];
+                            }
                         }elseif ($order->recipient->country_id == Order::CHILE) {
 
                             $response = CorreiosChileTrackingFacade::trackOrder($order->corrios_tracking_code);

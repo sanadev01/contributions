@@ -115,6 +115,7 @@ class Client{
                     $data = $response->json(); 
                     return $data;
                 } else {
+                    \Log::error('Error while hound express tracking',$response->body());
                     return [
                         'error' => true,
                         'message' => $response->body(),
@@ -122,6 +123,8 @@ class Client{
                 }
             
         } catch (\GuzzleHttp\Exception\ClientException $e) {
+            \Log::error('Error while hound express ClientException',$e->getResponse()->getBody()->getContents());
+
             return new PackageError($e->getResponse()->getBody()->getContents());
         }
     }
