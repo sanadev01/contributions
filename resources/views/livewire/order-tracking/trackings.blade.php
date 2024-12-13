@@ -113,7 +113,7 @@
                                                                     <p class="font-weight-bold">Received <br>Correios Chile</p> 
                                                                 </div>
                                                             @elseif ($tracking['order']->shippingService->is_hound_express)  
-                                                            <img class="icon offset-1" src="{{ asset('images/tracking/hound.JPEG') }}">
+                                                            <img class="icon offset-1" src="{{ asset('images/tracking/hound.jpeg') }}">
                                                             <div class="d-flex flex-column" mt-4>
                                                                     <p class="font-weight-bold">Received <br>by Hound Express</p>
                                                             </div>
@@ -449,7 +449,7 @@
                                                         @elseif( $tracking['service'] == 'Hound Express' )
                                                         <li class="@if( $this->toggleHoundExpressTrackingStatus($tracking['api_trackings']) >= 30 ) active @endif step0">
                                                             <div class="icon-content">
-                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/hound.JPEG') }}">
+                                                                <img class="icon offset-1 mt-2" src="{{ asset('images/tracking/hound.jpeg') }}">
                                                                 <div class="d-flex flex-column" mt-4>
                                                                     <p class="font-weight-bold">Received <br>by HoundExress</p>
                                                                 </div>
