@@ -14,8 +14,8 @@ class OrderTrackingController extends Controller
 
     public function __invoke(Request $request, $search, $format = 'json')
     {
-        $order_tracking_repository = new OrderTrackingRepository($search);
-        $responses = $order_tracking_repository->handle(); 
+        $orderTrackingRepository = new OrderTrackingRepository($search);
+        $responses = $orderTrackingRepository->handle(); 
         if ($format === 'xml') {
             $xmlResponse = $this->generateXmlResponse($responses);
             return response($xmlResponse, 200)->header('Content-Type', 'application/xml');
@@ -83,30 +83,41 @@ class OrderTrackingController extends Controller
 
     private function generateJsonResponse($responses)
     {
-                $apiTrackings = null; 
         foreach($responses as $response){
             if( $response['success'] == true ){
-                $service = $response['service'];
-                if($service == 'Correios_Chile'){
-                    $this->trackings = $this->getChileTrackings($response['chile_trackings'], $response['trackings']);   
-                    $apiTrackings = null;
-                }elseif($service == 'USPS'){
-                    $this->trackings = $this->getUSPSTrackings($response['usps_trackings'], $response['trackings']); 
-                    $apiTrackings = null;
+                if($response['service'] == 'Correios_Chile')
+                {
+                    $this->trackings = $this->getChileTrackings($response['chile_trackings'], $response['trackings']);
+     
+                    
+                    return apiResponse(true,'Order found', ['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => null ]);
                 }
-                elseif($service == 'Correios_Brazil'||$service == 'PasarEx'||$service == 'Hound Express'){
+                if($response['service'] == 'USPS')
+                {
+                    $this->trackings = $this->getUSPSTrackings($response['usps_trackings'], $response['trackings']);
+     
+                    
+                    return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => null ]);
+                }
+                if($response['service'] == 'Correios_Brazil')
+                {
                     $this->trackings = $response['trackings'];
-                    $apiTrackings = $response['api_trackings'];                     
+                    $apiTracking = $response['api_trackings']; 
+                    return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => $apiTracking]); 
                 }
-                else{
-                    $this->trackings = $response['trackings']; 
+                if($response['service'] == 'PasarEx'||$response['service'] == 'Hound Express')
+                {
+                    $this->trackings = $response['trackings'];
+                    $apiTracking = $response['api_trackings']; 
+                    return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => $apiTracking]); 
                 }
-                $this->trackings = OrderTrackingResource::collection($this->trackings);
-                return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings, 'apiTrackings' => $apiTrackings ]); 
+                
+                $this->trackings = $response['trackings'];
+                return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => null]);
             }
         }
         
-        return apiResponse(true,'Order found',['hdTrackings'=> $this->trackings, 'apiTrackings' => $apiTrackings ]); 
+        return apiResponse(false,'Order not found', ['hdTrackings'=> $this->trackings, 'apiTrackings' => null ]);
     }
 
     private function getChileTrackings($response, $hd_trackings)
