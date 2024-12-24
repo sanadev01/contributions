@@ -339,7 +339,27 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col"></div>
+                                    <div class="col">
+                                        <div class="row align-item-center">
+                                            <div class="col-1">
+                                                <div class="controls row mb-1 align-items-center">
+                                                    <div class="input-group">
+                                                        <div class="vs-checkbox-con vs-checkbox-primary" title="ID Label Service">                                                            
+                                                            <input type="checkbox" name="id_label_service" id="id_label_service" @if(setting('id_label_service', null, $user->id)) checked @endif>
+                                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                                <span class="vs-checkbox--check">
+                                                                    <i class="vs-icon feather icon-check"></i>
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-11">
+                                                <label>ID Label Service<span class="text-danger"></span></label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <hr>

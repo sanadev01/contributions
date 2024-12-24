@@ -83,6 +83,7 @@ class ShippingService extends Model
     const VIP_PARCEL_FCP = 849;
     const Cainiao = 1000;
     const Mile_Express = 33175;
+    const ID_Label_Service = 4357;
 
     protected $guarded = [];
 
@@ -631,6 +632,11 @@ class ShippingService extends Model
             return true;
         }
         return false;
+    }
+
+    function getIsIdLabelServiceAttribute()
+    {
+        return $this->service_sub_class == self::ID_Label_Service;
     }
 
 }

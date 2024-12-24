@@ -434,6 +434,10 @@ class Order extends Model implements Package
 
                 return 'Mile Express';
             }
+            elseif(optional($this->shippingService)->is_id_label_service){
+
+                return 'ID Label Service';
+            }
             return 'Correios Brazil';
         }
 
@@ -470,7 +474,9 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP ||
                 optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMEI||
                 optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Mile_Express) {
+                optional($this->shippingService)->service_sub_class == ShippingService::Mile_Express  ||
+                optional($this->shippingService)->service_sub_class == ShippingService::Mile_Express ||
+                optional($this->shippingService)->service_sub_class == ShippingService::ID_Label_Service) {
 
                 return $this->user_declared_freight;
             }

@@ -250,6 +250,11 @@ class OrderRepository
                     ShippingService::Mile_Express,
                 ];
             }
+            if($request->carrier == 'ID Label Service'){
+                $service = [
+                    ShippingService::ID_Label_Service,
+                ];
+            }
             $query->whereHas('shippingService', function ($query) use($service) {
                 return $query->whereIn('service_sub_class', $service);
             });
