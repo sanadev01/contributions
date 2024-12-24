@@ -7,17 +7,20 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="mb-0 mr-3">
-                        All Groups
+                        All Zones
                     </h4>
                     <div>
                         @can('create', App\Models\Rate::class)
-                            <a href="{{ route('admin.rates.zone-cost-upload') }}" class="btn btn-primary">
-                                Upload Rates
-                            </a>
-                            <a href="{{ route('admin.rates.zone-profit.create') }}" class="btn btn-primary ml-2">
-                                Upload Profit
-                            </a>
+                        <a href="{{ route('admin.rates.zone-cost-upload') }}" class="btn btn-primary">
+                            Upload Rates
+                        </a>
+                        <a href="{{ route('admin.rates.zone-profit.create') }}" class="btn btn-primary ml-2">
+                            Upload Profit
+                        </a>
+
                         @endcan
+
+
                     </div>
                 </div>
                 <hr>
@@ -27,7 +30,7 @@
                             <tr>
                                 <th>
                                     <a href="{{ route('admin.rates.zone-profit.index', ['sort' => 'group_id', 'order' => request('sort') == 'group_id' && request('order') == 'desc' ? 'asc' : 'desc']) }}">
-                                        Group
+                                        Zone
                                         @if(request('sort') == 'group_id')
                                         @if(request('order') == 'asc')
                                         &#8593;
@@ -49,6 +52,8 @@
                                         @endif
                                     </a>
                                 </th>
+                                <th>Zipcode Start</th>
+                                <th>Zipcode End</th>
                                 <th>
                                     Action
                                 </th>
@@ -59,12 +64,17 @@
                             @foreach($services as $serviceId => $groupService)
                             <tr>
                                 <th>
-                                    Group {{$groupId}}
+                                    Zone {{$groupId}}
                                 </th>
                                 <th>
                                     {{$groupService->first()->shippingService->name}}
                                 </th>
-
+                                <th>
+                                    {{ getGroupRange($groupId)['start'] }}
+                                </th>
+                                <th>
+                                    {{ getGroupRange($groupId)['end'] }}
+                                </th>
                                 <th>
                                     @if(Auth::user()->isAdmin())
                                     <a href="{{ route('admin.rates.zone-profit-show', ['group_id' => $groupId, 'shipping_service_id' => $serviceId]) }}" class="btn btn-primary btn-sm">
@@ -87,40 +97,40 @@
                                     @if($rates->contains('shippingService.id', $serviceId))
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 120px; height:27px; padding-top:3px;">
-                                             View Rates
+                                            View Rates
                                         </button>
                                         <div class="dropdown-menu">
                                             @foreach($rates as $rate)
-                                                @if($rate->shippingService->id == $serviceId)
-                                                    @if(isset($rate->cost_rates) && Auth::user()->isAdmin())
-                                                        @php
-                                                            $costRateLabel = ($rate->shippingService->is_pasarex ? 'Accrual Rate' : 'Cost Rate') . ' - ' . ($rate->user ? $rate->user->pobox_number : 'All');
-                                                            $decodedCostRates = json_decode($rate->cost_rates, true);
-                                                            $zoneExists = isset($decodedCostRates["Zone $groupId"]);
-                                                        @endphp
-                                                        @if($zoneExists)
-                                                            <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId, 'type' => 'cost', 'user_id' => $rate->user ? $rate->user->id : null]) }}">{{ $costRateLabel }}</a>
-                                                        @endif
-                                                    @endif
-                                        
-                                                    @if(isset($rate->selling_rates) )
-                                                        @php
-                                                            $sellingRateLabel = $rate->user ? 'Selling Rate - ' . $rate->user->pobox_number : 'Selling Rate - All';
-                                                            $decodedSellingRates = json_decode($rate->selling_rates, true);
-                                                            $zoneExists = isset($decodedSellingRates["Zone $groupId"]);
-                                                        @endphp
-                                                        @if($zoneExists)
-                                                            <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId, 'type' => 'package', 'user_id' => $rate->user ? $rate->user->id : null]) }}">{{ $sellingRateLabel }}</a>
-                                                        @endif
-                                                    @endif
-                                                @endif
+                                            @if($rate->shippingService->id == $serviceId)
+                                            @if(isset($rate->cost_rates) && Auth::user()->isAdmin())
+                                            @php
+                                            $costRateLabel = ($rate->shippingService->is_pasarex ? 'Accrual Rate' : 'Cost Rate') . ' - ' . ($rate->user ? $rate->user->pobox_number : 'All');
+                                            $decodedCostRates = json_decode($rate->cost_rates, true);
+                                            $zoneExists = isset($decodedCostRates["Zone $groupId"]);
+                                            @endphp
+                                            @if($zoneExists)
+                                            <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId, 'type' => 'cost', 'user_id' => $rate->user ? $rate->user->id : null]) }}">{{ $costRateLabel }}</a>
+                                            @endif
+                                            @endif
+
+                                            @if(isset($rate->selling_rates) )
+                                            @php
+                                            $sellingRateLabel = $rate->user ? 'Selling Rate - ' . $rate->user->pobox_number : 'Selling Rate - All';
+                                            $decodedSellingRates = json_decode($rate->selling_rates, true);
+                                            $zoneExists = isset($decodedSellingRates["Zone $groupId"]);
+                                            @endphp
+                                            @if($zoneExists)
+                                            <a class="dropdown-item" href="{{ route('admin.rates.view-zone-cost', ['shipping_service_id' => $serviceId, 'zone_id' => $groupId, 'type' => 'package', 'user_id' => $rate->user ? $rate->user->id : null]) }}">{{ $sellingRateLabel }}</a>
+                                            @endif
+                                            @endif
+                                            @endif
                                             @endforeach
-                                        </div>                                                                               
+                                        </div>
                                     </div>
-                                    
+
                                     @endif
                                 </th>
-                                
+
                             </tr>
                             @endforeach
                             @endforeach
