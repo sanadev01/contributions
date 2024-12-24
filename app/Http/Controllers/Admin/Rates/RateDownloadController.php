@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\ShippingService;
 use App\Http\Controllers\Controller;
 use App\Repositories\Reports\RateReportsRepository;
+use App\Services\Excel\Export\PasarExExportUserZoneRate;
 use App\Services\Excel\Export\ProfitSampleRateExport;
 use App\Services\Excel\Export\ProfitPackageRateExport;
 use App\Services\Excel\Export\ShippingServiceRegionRateExport;
@@ -24,6 +25,11 @@ class RateDownloadController extends Controller
         //     }
         // }
         $service = ShippingService::find($id); 
+        if($service->is_pasar_ex){
+            $exportService = new PasarExExportUserZoneRate($service->id);
+            $exportService->handle();
+            return $exportService->download();
+        }
         if(optional($service)->rates && $service->isGDEService()){
             if($service->rates && setting('gde', null, User::ROLE_ADMIN) && setting('gde', null, auth()->user()->id)){
                 $profit = getGDEProfit($service->rates, $service->service_sub_class);

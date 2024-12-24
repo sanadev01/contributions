@@ -24,8 +24,8 @@ class ZoneProfitController extends Controller
 
     public function index(Request $request)
     {
-        $service = $request->get('service', 'usps'); 
-       
+        $service = $request->get('service', 'usps');
+
         if (!Auth::user()->hasPermission("view_".$service."_service")) {
             abort(403, "You do not have permission to view $service profit.");
         }
@@ -47,33 +47,37 @@ class ZoneProfitController extends Controller
             ->orderBy($sort, $order)
             ->get()
             ->groupBy(['group_id', 'shipping_service_id']);
+            if(Auth::user()->isAdmin()){
+            $rates = ZoneRate::orderBy('id')->get();
 
-        $rates = ZoneRate::orderBy('id')->when(!Auth::user()->isAdmin(),function($query){
-            return $query->select('selling_rates','id','user_id','shipping_service_id')->where('user_id',Auth::id());
-        })
-        ->get();   
+            }else{
+                $rates = ZoneRate::orderBy('id')->select('selling_rates','id','user_id','shipping_service_id')->where('user_id',Auth::id())->get();
+                if($rates->count() == 0){
+                    $rates = ZoneRate::orderBy('id')->select('selling_rates','id','user_id','shipping_service_id')->where('user_id',null)->get();  
+            }
+        }
 
         return view('admin.rates.zone-profit.index', compact('groups', 'rates', 'service'));
     }
 
 
     public function create()
-    {     
+    {
         if (!Auth::user()->isAdmin()) {
             abort(403, "You do not have permission to import zone profit.");
         }
-        $this->authorizeResource(Rate::class); 
+        $this->authorizeResource(Rate::class);
 
         $services = ShippingService::whereIn('service_sub_class', [
             ShippingService::GSS_PMI,
-            ShippingService::GSS_EPMEI, 
-            ShippingService::GSS_EPMI, 
-            ShippingService::GSS_FCM, 
+            ShippingService::GSS_EPMEI,
+            ShippingService::GSS_EPMI,
+            ShippingService::GSS_FCM,
             ShippingService::GSS_EMS,
             ShippingService::GSS_CEP,
             ShippingService::PasarEx,
             ])->where('active',true)->get();
-        
+
         return view('admin.rates.zone-profit.create', compact('services'));
     }
 
@@ -111,8 +115,8 @@ class ZoneProfitController extends Controller
         if (!Auth::user()->hasPermission("delete_zone_rate_profit")) {
             abort(403, "You do not have permission to delete the zone.");
         }
-         ZoneCountry::where('id', $id)->delete();
-         
+        ZoneCountry::where('id', $id)->delete();
+
         session()->flash('alert-success', 'Group country deleted successfully');
         return redirect()->route('admin.rates.zone-profit.index');
     }
@@ -153,12 +157,12 @@ class ZoneProfitController extends Controller
         if (!Auth::user()->isAdmin()) {
             abort(403, "You do not have permission to add cost.");
         }
-        $this->authorizeResource(Rate::class); 
+        $this->authorizeResource(Rate::class);
         $services = ShippingService::whereIn('service_sub_class', [
             ShippingService::GSS_CEP,
             ShippingService::PasarEx,
             ])->where('active',true)->get();
-        
+
         return view('admin.rates.zone-profit.add-cost', compact('services'));
     }
 
@@ -188,32 +192,35 @@ class ZoneProfitController extends Controller
         $poboxNumber = '';
         $service = ShippingService::findOrFail($serviceId);
         $ratesQuery = ZoneRate::where('shipping_service_id', $serviceId);
-        
+
         if ($userId !== null) {
             $ratesQuery->where('user_id', $userId);
             $poboxNumber = User::where('id', $userId)->value('pobox_number');
         }
-    
+
         $rates = $ratesQuery->first();
-    
-        if ($type === "cost") {
-            $decodedRates = json_decode($rates->cost_rates, true); 
-        } elseif ($type === "package") {
-            $decodedRates = json_decode($rates->selling_rates, true); 
+        if(!$rates){
+            abort(404,'rate not found');
         }
-    
+
+        if ($type === "cost") {
+            $decodedRates = json_decode($rates->cost_rates, true);
+        } elseif ($type === "package") {
+            $decodedRates = json_decode($rates->selling_rates, true);
+        }
+
         $rate = null;
-    
+
         foreach ($decodedRates as $zone => $zoneData) {
             $zoneNumber = (int) filter_var($zone, FILTER_SANITIZE_NUMBER_INT);
-    
+
             if ($zoneNumber === (int)$zoneId) {
                 $rate = $zoneData;
                 break;
             }
         }
-    
+
         return view('admin.rates.zone-profit.view-rates', compact('service', 'rate', 'type', 'zoneId', 'poboxNumber'));
-    }       
+    }
 
 }
