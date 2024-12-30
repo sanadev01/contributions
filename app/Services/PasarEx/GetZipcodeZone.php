@@ -3762,6 +3762,8 @@ class GetZipcodeZone
         return null;
     }
     function getStartAndEndFromZone($zone){ 
+        $zone = (int)$zone;
+
         $filtered = array_values(array_filter($this->zoneData, function ($entry) use ($zone) {
             return $entry['zone'] === $zone;
         }));
