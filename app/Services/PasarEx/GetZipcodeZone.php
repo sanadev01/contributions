@@ -3767,20 +3767,14 @@ class GetZipcodeZone
         $filtered = array_values(array_filter($this->zoneData, function ($entry) use ($zone) {
             return $entry['zone'] === $zone;
         }));
-    
-        // Sort the filtered array by zipcode
         usort($filtered, function ($a, $b) {
             return $a['zipcode'] <=> $b['zipcode'];
         });
-    
-        // Find the start and end entries for the zone
         if (!empty($filtered)) {
             $start = $filtered[0];
             $end = $filtered[count($filtered) - 1];
             return ['start' => $start['zipcode'], 'end' => $end['zipcode']];
         }
-    
-        // Return null if no entries match the zone
         return null;
     }
 
