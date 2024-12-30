@@ -20,9 +20,9 @@ class PasarExExportUserZoneRate extends AbstractExportService
     public function __construct()
     {
         $this->user = Auth::user();
-        $rates = ZoneRate::orderBy('id')->select('selling_rates', 'id', 'user_id', 'shipping_service_id')->where('user_id', $this->user->id)->first();
+        $rates = ZoneRate::orderBy('id')->select('selling_rates', 'id', 'user_id', 'shipping_service_id')->where('user_id', $this->user->id)->latest('id')->first();
         if (!$rates) {
-            $rates = ZoneRate::orderBy('id')->select('selling_rates', 'id', 'user_id', 'shipping_service_id')->where('user_id', null)->first();
+            $rates = ZoneRate::orderBy('id')->select('selling_rates', 'id', 'user_id', 'shipping_service_id')->where('user_id', null)->latest('id')->first();
         }
         if (!$rates) {
             abort(404, 'rate not found');

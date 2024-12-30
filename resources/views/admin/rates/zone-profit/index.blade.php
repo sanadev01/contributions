@@ -16,10 +16,11 @@
                         </a>
                         <a href="{{ route('admin.rates.zone-profit.create') }}" class="btn btn-primary ml-2">
                             Upload Profit
-                        </a>
-
+                        </a> 
                         @endcan
-
+                        @if(!Auth::user()->isAdmin())
+                        <a href="{{ route('admin.rates.user-rates.index') }}" class="btn btn-primary">Back to the list</a>
+                        @endif
 
                     </div>
                 </div>
