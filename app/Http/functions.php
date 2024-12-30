@@ -13,6 +13,7 @@ use App\Models\ShippingService;
 use App\Mail\User\PurchaseInsurance;
 use App\Services\Calculators\AbstractRateCalculator;
 use Illuminate\Contracts\Encryption\DecryptException;
+use App\Services\PasarEx\GetZipcodeZone;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 
@@ -272,23 +273,8 @@ function getOrderGroupRange($order)
     return null;
 }
 function getGroupRange($group)
-{
-    if (preg_match('/\d+/', $group, $matches)) {
-        $group= (int)$matches[0];
-    }     
-    $groupRanges =  config('hd.order_groups_range');
-    $start = PHP_INT_MAX;
-    $end = PHP_INT_MIN;
-    foreach ($groupRanges as $range) {
-        if ($range['group'] === $group) {
-            $start = min($start, $range['start']);
-            $end = max($end, $range['end']);
-        }
-    }
-
-    return ($start !== PHP_INT_MAX && $end !== PHP_INT_MIN) 
-        ? ['start' => $start, 'end' => $end] 
-        :['start' => '', 'end' => ''] ; 
+{ 
+    return ((new GetZipcodeZone('-'))->getStartAndEndFromZone($group));
 }
 
 
