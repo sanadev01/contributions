@@ -27,8 +27,7 @@
                             </span>
                         </h4>
                         <hr>
-                    </div>
-                    @can('create', App\Models\Rate::class)
+                    </div> 
                     <div class="row col-md-6">
                         <div class="ml-auto">
                             <a href="{{ url()->previous() }}" class="pull-right btn btn-primary ml-2">
@@ -39,8 +38,7 @@
                             </a> --}}
                         </div>
                     </div>
-
-                    @endcan
+ 
                 </div>
                 <hr>
                 <div class="card-content card-body">
