@@ -274,6 +274,9 @@ function getOrderGroupRange($order)
 }
 function getGroupRange($group)
 { 
+    if (preg_match('/\d+/', $group, $matches)) {
+        $group= (int)$matches[0];
+    }
     return ((new GetZipcodeZone('-'))->getStartAndEndFromZone($group));
 }
 
