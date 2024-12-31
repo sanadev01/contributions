@@ -5,17 +5,7 @@ namespace App\Services\PasarEx;
 class GetZipcodeZone
 {
     private $zipcode;
-    function __construct($zipcode)
-    {
-        $this->zipcode = str_replace('-', '', $zipcode);
-    }
-
-    function getZipcodeZone()
-    {
-        if (!$this->zipcode) {
-            return null;
-        }
-        $zoneData = [
+    private $zoneData = [
             ["state" => "Antioquia", "city" => "Medellin", "zipcode" => 50001, "zone" => 2],
             ["state" => "Antioquia", "city" => "Medellin", "zipcode" => 50002, "zone" => 2],
             ["state" => "Antioquia", "city" => "Medellin", "zipcode" => 50003, "zone" => 2],
@@ -3754,12 +3744,38 @@ class GetZipcodeZone
             ['state' => 'Vichada', 'city' => 'Cumaribo', 'zipcode' => 991058, 'zone' => 6],
             ['state' => 'Vichada', 'city' => 'Cumaribo', 'zipcode' => 991059, 'zone' => 6]
         ];
-        foreach ($zoneData as $data) {
+    function __construct($zipcode)
+    {
+        $this->zipcode = str_replace('-', '', $zipcode);
+    }
+
+    function getZipcodeZone()
+    {
+        if (!$this->zipcode){
+            return null;
+        }
+        foreach ($this->zoneData as $data) {
             if ($data['zipcode'] == $this->zipcode) {
                 return $data['zone'];
             }
         }
-
         return null;
     }
+    function getStartAndEndFromZone($zone){ 
+        $zone = (int)$zone;
+
+        $filtered = array_values(array_filter($this->zoneData, function ($entry) use ($zone) {
+            return $entry['zone'] === $zone;
+        }));
+        usort($filtered, function ($a, $b) {
+            return $a['zipcode'] <=> $b['zipcode'];
+        });
+        if (!empty($filtered)) {
+            $start = $filtered[0];
+            $end = $filtered[count($filtered) - 1];
+            return ['start' => $start['zipcode'], 'end' => $end['zipcode']];
+        }
+        return null;
+    }
+
 }
