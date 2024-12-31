@@ -3763,8 +3763,6 @@ class GetZipcodeZone
     }
     function getStartAndEndFromZone($zone){ 
         $zone = (int)$zone;
-
-        $zoneData = 
         $zoneData = [
             ["zipcode" => 110111, "zone" => 1],
             ["zipcode" => 250258, "zone" => 1],
