@@ -3764,7 +3764,22 @@ class GetZipcodeZone
     function getStartAndEndFromZone($zone){ 
         $zone = (int)$zone;
 
-        $filtered = array_values(array_filter($this->zoneData, function ($entry) use ($zone) {
+        $zoneData = 
+        $zoneData = [
+            ["state" => "", "city" => "", "zipcode" => 110111, "zone" => 1],
+            ["state" => "", "city" => "", "zipcode" => 250258, "zone" => 1],
+            ["state" => "", "city" => "", "zipcode" => 50001, "zone" => 2],
+            ["state" => "", "city" => "", "zipcode" => 762528, "zone" => 2],
+            ["state" => "", "city" => "", "zipcode" => 80001, "zone" => 3],
+            ["state" => "", "city" => "", "zipcode" => 541018, "zone" => 3],
+            ["state" => "", "city" => "", "zipcode" => 55020, "zone" => 4],
+            ["state" => "", "city" => "", "zipcode" => 761517, "zone" => 4],
+            ["state" => "", "city" => "", "zipcode" => 55440, "zone" => 5],
+            ["state" => "", "city" => "", "zipcode" => 760518, "zone" => 5],
+            ["state" => "", "city" => "", "zipcode" => 910001, "zone" => 6],
+            ["state" => "", "city" => "", "zipcode" => 991059, "zone" => 6],
+        ];
+        $filtered = array_values(array_filter($zoneData, function ($entry) use ($zone) {
             return $entry['zone'] === $zone;
         }));
         usort($filtered, function ($a, $b) {
