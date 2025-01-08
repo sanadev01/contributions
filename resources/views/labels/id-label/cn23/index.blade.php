@@ -17,11 +17,11 @@
         }
 
         img.partner-logo{
-            width: 2.6cm;
-            height: 3.1cm;
+            width: 3.5cm;
+            height: 4.1cm;
             position: absolute;
-            top: 5.7cm;
-            left: 0.5cm;
+            top: 10.6cm;
+            left: 3.3cm;
             object-fit: contain;
         }
         .destination-country-name {
@@ -71,20 +71,20 @@
         }
         .address{
             position: absolute;
-            top: 8.9cm;
+            top: 5.9cm;
             display: block;
             /* border: 2px solid black; */
             padding: 1mm;
             width: 9.3cm;
-            font-size: 7px;
-            left: 0.2cm;
+            font-size: 12px;
+            left: 0.5cm;
             right: 0;
             height: 26mm;
         }
         .destination{
             width: 4cm;
             display: inline-block;
-            font-size: 7pt;
+            font-size: 8.5pt;
             /* font-family: Arial; */
         }
         .destination h4{
@@ -112,9 +112,9 @@
         }
         .barcode_zipcode{
             position: absolute;
-            top: 8.9cm;
+            top: 8.6cm;
             display: block;
-            right: 10mm;
+            left: 3.0cm;
             text-align: center;
         }
         .barcode_zipcode img{
@@ -124,8 +124,8 @@
         }
         .zipcode-label{
             position: absolute;
-            right: 20mm;
-            top: 10.4cm;
+            left: 4.4cm;
+            top: 10.1cm;
             font-size: 10pt;
             text-align: center;
             font-weight: bold;
@@ -270,15 +270,5 @@
             </div>
         </div>
 
-        @include('labels.senegal.cn23.items')
-
-        @if ($hasSumplimentary)
-            @foreach ($suplimentaryItems as $items)
-                <div class="page-break-before"></div>
-                @include('labels.senegal.cn23.suplimentary',[
-                    'items' => $items
-                ])
-            @endforeach
-        @endif
     </body>
 </html>

@@ -151,6 +151,30 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="form-check form-check-inline ml-5 text-center">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Battery">
+                                            <input type="checkbox" name="battery" id="battery">
+                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="battery">Contains UN3481<span class="text-danger"></span></label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline ml-5 text-center">
+                                        <div class="vs-checkbox-con vs-checkbox-primary" title="Perfume">
+                                            <input type="checkbox" name="perfume" id="perfume">
+                                            <span class="vs-checkbox vs-checkbox-lg">
+                                                <span class="vs-checkbox--check">
+                                                    <i class="vs-icon feather icon-check"></i>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="perfume">ID 8000 (consumer commodities)<span class="text-danger"></span></label>
+                                    </div>
                                     
                                 @endcan
 
