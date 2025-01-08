@@ -41,7 +41,7 @@ class Table extends Component
      */
     public $sortAsc = false;
     public $sortBy = 'id';
-    public $year = 2024;
+    public $year;
 
 
     public function mount($userType = null)
@@ -73,7 +73,8 @@ class Table extends Component
 
     public function getOrders()
     {
-        $selectedYear = $this->year ?: date('Y');
+        $this->year = $this->year ?? date('Y');
+        $selectedYear = $this->year;
 
         return (new OrderRepository)->get(request()->merge([
             'order_date' => $this->date,
