@@ -55,11 +55,11 @@ class Table extends Component
 
         return view('livewire.pre-alert.table', [
             'parcels' => $this->query
-            ->orderBy(
-                $this->sortBy,
-                $this->sortAsc ? 'ASC' : 'DESC'
-            )
-            ->paginate($this->pageSize)
+                ->orderBy(
+                    $this->sortBy,
+                    $this->sortAsc ? 'ASC' : 'DESC'
+                )
+                ->paginate($this->pageSize)
         ]);
     }
 
@@ -154,6 +154,7 @@ class Table extends Component
             $shippingService = ShippingService::where('service_sub_class', ShippingService::ID_Label_Service)->first();
 
             if (!$shippingService) {
+                session()->flash('livewire-alert-danger', 'Shipping service not found.');
                 return $this->redirectWithError("Shipping service not found.");
             }
 
@@ -189,6 +190,7 @@ class Table extends Component
 
             if (empty($matches)) {
                 DB::rollBack();
+                session()->flash('livewire-alert-danger', 'Invalid merchant format. Ensure it contains first name, last name, and ZIP code.');
                 return $this->redirectWithError("Invalid merchant format. Ensure it contains first name, last name, and ZIP code.");
             }
 
@@ -203,25 +205,26 @@ class Table extends Component
             $order->syncServices([]);
             $order->doCalculations();
 
-            $isPayingFlag = false;
+            $isPayingFlag = true;
 
             // Check payment status
-            if (!$order->isPaid()) {
-                if (getBalance() < $order->gross_total) {
-                    DB::rollBack();
-                    return $this->redirectWithError("Not Enough Balance. Please Recharge your account.");
-                } else {
-                    $order->update([
-                        'is_paid' => true,
-                        'status' => Order::STATUS_PAYMENT_DONE
-                    ]);
+            // if (!$order->isPaid()) {
+            //     if (getBalance() < $order->gross_total) {
+            //         DB::rollBack();
+            //         session()->flash('livewire-alert-danger', 'Not Enough Balance. Please Recharge your account.');
+            //         return $this->redirectWithError("Not Enough Balance. Please Recharge your account.");
+            //     } else {
+            //         $order->update([
+            //             'is_paid' => true,
+            //             'status' => Order::STATUS_PAYMENT_DONE
+            //         ]);
 
-                    chargeAmount($order->gross_total, $order);
-                    AutoChargeAmountEvent::dispatch($order->user);
-                    $isPayingFlag = true;
-                }
-            }
-            if($isPayingFlag) {
+            //         chargeAmount($order->gross_total, $order);
+            //         AutoChargeAmountEvent::dispatch($order->user);
+            //         $isPayingFlag = true;
+            //     }
+            // }
+            if ($isPayingFlag) {
                 $order->update([
                     'api_response' => null,
                     'corrios_tracking_code' => 'HD' . date('d') . date('m') . substr(date('s'), 1, 1) . $order->id . 'GT',
@@ -237,8 +240,7 @@ class Table extends Component
                 session()->flash('message', 'ID Label generated successfully!');
 
                 // Redirect to orders index page
-                return redirect()->route('admin.orders.index');
-
+                return redirect()->route('admin.orders.label.index',encrypt($order->id));
             }
         } catch (\Exception $e) {
             DB::rollBack();
@@ -249,6 +251,8 @@ class Table extends Component
             ]);
 
             // Return error message
+            session()->flash('livewire-alert-danger', 'An error occurred while generating the ID Label: ' .  $e->getMessage());
+
             return $this->redirectWithError("An error occurred while generating the ID Label: " . $e->getMessage());
         }
     }
@@ -280,8 +284,7 @@ class Table extends Component
 
     private function addOrderTracking($order)
     {
-        if($order->trackings->isEmpty())
-        {
+        if ($order->trackings->isEmpty()) {
             OrderTracking::create([
                 'order_id' => $order->id,
                 'status_code' => Order::STATUS_PAYMENT_PENDING,
@@ -293,5 +296,4 @@ class Table extends Component
 
         return true;
     }
-
 }

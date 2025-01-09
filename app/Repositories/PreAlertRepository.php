@@ -13,6 +13,8 @@ use App\Mail\User\ShipmentTransit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\User\ConsolidationRequest;
+use App\Models\OrderItem;
+use App\Models\ShCode;
 use App\Services\Calculators\WeightCalculator;
 use Illuminate\Support\Facades\File;
 
@@ -40,7 +42,7 @@ class PreAlertRepository
 
         $request->merge([
             'status' => Order::STATUS_PREALERT_TRANSIT
-        ]);
+        ]); 
 
         $data = [ 'merchant', 'carrier', 'tracking_id', 'order_date','customer_reference', 'user_id','status'];
 
@@ -76,6 +78,7 @@ class PreAlertRepository
         $order = Order::create(
             $request->only($data)
         );
+        $this->updateOrCreateItem($order, $request);
 
         if ( !Auth::user()->isAdmin() && Auth::user()->can('addShipmentDetails',Order::class) ){
             $order->update([
@@ -137,7 +140,7 @@ class PreAlertRepository
             ]);
             $data[] = 'warehouse_number';
         }
-
+        $this->updateOrCreateItem($order, $request);
         $status = $order->status;
 
         if ( $order->status < Order::STATUS_ORDER ){
@@ -233,7 +236,25 @@ class PreAlertRepository
         }
         return $order;
     }
-
+    function updateOrCreateItem($order,$request) {
+        if(in_array($request->order_contain_option,['battery','perfume'])){
+            $shCode = ShCode::where('description', 'like', "%$request->order_contain_option%")->first() ?: ShCode::first();
+            OrderItem::updateOrCreate(
+                [
+                     'order_id' => $order->id,
+                ],
+                [
+               'sh_code' => $shCode->code,
+               'description' => $shCode->description,
+               'quantity' => 1,
+               'made_in' => '',
+               'value' => 1,
+               'contains_battery' =>$request->order_contain_option == 'battery' ? true : false,
+               'contains_perfume' => $request->order_contain_option == 'perfume' ? true : false, 
+               'contains_flammable_liquid' => true , 
+           ]);
+       }
+    }
     public function delete(Order $order,$soft=true)
     {
         if ( $soft ){

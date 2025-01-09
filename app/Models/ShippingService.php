@@ -34,7 +34,7 @@ class ShippingService extends Model
     const Packet_Mini = 33197;
     const AJ_Standard_CN = 34166;
     const AJ_Express_CN = 33174;
-    
+
     const AJ_Packet_Standard = 33164;
     const AJ_Packet_Express = 33172;
     const BCN_Packet_Standard = 44164;
@@ -111,13 +111,13 @@ class ShippingService extends Model
         $serviceSubClass = $this->service_sub_class;
         $serviceMapping = [
             ShippingService::AJ_Packet_Standard => 'Packet Standard',
-            ShippingService::AJ_Packet_Express => 'Packet Express', 
+            ShippingService::AJ_Packet_Express => 'Packet Express',
             ShippingService::AJ_Standard_CN => 'Packet Standard AJ',
-            ShippingService::AJ_Express_CN => 'Packet Express AJ', 
-            ShippingService::BCN_Packet_Standard => 'Packet Standard', 
-            ShippingService::BCN_Packet_Express => 'Packet Express', 
-        ]; 
-        if (array_key_exists($serviceSubClass, $serviceMapping)) { 
+            ShippingService::AJ_Express_CN => 'Packet Express AJ',
+            ShippingService::BCN_Packet_Standard => 'Packet Standard',
+            ShippingService::BCN_Packet_Express => 'Packet Express',
+        ];
+        if (array_key_exists($serviceSubClass, $serviceMapping)) {
             return $serviceMapping[$serviceSubClass];
         }
         return  $this->name;
@@ -166,6 +166,9 @@ class ShippingService extends Model
         return false;
     }
 
+    function getUnpaidPrintableAttribute() {
+        return $this->is_id_label_service;
+    }
     public function isDomesticService()
     {
         if (collect($this->domesticShippingServices())->contains($this->service_sub_class)) {

@@ -17,7 +17,7 @@ class Create extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $pageSize = 50;
-    
+
     public $recipient;
     public $merchant;
     public $customer_reference;
@@ -26,42 +26,44 @@ class Create extends Component
     public $warehouse_number;
     public $sortBy = 'id';
     public $sortAsc = false;
-    public $selectedOrder;
+    public $selectedOrders;
 
     public function mount()
     {
-        $this->selectedOrder = request('order');
-        
-        if ($this->selectedOrder) {
-            try {
-                $this->selectedOrder = decrypt($this->selectedOrder);
-            } catch (Exception $e) {
-                $this->selectedOrder = null;
-            }
+
+        $ordersId = (json_decode(request()->data))??[];
+        if (request('order')) {
+            $ordersId[] = request('order');
         }
+        $this->selectedOrders= array_map(function ($order) {
+            try {
+            return decrypt($order);
+            } catch (Exception $e) {
+            }
+        }, $ordersId);
+       
     }
 
     public function render()
     {
-
-        return view('livewire.payment-invoice.create',[
+        return view('livewire.payment-invoice.create', [
             'orders' => $this->getUnpaidOrders(),
-            'selected_order' => $this->selectedOrder
+            'selected_orders' => $this->selectedOrders
         ]);
     }
 
     public function getUnpaidOrders()
     {
         $query = Order::query()
-                        ->where('user_id',Auth::id())
-                        ->where('is_paid',false)
-                        ->where('is_shipment_added',true)
-                        ->where('status','>=',Order::STATUS_ORDER)
-                        ->where('gross_total','>',0)
-                        ->where('shipping_service_id','!=',null)
-                        ->doesntHave('paymentInvoices')
-                        ->with('recipient')
-                        ->orderBy('id', 'desc');
+            ->where('user_id', Auth::id())
+            ->where('is_paid', false)
+            ->where('is_shipment_added', true)
+            ->where('status', '>=', Order::STATUS_ORDER)
+            ->where('gross_total', '>', 0)
+            ->where('shipping_service_id', '!=', null)
+            ->doesntHave('paymentInvoices')
+            ->with('recipient')
+            ->orderBy('id', 'desc');
 
         $query->when($this->recipient, function ($query) {
             $query->whereHas('recipient', function ($subquery) {
@@ -100,6 +102,11 @@ class Create extends Component
 
     public function toggleOrderSelection($orderId)
     {
-        $this->selectedOrder = $this->selectedOrder == $orderId ? null : $orderId;
+        if (($key = array_search($orderId, $this->selectedOrders)) !== false) {
+            unset($this->selectedOrders[$key]);
+        } else {
+            $this->selectedOrders[] = $orderId;
+        }
+        $this->selectedOrders = array_values($this->selectedOrders);
     }
 }

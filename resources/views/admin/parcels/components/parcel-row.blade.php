@@ -94,7 +94,7 @@
                             <i class="feather icon-edit"></i> @lang('consolidation.Edit Consolidation')
                         </a>
                     @endif
-                    @if (setting('id_label_service', null, Auth::user()->id))
+                    @if (setting('id_label_service', null,$parcel->user_id))
                         <button wire:click="generateIDLabel('{{ $parcel->encrypted_id }}')" class="dropdown-item btn" title="Generate ID Label">
                             <i class="fa fa-print"></i> Generate ID Label
                         </button>

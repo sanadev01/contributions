@@ -23,8 +23,8 @@ class OrderLabelController extends Controller
     public function store(Request $request, Order $order)
     {
         $this->authorize('canPrintLable', $order);
-
-        if (!$order->isPaid()) {
+        
+        if (!$order->isPaid()&&!$order->shippingService->unpaid_printable) {
             $error = 'Error: Payment is Pending';
             $buttonsOnly = $request->has('buttons_only');
             return view('admin.orders.label.label', compact('order', 'error', 'buttonsOnly'));

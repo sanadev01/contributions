@@ -116,6 +116,8 @@
                     @if (\Request::route()->getName() != 'admin.trash-orders.index' && $isTrashed)
                         <th style="min-width: 100px;">
                             <select name="" id="bulk-actions" class="form-control">
+                                <option value="">No Select</option>
+                                <option value="pay-selected">Create Invoice</option>
                                 <option value="clear">Clear All</option>
                                 <option value="checkAll">Select All</option>
                                 <option value="print-label">Print Label</option>

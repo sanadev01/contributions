@@ -114,15 +114,20 @@
                     @lang('orders.actions.actions')
                 </button>
                 <div class="dropdown-menu overlap-menu" aria-labelledby="dropdownMenuLink">
-
+                    @if(optional($order->shippingService)->is_id_label_service&!$order->isPaid() && $order->gross_total>0)
+                        <a href="{{ route('admin.orders.label.index', $order->encrypted_id) }}" class="dropdown-item" title="@lang('orders.actions.label')">
+                            <i class="feather icon-printer"></i>@lang('orders.actions.label')
+                        </a>
+                    @endif
                     @user
+                    
                     @if( !$order->isPaid() && !$order->isNeedsProcessing() && $order->user->isActive())
 
-                    @if ( optional($order)->getPaymentInvoice() )
+                    @if ($order->gross_total>0 && optional($order)->getPaymentInvoice() )
                     <a @if(Auth::user()->isActive()) href="{{ route('admin.payment-invoices.invoice.show',optional($order)->getPaymentInvoice()) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item" title="Pay Order">
                         <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
                     </a>
-                    @else
+                    @elseif($order->gross_total>0)
                     <a @if(Auth::user()->isActive()) href="{{ route('admin.payment-invoices.orders.index',['order'=>$order->encrypted_id]) }}" @else data-toggle="modal" data-target="#hd-modal" data-url="{{ route('admin.modals.user.suspended') }}" @endif class="dropdown-item" title="Pay Order">
                         <i class="feather icon-dollar-sign"></i> @lang('orders.actions.pay-order')
                     </a>
@@ -143,7 +148,7 @@
                         <i class="feather icon-edit"></i> @lang('parcel.Edit Parcel')
                     </a>
                     @endcan
-
+                   
                     @if( $order->isPaid() && auth()->user()->can('canPrintLable',$order) && !$order->isRefund() && $order->is_paid && Auth::user()->isActive() && !$order->isTrashed())
                     <a href="{{ route('admin.orders.label.index', $order->encrypted_id) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                         <i class="feather icon-printer"></i>@lang('orders.actions.label')
@@ -152,7 +157,7 @@
                     <a href="{{ route('admin.order.label.cancel',$order->encrypted_id) }}" class="dropdown-item" title="@lang('orders.actions.cancel')">
                         <i class="feather icon-x-square"></i>@lang('orders.actions.cancel')
                     </a>
-                    @endif
+                    @endif 
                     @if( $order->corrios_tracking_code && $order->recipient->country_id != \App\Models\Order::US && !$order->hasSecondLabel() && !$order->isRefund())
                     <a href="{{ route('admin.order.us-label.index', $order->encrypted_id) }}" class="dropdown-item" title="@lang('orders.actions.label')">
                         <i class="feather icon-printer"></i>@lang('orders.actions.buy-us-label')
