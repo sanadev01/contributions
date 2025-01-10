@@ -79,7 +79,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             'SRM' => 'SRM service',
             'SRP' => 'SRP service',
             'Priority' => 'Priority',
-            '537' => 'Global eParcel Prime',
+            '537' => 'Global eParcel Prime',  
             '773' => 'Prime5',
             'USPS Ground' => 'USPS Ground',
             '734' => 'Post Plus',
@@ -117,7 +117,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
         if (isset($serviceSubclasses[$this->services_subclass_code])) {
             return $serviceSubclasses[$this->services_subclass_code];
         } else {
-            return 'FirstClass';
+            return optional(ShippingService::where('service_sub_class', $this->services_subclass_code)->first())->name??'FirstClass';
         }
     } 
 
@@ -152,6 +152,7 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
             ShippingService::PHX_ST_COURIER => 26,
             ShippingService::PHX_EX_COURIER => 27,
             ShippingService::Mile_Express => 28,
+            ShippingService::ID_Label_Service => 29,
         ];
     
         // Check if the service subclass code exists in the array
@@ -352,6 +353,9 @@ class Container extends Model implements \App\Services\Correios\Contracts\Contai
     {
         return $this->services_subclass_code == ShippingService::Mile_Express;
 
+    }
+    function hasIdLabelService() {
+       return $this->services_subclass_code == ShippingService::ID_Label_Service;
     }
 
 }

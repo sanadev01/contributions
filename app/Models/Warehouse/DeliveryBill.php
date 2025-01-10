@@ -183,5 +183,14 @@ class DeliveryBill extends Model
     {
         return $this->containers->first()->hasMileExpressService();
     }
+    function getCodeNameAttribute() {
+        $name =( optional(optional(optional(optional($this->containers->first())->orders)->first())->shippingService)->name)??"H"; 
+        preg_match_all('/\b\w/u', $name, $matches); 
+        $firstLetters = implode('', $matches[0]);  
+        return $firstLetters; 
+    }
 
+    function isIdLabelService() {
+        return $this->containers->first()->hasIdLabelService();
+    }
 }

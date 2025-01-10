@@ -129,11 +129,9 @@
                             </div>
                             @endcan
                             @can('addShipmentDetails', App\Models\Order::class)
-                            <livewire:order.shipment-info :order="$parcel" />
-                            <h4 class="mt-2">@lang('parcel.Shipment Images') </h4>
+                            <livewire:order.shipment-info :order="$parcel" /> 
 
                             <!-- Button to trigger the modal -->
-                            <button class="btn btn-primary" id="openUploadModalBtn" type="button">Upload Images</button>
                             <!-- Modal -->
                             <div class="modal fade" id="uploadModal" aria-labelledby="uploadModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg m-100">
@@ -162,16 +160,60 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="d-flex justify-content-between">
+                                    <div> 
 
+                                    <button class="btn btn-primary" id="openUploadModalBtn" type="button">Upload Shipment Images</button>
+                                     
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="form-check form-check-inline mx-4 text-center">
+                                                <div class="vs-checkbox-con vs-checkbox-primary" title="Battery">
+                                                    <input type="radio" name="order_contain_option" value="battery" id="battery"
+                                                        {{ old('order_contain_option',optional($parcel->items()->first())->contains_battery?'battery':'') == 'battery' ? 'checked' : '' }}>
+                                                    <span class="vs-checkbox vs-checkbox-lg">
+                                                        <span class="vs-checkbox--check">
+                                                            <i class="vs-icon feather icon-check"></i>
+                                                        </span>
+                                                    </span>
+                                                </div> <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="battery">
+                                                    <strong>
+                                                        Contains UN3481
+                                                    </strong>
+                                                </label>
+
+                                            </div>
+                                            <br>
+                                            <div class="form-check form-check-inline mx-4 text-center">
+                                                <div class="vs-checkbox-con vs-checkbox-primary" title="Perfume">
+                                                    <input type="radio" name="order_contain_option" value="perfume" id="perfume"
+                                                        {{ old('order_contain_option',optional($parcel->items()->first())->contains_perfume?'perfume':'') == 'perfume' ? 'checked' : '' }}>
+                                                    <span class="vs-checkbox vs-checkbox-lg">
+                                                        <span class="vs-checkbox--check">
+                                                            <i class="vs-icon feather icon-check"></i>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                                <label class="form-check-label font-medium-1   mt-2" for="perfume">
+                                                    <strong> ID 8000 </strong>
+                                                    (consumer commodities)
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @endcan
 
+                            
 
                             <div class="row mt-1">
                                 <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
-                                    <button type="submit" class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
+                                    <button type="reset" class="btn btn-outline-danger btn-lg waves-effect waves-light mx-3">@lang('parcel.Reset')</button>
+
+                                    <button type="submit" class="btn btn-primary btn-lg glow mb-1 mb-sm-0 mr-0 mr-sm-1 waves-effect waves-light">
                                         @lang('parcel.Save Parcel')
                                     </button>
-                                    <button type="reset" class="btn btn-outline-danger waves-effect waves-light">@lang('parcel.Reset')</button>
                                 </div>
                             </div>
                         </form>

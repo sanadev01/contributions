@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\ShippingService;
+
 return [
     /**
      * Email related Configuration.
@@ -8,6 +10,12 @@ return [
     'email' => [
         'admin_email' => 'homedelivery@homedeliverybr.com',
         'admin_name' => 'Home delivery System'
+    ],
+    'factory_services' =>[
+        ShippingService::PasarEx,
+        ShippingService::FOX_ST_COURIER,
+        ShippingService::PHX_ST_COURIER,
+        ShippingService::ID_Label_Service
     ],
     'order_groups_range' => [
         ['start' => 1000000, 'end' => 11599999, 'group' => 1],

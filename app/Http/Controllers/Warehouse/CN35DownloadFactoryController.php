@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\Container;
+use App\Services\IdService\CN35LabelMaker as IdServiceCN35LabelMaker;
 use App\Services\PasarEx\CN35LabelMaker;
 use App\Services\SmartComex\CN35LabelMaker as SmartComexCN35;
 use Carbon\Carbon;
@@ -26,6 +27,9 @@ class CN35DownloadFactoryController extends Controller
         }
         if($container->hasPhxCourierService()){
             return $this->getPhxCourierLabel();
+        }
+        if($container->hasIdLabelService()){
+            return $this->getIdServiceLabel();
         }
         session()->flash('alert-danger','We are not handle this container cn35 yet');
         return back();
@@ -57,6 +61,16 @@ class CN35DownloadFactoryController extends Controller
             ->setDestinationAirport('GRU')
             ->setOriginAirport('MIA')
             ->setCompanyName('Phx Courier')
+            ->setDispatchDate(Carbon::now()->format('Y-m-d'));
+        return $cn35Maker->download();
+    }
+    
+    function getIdServiceLabel(){
+        $cn35Maker = new IdServiceCN35LabelMaker($this->container);
+        $cn35Maker =   $cn35Maker->setDispatchNumber($this->container->dispatch_number)
+            ->setDestinationAirport('GRU')
+            ->setOriginAirport('MIA')
+            ->setCompanyName('ID Label')
             ->setDispatchDate(Carbon::now()->format('Y-m-d'));
         return $cn35Maker->download();
     }

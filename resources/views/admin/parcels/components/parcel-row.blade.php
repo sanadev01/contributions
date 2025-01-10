@@ -94,6 +94,12 @@
                             <i class="feather icon-edit"></i> @lang('consolidation.Edit Consolidation')
                         </a>
                     @endif
+                    @if (setting('id_label_service', null,$parcel->user_id))
+                        <button wire:click="generateIDLabel('{{ $parcel->encrypted_id }}')" class="dropdown-item btn" title="Generate ID Label">
+                            <i class="fa fa-print"></i> Generate ID Label
+                        </button>
+                    @endif
+
                     @if(Auth::user()->isActive())
                         @can('delete', $parcel)
                             <form method="post" action="{{ route('admin.parcels.destroy',$parcel) }}" class="d-inline-block w-100" onsubmit="return confirmDelete()">

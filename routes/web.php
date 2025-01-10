@@ -137,6 +137,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('payment-invoices', PaymentInvoiceController::class)->only(['index','store','destroy']);
             Route::prefix('payment-invoices')->as('payment-invoices.')->group(function () {
                 Route::resource('orders', OrdersSelectController::class)->only(['index','store']);
+                Route::any('orders-bulk', [App\Http\Controllers\Admin\Payment\OrdersSelectController::class,'index'])->name('orders-bulk.index');
                 Route::resource('invoice', OrdersInvoiceController::class)->only(['show','store','edit','update']);
                 Route::resource('invoice.checkout', OrdersCheckoutController::class)->only(['index','store']);
                 Route::get('invoice/{invoice}/toggle_paid', \PaymentStatusToggleController::class)->name('paid.toggle');

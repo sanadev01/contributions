@@ -140,7 +140,7 @@
                                                 @elseif($deliveryBill->isMileExpress())
                                                 <span class="badge badge-warning text-black">Mile</span>
                                                 @else
-                                                    <span class="badge badge-primary">H</span>
+                                                    <span class="badge badge-primary">{{ $deliveryBill->code_name??H }}</span>
                                                 @endif
                                             @endif
                                             @if(optional($deliveryBill)->Containers->first()->isPRC())

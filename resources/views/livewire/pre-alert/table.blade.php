@@ -1,4 +1,14 @@
 <div class="p-2">
+    @if (session()->has('livewire-alert-danger'))
+    <div class="alert alert-danger">
+        {{ session('livewire-alert-danger') }}
+    </div>
+    @endif 
+     @if (session()->has('livewire-alert-success'))
+    <div class="alert alert-success">
+        {{ session('livewire-alert-success') }}
+    </div>
+    @endif
     <div class="row">
         <div class="col-1">
             <select class="form-control" wire:model="pageSize">
@@ -59,9 +69,9 @@
                 <th></th>
             </tr>
             @forelse($parcels as $parcel)
-                @include('admin.parcels.components.parcel-row',['parcel'=>$parcel])
+            @include('admin.parcels.components.parcel-row',['parcel'=>$parcel])
             @empty
-                <x-tables.no-record colspan="9"></x-tables.no-record>
+            <x-tables.no-record colspan="9"></x-tables.no-record>
             @endforelse
         </tbody>
     </table>

@@ -69,11 +69,11 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($orders as $order)
-                                                <tr class="selectable cursor-pointer {{ $selected_order == $order->id ? 'bg-info' : '' }}">
+                                                <tr class="selectable cursor-pointer {{ in_array( $order->id, $selected_orders) ? 'bg-info' : '' }}">
                                                     <td>
                                                         <input class="form-control order-select" type="checkbox" name="orders[]" id="{{$order->id}}" 
                                                         wire:click="toggleOrderSelection({{$order->id}})"
-                                                        {{ $selected_order == $order->id ? 'checked': '' }} value="{{$order->id}}">
+                                                        {{ in_array( $order->id, $selected_orders)  ? 'checked': '' }} value="{{$order->id}}">
                                                     </td>
                                                     <td>
                                                         {{ $loop->iteration }}
@@ -81,7 +81,7 @@
                                                     <td>
                                                         {{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }}
                                                     </td>
-                                                    <td>{{ $order->merchant }}</td>
+                                                    <td>{{ $order->merchant  }}</td>
                                                     <td>{{ $order->customer_reference }}</td>
                                                     <td>{{ $order->tracking_id }}</td>
                                                     <td>{{  $order->corrios_tracking_code }}</td>
