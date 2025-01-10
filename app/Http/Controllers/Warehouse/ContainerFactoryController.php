@@ -1,17 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Warehouse;
-
-use Illuminate\Http\Request;
 use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
-use App\Repositories\Warehouse\TotalExpressContainerRepository;
 use App\Http\Requests\Warehouse\Container\CreateContainerRequest;
 use App\Http\Requests\Warehouse\Container\UpdateContainerFactoryRequest;
-use App\Http\Requests\Warehouse\Container\UpdateContainerRequest;
 use App\Models\ShippingService;
 use Illuminate\Support\Facades\Auth;
-
 class ContainerFactoryController extends Controller
 {
     /**

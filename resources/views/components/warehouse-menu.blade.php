@@ -92,16 +92,6 @@
                                 <span class="menu-title">Total Express</span>
                             </a>
                         </li>
-                        <li > <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>App\Models\ShippingService::PasarEx]) }}">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title">PasarEx</span>
-                            </a>
-                        </li>
-                        <li > <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>App\Models\ShippingService::Cainiao]) }}">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title">Cainiao</span>
-                            </a>
-                        </li>
                         <li class="{{ $isActive(['warehouse.hound_containers.index','warehouse.hound_containers.create','warehouse.hound_containers.edit','warehouse.hound_container.packages.index']) }}">
                             <a href="{{ route('warehouse.hound_containers.index') }}">
                                 <i class="feather icon-circle"></i>
@@ -120,16 +110,13 @@
                                 <span class="menu-title">@lang('menu.Warehouse.DSS Senegal')</span>
                             </a>
                         </li>
-                        <li> <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>App\Models\ShippingService::FOX_ST_COURIER]) }}">
+                        @foreach (config('hd.factory_services') as $service)
+                        <li > <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>$service]) }}">
                                 <i class="feather icon-circle"></i>
-                                <span class="menu-title">Fox Courier</span>
+                                <span class="menu-title">{{ optional(\App\Models\ShippingService::where('service_sub_class',$service)->first())->name??$service }}</span>
                             </a>
                         </li>
-                        <li> <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>App\Models\ShippingService::PHX_ST_COURIER]) }}">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title">Phx Courier</span>
-                            </a>
-                        </li>
+                        @endforeach
                         <li class="{{ $isActive(['warehouse.mile_express_containers.index','warehouse.mile_express_containers.create','warehouse.mile_express_containers.edit','warehouse.mile_express_container.packages.index']) }}">
                             <a href="{{ route('warehouse.mile_express_containers.index') }}">
                                 <i class="feather icon-circle"></i>

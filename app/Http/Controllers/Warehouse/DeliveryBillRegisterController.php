@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Warehouse;
 
 use App\Models\ShippingService;
-use App\Models\Warehouse\Container;
 use App\Http\Controllers\Controller;
 use App\Models\Warehouse\DeliveryBill;
 use App\Services\Cainiao\Client as CainiaoClient;
@@ -31,14 +30,17 @@ class DeliveryBillRegisterController extends Controller
                 'cnd38_code' => $deliveryBill->setCN38Code(),
                 'request_id' => $deliveryBill->setRandomRequestId()
             ]);
-        } 
-
+            session()->flash('alert-success','Delivery registered successfully ! Now you can download deliverybill.');
+            return back();
+        }
  
-        if($deliveryBill->isAnjunChina() ||$deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE() || $deliveryBill->isHDExpress()|| $deliveryBill->isHoundExpress() || $deliveryBill->isSenegal() || $deliveryBill->isPasarEx() || $deliveryBill->isFoxCourier() || $deliveryBill->isPhxCourier()){
+        if($deliveryBill->isAnjunChina() ||$deliveryBill->isGePS() || $deliveryBill->isSwedenPost() || $deliveryBill->isPostPlus() || $deliveryBill->isGSS() || $deliveryBill->isGDE() || $deliveryBill->isHDExpress()|| $deliveryBill->isHoundExpress() || $deliveryBill->isSenegal() || $deliveryBill->isPasarEx() || $deliveryBill->isFoxCourier() || $deliveryBill->isPhxCourier()|| $deliveryBill->isIdLabelService()){
             $deliveryBill->update([
                 'cnd38_code' => $deliveryBill->id.''.$deliveryBill->setCN38Code(),
                 'request_id' => $deliveryBill->setRandomRequestId()
-            ]);
+            ]); 
+            session()->flash('alert-success','Delivery registered successfully ! Now you can download deliverybill.');
+            return back();
             
         }
         

@@ -44,8 +44,8 @@
     <form action="{{ route('admin.payment-invoices.orders-bulk.index') }}" method="POST" id="pay_selected" onsubmit="return confirm('Are you Sure want to create invoice?');">
         @csrf
         @method('POST')
-        <input type="" name="command" id="command" value="">
-        <input type="" name="data" id="data" value="">
+        <input type="hidden" name="command" id="command" value="">
+        <input type="hidden" name="data" id="data" value="">
     </form>
 </div>
 <!--SEND MAIL MODAL-->
