@@ -70,7 +70,7 @@ class CN35DownloadFactoryController extends Controller
         $cn35Maker =   $cn35Maker->setDispatchNumber($this->container->dispatch_number)
             ->setDestinationAirport('GRU')
             ->setOriginAirport('MIA')
-            ->setCompanyName('I Label')
+            ->setCompanyName('ID Label')
             ->setDispatchDate(Carbon::now()->format('Y-m-d'));
         return $cn35Maker->download();
     }
