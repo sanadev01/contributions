@@ -70,7 +70,7 @@ class OrderRepository
             });
         }
 
-        $year = $request->year ?: date('Y');
+        $year = $request->year ?: 'all';
         if ($year !== 'all') {
             $query->whereYear('created_at', $year);
         }
