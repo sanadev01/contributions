@@ -40,12 +40,19 @@ class KPIReportController extends Controller
             }
             catch(Exception $e){
                 session()->flash('alert-danger', 'Error' . $e->getMessage());
-                return back(); 
+                return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates', 'firstEventDate'));
             }
-            $trackings = $response['trackings'];
-            $firstEventDate = $response['firstEventDate'];
-            $trackingCodeUsersName = $response['trackingCodeUsersName'];
-            $orderDates = $response['orderDates'];
+            if(isset($response['trackings'])){
+                $trackings = $response['trackings'];
+                $firstEventDate = $response['firstEventDate'];
+                $trackingCodeUsersName = $response['trackingCodeUsersName'];
+                $orderDates = $response['orderDates'];
+            }
+        }    
+        if(!count($trackings)){
+            if($request->start_date || $request->end_date || $request->trackingNumbers!==null){
+                session()->flash('alert-danger', 'no record found'); 
+            }
         }
         return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates', 'firstEventDate'));
     }
