@@ -26,16 +26,27 @@
                             <div class="row">
                                 @csrf
 
-                                <div class="col-5">
+                                <div class="col-4">
                                     <label for="end-date" class="mt-4 mb-2 font-black"><strong>Start Date</strong></label><br>
                                     <div class="input-group">
                                         <input name="start_date" id="startDate" class="form-control py-2 mr-1 p-3" type="date">
                                     </div>
                                 </div>
-                                <div class="col-5">
+                                <div class="col-4">
                                     <label for="end-date" class="mt-4 mb-2 font-black"><strong>End Date</strong></label><br>
                                     <div class="input-group">
                                         <input name="end_date" id="endDate" class="form-control py-2 mr-1 p-3" type="date">
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="controls">
+                                        <label for="end-date" class="mt-4 mb-2 font-black"><strong>Status</strong></label><br>
+                                        <select name="is_paid" class="form-control">
+                                            <option value="">All</option>
+                                            <option value="true">Paid</option>
+                                            <option value="false">Unpaid</option>
+                                        </select>
+                                        <div class="help-block"></div>
                                     </div>
                                 </div>
 

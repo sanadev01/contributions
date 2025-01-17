@@ -28,7 +28,7 @@ class AccrualReport extends AbstractExportService
         $row = $this->currentRow; 
         foreach ($this->orders as $order) {
                    $this->setCellValue('A'.$row, $order->user->name);
-                   $this->setCellValue('B'.$row, $order->warehouse_number);
+                   $this->setCellValue('B'.$row, $order->corrios_tracking_code);
                    $this->setCellValue('C'.$row, $order->carrier); 
                    $this->setCellValue('D'.$row, ''.$order->gross_total); 
                    $this->setCellValue('E'.$row, ''.(string) $order->tax_and_duty);  

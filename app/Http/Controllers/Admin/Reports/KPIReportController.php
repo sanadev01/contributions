@@ -58,14 +58,20 @@ class KPIReportController extends Controller
     }
     public function store(Request $request)
     { 
-        if($request->type == 'accrual'){
+        if($request->type == 'accrual'){  
             if($request->start_date != null && $request->end_date != null)
                 {
                     $start_date = $request->start_date.' 00:00:00';
                     $end_date = $request->end_date.' 23:59:59';
-                    $orders = Order::whereBetween('order_date', [$start_date, $end_date])->where('tax_and_duty','!=',0)->get();
+                    $orders = Order::whereBetween('order_date', [$start_date, $end_date])
+                    ->when($request->is_paid&&$request->is_paid!=="all",function($query) use ($request){
+                        return $query->where('is_paid',$request->is_paid=='true');
+                    })->where('tax_and_duty','!=',0)->get();
                 }else{ 
-                    $orders =  Order::where('tax_and_duty','!=',0)->get();
+                    $orders =  Order::where('tax_and_duty','!=',0)
+                    ->when($request->is_paid&&$request->is_paid!=="all",function($query) use ($request){
+                        return $query->where('is_paid',$request->is_paid=='true');
+                    })->get();
                 }
                 if(count($orders)<1){ 
                     session()->flash('alert-danger', 'No order found!');
