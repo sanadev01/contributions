@@ -28,16 +28,17 @@ class AccrualReport extends AbstractExportService
         $row = $this->currentRow; 
         foreach ($this->orders as $order) {
                    $this->setCellValue('A'.$row, $order->user->name);
-                   $this->setCellValue('B'.$row, $order->warehouse_number);
+                   $this->setCellValue('B'.$row, $order->corrios_tracking_code);
                    $this->setCellValue('C'.$row, $order->carrier); 
                    $this->setCellValue('D'.$row, ''.$order->gross_total); 
                    $this->setCellValue('E'.$row, ''.(string) $order->tax_and_duty);  
                    $this->setCellValue('F'.$row, $order->order_date->format('m-d-Y'));
+                   $this->setCellValue('H'.$row, $order->warehouse_number);
                    if($order->isPaid()){
                         $grossTotalPaid += $order->gross_total; 
                         $totalPaidTax   += $order->tax_and_duty;
                         $this->setCellValue('G'.$row, "Paid");
-                        $this->setBackgroundColor("A{$row}:G{$row}", 'adfb84');
+                        $this->setBackgroundColor("A{$row}:H{$row}", 'adfb84');
                     }else{
                         $this->setCellValue('G'.$row, "Un-paid"); 
                     }
@@ -48,13 +49,13 @@ class AccrualReport extends AbstractExportService
                 $this->setCellValue('D'.$row, number_format($this->orders->sum('gross_total'),2)); 
                 $this->setCellValue('E'.$row, number_format($this->orders->sum('tax_and_duty'),2)); 
                 $this->currentRow = $row;
-                $this->setBackgroundColor("A{$row}:G{$row}", 'fcf7b6');
+                $this->setBackgroundColor("A{$row}:H{$row}", 'fcf7b6');
                 $row++;
                 $this->setCellValue('C'.$row, "Total Paid");
                 $this->setCellValue('D'.$row, number_format($grossTotalPaid,2)); 
                 $this->setCellValue('E'.$row, number_format($totalPaidTax,2)); 
                 $this->currentRow = $row;
-                $this->setBackgroundColor("A{$row}:G{$row}", 'adfb84');
+                $this->setBackgroundColor("A{$row}:H{$row}", 'adfb84');
         }
  
 
@@ -82,10 +83,12 @@ class AccrualReport extends AbstractExportService
         $this->setColumnWidth('F', 20);
         $this->setCellValue('F1', 'Order Date');
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Order Date');
+        $this->setCellValue('G1', 'Status');
+        $this->setColumnWidth('H', 20);
+        $this->setCellValue('H1', 'Warehouse Number');
 
-        $this->setBackgroundColor('A1:G1', '2b5cab');
-        $this->setColor('A1:G1', 'FFFFFF');
+        $this->setBackgroundColor('A1:H1', '2b5cab');
+        $this->setColor('A1:H1', 'FFFFFF');
 
         $this->currentRow++;
 

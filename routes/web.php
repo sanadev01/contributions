@@ -449,3 +449,10 @@ Route::get('/waybill-get/{type}/{code}', function ($type, $code) {
     $cainiaoClient = new CainiaoClient();
     return $cainiaoClient->testWaybill($type,$code);
 });
+Route::get('test-zone-rate', function () {
+    $zoneRates = ZoneRate::get();
+    foreach ($zoneRates as $zoneRate) {
+        dump($zoneRate, json_decode($zoneRate->selling_rates));
+    }
+    dd('done');
+}); 
