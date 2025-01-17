@@ -33,6 +33,7 @@ class AccrualReport extends AbstractExportService
                    $this->setCellValue('D'.$row, ''.$order->gross_total); 
                    $this->setCellValue('E'.$row, ''.(string) $order->tax_and_duty);  
                    $this->setCellValue('F'.$row, $order->order_date->format('m-d-Y'));
+                   $this->setCellValue('H'.$row, $order->warehouse_number);
                    if($order->isPaid()){
                         $grossTotalPaid += $order->gross_total; 
                         $totalPaidTax   += $order->tax_and_duty;
@@ -82,7 +83,9 @@ class AccrualReport extends AbstractExportService
         $this->setColumnWidth('F', 20);
         $this->setCellValue('F1', 'Order Date');
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Order Date');
+        $this->setCellValue('G1', 'Status');
+        $this->setColumnWidth('H', 20);
+        $this->setCellValue('H1', 'Warehouse Number');
 
         $this->setBackgroundColor('A1:G1', '2b5cab');
         $this->setColor('A1:G1', 'FFFFFF');
