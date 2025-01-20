@@ -13,6 +13,7 @@ return [
     'Carrier Inside' => 'Your customer nick name or their code',
     'Tracking Inside' => 'Your reference or order number',
     'External Customer Reference' => 'Additional reference',
+    'Customer Reference' => 'Customer reference',
     'Merchant' => 'Merchant',
     'Sender' => 'Sender',
     'Carrier' => 'Carrier',

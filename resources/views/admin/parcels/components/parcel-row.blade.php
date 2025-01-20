@@ -44,7 +44,7 @@
     </td>
     <td>{{ $parcel->merchant }}</td>
     <td>
-        {{ $parcel->carrier }}
+        {{ $parcel->customer_reference }}</td>
     </td>
     <td class="p-1">
         {{ $parcel->tracking_id }}

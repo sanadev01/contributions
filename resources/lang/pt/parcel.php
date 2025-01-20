@@ -18,6 +18,7 @@ return [
     'Carrier Inside' => 'Nome do seu cliente ou código do interno do seu cliente',
     'Tracking Inside' => 'Sua referência ou Código Externo ',
     'External Customer Reference' => 'Referência adicional',
+    'Customer Reference' => 'Referência do cliente',
     'Arrival Date' => 'Data de chegada',
     'Order Date' => 'Data do pedido',
     'Invoice' => 'Fatura',

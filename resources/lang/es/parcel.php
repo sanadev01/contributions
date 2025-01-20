@@ -11,6 +11,7 @@ return [
     'Carrier Inside' => 'Nombre del cliente o destinatario para una fácil visualización',
     'Tracking Inside' => 'Su Referencia o Código Externo',
     'External Customer Reference' => 'Referencia adicional',
+    'Customer Reference' => 'Referencia del cliente',
     'Merchant' => 'Comerciante',
     'Sender' => 'Remitente',
     'Carrier' => 'Transportador',
