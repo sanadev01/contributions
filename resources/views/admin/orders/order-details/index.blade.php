@@ -1,4 +1,4 @@
-@extends('admin.orders.layouts.wizard')
+@extends('admin.orders.layouts.order-items-wizard')
 @section('wizard-css')
 <link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
 @endsection
@@ -9,66 +9,69 @@
         @foreach (explode('!', $error) as $index=>$msg)
         @if(trim($msg))
         @if($index==0)
-            @foreach (explode(':', $msg) as $index2=>$msg2)
-                @if(trim($msg))
-                    @if($index2==0)
-                        <h6 class="alert text-danger text-justify">{{ trim($msg2) }}</h6>
-                    @else
-                        <li>{{ trim($msg2) }}</li>
-                    @endif
-                @endif
-            @endforeach 
+        @foreach (explode(':', $msg) as $index2=>$msg2)
+        @if(trim($msg))
+        @if($index2==0)
+        <h6 class="alert text-danger text-justify">{{ trim($msg2) }}</h6>
         @else
-            <li>{{ trim($msg) }}</li>
+        <li>{{ trim($msg2) }}</li>
         @endif
         @endif
         @endforeach
-</ul>
+        @else
+        <li>{{ trim($msg) }}</li>
+        @endif
+        @endif
+        @endforeach
+    </ul>
 </div>
 @endif
 <div class="alert alert-danger" role="alert" id="ups_response" style="display: none;"></div>
 <form action="{{ route('admin.orders.order-details.store',$order) }}" method="POST" class="wizard" id="order-form">
     @csrf
     <input type="hidden" name="order_id" id="order_id" value="{{$order->id}}">
-    <div class="content clearfix">
+    <div class="content clearfix" >
         <!-- Step 1 -->
         <h6 id="steps-uid-0-h-0" tabindex="-1" class="title current">@lang('orders.order-details.Step 1')</h6>
         <fieldset role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current p-4" aria-hidden="false">
             <div class="row">
-                <div class="form-group col-12 col-sm-6 col-md-6">
-                    <div class="controls">
-                        <label>@lang('orders.order-details.Customer Reference') <span class="text-danger"></span></label>
-                        <input name="customer_reference" class="form-control" {{($order->recipient->country_id == $chileCountryId) ? 'required' : ''}} value="{{ $order->customer_reference }}" placeholder="@lang('orders.order-details.Customer Reference')" />
+                <div class="form-group col-4 col-sm-6 col-md-4">
+                    <div class="controls col-lg-10 col-sm-12 col-md-12">
+                        <label class="h4">@lang('orders.order-details.Customer Reference') <span class="text-danger"></span></label>
+                        <input name="customer_reference" class="form-control fs-1" {{($order->recipient->country_id == $chileCountryId) ? 'required' : ''}} value="{{ $order->customer_reference }}" placeholder="@lang('orders.order-details.Customer Reference')" />
                         <p class="text-danger">{{ $errors->first('customer_reference') }}</p>
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-6">
-                    <div class="controls">
-                        <label>@lang('orders.order-details.WHR')# <span class="text-danger"></span></label>
-                        <input class="form-control" readonly value="{{ $order->warehouse_number }}" placeholder="@lang('orders.order-details.Warehouse Number')" />
+                <div class="form-group col-4 col-sm-6 col-md-4">
+                    <div class="controls col-lg-10 col-sm-12 col-md-12">
+                        <label class="h4">@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
+                        <select class="form-control bg-white  show-tick" style="background-color: #f6f5ff !important;" name="tax_modality" id="tax_modality" readonly required placeholder="@lang('orders.order-details.Tax Modality')">
+                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }}>DDU</option>
+                            <option value="ddp" {{ 'ddp' == $order->tax_modality || setting('is_prc_user', null, $order->user->id) ? 'selected' : '' }}>DDP</option>
+                        </select>
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-6">
-                    <div class="controls">
+                <div class="form-group col-4 col-sm-6 col-md-4 me-3">
+                    <div class="controls col-lg-10 col-sm-12 col-md-12">
                         <label class="h4">Freight <span class="text-danger"></span></label>
                         <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight', $order->user_declared_freight) }}" placeholder="Freight" />
-                        {{-- <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight',__default($order->user_declared_freight,$order->gross_total)) }}" placeholder="Freight"/> --}}
                         <div class="help-block"></div>
                         <span class="text-danger">@error('user_declared_freight') {{ $message }} @enderror</span>
                     </div>
                 </div>
             </div>
-            <h4 class="mt-2">@lang('orders.order-details.Service')</h4>
             <div id="error-alert" style="display: none; color: red; font-weight: bold; margin-bottom: 10px;">
                 <!-- Error message will appear here -->
             </div>
-            
+
+            <hr>
             <div class="row mt-1">
-                <div class="form-group col-12 col-sm-6 col-md-6">
-                    <div class="controls">
-                        <label>@lang('orders.order-details.Select Shipping Service')<span class="text-danger"></span></label>
+                <div class="form-group col-4 col-sm-6 col-md-4">
+                    <div class="controls col-lg-10 col-sm-12 col-md-12">
+                        <h4 class="h4">@lang('orders.order-details.Service')</h4>
+
                         @if ($order->recipient->country_id != $usCountryId)
                         <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="shipping_service_id" required placeholder="Select Shipping Service">
                             <option value="">@lang('orders.order-details.Select Shipping Service')</option>
@@ -97,117 +100,102 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-                {{-- @dd($order->tax_modality ) --}}
-                <div class="form-group col-12 col-sm-6 col-md-6">
-                    <div class="controls">
-                        <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
-                        <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" readonly required placeholder="@lang('orders.order-details.Tax Modality')">
-                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }}>DDU</option>
-                            <option value="ddp" {{ 'ddp' == $order->tax_modality || setting('is_prc_user', null, $order->user->id) ? 'selected' : '' }}>DDP</option>
-                        </select>
+
+                <div class="form-group col-4 col-sm-6 col-md-4">
+                    <label><span class="text-danger"></span></label>
+                    <div class="controls col-lg-10 col-sm-12 col-md-12">
+                        @if($order->sinerlog_tran_id)
+                        <label for="h4"></label>
+                        <div class="controls row mb-1">
+                            <div class="form-check form-check-inline mr-5">
+                                <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
+
+                                    <input type="checkbox" name="return_origin " id="returnParcel" @if($order->sinerlog_tran_id == 1) checked @endif>
+                                    <span class="vs-checkbox vs-checkbox-lg">
+                                        <span class="vs-checkbox--check">
+                                            <i class="vs-icon feather icon-check"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                                <label class="form-check-label fs-7 font-weight-bold mt-2 ml-2" for="returnParcel">Return the parcel; I'll cover the cost.<span class="text-danger"></span></label>
+                            </div>
+                        </div>
+                        @else
+                        <div class="controls row mb-1">
+                            <div class="form-check form-check-inline mr-5">
+                                <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
+                                    <input type="checkbox" name="return_origin" id="returnParcel" @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
+                                    <span class="vs-checkbox vs-checkbox-lg">
+                                        <span class="vs-checkbox--check">
+                                            <i class="vs-icon feather icon-check"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                                <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
+                            </div>
+
+                        </div>
+                        @endif
+                        <div class="help-block"></div>
+                    </div>
+                </div>
+
+                <div class="form-group col-4 col-sm-6 col-md-4">
+                    <label><span class="text-danger"></span></label>
+                    <div class="controls col-lg-10 col-sm-12 col-md-12">
+                        @if($order->sinerlog_tran_id)
+                        <label for="h4"></label>
+                        <div class="controls row mb-1">
+
+                            <div class="form-check form-check-inline mr-5">
+                                <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
+
+                                    <input type="checkbox" name="dispose_all" id="disposeAll" @if($order->sinerlog_tran_id == 2) checked @endif>
+                                    <span class="vs-checkbox vs-checkbox-lg">
+                                        <span class="vs-checkbox--check">
+                                            <i class="vs-icon feather icon-check"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                                <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Dispose Parcel<span class="text-danger"></span></label>
+                            </div>
+                        </div>
+                        @endif
                         <div class="help-block"></div>
                     </div>
                 </div>
             </div>
-            <hr>
-            <div class="col-md-8">
-                @if($order->sinerlog_tran_id)
-                <div class="controls row mb-1">
-                    <div class="form-check form-check-inline mr-5">
-                        <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
-                            <input type="checkbox" name="return_origin" id="returnParcel" @if($order->sinerlog_tran_id == 1) checked @endif>
-                            <span class="vs-checkbox vs-checkbox-lg">
-                                <span class="vs-checkbox--check">
-                                    <i class="vs-icon feather icon-check"></i>
-                                </span>
-                            </span>
-                        </div>
-                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return parcel, I'm responsible for the Cost<span class="text-danger"></span></label>
-                    </div>
-                    <div class="form-check form-check-inline mr-5">
-                        <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
-                            <input type="checkbox" name="dispose_all" id="disposeAll" @if($order->sinerlog_tran_id == 2) checked @endif>
-                            <span class="vs-checkbox vs-checkbox-lg">
-                                <span class="vs-checkbox--check">
-                                    <i class="vs-icon feather icon-check"></i>
-                                </span>
-                            </span>
-                        </div>
-                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Dispose Parcel<span class="text-danger"></span></label>
-                    </div>
-                    {{-- <div class="form-check form-check-inline mr-5">
-                        <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
-                            <input type="checkbox" name="individual_parcel" id="returnIndividual" @if($order->sinerlog_tran_id == 3) checked @endif>
-                            <span class="vs-checkbox vs-checkbox-lg">
-                                <span class="vs-checkbox--check">
-                                    <i class="vs-icon feather icon-check"></i>
-                                </span>
-                            </span>
-                        </div>
-                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                    </div> --}}
-                </div>
-                @else
-                <div class="controls row mb-1">
-                    <div class="form-check form-check-inline mr-5">
-                        <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
-                            <input type="checkbox" name="return_origin" id="returnParcel" @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
-                            <span class="vs-checkbox vs-checkbox-lg">
-                                <span class="vs-checkbox--check">
-                                    <i class="vs-icon feather icon-check"></i>
-                                </span>
-                            </span>
-                        </div>
-                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
-                    </div>
-                    {{-- <div class="form-check form-check-inline mr-5">
-                        <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
-                            <input type="checkbox" name="dispose_all" id="disposeAll" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
-                            <span class="vs-checkbox vs-checkbox-lg">
-                                <span class="vs-checkbox--check">
-                                    <i class="vs-icon feather icon-check"></i>
-                                </span>
-                            </span>
-                        </div>
-                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
-                    </div> --}}
-                    {{-- <div class="form-check form-check-inline mr-5">
-                        <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
-                            <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
-                            <span class="vs-checkbox vs-checkbox-lg">
-                                <span class="vs-checkbox--check">
-                                    <i class="vs-icon feather icon-check"></i>
-                                </span>
-                            </span>
-                        </div>
-                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
-                    </div> --}}
-                </div>
-                @endif
-            </div>
-            <div class="row col-12" id="itemLimit">
-                <h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5>
-            </div>
-            <livewire:order.order-details.order-items :order-id="$order->id" />
-            <hr>
-            <div class="row mt-1">
-                <div class="form-group col-12">
-                    @lang('orders.order-details.declaration')
-                </div>
-            </div>
-        </fieldset>
+    </div> 
+   
+    <div class="row col-12" id="itemLimit">
+        <h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5>
+    </div> 
+    <div> 
+        <livewire:order.order-details.order-items :order-id="$order->id" />  
     </div>
-    <div class="actions clearfix">
-        <ul role="menu" aria-label="Pagination">
-            <li class="disabled" aria-disabled="true">
-                <a href="{{ route('admin.orders.recipient.index',$order->encrypted_id) }}" role="menuitem">@lang('orders.order-details.Previous')</a>
-            </li>
-            <li aria-hidden="false" aria-disabled="false">
+    <div class="row mt-1">
+        <div class="form-group col-12">
+            @lang('orders.order-details.declaration')
+        </div>
+    </div>
+    </fieldset>
+    </div>
+
+    <div class="">
+        <div class="d-flex justify-content-between"> 
+            <div>
+                <button class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i>
+                    <a href="{{ route('admin.orders.recipient.index',$order->encrypted_id) }}" class="text-white">@lang('orders.order-details.Previous')</a>
+                </button>
+            </div> 
+            <div>
                 <button type="button" class="btn btn-success" id="rateBtn" onClick="checkService()">Get Rate</button>
-                <button class="btn btn-primary" id="submitButton" @if($order->items->isEmpty()) title="Please add atleast one item !" disabled @endif >@lang('orders.order-details.Place Order')</button>
-            </li>
-        </ul>
-    </div>
+                <button class="btn btn-primary" id="submitButton" @if($order->items->isEmpty()) title="Please add atleast one item !" disabled @endif >@lang('orders.order-details.Place Order') <i class="fas fa-arrow-right"></i> </button>
+            </div>
+        </div>
+
+
 </form>
 
 <div class="modal fade" id="checkOptionsModal" tabindex="-1" role="dialog" aria-labelledby="checkOptionsModalLabel" aria-hidden="true">
@@ -285,7 +273,6 @@
     </div>
 </div>
 @endsection
-
 @section('js')
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 
@@ -555,7 +542,7 @@
 
         // Hide error alert at the beginning of the request
         $('#error-alert').hide();
-        
+
         $('#loading').fadeIn();
         $.get('{{ route("api.pasarExRates") }}', {
             service: service,
