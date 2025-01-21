@@ -47,19 +47,20 @@
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center   ">
-                <div class="mt-sm-5 mt-md-0">
+                <div class="mt-sm-5 mt-md-0 rounded rounded-lg ">
                     <h4>@lang('orders.order-details.Orders')</h4>
                     <p class="h4 text-danger pb-2 mt-4">WHR# {{ optional($order)->warehouse_number }}</p>
                 </div>
             </div>
-            <div class="filter-card " id="filter-card">
-                @if(in_array(request()->route()->getName(),['admin.orders.sender.index']))
-                <div class="row">
+            @if(in_array(request()->route()->getName(),['admin.orders.sender.index']))
+                <div class="row my-3">
                     <div class="col-12 ">
                         <marquee direction="left" style="font-size: xx-large;color: #fff;background-color: #246bad;border-radius: 0%;">@lang('orders.scrolling')</marquee>
                     </div>
                 </div>
-                @endif
+            @endif
+            <div class="filter-card " id="filter-card">
+           
                 <div>
                     <div class="card-body">
                         <div class="number-tab-steps wizard-circle wizard clearfix" role="application" id="steps-uid-0">
