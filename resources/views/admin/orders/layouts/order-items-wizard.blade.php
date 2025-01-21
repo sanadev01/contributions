@@ -47,7 +47,7 @@
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center   ">
-                <div>
+                <div class="mt-sm-5 mt-md-0">
                     <h4>@lang('orders.order-details.Orders')</h4>
                     <p class="h4 text-danger pb-2 mt-4">WHR# {{ optional($order)->warehouse_number }}</p>
                 </div>
