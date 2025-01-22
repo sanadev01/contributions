@@ -1,4 +1,4 @@
-@extends('admin.orders.layouts.wizard')
+@extends('admin.orders.layouts.order-items-wizard')
 
 @section('wizard-form')
 <form action="{{ route('admin.orders.services.store',$order) }}" method="POST" class="wizard">

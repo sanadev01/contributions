@@ -1,4 +1,4 @@
-@extends('admin.orders.layouts.wizard')
+@extends('admin.orders.layouts.order-items-wizard')
 @section('wizard-css')
     <link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
 @endsection
@@ -27,7 +27,7 @@
                 
             </div>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-12 col-sm-6 col-md-3">
                     <div class="form-group">
                     <label for="firstName1">@lang('orders.sender.First Name') <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="first_name" required value="{{ old('first_name',__default($order->sender_first_name,optional($order->user)->name)) }}" id="firstName1">
@@ -39,7 +39,7 @@
                     </div>
                 </div>
     
-                <div class="col-sm-6">
+                <div class="col-12 col-sm-6 col-md-3">
                     <div class="form-group">
                         <label for="lastName1">@lang('orders.sender.Last Name')</label>
                         <input type="text" class="form-control" name="last_name" value="{{ old('last_name',__default($order->sender_last_name,optional($order->user)->last_name)) }}">
@@ -51,7 +51,7 @@
                     </div>
                 </div>
     
-                <div class="col-sm-6">
+                <div class="col-12 col-sm-6 col-md-3">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Email')</label>
                         <input type="email" class="form-control" name="email" value="{{ old('email',__default($order->sender_email,null)) }}">
@@ -62,7 +62,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-12 col-sm-6 col-md-3">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Phone')<span class="text-danger" id="phone" style="display: none;">*</span></label>
                         <input type="text" class="form-control" name="phone" value="{{ old('phone',__default($order->sender_phone,null)) }}">
@@ -73,7 +73,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-sm-6" id="tax_id">
+                <div class="col-12 col-sm-6 col-md-3" id="tax_id">
                     <div class="form-group">
                         <label for="emailAddress1">@lang('orders.sender.Tax Id')</label>
                         <input type="text" class="form-control" name="taxt_id" value="{{ old('tax_id',__default($order->sender_taxId,null)) }}">
@@ -84,7 +84,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-sm-6 d-none" id="state">
+                <div class="col-12 col-sm-6 col-md-3 d-none" id="state">
                     <div class="form-group">
                         <label for="sender_state">@lang('orders.sender.State')<span class="text-danger">*</span></label>
                         <option value="" selected disabled hidden>Select State</option>
@@ -101,7 +101,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-sm-6" id="address" style="display: none">
+                <div class="col-12 col-sm-6 col-md-3" id="address" style="display: none">
                     <div class="form-group">
                         <label for="sender_address">@lang('orders.sender.Address')<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="sender_address" name="sender_address" value="{{ old('sender_address',__default($order->sender_address,optional($order->user)->address)) }}">
@@ -112,7 +112,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-sm-6" id="city" style="display: none">
+                <div class="col-12 col-sm-6 col-md-3" id="city" style="display: none">
                     <div class="form-group">
                         <label for="sender_city">@lang('orders.sender.City')<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="sender_city" name="sender_city" value="{{ old('sender_city',__default($order->sender_city,optional($order->user)->city)) }}">
@@ -124,7 +124,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6 d-none" id="zip_code">
+                <div class="col-12 col-sm-6 col-md-3 d-none" id="zip_code">
                     <div class="form-group">
                         <label for="zipcode">@lang('orders.sender.Zipcode')<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="sender_zipcode" name="sender_zipcode" value="{{ old('sender_zipcode',__default($order->sender_zipcode,optional($order->user)->zipcode)) }}">
@@ -137,7 +137,7 @@
                     <div class="help-block" id="zipcode_response"></div>
                 </div>
                 @if(setting('is_prc_user', null, $order->user->id))
-                    <div class="col-sm-6" id="sender_website">
+                    <div class="col-12 col-sm-6 col-md-3" id="sender_website">
                         <div class="form-group">
                             <label for="sender_website">@lang('orders.sender.Website')<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="sender_website" name="sender_website" value="{{ old('sender_website',__default($order->sender_website,null)) }}">

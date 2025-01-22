@@ -12,7 +12,7 @@ return  [
     'Name' => 'Name',
     'Address Type' => 'Address Type',
     'Email' => 'Email',
-    'Phone' => 'Phone *(International Format) i.e +5511992230189 Symbols,letters or spaces not accepted.',
+    'Phone' => 'Phone: + & Digits only. eg +5511992230189',
     'Address' => 'Address',
     'Chile Address' => 'Enter street address in Chile',
     'Telefone' => 'Phone',

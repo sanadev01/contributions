@@ -38,7 +38,7 @@
                 <th>@lang('parcel.Gross Weight')</th>
                 <th>@lang('parcel.Volume Weight')</th>
                 <th>@lang('parcel.Merchant')</th>
-                <th>@lang('parcel.Carrier')</th>
+                <th>@lang('parcel.Customer Reference')</th>
                 <th>@lang('parcel.Tracking ID')</th>
                 <th>@lang('parcel.Status')</th>
                 <th>@lang('parcel.Action')</th>
