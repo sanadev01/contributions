@@ -497,8 +497,7 @@
         }).then(function(response) {
             console.log('api.gssRates response');
             console.log(response);
-            if (response.success == true) {
-                alert('gss response get')
+            if (response.success == true) { 
                 if (service != 283) {
                     $('#user_declared_freight').val(response.total_amount);
                     $('#user_declared_freight').prop('readonly', true);
