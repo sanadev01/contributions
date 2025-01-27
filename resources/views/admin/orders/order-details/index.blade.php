@@ -318,8 +318,14 @@
         const serviceId = $('#us_shipping_service').val();
         console.log(subClass, 'subClass on check sum')
         console.log(serviceId, 'serviceId on check sum')
+        if(!serviceId&&subClass){
+            alert('please first select the service.')
+        }
         if (subClass == 3442) {
             return getUspsPriorityIntlRates(serviceId, subClass);
+        }
+        else{
+            alert('invalid service.')
         }
     }
 
@@ -502,6 +508,8 @@
                 if (service == 3674) {
                     $('#gssRateModal').modal('show');
                     Livewire.emit('removeService');
+                    $("#rateBtn").hide();
+                    $("#itemLimit").hide();
 
                 }
             }
@@ -534,7 +542,10 @@
                 $('#user_declared_freight').prop('readonly', true);
             } else {
                 $('#error-alert').text(response.error).fadeIn();
+                $("#rateBtn").hide();
+                $("#itemLimit").hide();
                 Livewire.emit('removeService');
+                
                 $('#user_declared_freight').val(0);
                 setTimeout(function() {
                     $('#error-alert').fadeOut();
