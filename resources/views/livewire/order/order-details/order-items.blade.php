@@ -1,6 +1,6 @@
 <div > 
     @if(optional($order->items)->isNotEmpty())
-    <table class="table mt-0 pt-0">
+    <table class="table mt-0 pt-5">
         <thead>
             <tr>
                 <th> No# </th>
