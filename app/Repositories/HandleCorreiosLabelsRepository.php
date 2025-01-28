@@ -51,7 +51,7 @@ class HandleCorreiosLabelsRepository
             return $this->senegalLabel();
         }
         if ($this->order->shippingService->is_id_label_service) {
-            return $this->iDLabel();
+            return $this->idLabel();
         }
         if ($this->order->recipient->country_id == Order::BRAZIL) {
 
@@ -292,11 +292,11 @@ class HandleCorreiosLabelsRepository
         return $this->renderLabel($this->request, $this->order, $mileExpress->getError());
     }
 
-    public function iDLabel()
+    public function idLabel()
     {
-        $iDLabelRepository = new iDLabelRepository();
-        $iDLabelRepository->run($this->order, $this->update);
-        return $this->renderLabel($this->request, $this->order, $iDLabelRepository->getError());
+        $idLabelRepository = new IdLabelRepository();
+        $idLabelRepository->run($this->order, $this->update);
+        return $this->renderLabel($this->request, $this->order, $idLabelRepository->getError());
     }
 
     public function updateShippingServiceFromSetting($order)

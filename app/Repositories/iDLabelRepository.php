@@ -1,22 +1,22 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Models\Order;
 use App\Models\OrderTracking;
 use App\Services\IDLabel\CN23LabelMaker;
 
-class iDLabelRepository
+class IdLabelRepository
 {
     private $order;
     private $error;
 
-    public function run(Order $order,$update)
+    public function run(Order $order, $update)
     {
-      $this->order = $order;
-        if($update){
+        $this->order = $order;
+        if ($update) {
             return $this->updateLabel();
-        }
-        else {
+        } else {
             return $this->handle();
         }
     }
@@ -35,10 +35,10 @@ class iDLabelRepository
         // $code = optional(optional(optional($this->order)->recipient)->country)->code ?? 'BR';
         $this->order->update([
             'api_response' => null,
-            'corrios_tracking_code' => 'HD'.date('d').date('m').substr(date('s'), 1, 1).$this->order->id.'GT',
-        ]); 
-        $this->printCN23();        
-        return true; 
+            'corrios_tracking_code' => 'HD' . date('d') . date('m') . substr(date('s'), 1, 1) . $this->order->id . 'GT',
+        ]);
+        $this->printCN23();
+        return true;
     }
 
     public function getError()
@@ -48,21 +48,20 @@ class iDLabelRepository
 
     private function getPrimaryLabel()
     {
-            if(!$this->order->corrios_tracking_code){ 
-                // $code = optional(optional(optional($this->order)->recipient)->country)->code ?? 'BR';
-                $this->order->update([
-                    'api_response' => null,
-                    'corrios_tracking_code' => 'HD'.date('d').date('m').substr(date('s'), 1, 1).$this->order->id."GT",
-                ]);
-            }
-            $this->printCN23();
-            return true; 
+        if (!$this->order->corrios_tracking_code) {
+            // $code = optional(optional(optional($this->order)->recipient)->country)->code ?? 'BR';
+            $this->order->update([
+                'api_response' => null,
+                'corrios_tracking_code' => 'HD' . date('d') . date('m') . substr(date('s'), 1, 1) . $this->order->id . "GT",
+            ]);
+        }
+        $this->printCN23();
+        return true;
     }
 
     private function addOrderTracking()
     {
-        if($this->order->trackings->isEmpty())
-        {
+        if ($this->order->trackings->isEmpty()) {
             OrderTracking::create([
                 'order_id' => $this->order->id,
                 'status_code' => Order::STATUS_PAYMENT_DONE,
