@@ -17,6 +17,7 @@ class OrderItemResource extends JsonResource
         return [
             "sh_code" => $this->sh_code,
             "description" => $this->description,
+            "made_in" => $this->made_in,
             "quantity" => $this->quantity,
             "value" => $this->value,
             "is_battery" => $this->contains_battery,

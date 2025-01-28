@@ -280,6 +280,7 @@ class ParcelController extends Controller
                 $order->items()->create([
                     "sh_code" => $shCode,
                     "description" => optional($product)['description'],
+                    "made_in" => optional($product)['made_in'],
                     "quantity" => optional($product)['quantity'],
                     "value" => optional($product)['value'],
                     "contains_battery" => optional($product)['is_battery'],
