@@ -20,8 +20,7 @@
         hr {
             border: 0;
             border-top: 1px solid #000;  
-        }
-
+        } 
         .font-bold {
             font-weight: bold;
         }
@@ -34,12 +33,7 @@
             left: 28%;
             object-fit: contain;
         }
-
-        .first-hr {
-            position: absolute;
-            top: 2cm
-        }
-
+ 
         .destination-country-name {
             position: absolute;
             left: 50%;
@@ -222,7 +216,6 @@
         </div>
         <p class="barcode-label font-bold">{{$order->corrios_tracking_code}}</p> 
         <hr style="position: relative;top:5cm">
-        <hr style="position: relative;top:11cm">
     </div>
     <!-- sender address -->
     <div class="sender-address">
@@ -274,18 +267,20 @@
             @endif
         </div>
     </div>
+    <p style="font-style:italic;position: absolute;top:11.4cm;right:4mm;font-size:12px">https://homedeliverybr.com</p>
+    <hr style="position: relative;top:11cm">
+
     <!-- zipcode and zipcode barcode -->
-    @if($order->hasBattery()||true)
+    @if($order->hasBattery())
     <div class="battery font-bold">B</div>
     @endif
-    @if($order->hasPerfume()||true)
+    @if($order->hasPerfume())
     <div class="perfume font-bold">P</div>
     @endif
     <div class="barcode_zipcode">
         <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode(cleanString($recipient->zipcode), $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode" />
     </div>
     <p class="zipcode-label font-bold">{{ cleanString($recipient->zipcode) }}</p>
-
 
     </div>
 
