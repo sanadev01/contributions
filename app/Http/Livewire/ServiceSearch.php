@@ -15,6 +15,7 @@ class ServiceSearch extends Component
     public $allServices;
     public $serviceSubClass;
     public $order;
+    public $isActive=false;
     public $rate = null;
     public $allRates = [];
     protected $listeners = ['removeService'];
@@ -66,10 +67,12 @@ class ServiceSearch extends Component
     }
     public function handleFocus()
     {
+        $this->isActive = true;
         $this->dropDownServices = $this->allServices;
     }
     public function handleBlur()
     {
+        $this->isActive=false;
         $this->dropDownServices = [];
     }
     public function getShippingSubName($serviceId)
@@ -101,8 +104,8 @@ class ServiceSearch extends Component
     {
         if (isset($this->allRates[$serviceId])) {
             $rate = $this->allRates[$serviceId];
-            return $rate > 0 ? $rate : '';
+            return $rate > 0 ? $rate : null;
         }
-        return  'null';
+        return  null;
     }
 }
