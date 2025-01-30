@@ -24,8 +24,10 @@
                 style="background-color: {{ $loop->odd ? '#f9f9f9' : '#ffffff' }}; color: #333;"
                 wire:click="selectService('{{ $service['id'] }}')">
                 <span> {{ $this->getShippingSubName($service['id']) }} </span>
-                @if($order->recipient->country_id != 250||$shippingService->is_inbound_domestic_service)
-                <span>{{ $this->getShippingRate($service['id']) }} </span>
+                @if($order->recipient->country_id != 250)
+                <span>{{ number_format($this->getShippingRate($service['id']),2)}} </span>
+                @elseif(isset($shippingService) && $shippingService->is_inbound_domestic_service)
+                    <span>{{ number_format($this->getShippingRate($service['id']),2) }} </span>
                 @endif
             </strong>
             @endforeach
