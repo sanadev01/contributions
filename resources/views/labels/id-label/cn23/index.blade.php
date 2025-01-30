@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,49 +11,61 @@
             margin: 0px;
             padding: 0px;
         }
-        *{
+
+        * {
             font-family: Arial, Helvetica, sans-serif;
-            box-sizing:border-box !important;
+            box-sizing: border-box !important;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #000;  
+        } 
+        .font-bold {
             font-weight: bold;
         }
 
-        img.partner-logo{
-            width: 3.5cm;
-            height: 4.1cm;
+        img.partner-logo {
+            width: 4.7cm;
+            height: 1.7cm;
             position: absolute;
-            top: 10.6cm;
-            left: 3.3cm;
+            top: 1mm;
+            left: 28%;
             object-fit: contain;
         }
+ 
         .destination-country-name {
             position: absolute;
             left: 50%;
-            top: 2mm;
+            top: 1.4cm;
             transform: translateX(-50%);
             text-align: center;
-            font-weight: bold;
-            font-size: 14pt;
+            font-size: 12pt;
             margin-bottom: 5px;
             text-transform: uppercase;
-            white-space: nowrap; /* Prevent text wrapping */
-            width: 100%; /* Ensure the div takes full width */
+            white-space: nowrap;
+            /* Prevent text wrapping */
+            width: 100%;
+            /* Ensure the div takes full width */
         }
 
-        .tracking_code{
+        .tracking_code {
             position: absolute;
             top: 3.5cm;
             display: block;
             text-align: center;
             width: 9.3cm;
         }
-        .tracking_code img{
+
+        .tracking_code img {
             position: absolute;
             display: block;
             left: 6.25mm;
             width: 79.5mm;
             height: 18mm;
         }
-        .tracking_code span{
+
+        .tracking_code span {
             position: absolute;
             display: block;
             left: 96%;
@@ -60,150 +73,104 @@
             font-size: 25px
         }
 
-        .barcode-label{
+        .barcode-label {
             position: absolute;
             top: 2.7cm;
             width: 9.4cm;
             font-size: 10pt;
             text-align: center;
             left: 0.2cm;
-            font-weight: bold;
         }
-        .address{
+
+        .second-hr {
             position: absolute;
-            top: 5.9cm;
+            top: 5.3cm;
+        }
+
+        .destination-address {
+            position: absolute;
+            top: 5.5cm;
             display: block;
-            /* border: 2px solid black; */
-            padding: 1mm;
-            width: 9.3cm;
-            font-size: 12px;
-            left: 0.5cm;
+            left: 5.5cm;
             right: 0;
-            height: 26mm;
+            padding: 0px;
+            margin: 0px;
         }
-        .destination{
-            width: 4cm;
+
+        .destination {
             display: inline-block;
-            font-size: 8.5pt;
-            /* font-family: Arial; */
         }
-        .destination h4{
-            margin: 0px !important;
-            padding: 0px !important;
+
+
+        .border-left-green {
+            width: 45%;
+            padding: 10px;
+            border-left: 2px solid #81d08b;
         }
-        .sender-address{
-            font-size: 8px;
-            top: 5.9cm;
+
+        .sender-address {
+            top: 5.5cm;
             position: absolute;
-            left: 5.8cm;
-            width: 9.6cm;
-            padding: 5px;
+            left: 0.5cm;
+            margin: 0px;
+            padding: 0px;
         }
-        .sender{
-            display: inline-block;
-            width: 3cm;
+
+        .padding-top-10 {
+            padding-top: 22px;
+        }
+
+        .sender {
             position: relative;
             text-align: left;
             font-size: 9px;
+            margin: 0px;
+            padding: 0px;
         }
-        .sender h4{
-            margin: 0px !important;
-            padding: 0px !important;
-        }
-        .barcode_zipcode{
+
+
+        .third-hr {
             position: absolute;
-            top: 8.6cm;
+            top: 122mm;
+        }
+
+        .barcode_zipcode {
+            position: absolute;
+            top: 125mm;
             display: block;
             left: 3.0cm;
             text-align: center;
         }
-        .barcode_zipcode img{
+
+        .barcode_zipcode img {
             width: 40mm;
             height: 18mm;
             display: block;
         }
-        .zipcode-label{
+
+        .zipcode-label {
             position: absolute;
             left: 4.4cm;
-            top: 10.1cm;
+            top: 140mm;
             font-size: 10pt;
             text-align: center;
-            font-weight: bold;
-        }        
-        .items-table{
+        }
+
+
+        .page-break-before {
+            page-break-before: always;
+        }
+
+        .page-break-after {
+            page-break-after: always;
+        }
+
+        .perfume {
+            top: 131mm;
             position: absolute;
-            top: 11.90cm;
-            font-size: 7px;
-            font-weight: bold;
-            width: auto;
-        }
-        .items-table table{
-            margin: 0.1cm;
-            border-collapse: collapse;
-            width: 98%;
-            /* page-break-inside: auto; */
-            margin-bottom: 0.2cm;
-        }
-        .page-break-before{
-            page-break-before:always;
-        }
-        .page-break-after{
-            page-break-after:always;
-        }
-        .items-table .td1{
-            width: 210.4px;
-            height: 12px;
-        }
-        .items-table .td2{
-            width: 144px;
-            height: 12px;
-        }
-
-        .items-table .sh_code{
-            width: 60.8px;
-            height: 12px;
-        }
-        .items-table .qtd{
-            width: 28.8px;
-            height: 12px;
-        }
-        .items-table .description{
-            width: 120.8px;
-            height: 12px;
-        }
-        .items-table .weight{
-            width: 49.6px;
-            height: 12px;
-        }
-        .items-table .unit{
-            width: 42.4px;
-            height: 12px;
-        }
-        .items-table .value{
-            width: 52px;
-            height: 12px;
-        }
-
-        .items-table .table .tr{
-            display: block;
-            width: 100%;
-        }
-
-        .items-table .table .td{
-            padding: 2px;
-            margin: 0px !important;
-            border: 1px solid black;
-            float: left;
-            /* display:table-column; */
-            display: block;
-        }
-        .perfume{
-            top: 90mm;
-            position:absolute;
             right: 2.5mm;
             background-color: black;
             color: white;
-            font-weight: bold;
             display: block;
             width: 4mm;
             height: 5mm;
@@ -212,14 +179,14 @@
             text-align: center;
             border-radius: 1mm;
         }
-        .battery{
+
+        .battery {
             border-radius: 1mm;
-            top: 90mm;
-            position:absolute;
+            top: 131mm;
+            position: absolute;
             right: 2.5mm;
             border: 1px solid black;
             color: black;
-            font-weight: bold;
             display: block;
             width: 4mm;
             height: 5mm;
@@ -229,46 +196,94 @@
         }
     </style>
 </head>
-    <body>
-        <img class="partner-logo" src="{{ $partnerLogo }}"> 
-        <div class="destination-country-name">
-            <h1>GUA-{{optional($recipient->country)->name}}</h1>
-        </div>
-        <div class="tracking_code">
-            <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
-            <span class="cn-label">US</span>
-        </div>
-        <p class="barcode-label">{{$order->corrios_tracking_code}}</p>
-        <div class="address">
-            <div class="destination">
-                <h4><strong>DESTINATION:</strong></h4> 
-                {{ $recipient->first_name }} {{ $recipient->last_name }} <br>
-                {{ $recipient->address }} @if ($recipient->street_no != 0 ) {{ $recipient->street_no }} @endif {{ $recipient->address2 }} {{ $recipient->city }} {{ $recipient->zipcode }} <br>
-                {{ optional($recipient->state)->name }}
-                {{ optional($recipient->country)->name }}
-            </div>
-        </div>
-        @if($order->hasBattery())
-        <div class="battery">B</div>
-        @endif
-        @if($order->hasPerfume())
-        <div class="perfume">P</div>
-        @endif
-        <div class="barcode_zipcode">
-            <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode(cleanString($recipient->zipcode), $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode"   />
-        </div>
-        <p class="zipcode-label">{{ cleanString($recipient->zipcode) }}</p>
-        <div class="sender-address">
-            <div class="sender">
-                <h4><strong>SENDER:</strong></h4> 
-                {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
-                {{ $order->sender_email }} <br>
-                <strong>Order#:</strong>{{ $order->warehouse_number }} <br>
-                <strong>CR#:</strong>{{ $order->customer_reference }} <br>
-                <strong>Weight</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>
-                <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
-            </div>
-        </div>
 
-    </body>
+<body>
+    <!-- partner log -->
+    <div>
+
+        <img class="partner-logo" src="{{ $partnerLogo }}">
+        <hr style="position: relative;top:1.6cm">
+    </div>
+    <!-- country  -->
+    <div class="destination-country-name font-bold">
+        <h1>GUA-{{optional($recipient->country)->name}}</h1>
+    </div>
+    <div> 
+        <!-- tracking code and tracking code barcode -->
+        <div class="tracking_code font-bold">
+            <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode($order->corrios_tracking_code, $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode" />
+            <span class="font-bold">US</span>
+        </div>
+        <p class="barcode-label font-bold">{{$order->corrios_tracking_code}}</p> 
+        <hr style="position: relative;top:5cm">
+    </div>
+    <!-- sender address -->
+    <div class="sender-address">
+        <div>
+            <h5><strong class="border-left-green" style="font-size: 18px;">SENDER:</strong></h5>
+        </div>
+        <div class="sender" style="font-size:12px">
+            <p>
+                <strong>Name#: &nbsp;</strong> {{ $order->sender_first_name }} {{ $order->sender_last_name }} <br>
+            </p>
+            <p>
+                <strong>Order#: &nbsp;</strong>{{ $order->warehouse_number }}
+            </p>
+            <p>
+                <strong>CR#: &nbsp; &nbsp;&nbsp; </strong>{{ $order->customer_reference }}
+            </p>
+            <p>
+                <strong>Weight &nbsp;</strong> {{ $order->getOriginalWeight('kg') }}kg|{{ $order->getOriginalWeight('lbs') }}lbs <br>
+            </p>
+            <p>
+                <strong>{{ $order->length }} x {{ $order->width }} x {{$order->height}} ({{$order->isWeightInKg() ? 'cm' :'in'}})</strong>
+            </p>
+
+        </div>
+    </div>
+    <!-- destination address -->
+    <div class="destination-address">
+        <div>
+            <h5><strong class="border-left-green" style="font-size: 18px;">DESTINATION:</strong></h5>
+        </div>
+        <div class="destination" style="font-size: 12px">
+            @if ($recipient->first_name || $recipient->last_name)
+            <p>{{ $recipient->first_name }} {{ $recipient->last_name }}</p>
+            @endif
+            @if($recipient->address)
+            <p>{{ $recipient->address }}</p>
+            @endif
+            @if ($recipient->street_no != 0||true )
+            <p>{{ $recipient->street_no }} </p>
+            @endif
+            @if($recipient->address2 || $recipient->city || $recipient->zipcode)
+            <p>{{ $recipient->address2 }} {{ $recipient->city }} {{ $recipient->zipcode }}</p>
+            @endif
+            @if (optional($recipient->state)->name)
+            <p>{{ optional($recipient->state)->name }} </p>
+            @endif
+            @if (optional($recipient->country)->name)
+            <p>{{ optional($recipient->country)->name }} </p>
+            @endif
+        </div>
+    </div>
+    <p style="font-style:italic;position: absolute;top:11.4cm;right:4mm;font-size:12px">https://homedeliverybr.com</p>
+    <hr style="position: relative;top:11cm">
+
+    <!-- zipcode and zipcode barcode -->
+    @if($order->hasBattery())
+    <div class="battery font-bold">B</div>
+    @endif
+    @if($order->hasPerfume())
+    <div class="perfume font-bold">P</div>
+    @endif
+    <div class="barcode_zipcode">
+        <img src="data:image/png;base64,{{ base64_encode($barcodeNew->getBarcode(cleanString($recipient->zipcode), $barcodeNew::TYPE_CODE_128, 1,94, [0,0,0]))}}" alt="barcode" />
+    </div>
+    <p class="zipcode-label font-bold">{{ cleanString($recipient->zipcode) }}</p>
+
+    </div>
+
+</body>
+
 </html>
