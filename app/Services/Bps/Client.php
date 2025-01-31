@@ -25,12 +25,8 @@ class Client{
         }else{
             $this->baseUri = 'https://bps.bringer.dev/public/api/v2';
         }
-        $this->username = env('API_USERNAME');
-        $this->password = env('API_PASSWORD');
-
-        if (!$this->username || !$this->password) {
-            throw new \Exception("API credentials are not set.");
-        }
+        $this->username = 'hercoff';
+        $this->password = 'Herco2019!';
         $this->headers = [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json'

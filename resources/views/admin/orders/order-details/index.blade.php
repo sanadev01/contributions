@@ -1,29 +1,11 @@
-@extends('admin.orders.layouts.order-items-wizard')
+@extends('admin.orders.layouts.wizard')
 @section('wizard-css')
 <link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
 @endsection
 @section('wizard-form')
 @if ($error)
 <div class="alert alert-danger" role="alert">
-    <ul>
-        @foreach (explode('!', $error) as $index=>$msg)
-        @if(trim($msg))
-        @if($index==0)
-        @foreach (explode(':', $msg) as $index2=>$msg2)
-        @if(trim($msg))
-        @if($index2==0)
-        <h6 class="alert text-danger text-justify">{{ trim($msg2) }}</h6>
-        @else
-        <li>{{ trim($msg2) }}</li>
-        @endif
-        @endif
-        @endforeach
-        @else
-        <li>{{ trim($msg) }}</li>
-        @endif
-        @endif
-        @endforeach
-    </ul>
+    {{$error}}
 </div>
 @endif
 <div class="alert alert-danger" role="alert" id="ups_response" style="display: none;"></div>
@@ -35,146 +17,170 @@
         <h6 id="steps-uid-0-h-0" tabindex="-1" class="title current">@lang('orders.order-details.Step 1')</h6>
         <fieldset role="tabpanel" aria-labelledby="steps-uid-0-h-0" class="body current p-4" aria-hidden="false">
             <div class="row">
-                <div class="form-group col-12 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
-                        <label class="h4 my-2">@lang('orders.order-details.Customer Reference') <span class="text-danger"></span></label>
-                        <input name="customer_reference" class="form-control fs-1" {{($order->recipient->country_id == $chileCountryId) ? 'required' : ''}} value="{{ $order->customer_reference }}" placeholder="@lang('orders.order-details.Customer Reference')" />
+                        <label>@lang('orders.order-details.Customer Reference') <span class="text-danger"></span></label>
+                        <input name="customer_reference" class="form-control" {{($order->recipient->country_id == $chileCountryId) ? 'required' : ''}} value="{{ $order->customer_reference }}" placeholder="@lang('orders.order-details.Customer Reference')" />
                         <p class="text-danger">{{ $errors->first('customer_reference') }}</p>
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-md-4">
+                <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
-                        <label class="h4 my-2">@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
-                        <select class="form-control bg-white  show-tick" style="background-color: #f6f5ff !important;" name="tax_modality" id="tax_modality" readonly required placeholder="@lang('orders.order-details.Tax Modality')">
-                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }}>DDU</option>
-                            <option value="ddp" {{ 'ddp' == $order->tax_modality || setting('is_prc_user', null, $order->user->id) ? 'selected' : '' }}>DDP</option>
-                        </select>
+                        <label>@lang('orders.order-details.WHR')# <span class="text-danger"></span></label>
+                        <input class="form-control" readonly value="{{ $order->warehouse_number }}" placeholder="@lang('orders.order-details.Warehouse Number')" />
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-md-4 me-3">
+                <div class="form-group col-12 col-sm-6 col-md-6">
                     <div class="controls">
-                        <label class="h4 my-2">Freight <span class="text-danger"></span></label>
+                        <label class="h4">Freight <span class="text-danger"></span></label>
                         <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight', $order->user_declared_freight) }}" placeholder="Freight" />
+                        {{-- <input class="form-control" name="user_declared_freight" id="user_declared_freight" value="{{ old('user_declared_freight',__default($order->user_declared_freight,$order->gross_total)) }}" placeholder="Freight"/> --}}
                         <div class="help-block"></div>
                         <span class="text-danger">@error('user_declared_freight') {{ $message }} @enderror</span>
                     </div>
                 </div>
             </div>
-            <div id="error-alert" style="display: none; color: red; font-weight: bold; margin-bottom: 10px;">
-                <!-- Error message will appear here -->
+            <h4 class="mt-2">@lang('orders.order-details.Service')</h4>
+            <div class="row mt-1">
+                <div class="form-group col-12 col-sm-6 col-md-6">
+                    <div class="controls">
+                        <label>@lang('orders.order-details.Select Shipping Service')<span class="text-danger"></span></label>
+                        @if ($order->recipient->country_id != $usCountryId)
+                        <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="shipping_service_id" required placeholder="Select Shipping Service">
+                            <option value="">@lang('orders.order-details.Select Shipping Service')</option>
+                            @foreach ($shippingServices as $shippingService)
+                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->sub_name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->sub_name }}@endif</option>
+                            @endforeach
+                        </select>
+                        @else
+                        {{-- for usps,ups and fedex --}}
+                        <select class="form-control selectpicker show-tick" data-live-search="true" name="shipping_service_id" id="us_shipping_service" required placeholder="Select Shipping Service">
+                            <option value="">@lang('orders.order-details.Select Shipping Service')</option>
+                            @foreach ($shippingServices as $shippingService)
+                            @if($shippingService->isInboundDomesticService())
+                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-cost="{{$shippingService->getRateFor($order)}}" data-services-cost="{{ $order->services()->sum('price') }}" data-service-code="{{$shippingService->service_sub_class}}">@if($shippingService->getRateFor($order)){{ "{$shippingService->sub_name} - $". $shippingService->getRateFor($order) }}@else{{ $shippingService->sub_name }}@endif</option>
+                            @else
+                            <option value="{{ $shippingService->id }}" {{ old('shipping_service_id',$order->shipping_service_id) == $shippingService->id ? 'selected' : '' }} data-service-code="{{$shippingService->service_sub_class}}">{{ "{$shippingService->sub_name}"}}</option>
+                            @endif
+                            @endforeach
+                        </select>
+                        @endif
+                        <div class="help-block"></div>
+                    </div>
+                </div>
+                {{-- @dd($order->tax_modality ) --}}
+                <div class="form-group col-12 col-sm-6 col-md-6">
+                    <div class="controls">
+                        <label>@lang('orders.order-details.Tax Modality') <span class="text-danger"></span></label>
+                        <select class="form-control selectpicker show-tick" name="tax_modality" id="tax_modality" readonly required placeholder="@lang('orders.order-details.Tax Modality')">
+                            <option value="ddu" {{ 'ddu' == $order->tax_modality ? 'selected' : '' }}>DDU</option>
+                            <option value="ddp" {{ 'ddp' == $order->tax_modality ? 'selected' : '' }}>DDP</option>
+                        </select>
+                        <div class="help-block"></div>
+                    </div>
+                </div>
             </div>
-
+            <hr>
+            <div class="col-md-8">
+                @if($order->sinerlog_tran_id)
+                <div class="controls row mb-1">
+                    <div class="form-check form-check-inline mr-5">
+                        <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
+                            <input type="checkbox" name="return_origin" id="returnParcel" @if($order->sinerlog_tran_id == 1) checked @endif>
+                            <span class="vs-checkbox vs-checkbox-lg">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
+                                </span>
+                            </span>
+                        </div>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
+                    </div>
+                    <div class="form-check form-check-inline mr-5">
+                        <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
+                            <input type="checkbox" name="dispose_all" id="disposeAll" @if($order->sinerlog_tran_id == 2) checked @endif>
+                            <span class="vs-checkbox vs-checkbox-lg">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
+                                </span>
+                            </span>
+                        </div>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
+                    </div>
+                    {{-- <div class="form-check form-check-inline mr-5">
+                        <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
+                            <input type="checkbox" name="individual_parcel" id="returnIndividual" @if($order->sinerlog_tran_id == 3) checked @endif>
+                            <span class="vs-checkbox vs-checkbox-lg">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
+                                </span>
+                            </span>
+                        </div>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
+                    </div> --}}
+                </div>
+                @else
+                <div class="controls row mb-1">
+                    <div class="form-check form-check-inline mr-5">
+                        <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
+                            <input type="checkbox" name="return_origin" id="returnParcel" @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
+                            <span class="vs-checkbox vs-checkbox-lg">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
+                                </span>
+                            </span>
+                        </div>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
+                    </div>
+                    <div class="form-check form-check-inline mr-5">
+                        <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
+                            <input type="checkbox" name="dispose_all" id="disposeAll" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
+                            <span class="vs-checkbox vs-checkbox-lg">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
+                                </span>
+                            </span>
+                        </div>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
+                    </div>
+                    {{-- <div class="form-check form-check-inline mr-5">
+                        <div class="vs-checkbox-con vs-checkbox-primary" title="Choose Return by Individual Parcel">
+                            <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>
+                            <span class="vs-checkbox vs-checkbox-lg">
+                                <span class="vs-checkbox--check">
+                                    <i class="vs-icon feather icon-check"></i>
+                                </span>
+                            </span>
+                        </div>
+                        <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnIndividual">Choose Return by Individual Parcel<span class="text-danger"></span></label>
+                    </div> --}}
+                </div>
+                @endif
+            </div>
+            <div class="row col-12" id="itemLimit">
+                <h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5>
+            </div>
+            <livewire:order.order-details.order-items :order-id="$order->id" />
             <hr>
             <div class="row mt-1">
-                <div class="form-group col-12 col-md-4">
-                    <div class="controls">
-                        <span class="my-2" style="padding-bottom: 20px !important;">
-                            <h4 class="h4 my-2">@lang('orders.order-details.Service')</h4>
-                        </span>
-
-                         <livewire:service-search :allServices="$shippingServices" :order="$order" />
- 
-                        <div class="help-block"></div>
-                    </div>
-                </div>
-
-                <div class="form-group col-12 col-md-4">
-                    <label><span class="text-danger"></span></label>
-                    <div class="controls">
-                        @if($order->sinerlog_tran_id)
-                        <label for="h4"></label>
-                        <div class="controls row mb-1">
-                            <div class="form-check form-check-inline mr-5">
-                                <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
-
-                                    <input type="checkbox" name="return_origin " id="returnParcel" @if($order->sinerlog_tran_id == 1) checked @endif>
-                                    <span class="vs-checkbox vs-checkbox-lg">
-                                        <span class="vs-checkbox--check">
-                                            <i class="vs-icon feather icon-check"></i>
-                                        </span>
-                                    </span>
-                                </div>
-                                <label class="form-check-label fs-7 font-weight-bold mt-2 ml-2" for="returnParcel">Return the parcel; I'll cover the cost.<span class="text-danger"></span></label>
-                            </div>
-                        </div>
-                        @else
-                        <div class="controls row mb-1">
-                            <div class="form-check form-check-inline mr-5">
-                                <div class="vs-checkbox-con vs-checkbox-primary" title="Parcel Return to Origin">
-                                    <input type="checkbox" name="return_origin" id="returnParcel" @if(setting('return_origin', null, auth()->user()->id)) checked @endif>
-                                    <span class="vs-checkbox vs-checkbox-lg">
-                                        <span class="vs-checkbox--check">
-                                            <i class="vs-icon feather icon-check"></i>
-                                        </span>
-                                    </span>
-                                </div>
-                                <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
-                            </div>
-
-                        </div>
-                        @endif
-                        <div class="help-block"></div>
-                    </div>
-                </div>
-
-                <div class="form-group col-12 col-md-4">
-                    <label><span class="text-danger"></span></label>
-                    <div class="controls">
-                        @if($order->sinerlog_tran_id)
-                        <label for="h4"></label>
-                        <div class="controls row mb-1">
-
-                            <div class="form-check form-check-inline mr-5">
-                                <div class="vs-checkbox-con vs-checkbox-primary" title="Disposal All Authorized">
-
-                                    <input type="checkbox" name="dispose_all" id="disposeAll" @if($order->sinerlog_tran_id == 2) checked @endif>
-                                    <span class="vs-checkbox vs-checkbox-lg">
-                                        <span class="vs-checkbox--check">
-                                            <i class="vs-icon feather icon-check"></i>
-                                        </span>
-                                    </span>
-                                </div>
-                                <label class="form-check-label font-medium-1 font-weight-bold mt-2 ml-2" for="disposeAll">Dispose Parcel<span class="text-danger"></span></label>
-                            </div>
-                        </div>
-                        @endif
-                        <div class="help-block"></div>
-                    </div>
+                <div class="form-group col-12">
+                    @lang('orders.order-details.declaration')
                 </div>
             </div>
+        </fieldset>
     </div>
-
-    <div class="row col-12" id="itemLimit">
-        <h5 class="content-justify text-info"><b>@lang('orders.order-details.Item Limit')</b></h5>
-    </div>
-    <div class="my-5">
-        <livewire:order.order-details.order-items :order-id="$order->id" />
-    </div>
-    <div class="row mt-1">
-        <div class="form-group col-12">
-            @lang('orders.order-details.declaration')
-        </div>
-    </div>
-    </fieldset>
-    </div>
-
-    <div class="">
-        <div class="d-flex justify-content-between">
-            <div>
-                <button class="btn btn-primary">
-                    <i class="fas fa-arrow-left"></i>
-                    <a href="{{ route('admin.orders.recipient.index',$order->encrypted_id) }}" class="text-white">@lang('orders.order-details.Previous')</a>
-                </button>
-            </div>
-            <div>
+    <div class="actions clearfix">
+        <ul role="menu" aria-label="Pagination">
+            <li class="disabled" aria-disabled="true">
+                <a href="{{ route('admin.orders.recipient.index',$order->encrypted_id) }}" role="menuitem">@lang('orders.order-details.Previous')</a>
+            </li>
+            <li aria-hidden="false" aria-disabled="false">
                 <button type="button" class="btn btn-success" id="rateBtn" onClick="checkService()">Get Rate</button>
-                <button class="btn btn-primary" id="submitButton" @if($order->items->isEmpty()) title="Please add atleast one item !" disabled @endif >@lang('orders.order-details.Place Order') <i class="fas fa-arrow-right"></i> </button>
-            </div>
-        </div>
-
-
+                <button class="btn btn-primary" id="submitButton" @if($order->items->isEmpty()) title="Please add atleast one item !" disabled @endif >@lang('orders.order-details.Place Order')</button>
+            </li>
+        </ul>
+    </div>
 </form>
 
 <div class="modal fade" id="checkOptionsModal" tabindex="-1" role="dialog" aria-labelledby="checkOptionsModalLabel" aria-hidden="true">
@@ -232,106 +238,45 @@
         </div>
     </div>
 </div>
-
-
-<div class="modal fade" id="taxModalityModal" role="dialog">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header bg-info">
-                <h5 class="modal-title">Info</h5>
-            </div>
-            <div class="modal-body">
-                <h5>
-                    @lang('orders.DDP/PRC service not available')
-                </h5>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info text-white" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
+
 @section('js')
 <script src="{{ asset('app-assets/select/js/bootstrap-select.min.js') }}"></script>
 
 <script>
     $("#rateBtn").hide();
     $("#itemLimit").hide();
-
-    function updateService(serviceId, subClass, rate = null) {
-
-        console.log('check tax modality shipping serivce')
-        showTaxModalityMessage(serviceId, subClass)
-        console.log('serviceid', serviceId, 'subclass', subClass, 'rate', rate)
-        if (rate) {
-            $('#user_declared_freight').val(rate);
-        } else {
-            $('#user_declared_freight').val(0);
-        }
-
-        if (subClass == 4 || subClass == 04) {
-            return getFedExRates(serviceId, subClass);
-        }
-        if (subClass == 3440 || subClass == 3441 || subClass == 05 || subClass == 5) {
-            return getUspsRates(serviceId, subClass);
-        } else if (subClass == 3) {
-            return getUpsRates(serviceId, subClass);
-        } else if (subClass == 3442 || subClass == 3443) {
-            console.log('show rate button')
+    getGSSRates();
+    $('#shipping_service_id').on('change', function() {
+        $('#user_declared_freight').val(
+            parseFloat($('option:selected', this).attr("data-cost"))
+        );
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        emitSHCodes()
+        if (service == 3442 || service == 3443) {
             $("#rateBtn").show();
             $("#itemLimit").hide();
-        } else if (subClass == 477 || subClass == 3674 || subClass == 37634 || subClass == 3326 || subClass == 4367 || subClass == 237) {
-            console.log('get gss rates')
-            return getGSSRates(serviceId, subClass);
-        } else if (subClass == 33175) {
-            console.log('get mile rates')
-            return getMileRates(serviceId, subClass);
-        } else if (subClass == 238) {
-            console.log('get pasarex colobia rates')
-            return getPasarExColombiaRates(serviceId, subClass);
-        } else if (subClass == 537 || subClass == 540 || subClass == 773) {
-            console.log('itemLimit show')
+        } else if (service == 477 || service == 3674 || service == 37634 || service == 3326 || service == 4367 || service == 237) {
+            return getGSSRates();
+        } else if (service == 537 || service == 540 || service == 773) {
             $("#itemLimit").show();
             $("#rateBtn").hide();
         } else {
-            console.log('itemLimit hide')
             $("#itemLimit").hide();
             $("#rateBtn").hide();
         }
-    }
+    })
 
-    function showTaxModalityMessage(serviceId, serviceCode) {
-        serviceCode = Number(serviceCode)
-        const uspsService = @json($uspsService);
-        if (uspsService.includes(serviceCode)) {
-            $('#taxModalityModal').modal('show');
-            console.log(' tax modality result: service include in usps service')
-        } else {
-            console.log(serviceCode, 'tax modality  result: not include in usps service')
-            console.log(uspsService)
-        }
-    }
     //USPS PRIORITY INTERNATIONAL SERVICE FOR RATES CALL 
     function checkService() {
-        const subClass = $('#data-service-code').val();
-        const serviceId = $('#us_shipping_service').val();
-        console.log(subClass, 'subClass on check sum')
-        console.log(serviceId, 'serviceId on check sum')
-        if(!serviceId&&subClass){
-            alert('please first select the service.')
-        }
-        if (subClass == 3442) {
-            return getUspsPriorityIntlRates(serviceId, subClass);
-        }
-        else{
-            alert('invalid service.')
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
+        if (service == 3442) {
+            return getUspsPriorityIntlRates();
         }
     }
 
-    function getUspsPriorityIntlRates(serviceId, subClass) {
-        const service = subClass;
-        flag = true;
+    function getUspsPriorityIntlRates() {
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
         var descpall = [];
         var qtyall = [];
@@ -360,7 +305,7 @@
                 qty: qtyall,
                 value: valueall,
             }).then(function(response) {
-                console.log('getUspsPriorityIntlRates response', response);
+                console.log(response);
                 if (response.success == true) {
                     $('#user_declared_freight').val(response.total_amount);
                     $('#user_declared_freight').prop('readonly', true);
@@ -373,22 +318,44 @@
                 $('#loading').fadeOut();
 
             }).catch(function(error) {
-                console.log('getUspsPriorityIntlRates error');
+                console.log('error');
                 console.log(error);
                 $('#loading').fadeOut();
             })
         } else {
             alert('Add items to get rates!');
-            console.log(descpall.length, qtyall.length, valueall.length)
-            flag = false;
-        } 
+        }
     }
 
 
-    function usShippingService(serviceId, serviceCode) {
-        showTaxModalityMessage(serviceId, serviceCode)
-    }
+    $('#us_shipping_service').ready(function() {
+        const service = $('#us_shipping_service option:selected').attr('data-service-code');
+        if (service == 3440 || service == 3441) {
 
+            return getUspsRates();
+
+        } else if (service == 3) {
+            return getUpsRates();
+        } else if (service == 4) {
+            return getFedExRates();
+        }
+
+    })
+
+    $('#us_shipping_service').on('change', function() {
+        const service = $('#us_shipping_service option:selected').attr('data-service-code');
+
+        if (service == 3440 || service == 3441 || service == 05) {
+
+            return getUspsRates();
+
+        } else if (service == 4) {
+            return getFedExRates();
+
+        } else if (service != undefined && service == 03) {
+            return getUpsRates();
+        }
+    })
 
     function change(id) {
         var id = "dangrous_" + id;
@@ -405,10 +372,10 @@
         }
     }
 
-    function getUspsRates(serviceId, subClass) {
-        const service = subClass;
+    function getUspsRates() {
+        const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-        showTaxModalityMessage(service)
+
         $('#loading').fadeIn();
         $.get('{{ route("api.usps_rates") }}', {
             service: service,
@@ -427,10 +394,10 @@
 
     }
 
-    function getUpsRates(serviceId, subClass) {
-        const service = subClass
+    function getUpsRates() {
+        const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-        console.log('api.ups_rates', 'service', service, 'order_id', order_id)
+
         $('#loading').fadeIn();
         $.get('{{ route("api.ups_rates") }}', {
             service: service,
@@ -453,20 +420,15 @@
         })
     }
 
-    function getFedExRates(serviceId, subClass) {
-        const service = subClass;
+    function getFedExRates() {
+        const service = $('#us_shipping_service option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
-
-        console.log('api.fedExRates', 'service', service, 'order_id', order_id)
 
         $('#loading').fadeIn();
         $.get('{{ route("api.fedExRates") }}', {
             service: service,
             order_id: order_id,
         }).then(function(response) {
-
-            console.log('api.fedExRates response');
-            console.log(response);
             if (response.success == true) {
                 $('#user_declared_freight').val(response.total_amount);
                 $('#user_declared_freight').prop('readonly', true);
@@ -479,86 +441,42 @@
             $('#loading').fadeOut();
 
         }).catch(function(error) {
-            console.log('api.fedExRates')
             console.log(error);
             $('#loading').fadeOut();
         })
     }
 
-    function getGSSRates(serviceId, subClass) {
-        const service = subClass;
+    function getGSSRates() {
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
         var order_id = $('#order_id').val();
 
-        console.log('api.gssRates', 'service', service, 'order_id', order_id)
         $('#loading').fadeIn();
         $.get('{{ route("api.gssRates") }}', {
             service: service,
             order_id: order_id,
         }).then(function(response) {
-            console.log('api.gssRates response');
-            console.log(response);
-            if (response.success == true) { 
+            if (response.success == true) {
+
                 if (service != 283) {
                     $('#user_declared_freight').val(response.total_amount);
                     $('#user_declared_freight').prop('readonly', true);
                 }
-                return true;
             } else {
                 if (service == 3674) {
                     $('#gssRateModal').modal('show');
-                    Livewire.emit('removeService');
-                    $("#rateBtn").hide();
-                    $("#itemLimit").hide();
 
+                    $('#shipping_service_id option:selected').remove();
+                    $('#shipping_service_id').selectpicker('refresh');
                 }
             }
             $('#loading').fadeOut();
 
         }).catch(function(error) {
-            console.log('api.gssRates');
             console.log(error);
             $('#loading').fadeOut();
         })
-        return false;
+
     }
-
-    function getPasarExColombiaRates(serviceId, subClass) {
-        const service = subClass;
-        var order_id = $('#order_id').val();
-
-        // Hide error alert at the beginning of the request
-        $('#error-alert').hide();
-
-        $('#loading').fadeIn();
-        $.get('{{ route("api.pasarExRates") }}', {
-            service: service,
-            order_id: order_id,
-        }).then(function(response) {
-            console.log('api.pasarExRates response');
-            console.log(response);
-            if (response.success == true) {
-                $('#user_declared_freight').val(response.total_amount);
-                $('#user_declared_freight').prop('readonly', true);
-            } else {
-                $('#error-alert').text(response.error).fadeIn();
-                $("#rateBtn").hide();
-                $("#itemLimit").hide();
-                Livewire.emit('removeService');
-                
-                $('#user_declared_freight').val(0);
-                setTimeout(function() {
-                    $('#error-alert').fadeOut();
-                }, 10000);
-            }
-            $('#loading').fadeOut();
-
-        }).catch(function(error) {
-            console.log(error);
-            $('#loading').fadeOut();
-        });
-    }
-
-
 
     $('#returnParcel').change(function() {
         if ($(this).is(":checked")) {
@@ -579,10 +497,12 @@
         }
     });
     //handle shcode
+    $('#shipping_service_id').ready(function() {
+        emitSHCodes()
+    })
 
-
-    function emitSHCodes(serviceId, subClass) {
-        const service =subClass;
+    function emitSHCodes(serviceCode) {
+        const service = $('#shipping_service_id option:selected').attr('data-service-code');
         if (service) {
             $('.sh_code').selectpicker('destroy');
             window.livewire.emit('loadSHCodes', {
@@ -644,17 +564,6 @@
                 event.preventDefault(); // Prevent form submission
                 $('#checkOptionsModal').modal('show'); // Show the modal
             }
-        });
-    });
-    document.addEventListener('livewire:load', function() {
-        Livewire.on('service:updated', function(serviceId, subClass, rate = null) {
-            console.log('Service updated with ID:', serviceId);
-            console.log('Service updated with service code:', subClass);
-            console.log('Service updated with rate:', rate);
-            updateService(serviceId, subClass, rate);
-            emitSHCodes(serviceId, subClass);
-            
-
         });
     });
 </script>

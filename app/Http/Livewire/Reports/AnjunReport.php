@@ -32,9 +32,6 @@ class AnjunReport extends Component
         if($isCommission && $service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express){
             return  $rateSlab->commission;
         }
-        if($isCommission && $service == ShippingService::AJ_Express_CN || $service == ShippingService::AJ_Standard_CN){
-            return  $rateSlab->commission;
-        }
         return $rateSlab->cwb;        
     }
 }

@@ -56,19 +56,8 @@ return [
             5537 => 'Japan Prime JerseyPost',
             5541 => 'Japan EMS JerseyPost',
             237 => 'GSS CEP',
-            238 => 'PasarEX',
             284 => 'Total Express 10KG',
             735 => 'DSS Senegal',
-            3697 => 'Fox Standard Courier',
-            3693 => 'Fox Express Courier',
-            847 => 'VIP Parcel PMEI',
-            848 => 'VIP Parcel PMI',
-            849 => 'VIP Parcel FCP',
-            1000 => 'Cainiao China',
-            7492 => 'PHX Standard Courier',
-            7493 => 'PHX Express Courier',
-            33175 => 'Mile Express',
-            4357 => 'ID Label Service',
         ]
     ]
 ];

@@ -33,16 +33,7 @@
                 <option value="300">300</option>
             </select>
         </div>
-        <div class="col-1">
-            <select class="form-control" wire:model="year">
-                <option value="all">All</option>
-                @for ($i = date('Y'); $i >= 2020; $i--)
-                    <option value="{{ $i }}">{{ $i }}</option>
-                @endfor
-            </select>
-        </div>
-        
-        <div class="row col-10  d-flex justify-content-end pr-0">
+        <div class="row col-11  d-flex justify-content-end pr-0">
             <form class="row col-8  d-flex justify-content-end " action="{{ route('admin.order.exports') }}" method="GET" target="_blank">
                 @csrf
                 @if (request()->route()->getName() != 'admin.trash-orders.index')
@@ -100,15 +91,16 @@
                     <th>User Name</th>
                     @endadmin
                     <th>Loja/Cliente</th>
+                    <th>Carrier Tracking</th>
                     <th>Referência do Cliente</th>
                     <th>Carrier</th>
                     @admin
                     <th>Carrier Cost</th>
                     @endadmin
                     <th>Tracking Code</th>
-                    <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount') USD</a></th>
-                    <th>@lang('orders.Estimate tax & duty') USD</th>
+                    <th><a href="#" wire:click.prevent="sortBy('gross_total')">@lang('orders.amount')</a></th>
                     <th>@lang('orders.status')</th>
+                    <th>@lang('orders.type')</th>
                     <th>@lang('orders.payment-status')</th>
                     <th class="no-print">@lang('orders.actions.actions')</th>
                 </tr>
@@ -116,8 +108,6 @@
                     @if (\Request::route()->getName() != 'admin.trash-orders.index' && $isTrashed)
                         <th style="min-width: 100px;">
                             <select name="" id="bulk-actions" class="form-control">
-                                <option value="">No Select</option>
-                                <option value="pay-selected">Create Invoice</option>
                                 <option value="clear">Clear All</option>
                                 <option value="checkAll">Select All</option>
                                 <option value="print-label">Print Label</option>
@@ -143,6 +133,9 @@
                         <input type="search" class="form-control" wire:model.debounce.1000ms="merchant">
                     </th>
                     <th>
+                        <input type="search" class="form-control" wire:model.debounce.1000ms="tracking_id">
+                    </th>
+                    <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="customer_reference">
                     </th>
                     <th>
@@ -162,14 +155,7 @@
                             <option value="Total Express">Total Express</option>
                             <option value="HD Express">HD Express</option>
                             <option value="Hound Express">Hound Express</option>
-                            <option value="PasarEx">Pasar Ex</option>
-                            <option value="Cainiao">Cainiao</option>
                             <option value="DSS Senegal">DSS Senegal</option>
-                            <option value="Fox Courier">Fox Courier</option>
-                            <option value="Phx Courier">Phx Courier</option>
-                            <option value="VIP Parcels">VIP Parcel</option>
-                            <option value="Mile Express">Mile Express</option>
-                            <option value="ID Label Service">ID Label Service</option>
                         </select>
                     </th>
                     @admin<th></th>@endadmin
@@ -178,9 +164,6 @@
                     </th>
                     <th>
                         <input type="search" class="form-control" wire:model.debounce.1000ms="amount">
-                    </th>
-                    <th>
-                        <input type="search" class="form-control" wire:model.debounce.1000ms="tax_and_duty">
                     </th>
                     <th>
                         <select class="form-control" wire:model="status">
@@ -195,18 +178,18 @@
                             <option value="{{ App\Models\Order::STATUS_REFUND }}">REFUND / CANCELLED</option>
                         </select>
                     </th>
-                    <th>
-                        <select class="form-control" wire:model="paymentStatus">
-                            <option value="">All</option>
-                            <option value="paid">Paid</option>
-                            <option value="unpaid">Unpaid</option>
-                        </select>
-                    </th>
                     <th >
                         <select class="form-control" wire:model="orderType">
                             <option value="">All</option>
                             <option value="consolidated">Consolidated</option>
                             <option value="non-consolidated">Non-Consolidated</option>
+                        </select>
+                    </th>
+                    <th>
+                        <select class="form-control" wire:model="paymentStatus">
+                            <option value="">All</option>
+                            <option value="paid">Paid</option>
+                            <option value="unpaid">Unpaid</option>
                         </select>
                     </th>
                     <th></th>
@@ -216,7 +199,7 @@
                 @forelse ($orders as $order)
                     @include('admin.orders.components.order-row',['order'=>$order])    
                 @empty
-                    <x-tables.no-record colspan="{{auth()->user()->isAdmin()?14:12}}"></x-tables.no-record>
+                    <x-tables.no-record colspan="12"></x-tables.no-record>
                 @endforelse
             </tbody>
         </table>

@@ -13,7 +13,7 @@ use App\Services\SwedenPost\DirectLinkTrackingService;
 use App\Http\Resources\TrackingUserResource;
 use App\Services\Correios\Services\Brazil\CorreiosTrackingService;
 use Illuminate\Support\Facades\Log;
-use App\Services\HoundExpress\Client as HoundClient;
+
 class OrderTrackingRepository
 {
 
@@ -40,22 +40,12 @@ class OrderTrackingRepository
 
         $getTrackings = collect();
         if ($orders) {
-            foreach ($orders as $key => $order) { 
+            foreach ($orders as $key => $order) {
+
                 $apiResponse = [];
                 if ($order->trackings->isNotEmpty() && $order->shippingService != null) {
                     if($order->trackings->last()->status_code == Order::STATUS_SHIPPED){
-                        if ($order->shippingService->is_hound_express){
-                            $response = HoundClient::orderTrackings($order->corrios_tracking_code); 
-                                $apiResponse = [
-                                    'success' => true,
-                                    'status' => 200,
-                                    'service' => 'Hound Express',
-                                    'trackings' => $order->trackings,
-                                    'api_trackings' => isset($response['resultDetails'])?collect($response['resultDetails']):null,
-                                    'order' => $order
-                                ];
-                             
-                        }elseif ($order->recipient->country_id == Order::CHILE) {
+                        if ($order->recipient->country_id == Order::CHILE) {
 
                             $response = CorreiosChileTrackingFacade::trackOrder($order->corrios_tracking_code);
                             if ($response->status == true && ($response->data != null || $response->data != [])) {

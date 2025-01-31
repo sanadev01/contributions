@@ -33,14 +33,6 @@ class EventServiceProvider extends ServiceProvider
             AutoChargeAmountListener::class,
 
         ],
-
-        \Illuminate\Auth\Events\Login::class => [
-            \App\Listeners\LogUserLoginDetail::class,
-        ],
-        \Illuminate\Auth\Events\Failed::class => [
-            \App\Listeners\LogUserLoginDetail::class,
-        ],
-
     ];
 
     /**

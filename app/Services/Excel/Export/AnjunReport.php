@@ -39,20 +39,20 @@ class AnjunReport extends AbstractExportService
             foreach ($deliveryBill->containers as $container) {
                 foreach ($container->orders as $order) {
                     $shippingService = $order->shippingService;
-                    $commission = $this->getValuePaidToCorrieos($order);
-                    if ($shippingService) {
+                    if ($shippingService && $shippingService->is_correios) {
+
                         $this->setCellValue('A' . $row, $order->order_date);
                         $this->setCellValue('B' . $row, $order->warehouse_number);
                         $this->setCellValue('C' . $row, $order->user->name);
                         $this->setCellValue('D' . $row, $order->corrios_tracking_code);
-                        $this->setCellValue('E' . $row, $order->getOriginalWeight('kg') . 'kg');
+                        $this->setCellValue('E' . $row, $order->getOriginalWeight('kg').'kg');
                         $this->setCellValue('F' . $row, $shippingService->sub_name);
                         $this->setCellValue('G' . $row, optional(optional($order->containers)[0])->unit_code);
                         $this->setCellValue('H' . $row, round($order->gross_total, 2));
-                        // $this->setCellValue('I' . $row, $commission['airport']);
-                        $this->setCellValue('I' . $row, $commission['commission']);
-                        $this->setCellValue('J' . $row, $order->status_name);
-                        $this->setCellValue('K' . $row, $deliveryBill->created_at);
+                        $this->setCellValue('I' . $row, $this->getValuePaidToCorrieos($order)['airport']);
+                        $this->setCellValue('J' . $row, $this->getValuePaidToCorrieos($order)['commission']);
+                        $this->setCellValue('K' . $row, $order->status_name);
+                        $this->setCellValue('L' . $row, $deliveryBill->created_at);
                         $row++;
                     }
                 }
@@ -60,9 +60,11 @@ class AnjunReport extends AbstractExportService
         }
 
         $this->currentRow = $row;
+
         $this->setCellValue('H' . $row, "=SUM(H1:H{$row})");
         $this->setCellValue('I' . $row, "=SUM(I1:I{$row})");
-        $this->setBackgroundColor("A{$row}:I{$row}", 'adfb84');
+        $this->setCellValue('J' . $row, "=SUM(J1:J{$row})");
+        $this->setBackgroundColor("A{$row}:L{$row}", 'adfb84');
     }
 
     private function setExcelHeaderRow()
@@ -80,31 +82,31 @@ class AnjunReport extends AbstractExportService
         $this->setCellValue('D1', 'Tracking Code');
 
         $this->setColumnWidth('E', 20);
-        $this->setCellValue('E1', 'Weight');
+        $this->setCellValue('E1', 'Gross Weight');
 
         $this->setColumnWidth('F', 20);
-        $this->setCellValue('F1', 'Correios');
+        $this->setCellValue('F1', 'Service');
 
         $this->setColumnWidth('G', 20);
         $this->setCellValue('G1', 'Unit Code');
 
         $this->setColumnWidth('H', 20);
-        $this->setCellValue('H1', 'Gross total');
-
-        // $this->setColumnWidth('I', 20);
-        // $this->setCellValue('I1', 'Airport');
+        $this->setCellValue('H1', 'Amount Customers Paid');
 
         $this->setColumnWidth('I', 20);
-        $this->setCellValue('I1', 'Anjun Commission');
+        $this->setCellValue('I1', 'Correios');
 
         $this->setColumnWidth('J', 20);
-        $this->setCellValue('J1', 'Status');
+        $this->setCellValue('J1', 'Anjun Commission');
 
         $this->setColumnWidth('K', 20);
-        $this->setCellValue('K1', 'DeliveryBill Date');
+        $this->setCellValue('K1', 'Status');
 
-        $this->setBackgroundColor('A1:K1', '2b5cab');
-        $this->setColor('A1:K1', 'FFFFFF');
+        $this->setColumnWidth('L', 20);
+        $this->setCellValue('L1', 'DeliveryBill Date');
+
+        $this->setBackgroundColor('A1:L1', '2b5cab');
+        $this->setColor('A1:L1', 'FFFFFF');
 
         $this->currentRow++;
     }
@@ -121,10 +123,7 @@ class AnjunReport extends AbstractExportService
                 'commission' => 0
             ];
         }
-        if(in_array($service,[ShippingService::AJ_Packet_Standard , ShippingService::AJ_Packet_Express,ShippingService::AJ_Standard_CN,ShippingService::AJ_Express_CN])) {
-            $commission = true;
-        }
-        if ($service == ShippingService::AJ_Express_CN || $service == ShippingService::AJ_Express_CN) {
+        if ($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express) {
             $commission = true;
         }
         return [

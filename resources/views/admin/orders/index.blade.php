@@ -41,12 +41,6 @@
         <input type="hidden" name="command" id="command" value="">
         <input type="hidden" name="data" id="data" value="">
     </form>
-    <form action="{{ route('admin.payment-invoices.orders-bulk.index') }}" method="POST" id="pay_selected" onsubmit="return confirm('Are you Sure want to create invoice?');">
-        @csrf
-        @method('POST')
-        <input type="hidden" name="command" id="command" value="">
-        <input type="hidden" name="data" id="data" value="">
-    </form>
 </div>
 <!--SEND MAIL MODAL-->
 <div class="modal fade" id="mailModal" role="dialog">
@@ -118,15 +112,6 @@
                 $('#trash_order_actions_form #command').val('move-order-trash');
                 $('#trash_order_actions_form #data').val(JSON.stringify(orderIds));
                 $('#trash_order_actions_form').submit();
-            }else if ($(this).val() == 'pay-selected'){
-                var orderIds = [];
-                $.each($(".bulk-orders:checked"), function(){
-                    orderIds.push($(this).val());
-                });
-
-                $('#pay_selected #command').val('create-invoice');
-                $('#pay_selected #data').val(JSON.stringify(orderIds));
-                $('#pay_selected').submit();
             }
         })
     </script>

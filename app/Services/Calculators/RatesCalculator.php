@@ -64,23 +64,9 @@ class RatesCalculator
         
         $this->initializeDims();
 
-        if($this->shippingService->is_total_express){
-            $this->weight = $this->getTotalExpressApplicableWeight($calculateOnVolumeMetricWeight,$originalRate);
-        }
-        else{
-            $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight($originalRate): $this->originalWeight;
-        }
+        $this->weight = $calculateOnVolumeMetricWeight ? $this->calculateWeight($originalRate): $this->originalWeight;
     }
-    function getTotalExpressApplicableWeight($calculateOnVolumeMetricWeight,$originalRate) {
-        $applyWeight = $calculateOnVolumeMetricWeight ? $this->calculateWeight($originalRate): $this->originalWeight;
-        $maxAllowWeight = $this->shippingService->max_weight_allowed;
-        if($applyWeight > $maxAllowWeight && $this->originalWeight <= $maxAllowWeight){
-            return $maxAllowWeight;
-        }
-        else{
-            return $applyWeight;
-        }
-    }
+
     private function initializeDims()
     {
         if ($this->order->measurement_unit == 'lbs/in') {
@@ -113,7 +99,6 @@ class RatesCalculator
                 ShippingService::Packet_Express,
                 ShippingService::Prime5,
                 ShippingService::Prime5RIO,
-                ShippingService::Cainiao,
             ])
             && $this->order->weight_discount && $originalRate == false) 
         {
@@ -260,9 +245,7 @@ class RatesCalculator
                 return false;
             }
             if ( $this->shippingService->max_weight_allowed < $this->weight ){
-                $name = $this->shippingService->sub_name;
-                $weight = $this->shippingService->max_weight_allowed;
-                self::$errors .= "Service '$name' is not available for more then $weight KG !";
+                self::$errors .= "service is not available for more then {$this->shippingService->max_weight_allowed}KG  weight";
                 return false;
             }
 

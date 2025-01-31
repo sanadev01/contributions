@@ -1,41 +1,30 @@
 <?php
 
-use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Models\Order;
-use App\Models\State;
 use App\Models\ShCode;
-use App\Models\Country;
-use App\Models\ZoneCountry;
-use Illuminate\Http\Request;
+use App\Models\State;
 use App\Models\AffiliateSale;
 use App\Models\ProfitPackage;
-use Illuminate\Http\Response;
-use App\Models\ShippingService;
-use Illuminate\Support\Facades\DB;
-// use App\Services\Correios\Services\Brazil\CN23LabelMaker;
-use App\Models\Warehouse\Container;
 use App\Models\Warehouse\DeliveryBill;
 use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\UpdateTracking;
 use App\Services\HDExpress\CN23LabelMaker;
 use App\Services\StoreIntegrations\Shopify;
 use App\Http\Controllers\Admin\HomeController;
-use App\Services\Excel\Export\TempOrderExport;
-use App\Http\Controllers\ConnectionsController;
-use App\Http\Controllers\DownloadUpdateTracking;
-use App\Services\Excel\Export\OrderUpdateExport;
-use App\Services\Cainiao\Client as CainiaoClient;
-use App\Services\Excel\Export\ExportNameListTest;
-use App\Http\Controllers\CustomsResponseController;
+// use App\Services\Correios\Services\Brazil\CN23LabelMaker;
 use App\Http\Controllers\Admin\Deposit\DepositController;
 use App\Http\Controllers\Admin\Order\OrderUSLabelController;
-use App\Repositories\AnjunLabelRepository;
-use App\Models\CustomResponse;
-use App\Models\BillingInformation;
-use App\Models\User;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\AmazonOrdersController;
+use App\Models\Warehouse\Container;
+use App\Http\Controllers\ConnectionsController;
+use App\Http\Controllers\UpdateTracking;
+use App\Http\Controllers\DownloadUpdateTracking;
+use App\Models\Country;
+use App\Models\ShippingService;
+use App\Models\ZoneCountry;
+use App\Services\Excel\Export\ExportNameListTest;
+use Illuminate\Http\Response;
+
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,9 +49,10 @@ Route::get('/', function (Shopify $shopifyClient) {
 });
 ini_set('memory_limit', '10000M');
 ini_set('memory_limit', '-1');
-Route::get('tax-calculator', [TaxCalculatorController::class,'index'])->name('tax-calculator.index')->middleware('auth');
+Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
+Route::resource('us-calculator', USCalculatorController::class)->only(['index', 'store']);
 
-Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
+// Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
 Route::get('/home', function () {
 
     if ( session()->get('shopify.redirect') ){
@@ -71,8 +61,6 @@ Route::get('/home', function () {
 
     return redirect()->route('admin.home');
 });
-Route::get('verify', 'Auth\TwoFactorVerificationController@showVerificationForm')->name('showVerificationForm');
-Route::post('verify', 'Auth\TwoFactorVerificationController@verifyToken')->name('verifyToken');
 
 Auth::routes();
 
@@ -101,7 +89,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         Route::resource('orders',OrderController::class)->only('index','destroy', 'show');
         Route::resource('trash-orders',TrashOrderController::class)->only(['index','destroy']);
 
-        // Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
+        Route::resource('tracking', TrackingController::class)->only(['index', 'show']);
         Route::get('/buy-usps-label', [\App\Http\Controllers\Admin\Order\OrderUSPSLabelController::class, 'uspsBulkView'])->name('bulk-usps-label');
 
         Route::namespace('Order')->group(function () {
@@ -137,7 +125,6 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::resource('payment-invoices', PaymentInvoiceController::class)->only(['index','store','destroy']);
             Route::prefix('payment-invoices')->as('payment-invoices.')->group(function () {
                 Route::resource('orders', OrdersSelectController::class)->only(['index','store']);
-                Route::any('orders-bulk', [App\Http\Controllers\Admin\Payment\OrdersSelectController::class,'index'])->name('orders-bulk.index');
                 Route::resource('invoice', OrdersInvoiceController::class)->only(['show','store','edit','update']);
                 Route::resource('invoice.checkout', OrdersCheckoutController::class)->only(['index','store']);
                 Route::get('invoice/{invoice}/toggle_paid', \PaymentStatusToggleController::class)->name('paid.toggle');
@@ -159,8 +146,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
             Route::get('accrual-rates/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'showRates'])->name('show-accrual-rates');
             Route::get('accrual-rates-download/{accrual_rate}', [\App\Http\Controllers\Admin\Rates\AccrualRateController::class, 'downloadRates'])->name('download-accrual-rates');
             Route::resource('user-rates', UserRateController::class)->only(['index']);
-            Route::get('rates-exports/{package}/{service?}/{regionRates?}', RateDownloadController::class)->name('rates.exports');
-            Route::get('sample-exports/{package}/{regionRates?}', SampleRateDownloadController::class)->name('sample.exports');
+            Route::get('rates-exports/{package}/{regionRates?}', RateDownloadController::class)->name('rates.exports');
             Route::resource('profit-packages-upload', ProfitPackageUploadController::class)->only(['create', 'store','edit','update']);
             Route::get('/show-profit-package-rates/{id}/{packageId}', [\App\Http\Controllers\Admin\Rates\UserRateController::class, 'showPackageRates'])->name('show-profit-rates');
             Route::resource('usps-accrual-rates', USPSAccrualRateController::class)->only(['index']);
@@ -184,8 +170,7 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 
         Route::resource('settings', SettingController::class)->only(['index', 'store']);
-        Route::resource('profile', ProfileController::class)->only(['index', 'store']);        
-        Route::get('login-details', [HomeController::class,'loginDetails'])->name('login-details');
+        Route::resource('profile', ProfileController::class)->only(['index', 'store']);
         Route::resource('users', UserController::class)->only(['index','destroy']);
         Route::post('users/export', UserExportController::class)->name('users.export.index');
         Route::resource('users.setting', UserSettingController::class)->only('index','store');
@@ -278,16 +263,10 @@ Route::namespace('Admin')->middleware(['auth'])->as('admin.')->group(function ()
         });
 });
 Route::middleware(['auth'])->group(function () {
-    Route::resource('us-calculator', USCalculatorController::class)->only(['index', 'store']);
-    Route::resource('calculator', CalculatorController::class)->only(['index', 'store']);
-
     Route::get('/user/amazon/connect', [ConnectionsController::class, 'getIndex'])->name('amazon.home');
     Route::get('/amazon/home', [ConnectionsController::class, 'getIndex']);
     Route::get('/auth', [ConnectionsController::class, 'getAuth']); 
     Route::get('/status-change/{user}', [ConnectionsController::class, 'getStatusChange']);
-    Route::get('/amazon/orders', [AmazonOrdersController::class, 'listOrders'])->name('amazon.orders');
-    Route::get('/amazon/orders/create/{id}', [AmazonOrdersController::class, 'createOrder'])->name('amazon.orders.create');
-
 });
 Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->group(function(){
     Route::namespace('Shopify')->prefix('shopify')->as('shopify.')->group(function(){
@@ -300,13 +279,13 @@ Route::namespace('Admin\Webhooks')->prefix('webhooks')->as('admin.webhooks.')->g
 });
 
 Route::get('media/get/{document}', function (App\Models\Document $document) {
-    if ( !file_exists(storage_path("app/public/documents/$document->path")) ){
-        return apiResponse(false,"File Expired or not generated yet please update lable");
+    ob_end_clean();
+    if (! Storage::exists($document->getStoragePath())) {
+        abort(404, 'Resource Not Found');
     }
-    return response()->download(storage_path("app/public/documents/$document->path"));
 
-
- })->name('media.get');
+    return Storage::response($document->getStoragePath(), $document->name);
+})->name('media.get');
 
 Route::get('order/{id}/label/get',\Admin\Label\GetLabelController::class)->name('order.label.download');
 
@@ -318,7 +297,7 @@ Route::get('order/{order}/us-label/get', function (App\Models\Order $order) {
 })->name('order.us-label.download');
  
 Route::get('permission',function($id = null){
-    Artisan::call('db:seed', ['--class'=>"PermissionSeeder",'--force' => true ]);
+    Artisan::call('db:seed --class=PermissionSeeder', ['--force' => true ]);
     return Artisan::output();
 });
 Route::get('session-refresh/{slug?}', function($slug = null){
@@ -349,15 +328,29 @@ Route::get('/cleanup-activity-log', function () {
     return 'Removed ' . $rowsRemoved . ' rows from activity_log table older than ' . $yearAgo->format('Y-m-d') . '.';
 });
 
+Route::get('/service-id-update', function () {
+
+    $codes = [
+        'HD2282155927BR',
+    ];
+    $orderDate = Carbon::create(2024, 1, 23);
+    $updatedRows = Order::whereIn('warehouse_number', $codes)
+        ->update(['status' => 70, 'order_date' => $orderDate]);
+
+    return 'Status Updated';
+});
+
 Route::get('/download-name-list/{user_id}', function ($user_id) {
     $exportNameList = new ExportNameListTest($user_id);
     return $exportNameList->handle();
 });
 
-Route::get('/update-order-tracking',[UpdateTracking::class,'update']); 
+Route::get('/update-order-bcn-to-anjuna',[UpdateTracking::class,'bCNToAnjunLabelsa']);
+Route::get('/update-order-bcn-to-anjunb',[UpdateTracking::class,'bCNToAnjunLabelsb']);
+Route::get('/update-order-bcn-to-anjunc',[UpdateTracking::class,'bCNToAnjunLabelsc']);
 
 
-Route::get('/download-updated-tracking',[DownloadUpdateTracking::class,'download']);
+Route::get('/download-tracking-bcn-to-anjun',[DownloadUpdateTracking::class,'bCNToAnjunLabels']);
 
 Route::get('/fail-jobs', function () {
     $failedJobs = DB::table('failed_jobs')->get();
@@ -372,87 +365,6 @@ Route::get('/fail-jobs', function () {
 Route::get('/delete-fail-jobs', function () {
     return DB::table('failed_jobs')->delete(); 
 });
-Route::get('/ispaid-order', function () {
 
-    $codes = [
-        'HD2433905516BR',
-    ]; 
-    Order::whereIn('warehouse_number', $codes)
-        ->update(['is_paid'=>true]);
 
-    return 'Status Updated';
-});
 
-Route::get('/truncate-shcodes', function () {
-    DB::table('sh_codes')->truncate();
-    return 'ShCode table truncated successfully!';
-});
-Route::get('/warehouse-detail/{warehouse}/{field}', function ($warehouse,$field) {
-    $order = (Order::where('warehouse_number', $warehouse)->first());  
-    \Log::info(
-        $order->toArray()
-    );
-    dump($order->update([$field=>null]));  
-    dd($order);
-});
-
-Route::post('/webhooks/customs-response', [CustomsResponseController::class, 'handle']);
-Route::get('/get/customs-response', function (Request $request) {
-    $customResponse = CustomResponse::all();
-    dd($customResponse);
-});
-
-Route::get('/anjun-china-label/{warehouse}', function ($warehouse,Request $request) {
-    $order = (Order::where('warehouse_number', $warehouse)->first());  
-    if($order){ 
-    $order->shipping_service_id = 43;
-    $order->save();
-    $order->fresh();
-        $anjun= new AnjunLabelRepository($order, $request, true);
-        $anjunResponse = $anjun->run(); 
-        dump([ "anjun run response front"=>$anjunResponse]);
-        dump([ "anjun run response error"=>$anjun->getError()]);  
-        dd('done');
-    }
-    dd('order not found');
-});
-Route::get('/detach-container-orders', function (Request $request) {
-    $codes = [
-        'ND145854165BR',
-    ];
-    $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
-
-    foreach ($orders as $order) {
-        foreach ($order->containers as $container) {
-            $container->orders()->detach($order->id);
-        }
-    }
-    return "Orders Detached Successfully";
-});
-
-Route::get('/download-return-orders', function (Request $request) {
-    set_time_limit(300);
-    $codes = [
-    ];
-    $orders = Order::whereIn('corrios_tracking_code', $codes)->get();
-    $ordersdownload = new TempOrderExport($orders);
-    $filePath = $ordersdownload->handle();
-
-    return response()->download($filePath)->deleteFileAfterSend(true);
-});
-Route::get('/warehouse-detail/{warehouse}', function ($warehouse) {
- 
-    dd(Order::where('warehouse_number', $warehouse)->first());  
-});
-
-Route::get('/waybill-get/{type}/{code}', function ($type, $code) {
-    $cainiaoClient = new CainiaoClient();
-    return $cainiaoClient->testWaybill($type,$code);
-});
-Route::get('test-zone-rate', function () {
-    $zoneRates = ZoneRate::get();
-    foreach ($zoneRates as $zoneRate) {
-        dump($zoneRate, json_decode($zoneRate->selling_rates));
-    }
-    dd('done');
-}); 

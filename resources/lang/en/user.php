@@ -24,7 +24,6 @@ return [
     'Setting' => 'Setting',
     'Available' => 'Available',
     'Edit Profile' => 'Edit Profile',
-    'Login Details' => 'Login Details',
     'Logout' => 'Logout',
     'User Setting Updated Successfully' => 'User Setting Updated Successfully',
     'Select Package' => 'Select Package',

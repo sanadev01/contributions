@@ -12,13 +12,9 @@ class ExportNameListTest extends AbstractExportService
 
     private $currentRow = 1;
 
-    public function __construct($user_id)
+    public function __construct($orders)
     {
-        $this->user   = User::where('pobox_number',$user_id)->orwhere('id',$user_id)->first();
-        if(!$this->user){
-            abort(404);
-        }
-        $this->orders = $this->user->orders; 
+        $this->orders = $orders; 
         parent::__construct();
     }
 
@@ -35,14 +31,9 @@ class ExportNameListTest extends AbstractExportService
         $row= $this->currentRow;
 
         foreach ($this->orders as $order) {
-            $this->setCellValue('A'.$row, $this->user->pobox_number);
+            $this->setCellValue('A'.$row, $order->user->pobox_number);
             $this->setCellValue('B'.$row, $order->warehouse_number); 
-            $this->setCellValue('C'.$row, $order->getSenderFullName());
-            $this->setCellValue('D'.$row, $order->sender_email); 
-            $this->setCellValue('E'.$row, optional($order)->sender_phone); 
-            $this->setCellValue('F'.$row, optional($order->recipient)->getFullName()); 
-            $this->setCellValue('G'.$row, optional($order->recipient)->email);
-            $this->setCellValue('H'.$row, optional(optional($order)->recipient)->phone);   
+            $this->setCellValue('C'.$row, optional($order)->corrios_tracking_code); 
             $row++;
         } 
         $this->setBackgroundColor("A{$row}:F{$row}", 'adfb84');
@@ -55,19 +46,9 @@ class ExportNameListTest extends AbstractExportService
         $this->setColumnWidth('B', 20);
         $this->setCellValue('B1', 'Warehouse number');
         $this->setColumnWidth('C', 20);
-        $this->setCellValue('C1', 'Sender Name');
-        $this->setColumnWidth('D', 30);
-        $this->setCellValue('D1', 'Sender Email');
-        $this->setColumnWidth('E', 30);
-        $this->setCellValue('E1', 'Sender Phone');
-        $this->setColumnWidth('F', 30);
-        $this->setCellValue('F1', 'Buyer Name');
-        $this->setColumnWidth('G', 30);
-        $this->setCellValue('G1', 'Buyer Email');
-        $this->setColumnWidth('H', 30);
-        $this->setCellValue('H1', 'Buyer Phone');  
-        $this->setBackgroundColor('A1:H1', '2b5cab');
-        $this->setColor('A1:H1', 'FFFFFF');
+        $this->setCellValue('C1', 'Tracking Code');
+        $this->setBackgroundColor('A1:C1', '2b5cab');
+        $this->setColor('A1:C1', 'FFFFFF');
 
 
         $this->currentRow++;

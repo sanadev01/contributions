@@ -1,106 +1,90 @@
 <?php
 
 use App\Models\Order;
-use App\Models\Warehouse\Container;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Services\Correios\Models\Package;
-use App\Services\Excel\Export\OrderExportTemp;
 use App\Http\Controllers\Warehouse\AwbController;
 use App\Http\Controllers\Warehouse\ContainerController;
 use App\Http\Controllers\Warehouse\ScanLabelController;
 use App\Http\Controllers\Warehouse\UnitCancelContoller;
-use App\Http\Controllers\Warehouse\UnitsInfoController;
 use App\Http\Controllers\Warehouse\AuditReportController;
 use App\Http\Controllers\Warehouse\ScanPackageController;
-
 use App\Http\Controllers\Warehouse\CN23DownloadController;
 use App\Http\Controllers\Warehouse\CN35DownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillController;
-use App\Http\Controllers\Warehouse\GDEContainerController;
-use App\Http\Controllers\Warehouse\GSSContainerController;
 use App\Http\Controllers\Warehouse\UnitRegisterController;
-use App\Http\Controllers\Warehouse\GePSContainerController;
-use App\Http\Controllers\Warehouse\PRCUnitDeleteController;
+
+use App\Http\Controllers\Warehouse\Anjun\AnjunUnitRegisterController;
+use App\Http\Controllers\Warehouse\Anjun\AnjunCN35DownloadController;
 use App\Http\Controllers\Warehouse\SearchPackageController;
 use App\Http\Controllers\Warehouse\USPSContainerController;
 use App\Http\Controllers\Warehouse\ChileContainerController;
-use App\Http\Controllers\Warehouse\HoundContainerController;
-use App\Http\Controllers\Warehouse\GDECN35DownloadController;
-use App\Http\Controllers\Warehouse\GDEUnitRegisterController;
-use App\Http\Controllers\Warehouse\GSSCN35DownloadController;
-use App\Http\Controllers\Warehouse\GSSCN38DownloadController;
-use App\Http\Controllers\Warehouse\GSSUnitRegisterController;
-use App\Http\Controllers\Warehouse\PRCUnitRegisterController;
-use App\Http\Controllers\Warehouse\ContainerFactoryController;
 use App\Http\Controllers\Warehouse\ContainerPackageController;
-use App\Http\Controllers\Warehouse\GePSCN35DownloadController;
-use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
 use App\Http\Controllers\Warehouse\ManifestDownloadController;
-use App\Http\Controllers\Warehouse\SenegalContainerController;
 use App\Http\Controllers\Warehouse\USPSCN35DownloadController;
 use App\Http\Controllers\Warehouse\USPSUnitRegisterController;
 use App\Http\Controllers\Warehouse\ChileCN35DownloadController;
-use App\Http\Controllers\Warehouse\HoundCN35DownloadController;
-use App\Http\Controllers\Warehouse\HoundUnitRegisterController;
-use App\Http\Controllers\Warehouse\PostPlusContainerController;
 use App\Http\Controllers\Warehouse\SinerlogContainerController;
-use App\Http\Controllers\Warehouse\GSSReportsDownloadController;
-use App\Http\Controllers\Warehouse\HDExpressContainerController;
-use App\Http\Controllers\Warehouse\CN35DownloadFactoryController;
-use App\Http\Controllers\Warehouse\GDEContainerPackageController;
-use App\Http\Controllers\Warehouse\GDEManifestDownloadController;
-use App\Http\Controllers\Warehouse\GSSContainerPackageController;
-use App\Http\Controllers\Warehouse\GSSManifestDownloadController;
-use App\Http\Controllers\Warehouse\PostPlusUnitPrepareController;
-use App\Http\Controllers\Warehouse\SenegalCN35DownloadController;
-use App\Http\Controllers\Warehouse\SenegalUnitRegisterController;
-use App\Http\Controllers\Warehouse\SwedenPostContainerController;
-use App\Http\Controllers\Warehouse\UnitRegisterFactoryController;
 use App\Http\Controllers\Warehouse\DeliveryBillDownloadController;
 use App\Http\Controllers\Warehouse\DeliveryBillRegisterController;
-use App\Http\Controllers\Warehouse\GePSContainerPackageController;
-use App\Http\Controllers\Warehouse\GePSManifestDownloadController;
-use App\Http\Controllers\Warehouse\MileExpressContainerController;
-use App\Http\Controllers\Warehouse\PostPlusCN35DownloadController;
-use App\Http\Controllers\Warehouse\PostPlusCN38DownloadController;
-use App\Http\Controllers\Warehouse\PostPlusUnitRegisterController;
 use App\Http\Controllers\Warehouse\SinerlogCN35DownloadController;
 use App\Http\Controllers\Warehouse\SinerlogUnitRegisterController;
-use App\Http\Controllers\Warehouse\TotalExpressManifestController;
 use App\Http\Controllers\Warehouse\USPSContainerPackageController;
-use App\Http\Controllers\Warehouse\BulkContainerDownloadController;
 use App\Http\Controllers\Warehouse\ChileContainerPackageController;
-use App\Http\Controllers\Warehouse\HDExpressCN35DownloadController;
-use App\Http\Controllers\Warehouse\HDExpressUnitRegisterController;
-use App\Http\Controllers\Warehouse\HoundContainerPackageController;
-use App\Http\Controllers\Warehouse\TotalExpressContainerController;
-use App\Http\Controllers\Warehouse\SwedenPostCN35DownloadController;
-use App\Http\Controllers\Warehouse\SwedenPostUnitRegisterController;
-use App\Http\Controllers\Warehouse\Anjun\AnjunCN35DownloadController;
-use App\Http\Controllers\Warehouse\Anjun\AnjunUnitRegisterController;
-use App\Http\Controllers\Warehouse\CombineManifestDownloadController;
-use App\Http\Controllers\Warehouse\ContainerPackageFactoryController;
-use App\Http\Controllers\Warehouse\MileExpressCN35DownloadController;
-use App\Http\Controllers\Warehouse\MileExpressUnitRegisterController;
-use App\Http\Controllers\Warehouse\SenegalContainerPackageController;
 use App\Http\Controllers\Warehouse\DeliveryBillStatusUpdateController;
-use App\Http\Controllers\Warehouse\PostPlusContainerPackageController;
-use App\Http\Controllers\Warehouse\PostPlusManifestDownloadController;
 use App\Http\Controllers\Warehouse\SinerlogContainerPackageController;
 use App\Http\Controllers\Warehouse\SinerlogManifestDownloadController;
-use App\Http\Controllers\Warehouse\TotalExpressCN35DownloadController;
-use App\Http\Controllers\Warehouse\TotalExpressUnitRegisterController;
-use App\Http\Controllers\Warehouse\HDExpressContainerPackageController;
+use App\Http\Controllers\Warehouse\CombineManifestDownloadController;
+use App\Http\Controllers\Warehouse\GePSContainerController;
+use App\Http\Controllers\Warehouse\GePSContainerPackageController;
+use App\Http\Controllers\Warehouse\GePSUnitRegisterController;
+use App\Http\Controllers\Warehouse\GePSCN35DownloadController;
+use App\Http\Controllers\Warehouse\GePSManifestDownloadController;
+use App\Http\Controllers\Warehouse\UnitsInfoController;
+use App\Http\Controllers\Warehouse\SwedenPostContainerController;
 use App\Http\Controllers\Warehouse\SwedenPostContainerPackageController;
+use App\Http\Controllers\Warehouse\SwedenPostUnitRegisterController;
+use App\Http\Controllers\Warehouse\SwedenPostCN35DownloadController;
 use App\Http\Controllers\Warehouse\SwedenPostManifestDownloadController;
-use App\Http\Controllers\Warehouse\MileExpressContainerPackageController;
+use App\Http\Controllers\Warehouse\PostPlusContainerController;
+use App\Http\Controllers\Warehouse\PostPlusContainerPackageController;
+use App\Http\Controllers\Warehouse\PostPlusUnitPrepareController;
+use App\Http\Controllers\Warehouse\PostPlusUnitRegisterController;
+use App\Http\Controllers\Warehouse\PostPlusCN35DownloadController;
+use App\Http\Controllers\Warehouse\PostPlusCN38DownloadController;
+use App\Http\Controllers\Warehouse\PostPlusManifestDownloadController;
+use App\Http\Controllers\Warehouse\GSSContainerController;
+use App\Http\Controllers\Warehouse\GSSContainerPackageController;
+use App\Http\Controllers\Warehouse\GSSUnitRegisterController;
+use App\Http\Controllers\Warehouse\GSSCN35DownloadController;
+use App\Http\Controllers\Warehouse\GSSCN38DownloadController;
+use App\Http\Controllers\Warehouse\GSSManifestDownloadController;
+use App\Http\Controllers\Warehouse\GSSReportsDownloadController;
+use App\Http\Controllers\Warehouse\GDEContainerController;
+use App\Http\Controllers\Warehouse\GDEContainerPackageController;
+use App\Http\Controllers\Warehouse\GDEUnitRegisterController;
+use App\Http\Controllers\Warehouse\GDECN35DownloadController;
+use App\Http\Controllers\Warehouse\GDEManifestDownloadController;
+use App\Http\Controllers\Warehouse\TotalExpressContainerController;
 use App\Http\Controllers\Warehouse\TotalExpressContainerPackageController;
-
-use App\Http\Controllers\Warehouse\VIPParcelContainerController;
-use App\Http\Controllers\Warehouse\VIPParcelUnitRegisterController;
-use App\Http\Controllers\Warehouse\VIPParcelCN35DownloadController;
-use App\Http\Controllers\Warehouse\VIPParcelContainerPackageController;
+use App\Http\Controllers\Warehouse\TotalExpressUnitRegisterController;
+use App\Http\Controllers\Warehouse\TotalExpressCN35DownloadController;
+use App\Http\Controllers\Warehouse\TotalExpressManifestController;
+use App\Http\Controllers\Warehouse\HDExpressContainerController;
+use App\Http\Controllers\Warehouse\HDExpressUnitRegisterController;
+use App\Http\Controllers\Warehouse\HDExpressCN35DownloadController;
+use App\Http\Controllers\Warehouse\HDExpressContainerPackageController;
+use App\Http\Controllers\Warehouse\HoundCN35DownloadController;
+use App\Http\Controllers\Warehouse\HoundContainerController;
+use App\Http\Controllers\Warehouse\HoundContainerPackageController;
+use App\Http\Controllers\Warehouse\HoundUnitRegisterController;
+use App\Models\Warehouse\Container;
+use App\Services\Excel\Export\OrderExportTemp;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Warehouse\SenegalContainerController;
+use App\Http\Controllers\Warehouse\SenegalUnitRegisterController;
+use App\Http\Controllers\Warehouse\SenegalCN35DownloadController;
+use App\Http\Controllers\Warehouse\SenegalContainerPackageController;
 
 
 Route::middleware(['auth'])->as('warehouse.')->group(function () {
@@ -110,7 +94,7 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
     Route::resource('search_package', SearchPackageController::class)->only('index', 'show');
     Route::resource('scan', ScanPackageController::class)->only('index');
     Route::resource('scan-label', ScanLabelController::class)->only('index', 'store', 'create');
-    Route::get('/download-bulk-container', [BulkContainerDownloadController::class,'index'])->name('download-bulk-container');
+
     Route::resource('containers', ContainerController::class);
 
     Route::get('awb/', AwbController::class)->name('container.awb');
@@ -124,13 +108,11 @@ Route::middleware(['auth'])->as('warehouse.')->group(function () {
      Route::get('container/{container}/register', UnitRegisterController::class)->name('container.register');
     Route::get('container/{container}/cancel', UnitCancelContoller::class)->name('container.cancel');
     Route::get('container/{container}/download', CN35DownloadController::class)->name('container.download');
-    Route::get('container/{container}/registerprc', PRCUnitRegisterController::class)->name('container.registerprc');
-    Route::get('container/{container}/cancelprc', PRCUnitDeleteController::class)->name('container.cancelprc');
     
     Route::resource('delivery_bill', DeliveryBillController::class);
     Route::get('delivery_bill/{delivery_bill}/register', DeliveryBillRegisterController::class)->name('delivery_bill.register');
     Route::get('delivery_bill/{delivery_bill}/status/refresh', DeliveryBillStatusUpdateController::class)->name('delivery_bill.status.refresh');
-Route::resource('delivery_bill/download', DeliveryBillDownloadController::class)->only('show', 'create');
+    Route::resource('delivery_bill/download', DeliveryBillDownloadController::class)->only('show', 'create');
     // Route::get('delivery_bill/{delivery_bill}/download', DeliveryBillDownloadController::class)->name('delivery_bill.download');
     Route::get('delivery_bill/{delivery_bill}/manifest', ManifestDownloadController::class)->name('delivery_bill.manifest');
     Route::post('combine-delivery-bill/manifest/download', CombineManifestDownloadController::class)->name('combine_delivery_bill.manifest.download');
@@ -209,31 +191,6 @@ Route::resource('delivery_bill/download', DeliveryBillDownloadController::class)
     Route::resource('hound_container.packages', HoundContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('hound_container/{id}/create', [HoundUnitRegisterController::class, 'createMasterBox'])->name('hound_container.createRequest');
     Route::get('hound_container/{container}/download', HoundCN35DownloadController::class)->name('hound_container.download');
-
-    // Routes for Mile Express Container
-    Route::resource('mile_express_containers', MileExpressContainerController::class);
-    Route::get('mile_express_container/{container}/packages', MileExpressContainerPackageController::class)->name('mile_express_container.packages');
-    Route::get('mile_express_container/{container}/register', MileExpressUnitRegisterController::class)->name('mile_express_container.register');
-    Route::get('mile_express/{container}/download', MileExpressCN35DownloadController::class)->name('mile_express_container.download');
-    
-    // Routes for any Container
-    Route::resource('containers_factory', ContainerFactoryController::class)->names([
-        'index' => 'containers_factory.index',
-        'create' => 'containers_factory.create',
-        'store' => 'containers_factory.store',
-        'edit' => 'containers_factory.edit',
-        'update' => 'containers_factory.update',
-        'destroy' => 'containers_factory.destroy',
-    ]); 
-    Route::resource('container_factory.packages', ContainerPackageFactoryController::class)->only('index','destroy', 'create');
-    Route::get('container_factory/{id}/create', [UnitRegisterFactoryController::class, 'createMasterBox'])->name('container_factory.createRequest');
-    Route::get('container_factory/{container}/download', CN35DownloadFactoryController::class)->name('container_factory.download');
-
-
-    Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
-    Route::get('totalexpress_container/{id}/create', [TotalExpressUnitRegisterController::class, 'createMasterBox'])->name('totalexpress_container.createRequest');
-    Route::get('totalexpress_container/{id}/register', [TotalExpressUnitRegisterController::class, 'consultMasterBox'])->name('totalexpress_container.registerBox');
-    Route::get('totalexpress_container/{container}/download', TotalExpressCN35DownloadController::class)->name('totalexpress_container.download');
     // Routes for Total Express Container
     Route::resource('totalexpress_containers', TotalExpressContainerController::class);
     Route::resource('totalexpress_container.packages', TotalExpressContainerPackageController::class)->only('index','destroy', 'create');
@@ -256,12 +213,6 @@ Route::resource('delivery_bill/download', DeliveryBillDownloadController::class)
     Route::resource('hd-senegal-container.packages', SenegalContainerPackageController::class)->only('index','destroy', 'create');
     Route::get('hd-senegal-container/{container}/register', SenegalUnitRegisterController::class)->name('hd-senegal-container.register');
     Route::get('hd-senegal-container/{container}/download', SenegalCN35DownloadController::class)->name('hd-senegal-container.download');
-
-    // Routes for vip parcel container
-    Route::resource('vip-parcel-containers', VIPParcelContainerController::class);
-    Route::resource('vip-parcel-container.packages', VIPParcelContainerPackageController::class)->only('index','destroy', 'create');
-    Route::get('vip-parcel-container/{container}/register', VIPParcelUnitRegisterController::class)->name('vip-parcel-container.register');
-    Route::get('vip-parcel-container/{container}/download', VIPParcelCN35DownloadController::class)->name('vip-parcel-container.download');
 });
 
 

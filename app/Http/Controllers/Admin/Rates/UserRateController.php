@@ -28,10 +28,10 @@ class UserRateController extends Controller
         $settings = ProfitSetting::where('user_id', auth()->user()->id)->get();
         
         $shippingServices = array_merge($shippingServices, $this->getActiveProfitService());
-
+        
         $services = ShippingService::whereIn('service_sub_class', $shippingServices)->get();
-        $zoneRateServices = ShippingService::whereIn('service_sub_class', [ShippingService::PasarEx])->get();
-        return view('admin.rates.profit-packages.user-profit-package.index', compact('services', 'settings','zoneRateServices'));
+
+        return view('admin.rates.profit-packages.user-profit-package.index', compact('services', 'settings'));
     }
 
     public function showPackageRates($id,$packageId)
@@ -49,7 +49,8 @@ class UserRateController extends Controller
                 return view('admin.rates.profit-packages.user-profit-package.rates', compact('rates', 'service', 'packageId','profit', 'isGDE'));
             }
 
-        } 
+        }
+
         $service = ShippingService::find($id);
         
 

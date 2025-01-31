@@ -88,16 +88,14 @@
                     {!! $officeAddress !!}
 
                     @if(!empty($containerGroup))
-                        @if(!$hideContainerGroup)
-                            <div style="position: absolute;top:108px;left:700px;font-size:25px;font-weight:bold;">
-                                CJA01
-                                <div style="background-color: black; width: 115px; float: right;">
-                                    <p style="font-size: 30px; font-weight: bold; color: white;">
-                                        {{$containerGroup}}
-                                    </p>
-                                </div>
+                        <div style="position: absolute;top:108px;left:700px;font-size:25px;font-weight:bold;">
+                            CJA01
+                            <div style="background-color: black; width: 115px; float: right;">
+                                <p style="font-size: 30px; font-weight: bold; color: white;">
+                                    {{$containerGroup}}
+                                </p>
                             </div>
-                        @endif
+                        </div>
                     @else
                         @if ($OrderWeight > 3)         
                             <div style="position: relative;left:215px !important; margin-top:-40px !important;">

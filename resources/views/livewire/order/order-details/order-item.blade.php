@@ -1,13 +1,13 @@
-<div>
+<div class="items shadow p-4 border-top-success border-2 mt-2">
     @if (session()->has('success'))
     <div class="alert alert-success" wire-ignore>
         {{ session('success') }}
     </div>
     @endif
 
-    <div class="row mt-5">
+    <div class="row mt-1">
 
-        <div class="form-group  col-12 col-md-4 my-2">
+        <div class="form-group col-12 col-sm-6 col-md-6">
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Harmonized Code')<span class="text-danger"></span></label>
                 <input type="hidden" wire:model="editItemId">
@@ -48,7 +48,20 @@
                 </div>
             </div>
         </div>
-        <div class="form-group  col-12 col-md-4 my-2">
+        <div class="form-group col-12 col-sm-6 col-md-6">
+            <div class="controls">
+                <label>@lang('orders.order-details.order-item.Description') <span id="feedback" wire:ignore></span></label>
+                <input type="text" wire:model="description" class="form-control descp" id="description" max="500" min="0" onkeyup="descriptionChange()">
+                <small id="characterCount" class="form-text text-muted" wire:ignore></small>
+
+                @error("description")
+                <div class="help-block text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="form-group col-12 col-sm-4 col-md-4">
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Quantity') <span class="text-danger"></span></label>
                 <input type="number" class="form-control quantity" wire:model="quantity" step="0.01" onkeydown="if(event.key==='.'){event.preventDefault();}" oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');" min="1" @if($order->products->isNotEmpty()) readonly @endif>
@@ -57,7 +70,7 @@
                 @enderror
             </div>
         </div>
-        <div class="form-group  col-12 col-md-4 my-2">
+        <div class="form-group col-12 col-sm-4 col-md-4">
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Unit Value') <span class="text-danger"></span></label>
                 <input type="number" class="form-control value" wire:model="value" step="0.01" min="0.01">
@@ -66,13 +79,15 @@
                 @enderror
             </div>
         </div>
-        <div class="form-group  col-12 col-md-4 my-2">
+        <div class="form-group col-12 col-sm-4 col-md-4">
             <div class="controls">
                 <label>@lang('orders.order-details.order-item.Total') <span class="text-danger"></span></label>
                 <input type="number" readonly class="form-control total" value="{{ $totalValue }}">
             </div>
         </div>
-        <div class="form-group  col-12 col-md-4 my-2">
+    </div>
+    <div class="row mt-1">
+        <div class="form-group col-12 col-sm-4 col-md-4">
             <div class="controls">
                 <label class="d-flex">@lang('orders.order-details.order-item.Is Contains Dangrous Goods') </label>
                 <select wire:model="dangrous_item" class="form-control dangrous">
@@ -84,31 +99,9 @@
                 <div class="help-block text-danger">{{ $message }}</div>
                 @enderror
             </div>
-        </div> 
-        <div class="form-group col-12 col-md-4 my-2">
-            <div class="controls">
-                <label>@lang('orders.order-details.order-item.Description') <span id="feedback" wire:ignore></span></label>
-                <input type="text" wire:model="description" class="form-control descp" id="description" max="500" min="0" onkeyup="descriptionChange()">
-                <small id="characterCount" class="form-text text-muted" wire:ignore></small>
-
-                @error("description")
-                <div class="help-block text-danger">{{ $message }}</div>
-                @enderror
-            </div>
         </div>
-        @if($order->recipient->country_id == \App\Models\Order::MEXICO)
-        <div class="form-group  col-12 col-md-4 my-2">
-            <div class="controls">
-                <label>@lang('orders.order-details.order-item.madein') <span class="text-danger"></span></label>
-                <input class="form-control" require wire:model="made_in">
-                @error("quantity")
-                <div class="help-block text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-        </div>
-        @endif
-
     </div>
+
     <div class="row justify-content-end">
         <div class="col-4 text-right">
             @if($editItemId)

@@ -84,8 +84,6 @@
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_Hound_Express}}">MEXICO Hound Express</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_TOTAL_EXPRESS_10KG}}">Total Express 10KG</option>
                                             <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_DSS_SENEGAL}}">DSS Senegal</option>
-                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_Express_CN}}">AJ Express CN</option>
-                                            <option value="{{App\Services\Correios\Models\Package::SERVICE_CLASS_AJ_Standard_CN}}">AJ Standard CN</option>
 
                                         </select>
                                         <div class="help-block"></div>

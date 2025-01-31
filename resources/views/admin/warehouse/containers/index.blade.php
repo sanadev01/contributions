@@ -23,21 +23,6 @@
                 $('#bulk_sale_form #data').val(JSON.stringify(containerIds));
                 $('#confirm').modal('show');
                 // $('#bulk_sale_form').submit();
-            }else if ( $(this).val() == 'download-report' ){
-                var containerIds = [];
-                $.each($(".bulk-container:checked"), function(){
-                    containerIds.push($(this).val());
-                    
-                    // $(".result").append('HD-' + this.value + ',');
-                });
-                
-                $('#bulk_sale_form #command').val('assign-awb');
-                $('#bulk_sale_form #data').val(JSON.stringify(containerIds));
-                var jsonString = JSON.stringify(containerIds);
-                 
-                var url = "{{ route('warehouse.download-bulk-container') }}?data=" + encodeURIComponent(jsonString); 
-                window.location.href = url; 
-                // $('#bulk_sale_form').submit();
             }
         })
     </script>

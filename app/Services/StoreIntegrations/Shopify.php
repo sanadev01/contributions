@@ -21,11 +21,9 @@ class Shopify{
 
     public function __construct()
     {
-        $this->key = env("shopify_amazon_key");
-        $this->secret = env("shopify_amazon_secret");
-        if (!$this->key || !$this->secret) {
-            throw new \Exception("Missing required configuration for Shopify Amazon API.");
-        }
+        $this->key = 'b7a4cd09325d145228a156632e865176';
+        $this->secret = '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';
+
     }
 
     public function getRedirectUrl($storeUrl, $data=[], $scopes=['read_orders'])

@@ -50,11 +50,7 @@ class PreAlertUpdateRequest extends FormRequest
         if($this->hasFile('invoiceFile')){
             $rules['invoiceFile'] = 'required|file';
         }
-        $order = Order::find($this->route('parcel')->id);
-        if($order->shippingService){
-           $maxWeightAllowed = $order->shippingService->max_weight_allowed; 
-           $rules['weight'] = "required|numeric|gt:0|max:$maxWeightAllowed";
-        }
+
         return $rules;
     }
 }

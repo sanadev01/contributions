@@ -13,12 +13,6 @@
             </a>
         </li>
     @endif
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('amazon.orders') }}"  >
-            <img src="{{ asset('images/icon/amazon.svg') }}" alt="amazon orders" >
-            <span data-i18n="Apps"> Amazon Orders</span>
-        </a>
-    </li>
 
 @user
     @php $user = Auth()->user(); @endphp

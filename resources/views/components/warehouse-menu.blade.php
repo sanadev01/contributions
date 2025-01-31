@@ -110,19 +110,6 @@
                                 <span class="menu-title">@lang('menu.Warehouse.DSS Senegal')</span>
                             </a>
                         </li>
-                        @foreach (config('hd.factory_services') as $service)
-                        <li > <a href="{{ route('warehouse.containers_factory.index',['service_sub_class'=>$service]) }}">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title">{{ optional(\App\Models\ShippingService::where('service_sub_class',$service)->first())->name??$service }}</span>
-                            </a>
-                        </li>
-                        @endforeach
-                        <li class="{{ $isActive(['warehouse.mile_express_containers.index','warehouse.mile_express_containers.create','warehouse.mile_express_containers.edit','warehouse.mile_express_container.packages.index']) }}">
-                            <a href="{{ route('warehouse.mile_express_containers.index') }}">
-                                <i class="feather icon-circle"></i>
-                                <span class="menu-title">Mile Express</span>
-                            </a>
-                        </li>
 
                         <li class="{{ $isActive(['warehouse.chile_containers.index','warehouse.chile_containers.create','warehouse.chile_containers.edit','warehouse.chile_container.packages.index']) }}">
                             <a href="{{ route('warehouse.chile_containers.index') }}">

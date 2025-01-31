@@ -8,7 +8,6 @@ use Carbon\Carbon;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\OrderTracking;
-use App\Facades\MileExpressFacade;
 use App\Models\Warehouse\Container;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Warehouse\DeliveryBill;
@@ -57,25 +56,17 @@ class DeliveryBillRepository extends AbstractRepository
     {
         try {
 
-            $isPRC = null;
             $containerService = null;
 
             foreach($request->get('container',[]) as $containerId){
-                $container = Container::find($containerId);
+                $container = Container::find($containerId)->services_subclass_code;
                 
                 if ($container && !$containerService) {
                     $containerService = $container;
                 }
 
-                if($container && $container->service_sub_class != $container->service_sub_class){
+                if($container && $containerService != $container){
                     throw new \Exception("Please don't use diffirent type of Container in one Delivery Bill",500);
-                }
-
-                // Check for PRC condition
-                if ($isPRC === null) {
-                    $isPRC = $container->isPRC();
-                } elseif ($isPRC !== $container->isPRC()) {
-                    throw new \Exception("Cannot mix PRC and Non-PRC Containers in one Delivery Bill", 500);
                 }
             }
 
@@ -163,32 +154,6 @@ class DeliveryBillRepository extends AbstractRepository
             'city' => 'Miami'
         ]);
 
-        return true;
-    }
-
-    public function processMileExpressBill($deliveryBill, $firstContainer)
-    {
-        $deliveryBillCreateResponse = MileExpressFacade::createDeilveryBill($deliveryBill->id, $firstContainer->destination_operator_name);
-        
-        if ($deliveryBillCreateResponse->success == false) {
-            $this->error = $deliveryBillCreateResponse->error;
-            return false;
-        }
-        $containerIds = [];
-        foreach ($deliveryBill->containers()->get() as $container) {
-            $containerResponse = json_decode($container->unit_response_list);
-            array_push($containerIds, $containerResponse->id);
-        }
-        
-        $deliveryBillRegisterResponse = MileExpressFacade::registerDeliveryBill($deliveryBillCreateResponse->data['data']['id'], $containerIds);
-        if ($deliveryBillRegisterResponse->success == false) {
-            $this->error = $deliveryBillCreateResponse->error;
-            return false;
-        }
-        $deliveryBill->update([
-            'request_id' => $deliveryBillCreateResponse->data['data']['id'],
-            'cnd38_code' => $deliveryBillCreateResponse->data['data']['code']
-        ]);
         return true;
     }
 }

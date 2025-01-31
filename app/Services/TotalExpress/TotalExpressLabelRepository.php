@@ -3,7 +3,7 @@
 
 namespace App\Services\TotalExpress;
 use App\Models\Order;
-use App\Services\Cainiao\Client;
+use App\Services\TotalExpress\Client;
 use Illuminate\Support\Facades\Storage; 
 use App\Services\Correios\Models\PackageError;
 use App\Services\TotalExpress\Services\UpdateCN23Label;

@@ -14,7 +14,6 @@ class Client{
     //Sweden Post Parameters 
     private $baseUrl;
     private $partnerKey;
-    public $client;
 
     public function __construct()
     {
@@ -54,12 +53,11 @@ class Client{
     function generateMasterAirWayBill($deliveryBill){
         $order = $deliveryBill->containers->first()->orders->first(); 
         $order_response = json_decode($order->api_response);
-        $response = Http::withHeaders($this->getHeaders())->post($this->baseUrl . '/Sabueso/ws/deliveryServices/receiveMAWBEsp', [                
+        $response = Http::withHeaders($this->getHeaders())->post($this->baseUrl . '/Sabueso/ws/deliveryServices/receiveMAWB', [                
                 "mawb_number"   => $order_response->id,
                 "isUpdate"      => true
         ]);
-        $response_body = json_decode($response->getBody());  
-        dd($response_body);
+        $response_body = json_decode($response->getBody()); 
         $byteArray = $response_body->zipFile; 
         // Specify the file path where you want to save the PDF
         $filePath =   storage_path("app/labels/{$order->corrios_tracking_code}.zip");
@@ -92,39 +90,6 @@ class Client{
 
             $this->generateLabel($order);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            return new PackageError($e->getResponse()->getBody()->getContents());
-        }
-    }
-    
-    public static function orderTrackings($tracking)
-    { 
-        try { 
-            if (app()->isProduction()) {
-                $partnerKey = config('hound.production.partner_key');
-                $baseUrl = config('hound.production.base_url');
-            } else {
-                $partnerKey = config('hound.test.partner_key');
-                $baseUrl = config('hound.test.base_url');
-            }
-            $response =  Http::withHeaders([
-                'partnerKey' => $partnerKey,
-            ])->post($baseUrl .'/Sabueso/ws/deliveryServices/trackOrder', [
-                "guideNumber" => $tracking 
-            ]);
-                if ($response->successful()){
-                    $data = $response->json(); 
-                    return $data;
-                } else {
-                    \Log::error('Error while hound express tracking',$response->body());
-                    return [
-                        'error' => true,
-                        'message' => $response->body(),
-                    ];
-                }
-            
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            \Log::error('Error while hound express ClientException',$e->getResponse()->getBody()->getContents());
-
             return new PackageError($e->getResponse()->getBody()->getContents());
         }
     }

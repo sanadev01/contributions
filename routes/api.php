@@ -3,7 +3,6 @@
 use App\Models\Deposit;
 use App\Models\Order;
 use App\Models\PaymentInvoice;
-use App\Services\Cainiao\Client as CainiaoClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -50,10 +49,6 @@ Route::get('order-fedex-rates', [App\Http\Controllers\Admin\Order\OrderItemsCont
 
 //Route for GSS
 Route::get('order-gss-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'GSSRates'])->name('api.gssRates');
-
-//Route for PasarEx Colombia
-Route::get('order-pasarex-rates', [App\Http\Controllers\Admin\Order\OrderItemsController::class, 'pasarExColombiaRates'])->name('api.pasarExRates');
-
 
 Route::post('update/inventory-order', Api\InventoryOrderUpdateController::class)->name('api.inventory.order.update');
 
@@ -145,8 +140,4 @@ Route::prefix('v1')->group(function(){
         ]);
     });
 
-});
-Route::post('/cainiao-webhook', function (Request $request){   
-    $cainiaoClient = new CainiaoClient();
-    return $cainiaoClient->cngeCn38CallbackWebHook($request);
 });

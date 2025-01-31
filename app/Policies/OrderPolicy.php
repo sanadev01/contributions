@@ -176,7 +176,7 @@ class OrderPolicy
 
     public function canPrintLable(User $user,Order $order)
     {
-        return ($user->hasPermission('print_label') && $order->user_id == $user->id &&$order->isPaid()||optional($order->shippingService)->unpaid_printable);
+        return $user->hasPermission('print_label') && $order->user_id == $user->id && $order->isPaid();
     }
 
     public function canPrintLableViaApi(User $user,Order $order)

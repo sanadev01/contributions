@@ -50,12 +50,6 @@ class CreateRequest extends FormRequest
             $rules['zipcode'] = [($this->country_id == \App\Models\Order::Guatemala ? 'nullable' : 'required'), new ZipCodeValidator($this->country_id, $this->state_id)];
             $rules['street_no'] = 'sometimes|numeric';
         }
-        
-        if (Country::where('code', 'MX')->first()->id == $this->country_id && $this->account_type == 'individual') {
-            $rules['tax_id'] = 'sometimes|min:13|max:18|required_if:country_id,' . Country::where('code', 'BR')->first()->id;
-            $rules['zipcode'] = [ 'required', new ZipCodeValidator($this->country_id, $this->state_id)];
-            $rules['street_no'] = 'sometimes|numeric';
-        }
 
         return $rules;
     }

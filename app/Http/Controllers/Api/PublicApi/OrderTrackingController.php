@@ -14,8 +14,9 @@ class OrderTrackingController extends Controller
 
     public function __invoke(Request $request, $search, $format = 'json')
     {
-        $orderTrackingRepository = new OrderTrackingRepository($search);
-        $responses = $orderTrackingRepository->handle(); 
+        $order_tracking_repository = new OrderTrackingRepository($search);
+        $responses = $order_tracking_repository->handle();
+
         if ($format === 'xml') {
             $xmlResponse = $this->generateXmlResponse($responses);
             return response($xmlResponse, 200)->header('Content-Type', 'application/xml');
@@ -100,12 +101,6 @@ class OrderTrackingController extends Controller
                     return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => null ]);
                 }
                 if($response['service'] == 'Correios_Brazil')
-                {
-                    $this->trackings = $response['trackings'];
-                    $apiTracking = $response['api_trackings']; 
-                    return apiResponse(true,'Order found',['hdTrackings'=> OrderTrackingResource::collection($this->trackings), 'apiTrackings' => $apiTracking]); 
-                }
-                if($response['service'] == 'PasarEx'||$response['service'] == 'Hound Express')
                 {
                     $this->trackings = $response['trackings'];
                     $apiTracking = $response['api_trackings']; 

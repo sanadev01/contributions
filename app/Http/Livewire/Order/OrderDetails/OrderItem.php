@@ -27,7 +27,7 @@ class OrderItem extends Component
     public $geps;
     public $prime5;
     public $service;
-    public $made_in="";
+
     // public $search;
     // public $name;
     public $type = 'Postal (Correios)';
@@ -56,7 +56,6 @@ class OrderItem extends Component
             $this->value = $editItem->value;
             $this->total = $this->value * $this->quantity;
             $this->description =  $editItem->description;
-            $this->made_in =  $editItem->made_in;
             $this->dangrous_item = null;
             $this->contains_battery = $editItem->contains_battery;
             if ($this->contains_battery) {
@@ -82,7 +81,6 @@ class OrderItem extends Component
         $this->contains_flammable_liquid = null;
         $this->contains_perfume = null;
         $this->contains_battery = null;
-        $this->made_in = "";
         $this->order->refresh();
         if (count($this->order->items) == 0) {
             $this->dispatchBrowserEvent('disabledSubmitButton');
@@ -151,7 +149,6 @@ class OrderItem extends Component
                     'description' => $this->description,
                     'quantity' => $this->quantity,
                     'value' => $this->value,
-                    'made_in' => $this->made_in??'',
                     'contains_battery' => $this->dangrous_item == 'contains_battery' ? true : false,
                     'contains_perfume' => $this->dangrous_item == 'contains_perfume' ? true : false,
                     'contains_flammable_liquid' => $this->dangrous_item == 'contains_flammable_liquid' ? true : false,
@@ -164,7 +161,6 @@ class OrderItem extends Component
                 'sh_code' => $this->sh_code,
                 'description' => $this->description,
                 'quantity' => $this->quantity,
-                'made_in' => $this->made_in??'',
                 'value' => $this->value,
                 'contains_battery' => $this->dangrous_item == 'contains_battery' ? true : false,
                 'contains_perfume' => $this->dangrous_item == 'contains_perfume' ? true : false,

@@ -44,6 +44,7 @@ class DeliveryBill extends Model
         foreach ($this->containers as $container){
             $weight += round($container->orders()->sum(DB::raw('CASE WHEN orders.measurement_unit = "kg/cm" THEN orders.weight ELSE (orders.weight/2.205) END')),2);
         }
+
         return $weight;
     }
 
@@ -143,10 +144,6 @@ class DeliveryBill extends Model
     {
         return $this->containers->first()->hasBCNService();
     }
-    public function isPasarEx()
-    {
-        return $this->containers->first()->hasPasarExService();
-    }
 
     public function isSenegal()
     {
@@ -155,42 +152,5 @@ class DeliveryBill extends Model
         }
         return false;
     }
-    
-    public function getIsCainiaoAttribute()
-    {
-        return $this->containers->first()->has_cainiao;
-    }
 
-    public function isVipParcel()
-    {
-        if(($this->containers->first()->services_subclass_code == ShippingService::VIP_PARCEL_FCP) || ($this->containers->first()->services_subclass_code == ShippingService::VIP_PARCEL_PMEI) || ($this->containers->first()->services_subclass_code == ShippingService::VIP_PARCEL_PMI)){
-            return true;
-        }
-        return false;
-    }
-
-    public function isFoxCourier()
-    {
-        return $this->containers->first()->hasFoxCourierService();
-    }
-
-    public function isPhxCourier()
-    {
-        return $this->containers->first()->hasPhxCourierService();
-    }
-
-    public function isMileExpress()
-    {
-        return $this->containers->first()->hasMileExpressService();
-    }
-    function getCodeNameAttribute() {
-        $name =( optional(optional(optional(optional($this->containers->first())->orders)->first())->shippingService)->name)??"H"; 
-        preg_match_all('/\b\w/u', $name, $matches); 
-        $firstLetters = implode('', $matches[0]);  
-        return $firstLetters; 
-    }
-
-    function isIdLabelService() {
-        return $this->containers->first()->hasIdLabelService();
-    }
 }

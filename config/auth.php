@@ -39,7 +39,6 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
-            'throttle' => 5,
         ],
 
         'api' => [

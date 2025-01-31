@@ -3,7 +3,6 @@
 namespace App\Models\Warehouse;
 
 use App\Models\Country;
-use App\Models\ShippingService;
 use Illuminate\Database\Eloquent\Model;
 use App\Services\Correios\Models\Package;
 use App\Services\Converters\UnitsConverter;
@@ -117,10 +116,10 @@ class AccrualRate extends Model
         if ( $this->service == Package::SERVICE_CLASS_DSS_SENEGAL ){
             return "DSS Senegal";
         }
-        return (ShippingService::where('service_sub_class',$this->service)->first())->name??'';
+        return '';
     }
 
-    public static function getRateSlabFor($weight, $service  = null)
+    public static function getRateSlabFor($weight, $service  = null): ?AccrualRate
     {
         if($weight < 0.1){
             $weight = 0.1;

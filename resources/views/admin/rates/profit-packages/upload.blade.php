@@ -38,7 +38,7 @@
                                 @endphp
                     
                                 @foreach ($filteredServices  as $service)
-                                    <a class="dropdown-item service-item" href="{{ route('admin.rates.sample.exports',['package' => 10,'service' => $service->id]) }}">
+                                    <a class="dropdown-item service-item" href="{{ route('admin.rates.rates.exports',['package' => 10,'service' => $service->id]) }}">
                                         <i class="fa fa-arrow-down"></i> {{ $service->name }} Download Sample
                                     </a>
                                 @endforeach

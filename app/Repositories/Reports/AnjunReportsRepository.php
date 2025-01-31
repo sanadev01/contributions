@@ -4,7 +4,6 @@ namespace App\Repositories\Reports;
 
 use App\Models\Order;
 use App\Models\ShippingService;
-use App\Models\Warehouse\Container;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Warehouse\DeliveryBill;
@@ -21,8 +20,6 @@ class AnjunReportsRepository
                 return $query->whereIn('service_sub_class', [ShippingService::BCN_Packet_Standard, ShippingService::BCN_Packet_Express]);
             if($request->type=="anjun")
                 return $query->whereIn('service_sub_class', [ShippingService::AJ_Packet_Standard, ShippingService::AJ_Packet_Express]);
-            if($request->type=="anjun_china")
-                return $query->whereIn('service_sub_class', [ShippingService::AJ_Standard_CN, ShippingService::AJ_Express_CN]);
             if($request->type=="correios")
                 return $query->whereIn('service_sub_class', [ShippingService::Packet_Standard,ShippingService::Packet_Express,ShippingService::Packet_Mini]);
         });
@@ -50,8 +47,6 @@ class AnjunReportsRepository
                 return $query->whereIn('services_subclass_code', ['BCN-NX', 'BCN-IX']);
             if($request->type=="anjun")
                 return $query->whereIn('services_subclass_code', ["AJ-IX","AJ-NX"]);
-            if($request->type=="anjun_china")
-                return $query->whereIn('services_subclass_code', ["AJC-IX","AJC-NX"]);
             if($request->type=="correios")
                 return $query->whereIn('services_subclass_code', ["IX","NX","XP"]);
         });
@@ -66,19 +61,6 @@ class AnjunReportsRepository
             $query->where('created_at','<=',$endDate);
         }
 
-        return $query->get();
-    }
-    public function getAnjunChinaContainersReport($request)
-    {
-        $query = Container::whereIn('services_subclass_code', ["AJ-IX","AJ-NX"]);
-        $startDate  = $request['start_date'].' 00:00:00';
-        $endDate    = $request['end_date'].' 23:59:59';
-        if ( $request['start_date'] ){
-            $query->where('created_at','>=',$startDate);
-        }
-        if ( $request['end_date'] ){
-            $query->where('created_at','<=',$endDate);
-        }
         return $query->get();
     }
 

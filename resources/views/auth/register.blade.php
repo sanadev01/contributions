@@ -140,14 +140,14 @@
                                     <label for="reffered_by" class="col-form-label text-md-right">{{ __('auth.register.How you come to know') }}</label>
                                     <select name="come_from" class="form-control" required>
                                         <option value="">Select One Option</option>
-                                        <option value="Instagram" {{ old('come_from') == 'Instagram' ? 'selected' : '' }}>&#xf16d; Instagram</option>
-                                        <option value="Facebook" {{ old('come_from') == 'Facebook' ? 'selected' : '' }}>&#xf082; Facebook</option>
-                                        <option value="Youtube Channel" {{ old('come_from') == 'Youtube Channel' ? 'selected' : '' }}>&#xf16a; Youtube Channel</option>
-                                        <option value="Google" {{ old('come_from') == 'Google' ? 'selected' : '' }}>&#xf1a0; Google</option>
-                                        <option value="Yahoo" {{ old('come_from') == 'Yahoo' ? 'selected' : '' }}>&#xf19e; Yahoo</option>
-                                        <option value="Friend" {{ old('come_from') == 'Friend' ? 'selected' : '' }}>&#xf2be; Friend</option>
-                                        <option value="Mail marketing" {{ old('come_from') == 'Mail marketing' ? 'selected' : '' }}>&#xf003; Mail marketing</option>
-                                        <option value="Others (type)" {{ old('come_from') == 'Others (type)' ? 'selected' : '' }}>&#xf192; Others (type)</option>
+                                        <option value="Instagram">&#xf16d; Instagram </option>
+                                        <option value="Facebook">&#xf082; Facebook </option>
+                                        <option value="Youtube Channel">&#xf16a; Youtube Channel </option>
+                                        <option value="Google">&#xf1a0; Google </option>
+                                        <option value="Yahoo">&#xf19e; Yahoo</option>
+                                        <option value="Friend">&#xf2be; Friend </option>
+                                        <option value="Mail marketing">&#xf003; Mail marketing </option>
+                                        <option value="Others (type)">&#xf192; Others (type)</option>
                                     </select>
                                     @error('reffered_by')
                                     <span class="invalid-feedback" role="alert">

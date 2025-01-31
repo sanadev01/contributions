@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class AffiliateSaleRepository
 {
     public function get(Request $request,$paginate = true,$pageSize=50){
+
         $query = AffiliateSale::has('user')->with('order')->has('order');
         if ($request->orderIds) {
               $query->whereIn('id', json_decode($request->orderIds));
@@ -26,14 +27,14 @@ class AffiliateSaleRepository
             $query->where('is_paid',false);
         }
         
-        if ( $request->start ||$request->start_date ){
-            $startDate = $request->start??$request->start_date . ' 00:00:00'; 
+        if ( $request->start ){
+            $startDate = $request->start . ' 00:00:00'; 
             $query->where(function($query) use($startDate){
                 return $query->where('created_at','>=',$startDate);
             });
         }
-        if ( $request->end ||$request->end_date){
-            $endDate = $request->end??$request->end_date.' 23:59:59'; 
+        if ( $request->end ){
+            $endDate = $request->end.' 23:59:59'; 
             $query->where(function($query) use($endDate){
                 return $query->where('created_at','<=', $endDate);
             });

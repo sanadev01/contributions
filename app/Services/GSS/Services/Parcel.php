@@ -69,8 +69,8 @@ class Parcel {
                   'itemValueCurrencyType' => 'USD',
                   // 'valueLoaded' => true,
                   'packageType' => 'G',
-                  'weight' => $type === "CEP" ? $order->getOriginalWeight() : $order->weight,
-                  'weightUnit' => $type === "CEP" ? 'KG' : (($order->measurement_unit == "lbs/in") ? 'LB' : 'KG'),
+                  'weight' => $order->weight,
+                  'weightUnit' => ($order->measurement_unit == "lbs/in") ? 'LB' : 'KG',
                   // 'returnServiceRequested' => true,
                   'orderID' => "$order->id",
                   'orderDate' => Carbon::today()->toDateString(),
@@ -83,34 +83,34 @@ class Parcel {
                   'unitOfMeasurement' => ($order->measurement_unit == "lbs/in") ? 'IN' : 'CM',
                   ]:[]),
                //Items Information
-               'items' => $this->setItemsDetails($order, $type),              
+               'items' => $this->setItemsDetails($order),              
             ];
       return $packet;
    }
 
-   private function setItemsDetails($order, $type)
+   private function setItemsDetails($order)
    {
-      $items = [];
-
-      if (count($order->items) >= 1) {
+        $items = [];
+      
+        if (count($order->items) >= 1) {
          $totalQuantity = $order->items->sum('quantity');
-         foreach ($order->items as $key => $item) {
-            $itemToPush = [];
-            $originCountryCode = optional($order->senderCountry)->code;
-            $itemToPush = [
-                  'itemID' => "$key",
-                  'itemDescription' => $item->description,
-                  "customsDescription" => $item->description,
-                  'quantity' => (int)$item->quantity,
-                  'htsNumber' => "$item->sh_code",
-                  'unitValue' => $item->value,
-                  'weight' => $type === "CEP" ? ($order->getOriginalWeight() / $totalQuantity) - 0.02 : round($order->weight / $totalQuantity, 2) - 0.02,
-                  "weightUnit" => $type === "CEP" ? 'KG' : (($order->measurement_unit == "lbs/in") ? 'LB' : 'KG'),
-            ];
-            array_push($items, $itemToPush);
-         }
-      }
-      return $items;
+            foreach ($order->items as $key => $item) {
+                $itemToPush = [];
+                $originCountryCode = optional($order->senderCountry)->code;
+                $itemToPush = [
+                     'itemID' => "$key",
+                     'itemDescription' => $item->description,
+                     "customsDescription" => $item->description,
+                     'quantity' => (int)$item->quantity,
+                     'htsNumber' => "$item->sh_code",
+                     'unitValue' => $item->value,
+                     'weight' => round($order->weight / $totalQuantity, 2) - 0.02,
+                     "weightUnit" => ($order->measurement_unit == "lbs/in") ? 'LB' : 'KG',
+                ];
+               array_push($items, $itemToPush);
+            }
+        }
+        return $items;
    }
 
 

@@ -15,7 +15,6 @@ class Container extends Component
     public $startDate=null;
     public $endDate=null;
     public $service=null;
-    public $customType='';
     public function render()
     {
         return view('livewire.container.container',[
@@ -43,7 +42,6 @@ class Container extends Component
             'sealNo' => $this->sealNo,
             'packetType' => $this->packetType,
             'unitCode' => $this->unitCode,
-            'customType' => $this->customType,
         ]);
     }
 }

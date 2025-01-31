@@ -10,19 +10,23 @@ use Illuminate\Support\Facades\Cache;
 use App\Services\Converters\UnitsConverter;
 use App\Http\Requests\Calculator\USCalculatorRequest;
 use App\Repositories\Calculator\USCalculatorRepository;
-use Illuminate\Support\Facades\Auth;
 
 class USCalculatorController extends Controller
 {
     public function index()
     {
-            return view('uscalculator.calculator');
+        $states = Cache::remember('states', Carbon::now()->addDay(), function () {
+            return State::query()->where('country_id', Country::US)->get(['name','code','id']);
+        });
+
+        $userId = (auth()->check()) ? auth()->user()->id : null;
+        $cc = 'US';
+        return view('uscalculator.calculator', compact('states', 'userId', 'cc'));
     }
 
     public function store(USCalculatorRequest $request, USCalculatorRepository $usCalculatorRepository)
     {
         $tempOrder = $usCalculatorRepository->handle($request);
-        $tempOrder['tax_modality'] = $request->tax_modality;
         $shippingServices = $usCalculatorRepository->getShippingServices();
 
         $apiRates = $usCalculatorRepository->getRates();
@@ -46,9 +50,10 @@ class USCalculatorController extends Controller
         }else{
             $weightInOtherUnit = UnitsConverter::poundToKg($chargableWeight);
         }
-        $isInternational  = $request->to_international?true:false;
+
         $shippingServiceTitle = 'US Services';
         $tempOrder = collect($tempOrder);
-           return view('uscalculator.index', compact('isInternational','apiRates','ratesWithProfit','tempOrder', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn', 'shippingServiceTitle'));
+
+        return view('uscalculator.index', compact('apiRates','ratesWithProfit','tempOrder', 'weightInOtherUnit', 'chargableWeight', 'userLoggedIn', 'shippingServiceTitle'));
     }
 }

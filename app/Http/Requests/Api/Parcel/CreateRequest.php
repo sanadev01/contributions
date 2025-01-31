@@ -9,8 +9,6 @@ use App\Models\ShippingService;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Concerns\HasJsonResponse;
 use App\Models\Country;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class CreateRequest extends FormRequest
 {
@@ -33,23 +31,20 @@ class CreateRequest extends FormRequest
      */
     public function rules(Request $request)
     {
-         $order = Order::where('user_id', auth()->user()->id)
-                    ->where(function ($query) use ($request) {
-                        $query->where('tracking_id', $request->parcel['tracking_id'])
-                            ->orWhere('customer_reference', $request->parcel['customer_reference']);
-                    })
-                    ->whereNotIn('status', [
-                        Order::STATUS_RELEASE,
-                        Order::STATUS_REJECTED,
-                        Order::STATUS_REFUND,
-                        Order::STATUS_CANCEL,
-                    ])
-                    ->first();
+        $order = Order::where([
+                    ['user_id', auth()->user()->id],
+                    ['tracking_id', $request->parcel['tracking_id']]
+                ])
+                ->orWhere([
+                    ['user_id', auth()->user()->id],
+                    ['customer_reference', $request->parcel['customer_reference']]
+                ])
+                ->first();
+                
         $rules = [
             "parcel.service_id" => "bail|required|exists:shipping_services,id",
             "parcel.merchant" => "required",
             "parcel.carrier" => "required",
-            "parcel.tax_modality" => "in:ddu,DDU,ddp,DDP",
             'parcel.tracking_id' => 'required|max:22',
             'parcel.customer_reference' => 'required|max:22',
             "parcel.measurement_unit" => "required|in:kg/cm,lbs/in",
@@ -58,7 +53,7 @@ class CreateRequest extends FormRequest
             "parcel.width" => "required|numeric|gt:0",
             "parcel.height" => "required|numeric|gt:0",
             "parcel.shipment_value" => "nullable|numeric",
-            'parcel.return_option' => 'nullable|in:1',
+            "parcel.return_option" => "nullable|numeric",
 
             "sender.sender_first_name" => "required|max:100",
             "sender.sender_last_name" => "required|max:100",
@@ -149,25 +144,13 @@ class CreateRequest extends FormRequest
         if ($shippingService && $shippingService->is_total_express) {
 
             $rules['products.*.description'] = 'required|max:60';
-            $rules['parcel.tax_modality'] = 'required|in:ddu,DDU,ddp,DDP';
+            $rules['parcel.tax_modality'] = 'required|in:DDU,DDP';
         }
 
         if ($request->recipient['country_id'] == 'UK' || $request->recipient['country_id'] == Country::UK) {
             $rules['recipient.state_id'] = 'nullable';
             $rules['recipient.tax_id'] = 'nullable';
             $rules['recipient.street_no'] = 'nullable';
-        }
-
-        if ($request->recipient['country_id'] == 'MEX' || $request->recipient['country_id'] == 'Mexico' || $request->recipient['country_id'] == Country::Mexico) {
-            $rules['recipient.tax_id'] = 'nullable';
-        }
-
-        if ($request->recipient['country_id'] == 'CO' || $request->recipient['country_id'] == 'Colombia' || $request->recipient['country_id'] == Country::Colombia) {
-            $rules['recipient.tax_id'] = 'nullable';
-        }
-
-        if(setting('is_prc_user', null, auth()->user()->id)) {
-            $rules['sender.sender_website'] = 'required';
         }
 
         return $rules;
@@ -183,7 +166,7 @@ class CreateRequest extends FormRequest
             'sender.sender_city.required_if' => __('validation.sender_city.required_if'),
             'recipient.phone.required' => 'The phone number field is required.',
             'recipient.phone.regex' => 'Please enter a valid phone number in international format. Example: +551234567890',
-            'parcel.return_option.required' => 'The return option is required. It should be 1.',
+            'parcel.return_option.required' => 'The return option is required. It should be 0 or 1.',
         ];
     }
 }

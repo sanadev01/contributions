@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Admin\Reports;
 use App\Models\Reports;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Order;
 use Illuminate\Support\Facades\Session;
 use App\Services\Excel\Export\KPIReport;
 use App\Repositories\Reports\KPIReportsRepository;
-use App\Services\Excel\Export\AccrualReport;
 use Exception;
 
 class KPIReportController extends Controller
@@ -21,15 +19,7 @@ class KPIReportController extends Controller
     */
     public function index(Request $request, KPIReportsRepository $kpiReportsRepository)
     { 
-        if($request->type=='accrual'){
-            $this->authorize('viewTaxAndDutyReport',Reports::class);
-            return view('admin.reports.report-accrual');
-        }
-        else{
-            $this->authorize('viewKPIReport',Reports::class);
-        }
-            
-        
+        $this->authorize('viewKPIReport',Reports::class);
         $trackings = [];
         $trackingCodeUsersName = [];
         $orderDates = [];
@@ -40,48 +30,17 @@ class KPIReportController extends Controller
             }
             catch(Exception $e){
                 session()->flash('alert-danger', 'Error' . $e->getMessage());
-                return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates', 'firstEventDate'));
+                return back(); 
             }
-            if(isset($response['trackings'])){
-                $trackings = $response['trackings'];
-                $firstEventDate = $response['firstEventDate'];
-                $trackingCodeUsersName = $response['trackingCodeUsersName'];
-                $orderDates = $response['orderDates'];
-            }
-        }    
-        if(!count($trackings)){
-            if($request->start_date || $request->end_date || $request->trackingNumbers!==null){
-                session()->flash('alert-danger', 'no record found'); 
-            }
+            $trackings = $response['trackings'];
+            $firstEventDate = $response['firstEventDate'];
+            $trackingCodeUsersName = $response['trackingCodeUsersName'];
+            $orderDates = $response['orderDates'];
         }
         return view('admin.reports.kpi-report', compact('trackings','trackingCodeUsersName', 'orderDates', 'firstEventDate'));
     }
     public function store(Request $request)
-    { 
-        if($request->type == 'accrual'){  
-            if($request->start_date != null && $request->end_date != null)
-                {
-                    $start_date = $request->start_date.' 00:00:00';
-                    $end_date = $request->end_date.' 23:59:59';
-                    $orders = Order::whereBetween('order_date', [$start_date, $end_date])
-                    ->when($request->is_paid&&$request->is_paid!=="all",function($query) use ($request){
-                        return $query->where('is_paid',$request->is_paid=='true');
-                    })->where('tax_and_duty','!=',0)->get();
-                }else{ 
-                    $orders =  Order::where('tax_and_duty','!=',0)
-                    ->when($request->is_paid&&$request->is_paid!=="all",function($query) use ($request){
-                        return $query->where('is_paid',$request->is_paid=='true');
-                    })->get();
-                }
-                if(count($orders)<1){ 
-                    session()->flash('alert-danger', 'No order found!');
-                    return back(); 
-                }
-                 
-            $exportService = new AccrualReport($orders);
-            return $exportService->handle();
-        }
-
+    {
         if($request->order){
             
             $trackings = json_decode($request->order, true);

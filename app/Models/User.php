@@ -16,15 +16,14 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
- 
+
 use AmazonSellingPartner\Exception\ApiException;
 use AmazonSellingPartner\Exception\InvalidArgumentException;
 use App\AmazonSPClients\SellersApiClient; 
 use Exception;
 use JsonException; 
 use Psr\Http\Client\ClientExceptionInterface;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
+
 class User extends Authenticatable
 {
     use Notifiable,LogsActivity,CausesActivity;
@@ -286,7 +285,7 @@ class User extends Authenticatable
             return asset('app-assets/images/portrait/small/avatar-s-11.jpg');
         }
         
-        return $this->image->public_path;
+        return $this->image->getPath();
         
     }
 
@@ -394,51 +393,6 @@ class User extends Authenticatable
     }
  
 
-    public function generateVerificationToken()
-    {
-        $token = rand(100000, 999999);
-        DB::table('verification_tokens')->updateOrInsert(
-            ['user_id' => $this->id],
-            ['token' => $token, 'expires_at' => Carbon::now()->addMinutes(3)]
-        );
-    
-        return $token;
-    }
-    
-    public function verifyToken($token)
-    {
-        $record = DB::table('verification_tokens')
-            ->where('user_id', $this->id)
-            ->where('token', $token)
-            ->where('expires_at', '>', Carbon::now())
-            ->first();
-    
-        if ($record) {
-            DB::table('verification_tokens')->where('user_id', $this->id)->delete();
-            return true;
-        }
-    
-        return false;
-    }
-
-    public function remainingTime()
-    { 
-        $record = DB::table('verification_tokens')
-            ->where('user_id', $this->id)
-            ->where('expires_at', '>', Carbon::now())
-            ->first(); 
-        if ($record) {
-            $expiresAt = Carbon::parse($record->expires_at);
-            $now = Carbon::now();
-            $remainingSeconds = $expiresAt->diffInSeconds($now);
-            
-            return $remainingSeconds;
-        }
-     
-        return 0;
-    }
-    
-    
     
 }
 

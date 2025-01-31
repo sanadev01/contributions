@@ -1,12 +1,12 @@
 <?php
-
 return [
     'test' => [
-        'x-api-key' => env('POSTPLUS_TEST_X_API_KEY'),
-        'base_uri' => env('POSTPLUS_TEST_BASE_URI', 'https://default.test.uri'),
+        'x-api-key' => 'labelapitest1234567890',
+        'base_uri' => 'https://api.test.post-plus.io/api/v1'
     ],
     'production' => [
-        'x-api-key' => env('POSTPLUS_PROD_X_API_KEY'),
-        'base_uri' => env('POSTPLUS_PROD_BASE_URI', 'https://default.production.uri'),
-    ],
-];
+        'x-api-key' => 'ec62cb67628244e3b74acef4c374a3b3',
+        'base_uri' => 'https://api.post-plus.io/api/v1'
+
+        ],
+    ];

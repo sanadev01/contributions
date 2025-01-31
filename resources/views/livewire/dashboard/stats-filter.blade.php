@@ -30,9 +30,6 @@
                         <h2 class="pb-4">
                             <span class="white">{{ $orders['currentDayTotal'] }}</span>
                         </h2>
-                        <h6 class="white">@lang('dashboard.Unpaid orders')
-                            <span class="f-right white">{{ $orders['currentDayTotal'] - $orders['currentDayConfirm'] }}</span>
-                        </h6>
                         <h6 class="white">@lang('dashboard.Completed Orders')
                             <span class="f-right">{{ $orders['currentDayConfirm'] }}</span>
                         </h6>
@@ -51,10 +48,7 @@
                             </div>
                         </div>
                         <h2 class="pb-4"><span class="white">{{ $orders['currentMonthTotal'] }}</span></h2>
-                        <h6 class="white">@lang('dashboard.Unpaid orders')
-                            <span class="f-right white">{{ $orders['currentMonthTotal'] - $orders['currentMonthConfirm'] }}</span>
-                        </h6>
-                         <h6 class="white">@lang('dashboard.Completed Orders')
+                        <h6 class="white">@lang('dashboard.Completed Orders')
                             <span class="f-right white">{{ $orders['currentMonthConfirm'] }}</span>
                         </h6>
                     </div>
@@ -70,9 +64,6 @@
                             </div>
                         </div>
                         <h2 class="pb-4"><span class="white"> {{ $orders['currentYearTotal'] }} </span></h2>
-                        <h6 class="white">@lang('dashboard.Unpaid orders')
-                            <span class="f-right white">{{ $orders['currentYearTotal'] - $orders['currentYearConfirm'] }}</span>
-                        </h6>
                         <h6 class="white">@lang('dashboard.Completed Orders')<span
                                 class="f-right white">{{ $orders['currentYearConfirm'] }}</span></h6>
                     </div>
@@ -88,9 +79,6 @@
                             </div>
                         </div>
                         <h2 class="pb-4"><span class="white">{{ $orders['totalOrders'] }}</span></h2>
-                        <h6 class="white">@lang('dashboard.Unpaid orders')
-                            <span class="f-right white">{{ $orders['totalOrders'] - $orders['totalCompleteOrders'] }}</span>
-                        </h6>
                         <h6 class="white">@lang('dashboard.Completed Orders')<span class="f-right white">{{ $orders['totalCompleteOrders'] }}</span></h6>
                     </div>
                 </div>

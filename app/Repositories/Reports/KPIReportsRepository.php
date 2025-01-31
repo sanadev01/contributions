@@ -42,8 +42,6 @@ class KPIReportsRepository
                     ShippingService::Post_Plus_Premium,
                     ShippingService::Prime5RIO,
                     ShippingService::LT_PRIME,
-                    ShippingService::AJ_Standard_CN,
-                    ShippingService::AJ_Express_CN,
                 ]);
             });
 

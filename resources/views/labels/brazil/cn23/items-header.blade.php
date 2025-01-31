@@ -1,10 +1,12 @@
 <tr>
-    <td>COD NCM</td>
+    <td>
+        COD SH
+    </td>
     <td style="width: 15px;">
         QTDE
     </td>
-    <td colspan="2">
-        DESCRIÇÃO DO CON TEÚDO
+    <td colspan="2"  >
+        DESCRIÇÃO DO CON TEÚDO 
     </td>
     <td>
         PESO (KG)

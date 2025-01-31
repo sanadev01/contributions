@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\AccrualRate;
 
-use App\Models\ShippingService;
 use Livewire\Component;
 use App\Services\Correios\Models\Package;
 
@@ -20,11 +19,11 @@ class IndexTable extends Component
     public function getServices()
     {
         $this->services[0] = [
-            'name' => 'Herco Packet Standard',
+            'name' => 'Standard',
             'value' => Package::SERVICE_CLASS_STANDARD,
         ];
         $this->services[1] = [
-            'name' => 'Herco Packet Express',
+            'name' => 'Express',
             'value' => Package::SERVICE_CLASS_EXPRESS,
         ];
         $this->services[2] = [
@@ -139,15 +138,6 @@ class IndexTable extends Component
             'name' => 'DSS Senegal',
             'value' => Package::SERVICE_CLASS_DSS_SENEGAL,
         ];   
-        $this->services[29] = [
-            'name' => 'Anjun China Standard',
-            'value' => Package::SERVICE_CLASS_AJ_Standard_CN,
-        ];   
-        $this->services[30] = [
-            'name' => 'Anjun China Express',
-            'value' => Package::SERVICE_CLASS_AJ_Express_CN,
-        ];   
-
         return $this->services;
     }
 }

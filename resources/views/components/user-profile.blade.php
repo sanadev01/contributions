@@ -14,9 +14,6 @@
         <a class="dropdown-item" href="{{ route('admin.profile.index') }}">
             <i class="feather icon-user"></i> @lang('user.Edit Profile')
         </a>
-        <a class="dropdown-item" href="{{ route('admin.login-details') }}">
-            <i class="feather icon-user"></i> @lang('user.Login Details')
-        </a>
         <div class="dropdown-divider"></div>
         <form action="{{ route('logout') }}" method="post">
             @csrf

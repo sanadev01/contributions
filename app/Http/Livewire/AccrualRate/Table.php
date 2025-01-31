@@ -18,7 +18,6 @@ class Table extends Component
     public $commission;
     public $chileService = false;
     public $anjunService = false;
-    public $anjunChinaService = false;
     
     public function mount($shippingService)
     {
@@ -52,9 +51,6 @@ class Table extends Component
         }
         if($this->service == ShippingService::AJ_Packet_Standard || $this->service == ShippingService::AJ_Packet_Express){
             $this->anjunService = true;
-        }
-        if($this->service == ShippingService::AJ_Standard_CN || $this->service == ShippingService::AJ_Express_CN){
-            $this->anjunChinaService = true;
         }
     }
 

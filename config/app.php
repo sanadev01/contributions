@@ -183,7 +183,6 @@ return [
         App\Providers\FedExServiceProvider::class,
         App\Providers\ChileServiceProvider::class,
         Webklex\PDFMerger\Providers\PDFMergerServiceProvider::class,
-        App\Providers\MileExpressServiceProvider::class,
 
     ],
 

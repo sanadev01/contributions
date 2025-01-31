@@ -40,9 +40,6 @@ class Package implements \App\Services\Correios\Contracts\Package
     const SERVICE_CLASS_Hound_Express = ShippingService::HoundExpress;
     const SERVICE_CLASS_TOTAL_EXPRESS_10KG = ShippingService::TOTAL_EXPRESS_10KG;
     const SERVICE_CLASS_DSS_SENEGAL = ShippingService::DSS_SENEGAL;
-    const SERVICE_CLASS_AJ_Express_CN = ShippingService::AJ_Express_CN;
-    const SERVICE_CLASS_AJ_Standard_CN = ShippingService::AJ_Standard_CN;
-    const SERVICE_CLASS_MILE_EXPRESS = ShippingService::Mile_Express;
 
     public $customerControlCode = "";
     public $senderName = "HERCO";
@@ -76,12 +73,6 @@ class Package implements \App\Services\Correios\Contracts\Package
     public $freightPaidValue = 0;
     public $insurancePaidValue = 0;
     public $nonNationalizationInstruction = "RETURNTOORIGIN";
-
-    public $provisionedTaxValue = null;
-    public $provisionedtIcmsValue = null;
-    public $senderCodeEce = null;
-    public $generalDescription = null;
-
 
     public $items = [];
 

@@ -58,9 +58,7 @@
                                                                     <option value="{{json_encode(['734','367','778','777'])}}">Post Plus</option>                                                           
                                                                     <option value="{{json_encode(['PostNL'])}}">Post NL</option>                                                           
                                                                     <option value="{{json_encode(['AJ-IX','AJ-NX'])}}">Anjun </option>                                                    
-                                                                    <option value="{{json_encode(['BCN-IX','BCN-NX'])}}">Correios B </option>
-                                                                    <option value="{{json_encode(['AJC-IX','AJC-NX'])}}">Anjun China</option>                                                                 
-                                                                    <option value="{{json_encode([App\Models\ShippingService::HoundExpress])}}">Hound Express</option>
+                                                                    <option value="{{json_encode(['BCN-IX','BCN-NX'])}}">Correios B </option>                                                                  
                                                                 </select>
                                                     </div>
                                                     <div class="col-md-2 mt-1">
@@ -123,36 +121,16 @@
                                                 <span class="badge">B</span>
                                                 @elseif($deliveryBill->isHoundExpress())
                                                 <span class="badge text-dark" style="background-color:#b4e2ef">HE</span>
-                                                @elseif($deliveryBill->isPasarEx())
-                                                <span class="badge text-dark" style="background-color:#b4e2ef">PEx</span>
                                                 @elseif($deliveryBill->isSenegal())
                                                 <span class="badge badge-secondary text-dark">SN</span>
-                                                @elseif($deliveryBill->isVipParcel())
-                                                <span class="badge badge-secondary text-dark">VIP</span>
-                                                @elseif($deliveryBill->isAnjunChina())
-                                                <span class="badge badge-secondary text-dark">AJ</span>
-                                                @elseif($deliveryBill->isFoxCourier())
-                                                <span class="badge text-dark" style="background-color:#b4e2ef">Fox</span>
-                                                @elseif($deliveryBill->isPhxCourier())
-                                                <span class="badge text-dark" style="background-color:#b4e2ef">Phx</span>
-                                                @elseif($deliveryBill->is_cainiao)
-                                                <span class="badge badge-secondary text-danger">CIA</span>
-                                                @elseif($deliveryBill->isMileExpress())
-                                                <span class="badge badge-warning text-black">Mile</span>
                                                 @else
-                                                    <span class="badge badge-primary">{{ $deliveryBill->code_name??H }}</span>
+                                                    <span class="badge badge-primary">H</span>
                                                 @endif
-                                            @endif
-                                            @if(optional($deliveryBill)->Containers->first()->isPRC())
-                                                <strong class="primary">(PRC)</strong>
                                             @endif
                                             @admin @if(optional($deliveryBill->user)->isUser()) <span class="badge badge-danger">GoBox</span> @endif @endadmin
                                         </td>
                                         <td>
-                                        <span class="{{ ($deliveryBill->request_id == 'waiting...' ? 'text-danger' : '') }}">
                                             {{ $deliveryBill->request_id }}
-                                        </span>
-                                            
                                         </td>
                                         <td>{{ $deliveryBill->cnd38_code }}</td>
                                         <td class="d-flex">
@@ -198,7 +176,7 @@
                                                                 <i class="fa fa-cloud-download"></i> Download PostPlus Manifest
                                                             </a>
                                                         @endif -->
-                                                        @if(!$deliveryBill->isGDE()&&!$deliveryBill->isHoundExpress()&&!$deliveryBill->isPasarEx())
+                                                        @if(!$deliveryBill->isGDE()&&!$deliveryBill->isHoundExpress())
                                                             <a href="{{ route('warehouse.delivery_bill.manifest',[$deliveryBill, 'service'=> true]) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-cloud-download"></i> Download Manifest By Service
                                                             </a>
@@ -260,14 +238,14 @@
                                                             </a>
                                                         
                                                         @endif
-                                                       @if( !$deliveryBill->isRegistered() ) 
+                                                        {{-- @if( !$deliveryBill->isRegistered() ) --}}
                                                             {{-- <a href="{{ route('warehouse.delivery_bill.edit',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="fa fa-edit"></i> @lang('warehouse.actions.Edit')
                                                             </a> --}}
                                                             <a href="{{ route('warehouse.delivery_bill.register',$deliveryBill) }}" class="dropdown-item w-100">
                                                                 <i class="feather icon-box"></i> Register Delivery Bill
                                                             </a>
-                                                        @endif  
+                                                        {{-- @endif --}}
 
                                                         @if(!$deliveryBill->isReady())
                                                             <form action="{{ route('warehouse.delivery_bill.destroy',$deliveryBill) }}" class="d-flex" method="post" onsubmit="return confirmDelete()">

@@ -24,7 +24,6 @@ return [
     'Setting' => 'Configuração',
     'Available' => 'acessível',
     'Edit Profile' => 'Editar Perfil',
-    'Login Details' => 'Detalhes de login',
     'Logout' => 'Sair',
     'User Setting Updated Successfully' => 'Configuração do usuário atualizada com sucesso',
     'Select Package' => 'Selecione o pacote',

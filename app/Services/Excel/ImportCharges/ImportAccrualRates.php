@@ -14,14 +14,13 @@ class ImportAccrualRates extends AbstractImportService
     protected $service;
     protected $country_id;
     protected $anjunService = false;
-    protected $anjunChinaService = false;
 
     public function __construct(UploadedFile $file, $service, $country_id)
     {
         $this->service = $service;
         $this->country_id = $country_id;
-        $this->anjunService = (in_array($service,[ShippingService::AJ_Packet_Standard ,ShippingService::AJ_Packet_Express])) ? true : false;
-        $this->anjunChinaService = (in_array($service,[ShippingService::AJ_Express_CN,ShippingService::AJ_Standard_CN])) ? true : false;
+        $this->anjunService = ($service == ShippingService::AJ_Packet_Standard || $service == ShippingService::AJ_Packet_Express) ? true : false;
+
         $filename = $this->importFile($file);
 
         parent::__construct(
@@ -78,20 +77,21 @@ class ImportAccrualRates extends AbstractImportService
 
         foreach (range(3, $limit) as $row) {
 
-            $weight = round($this->getValueOrDefault('A'.$row),2); 
+            $weight = round($this->getValueOrDefault('A'.$row),2);
             
             if(($this->country_id == Country::Brazil && $weight <= 30000) || ($this->country_id == Country::Chile && $weight <= 50000) || ($this->country_id == Country::Portugal && $weight <= 20000) || ($this->country_id == Country::Colombia && $weight <= 20000) || ($this->country_id == Country::Brazil && $weight <= 60000) || ($this->country_id == Country::Japan && $weight <= 30000) || ($this->country_id == Country::Mexico && $weight <= 30000) || ($this->country_id == Country::Senegal && $weight <= 30000))
-            { 
+            {
                 $rates[] = [
                     'service' => $this->service,
                     'country_id' => $this->country_id,
                     'weight' => round($this->getValueOrDefault('A'.$row),2),
                     'cwb' => round($this->getValueOrDefault('C'.$row),2),
                     'gru' => round($this->getValueOrDefault('D'.$row),2),
-                    'commission' => ($this->anjunService || $this->anjunChinaService) ? round($this->getValueOrDefault('E'.$row),2) : 0,
+                    'commission' => ($this->anjunService) ? round($this->getValueOrDefault('E'.$row),2) : 0,
                 ];
             }    
-        } 
+        }
+
         return $this->storeRatesToDb($rates);
     }
 

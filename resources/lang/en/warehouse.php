@@ -22,12 +22,10 @@ return [
         'Packages Inside Container' => 'Packages Inside Container',
         'Customer Reference' => 'Customer Reference',
         'Download Manifest' => 'Download Manifest (US Customs)',
-        'Custom Type' => 'Custom Type',
         'validations' => [
             'Container Type' => 'Container Type Required',
             'Destination Airport' => 'Destination Airport Required',
             'Distribution Service Class' => 'Distribution Service Class Required',
-            'Custom Type' => 'Container Custom Type Required',
         ]
     ],
     'deliveryBill' => [

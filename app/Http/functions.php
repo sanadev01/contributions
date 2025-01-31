@@ -12,10 +12,6 @@ use App\Models\ZoneRate;
 use App\Models\ShippingService;
 use App\Mail\User\PurchaseInsurance;
 use App\Services\Calculators\AbstractRateCalculator;
-use Illuminate\Contracts\Encryption\DecryptException;
-use App\Services\PasarEx\GetZipcodeZone;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Auth;
 
 function countries()
 {
@@ -40,13 +36,6 @@ function states($countryId=null){
     $states =  State::all();
     return $states;
 }
-function us_states(){
-    return Cache::remember('states', Carbon::now()->addDay(), function () {
-        return State::query()->where('country_id', Country::US)->get(['name','code','id']);
-    });
-}
-
-
 
 function saveSetting($key, $value, $userId = null, $admin = false)
 {
@@ -253,34 +242,7 @@ function responseSuccessful($output, $message)
         'message' =>  $message,
     ]);
 }
-
-function getOrderGroupRange($order)
-{
-    if ($order) {
-        $orderZipcode = str_replace('-', '', $order->recipient->zipcode);
-        $groupRanges = config('hd.order_groups_range');
-        usort($groupRanges, function ($a, $b) {
-            return $a['start'] - $b['start'];
-        });
-        foreach ($groupRanges as $range) {
-            if ($orderZipcode >= $range['start'] && $orderZipcode <= $range['end']) {
-                return $range;
-            } elseif ($orderZipcode < $range['start']) {
-                 break;
-            }
-        }
-    }
-    return null;
-}
-function getGroupRange($group)
-{ 
-    if (preg_match('/\d+/', $group, $matches)) {
-        $group= (int)$matches[0];
-    }
-    return ((new GetZipcodeZone('-'))->getStartAndEndFromZone($group));
-}
-
-
+ 
 function getValidShCode($shCode, $service)
 {
     $invalidShCodes = [
@@ -338,29 +300,6 @@ function getValidShCode($shCode, $service)
     }
     return $shCode;
 }
-function currentActiveApiName() {
-    return  setting('correios_api', null, User::ROLE_ADMIN) ? 'Correios Api' : (setting('anjun_api', null,  User::ROLE_ADMIN) ? 'Correios Anjun Api' : (setting('bcn_api', null,User::ROLE_ADMIN) ? 'BCN Setting' : 'Anjun China Api'));
-}
-function checksSettingShippingService($shippingService){
-    $api = currentActiveApiName();
-    if(in_array($shippingService->service_sub_class,[ShippingService::Packet_Standard, ShippingService::AJ_Packet_Standard, ShippingService::AJ_Standard_CN, ShippingService::BCN_Packet_Standard,ShippingService::Packet_Express, ShippingService::AJ_Packet_Express, ShippingService::AJ_Express_CN, ShippingService::BCN_Packet_Express]))
-    {
-        if($api=='Correios Anjun Api'){  
-        return in_array($shippingService->service_sub_class,[ShippingService::AJ_Packet_Standard,ShippingService::AJ_Packet_Express]);
-        }
-        if($api=='Correios Api'){ 
-        return in_array($shippingService->service_sub_class,[ShippingService::Packet_Express,ShippingService::Packet_Standard]);
-        }
-        if($api=='Correios Anjun Api'){  
-        return in_array($shippingService->service_sub_class,[ShippingService::AJ_Standard_CN,ShippingService::AJ_Express_CN]);
-        }
-        if($api=='BCN Setting'){  
-        return in_array($shippingService->service_sub_class,[ShippingService::BCN_Packet_Standard,ShippingService::BCN_Packet_Express]);
-        }
-    }
-    return true;
-
-}
 
 function getZoneRate($order, $service, $zoneId)
 {
@@ -406,6 +345,7 @@ function getZoneRate($order, $service, $zoneId)
 
     return $rate;
 }
+
 function checkParcelInsurance($data) {
     if ($data instanceof Deposit) {
         $order = Order::with('services')->find($data->order_id);
@@ -427,47 +367,5 @@ function checkParcelInsurance($data) {
         }
     } else {
         \Log::warning('Order not found for Deposit ID');
-    }
-}
-function authMaskWithStars($value, $owner_id,$fun="Mid") {
-
-    $fun = in_array(ucfirst(strtolower($fun)),['Mid','Left','Right','All'])?$fun:'Mid';
-    $function = 'maskWithStars'.$fun;
-    return (Auth::check() && Auth::id() == $owner_id) ? $value : $function($value);
-}
-function maskWithStarsLeft($value)
-{
-    $length = strlen($value);
-    if ($length <= 6) {
-        return ($length <= 2) ? $value : '******' . substr($value, -1);
-    }
-    return  '******' . substr($value, -3);
-}
-function maskWithStarsAll($value)
-{
-    return  '******';
-}
-function maskWithStarsRight($value)
-{
-    $length = strlen($value);
-    if ($length <= 6) {
-        return ($length <= 2) ? $value : substr($value, 0, 1) . '******';
-    }
-    return substr($value, 0, 3) . '******';
-}
-function maskWithStarsMid($value)
-{
-    $length = strlen($value);
-    if ($length <= 6) {
-        return ($length <= 2) ? $value : substr($value, 0, 1) . '******' . substr($value, -1);
-    }
-    return substr($value, 0, 3) . '******' . substr($value, -3);
-}
-function isEncrypted($value) {
-    try {
-        decrypt($value);
-        return true;
-    } catch (DecryptException $e) {
-        return false;
     }
 }

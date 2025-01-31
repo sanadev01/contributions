@@ -7,7 +7,6 @@ return [
     'Today Orders' =>'Today Orders',
     'Total Month Order'=>'Total :month Order',
     'Completed Orders'=>'Completed Orders',
-    'Unpaid orders'=>'Unpaid Orders',
     'Current Year' =>'Current Year Total Orders',
     'Total Orders'=>'Total Order Since: 2020',
     'Start Date'=>'Start Date',

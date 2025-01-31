@@ -11,7 +11,6 @@ class AccuralRateExport extends AbstractExportService
 {
     private $rates;
     private $countryId;
-    private $service;
 
     private $currentRow = 1;
 

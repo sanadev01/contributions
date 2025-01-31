@@ -30,7 +30,6 @@ class Table extends Component
     public $customer_reference = '';
     public $tracking_code = '';
     public $amount = '';
-    public $tax_and_duty = '';
     public $status = '';
     public $orderType = null;
     public $userType = null;
@@ -41,8 +40,6 @@ class Table extends Component
      */
     public $sortAsc = false;
     public $sortBy = 'id';
-    public $year;
-
 
     public function mount($userType = null)
     {
@@ -73,9 +70,6 @@ class Table extends Component
 
     public function getOrders()
     {
-        $this->year = $this->year ?? date('Y');
-        $selectedYear = $this->year;
-
         return (new OrderRepository)->get(request()->merge([
             'order_date' => $this->date,
             'name' => trim($this->name),
@@ -88,11 +82,9 @@ class Table extends Component
             'customer_reference' => trim($this->customer_reference),
             'corrios_tracking_code' => trim($this->tracking_code),
             'status' => trim($this->status),
-            'tax_and_duty' => trim($this->tax_and_duty),
             'orderType' => trim($this->orderType),
             'paymentStatus' => trim($this->paymentStatus),
             'userType' => trim($this->userType),
-            'year' => $selectedYear, 
         ]),true,$this->pageSize,$this->sortBy,$this->sortAsc ? 'asc' : 'desc');
     }
 

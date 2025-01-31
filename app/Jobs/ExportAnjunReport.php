@@ -10,11 +10,10 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Services\Excel\Export\AnjunReport;
 use App\Repositories\Reports\AnjunReportsRepository;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-class ExportAnjunReport 
-// implements ShouldQueue
+use Illuminate\Support\Facades\Log;
+class ExportAnjunReport implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,7 +27,6 @@ class ExportAnjunReport
      */
     public function __construct(array $request, $user)
     {
-        set_time_limit(120);
         $this->user = $user;
         $this->request = $request;
         $this->reportRepository = new AnjunReportsRepository();
@@ -43,8 +41,8 @@ class ExportAnjunReport
     {
         try {
             $request = new Request($this->request);
-            $id = $this->user->id;
             $deliveryBills = $this->reportRepository->getAnjunReport($request, $this->user);
+            $id = $this->user->id;
             $exportService = new AnjunReport($deliveryBills, $id);
             $url = $exportService->handle();
             

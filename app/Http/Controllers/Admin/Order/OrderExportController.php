@@ -17,22 +17,21 @@ class OrderExportController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $serviceType = [
-            "anjun" => "Anjun Report",
-            "bcn" => "BCN Export",
-            "correios" => "Correios Export",
-            "anjun_china" => "Anjun China Export",
-        ];
-        $request['start_date']  = $request->start_date?? Carbon::now()->startOfMonth()->toDateString();
-        $request['end_date']  = $request->end_date?? Carbon::now()->format('Y-m-d'); 
+        $todayDate = Carbon::now()->format('Y-m-d');
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        $startDate = $startDate ? $startDate : $todayDate;
+        $endDate = $endDate ? $endDate : $todayDate;
+
         $report = Reports::create([
             'user_id' => Auth::id(),
-            'name' => isset($serviceType[$request->type]) ? $serviceType[$request->type] : "Orders Export",
-             'start_date' => $request['start_date'],
-            'end_date' => $request['end_date'],
+            'name' => $request->type == "anjun" ? "Anjun Report" : ( $request->type == "bcn" ? 'BCN Export':( $request->type == "correios" ? 'Correios Export':"Orders Export")),
+            'start_date' => $startDate,
+            'end_date' => $endDate,
         ]);
+        
         $request->merge(['report' => $report->id]);
-        if(in_array($request->type ,["anjun","anjun_china",'bcn','correios'])){
+        if(in_array($request->type ,["anjun",'bcn','correios'])){
             ExportAnjunReport::dispatch($request->all(), Auth::user());
         }else {
             ExportOrder::dispatch($request->all(), Auth::user());

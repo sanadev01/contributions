@@ -42,7 +42,12 @@ class ContainerPackageController extends Controller
      */
     public function store(Container $container, string $barcode)
     {
-        return (new AddContainerPackageRepository($container,$barcode))->addOrderToContainer();
+        $startTime = microtime(true); 
+        $output = (new AddContainerPackageRepository($container,$barcode))->addOrderToContainer();
+        $endTime = microtime(true); 
+        $executionTime = $endTime - $startTime;  
+        \Log::info('Execution time of addOrderToContainer:' . $executionTime . ' seconds');
+        return $output;
     }
 
     /**

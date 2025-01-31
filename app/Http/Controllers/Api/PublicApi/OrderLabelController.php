@@ -2,37 +2,32 @@
 
 namespace App\Http\Controllers\Api\PublicApi;
 
-use Exception;
-use App\Models\User;
 use App\Models\Order;
+use App\Models\User;
 use App\Events\OrderPaid;
 use Illuminate\Http\Request;
+use App\Repositories\AnjunLabelRepository;
 use App\Services\GePS\Client;
 use App\Models\ShippingService;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Events\AutoChargeAmountEvent;
 use Illuminate\Support\Facades\Storage;
-use App\Repositories\GSSLabelRepository;
 use App\Repositories\UPSLabelRepository;
 use App\Repositories\GePSLabelRepository;
 use App\Repositories\USPSLabelRepository;
-use App\Repositories\AnjunLabelRepository;
 use App\Repositories\FedExLabelRepository;
-use App\Repositories\PasarExLabelRepository;
-use App\Repositories\SenegalLabelRepository;
-use Illuminate\Database\Eloquent\Collection;
-use App\Repositories\PostPlusLabelRepository;
-use App\Repositories\HDExpressLabelRepository;
-use App\Repositories\FoxCourierLabelRepository;
-use App\Repositories\SmartComexLabelRepository;
 use App\Repositories\SwedenPostLabelRepository;
-use App\Repositories\MileExpressLabelRepository;
-use App\Repositories\HoundExpressLabelRepository;
+use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\CorrieosChileLabelRepository;
 use App\Repositories\CorrieosBrazilLabelRepository;
+use App\Repositories\PostPlusLabelRepository;
+use App\Repositories\GSSLabelRepository;
+use App\Repositories\HDExpressLabelRepository;
 use App\Services\TotalExpress\TotalExpressLabelRepository;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Events\AutoChargeAmountEvent;
+use App\Repositories\SenegalLabelRepository;
 
 class OrderLabelController extends Controller
 {
@@ -47,6 +42,9 @@ class OrderLabelController extends Controller
             $order = $this->updateShippingServiceFromSetting($order);
         }
         DB::beginTransaction();
+        if ($order->shippingService->is_anjun_china_service_sub_class && Auth::id() != "1233") {
+        return $this->rollback("service not available for this user.");
+        }
         $isPayingFlag = false;
         try {
             $orders = new Collection;
@@ -68,10 +66,6 @@ class OrderLabelController extends Controller
             //sweden post
             if ($order->shippingService->isSwedenPostService()) {
                 return $this->swedenPostLabel($order);
-            }
-            //hound express
-            if ($order->shippingService->is_hound_express) { 
-                return $this->isHoundExpress($order);
             }
 
             //For USPS International services
@@ -160,17 +154,19 @@ class OrderLabelController extends Controller
                         return $this->rollback((string)$error);
                     }
                 }
-                if ($order->shippingService->is_anjun_china_service_sub_class){ 
-                    $anjun = new AnjunLabelRepository($order, $request, false); 
-                    $labelData = $anjun->run();  
+                if ($order->shippingService->is_anjun_china_service_sub_class && Auth::id() == "1233") {
+                                    $anjun = new AnjunLabelRepository($order, $request);
+                    $labelData = $anjun->run();
                     $order->refresh();
-                    \Log::info(["anjun label data response"=>$labelData]);
-                    if ($anjun->getError()) {
-                        return $this->rollback($anjun->getError());
-                    }
                     if ($labelData) {
                         Storage::put("labels/{$order->corrios_tracking_code}.pdf", $labelData);
                     }
+                    if ($anjun->getError()) {
+                        return $this->rollback($anjun->getError());
+                    }
+                }elseif ($order->shippingService->is_anjun_china_service_sub_class) {
+
+                    return $this->rollback('service not availble for this user.');
                 }
                 if ($order->shippingService->isAnjunService() ||  $order->shippingService->isCorreiosService() || $order->shippingService->is_bcn_service) {
                     $corrieosBrazilLabelRepository = new CorrieosBrazilLabelRepository();
@@ -181,24 +177,6 @@ class OrderLabelController extends Controller
                     }
                     if ($corrieosBrazilLabelRepository->getError()) {
                         return $this->rollback($corrieosBrazilLabelRepository->getError());
-                    }
-                }
-
-                if ($order->shippingService->is_fox_courier || $order->shippingService->is_phx_courier) {
-                    $smartComexLabelRepository = new SmartComexLabelRepository();
-                    $smartComexLabelRepository->get($order);
-                    $error = $smartComexLabelRepository->getError();
-                    if ($error) {
-                        return $this->rollback((string)$error);
-                    }
-                }
-
-                if ($order->shippingService->isMileExpressService()) {
-                    $mileExpressLabelRepository = new MileExpressLabelRepository();
-                    $mileExpressLabelRepository->run($order, false);
-                    $error = $mileExpressLabelRepository->getError();
-                    if ($error) {
-                        return $this->rollback($error);
                     }
                 }
             }
@@ -232,16 +210,6 @@ class OrderLabelController extends Controller
                     return $this->rollback($error);
                 }
             }
-
-            if ($order->shippingService->is_pasarex) {
-                $pasarexLabelRepository = new PasarExLabelRepository();
-                $pasarexLabelRepository->run($order, false);
-                $error = $pasarexLabelRepository->getError();
-                if ($error) {
-                    return $this->rollback($error);
-                }
-            }
-
             return $this->commit($order);
         } catch (Exception $e) {
             return $this->rollback($e->getMessage());
@@ -260,15 +228,6 @@ class OrderLabelController extends Controller
             return $this->commit($order);
         }
     }
-    function isHoundExpress($order){
-        $houndExpress = new HoundExpressLabelRepository(); 
-        $houndExpress->run($order,false);
-        if ($houndExpress->getError()) {
-            return $this->rollback($houndExpress->getError());
-        }
-        return $this->commit($order);
-    }
-
     private function commit($order)
     {
         DB::commit();

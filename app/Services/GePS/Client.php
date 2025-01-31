@@ -28,12 +28,9 @@ class Client{
 
     private function getKeys()
     {
-        $token = env('API_TOKEN_DEV');
-        if (app()->isProduction()) {
-            $token = env('API_TOKEN_PROD');
-        }
-        if (!$token) {
-            throw new \Exception("API token is not set.");
+        $token = 'Z3BwOmFwaXRlc3Q=';
+        if(app()->isProduction()){
+            $token = 'aGVyY29hcGk6aGVyY29AMDk4';
         }
         $headers = [
             'Authorization'=> "Basic {$token}",

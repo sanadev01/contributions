@@ -1,8 +1,8 @@
 <section class="card invoice-page">
     {{-- @dd(request()); --}}
     @if (strpos(request()->server('HTTP_REFERER'), 'reports/commission') !== false)
-            <div class="col-12 row justify-content-center"> 
-            <div class="h1 text-center"><i class="fa fa-spinner fa-spin"></i></div>
+            <div class="col-12 row justify-content-between">
+                500 | Server Error
             </div>
         @else
             <div class="col-12 row justify-content-between">
@@ -47,21 +47,21 @@
                     <div class="text-left w-50">
                         <h5>@lang('orders.invoice.Recipient')</h5>
                         <div class="recipient-info my-2">
-                        <p>{{ optional($order->recipient)->first_name .' '. optional($order->recipient)->last_name }} </p>
-                        <p> {{ authMaskWithStars(optional($order->recipient)->address,$order->user_id,'Right') }} {{ authMaskWithStars(optional($order->recipient)->address2,$order->user_id,'All') }} {{ authMaskWithStars(optional($order->recipient)->street_no,$order->user_id,'Left') }}<br>
-                            {{ authMaskWithStars(optional($order->recipient)->city,$order->user_id,"Right") }}, {{ authMaskWithStars(optional($order->recipient)->region,$order->user_id,"All") }}, {{  authMaskWithStars(optional(optional($order->recipient)->state)->code,$order->user_id,"All") }}, {{ authMaskWithStars(optional($order->recipient)->zipcode,$order->user_id,'All') }}<br>
-                            {{  authMaskWithStars(optional(optional($order->recipient)->country)->name,$order->user_id,'Left') }}<br>
-                            <i class="feather icon-phone"></i> Ph#:{{ authMaskWithStars(optional($order->recipient)->phone,$order->user_id,'right') }}
-                        </p>
-                    </div>
-                    <div class="recipient-contact pb-2">
-                        <p>
-                            <i class="feather icon-mail"></i>
-                            {{ authMaskWithStars(optional($order->recipient)->email,$order->user_id,"Right") }}
-                        </p>
-                        <p>
-                            {{ authMaskWithStars(optional($order->recipient)->tax_id,$order->user_id,"Right") }}
-                        </p>
+                            <p> {{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }} </p>
+                            <p>{{ optional($order->recipient)->address }} {{ optional($order->recipient)->address2 }} {{ optional($order->recipient)->street_no }}<br>
+                                {{ optional($order->recipient)->city }}, {{ optional($order->recipient)->region }}, {{ optional(optional($order->recipient)->state)->code }}, {{ optional($order->recipient)->zipcode }}<br>
+                                {{ optional(optional($order->recipient)->country)->name }}<br>
+                                <i class="feather icon-phone"></i> Ph#: {{ optional($order->recipient)->phone }}
+                            </p>
+                        </div>
+                        <div class="recipient-contact pb-2">
+                            <p>
+                                <i class="feather icon-mail"></i>
+                                {{ optional($order->recipient)->email }}
+                            </p>
+                            <p>
+                                {{ optional($order->recipient)->tax_id }}
+                            </p>
                         </div>
                     </div>
                     <div class="text-righ justify-self-end">
@@ -156,7 +156,7 @@
                         </div>
                     </div>
                 </div>
-               
+
                 <!-- Invoice Items Details -->
                 <div id="invoice-items-details" class="pt-1 invoice-items-table">
                     <div class="row">
@@ -317,7 +317,6 @@
                     </div>
                 </div>
             </div>
-                @endif
-    
+    @endif
 
 </section>

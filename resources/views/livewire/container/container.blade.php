@@ -45,8 +45,8 @@
                         </div>
                     </div> 
                     <div class="card-content card-body" style="min-height: 100vh;">
-                        <div class="mt-1 table-responsive">
-                            <table class="table table-hover">
+                        <div class="mt-1">
+                            <table class="table mb-0">
                                 <thead>
                                 <tr>
                                     <th style="min-width: 100px;">
@@ -54,7 +54,6 @@
                                             <option value="clear">Clear All</option>
                                             <option value="checkAll">Select All</option>
                                             <option value="assign-awb">Assign AWB</option>
-                                            <option value="download-report">Download Report</option>
                                         </select>
                                     </th>
                                     <th>@lang('warehouse.containers.Dispatch Number')</th>
@@ -70,16 +69,12 @@
                                     </th>
                                     <th>@lang('warehouse.containers.Destination Airport')</th>
                                     <th>@lang('warehouse.containers.Container Type')</th>
-                                    <th>@lang('warehouse.containers.Custom Type')</th>
                                     <th>@lang('warehouse.containers.Distribution Service Class')</th>
                                     <th>
                                         Unit Code
                                     </th>
                                     <th>
                                         AWB#
-                                    </th>
-                                    <th>
-                                        Zone
                                     </th>
                                     <th>
                                         Status
@@ -98,7 +93,6 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <th></th>  
                                     <th></th>               
                                     <th>
                                         <select class="form-control" wire:model="packetType">
@@ -152,25 +146,13 @@
                                             {{ $container->getContainerType() }}
                                         </td>
                                         <td>
-                                            {{ $container->getCustomType() }}
-                                        </td>
-                                        <td>
                                             {{ $container->getServiceSubClass() }}
                                         </td>
                                         <td>
-                                            {{ $container->getUnitCode() }}<br>
-
-                                            @if(!empty($container->customs_response_list))
-                                                PRC ID: {{$container->customs_response_list}}
-                                            @endif
+                                            {{ $container->getUnitCode() }}
                                         </td>
                                         <td>
                                             {{ $container->awb }}
-                                        </td>
-                                        <td>
-                                           <div class="badge badge-danger p-2">
-                                                {{ $container->zone_group}}
-                                            </div>
                                         </td>
                                         <td>
                                             @if(!$container->isRegistered())
@@ -207,16 +189,6 @@
                                                             @if( !$container->isRegistered() && $container->hasOrders())
                                                                 <a href="{{  $container->hasAnjunChinaService()?route('warehouse.anjun.container.register',$container):route('warehouse.container.register',$container) }}" class="dropdown-item w-100">
                                                                     <i class="feather icon-box"></i> Register Unit
-                                                                </a>
-                                                            @endif
-                                                            @if($container->isPRC() && !$container->isPRCRegistered())
-                                                                <a href="{{ route('warehouse.container.registerprc',$container) }}" class="dropdown-item w-100">
-                                                                    <i class="feather icon-box"></i> Register PRC Unit
-                                                                </a>
-                                                            @endif
-                                                            @if($container->isPRC() && $container->isPRCRegistered())
-                                                                <a href="{{ route('warehouse.container.cancelprc',$container) }}" class="dropdown-item w-100">
-                                                                    <i class="feather icon-box"></i> Cancel PRC Unit
                                                                 </a>
                                                             @endif
                                                             @if( $container->isRegistered())

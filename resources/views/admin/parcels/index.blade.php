@@ -2,11 +2,6 @@
 
 @section('page')
     <section>
-        @if (session()->has('message'))
-            <div class="alert alert-success">
-                {{ session('message') }}
-            </div>
-        @endif
         <div class="row">
             <div class="col-12">
                 <div class="card min-vh-100">

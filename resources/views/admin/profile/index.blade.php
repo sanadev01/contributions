@@ -96,7 +96,7 @@
                                     <div class="col-md-6">
                                         <input type="file" accept="image/*" class="form-control" name="image" placeholder="">
                                         <div class="help-block"></div>
-                                        <img src="{{ auth()->user()->getImage() }}" style="width: 100px; height:auto;" class="mt-2" alt="">
+                                        <img src="{{ auth()->user()->getImage() }}" style="width: 100px; height:100px;" alt="">
                                     </div>
                                 </div>
 
@@ -183,15 +183,6 @@
                                             <div class="help-block"></div>
                                         </div>
                                     </div>
-                                    
-                                    
-                                    <div class="controls row mb-1 align-items-center">
-                                        <label class="col-md-3 text-md-right">Website<span class="text-danger"></span></label>
-                                        <div class="col-md-6">
-                                            <input type="url" class="form-control"  name="user_website" value="{{ old('user_website',setting('user_website', null, auth()->user()->id))??'https://homedeliverybr.com' }}"  placeholder="Enter website URL"/>
-                                            <div class="help-block"></div>
-                                        </div>
-                                    </div>
                                     <!-- <div class="controls row mb-1 align-items-center">
                                         <div class="offset-3">
                                             <div class="input-group ml-3">
@@ -219,7 +210,7 @@
                                             </div>
                                             <label class="form-check-label font-medium-1 font-weight-bold mt-2" for="returnParcel">Return All Parcels on My Account Cost<span class="text-danger"></span></label>
                                         </div>
-                                        {{-- <div class="form-check form-check-inline">
+                                        <div class="form-check form-check-inline">
                                             <div class="vs-checkbox-con vs-checkbox-primary ml-3" title="Disposal All Authorized">
                                                 <input type="checkbox" name="dispose_all" id="disposeAll" @if(setting('dispose_all', null, auth()->user()->id)) checked @endif>
                                                 <span class="vs-checkbox vs-checkbox-lg">
@@ -229,7 +220,7 @@
                                                 </span>
                                             </div>
                                             <label class="form-check-label font-medium-1 font-weight-bold mt-2" for="disposeAll">Disposal All Authorized<span class="text-danger"></span></label>
-                                        </div> --}}
+                                        </div>
                                         <div class="form-check form-check-inline">
                                             <div class="vs-checkbox-con vs-checkbox-primary ml-3" title="Choose Return by Individual Parcel">
                                                 <input type="checkbox" name="individual_parcel" id="returnIndividual" @if(setting('individual_parcel', null, auth()->user()->id)) checked @endif>

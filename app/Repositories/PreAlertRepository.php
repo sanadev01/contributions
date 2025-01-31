@@ -13,10 +13,7 @@ use App\Mail\User\ShipmentTransit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\User\ConsolidationRequest;
-use App\Models\OrderItem;
-use App\Models\ShCode;
 use App\Services\Calculators\WeightCalculator;
-use Illuminate\Support\Facades\File;
 
 class PreAlertRepository
 {
@@ -42,7 +39,7 @@ class PreAlertRepository
 
         $request->merge([
             'status' => Order::STATUS_PREALERT_TRANSIT
-        ]); 
+        ]);
 
         $data = [ 'merchant', 'carrier', 'tracking_id', 'order_date','customer_reference', 'user_id','status'];
 
@@ -78,7 +75,6 @@ class PreAlertRepository
         $order = Order::create(
             $request->only($data)
         );
-        $this->updateOrCreateItem($order, $request);
 
         if ( !Auth::user()->isAdmin() && Auth::user()->can('addShipmentDetails',Order::class) ){
             $order->update([
@@ -91,11 +87,8 @@ class PreAlertRepository
         }
 
         if ($request->hasFile('images')) {
-            foreach ($order->images() as $image) {
-                File::delete(public_path($image->path));
-            }
             foreach ($request->file('images') as $image) {
-                $document = Document::saveDocument($image,'parcels/');
+                $document = Document::saveDocument($image);
                 $order->images()->create([
                     'name' => $document->getClientOriginalName(),
                     'size' => $document->getSize(),
@@ -140,7 +133,7 @@ class PreAlertRepository
             ]);
             $data[] = 'warehouse_number';
         }
-        $this->updateOrCreateItem($order, $request);
+
         $status = $order->status;
 
         if ( $order->status < Order::STATUS_ORDER ){
@@ -163,30 +156,10 @@ class PreAlertRepository
             $data[] = 'weight_discount';
 
         }
-        
-        if ( $request->hasFile('invoiceFile') ){
-            $order->attachInvoice( $request->file('invoiceFile') );
-        }
-        if ($request->hasFile('images')) {
-            foreach ($order->images as $oldImage) {
-                $oldImage->delete();
-            }
-
-            foreach ($request->file('images') as $image) {
-                $document = Document::saveDocument($image,'parcels/');
-                $order->images()->create([
-                    'name' => $document->getClientOriginalName(),
-                    'size' => $document->getSize(),
-                    'type' => $document->getMimeType(),
-                    'path' => $document->filename
-                ]);
-            }
-            session()->flash('alert-success','Images Updated Successfully');
-        }
-        
         //CHECK VOL WEIGHT OF PARCEL AND SET DISCOUNT
-        $totalDiscountPercentage = 0; 
-        $discountPercentage = setting('discount_percentage', null, $order->user->id)??0; 
+        $totalDiscountPercentage = 0;
+        $discountPercentage = setting('discount_percentage', null, $order->user->id)??0;
+        
         if ( $request->measurement_unit == 'kg/cm' ){
             $volumetricWeight = WeightCalculator::getVolumnWeight($request->length,$request->width,$request->height,'cm');
         }else {
@@ -207,9 +180,31 @@ class PreAlertRepository
                 'weight_discount' => null,
             ]);
         }
+        
         $order->update(
             $request->only($data)
         );
+
+        if ( $request->hasFile('invoiceFile') ){
+            $order->attachInvoice( $request->file('invoiceFile') );
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($order->images as $oldImage) {
+                $oldImage->delete();
+            }
+
+            foreach ($request->file('images') as $image) {
+                $document = Document::saveDocument($image);
+                $order->images()->create([
+                    'name' => $document->getClientOriginalName(),
+                    'size' => $document->getSize(),
+                    'type' => $document->getMimeType(),
+                    'path' => $document->filename
+                ]);
+            }
+        }
+
         if($order->status == Order::STATUS_PREALERT_TRANSIT){
             try {
                 \Mail::send(new ShipmentTransit($order));
@@ -236,25 +231,7 @@ class PreAlertRepository
         }
         return $order;
     }
-    function updateOrCreateItem($order,$request) {
-        if(in_array($request->order_contain_option,['battery','perfume'])){
-            $shCode = ShCode::where('description', 'like', "%$request->order_contain_option%")->first() ?: ShCode::first();
-            OrderItem::updateOrCreate(
-                [
-                     'order_id' => $order->id,
-                ],
-                [
-               'sh_code' => $shCode->code,
-               'description' => $shCode->description,
-               'quantity' => 1,
-               'made_in' => '',
-               'value' => 1,
-               'contains_battery' =>$request->order_contain_option == 'battery' ? true : false,
-               'contains_perfume' => $request->order_contain_option == 'perfume' ? true : false, 
-               'contains_flammable_liquid' => true , 
-           ]);
-       }
-    }
+
     public function delete(Order $order,$soft=true)
     {
         if ( $soft ){

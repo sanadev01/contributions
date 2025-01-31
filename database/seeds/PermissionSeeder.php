@@ -1,5 +1,6 @@
 <?php
 
+namespace Database\Seeders;
 use App\Models\Permission;
 use App\Models\User;
 use Carbon\Carbon;
@@ -467,12 +468,12 @@ class PermissionSeeder extends Seeder
                 'slug' => 'create_tax',
                 'group' => 'Tax',
                 'description' => 'User can create tax'
-            ],
+            ], 
             [
                 'slug' => 'update_tax',
                 'group' => 'Tax',
                 'description' => 'User can update tax'
-            ],
+            ],            
             [
                 'slug' => 'view_adjustment',
                 'group' => 'Tax',
@@ -482,18 +483,18 @@ class PermissionSeeder extends Seeder
                 'slug' => 'create_adjustment',
                 'group' => 'Tax',
                 'description' => 'User can create adjustment'
-            ],
+            ], 
             [
                 'slug' => 'update_adjustment',
                 'group' => 'Tax',
                 'description' => 'User can update adjustment'
-            ],
+            ], 
             [
                 'slug' => 'consolidate_parcel',
                 'group' => 'Order',
                 'description' => 'User can consolidate order'
             ],
-
+ 
             [
                 'slug' => 'change_order_status',
                 'group' => 'Order',
@@ -568,54 +569,7 @@ class PermissionSeeder extends Seeder
                 'slug' => 'calculator-tax-modality',
                 'group' => 'Calculator',
                 'description' => 'User can change calculator tax modality !'
-            ],
-            // Pasarex Service Permissions
-            [
-                'slug' => 'view_pasarex_service',
-                'group' => 'Service',
-                'description' => 'User can view Pasarex service!'
-            ],   
-
-            // USPS Service Permissions
-            [
-                'slug' => 'view_usps_service',
-                'group' => 'Service',
-                'description' => 'User can view USPS service!'
-            ], 
-
-            // Group Permissions (for both services)
-            [
-                'slug' => 'view_zone_rate_profit',
-                'group' => 'Group',
-                'description' => 'User can view the service group!'
-            ],
-            
-            [
-                'slug' => 'import_zone_rate_profit',
-                'group' => 'Group',
-                'description' => 'User can view the service group!'
-            ],
-            [
-                'slug' => 'edit_zone_rate_profit',
-                'group' => 'Group',
-                'description' => 'User can edit the service group!'
-            ], 
-            [
-                'slug' => 'update_zone_rate_profit',
-                'group' => 'Group',
-                'description' => 'User can update the service group!'
-            ],
-            [
-                'slug' => 'delete_zone_rate_profit',
-                'group' => 'Group',
-                'description' => 'User can delete the zone rate and profit!'
-            ],
-            [
-                'slug' => 'download_zone_rate_profit',
-                'group' => 'Group',
-                'description' => 'User can download the service group!'
-            ],
- 
+            ]
         ];
     }
 }

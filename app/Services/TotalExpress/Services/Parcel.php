@@ -110,13 +110,12 @@ class Parcel
       if (count($this->order->items) >= 1) {
          $totalQuantity = $this->order->items->sum('quantity');
          foreach ($this->order->items as $key => $item) {
-            $weight = round($this->weight / $totalQuantity, 2) - 0.02;
             $itemToPush = []; 
             $itemToPush = [
                "name" => substr($item->description, 20),
                "description" =>  $item->description,
                "value" => $item->value,
-               'weight' => $weight<0.1?0.1:$weight,
+               'weight' => round($this->weight / $totalQuantity, 2) - 0.02,
                "hs_code" => substr( $item->sh_code, 0, 6),
                "sku" => $item->sh_code,
                "origin_country" => 'US',

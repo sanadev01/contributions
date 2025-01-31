@@ -69,11 +69,11 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($orders as $order)
-                                                <tr class="selectable cursor-pointer {{ in_array( $order->id, $selected_orders) ? 'bg-info' : '' }}">
+                                                <tr class="selectable cursor-pointer {{ $selected_order == $order->id ? 'bg-info' : '' }}">
                                                     <td>
                                                         <input class="form-control order-select" type="checkbox" name="orders[]" id="{{$order->id}}" 
                                                         wire:click="toggleOrderSelection({{$order->id}})"
-                                                        {{ in_array( $order->id, $selected_orders)  ? 'checked': '' }} value="{{$order->id}}">
+                                                        {{ $selected_order == $order->id ? 'checked': '' }} value="{{$order->id}}">
                                                     </td>
                                                     <td>
                                                         {{ $loop->iteration }}
@@ -81,17 +81,12 @@
                                                     <td>
                                                         {{ optional($order->recipient)->first_name }} {{ optional($order->recipient)->last_name }}
                                                     </td>
-                                                    <td>{{ $order->merchant  }}</td>
+                                                    <td>{{ $order->merchant }}</td>
                                                     <td>{{ $order->customer_reference }}</td>
                                                     <td>{{ $order->tracking_id }}</td>
                                                     <td>{{  $order->corrios_tracking_code }}</td>
                                                     <td>{{  $order->warehouse_number }}</td>
-                                                    <td>  
-                                                        <div class="custom-tooltip">
-                                                            {{ number_format($order->gross_total, 2) }} USD
-                                                            <x-gross-total-details :order="$order" /> 
-                                                        </div>
-                                                    </td>
+                                                    <td>{{  number_format($order->gross_total,2) }} USD</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

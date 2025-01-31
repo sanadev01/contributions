@@ -17,11 +17,8 @@ class Client
     public function __construct()
     {
         // $token = setting('LEVE_AUTHORIZE_KEY');
-        $clientId = env('API_CLIENT_ID');
-        $token = env('API_TOKEN');
-        if (!$clientId || !$token) {
-            throw new \Exception("API credentials are not set.");
-        }
+        $clientId = '562b8024-d3ba-456c-aa06-5fe04d2dc6d2';
+        $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIyMDExMWRjZC01ZTUyLTRjMDYtOTQ1Ni02NDU0NTUwZGYxYjYiLCJpYXQiOjE1OTQ5MjMwOTN9.C47_EbGQtJZEyYHwjfQMeK2UTd2XkeT07Y-eArr8np0';
 
         if ( app()->environment('production') ){
             $this->baseUri = 'https://api.leveexpress.com/api';

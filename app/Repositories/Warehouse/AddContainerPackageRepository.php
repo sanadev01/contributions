@@ -36,9 +36,6 @@ class AddContainerPackageRepository extends AbstractRepository{
         if (!$this->order->containers->isEmpty()) {
             return $this->validationError404('Order Already in Container.');
         }
-        if ($this->container->isPRC() && strtolower($this->order->tax_modality) == "ddu") {
-            return $this->validationError404('DDU parcel cannot be added inside a PRC container.');
-        }
         if(!$this->orderValidate()){
             return $this->orderValidateMessage($this->container,$this->shippingService->service_sub_class);
         }
@@ -48,20 +45,33 @@ class AddContainerPackageRepository extends AbstractRepository{
         // if ($this->shippingService->isCorreiosService()) {
         //     return $this->validationError404('Service is currently blocked. Please contact administrator.');
         // }
-        return  $this->updateContainer();
+        $outputChina= $this->updateContainer();
+        $endTimeChina = microtime(true); 
+        $executionTimeChina = $endTimeChina - $startTime;  
+        \Log::info('Execution time of uptoUpdateTime:' . $executionTimeChina . ' seconds');
+        return $outputChina;
     }
     
   
     
     public function updateContainer()
     {
+        $startTime = microtime(true);   
+        $output = $this->updateContainerExecutionTime( );
+        $endTime = microtime(true); 
+        $executionTime = $endTime - $startTime;  
+        \Log::info('Execution time of updateContainer:' . $executionTime . ' seconds');
+       return $output;
+    }
+ 
+    public function updateContainerExecutionTime()
+    {
         if ($this->containerFirstOrder) {
                 //make sure container all order are belong to same gorup.
                 $firstGroup  = (new GetZipcodeGroup($this->containerFirstOrder->recipient->zipcode))->getZipcodeGroup();
                 $currentGroup =  (new GetZipcodeGroup($this->order->recipient->zipcode))->getZipcodeGroup();
                 if ($currentGroup !== $firstGroup){
-                    $zipCode = $this->order->recipient->zipcode;
-                    return $this->validationError404("Invalid Zone Group: ZipCode ($zipCode) belongs to group $currentGroup, but Valid Group is {$firstGroup} for this container.");
+                    return $this->validationError404("Invalid Zipcode Group for container. Valid Group is {$firstGroup}");
                 }
         }else{
             //make sure tha container first order have valid group.

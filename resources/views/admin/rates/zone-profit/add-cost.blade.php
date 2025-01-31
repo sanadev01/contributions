@@ -4,7 +4,7 @@
     <div class="card">
         <div class="card-header">
             <h4 class="card-title" id="basic-layout-form">Service Vise Cost and Selling Rates</h4>
-            <a href="{{ url()->previous() }}" class="btn btn-primary pull-right">
+            <a href="{{ route('admin.rates.zone-profit.index') }}" class="btn btn-primary pull-right">
                 @lang('shipping-rates.Return to List')
             </a>
             <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>

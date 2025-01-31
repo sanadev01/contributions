@@ -17,12 +17,9 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use App\Services\Correios\Contracts\Package;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Services\Calculators\WeightCalculator;
-use App\Services\PasarEx\GetZipcodeZone;
 use App\Services\Correios\Models\Package as ModelsPackage;
-use App\Services\Correios\GetZipcodeGroup;
 use Exception;
-
-
+use Illuminate\Support\Facades\Crypt;
 class Order extends Model implements Package
 {
 
@@ -75,7 +72,6 @@ class Order extends Model implements Package
     const COLOMBIA = 50;
     const Japan = 114;
     const UK = 249;
-    const MEXICO = 146;
 
     public $user_profit = 0;
     public function scopeParcelReady(Builder $query)
@@ -348,7 +344,7 @@ class Order extends Model implements Package
     }
 
     public function carrierService()
-    { 
+    {
         if ($this->shippingService()) {
             if (optional($this->shippingService)->service_sub_class == ShippingService::USPS_PRIORITY ||
                 optional($this->shippingService)->service_sub_class == ShippingService::USPS_FIRSTCLASS ||
@@ -416,28 +412,6 @@ class Order extends Model implements Package
             elseif(optional($this->shippingService)->service_sub_class == ShippingService::DSS_SENEGAL){
                 return 'DSS Senegal';
             }
-            elseif(optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMEI || optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI || optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP){
-                return 'VIP Parcels';
-            }elseif(optional($this->shippingService)->is_pasar_ex){
-
-                return 'PasarEx';
-            }
-            elseif(optional($this->shippingService)->is_fox_courier){
-
-                return 'Fox Courier';
-            }
-            elseif(optional($this->shippingService)->is_cainiao){
-
-                return 'Cainiao';
-            }
-            elseif(optional($this->shippingService)->isMileExpressService()){
-
-                return 'Mile Express';
-            }
-            elseif(optional($this->shippingService)->is_id_label_service){
-
-                return 'ID Label Service';
-            }
             return 'Correios Brazil';
         }
 
@@ -468,15 +442,7 @@ class Order extends Model implements Package
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMEI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_EPMI ||
                 optional($this->shippingService)->service_sub_class == ShippingService::GSS_FCM ||
-                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ||
-                optional($this->shippingService)->service_sub_class == ShippingService::FOX_ST_COURIER ||
-                optional($this->shippingService)->service_sub_class == ShippingService::FOX_EX_COURIER ||
-                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_FCP ||
-                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMEI||
-                optional($this->shippingService)->service_sub_class == ShippingService::VIP_PARCEL_PMI ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Mile_Express  ||
-                optional($this->shippingService)->service_sub_class == ShippingService::Mile_Express ||
-                optional($this->shippingService)->service_sub_class == ShippingService::ID_Label_Service) {
+                optional($this->shippingService)->service_sub_class == ShippingService::GSS_EMS ) {
 
                 return $this->user_declared_freight;
             }
@@ -561,24 +527,16 @@ class Order extends Model implements Package
         }
         return ($api?'TM':'HD')."{$tempWhr}".(optional($this->recipient)->country->code??"BR");
     }
-  
 
-
-    public function doCalculations($onVolumetricWeight = true, $isServices = false)
+    public function doCalculations($onVolumetricWeight=true, $isServices = false)
     {
         $shippingService = $this->shippingService;
-        if(!$shippingService){
-            return;
-        }
         $additionalServicesCost = $this->calculateAdditionalServicesCost($this->services);
         if ($shippingService && in_array($shippingService->service_sub_class, $this->usShippingServicesSubClasses())) {
             $shippingCost = $this->user_declared_freight;
             $this->calculateProfit($shippingCost, $shippingService);
         }elseif ($shippingService && $shippingService->isGSSService()) {
             $this->calculateGSSProfit($shippingService);
-            $shippingCost = $this->user_declared_freight;
-        }elseif ($shippingService && $shippingService->is_pasarex) {
-            $this->getPasarexColombiaRate($shippingService);
             $shippingCost = $this->user_declared_freight;
         }else {
             $shippingCost = $shippingService->getRateFor($this,true,$onVolumetricWeight);
@@ -590,32 +548,23 @@ class Order extends Model implements Package
         // $dangrousGoodsCost = (isset($this->user->perfume) && $this->user->perfume == 1 ? 0 : $pefumeExtra) + (isset($this->user->battery) && $this->user->battery == 1 ? 0 : $battriesExtra);
         
         $dangrousGoodsCost = (setting('perfume', null, $this->user->id) ? 0 : $pefumeExtra) + (setting('battery', null, $this->user->id) ? 0 : $battriesExtra);
-        $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES', 0, null, true) : 0;
-        $calculatedUserProfit = (float) number_format($this->user_profit,2); 
-        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $calculatedUserProfit;
-        $total =(float) number_format($total, 2); 
+        $consolidation = $this->isConsolidated() ?  setting('CONSOLIDATION_CHARGES',0,null,true) : 0;
+
+        $total = $shippingCost + $additionalServicesCost + $this->insurance_value + $dangrousGoodsCost + $consolidation + $this->user_profit;
+
         $discount = 0; // not implemented yet
-        $grossTotal = $total - $discount;
+        $gross_total = $total - $discount;
+
         $this->update([
             'consolidation' => $consolidation,
             'order_value' => $this->items()->sum(\DB::raw('quantity * value')),
             'shipping_value' => $shippingCost,
             'dangrous_goods' => $dangrousGoodsCost,
-            'total' => number_format($total,2),
-            'discount' => $discount,
-            'calculated_user_profit'=> $calculatedUserProfit,
-            'gross_total' => number_format($grossTotal,2) ,
-            'user_declared_freight' => $this->user_declared_freight
-        ]);
-        $taxAndDuty = (float)$this->calculate_tax_and_duty;
-        $feeForTaxAndDuty = (float)$this->calculate_fee_for_tax_and_duty;
-        $total =  $grossTotal  + $taxAndDuty + $feeForTaxAndDuty; 
-        $grossTotal = $total - $discount;
-        $this->update([
-            'tax_and_duty' =>  $taxAndDuty,
-            'fee_for_tax_and_duty' => $feeForTaxAndDuty,
             'total' => $total,
-            'gross_total' => $grossTotal,
+            'discount' => $discount,
+            'gross_total' => $gross_total,
+            'user_declared_freight' => $this->user_declared_freight
+            // 'user_declared_freight' => $this->user_declared_freight >0 ? $this->user_declared_freight : $shippingCost
         ]);
     }
 
@@ -1010,95 +959,6 @@ class Order extends Model implements Package
             }
         }
         return true;
-    }
-    public function getCalculateTotalCostAttribute(){ 
-        $additionalServicesCost =  $this->calculateAdditionalServicesCost($this->services) + $this->insurance_value;
-        return $this->shipping_value + $this->order_value + $additionalServicesCost;
-    }
-    public function getCalculateTaxAndDutyAttribute(){ 
-        return round($this->calculate_duty + $this->calculate_icms,2);//Total Taxes & Duties
-    }
-
-    public function getCalculateDutyAttribute(){
-        if ($this->is_tax_duty_applicable)
-        {
-            $totalCost = $this->calculate_total_cost;
-            if(setting('is_prc_user', null, $this->user_id))
-            {
-                $duty = $totalCost > 50 ? (($totalCost * .60)-20) :$totalCost*0.2; //Duties
-            }else{
-                $duty = $totalCost * .60; //Duties
-            }
-            return round($duty,2);//Total Taxes & Duties  
-        }
-        return 0;
-    }
-    
-    public function getCalculateIcmsAttribute(){
-        if ($this->is_tax_duty_applicable)
-        {
-            $totalCost = $this->calculate_total_cost;
-            $duty =  $this->calculate_duty;
-            $totalCostOfTheProduct = $totalCost + $duty;// Total Cost Of product
-            $icms = 0.17;  // ICMS (IVA)
-            $totalIcms = $totalCostOfTheProduct / (1-$icms)*$icms;//Total  ICMS (IVA)
-            return round($totalIcms, 2);
-        }
-        return 0;
-    }
-    public function getCalculateFeeForTaxAndDutyAttribute()
-    {
-        $fee=0;
-        if($this->calculate_tax_and_duty){
-            $flag=true;
-                if(setting('prc_user_fee', null, $this->user_id)=="flat_fee"){
-                    $fee = setting('prc_user_fee_flat', null, $this->user_id)??2;
-                    $flag=false;
-                }
-                if(setting('prc_user_fee', null, $this->user_id)=="variable_fee"){
-                    $percent = setting('prc_user_fee_variable', null, $this->user_id)??1;
-                    $fee= $this->calculate_tax_and_duty/100 * $percent;
-                    $fee= $fee <0.5? 0.5:$fee; 
-                    $flag=false;
-                }
-                if($flag){
-                $fee = $this->calculate_tax_and_duty*.01;
-                $fee = $fee<0.5?0.5:$fee;
-                }
-        }
-        return $fee;
-    }
-    public function getIsTaxDutyApplicableAttribute() {
-        $isUSPS = optional($this->shippingService)->usps_service_sub_class ?? false;
-        $taxSHCode = $this->items->contains(function ($item) {
-            return !in_array($item->sh_code, ["49019900", "490199"]);
-        });
-        if ($this->recipient->country->code == "BR" && $taxSHCode) {
-            if ((strtolower($this->tax_modality) == "ddp" && !$isUSPS)){
-                return true;
-            }
-        }
-        return false;
-    }
-       
-    public function getPasarexColombiaRate($shippingService)
-    {
-        $zoneId = (new GetZipcodeZone($this->recipient->zipcode))->getZipcodeZone();
-        $rate = getZoneRate($this, $shippingService, $zoneId);
-        
-        if($rate > 0) {
-            $this->update([
-                'user_declared_freight' => $rate,
-            ]);
-            $this->user_declared_freight = $rate;
-            return true;
-        } 
-        return false;
-    }
-    public function getZoneGroupAttribute()
-    { 
-           $getZipcodeGroup = new GetZipcodeGroup(optional($this->recipient)->zipcode);
-           return $getZipcodeGroup->getZipcodeGroup()??'no';  
     }
 
 }

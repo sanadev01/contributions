@@ -79,7 +79,7 @@ class ImportZoneRate extends AbstractImportService
         $data =[];
         foreach ($this->weightInKG as $key=> $row) {
 
-            $data['data'][$row.""] = number_format($this->workSheet->getCell($col.($key+4))->getValue(), 2);
+            $data['data'][$row.""] = $this->workSheet->getCell($col.($key+4))->getValue();
         }
         return $data;
     }

@@ -1,8 +1,12 @@
 <?php
 
 namespace App\Services\Excel\Export;
+use App\Models\User;
 use App\Models\Order;
+use App\Models\ShippingService;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class TempOrderExport extends AbstractExportService
 {
@@ -27,12 +31,15 @@ class TempOrderExport extends AbstractExportService
         $this->setExcelHeaderRow();
 
         $row = $this->currentRow;
+
         foreach ($this->orders as $order) {
+
             if ($order instanceof Order) {
+
                 $totalAmount = $order->items->reduce(function ($carry, $orderItem) {
                     return $carry + ($orderItem->quantity * $orderItem->value);
                 }, 0);
-        
+
                 $this->setCellValue('A'.$row, $order->corrios_tracking_code);
                 $this->setCellValue('B'.$row, $order->warehouse_number); 
                 $this->setCellValue('C'.$row, optional($order->user)->pobox_number); 
@@ -42,8 +49,8 @@ class TempOrderExport extends AbstractExportService
                 $this->setCellValue('G'.$row, $this->chargeWeight($order));
                 $this->setCellValue('H'.$row, $order->length.'x'.$order->width.'x'.$order->height);
                 $this->setCellValue('I'.$row, $order->shipping_value);
-                $this->setCellValue('J'.$row, number_format($totalAmount, 2));
-        
+                $this->setCellValue('J'.$row, number_format($totalAmount,2));
+                
                 foreach($order->items as $item) {
                     $this->setCellValue('K'.$row, $item->sh_code);   
                     $this->setCellValue('L'.$row, $item->description);
@@ -51,18 +58,18 @@ class TempOrderExport extends AbstractExportService
                 }
                 $this->setColor('D', 'FF0000');
             } else {
+
                 $this->setCellValue('A'.$row, $order->corrios_tracking_code);
                 $this->setCellValue('B'.$row, $order->warehouse_number); 
                 $this->setCellValue('C'.$row, optional($order->user)->pobox_number); 
                 $this->setCellValue('D'.$row, "Order Not Found");
-        
+
                 $this->setCellValue('K'.$row, '');   
                 $this->setCellValue('L'.$row, '');
                 $this->setBackgroundColor("A{$row}:L{$row}", 'FF0000');
                 $row++;
             }
         }
-        
     }
 
 
@@ -85,7 +92,7 @@ class TempOrderExport extends AbstractExportService
         $this->setColumnWidth('F', 20);
         $this->setCellValue('F1', 'Recepient');  
         $this->setColumnWidth('G', 20);
-        $this->setCellValue('G1', 'Weight in KG');
+        $this->setCellValue('G1', 'Weight');
         $this->setColumnWidth('H', 20);
         $this->setCellValue('H1', 'Dimensions');  
 

@@ -1,4 +1,4 @@
-@extends('admin.orders.layouts.order-items-wizard')
+@extends('admin.orders.layouts.wizard')
 @section('wizard-css')
 <link rel="stylesheet" href="{{ asset('app-assets/select/css/bootstrap-select.min.css') }}">
 <style>
@@ -67,7 +67,7 @@
 
             <hr>
             <div class="row mt-1">
-                <div class="form-group col-12 col-sm-6 col-md-3">
+                <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Type') <span class="text-danger">*</span></label>
                         <select class="form-control" name="account_type" id="accountType" required placeholder="@lang('address.Type')">
@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="row mt-1">
-                <div class="form-group col-12 col-sm-6 col-md-3">
+                <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.First Name') <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="first_name" value="{{old('first_name',optional($order->recipient)->first_name)}}"  placeholder="@lang('address.First Name')">
@@ -88,7 +88,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-12 col-sm-6 col-md-3">
+                <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Last Name') <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="last_name" value="{{old('last_name',optional($order->recipient)->last_name)}}" placeholder="@lang('address.Last Name')">
@@ -96,21 +96,21 @@
                     </div>
                 </div>
 
-                <div class="form-group col-12 col-sm-6 col-md-3">
+                <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Email') <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="email" value="{{old('email',optional($order->recipient)->email)}}" required placeholder="@lang('address.Email')">
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-3">
+                <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Phone') <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="phone" value="{{old('phone',optional($order->recipient)->phone)}}" placeholder="+55123456789">
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-3">
+                <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label id="label_address">@lang('address.Address') <span class="text-danger">*</span></label>
                         <label id="label_chile_address" style="display: none;">@lang('address.Chile Address')<span class="text-danger">*</span></label>
@@ -118,14 +118,14 @@
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-3">
+                <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
-                        <label>@lang('address.Address') 2</label>
+                        <label>@lang('address.Address2')</label>
                         <input type="text" class="form-control"  placeholder="@lang('address.Address2')" value="{{old('address2',optional($order->recipient)->address2)}}"  name="address2">
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-md-3">
+                <div class="col-12 col-sm-6 col-md-4">
                     <div class="form-group">
                         <div class="controls">
                             <label>@lang('address.Country') <span class="text-danger">*</span></label>
@@ -139,7 +139,7 @@
                         </div>
                     </div>
                 </div> 
-                    <div class="controls form-group col-12 col-sm-6 col-md-3" id="div_state">
+                    <div class="controls form-group col-12 col-sm-6 col-md-4" id="div_state">
                         <label>@lang('address.State') <span class="text-danger">*</span></label>
                         <select name="state_id" id="state" class="form-control selectpicker show-tick" data-live-search="true">
                             <option value="">Select @lang('address.State')</option>
@@ -150,14 +150,14 @@
                         <div class="help-block"></div>
                     </div>
                     {{-- Chile Regions --}}
-                    <div class="controls form-group col-12 col-sm-6 col-md-3" id="div_region" style="display: none">
+                    <div class="controls form-group col-12 col-sm-6 col-md-4" id="div_region" style="display: none">
                         <label>Regions<span class="text-danger">*</span></label>
                         <select name="region" id="region" class="form-control selectpicker show-tick" data-live-search="true" data-value="{{ old('region', optional($order->recipient)->region) }}">
                             <option value="">Select Region</option>
                         </select>
                         <div class="help-block"></div>
                     </div> 
-                    <div class="form-group col-12 col-sm-6 col-md-3" id="state_input"  style="display: none">
+                    <div class="form-group col-12 col-sm-6 col-md-4" id="state_input"  style="display: none">
                         <div class="controls">
                             <label>@lang('address.State') <span class="text-danger">*</span></label>
                             <input type="text" name="region" id="region_input" value="{{old('region',optional($order->recipient)->region)}}" class="form-control" placeholder="State"/>
@@ -170,7 +170,7 @@
                         </div>
                     </div>
                 </div> --}}
-                <div class="form-group col-12 col-sm-6 col-md-3">
+                <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls" id="div_city">
                         <label>@lang('address.City') <span class="text-danger">*</span></label>
                         <input type="text" id="city" name="city" value="{{old('city',optional($order->recipient)->city)}}" class="form-control" placeholder="City"/>
@@ -189,14 +189,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-3" id="div_street_number">
+                <div class="form-group col-12 col-sm-6 col-md-4" id="div_street_number">
                     <div class="controls">
                         <label>@lang('address.Street No') <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" placeholder="@lang('address.Street No')" value="{{old('street_no',optional($order->recipient)->street_no)}}"  name="street_no" id="street_no">
                         <div class="help-block"></div>
                     </div>
                 </div>
-                <div class="form-group col-12 col-sm-6 col-md-3">
+                <div class="form-group col-12 col-sm-6 col-md-4">
                     <div class="controls">
                         <label>@lang('address.Zip Code') <span class="text-danger">*</span></label>
                         <input type="text" name="zipcode"  id="zipcode" value="{{ cleanString(old('zipcode',optional($order->recipient)->zipcode)) }}" class="form-control" placeholder="Zip Code"/>
@@ -204,11 +204,10 @@
                     </div>
                 </div>
 
-                <div class="form-group col-12 col-sm-6 col-md-3" id="cpf" style="display: none">
+                <div class="form-group col-12 col-sm-6 col-md-4" id="cpf" style="display: none">
                     <div class="controls">
-                            <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only) 1</span> </label>
-                            <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only) </span> </label>
-                            <label id="rfc_curp" style="display:none" >@lang('address.RFC_CURP') <span class="text-danger">* (Mexico Only) </span> </label>
+                            <label id="cnpj_label_id" style="{{ optional($order->recipient)->account_type != 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CNPJ') <span class="text-danger">* (Brazil Only)</span> </label>
+                            <label id="cpf_label_id" style="{{ optional($order->recipient)->account_type == 'individual' ? 'display:block' : 'display:none' }}" >@lang('address.CPF') <span class="text-danger">* (Brazil Only)</span> </label>
                         <input type="text" name="tax_id" id="tax_id" value="{{old('tax_id',optional($order->recipient)->tax_id)}}" class="form-control" placeholder="CNPJ"/>
                         <div class="help-block"></div>
                     </div>
@@ -223,7 +222,7 @@
 
                 <div class="col-12 my-3 p-4 ">
                     <div class="row justify-content-end">
-                        <fieldset class="col-md-3 text-right">
+                        <fieldset class="col-md-4 text-right">
                             <div class="vs-checkbox-con vs-checkbox-primary">
                                 <input type="checkbox" name="save_address" value="false">
                                 <span class="vs-checkbox vs-checkbox-lg">

@@ -53,7 +53,7 @@ class CN35LabelMaker implements HasLableExport
         return $this;
     }
 
-    public function setService($service)
+    public function setService(int $service)
     {
         $this->service = $service; 
         $this->packetType = 'DSS Senegal';
